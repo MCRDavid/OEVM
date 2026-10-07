@@ -3,13 +3,13 @@
   "name": "Example Car Park",
   "address": {
     "street": "Example Street",
-    "city": "Manchester",
+    "city": "Exampletown",
     "postal_code": null,
     "country": "GBR"
   },
   "coordinates": {
-    "latitude": 53.4808,
-    "longitude": -2.2426
+    "latitude": 52.0,
+    "longitude": -1.0
   },
   "time_zone": "Europe/London",
   "operator": {
