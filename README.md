@@ -1,5 +1,11 @@
 # OEVM: Open UK EV Charger Map
 
+> OEVM is a personal, experimental project for learning about AI tools. Much of its code
+> and text was written with an AI assistant, and it will contain mistakes. Charger data
+> comes from the operators and other sources credited on every record, and remains their
+> work. Everything is provided "as is", with no warranty or guarantee of any kind. Always
+> check prices and availability at the charger. Full text: [DISCLAIMER.md](DISCLAIMER.md).
+
 A free, open map of UK public electric vehicle chargers, built from the open data that
 charge point operators must publish under the Public Charge Point Regulations 2023
 (regulation 10, OCPI 2.2.1). The aim is prices and availability from operators' own
@@ -9,15 +15,18 @@ The full plan is in [docs/BLUEPRINT.md](docs/BLUEPRINT.md).
 
 ## Status
 
-Early days. Blueprint tasks 1 to 3 are done:
+Early days. Blueprint tasks 1 to 4 are done:
 
 1. **Scaffold:** uv, ruff, pytest, pre-commit secret scanning and a CI workflow.
 2. **Schema:** Pydantic models for Location, EVSE, Connector, Tariff and Provenance,
    exported as JSON Schema in `schema/json/`.
 3. **Operator registry:** one YAML file per operator in `operators/`, with a schema and
    a validator.
+4. **OCPI 2.2.1 adapter:** fetches an operator's locations and tariffs politely, page by
+   page, and converts them to the schema. char.gy is the first operator switched on.
 
-Nothing is fetched from operators yet and there is no map yet.
+There is no map yet. The rules the site must follow for privacy and cookies are in
+[docs/PRIVACY_AND_COOKIES.md](docs/PRIVACY_AND_COOKIES.md).
 
 ## Principles
 
@@ -55,16 +64,21 @@ Nothing is fetched from operators yet and there is no map yet.
 | Fix formatting | `uv run ruff format .` |
 | Run the tests | `uv run pytest -q` |
 | Validate the operator registry | `uv run python -m pipeline.registry --validate` |
+| Run the adapters on recorded data (no network) | `uv run python -m pipeline.run --fixtures` |
+| Fetch one page from a real feed | `uv run python -m pipeline.run --live chargy --max-pages 1` |
 | Regenerate JSON Schema after changing a model | `uv run python -m schema.export` |
 | Run every pre-commit check on every file | `uv run pre-commit run --all-files` |
 
-CI runs all of these on every pull request.
+CI runs all of these on every pull request, except the live fetch: tests never call real
+feeds. Use `--live` sparingly. It only works for operators switched on in the registry.
 
 ## Repository layout
 
 ```
 operators/            one YAML file per operator, _template.yaml and schema.json
+adapters/             code that reads operator feeds (ocpi_221 so far)
 pipeline/registry.py  loads and validates the registry
+pipeline/run.py       runs adapters on recorded or live data
 schema/models.py      Location, EVSE, Connector, Tariff and Provenance models
 schema/operator.py    the model for an operator registry file
 schema/export.py      writes the JSON Schema files
@@ -97,8 +111,11 @@ every field.
 - If the scanner flags something that is not a secret, add the comment
   `pragma: allowlist secret` to that line and explain why in the pull request.
 
-## Licence
+## Licences
 
-Code is licensed under the Apache License 2.0 (see [LICENSE](LICENSE)). Licences for
-published data will be set out in `DATA_LICENCES.md` when data is first published, as
-described in section 6 of the blueprint.
+- **Code:** the code written for this project is licensed under the Apache License 2.0
+  (see [LICENSE](LICENSE)).
+- **Data:** the Apache licence does not cover any data. Data from operators and other
+  sources keeps its own licence and belongs to its publishers.
+  [DATA_LICENCES.md](DATA_LICENCES.md) lists every source with its licence and
+  attribution, and explains how the project keeps to those terms.

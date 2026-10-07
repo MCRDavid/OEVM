@@ -32,6 +32,9 @@ EXAMPLE_NAME = "EXAMPLE_TOKEN"
 RESERVED_NAME = "GITHUB_TOKEN"
 
 
+CHECKED_LICENCE = {"name": "OGL-3.0", "basis": "Checked for this test.", "checked": "2026-10-07"}
+
+
 def minimal(**overrides) -> dict:
     """The smallest valid operator: nothing known, not enabled."""
     data = {
@@ -58,6 +61,7 @@ def enabled_open(**overrides) -> dict:
         base_url="https://example.invalid/ocpi",
         auth={"method": "none"},
         attribution="Contains data from Example Operator.",
+        licence=CHECKED_LICENCE,
         enabled=True,
     )
     data.update(overrides)
@@ -135,6 +139,10 @@ def test_minimal_and_enabled_examples_are_valid():
         enabled_open(auth={"method": "unknown"}),
         enabled_open(auth={"method": "header", "name": "unknown", "secret_name": EXAMPLE_NAME}),
         enabled_open(attribution=None),
+        enabled_open(licence=None),
+        enabled_open(licence={**CHECKED_LICENCE, "checked": "unknown"}),
+        enabled_open(licence={**CHECKED_LICENCE, "name": "unknown"}),
+        minimal(licence={"name": "OGL-3.0", "checked": "2026-10-07"}),
         minimal(engagement={"status": "open_anonymous"}),
         minimal(
             engagement={
@@ -173,6 +181,10 @@ def test_minimal_and_enabled_examples_are_valid():
         "enabled-with-unknown-auth",
         "enabled-with-unknown-header-name",
         "enabled-without-attribution",
+        "enabled-without-licence",
+        "enabled-with-unchecked-licence",
+        "enabled-with-unknown-licence",
+        "licence-without-basis",
         "status-without-evidence",
         "no-reply-without-request-date",
         "granted-before-requested",

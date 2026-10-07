@@ -1,0 +1,134 @@
+{
+  "request": {
+    "method": "GET",
+    "url": "https://char.gy/open-ocpi/locations?limit=2"
+  },
+  "response": {
+    "status_code": 200,
+    "headers": {
+      "content-type": "application/json; charset=utf-8",
+      "link": "<https://char.gy/open-ocpi/locations?limit=2&offset=2>; rel=\"next\"",
+      "x-total-count": "5946",
+      "x-limit": "2"
+    },
+    "body": {
+      "data": [
+        {
+          "country_code": "GB",
+          "party_id": "CGY",
+          "id": "98632dfb-6751-45ec-b3a0-9066b749fdfa",
+          "parking_type": "ON_STREET",
+          "publish": true,
+          "name": "Opposite 25 Grovelands Road",
+          "address": "Grovelands Road",
+          "city": "Haringey",
+          "postal_code": "N15 6BT",
+          "country": "GBR",
+          "coordinates": {
+            "latitude": "51.5784972",
+            "longitude": "-0.0641408"
+          },
+          "evses": [
+            {
+              "uid": "7537c966-4204-480b-b886-b36da876a856",
+              "evse_id": "GB*CGY*E*00022",
+              "status": "WORKING",
+              "capabilities": [
+                "REMOTE_START_STOP_CAPABLE",
+                "UNLOCK_CAPABLE"
+              ],
+              "connectors": [
+                {
+                  "id": "1",
+                  "standard": "IEC_62196_T2",
+                  "format": "SOCKET",
+                  "power_type": "AC_1_PHASE",
+                  "max_voltage": 230,
+                  "max_amperage": 22,
+                  "tariff_ids": [
+                    "fd80692e-6fe0-42de-9f5f-88a292df9d42"
+                  ],
+                  "terms_and_conditions": "https://char.gy/terms-of-use",
+                  "last_updated": "2026-10-07T08:10:04Z"
+                }
+              ],
+              "physical_reference": "00022",
+              "last_updated": "2026-10-07T08:10:04Z"
+            }
+          ],
+          "operator": {
+            "name": "char.gy",
+            "website": "https://char.gy"
+          },
+          "owner": {
+            "name": "Haringey"
+          },
+          "time_zone": "Europe/London",
+          "opening_times": {
+            "twentyfourseven": true
+          },
+          "last_updated": "2026-10-07T08:10:04Z"
+        },
+        {
+          "country_code": "GB",
+          "party_id": "CGY",
+          "id": "17d206f9-9b8d-450e-a84a-2a58f30cc416",
+          "parking_type": "ON_STREET",
+          "publish": true,
+          "name": "141 - 143 Seaford Road",
+          "address": " Seaford Road",
+          "city": "Haringey",
+          "postal_code": "N15 5DX",
+          "country": "GBR",
+          "coordinates": {
+            "latitude": "51.5841962",
+            "longitude": "-0.0839332"
+          },
+          "evses": [
+            {
+              "uid": "1b04f6b6-44bb-4f47-810c-4be566e57e31",
+              "evse_id": "GB*CGY*E*00024",
+              "status": "WORKING",
+              "capabilities": [
+                "REMOTE_START_STOP_CAPABLE",
+                "UNLOCK_CAPABLE"
+              ],
+              "connectors": [
+                {
+                  "id": "1",
+                  "standard": "IEC_62196_T2",
+                  "format": "SOCKET",
+                  "power_type": "AC_1_PHASE",
+                  "max_voltage": 230,
+                  "max_amperage": 22,
+                  "tariff_ids": [
+                    "fd80692e-6fe0-42de-9f5f-88a292df9d42"
+                  ],
+                  "terms_and_conditions": "https://char.gy/terms-of-use",
+                  "last_updated": "2026-10-07T10:46:59Z"
+                }
+              ],
+              "physical_reference": "00024",
+              "last_updated": "2026-10-07T10:46:59Z"
+            }
+          ],
+          "operator": {
+            "name": "char.gy",
+            "website": "https://char.gy"
+          },
+          "owner": {
+            "name": "Haringey "
+          },
+          "time_zone": "Europe/London",
+          "opening_times": {
+            "twentyfourseven": true
+          },
+          "last_updated": "2026-10-07T10:46:59Z"
+        }
+      ],
+      "status_code": 1000,
+      "status_message": "Success",
+      "timestamp": "2026-10-07T22:32:54Z"
+    }
+  }
+}

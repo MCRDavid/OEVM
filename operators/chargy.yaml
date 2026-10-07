@@ -2,31 +2,57 @@
 id: chargy
 display_name: char.gy
 ocpi_country_code: GB
-ocpi_party_id: CGY # From the tariff path /GB/CGY/ noted in the blueprint. Confirm from data.
+ocpi_party_id: CGY # Confirmed from the feed's own country_code and party_id on 2026-10-07.
 adapter: ocpi_221
 base_url: https://char.gy/open-ocpi
-endpoints: {}
+endpoints:
+  locations:
+    url: https://char.gy/open-ocpi/locations
+    status: documented
+  tariffs:
+    url: https://char.gy/open-ocpi/tariffs
+    status: documented
 auth:
   method: none
   name: null
   secret_name: null
 rate_limit:
   min_seconds_between_requests: 2
-  documented: null
+  documented: None stated on char.gy's open data page (checked 2026-10-07).
 supports_single_location: needs_testing
-cors: needs_testing
+cors: not_supported
 attribution: >-
   Contains data from char.gy published under the Public Charge Point Regulations 2023,
   used in line with the Open Government Licence v3.0.
+licence:
+  name: OGL-3.0
+  url: https://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/
+  basis: >-
+    char.gy publishes this data to meet the Public Charge Point Regulations 2023. DfT's
+    guidance (updated 21 October 2024) says "Data must be open in line with the Open
+    Government Licence". char.gy's open data page states no other licence or terms for
+    the data.
+  checked: 2026-10-07
 engagement:
   status: open_anonymous
   evidence:
     - date: 2026-10-06
       url: https://help.char.gy/support/solutions/articles/77000576948-public-charge-point-regulations-2023
+    - date: 2026-10-07
+      url: https://help.char.gy/support/solutions/articles/77000576948-public-charge-point-regulations-2023
+      note: Re-checked. The page still lists the open locations and tariffs endpoints.
 access_requested: null
 access_granted: null
 sources:
   - url: https://help.char.gy/support/solutions/articles/77000576948-public-charge-point-regulations-2023
-    note: char.gy documents only /open-ocpi/locations and /open-ocpi/tariffs.
-notes: Fetching a single location by id is not documented and needs testing.
+    note: >-
+      Read 2026-10-07. Gives the host https://char.gy, the locations path
+      /open-ocpi/locations and the tariffs path /open-ocpi/tariffs, and points to the OCPI
+      standard. States no licence, terms or rate limits.
+notes: >-
+  CORS tested 2026-10-07: a request sent with an Origin header got no
+  Access-Control-Allow-Origin header back, so browsers cannot read the feed directly.
+  Paging uses the OCPI 2.2.1 Link, X-Total-Count and X-Limit headers. On 2026-10-07 the
+  feed used the EVSE statuses WORKING and FAULTED, which are not OCPI 2.2.1 values, and
+  published tariffs in EUR, USD and GBP. Fetching a single location by id needs testing.
 enabled: true

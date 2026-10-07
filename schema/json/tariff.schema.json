@@ -32,7 +32,7 @@
             }
           ],
           "default": null,
-          "description": "VAT percentage. Null means VAT not stated, which is not the same as 0%.",
+          "description": "VAT percentage. Null means the source gave no VAT figure, shown as 'VAT not stated'. OCPI 2.2.1 says an omitted VAT means no VAT is applicable, which is different from 0% VAT.",
           "title": "Vat"
         },
         "step_size": {
@@ -350,6 +350,23 @@
           },
           "title": "Day Of Week",
           "type": "array"
+        },
+        "reservation": {
+          "anyOf": [
+            {
+              "enum": [
+                "reservation",
+                "reservation_expires"
+              ],
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Set when the element prices a reservation, not charging.",
+          "title": "Reservation"
         }
       },
       "required": [
@@ -365,7 +382,8 @@
         "max_power",
         "min_duration",
         "max_duration",
-        "day_of_week"
+        "day_of_week",
+        "reservation"
       ],
       "title": "TariffRestrictions",
       "type": "object"
@@ -385,12 +403,60 @@
       "title": "Currency",
       "type": "string"
     },
+    "type": {
+      "anyOf": [
+        {
+          "enum": [
+            "ad_hoc_payment",
+            "profile_cheap",
+            "profile_fast",
+            "profile_green",
+            "regular"
+          ],
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "description": "OCPI tariff type, for example 'ad_hoc_payment' for paying at the charger.",
+      "title": "Type"
+    },
     "elements": {
       "items": {
         "$ref": "#/$defs/TariffElement"
       },
       "title": "Elements",
       "type": "array"
+    },
+    "min_price": {
+      "anyOf": [
+        {
+          "minimum": 0,
+          "type": "number"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "description": "Minimum cost of a session, excluding VAT.",
+      "title": "Min Price"
+    },
+    "max_price": {
+      "anyOf": [
+        {
+          "minimum": 0,
+          "type": "number"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "description": "Maximum cost of a session, excluding VAT.",
+      "title": "Max Price"
     },
     "alt_text": {
       "anyOf": [
@@ -460,7 +526,7 @@
     },
     "price_state": {
       "default": "unknown",
-      "description": "Derived from the price components; never set by hand. 'free_confirmed' only when every component is zero.",
+      "description": "Derived from the price components and min_price; never set by hand. 'free_confirmed' only when every component is zero and there is no minimum charge.",
       "enum": [
         "priced",
         "free_confirmed",
@@ -476,7 +542,10 @@
   "required": [
     "id",
     "currency",
+    "type",
     "elements",
+    "min_price",
+    "max_price",
     "alt_text",
     "alt_url",
     "start_date_time",

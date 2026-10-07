@@ -41,6 +41,9 @@ jobs:
       - name: Validate operator registry
         run: uv run python -m pipeline.registry --validate
 
+      - name: Run adapters on recorded fixtures (no network)
+        run: uv run python -m pipeline.run --fixtures
+
       - name: Secret scan and file checks (pre-commit, every file)
         run: uv run pre-commit run --all-files --show-diff-on-failure
 

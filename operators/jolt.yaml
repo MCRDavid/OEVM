@@ -24,6 +24,15 @@ cors: needs_testing
 attribution: >-
   Contains data from Jolt published under the Public Charge Point Regulations 2023,
   used in line with the Open Government Licence v3.0.
+licence:
+  name: OGL-3.0
+  url: https://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/
+  basis: >-
+    Jolt publishes this data under the Public Charge Point Regulations 2023, and DfT's
+    guidance says "Data must be open in line with the Open Government Licence". Jolt's
+    help page could not be read on 2026-10-07 because it sits behind a bot check, so any
+    access terms on it have not been checked.
+  checked: unknown
 engagement:
   status: open_shared_key
   evidence:
@@ -40,5 +49,6 @@ notes: >-
   This project keeps it in the GitHub Actions secret JOLT_API_KEY instead, so no key
   value is ever committed. Copy the key from Jolt's help page into that secret.
   Jolt could revoke the shared key. The full tariffs URL and fetching a location by id
-  need testing.
-enabled: true
+  need testing. Switched off until someone has read Jolt's help page in a browser and
+  recorded its access terms in the licence section.
+enabled: false

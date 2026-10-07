@@ -2,32 +2,48 @@
 
 ## What this is
 Open map of UK public EV chargers from operator open data (Public Charge Point Regulations 2023,
-reg 10, OCPI 2.2.1). Static site on GitHub Pages; Python pipeline on GitHub Actions.
-The brief is docs/BLUEPRINT.md; decisions are in docs/adr/.
+reg 10, OCPI 2.2.1). Static site on GitHub Pages; Python pipeline on GitHub Actions. A personal,
+experimental, AI-assisted learning project (see DISCLAIMER.md). The brief is docs/BLUEPRINT.md;
+decisions are in docs/adr/.
 
 ## Commands
 - Lint: uv run ruff check . && uv run ruff format --check .
 - Test: uv run pytest -q
 - Validate registry: uv run python -m pipeline.registry --validate
+- Offline pipeline: uv run python -m pipeline.run --fixtures
+- One live page (sparingly, enabled operators only): uv run python -m pipeline.run --live chargy --max-pages 1
 - After changing a model: uv run python -m schema.export (CI runs it with --check)
 - Secret scan and file checks: uv run pre-commit run --all-files
-- Offline pipeline (not built yet, task 4 onwards): uv run python -m pipeline.run --fixtures
 
 ## Where things live
 - schema/models.py: Location, EVSE, Connector, Tariff, Provenance. schema/operator.py: registry file model.
-- pipeline/registry.py: registry loader and validator. operators/*.yaml: one file per operator.
+- adapters/http.py: polite client. adapters/ocpi_221/: paging and OCPI conversion. adapters/replay.py: fixtures.
+- pipeline/registry.py, pipeline/run.py. operators/*.yaml: one file per operator.
 
 ## Hard rules
 - Never commit or print secrets. Reference keys by secret_name only, even keys an operator publishes.
 - Never call live feeds in tests. Use tests/fixtures.
 - Never label a charger "Free" unless price_state == free_confirmed.
-- Never overwrite operator data with OSM, Open Charge Map or user reports.
+- Never overwrite operator data with OSM, Open Charge Map or user reports. Record bad values as unknown.
 - Status wording: neutral, dated, evidenced. No claims that anyone broke the law.
 - British English. No em dashes. Write "unknown" or "needs testing" rather than guessing.
 - Only use feed URLs with a known source; record the source in the operator file.
 - One issue per change; small PRs; never push to main.
 
+## Data licences (DATA_LICENCES.md)
+- Apache-2.0 covers our code only. Never apply it, or any other licence, to data. Data keeps its source's licence.
+- Every record keeps its provenance. Every source gets attribution and a row in DATA_LICENCES.md.
+- Never use operator logos or suggest any operator or public body endorses the project.
+- Never keep locations whose OCPI publish flag is false or missing.
+- Switch an operator on only after reading its own terms and filling in its licence section.
+
+## The site (docs/PRIVACY_AND_COOKIES.md)
+- No analytics, ads, tracking or third-party files that set cookies or use storage.
+- Nothing is stored on a visitor's device until they opt in; "Forget my settings" deletes it all.
+- Every page shows the short disclaimer and links to DISCLAIMER.md, data sources and the privacy notice.
+
 ## Adding an operator
-Copy operators/_template.yaml to operators/<id>.yaml, pick an adapter, set secret_name, and run the
-registry validator. Once adapters exist: record a trimmed fixture, add tests, add attribution to
-DATA_LICENCES.md, add an evidence entry. A /add-operator skill is planned but not written yet.
+Copy operators/_template.yaml to operators/<id>.yaml, pick an adapter, set secret_name, read the
+operator's terms and fill in licence, then run the registry validator. Record a trimmed fixture with
+--save-raw, add tests, add a row to DATA_LICENCES.md and an evidence entry. A /add-operator skill is
+planned but not written yet.

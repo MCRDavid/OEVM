@@ -94,8 +94,30 @@ def test_price_state_is_derived_when_omitted(tariff_data):
 
 def test_claiming_free_for_a_priced_tariff_is_rejected(tariff_data):
     tariff_data["price_state"] = "free_confirmed"
-    with pytest.raises(ValidationError, match="does not match the price components"):
+    with pytest.raises(ValidationError, match="does not match the prices"):
         Tariff.model_validate(tariff_data)
+
+
+def test_minimum_charge_means_not_free(tariff_data):
+    del tariff_data["price_state"]
+    set_all_prices(tariff_data, 0)
+    tariff_data["min_price"] = 1.5
+    assert Tariff.model_validate(tariff_data).price_state == "priced"
+
+
+def test_zero_minimum_charge_can_still_be_free(tariff_data):
+    del tariff_data["price_state"]
+    set_all_prices(tariff_data, 0)
+    tariff_data["min_price"] = 0
+    assert Tariff.model_validate(tariff_data).price_state == "free_confirmed"
+
+
+def test_paid_reservation_element_means_not_free(tariff_data):
+    del tariff_data["price_state"]
+    set_all_prices(tariff_data, 0)
+    tariff_data["elements"][0]["price_components"][0].update(type="time", price=2.0)
+    tariff_data["elements"][0]["restrictions"]["reservation"] = "reservation"
+    assert Tariff.model_validate(tariff_data).price_state == "priced"
 
 
 def test_missing_vat_stays_missing_not_zero(tariff_data):

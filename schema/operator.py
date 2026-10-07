@@ -57,12 +57,17 @@ _CREDENTIAL_PARAM = re.compile(
 )
 
 
+def is_credential_param(name: str) -> bool:
+    """True if a query parameter name looks like it carries a key, token or password."""
+    return bool(_CREDENTIAL_PARAM.search(name))
+
+
 def _reject_credentials_in_url(url: str) -> str:
     parts = urlsplit(url)
     if parts.username or parts.password:
         raise ValueError("URL must not contain a username or password")
     for name, _ in parse_qsl(parts.query, keep_blank_values=True):
-        if _CREDENTIAL_PARAM.search(name):
+        if is_credential_param(name):
             raise ValueError(
                 f"URL query parameter {name!r} looks like a credential. Remove it, store the "
                 "key as a GitHub Actions secret and give its name in auth.secret_name"
@@ -165,6 +170,22 @@ class Evidence(_Model):
         return self
 
 
+class Licence(_Model):
+    name: str = Field(
+        min_length=1,
+        description="Licence the data is used under, for example 'OGL-3.0', or 'unknown'.",
+    )
+    url: SafeUrl | None = Field(default=None, description="Link to the licence text.")
+    basis: str = Field(
+        min_length=1,
+        description="Why this licence applies, in plain words, and what the operator's own "
+        "pages say about terms.",
+    )
+    checked: dt.date | Unknown = Field(
+        description="Date the operator's own terms were last checked (YYYY-MM-DD), or 'unknown'."
+    )
+
+
 class Engagement(_Model):
     status: EngagementStatus
     evidence: list[Evidence] = Field(default_factory=list)
@@ -193,6 +214,9 @@ class OperatorConfig(_Model):
     cors: Support
     attribution: str | None = Field(
         default=None, description="Attribution statement shown with this operator's data."
+    )
+    licence: Licence | None = Field(
+        default=None, description="Licence terms for this operator's data. Null if not yet known."
     )
     engagement: Engagement
     access_requested: dt.date | None = None
@@ -226,6 +250,12 @@ class OperatorConfig(_Model):
                 problems.append("an enabled operator needs known auth details")
             if not self.attribution:
                 problems.append("an enabled operator needs an attribution statement")
+            if (
+                self.licence is None
+                or self.licence.name == "unknown"
+                or self.licence.checked == "unknown"
+            ):
+                problems.append("an enabled operator needs licence terms that have been checked")
         if problems:
             raise ValueError("; ".join(problems))
         return self

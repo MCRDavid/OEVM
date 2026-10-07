@@ -1,0 +1,87 @@
+{
+  "request": {
+    "method": "GET",
+    "url": "https://char.gy/open-ocpi/tariffs?limit=2&offset=2"
+  },
+  "response": {
+    "status_code": 200,
+    "headers": {
+      "content-type": "application/json; charset=utf-8",
+      "x-total-count": "3",
+      "x-limit": "2"
+    },
+    "body": {
+      "data": [
+        {
+          "country_code": "GB",
+          "party_id": "CGY",
+          "id": "fd80692e-6fe0-42de-9f5f-88a292df9d42",
+          "currency": "GBP",
+          "elements": [
+            {
+              "price_components": [
+                {
+                  "type": "ENERGY",
+                  "price": 0.45,
+                  "step_size": 1
+                }
+              ],
+              "restrictions": {
+                "start_time": "00:00",
+                "end_time": "00:00",
+                "day_of_week": [
+                  "SATURDAY",
+                  "SUNDAY"
+                ]
+              }
+            },
+            {
+              "price_components": [
+                {
+                  "type": "ENERGY",
+                  "price": 0.325,
+                  "step_size": 1
+                }
+              ],
+              "restrictions": {
+                "start_time": "00:00",
+                "end_time": "07:00",
+                "day_of_week": [
+                  "MONDAY",
+                  "TUESDAY",
+                  "WEDNESDAY",
+                  "THURSDAY",
+                  "FRIDAY"
+                ]
+              }
+            },
+            {
+              "price_components": [
+                {
+                  "type": "ENERGY",
+                  "price": 0.4917,
+                  "step_size": 1
+                }
+              ],
+              "restrictions": {
+                "start_time": "07:00",
+                "end_time": "00:00",
+                "day_of_week": [
+                  "MONDAY",
+                  "TUESDAY",
+                  "WEDNESDAY",
+                  "THURSDAY",
+                  "FRIDAY"
+                ]
+              }
+            }
+          ],
+          "last_updated": "2026-07-23T10:43:11Z"
+        }
+      ],
+      "status_code": 1000,
+      "status_message": "Success",
+      "timestamp": "2026-10-07T22:33:00Z"
+    }
+  }
+}
