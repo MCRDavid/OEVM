@@ -45,10 +45,22 @@ auth:
   secret_name: null
 
 rate_limit:
-  # Seconds this project waits between requests. Keep it at or above any documented limit.
+  # Seconds this project waits between any two requests, retries included. At least 1, and
+  # at least what every documented limit below needs. The validator checks this.
   min_seconds_between_requests: 2
-  # The operator's published limit and where it was found, or null.
-  documented: null
+  # Each limit the operator publishes, quoted exactly. Example:
+  #   limits:
+  #     - requests: 30
+  #       per_seconds: 3600
+  #       endpoint: tariffs        # or all
+  #       quote: <the operator's exact wording>
+  #       source_url: <page the wording is on>
+  #       checked: <YYYY-MM-DD, or unknown>
+  limits: []
+  # Date the operator's pages were last checked for limits. With no limits listed, a date
+  # here means none were stated.
+  limits_checked: unknown
+  notes: null
 
 # One of: supported, not_supported, needs_testing, unknown.
 supports_single_location: unknown
@@ -83,6 +95,17 @@ access_granted: null
 
 # Where the technical facts in this file come from: list of {url, note}.
 sources: []
+
+# Dated observations shown on the transparency page: spec differences, data quirks,
+# access issues. Neutral, factual wording only. Example:
+#   findings:
+#     - date: <YYYY-MM-DD>
+#       kind: spec_conformance     # or data_quality, access, documentation
+#       summary: <one factual sentence about what was observed>
+#       handling: <what this project does about it>
+#       evidence_url: <where it can be seen>
+#       status: open               # or resolved, with resolved_date
+findings: []
 
 notes: null
 

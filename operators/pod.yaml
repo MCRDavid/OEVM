@@ -16,7 +16,9 @@ auth:
   secret_name: POD_TOKEN
 rate_limit:
   min_seconds_between_requests: 2
-  documented: null
+  limits: []
+  limits_checked: unknown
+  notes: null
 supports_single_location: unknown
 cors: unknown
 attribution: null
@@ -28,6 +30,5 @@ access_granted: null
 sources: []
 notes: >-
   The blueprint says the ocpi_221 adapter covers Pod "once a token is granted", so a token
-  is expected, but how tokens are issued and how they are sent are not recorded. The
-  blueprint also refers to this operator as Pod Point.
+  is expected, but how tokens are issued and how they are sent are not recorded.
 enabled: false

@@ -165,6 +165,32 @@ def test_minimal_and_enabled_examples_are_valid():
         minimal(adapter="ocpi"),
         minimal(cors=True),
         minimal(typo_field=1),
+        minimal(
+            findings=[{"date": "2026-10-07", "kind": "data_quality", "summary": "It is illegal."}]
+        ),
+        minimal(notes="The operator is in breach of the rules."),
+        minimal(
+            findings=[
+                {"date": "2026-10-07", "kind": "data_quality", "summary": "x", "status": "resolved"}
+            ]
+        ),
+        minimal(findings=[{"date": "2026-10-07", "kind": "gossip", "summary": "x"}]),
+        minimal(findings=[{"date": "unknown", "kind": "access", "summary": "x"}]),
+        minimal(
+            rate_limit={
+                "min_seconds_between_requests": 2,
+                "limits": [
+                    {
+                        "requests": 30,
+                        "per_seconds": 3600,
+                        "quote": "30 requests per 1 hour",
+                        "source_url": "https://example.invalid/terms",
+                        "checked": "2026-10-07",
+                    }
+                ],
+            }
+        ),
+        minimal(rate_limit={"min_seconds_between_requests": 0.5}),
     ],
     ids=[
         "key-in-base-url",
@@ -197,6 +223,13 @@ def test_minimal_and_enabled_examples_are_valid():
         "unknown-adapter",
         "yaml-yes-instead-of-value",
         "unknown-field",
+        "accusatory-finding",
+        "accusatory-notes",
+        "resolved-without-date",
+        "unknown-finding-kind",
+        "finding-without-date",
+        "gap-breaks-published-limit",
+        "gap-below-project-minimum",
     ],
 )
 def test_invalid_operator_configs_are_rejected(data):
@@ -281,3 +314,19 @@ def test_undated_evidence_produces_a_warning():
     assert registry.warnings_for(config) == [
         "example_operator: evidence https://example.invalid/help has no date; add the date checked"
     ]
+
+
+def test_resolved_finding_with_date_is_valid():
+    OperatorConfig.model_validate(
+        minimal(
+            findings=[
+                {
+                    "date": "2026-10-01",
+                    "kind": "data_quality",
+                    "summary": "Prices were missing.",
+                    "status": "resolved",
+                    "resolved_date": "2026-10-07",
+                }
+            ]
+        )
+    )

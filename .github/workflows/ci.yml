@@ -44,6 +44,9 @@ jobs:
       - name: Run adapters on recorded fixtures (no network)
         run: uv run python -m pipeline.run --fixtures
 
+      - name: Check the transparency page is up to date
+        run: uv run python -m pipeline.transparency --check
+
       - name: Secret scan and file checks (pre-commit, every file)
         run: uv run pre-commit run --all-files --show-diff-on-failure
 

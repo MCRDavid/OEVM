@@ -65,7 +65,7 @@ def raw_location(location_id: str = "LOC1", **overrides) -> dict:
         "address": "1 Example Street",
         "city": "Exampletown",
         "country": "GBR",
-        "coordinates": {"latitude": "53.48080", "longitude": "-2.24260"},
+        "coordinates": {"latitude": "52.00000", "longitude": "-1.00000"},
         "time_zone": "Europe/London",
         "evses": [
             {
@@ -272,7 +272,7 @@ def test_requests_are_spaced_by_the_registry_delay():
 
 
 def test_temporary_failures_are_retried_with_backoff_and_retry_after():
-    config = make_config(rate_limit={"min_seconds_between_requests": 0.001})
+    config = make_config(rate_limit={"min_seconds_between_requests": 1})
     responses = iter(
         [
             httpx.Response(503),
@@ -283,7 +283,7 @@ def test_temporary_failures_are_retried_with_backoff_and_retry_after():
     sleeps = Recorder()
     with client_for(config, lambda r: next(responses), sleeps) as client:
         assert client.get(f"{EXAMPLE}/a").status_code == 200
-    retry_waits = [s for s in sleeps.sleeps if s > 0.001]
+    retry_waits = [s for s in sleeps.sleeps if s > 1]
     assert retry_waits == [5.0, 30.0]
 
 
@@ -320,6 +320,27 @@ def test_header_key_comes_from_the_environment(monkeypatch):
     with client_for(config, handler) as client:
         client.get(f"{EXAMPLE}/a")
     assert seen["x-api-key"] == "test-value-123"
+
+
+def test_header_scheme_is_sent_before_the_key(monkeypatch):
+    config = make_config(
+        auth={
+            "method": "header",
+            "name": "Authorization",
+            "scheme": "Token",
+            "secret_name": HEADER_ENV_NAME,
+        }
+    )
+    monkeypatch.setenv(HEADER_ENV_NAME, "test-value-789")
+    seen = {}
+
+    def handler(request):
+        seen.update(request.headers)
+        return httpx.Response(200, json=ocpi_body([]))
+
+    with client_for(config, handler) as client:
+        client.get(f"{EXAMPLE}/a")
+    assert seen["authorization"] == "Token test-value-789"
 
 
 def test_missing_key_names_the_secret_without_a_value(monkeypatch):

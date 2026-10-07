@@ -4,17 +4,27 @@ display_name: Gridserve
 ocpi_country_code: unknown
 ocpi_party_id: unknown
 adapter: gridserve
-base_url: unknown
-endpoints: {}
+base_url: https://api.gridserve.com/ocpi/v1/
+endpoints:
+  locations:
+    url: https://api.gridserve.com/ocpi/v1/locations
+    status: documented
+    note: Also GET /locations/{location-id} for one location.
+  tariffs:
+    url: https://api.gridserve.com/ocpi/v1/tariffs
+    status: documented
 auth:
   method: header
   name: ec-subscription-key
   secret_name: GRIDSERVE_SUBSCRIPTION_KEY
 rate_limit:
   min_seconds_between_requests: 30
-  documented: >-
-    Slow rate limit. One request per 30 seconds comes from earlier research quoted in the
-    blueprint and has not been re-verified against the developer documentation.
+  limits: []
+  limits_checked: 2026-10-07
+  notes: >-
+    The developer documentation (version 1.0, November 2024) states no rate limit. Earlier
+    research quoted in the blueprint mentioned a slow limit of one request per 30 seconds,
+    so this project keeps a 30 second gap until Gridserve confirms otherwise.
 supports_single_location: supported
 cors: needs_testing
 attribution: null
@@ -25,9 +35,27 @@ access_requested: null
 access_granted: null
 sources:
   - url: https://www.gridserve.com/wp-content/uploads/2024/11/GRIDSERVE-PCPR-API-Developer-Documentation.pdf
-    note: Developer documentation. ec-subscription-key header; documents GET /locations/{location-id}.
+    note: >-
+      Developer documentation, version 1.0, November 2024, read 2026-10-07. Gives the base
+      URL, the ec-subscription-key header and GET /locations, /locations/{location-id} and
+      /tariffs. States no rate limit and no licence or terms.
+findings:
+  - date: 2026-10-07
+    kind: documentation
+    summary: >-
+      The developer documentation's example responses put results under "locations",
+      "location" or "tariffs" keys, while OCPI 2.2.1 responses put them in a "data" field.
+    handling: The adapter will be written against real responses, recorded as fixtures, not the examples.
+    evidence_url: https://www.gridserve.com/wp-content/uploads/2024/11/GRIDSERVE-PCPR-API-Developer-Documentation.pdf
+  - date: 2026-10-07
+    kind: documentation
+    summary: >-
+      The developer documentation lists location-id under "Headers", although the endpoint
+      is written as GET /locations/{location-id}.
+    handling: Noted for when the adapter is built; the path form will be tested first.
+    evidence_url: https://www.gridserve.com/wp-content/uploads/2024/11/GRIDSERVE-PCPR-API-Developer-Documentation.pdf
 notes: >-
-  The base URL and how keys are issued are not recorded in the blueprint. Gridserve's terms
-  come from earlier research and have not been re-verified. Read the developer documentation
-  before enabling.
+  How keys are issued, and any licence or terms, are not stated in the developer
+  documentation. Other Gridserve pages have not been checked. Read them, and record the
+  licence section, before enabling.
 enabled: false

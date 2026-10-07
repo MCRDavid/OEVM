@@ -1,0 +1,714 @@
+{
+  "last_reviewed": "2026-10-07",
+  "disclaimer": "OEVM is a personal, experimental project for learning about AI tools. Much of its code and text was written with an AI assistant, and it will contain mistakes. Charger data comes from the operators and other sources credited on every record, and remains their work. Everything is provided \"as is\", with no warranty or guarantee of any kind. Always check prices and availability at the charger.",
+  "regulation": {
+    "summary": "The Public Charge Point Regulations 2023 set no limit on how often data users may request the data. Regulation 10(5) requires the data to be available free of charge without terms on its use. DfT's guidance allows terms covering the means of access, which is where operators' rate limits come from.",
+    "quotes": [
+      {
+        "text": "terms and conditions covering the means of access to the data and API(s) are permissible",
+        "source": "DfT, Public Charge Point Regulations 2023 guidance",
+        "url": "https://www.gov.uk/government/publications/the-public-charge-point-regulations-2023-guidance/public-charge-point-regulations-2023-guidance"
+      }
+    ]
+  },
+  "operators": [
+    {
+      "id": "chargy",
+      "name": "char.gy",
+      "enabled": true,
+      "adapter": "ocpi_221",
+      "engagement": {
+        "status": "open_anonymous",
+        "label": "Open, no registration",
+        "evidence": [
+          {
+            "date": "2026-10-06",
+            "url": "https://help.char.gy/support/solutions/articles/77000576948-public-charge-point-regulations-2023",
+            "file": null,
+            "note": null
+          },
+          {
+            "date": "2026-10-07",
+            "url": "https://help.char.gy/support/solutions/articles/77000576948-public-charge-point-regulations-2023",
+            "file": null,
+            "note": "Re-checked. The page still lists the open locations and tariffs endpoints."
+          }
+        ]
+      },
+      "feeds": [
+        {
+          "kind": "locations",
+          "url": "https://char.gy/open-ocpi/locations",
+          "status": "documented"
+        },
+        {
+          "kind": "tariffs",
+          "url": "https://char.gy/open-ocpi/tariffs",
+          "status": "documented"
+        }
+      ],
+      "licence": {
+        "name": "OGL-3.0",
+        "url": "https://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/",
+        "checked": "2026-10-07"
+      },
+      "attribution": "Contains data from char.gy published under the Public Charge Point Regulations 2023, used in line with the Open Government Licence v3.0.",
+      "rate_limit": {
+        "our_gap_seconds": 2.0,
+        "our_max_per_hour": 1800,
+        "ours": "At least 2 s between requests (at most 1800 an hour), retries included.",
+        "published": [],
+        "limits_checked": "2026-10-07",
+        "comparison": "No limit published (checked 2026-10-07). The gap is our own choice.",
+        "difference_from_regulations": "Neither the operator nor the regulations set a limit.",
+        "notes": "char.gy's open data page states no rate limit. The 2 second gap is this project's own choice."
+      },
+      "findings": [
+        {
+          "date": "2026-10-07",
+          "kind": "spec_conformance",
+          "kind_label": "Differs from OCPI 2.2.1",
+          "summary": "EVSE statuses are published as WORKING and FAULTED, which are not values in the OCPI 2.2.1 Status list.",
+          "handling": "Shown as status unknown rather than guessed. Regulation 10(6)(a) uses \"working\" to mean an OCPI status of available, charging or reserved.",
+          "evidence_url": "https://char.gy/open-ocpi/locations",
+          "status": "open",
+          "resolved_date": null
+        },
+        {
+          "date": "2026-10-07",
+          "kind": "data_quality",
+          "kind_label": "Data quirk",
+          "summary": "Tariffs are published in three currencies (EUR, USD and GBP). Locations refer only to the GBP tariff.",
+          "handling": "Only GBP prices are shown, in pence per kWh, which is how regulation 10(6)(d)(iv) describes the price in reference data. Other currencies show as price unknown and are never converted.",
+          "evidence_url": "https://char.gy/open-ocpi/tariffs",
+          "status": "open",
+          "resolved_date": null
+        },
+        {
+          "date": "2026-10-07",
+          "kind": "data_quality",
+          "kind_label": "Data quirk",
+          "summary": "Tariff price components give no VAT figure.",
+          "handling": "Prices are shown as published, excluding VAT, and marked \"VAT not stated\".",
+          "evidence_url": "https://char.gy/open-ocpi/tariffs",
+          "status": "open",
+          "resolved_date": null
+        },
+        {
+          "date": "2026-10-07",
+          "kind": "access",
+          "kind_label": "Access",
+          "summary": "The feed sends no Access-Control-Allow-Origin header, so web browsers cannot read it directly.",
+          "handling": "The map will use data fetched by the pipeline, not requests from visitors' browsers.",
+          "evidence_url": "https://char.gy/open-ocpi/locations",
+          "status": "open",
+          "resolved_date": null
+        }
+      ],
+      "latest_run": null
+    },
+    {
+      "id": "bp_pulse",
+      "name": "bp pulse",
+      "enabled": false,
+      "adapter": "eco_movement_pcpr",
+      "engagement": {
+        "status": "key_on_request",
+        "label": "Key issued on request",
+        "evidence": [
+          {
+            "date": "unknown",
+            "url": "https://www.bppulse.com/en-gb/help-and-support/public-ev-charging/public-charge-point-regulations",
+            "file": null,
+            "note": "bp pulse's FAQ uses a request form. Whether a contract is also required is not known."
+          }
+        ]
+      },
+      "feeds": [
+        {
+          "kind": "locations",
+          "url": "https://open-chargepoints.com/api/ocpi/cpo/2.2.1/locations",
+          "status": "documented"
+        },
+        {
+          "kind": "tariffs",
+          "url": "https://open-chargepoints.com/api/ocpi/cpo/2.2.1/tariffs",
+          "status": "documented"
+        },
+        {
+          "kind": "statuses",
+          "url": "https://open-chargepoints.com/api/statuses",
+          "status": "documented"
+        }
+      ],
+      "licence": null,
+      "attribution": null,
+      "rate_limit": {
+        "our_gap_seconds": 120.0,
+        "our_max_per_hour": 30,
+        "ours": "At least 120 s between requests (at most 30 an hour), retries included.",
+        "published": [
+          {
+            "text": "30 per 1 hour for the locations endpoint",
+            "quote": "The `locations` endpoint has a rate limit of 30 requests per 1 hour.",
+            "source_url": "https://developers.eco-movement.com/v2.2.1/reference/get-all-locations-pcpr-api",
+            "checked": "2026-10-07"
+          },
+          {
+            "text": "30 per 1 hour for the locations endpoint",
+            "quote": "The `locations/{id}` endpoint has a rate limit of 30 requests per 1 hour.",
+            "source_url": "https://developers.eco-movement.com/v2.2.1/reference/get-specific-location-pcpr-api",
+            "checked": "2026-10-07"
+          },
+          {
+            "text": "30 per 1 hour for the tariffs endpoint",
+            "quote": "The `tariffs` endpoint has a rate limit of 30 requests per 1 hour.",
+            "source_url": "https://developers.eco-movement.com/reference/get-tariffs-pcpr-api",
+            "checked": "2026-10-07"
+          },
+          {
+            "text": "1 per 30 seconds for the statuses endpoint",
+            "quote": "The `statuses` endpoint has a rate limit of 1 request per 30 seconds.",
+            "source_url": "https://developers.eco-movement.com/reference/get-statuses-pcpr-api",
+            "checked": "2026-10-07"
+          }
+        ],
+        "limits_checked": "2026-10-07",
+        "comparison": "Matches the strictest published limit.",
+        "difference_from_regulations": "The operator sets a limit; the regulations set none. DfT guidance allows such terms on access.",
+        "notes": "One gap of 120 seconds is used for every request, so this project sends at most 30 requests an hour across all endpoints combined, within every limit even if they share one allowance. Requests are sent one at a time; Eco-Movement \"strongly recommends limiting simultaneous GET requests to a maximum of 5\". It recommends retrieving the entire dataset once a day."
+      },
+      "findings": [
+        {
+          "date": "2026-10-07",
+          "kind": "documentation",
+          "kind_label": "Documentation",
+          "summary": "Eco-Movement's PCPR API documentation gives two different defaults for the page size (1000 on the getting started page, 1 in the endpoint reference), and its user guide says date_from works for locations only while the tariffs reference lists it.",
+          "handling": "This project will always send an explicit page size and test date_from before relying on it.",
+          "evidence_url": "https://developers.eco-movement.com/v2.2.1/reference/getting-started-pcpr-api",
+          "status": "open",
+          "resolved_date": null
+        },
+        {
+          "date": "2026-10-07",
+          "kind": "documentation",
+          "kind_label": "Documentation",
+          "summary": "The rate limits are published, but the documentation does not say whether they apply per key or per address, what kind of time window is used, or what response is sent when a limit is reached.",
+          "handling": "This project assumes the strictest reading: one shared allowance across all endpoints, so it waits 120 seconds between any two requests.",
+          "evidence_url": "https://developers.eco-movement.com/v2.2.1/docs/eco-movement-pcpr-api-user-guide",
+          "status": "open",
+          "resolved_date": null
+        }
+      ],
+      "latest_run": null
+    },
+    {
+      "id": "community_by_shell_recharge",
+      "name": "Community by Shell Recharge",
+      "enabled": false,
+      "adapter": "eco_movement_pcpr",
+      "engagement": {
+        "status": "unknown",
+        "label": "Not yet established",
+        "evidence": []
+      },
+      "feeds": [
+        {
+          "kind": "locations",
+          "url": "https://open-chargepoints.com/api/ocpi/cpo/2.2.1/locations",
+          "status": "documented"
+        },
+        {
+          "kind": "tariffs",
+          "url": "https://open-chargepoints.com/api/ocpi/cpo/2.2.1/tariffs",
+          "status": "documented"
+        },
+        {
+          "kind": "statuses",
+          "url": "https://open-chargepoints.com/api/statuses",
+          "status": "documented"
+        }
+      ],
+      "licence": null,
+      "attribution": null,
+      "rate_limit": {
+        "our_gap_seconds": 120.0,
+        "our_max_per_hour": 30,
+        "ours": "At least 120 s between requests (at most 30 an hour), retries included.",
+        "published": [
+          {
+            "text": "30 per 1 hour for the locations endpoint",
+            "quote": "The `locations` endpoint has a rate limit of 30 requests per 1 hour.",
+            "source_url": "https://developers.eco-movement.com/v2.2.1/reference/get-all-locations-pcpr-api",
+            "checked": "2026-10-07"
+          },
+          {
+            "text": "30 per 1 hour for the locations endpoint",
+            "quote": "The `locations/{id}` endpoint has a rate limit of 30 requests per 1 hour.",
+            "source_url": "https://developers.eco-movement.com/v2.2.1/reference/get-specific-location-pcpr-api",
+            "checked": "2026-10-07"
+          },
+          {
+            "text": "30 per 1 hour for the tariffs endpoint",
+            "quote": "The `tariffs` endpoint has a rate limit of 30 requests per 1 hour.",
+            "source_url": "https://developers.eco-movement.com/reference/get-tariffs-pcpr-api",
+            "checked": "2026-10-07"
+          },
+          {
+            "text": "1 per 30 seconds for the statuses endpoint",
+            "quote": "The `statuses` endpoint has a rate limit of 1 request per 30 seconds.",
+            "source_url": "https://developers.eco-movement.com/reference/get-statuses-pcpr-api",
+            "checked": "2026-10-07"
+          }
+        ],
+        "limits_checked": "2026-10-07",
+        "comparison": "Matches the strictest published limit.",
+        "difference_from_regulations": "The operator sets a limit; the regulations set none. DfT guidance allows such terms on access.",
+        "notes": "One gap of 120 seconds is used for every request, so this project sends at most 30 requests an hour across all endpoints combined, within every limit even if they share one allowance. Requests are sent one at a time; Eco-Movement \"strongly recommends limiting simultaneous GET requests to a maximum of 5\". It recommends retrieving the entire dataset once a day."
+      },
+      "findings": [
+        {
+          "date": "2026-10-07",
+          "kind": "documentation",
+          "kind_label": "Documentation",
+          "summary": "Eco-Movement's PCPR API documentation gives two different defaults for the page size (1000 on the getting started page, 1 in the endpoint reference), and its user guide says date_from works for locations only while the tariffs reference lists it.",
+          "handling": "This project will always send an explicit page size and test date_from before relying on it.",
+          "evidence_url": "https://developers.eco-movement.com/v2.2.1/reference/getting-started-pcpr-api",
+          "status": "open",
+          "resolved_date": null
+        },
+        {
+          "date": "2026-10-07",
+          "kind": "documentation",
+          "kind_label": "Documentation",
+          "summary": "The rate limits are published, but the documentation does not say whether they apply per key or per address, what kind of time window is used, or what response is sent when a limit is reached.",
+          "handling": "This project assumes the strictest reading: one shared allowance across all endpoints, so it waits 120 seconds between any two requests.",
+          "evidence_url": "https://developers.eco-movement.com/v2.2.1/docs/eco-movement-pcpr-api-user-guide",
+          "status": "open",
+          "resolved_date": null
+        }
+      ],
+      "latest_run": null
+    },
+    {
+      "id": "geniepoint",
+      "name": "GeniePoint",
+      "enabled": false,
+      "adapter": "static_file",
+      "engagement": {
+        "status": "unknown",
+        "label": "Not yet established",
+        "evidence": []
+      },
+      "feeds": [],
+      "licence": null,
+      "attribution": null,
+      "rate_limit": {
+        "our_gap_seconds": 2.0,
+        "our_max_per_hour": 1800,
+        "ours": "At least 2 s between requests (at most 1800 an hour), retries included.",
+        "published": [],
+        "limits_checked": "unknown",
+        "comparison": "The operator's pages have not been checked for limits yet.",
+        "difference_from_regulations": "Not known yet.",
+        "notes": null
+      },
+      "findings": [],
+      "latest_run": null
+    },
+    {
+      "id": "go_zero",
+      "name": "Go Zero",
+      "enabled": false,
+      "adapter": "unknown",
+      "engagement": {
+        "status": "unknown",
+        "label": "Not yet established",
+        "evidence": []
+      },
+      "feeds": [],
+      "licence": null,
+      "attribution": null,
+      "rate_limit": {
+        "our_gap_seconds": 2,
+        "our_max_per_hour": 1800,
+        "ours": "At least 2 s between requests (at most 1800 an hour), retries included.",
+        "published": [],
+        "limits_checked": "unknown",
+        "comparison": "The operator's pages have not been checked for limits yet.",
+        "difference_from_regulations": "Not known yet.",
+        "notes": null
+      },
+      "findings": [],
+      "latest_run": null
+    },
+    {
+      "id": "gridserve",
+      "name": "Gridserve",
+      "enabled": false,
+      "adapter": "gridserve",
+      "engagement": {
+        "status": "unknown",
+        "label": "Not yet established",
+        "evidence": []
+      },
+      "feeds": [
+        {
+          "kind": "locations",
+          "url": "https://api.gridserve.com/ocpi/v1/locations",
+          "status": "documented"
+        },
+        {
+          "kind": "tariffs",
+          "url": "https://api.gridserve.com/ocpi/v1/tariffs",
+          "status": "documented"
+        }
+      ],
+      "licence": null,
+      "attribution": null,
+      "rate_limit": {
+        "our_gap_seconds": 30.0,
+        "our_max_per_hour": 120,
+        "ours": "At least 30 s between requests (at most 120 an hour), retries included.",
+        "published": [],
+        "limits_checked": "2026-10-07",
+        "comparison": "No limit published (checked 2026-10-07). The gap is our own choice.",
+        "difference_from_regulations": "Neither the operator nor the regulations set a limit.",
+        "notes": "The developer documentation (version 1.0, November 2024) states no rate limit. Earlier research quoted in the blueprint mentioned a slow limit of one request per 30 seconds, so this project keeps a 30 second gap until Gridserve confirms otherwise."
+      },
+      "findings": [
+        {
+          "date": "2026-10-07",
+          "kind": "documentation",
+          "kind_label": "Documentation",
+          "summary": "The developer documentation's example responses put results under \"locations\", \"location\" or \"tariffs\" keys, while OCPI 2.2.1 responses put them in a \"data\" field.",
+          "handling": "The adapter will be written against real responses, recorded as fixtures, not the examples.",
+          "evidence_url": "https://www.gridserve.com/wp-content/uploads/2024/11/GRIDSERVE-PCPR-API-Developer-Documentation.pdf",
+          "status": "open",
+          "resolved_date": null
+        },
+        {
+          "date": "2026-10-07",
+          "kind": "documentation",
+          "kind_label": "Documentation",
+          "summary": "The developer documentation lists location-id under \"Headers\", although the endpoint is written as GET /locations/{location-id}.",
+          "handling": "Noted for when the adapter is built; the path form will be tested first.",
+          "evidence_url": "https://www.gridserve.com/wp-content/uploads/2024/11/GRIDSERVE-PCPR-API-Developer-Documentation.pdf",
+          "status": "open",
+          "resolved_date": null
+        }
+      ],
+      "latest_run": null
+    },
+    {
+      "id": "instavolt",
+      "name": "InstaVolt",
+      "enabled": false,
+      "adapter": "unknown",
+      "engagement": {
+        "status": "signed_agreement_required",
+        "label": "Signed agreement required",
+        "evidence": [
+          {
+            "date": "unknown",
+            "url": "https://instavolt.co.uk/public-charge-point-regulation-data/",
+            "file": null,
+            "note": "InstaVolt's page refers to an \"Open Data Agreement\"."
+          }
+        ]
+      },
+      "feeds": [],
+      "licence": null,
+      "attribution": null,
+      "rate_limit": {
+        "our_gap_seconds": 2,
+        "our_max_per_hour": 1800,
+        "ours": "At least 2 s between requests (at most 1800 an hour), retries included.",
+        "published": [],
+        "limits_checked": "unknown",
+        "comparison": "The operator's pages have not been checked for limits yet.",
+        "difference_from_regulations": "Not known yet.",
+        "notes": null
+      },
+      "findings": [],
+      "latest_run": null
+    },
+    {
+      "id": "jolt",
+      "name": "Jolt",
+      "enabled": false,
+      "adapter": "custom",
+      "engagement": {
+        "status": "open_shared_key",
+        "label": "Open, published shared key",
+        "evidence": [
+          {
+            "date": "2026-10-07",
+            "url": "https://support.joltcharge.com/hc/en-gb/articles/27955558493207-UK-Public-Charge-Point-Regulations-Open-Data-Request",
+            "file": null,
+            "note": "Read in a browser by the project owner. Gives the Reference Data API URL with a shared apiKey and the Pricing Reference API URL."
+          }
+        ]
+      },
+      "feeds": [
+        {
+          "kind": "locations",
+          "url": "https://api.joltcharge.com/v1/uk/public/locations",
+          "status": "documented"
+        },
+        {
+          "kind": "tariffs",
+          "url": "https://api.joltcharge.com/v1/uk/public/tariffs/{tariffId}",
+          "status": "documented"
+        }
+      ],
+      "licence": {
+        "name": "OGL-3.0",
+        "url": "https://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/",
+        "checked": "2026-10-07"
+      },
+      "attribution": "Contains data from Jolt published under the Public Charge Point Regulations 2023, used in line with the Open Government Licence v3.0.",
+      "rate_limit": {
+        "our_gap_seconds": 2.0,
+        "our_max_per_hour": 1800,
+        "ours": "At least 2 s between requests (at most 1800 an hour), retries included.",
+        "published": [],
+        "limits_checked": "2026-10-07",
+        "comparison": "No limit published (checked 2026-10-07). The gap is our own choice.",
+        "difference_from_regulations": "Neither the operator nor the regulations set a limit.",
+        "notes": "Jolt's page states no rate limit. The 2 second gap is this project's own choice."
+      },
+      "findings": [
+        {
+          "date": "2026-10-07",
+          "kind": "access",
+          "kind_label": "Access",
+          "summary": "The help page that gives the open data details is behind a browser check, so automated tools cannot read it.",
+          "handling": "The page was read in a browser and its content recorded here.",
+          "evidence_url": "https://support.joltcharge.com/hc/en-gb/articles/27955558493207-UK-Public-Charge-Point-Regulations-Open-Data-Request",
+          "status": "open",
+          "resolved_date": null
+        },
+        {
+          "date": "2026-10-07",
+          "kind": "documentation",
+          "kind_label": "Documentation",
+          "summary": "Access uses a shared key printed on the help page, rather than a URL that needs no key.",
+          "handling": "The key is kept in the GitHub Actions secret JOLT_API_KEY and is never committed.",
+          "evidence_url": "https://support.joltcharge.com/hc/en-gb/articles/27955558493207-UK-Public-Charge-Point-Regulations-Open-Data-Request",
+          "status": "open",
+          "resolved_date": null
+        }
+      ],
+      "latest_run": null
+    },
+    {
+      "id": "pod",
+      "name": "Pod",
+      "enabled": false,
+      "adapter": "ocpi_221",
+      "engagement": {
+        "status": "unknown",
+        "label": "Not yet established",
+        "evidence": []
+      },
+      "feeds": [
+        {
+          "kind": "versions",
+          "url": "https://ocpi.podenergy.com/ocpi/cpo/versions",
+          "status": "needs_testing"
+        }
+      ],
+      "licence": null,
+      "attribution": null,
+      "rate_limit": {
+        "our_gap_seconds": 2.0,
+        "our_max_per_hour": 1800,
+        "ours": "At least 2 s between requests (at most 1800 an hour), retries included.",
+        "published": [],
+        "limits_checked": "unknown",
+        "comparison": "The operator's pages have not been checked for limits yet.",
+        "difference_from_regulations": "Not known yet.",
+        "notes": null
+      },
+      "findings": [],
+      "latest_run": null
+    },
+    {
+      "id": "shell_recharge",
+      "name": "Shell Recharge",
+      "enabled": false,
+      "adapter": "eco_movement_pcpr",
+      "engagement": {
+        "status": "unknown",
+        "label": "Not yet established",
+        "evidence": []
+      },
+      "feeds": [
+        {
+          "kind": "locations",
+          "url": "https://open-chargepoints.com/api/ocpi/cpo/2.2.1/locations",
+          "status": "documented"
+        },
+        {
+          "kind": "tariffs",
+          "url": "https://open-chargepoints.com/api/ocpi/cpo/2.2.1/tariffs",
+          "status": "documented"
+        },
+        {
+          "kind": "statuses",
+          "url": "https://open-chargepoints.com/api/statuses",
+          "status": "documented"
+        }
+      ],
+      "licence": null,
+      "attribution": null,
+      "rate_limit": {
+        "our_gap_seconds": 120.0,
+        "our_max_per_hour": 30,
+        "ours": "At least 120 s between requests (at most 30 an hour), retries included.",
+        "published": [
+          {
+            "text": "30 per 1 hour for the locations endpoint",
+            "quote": "The `locations` endpoint has a rate limit of 30 requests per 1 hour.",
+            "source_url": "https://developers.eco-movement.com/v2.2.1/reference/get-all-locations-pcpr-api",
+            "checked": "2026-10-07"
+          },
+          {
+            "text": "30 per 1 hour for the locations endpoint",
+            "quote": "The `locations/{id}` endpoint has a rate limit of 30 requests per 1 hour.",
+            "source_url": "https://developers.eco-movement.com/v2.2.1/reference/get-specific-location-pcpr-api",
+            "checked": "2026-10-07"
+          },
+          {
+            "text": "30 per 1 hour for the tariffs endpoint",
+            "quote": "The `tariffs` endpoint has a rate limit of 30 requests per 1 hour.",
+            "source_url": "https://developers.eco-movement.com/reference/get-tariffs-pcpr-api",
+            "checked": "2026-10-07"
+          },
+          {
+            "text": "1 per 30 seconds for the statuses endpoint",
+            "quote": "The `statuses` endpoint has a rate limit of 1 request per 30 seconds.",
+            "source_url": "https://developers.eco-movement.com/reference/get-statuses-pcpr-api",
+            "checked": "2026-10-07"
+          }
+        ],
+        "limits_checked": "2026-10-07",
+        "comparison": "Matches the strictest published limit.",
+        "difference_from_regulations": "The operator sets a limit; the regulations set none. DfT guidance allows such terms on access.",
+        "notes": "One gap of 120 seconds is used for every request, so this project sends at most 30 requests an hour across all endpoints combined, within every limit even if they share one allowance. Requests are sent one at a time; Eco-Movement \"strongly recommends limiting simultaneous GET requests to a maximum of 5\". It recommends retrieving the entire dataset once a day."
+      },
+      "findings": [
+        {
+          "date": "2026-10-07",
+          "kind": "documentation",
+          "kind_label": "Documentation",
+          "summary": "Eco-Movement's PCPR API documentation gives two different defaults for the page size (1000 on the getting started page, 1 in the endpoint reference), and its user guide says date_from works for locations only while the tariffs reference lists it.",
+          "handling": "This project will always send an explicit page size and test date_from before relying on it.",
+          "evidence_url": "https://developers.eco-movement.com/v2.2.1/reference/getting-started-pcpr-api",
+          "status": "open",
+          "resolved_date": null
+        },
+        {
+          "date": "2026-10-07",
+          "kind": "documentation",
+          "kind_label": "Documentation",
+          "summary": "The rate limits are published, but the documentation does not say whether they apply per key or per address, what kind of time window is used, or what response is sent when a limit is reached.",
+          "handling": "This project assumes the strictest reading: one shared allowance across all endpoints, so it waits 120 seconds between any two requests.",
+          "evidence_url": "https://developers.eco-movement.com/v2.2.1/docs/eco-movement-pcpr-api-user-guide",
+          "status": "open",
+          "resolved_date": null
+        }
+      ],
+      "latest_run": null
+    },
+    {
+      "id": "ubitricity",
+      "name": "ubitricity",
+      "enabled": false,
+      "adapter": "eco_movement_pcpr",
+      "engagement": {
+        "status": "unknown",
+        "label": "Not yet established",
+        "evidence": []
+      },
+      "feeds": [
+        {
+          "kind": "locations",
+          "url": "https://open-chargepoints.com/api/ocpi/cpo/2.2.1/locations",
+          "status": "documented"
+        },
+        {
+          "kind": "tariffs",
+          "url": "https://open-chargepoints.com/api/ocpi/cpo/2.2.1/tariffs",
+          "status": "documented"
+        },
+        {
+          "kind": "statuses",
+          "url": "https://open-chargepoints.com/api/statuses",
+          "status": "documented"
+        }
+      ],
+      "licence": null,
+      "attribution": null,
+      "rate_limit": {
+        "our_gap_seconds": 120.0,
+        "our_max_per_hour": 30,
+        "ours": "At least 120 s between requests (at most 30 an hour), retries included.",
+        "published": [
+          {
+            "text": "30 per 1 hour for the locations endpoint",
+            "quote": "The `locations` endpoint has a rate limit of 30 requests per 1 hour.",
+            "source_url": "https://developers.eco-movement.com/v2.2.1/reference/get-all-locations-pcpr-api",
+            "checked": "2026-10-07"
+          },
+          {
+            "text": "30 per 1 hour for the locations endpoint",
+            "quote": "The `locations/{id}` endpoint has a rate limit of 30 requests per 1 hour.",
+            "source_url": "https://developers.eco-movement.com/v2.2.1/reference/get-specific-location-pcpr-api",
+            "checked": "2026-10-07"
+          },
+          {
+            "text": "30 per 1 hour for the tariffs endpoint",
+            "quote": "The `tariffs` endpoint has a rate limit of 30 requests per 1 hour.",
+            "source_url": "https://developers.eco-movement.com/reference/get-tariffs-pcpr-api",
+            "checked": "2026-10-07"
+          },
+          {
+            "text": "1 per 30 seconds for the statuses endpoint",
+            "quote": "The `statuses` endpoint has a rate limit of 1 request per 30 seconds.",
+            "source_url": "https://developers.eco-movement.com/reference/get-statuses-pcpr-api",
+            "checked": "2026-10-07"
+          }
+        ],
+        "limits_checked": "2026-10-07",
+        "comparison": "Matches the strictest published limit.",
+        "difference_from_regulations": "The operator sets a limit; the regulations set none. DfT guidance allows such terms on access.",
+        "notes": "One gap of 120 seconds is used for every request, so this project sends at most 30 requests an hour across all endpoints combined, within every limit even if they share one allowance. Requests are sent one at a time; Eco-Movement \"strongly recommends limiting simultaneous GET requests to a maximum of 5\". It recommends retrieving the entire dataset once a day."
+      },
+      "findings": [
+        {
+          "date": "2026-10-07",
+          "kind": "documentation",
+          "kind_label": "Documentation",
+          "summary": "Eco-Movement's PCPR API documentation gives two different defaults for the page size (1000 on the getting started page, 1 in the endpoint reference), and its user guide says date_from works for locations only while the tariffs reference lists it.",
+          "handling": "This project will always send an explicit page size and test date_from before relying on it.",
+          "evidence_url": "https://developers.eco-movement.com/v2.2.1/reference/getting-started-pcpr-api",
+          "status": "open",
+          "resolved_date": null
+        },
+        {
+          "date": "2026-10-07",
+          "kind": "documentation",
+          "kind_label": "Documentation",
+          "summary": "The rate limits are published, but the documentation does not say whether they apply per key or per address, what kind of time window is used, or what response is sent when a limit is reached.",
+          "handling": "This project assumes the strictest reading: one shared allowance across all endpoints, so it waits 120 seconds between any two requests.",
+          "evidence_url": "https://developers.eco-movement.com/v2.2.1/docs/eco-movement-pcpr-api-user-guide",
+          "status": "open",
+          "resolved_date": null
+        }
+      ],
+      "latest_run": null
+    }
+  ]
+}

@@ -12,7 +12,9 @@ auth:
   secret_name: null
 rate_limit:
   min_seconds_between_requests: 2
-  documented: null
+  limits: []
+  limits_checked: unknown
+  notes: null
 supports_single_location: unknown
 cors: needs_testing
 attribution: null

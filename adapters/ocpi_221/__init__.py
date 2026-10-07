@@ -30,6 +30,7 @@ class AdapterResult:
     locations: list[Location] = field(default_factory=list)
     tariffs: list[Tariff] = field(default_factory=list)
     issues: list[str] = field(default_factory=list)
+    requests: int = 0
 
     @property
     def complete(self) -> bool:

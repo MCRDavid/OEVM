@@ -13,12 +13,15 @@ decisions are in docs/adr/.
 - Offline pipeline: uv run python -m pipeline.run --fixtures
 - One live page (sparingly, enabled operators only): uv run python -m pipeline.run --live chargy --max-pages 1
 - After changing a model: uv run python -m schema.export (CI runs it with --check)
+- After changing operators/*.yaml: uv run python -m pipeline.transparency (CI runs it with --check)
 - Secret scan and file checks: uv run pre-commit run --all-files
 
 ## Where things live
 - schema/models.py: Location, EVSE, Connector, Tariff, Provenance. schema/operator.py: registry file model.
 - adapters/http.py: polite client. adapters/ocpi_221/: paging and OCPI conversion. adapters/replay.py: fixtures.
 - pipeline/registry.py, pipeline/run.py. operators/*.yaml: one file per operator.
+- pipeline/pricing.py: the only way prices are shown. pipeline/transparency.py: site/transparency/.
+- pipeline/project.py: repository URL (also in site/.well-known/security.txt and .github/ISSUE_TEMPLATE).
 
 ## Hard rules
 - Never commit or print secrets. Reference keys by secret_name only, even keys an operator publishes.
@@ -29,6 +32,15 @@ decisions are in docs/adr/.
 - British English. No em dashes. Write "unknown" or "needs testing" rather than guessing.
 - Only use feed URLs with a known source; record the source in the operator file.
 - One issue per change; small PRs; never push to main.
+- No personal details of the owner anywhere: no name, location or places they use.
+
+## Prices and rate limits
+- Show prices only through pipeline/pricing.py: pounds and pence, GBP tariffs only. Never convert
+  currencies; other currencies show as "Price unknown".
+- Never go below 1 second between requests or break any limit in an operator's rate_limit.limits.
+  Record each published limit with an exact quote, source URL and date; tests enforce both rules.
+- Record spec differences, data quirks and access issues as dated findings in the operator file,
+  in neutral words, then regenerate the transparency page.
 
 ## Data licences (DATA_LICENCES.md)
 - Apache-2.0 covers our code only. Never apply it, or any other licence, to data. Data keeps its source's licence.
@@ -40,7 +52,12 @@ decisions are in docs/adr/.
 ## The site (docs/PRIVACY_AND_COOKIES.md)
 - No analytics, ads, tracking or third-party files that set cookies or use storage.
 - Nothing is stored on a visitor's device until they opt in; "Forget my settings" deletes it all.
-- Every page shows the short disclaimer and links to DISCLAIMER.md, data sources and the privacy notice.
+- Every page shows the short disclaimer and links to DISCLAIMER.md, data sources, the privacy notice
+  and SECURITY.md.
+
+## Security (SECURITY.md)
+- Vulnerabilities, leaked keys and personal data are reported privately, never in public issues.
+- Renew Expires in site/.well-known/security.txt before it lapses; a test fails 30 days ahead.
 
 ## Adding an operator
 Copy operators/_template.yaml to operators/<id>.yaml, pick an adapter, set secret_name, read the

@@ -57,8 +57,11 @@ the site goes live.
 7. **Any new storage needs review first.** Check it against Schedule A1 and update this
    page before it ships. Paragraph 4 must not be stretched to cover storage the visitor
    did not ask for.
-8. **Every page links to the privacy and cookies notice**, the disclaimer and the data
-   sources.
+8. **Every page links to the privacy and cookies notice**, the disclaimer, the data
+   sources and the security policy.
+9. **Privacy questions go through GitHub.** The "Privacy question" issue form warns that
+   issues are public. Anything involving personal data that should not be public goes
+   through GitHub's private vulnerability reporting instead (see `SECURITY.md`).
 
 ## Draft notice for the site
 
@@ -81,6 +84,9 @@ Finish the parts in square brackets when the site is built.
 > from [map provider]. Like any web server, they receive your IP address and basic
 > browser details when your browser asks them for files. Their privacy notices: [links].
 >
-> **Contact.** [Contact route to be decided, for example a GitHub issue.]
+> **Contact.** Open an issue on GitHub using the "Privacy question" form. Issues are
+> public, so please do not include personal information. If your question involves
+> personal data that should not be public, report it privately with the "Report a
+> vulnerability" button on the repository's Security tab.
 >
 > Last updated: [date].

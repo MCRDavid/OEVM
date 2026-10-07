@@ -16,9 +16,10 @@ from urllib.parse import parse_qsl, urlencode, urlsplit, urlunsplit
 
 import httpx
 
+from pipeline.project import NAME, REPOSITORY_URL, VERSION
 from schema.operator import OperatorConfig, is_credential_param
 
-USER_AGENT = "OEVM/0.1 (+https://github.com/MCRDavid/OEVM)"
+USER_AGENT = f"{NAME}/{VERSION} (+{REPOSITORY_URL})"
 RETRY_STATUSES = frozenset({429, 500, 502, 503, 504})
 MAX_RETRY_WAIT_SECONDS = 600
 
@@ -63,7 +64,7 @@ def credentials_for(config: OperatorConfig) -> tuple[dict[str, str], dict[str, s
             "In GitHub Actions, add it as a repository secret with that name."
         )
     if auth.method == "header":
-        return {auth.name: value}, {}
+        return {auth.name: f"{auth.scheme} {value}" if auth.scheme else value}, {}
     return {}, {auth.name: value}
 
 
@@ -99,6 +100,7 @@ class PoliteClient:
         self._sleep = sleep
         self._clock = clock
         self._last_request_at: float | None = None
+        self._blocked_until: float | None = None
         self.requests_made = 0
 
     def __enter__(self) -> "PoliteClient":
@@ -117,6 +119,11 @@ class PoliteClient:
     def get(self, url: str) -> httpx.Response:
         """GET url, retrying temporary failures. Raises FeedError when retries run out."""
         request_url = with_params(url, self._auth_params) if self._auth_params else url
+        if self._blocked_until is not None and self._clock() < self._blocked_until:
+            raise FeedError(
+                f"not requesting {redact_url(url)}: the server asked this project to wait "
+                f"another {self._blocked_until - self._clock():g} s"
+            )
         for attempt in range(self.max_retries + 1):
             self._wait_turn()
             self.requests_made += 1
@@ -135,6 +142,13 @@ class PoliteClient:
                 raise FeedError(
                     f"gave up on {redact_url(url)} after {attempt + 1} attempts: {problem}"
                 )
+            if retry_after is not None and retry_after > MAX_RETRY_WAIT_SECONDS:
+                # Never contact the server sooner than it asked; give up instead.
+                self._blocked_until = self._clock() + retry_after
+                raise FeedError(
+                    f"{redact_url(url)} asked to wait {retry_after:g} s before retrying, "
+                    f"longer than this project waits ({MAX_RETRY_WAIT_SECONDS} s); try later"
+                )
             delay = retry_after if retry_after is not None else self.backoff_seconds * 2**attempt
-            self._sleep(min(delay, MAX_RETRY_WAIT_SECONDS))
+            self._sleep(delay)
         raise AssertionError("unreachable")

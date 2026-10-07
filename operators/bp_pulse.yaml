@@ -8,8 +8,8 @@ base_url: unknown
 endpoints:
   locations:
     url: https://open-chargepoints.com/api/ocpi/cpo/2.2.1/locations
-    status: needs_testing
-    note: The blueprint marks this exact URL as unverified (probable).
+    status: documented
+    note: Confirmed in Eco-Movement's PCPR API reference on 2026-10-07.
   tariffs:
     url: https://open-chargepoints.com/api/ocpi/cpo/2.2.1/tariffs
     status: documented
@@ -18,14 +18,43 @@ endpoints:
     status: documented
 auth:
   method: header
-  name: unknown
+  name: Authorization
+  scheme: Token
   secret_name: BP_PULSE_TOKEN
 rate_limit:
   min_seconds_between_requests: 120
-  documented: >-
-    Eco-Movement PCPR API reference pages: tariffs "30 requests per 1 hour", statuses
-    "1 request per 30 seconds". Eco-Movement recommends retrieving the entire locations
-    dataset once a day.
+  limits:
+    - requests: 30
+      per_seconds: 3600
+      endpoint: locations
+      quote: The `locations` endpoint has a rate limit of 30 requests per 1 hour.
+      source_url: https://developers.eco-movement.com/v2.2.1/reference/get-all-locations-pcpr-api
+      checked: 2026-10-07
+    - requests: 30
+      per_seconds: 3600
+      endpoint: locations
+      quote: The `locations/{id}` endpoint has a rate limit of 30 requests per 1 hour.
+      source_url: https://developers.eco-movement.com/v2.2.1/reference/get-specific-location-pcpr-api
+      checked: 2026-10-07
+    - requests: 30
+      per_seconds: 3600
+      endpoint: tariffs
+      quote: The `tariffs` endpoint has a rate limit of 30 requests per 1 hour.
+      source_url: https://developers.eco-movement.com/reference/get-tariffs-pcpr-api
+      checked: 2026-10-07
+    - requests: 1
+      per_seconds: 30
+      endpoint: statuses
+      quote: The `statuses` endpoint has a rate limit of 1 request per 30 seconds.
+      source_url: https://developers.eco-movement.com/reference/get-statuses-pcpr-api
+      checked: 2026-10-07
+  limits_checked: 2026-10-07
+  notes: >-
+    One gap of 120 seconds is used for every request, so this project sends at most 30
+    requests an hour across all endpoints combined, within every limit even if they share
+    one allowance. Requests are sent one at a time; Eco-Movement "strongly recommends
+    limiting simultaneous GET requests to a maximum of 5". It recommends retrieving the
+    entire dataset once a day.
 supports_single_location: supported
 cors: needs_testing
 attribution: null
@@ -45,14 +74,39 @@ sources:
   - url: https://developers.eco-movement.com/reference/get-statuses-pcpr-api
     note: Statuses endpoint and its rate limit.
   - url: https://developers.eco-movement.com/reference/locations-pcpr-api
-    note: Locations endpoint; the exact URL is unverified.
-  - url: https://developers.eco-movement.com/reference/get-specific-location
-    note: Fetching a single location by id.
-  - url: https://developers.eco-movement.com/reference/getting-started-data-api
-    note: 'The general Data API uses an "Authorization: Token <token>" header.'
+    note: Locations overview; recommends retrieving the entire dataset once a day.
+  - url: https://developers.eco-movement.com/v2.2.1/reference/get-all-locations-pcpr-api
+    note: Locations endpoint URL and its rate limit (read 2026-10-07).
+  - url: https://developers.eco-movement.com/v2.2.1/reference/get-specific-location-pcpr-api
+    note: >-
+      Fetching a single location by id, and its rate limit. The blueprint linked
+      /reference/get-specific-location, which is Eco-Movement's separate paid Data API.
+  - url: https://developers.eco-movement.com/v2.2.1/reference/getting-started-pcpr-api
+    note: 'Authentication: each request adds an "Authorization: Token <token>" header.'
+  - url: https://developers.eco-movement.com/v2.2.1/docs/eco-movement-pcpr-api-user-guide
+    note: At most 5 simultaneous requests; date_from and date_to described for locations only.
+findings:
+  - date: 2026-10-07
+    kind: documentation
+    summary: >-
+      Eco-Movement's PCPR API documentation gives two different defaults for the page size
+      (1000 on the getting started page, 1 in the endpoint reference), and its user guide
+      says date_from works for locations only while the tariffs reference lists it.
+    handling: This project will always send an explicit page size and test date_from before relying on it.
+    evidence_url: https://developers.eco-movement.com/v2.2.1/reference/getting-started-pcpr-api
+  - date: 2026-10-07
+    kind: documentation
+    summary: >-
+      The rate limits are published, but the documentation does not say whether they
+      apply per key or per address, what kind of time window is used, or what response
+      is sent when a limit is reached.
+    handling: >-
+      This project assumes the strictest reading: one shared allowance across all
+      endpoints, so it waits 120 seconds between any two requests.
+    evidence_url: https://developers.eco-movement.com/v2.2.1/docs/eco-movement-pcpr-api-user-guide
 notes: >-
   Uses the shared Eco-Movement PCPR endpoints; only the token differs between operators.
-  The PCPR pages show a header credential, probably the same "Authorization: Token" header
-  as the Data API, but this is not confirmed. Whether one token covers several operators
-  is unverified, so this operator has its own secret.
+  Authentication is an "Authorization: Token <token>" header (confirmed 2026-10-07).
+  Whether one token covers several operators is unverified, so this operator has its own
+  secret.
 enabled: false

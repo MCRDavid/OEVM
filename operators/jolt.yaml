@@ -8,17 +8,25 @@ base_url: unknown
 endpoints:
   locations:
     url: https://api.joltcharge.com/v1/uk/public/locations
-    status: needs_testing
+    status: documented
     note: >-
-      Taken from the CORS test command in the blueprint. The apiKey query parameter is
-      added at fetch time from the secret below.
+      Jolt's page calls this the "Reference Data API". The apiKey query parameter is added
+      at fetch time from the secret below.
+  tariffs:
+    url: https://api.joltcharge.com/v1/uk/public/tariffs/{tariffId}
+    status: documented
+    note: >-
+      Jolt's page calls this the "Pricing Reference API". One tariff per request;
+      {tariffId} comes from the location data.
 auth:
   method: query_param
   name: apiKey
   secret_name: JOLT_API_KEY
 rate_limit:
   min_seconds_between_requests: 2
-  documented: null
+  limits: []
+  limits_checked: 2026-10-07
+  notes: Jolt's page states no rate limit. The 2 second gap is this project's own choice.
 supports_single_location: needs_testing
 cors: needs_testing
 attribution: >-
@@ -28,27 +36,45 @@ licence:
   name: OGL-3.0
   url: https://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/
   basis: >-
-    Jolt publishes this data under the Public Charge Point Regulations 2023, and DfT's
-    guidance says "Data must be open in line with the Open Government Licence". Jolt's
-    help page could not be read on 2026-10-07 because it sits behind a bot check, so any
-    access terms on it have not been checked.
-  checked: unknown
+    Jolt publishes this data "In accordance with the UK Public Charge Point Regulations
+    (PCPR) Open Data requirement", and DfT's guidance says "Data must be open in line with
+    the Open Government Licence". Jolt's page, read on 2026-10-07, states no licence, terms
+    of use or rate limits for the data.
+  checked: 2026-10-07
 engagement:
   status: open_shared_key
   evidence:
-    - date: unknown
+    - date: 2026-10-07
       url: https://support.joltcharge.com/hc/en-gb/articles/27955558493207-UK-Public-Charge-Point-Regulations-Open-Data-Request
-      note: Jolt publishes a shared apiKey on this help page.
+      note: >-
+        Read in a browser by the project owner. Gives the Reference Data API URL with a
+        shared apiKey and the Pricing Reference API URL.
 access_requested: null
 access_granted: null
 sources:
   - url: https://support.joltcharge.com/hc/en-gb/articles/27955558493207-UK-Public-Charge-Point-Regulations-Open-Data-Request
-    note: Shared apiKey; Jolt documents tariffs/{tariffId} for single tariffs.
+    note: >-
+      Read 2026-10-07. Gives both API URLs and a shared apiKey. Says regulators and others
+      needing "the extended open data" can ask by email with the subject line
+      "UK PCPR Open Data Request".
+findings:
+  - date: 2026-10-07
+    kind: access
+    summary: >-
+      The help page that gives the open data details is behind a browser check, so
+      automated tools cannot read it.
+    handling: The page was read in a browser and its content recorded here.
+    evidence_url: https://support.joltcharge.com/hc/en-gb/articles/27955558493207-UK-Public-Charge-Point-Regulations-Open-Data-Request
+  - date: 2026-10-07
+    kind: documentation
+    summary: >-
+      Access uses a shared key printed on the help page, rather than a URL that needs no
+      key.
+    handling: The key is kept in the GitHub Actions secret JOLT_API_KEY and is never committed.
+    evidence_url: https://support.joltcharge.com/hc/en-gb/articles/27955558493207-UK-Public-Charge-Point-Regulations-Open-Data-Request
 notes: >-
-  The blueprint says the published key could go in the registry because it is public.
-  This project keeps it in the GitHub Actions secret JOLT_API_KEY instead, so no key
-  value is ever committed. Copy the key from Jolt's help page into that secret.
-  Jolt could revoke the shared key. The full tariffs URL and fetching a location by id
-  need testing. Switched off until someone has read Jolt's help page in a browser and
-  recorded its access terms in the licence section.
+  The blueprint says the published key could go in the registry because it is public. This
+  project keeps it in a GitHub Actions secret instead, so no key value is ever committed.
+  Jolt could change or withdraw the shared key. Switched off until the custom adapter
+  (blueprint task 5) is built.
 enabled: false

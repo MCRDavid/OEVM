@@ -43,7 +43,11 @@ def run_operator(
     if fetch is None:
         raise FeedError(f"{config.id}: the {config.adapter} adapter is not built yet")
     with PoliteClient(config, transport=transport, sleep=sleep) as client:
-        return fetch(config, client, date_from=date_from, page_size=page_size, max_pages=max_pages)
+        result = fetch(
+            config, client, date_from=date_from, page_size=page_size, max_pages=max_pages
+        )
+        result.requests = client.requests_made
+        return result
 
 
 def report(result: AdapterResult) -> str:
@@ -69,6 +73,28 @@ def save_raw(result: AdapterResult, directory: Path) -> None:
         for number, page in enumerate(module.pages, start=1):
             path = directory / f"{module.module}_page{number}.json"
             path.write_text(json.dumps(page.to_exchange(), indent=2) + "\n", encoding="utf-8")
+
+
+def run_log(result: AdapterResult, mode: str) -> dict:
+    """A summary of one run for the transparency page: counts and issues, never records."""
+    return {
+        "operator": result.operator_id,
+        "mode": mode,
+        "fetched_at": result.fetched_at.isoformat().replace("+00:00", "Z"),
+        "requests": result.requests,
+        "complete": result.complete,
+        "modules": {
+            name: {
+                "pages": len(module.pages),
+                "records": len(module.records),
+                "reported": module.total_reported,
+                "complete": module.complete,
+            }
+            for name, module in result.modules.items()
+        },
+        "kept": {"locations": len(result.locations), "tariffs": len(result.tariffs)},
+        "issues": result.issues,
+    }
 
 
 def save_output(result: AdapterResult, directory: Path) -> None:
@@ -112,6 +138,11 @@ def main(argv: list[str] | None = None) -> int:
     )
     parser.add_argument("--save-raw", type=Path, help="save each response here (use raw/)")
     parser.add_argument("--out", type=Path, help="save converted records here")
+    parser.add_argument(
+        "--log-dir",
+        type=Path,
+        help="save a run summary per operator here, for the transparency page",
+    )
     args = parser.parse_args(argv)
 
     try:
@@ -144,6 +175,11 @@ def main(argv: list[str] | None = None) -> int:
             save_raw(result, args.save_raw / result.operator_id)
         if args.out:
             save_output(result, args.out / result.operator_id)
+        if args.log_dir:
+            args.log_dir.mkdir(parents=True, exist_ok=True)
+            log = run_log(result, "fixtures" if args.fixtures else "live")
+            path = args.log_dir / f"{result.operator_id}.json"
+            path.write_text(json.dumps(log, indent=2) + "\n", encoding="utf-8")
     if not results:
         print("No fixture sets found.")
     return 0
