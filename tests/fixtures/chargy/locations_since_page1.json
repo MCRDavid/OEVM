@@ -1,0 +1,134 @@
+{
+  "request": {
+    "method": "GET",
+    "url": "https://char.gy/open-ocpi/locations?date_from=2026-10-07T21:00:00Z&limit=2"
+  },
+  "response": {
+    "status_code": 200,
+    "headers": {
+      "content-type": "application/json; charset=utf-8",
+      "link": "<https://char.gy/open-ocpi/locations?date_from=2026-10-07T21:00:00Z&limit=2&offset=2>; rel=\"next\"",
+      "x-total-count": "551",
+      "x-limit": "2"
+    },
+    "body": {
+      "data": [
+        {
+          "country_code": "GB",
+          "party_id": "CGY",
+          "id": "25674789-c20a-4acb-84a9-2a147c5ab3ba",
+          "parking_type": "ON_STREET",
+          "publish": true,
+          "name": "39 Dulwich Wood Avenue",
+          "address": "Dulwich Wood Avenue",
+          "city": "Dulwich Wood",
+          "postal_code": "SE19 1HG",
+          "country": "GBR",
+          "coordinates": {
+            "latitude": "51.4250826",
+            "longitude": "-0.0819705"
+          },
+          "evses": [
+            {
+              "uid": "b11cc58f-a2bf-437f-a69c-9500278b9811",
+              "evse_id": "GB*CGY*E*00051",
+              "status": "WORKING",
+              "capabilities": [
+                "REMOTE_START_STOP_CAPABLE",
+                "UNLOCK_CAPABLE"
+              ],
+              "connectors": [
+                {
+                  "id": "1",
+                  "standard": "IEC_62196_T2",
+                  "format": "SOCKET",
+                  "power_type": "AC_1_PHASE",
+                  "max_voltage": 230,
+                  "max_amperage": 22,
+                  "tariff_ids": [
+                    "fd80692e-6fe0-42de-9f5f-88a292df9d42"
+                  ],
+                  "terms_and_conditions": "https://char.gy/terms-of-use",
+                  "last_updated": "2026-10-07T22:12:03Z"
+                }
+              ],
+              "physical_reference": "00051",
+              "last_updated": "2026-10-07T22:12:03Z"
+            }
+          ],
+          "operator": {
+            "name": "char.gy",
+            "website": "https://char.gy"
+          },
+          "owner": {
+            "name": "Southwark"
+          },
+          "time_zone": "Europe/London",
+          "opening_times": {
+            "twentyfourseven": true
+          },
+          "last_updated": "2026-10-07T22:12:03Z"
+        },
+        {
+          "country_code": "GB",
+          "party_id": "CGY",
+          "id": "93352106-44db-48e2-aadf-14e309a47a48",
+          "parking_type": "ON_STREET",
+          "publish": true,
+          "name": "5 Oakley Place",
+          "address": "Oakley Place",
+          "city": "Old Kent Road",
+          "postal_code": "SE1 5AD",
+          "country": "GBR",
+          "coordinates": {
+            "latitude": "51.4867334",
+            "longitude": "-0.0754243"
+          },
+          "evses": [
+            {
+              "uid": "7b46c6b6-22c8-4dea-acaa-ddb6530a86e0",
+              "evse_id": "GB*CGY*E*00061",
+              "status": "WORKING",
+              "capabilities": [
+                "REMOTE_START_STOP_CAPABLE",
+                "UNLOCK_CAPABLE"
+              ],
+              "connectors": [
+                {
+                  "id": "1",
+                  "standard": "IEC_62196_T2",
+                  "format": "SOCKET",
+                  "power_type": "AC_1_PHASE",
+                  "max_voltage": 230,
+                  "max_amperage": 22,
+                  "tariff_ids": [
+                    "fd80692e-6fe0-42de-9f5f-88a292df9d42"
+                  ],
+                  "terms_and_conditions": "https://char.gy/terms-of-use",
+                  "last_updated": "2026-10-07T21:49:58Z"
+                }
+              ],
+              "physical_reference": "00061",
+              "last_updated": "2026-10-07T21:49:58Z"
+            }
+          ],
+          "operator": {
+            "name": "char.gy",
+            "website": "https://char.gy"
+          },
+          "owner": {
+            "name": "Southwark"
+          },
+          "time_zone": "Europe/London",
+          "opening_times": {
+            "twentyfourseven": true
+          },
+          "last_updated": "2026-10-07T21:49:58Z"
+        }
+      ],
+      "status_code": 1000,
+      "status_message": "Success",
+      "timestamp": "2026-10-07T22:33:04Z"
+    }
+  }
+}

@@ -1,0 +1,20 @@
+{
+  "request": {
+    "method": "GET",
+    "url": "https://char.gy/open-ocpi/tariffs?date_from=2026-10-07T21:00:00Z&limit=2"
+  },
+  "response": {
+    "status_code": 200,
+    "headers": {
+      "content-type": "application/json; charset=utf-8",
+      "x-total-count": "0",
+      "x-limit": "2"
+    },
+    "body": {
+      "data": [],
+      "status_code": 1000,
+      "status_message": "Success",
+      "timestamp": "2026-10-07T22:33:05Z"
+    }
+  }
+}

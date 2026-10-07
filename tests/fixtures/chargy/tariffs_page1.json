@@ -1,0 +1,58 @@
+{
+  "request": {
+    "method": "GET",
+    "url": "https://char.gy/open-ocpi/tariffs?limit=2"
+  },
+  "response": {
+    "status_code": 200,
+    "headers": {
+      "content-type": "application/json; charset=utf-8",
+      "link": "<https://char.gy/open-ocpi/tariffs?limit=2&offset=2>; rel=\"next\"",
+      "x-total-count": "3",
+      "x-limit": "2"
+    },
+    "body": {
+      "data": [
+        {
+          "country_code": "GB",
+          "party_id": "CGY",
+          "id": "a38338f7-96fa-4c71-8b61-f1a8f5f179b2",
+          "currency": "EUR",
+          "elements": [
+            {
+              "price_components": [
+                {
+                  "type": "ENERGY",
+                  "price": 0.5505,
+                  "step_size": 1
+                }
+              ]
+            }
+          ],
+          "last_updated": "2025-10-03T14:52:11Z"
+        },
+        {
+          "country_code": "GB",
+          "party_id": "CGY",
+          "id": "f61692a5-b7af-48cc-b6e5-f63ff3e2a801",
+          "currency": "USD",
+          "elements": [
+            {
+              "price_components": [
+                {
+                  "type": "ENERGY",
+                  "price": 0.4167,
+                  "step_size": 1
+                }
+              ]
+            }
+          ],
+          "last_updated": "2025-10-14T09:59:55Z"
+        }
+      ],
+      "status_code": 1000,
+      "status_message": "Success",
+      "timestamp": "2026-10-07T22:32:58Z"
+    }
+  }
+}

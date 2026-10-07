@@ -10,9 +10,10 @@ Rules the models enforce:
 - Every Location and Tariff carries Provenance, and its id starts with the
   provenance source_id.
 - Timestamps must include a time zone.
-- A Tariff's price_state is always derived from its price components. It is
-  "free_confirmed" only when the tariff has at least one price component and
-  every component is zero. Supplying any other value is an error.
+- A Tariff's price_state is always derived from its prices. It is
+  "free_confirmed" only when the tariff has at least one price component, every
+  component is zero and there is no minimum charge. Supplying any other value is
+  an error.
 - VAT is a percentage. None means "VAT not stated", which is not the same as
   0% VAT.
 """
@@ -72,6 +73,8 @@ PowerType = Literal["ac_1_phase", "ac_2_phase", "ac_2_phase_split", "ac_3_phase"
 PriceState = Literal["priced", "free_confirmed", "unknown"]
 PriceComponentType = Literal["energy", "flat", "parking_time", "time"]
 DayOfWeek = Literal["monday", "tuesday", "wednesday", "thursday", "friday", "saturday", "sunday"]
+Reservation = Literal["reservation", "reservation_expires"]
+TariffType = Literal["ad_hoc_payment", "profile_cheap", "profile_fast", "profile_green", "regular"]
 Method = Literal[
     "operator_feed",
     "operator_static_file",
@@ -222,7 +225,9 @@ class PriceComponent(_Model):
         default=None,
         ge=0,
         le=100,
-        description="VAT percentage. Null means VAT not stated, which is not the same as 0%.",
+        description="VAT percentage. Null means the source gave no VAT figure, shown as 'VAT not "
+        "stated'. OCPI 2.2.1 says an omitted VAT means no VAT is applicable, which is different "
+        "from 0% VAT.",
     )
     step_size: int | None = Field(
         default=None, ge=0, description="Billing step as in OCPI. Null when not stated."
@@ -245,6 +250,9 @@ class TariffRestrictions(_Model):
     min_duration: int | None = Field(default=None, ge=0, description="Seconds.")
     max_duration: int | None = Field(default=None, ge=0, description="Seconds.")
     day_of_week: list[DayOfWeek] = Field(default_factory=list)
+    reservation: Reservation | None = Field(
+        default=None, description="Set when the element prices a reservation, not charging."
+    )
 
 
 class TariffElement(_Model):
@@ -252,16 +260,17 @@ class TariffElement(_Model):
     restrictions: TariffRestrictions | None = None
 
 
-def derive_price_state(elements: list[TariffElement]) -> PriceState:
-    """Work out a tariff's price_state from its price components.
+def derive_price_state(elements: list[TariffElement], min_price: float | None = None) -> PriceState:
+    """Work out a tariff's price_state from its price components and minimum price.
 
-    "free_confirmed" needs at least one component and every component at zero.
-    A tariff with no components at all says nothing about price, so it is "unknown".
+    "free_confirmed" needs at least one component, every component at zero and no minimum
+    charge above zero. A tariff with no components at all says nothing about price, so it
+    is "unknown".
     """
     components = [c for element in elements for c in element.price_components]
     if not components:
         return "unknown"
-    if all(c.price == 0 for c in components):
+    if all(c.price == 0 for c in components) and not min_price:
         return "free_confirmed"
     return "priced"
 
@@ -269,7 +278,17 @@ def derive_price_state(elements: list[TariffElement]) -> PriceState:
 class Tariff(_Model):
     id: RecordId
     currency: str = Field(pattern=r"^[A-Z]{3}$", description="ISO 4217, for example GBP.")
+    type: TariffType | None = Field(
+        default=None,
+        description="OCPI tariff type, for example 'ad_hoc_payment' for paying at the charger.",
+    )
     elements: list[TariffElement] = Field(default_factory=list)
+    min_price: float | None = Field(
+        default=None, ge=0, description="Minimum cost of a session, excluding VAT."
+    )
+    max_price: float | None = Field(
+        default=None, ge=0, description="Maximum cost of a session, excluding VAT."
+    )
     alt_text: str | None = Field(
         default=None, description="The operator's own text description of the tariff."
     )
@@ -281,8 +300,8 @@ class Tariff(_Model):
     )
     price_state: PriceState = Field(
         default="unknown",
-        description="Derived from the price components; never set by hand. 'free_confirmed' "
-        "only when every component is zero.",
+        description="Derived from the price components and min_price; never set by hand. "
+        "'free_confirmed' only when every component is zero and there is no minimum charge.",
     )
     provenance: Provenance
 
@@ -292,10 +311,10 @@ class Tariff(_Model):
             raise ValueError(
                 f"id {self.id!r} must start with provenance source_id {self.provenance.source_id!r}"
             )
-        derived = derive_price_state(self.elements)
+        derived = derive_price_state(self.elements, self.min_price)
         if "price_state" in self.model_fields_set and self.price_state != derived:
             raise ValueError(
-                f"price_state {self.price_state!r} does not match the price components, "
+                f"price_state {self.price_state!r} does not match the prices, "
                 f"which give {derived!r}"
             )
         self.price_state = derived

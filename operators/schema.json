@@ -180,6 +180,58 @@
       "title": "Evidence",
       "type": "object"
     },
+    "Licence": {
+      "additionalProperties": false,
+      "properties": {
+        "name": {
+          "description": "Licence the data is used under, for example 'OGL-3.0', or 'unknown'.",
+          "minLength": 1,
+          "title": "Name",
+          "type": "string"
+        },
+        "url": {
+          "anyOf": [
+            {
+              "pattern": "^https?://\\S+$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Link to the licence text.",
+          "title": "Url"
+        },
+        "basis": {
+          "description": "Why this licence applies, in plain words, and what the operator's own pages say about terms.",
+          "minLength": 1,
+          "title": "Basis",
+          "type": "string"
+        },
+        "checked": {
+          "anyOf": [
+            {
+              "format": "date",
+              "type": "string"
+            },
+            {
+              "const": "unknown",
+              "type": "string"
+            }
+          ],
+          "description": "Date the operator's own terms were last checked (YYYY-MM-DD), or 'unknown'.",
+          "title": "Checked"
+        }
+      },
+      "required": [
+        "name",
+        "basis",
+        "checked"
+      ],
+      "title": "Licence",
+      "type": "object"
+    },
     "RateLimit": {
       "additionalProperties": false,
       "properties": {
@@ -338,6 +390,18 @@
       "default": null,
       "description": "Attribution statement shown with this operator's data.",
       "title": "Attribution"
+    },
+    "licence": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/Licence"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "description": "Licence terms for this operator's data. Null if not yet known."
     },
     "engagement": {
       "$ref": "#/$defs/Engagement"

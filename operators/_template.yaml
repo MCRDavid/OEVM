@@ -59,6 +59,15 @@ cors: unknown
 # used in line with the Open Government Licence v3.0."
 attribution: null
 
+# Licence terms, required before the operator is enabled. Read the operator's own pages
+# first and record what they say. Never apply this project's code licence to data.
+#   licence:
+#     name: OGL-3.0
+#     url: https://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/
+#     basis: <why this licence applies, and what the operator's pages say about terms>
+#     checked: <YYYY-MM-DD, or unknown>
+licence: null
+
 engagement:
   # One of: open_anonymous, open_shared_key, key_on_request, signed_agreement_required,
   # requested_no_reply, request_declined, no_public_feed_found, possibly_out_of_scope,

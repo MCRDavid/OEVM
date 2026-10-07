@@ -1,6 +1,7 @@
 {
   "id": "example:GB:EXA:TARIFF-DC",
   "currency": "GBP",
+  "type": "regular",
   "elements": [
     {
       "price_components": [
@@ -24,7 +25,8 @@
         "max_power": null,
         "min_duration": null,
         "max_duration": null,
-        "day_of_week": []
+        "day_of_week": [],
+        "reservation": null
       }
     },
     {
@@ -39,6 +41,8 @@
       "restrictions": null
     }
   ],
+  "min_price": null,
+  "max_price": null,
   "alt_text": "Synthetic example: 55p per kWh overnight, 65p per kWh otherwise, excluding VAT.",
   "alt_url": null,
   "start_date_time": null,

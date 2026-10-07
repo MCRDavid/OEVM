@@ -1,0 +1,134 @@
+{
+  "request": {
+    "method": "GET",
+    "url": "https://char.gy/open-ocpi/locations?limit=2&offset=2"
+  },
+  "response": {
+    "status_code": 200,
+    "headers": {
+      "content-type": "application/json; charset=utf-8",
+      "link": "<https://char.gy/open-ocpi/locations?limit=2&offset=4>; rel=\"next\"",
+      "x-total-count": "5946",
+      "x-limit": "2"
+    },
+    "body": {
+      "data": [
+        {
+          "country_code": "GB",
+          "party_id": "CGY",
+          "id": "472976e5-8c76-46d3-9a0f-3163e705138f",
+          "parking_type": "ON_STREET",
+          "publish": true,
+          "name": "45 Myddleton Road",
+          "address": "Myddleton Road",
+          "city": "Haringey",
+          "postal_code": "N22 8LY",
+          "country": "GBR",
+          "coordinates": {
+            "latitude": "51.6063074",
+            "longitude": "-0.1141004"
+          },
+          "evses": [
+            {
+              "uid": "504fb39b-ba17-4e6b-948e-e07d1e81d2f6",
+              "evse_id": "GB*CGY*E*00012",
+              "status": "WORKING",
+              "capabilities": [
+                "REMOTE_START_STOP_CAPABLE",
+                "UNLOCK_CAPABLE"
+              ],
+              "connectors": [
+                {
+                  "id": "1",
+                  "standard": "IEC_62196_T2",
+                  "format": "SOCKET",
+                  "power_type": "AC_1_PHASE",
+                  "max_voltage": 230,
+                  "max_amperage": 22,
+                  "tariff_ids": [
+                    "fd80692e-6fe0-42de-9f5f-88a292df9d42"
+                  ],
+                  "terms_and_conditions": "https://char.gy/terms-of-use",
+                  "last_updated": "2026-10-06T23:09:22Z"
+                }
+              ],
+              "physical_reference": "00012",
+              "last_updated": "2026-10-06T23:09:22Z"
+            }
+          ],
+          "operator": {
+            "name": "char.gy",
+            "website": "https://char.gy"
+          },
+          "owner": {
+            "name": "Haringey"
+          },
+          "time_zone": "Europe/London",
+          "opening_times": {
+            "twentyfourseven": true
+          },
+          "last_updated": "2026-10-06T23:09:22Z"
+        },
+        {
+          "country_code": "GB",
+          "party_id": "CGY",
+          "id": "38c126ac-8a8f-4751-a79e-0f430f2fd484",
+          "parking_type": "ON_STREET",
+          "publish": true,
+          "name": "2 - 4 Cecile Park",
+          "address": "Cecile Park",
+          "city": "Haringey ",
+          "postal_code": "N8 9AX",
+          "country": "GBR",
+          "coordinates": {
+            "latitude": "51.5769071",
+            "longitude": "-0.1217295"
+          },
+          "evses": [
+            {
+              "uid": "ec63f363-223b-46aa-b6d5-ddaf40bc79c5",
+              "evse_id": "GB*CGY*E*00030",
+              "status": "WORKING",
+              "capabilities": [
+                "REMOTE_START_STOP_CAPABLE",
+                "UNLOCK_CAPABLE"
+              ],
+              "connectors": [
+                {
+                  "id": "1",
+                  "standard": "IEC_62196_T2",
+                  "format": "SOCKET",
+                  "power_type": "AC_1_PHASE",
+                  "max_voltage": 230,
+                  "max_amperage": 22,
+                  "tariff_ids": [
+                    "fd80692e-6fe0-42de-9f5f-88a292df9d42"
+                  ],
+                  "terms_and_conditions": "https://char.gy/terms-of-use",
+                  "last_updated": "2026-10-07T10:02:38Z"
+                }
+              ],
+              "physical_reference": "00030",
+              "last_updated": "2026-10-07T10:02:38Z"
+            }
+          ],
+          "operator": {
+            "name": "char.gy",
+            "website": "https://char.gy"
+          },
+          "owner": {
+            "name": "Haringey "
+          },
+          "time_zone": "Europe/London",
+          "opening_times": {
+            "twentyfourseven": true
+          },
+          "last_updated": "2026-10-07T10:02:38Z"
+        }
+      ],
+      "status_code": 1000,
+      "status_message": "Success",
+      "timestamp": "2026-10-07T22:32:56Z"
+    }
+  }
+}
