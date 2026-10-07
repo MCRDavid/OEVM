@@ -1,0 +1,508 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$defs": {
+    "Address": {
+      "additionalProperties": false,
+      "properties": {
+        "street": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Street and house number.",
+          "title": "Street"
+        },
+        "city": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "City"
+        },
+        "postal_code": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Postal Code"
+        },
+        "country": {
+          "anyOf": [
+            {
+              "pattern": "^[A-Z]{3}$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "ISO 3166-1 alpha-3, for example GBR.",
+          "title": "Country"
+        }
+      },
+      "required": [
+        "street",
+        "city",
+        "postal_code",
+        "country"
+      ],
+      "title": "Address",
+      "type": "object"
+    },
+    "Connector": {
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "minLength": 1,
+          "title": "Id",
+          "type": "string"
+        },
+        "standard": {
+          "description": "OCPI 2.2.1 ConnectorType value as published, for example 'IEC_62196_T2_COMBO', or 'unknown'.",
+          "pattern": "^[A-Za-z0-9_]+$",
+          "title": "Standard",
+          "type": "string"
+        },
+        "format": {
+          "default": "unknown",
+          "enum": [
+            "socket",
+            "cable",
+            "unknown"
+          ],
+          "title": "Format",
+          "type": "string"
+        },
+        "power_type": {
+          "default": "unknown",
+          "enum": [
+            "ac_1_phase",
+            "ac_2_phase",
+            "ac_2_phase_split",
+            "ac_3_phase",
+            "dc",
+            "unknown"
+          ],
+          "title": "Power Type",
+          "type": "string"
+        },
+        "max_kw": {
+          "anyOf": [
+            {
+              "minimum": 0,
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Max Kw"
+        },
+        "tariff_ids": {
+          "description": "Ids of Tariff records that apply to this connector.",
+          "items": {
+            "description": "'{source}:{country}:{party}:{id}', for example 'chargy:GB:CGY:1234'. Use 'unknown' for a country or party that is not known.",
+            "pattern": "^[a-z0-9_]+:[^:]+:[^:]+:.+$",
+            "type": "string"
+          },
+          "title": "Tariff Ids",
+          "type": "array"
+        }
+      },
+      "required": [
+        "id",
+        "standard",
+        "format",
+        "power_type",
+        "max_kw",
+        "tariff_ids"
+      ],
+      "title": "Connector",
+      "type": "object"
+    },
+    "Coordinates": {
+      "additionalProperties": false,
+      "properties": {
+        "latitude": {
+          "maximum": 90,
+          "minimum": -90,
+          "title": "Latitude",
+          "type": "number"
+        },
+        "longitude": {
+          "maximum": 180,
+          "minimum": -180,
+          "title": "Longitude",
+          "type": "number"
+        }
+      },
+      "required": [
+        "latitude",
+        "longitude"
+      ],
+      "title": "Coordinates",
+      "type": "object"
+    },
+    "EVSE": {
+      "additionalProperties": false,
+      "properties": {
+        "uid": {
+          "description": "OCPI EVSE uid, unique within its location.",
+          "minLength": 1,
+          "title": "Uid",
+          "type": "string"
+        },
+        "evse_id": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "eMI3 EVSE ID (for example 'GB*ABC*E123'), used to match across sources.",
+          "title": "Evse Id"
+        },
+        "status": {
+          "default": "unknown",
+          "enum": [
+            "available",
+            "blocked",
+            "charging",
+            "inoperative",
+            "out_of_order",
+            "planned",
+            "removed",
+            "reserved",
+            "unknown"
+          ],
+          "title": "Status",
+          "type": "string"
+        },
+        "status_at": {
+          "anyOf": [
+            {
+              "format": "date-time",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "When the status was last reported.",
+          "title": "Status At"
+        },
+        "connectors": {
+          "items": {
+            "$ref": "#/$defs/Connector"
+          },
+          "title": "Connectors",
+          "type": "array"
+        }
+      },
+      "required": [
+        "uid",
+        "evse_id",
+        "status",
+        "status_at",
+        "connectors"
+      ],
+      "title": "EVSE",
+      "type": "object"
+    },
+    "OpeningHours": {
+      "additionalProperties": false,
+      "properties": {
+        "twenty_four_seven": {
+          "title": "Twenty Four Seven",
+          "type": "boolean"
+        },
+        "regular_hours": {
+          "items": {
+            "$ref": "#/$defs/RegularHours"
+          },
+          "title": "Regular Hours",
+          "type": "array"
+        }
+      },
+      "required": [
+        "twenty_four_seven",
+        "regular_hours"
+      ],
+      "title": "OpeningHours",
+      "type": "object"
+    },
+    "Operator": {
+      "additionalProperties": false,
+      "properties": {
+        "registry_id": {
+          "anyOf": [
+            {
+              "description": "Operator id from the registry (for example 'chargy'), or a gap-filler source such as 'osm', 'ocm' or 'reports'.",
+              "pattern": "^[a-z0-9_]+$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Id in operators/, or null if the operator is not registered.",
+          "title": "Registry Id"
+        },
+        "name": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Name"
+        }
+      },
+      "required": [
+        "registry_id",
+        "name"
+      ],
+      "title": "Operator",
+      "type": "object"
+    },
+    "Provenance": {
+      "additionalProperties": false,
+      "description": "Where a record came from and how far to trust it.",
+      "properties": {
+        "source_id": {
+          "description": "Operator id from the registry (for example 'chargy'), or a gap-filler source such as 'osm', 'ocm' or 'reports'.",
+          "pattern": "^[a-z0-9_]+$",
+          "title": "Source Id",
+          "type": "string"
+        },
+        "source_url": {
+          "description": "The feed, file or page the record came from.",
+          "pattern": "^https?://\\S+$",
+          "title": "Source Url",
+          "type": "string"
+        },
+        "licence": {
+          "description": "Licence of the source data, for example 'OGL-3.0', 'ODbL-1.0' or 'CC-BY-4.0'.",
+          "minLength": 1,
+          "title": "Licence",
+          "type": "string"
+        },
+        "fetched_at": {
+          "description": "When this project retrieved the record.",
+          "format": "date-time",
+          "title": "Fetched At",
+          "type": "string"
+        },
+        "last_confirmed_at": {
+          "anyOf": [
+            {
+              "format": "date-time",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "When the source last confirmed the record, if known.",
+          "title": "Last Confirmed At"
+        },
+        "method": {
+          "enum": [
+            "operator_feed",
+            "operator_static_file",
+            "operator_website",
+            "foi",
+            "open_charge_map",
+            "openstreetmap",
+            "user_report"
+          ],
+          "title": "Method",
+          "type": "string"
+        },
+        "confidence": {
+          "enum": [
+            "high",
+            "medium_high",
+            "medium",
+            "low"
+          ],
+          "title": "Confidence",
+          "type": "string"
+        }
+      },
+      "required": [
+        "source_id",
+        "source_url",
+        "licence",
+        "fetched_at",
+        "last_confirmed_at",
+        "method",
+        "confidence"
+      ],
+      "title": "Provenance",
+      "type": "object"
+    },
+    "RegularHours": {
+      "additionalProperties": false,
+      "properties": {
+        "weekday": {
+          "description": "1 is Monday and 7 is Sunday, as in OCPI.",
+          "maximum": 7,
+          "minimum": 1,
+          "title": "Weekday",
+          "type": "integer"
+        },
+        "period_begin": {
+          "description": "HH:MM",
+          "pattern": "^([01]\\d|2[0-3]):[0-5]\\d$",
+          "title": "Period Begin",
+          "type": "string"
+        },
+        "period_end": {
+          "description": "HH:MM, or 24:00",
+          "pattern": "^(([01]\\d|2[0-3]):[0-5]\\d|24:00)$",
+          "title": "Period End",
+          "type": "string"
+        }
+      },
+      "required": [
+        "weekday",
+        "period_begin",
+        "period_end"
+      ],
+      "title": "RegularHours",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "id": {
+      "description": "'{source}:{country}:{party}:{id}', for example 'chargy:GB:CGY:1234'. Use 'unknown' for a country or party that is not known.",
+      "pattern": "^[a-z0-9_]+:[^:]+:[^:]+:.+$",
+      "title": "Id",
+      "type": "string"
+    },
+    "name": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Name"
+    },
+    "address": {
+      "$ref": "#/$defs/Address"
+    },
+    "coordinates": {
+      "$ref": "#/$defs/Coordinates"
+    },
+    "time_zone": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "description": "IANA time zone, for example 'Europe/London'.",
+      "title": "Time Zone"
+    },
+    "operator": {
+      "$ref": "#/$defs/Operator"
+    },
+    "access": {
+      "default": "unknown",
+      "enum": [
+        "public",
+        "customers",
+        "restricted",
+        "unknown"
+      ],
+      "title": "Access",
+      "type": "string"
+    },
+    "opening_hours": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/OpeningHours"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "description": "Null when the opening hours are unknown."
+    },
+    "evses": {
+      "items": {
+        "$ref": "#/$defs/EVSE"
+      },
+      "title": "Evses",
+      "type": "array"
+    },
+    "last_updated": {
+      "anyOf": [
+        {
+          "format": "date-time",
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "description": "When the source says it last changed this location.",
+      "title": "Last Updated"
+    },
+    "provenance": {
+      "$ref": "#/$defs/Provenance"
+    }
+  },
+  "required": [
+    "id",
+    "name",
+    "address",
+    "coordinates",
+    "time_zone",
+    "operator",
+    "access",
+    "opening_hours",
+    "evses",
+    "last_updated",
+    "provenance"
+  ],
+  "title": "Location",
+  "type": "object"
+}

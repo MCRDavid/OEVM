@@ -1,0 +1,25 @@
+# yaml-language-server: $schema=schema.json
+id: go_zero
+display_name: Go Zero
+ocpi_country_code: unknown
+ocpi_party_id: unknown
+adapter: unknown
+base_url: unknown
+endpoints: {}
+auth:
+  method: unknown
+  name: null
+  secret_name: null
+supports_single_location: unknown
+cors: needs_testing
+attribution: null
+engagement:
+  status: unknown
+  evidence: []
+access_requested: null
+access_granted: null
+sources: []
+notes: >-
+  The blueprint lists CORS and single-location fetching for Go Zero as untested and unknown,
+  but records no feed URL, adapter or access route.
+enabled: false

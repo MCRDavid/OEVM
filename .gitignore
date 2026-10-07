@@ -218,3 +218,18 @@ __marimo__/
 
 # Streamlit
 .streamlit/secrets.toml
+
+# ---------------------------------------------------------------------------
+# Project additions (see docs/BLUEPRINT.md, "Secrets")
+# Never commit keys, tokens, passwords, signed agreements or correspondence.
+# Keys live in GitHub Actions secrets and are referenced by name only.
+# ---------------------------------------------------------------------------
+.env*
+*.key
+*.pem
+*.p12
+*.pfx
+# Somewhere local for signed agreements, emails and other private material.
+private/
+# Raw operator responses can echo keys back. Commit only trimmed fixtures.
+raw/

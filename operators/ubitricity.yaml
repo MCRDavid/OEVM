@@ -1,0 +1,56 @@
+# yaml-language-server: $schema=schema.json
+id: ubitricity
+display_name: ubitricity
+ocpi_country_code: unknown
+ocpi_party_id: unknown
+adapter: eco_movement_pcpr
+base_url: unknown
+endpoints:
+  locations:
+    url: https://open-chargepoints.com/api/ocpi/cpo/2.2.1/locations
+    status: needs_testing
+    note: The blueprint marks this exact URL as unverified (probable).
+  tariffs:
+    url: https://open-chargepoints.com/api/ocpi/cpo/2.2.1/tariffs
+    status: documented
+  statuses:
+    url: https://open-chargepoints.com/api/statuses
+    status: documented
+auth:
+  method: header
+  name: unknown
+  secret_name: UBITRICITY_TOKEN
+rate_limit:
+  min_seconds_between_requests: 120
+  documented: >-
+    Eco-Movement PCPR API reference pages: tariffs "30 requests per 1 hour", statuses
+    "1 request per 30 seconds". Eco-Movement recommends retrieving the entire locations
+    dataset once a day.
+supports_single_location: supported
+cors: needs_testing
+attribution: null
+engagement:
+  status: unknown
+  evidence: []
+access_requested: null
+access_granted: null
+sources:
+  - url: https://wiki.openstreetmap.org/wiki/EV_charge_points_in_the_United_Kingdom
+    note: The blueprint cites this page for this operator using Eco-Movement's PCPR API.
+  - url: https://developers.eco-movement.com/reference/get-tariffs-pcpr-api
+    note: Tariffs endpoint and its rate limit.
+  - url: https://developers.eco-movement.com/reference/get-statuses-pcpr-api
+    note: Statuses endpoint and its rate limit.
+  - url: https://developers.eco-movement.com/reference/locations-pcpr-api
+    note: Locations endpoint; the exact URL is unverified.
+  - url: https://developers.eco-movement.com/reference/get-specific-location
+    note: Fetching a single location by id.
+  - url: https://developers.eco-movement.com/reference/getting-started-data-api
+    note: 'The general Data API uses an "Authorization: Token <token>" header.'
+notes: >-
+  Uses the shared Eco-Movement PCPR endpoints; only the token differs between operators.
+  The PCPR pages show a header credential, probably the same "Authorization: Token" header
+  as the Data API, but this is not confirmed. Whether one token covers several operators
+  is unverified, so this operator has its own secret. How access is requested is not
+  recorded in the blueprint.
+enabled: false

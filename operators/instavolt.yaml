@@ -1,0 +1,28 @@
+# yaml-language-server: $schema=schema.json
+id: instavolt
+display_name: InstaVolt
+ocpi_country_code: unknown
+ocpi_party_id: unknown
+adapter: unknown
+base_url: unknown
+endpoints: {}
+auth:
+  method: unknown
+  name: null
+  secret_name: null
+supports_single_location: unknown
+cors: unknown
+attribution: null
+engagement:
+  status: signed_agreement_required
+  evidence:
+    - date: unknown
+      url: https://instavolt.co.uk/public-charge-point-regulation-data/
+      note: InstaVolt's page refers to an "Open Data Agreement".
+access_requested: null
+access_granted: null
+sources: []
+notes: >-
+  Before signing any agreement, ask in writing whether the data may be republished with
+  attribution, and record the reply as evidence (blueprint section 2).
+enabled: false

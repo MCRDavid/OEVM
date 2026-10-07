@@ -1,0 +1,36 @@
+[project]
+name = "oevm"
+version = "0.1.0"
+description = "Open map of UK public EV chargers built from operator open data published under the Public Charge Point Regulations 2023."
+readme = "README.md"
+license = "Apache-2.0"
+requires-python = ">=3.12"
+dependencies = [
+    "pydantic>=2",
+    "pyyaml>=6",
+]
+
+[tool.uv]
+# This is an application, not a library, so uv does not build or install it.
+# Tests and commands run from the repository root.
+package = false
+
+[tool.ruff]
+line-length = 100
+target-version = "py312"
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "I", "UP", "B", "SIM", "RUF"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["."]
+addopts = "-ra --strict-markers"
+
+[dependency-groups]
+dev = [
+    "jsonschema>=4.26.0",
+    "pre-commit>=4.6.2",
+    "pytest>=9.1.1",
+    "ruff>=0.16.10",
+]

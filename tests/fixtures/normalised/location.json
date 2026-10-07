@@ -1,0 +1,74 @@
+{
+  "id": "example:GB:EXA:LOC-001",
+  "name": "Example Car Park",
+  "address": {
+    "street": "Example Street",
+    "city": "Manchester",
+    "postal_code": null,
+    "country": "GBR"
+  },
+  "coordinates": {
+    "latitude": 53.4808,
+    "longitude": -2.2426
+  },
+  "time_zone": "Europe/London",
+  "operator": {
+    "registry_id": null,
+    "name": "Example Operator"
+  },
+  "access": "public",
+  "opening_hours": {
+    "twenty_four_seven": false,
+    "regular_hours": [
+      {
+        "weekday": 1,
+        "period_begin": "07:00",
+        "period_end": "22:00"
+      }
+    ]
+  },
+  "evses": [
+    {
+      "uid": "EVSE-1",
+      "evse_id": "GB*EXA*E0001",
+      "status": "available",
+      "status_at": "2026-10-06T09:00:00Z",
+      "connectors": [
+        {
+          "id": "1",
+          "standard": "IEC_62196_T2_COMBO",
+          "format": "cable",
+          "power_type": "dc",
+          "max_kw": 50.0,
+          "tariff_ids": ["example:GB:EXA:TARIFF-DC"]
+        }
+      ]
+    },
+    {
+      "uid": "EVSE-2",
+      "evse_id": null,
+      "status": "unknown",
+      "status_at": null,
+      "connectors": [
+        {
+          "id": "1",
+          "standard": "IEC_62196_T2",
+          "format": "socket",
+          "power_type": "ac_3_phase",
+          "max_kw": 22.0,
+          "tariff_ids": []
+        }
+      ]
+    }
+  ],
+  "last_updated": "2026-10-05T18:30:00Z",
+  "provenance": {
+    "source_id": "example",
+    "source_url": "https://example.invalid/ocpi/locations",
+    "licence": "OGL-3.0",
+    "fetched_at": "2026-10-06T09:05:00Z",
+    "last_confirmed_at": "2026-10-06T09:05:00Z",
+    "method": "operator_feed",
+    "confidence": "high"
+  }
+}

@@ -1,0 +1,32 @@
+# yaml-language-server: $schema=schema.json
+id: chargy
+display_name: char.gy
+ocpi_country_code: GB
+ocpi_party_id: CGY # From the tariff path /GB/CGY/ noted in the blueprint. Confirm from data.
+adapter: ocpi_221
+base_url: https://char.gy/open-ocpi
+endpoints: {}
+auth:
+  method: none
+  name: null
+  secret_name: null
+rate_limit:
+  min_seconds_between_requests: 2
+  documented: null
+supports_single_location: needs_testing
+cors: needs_testing
+attribution: >-
+  Contains data from char.gy published under the Public Charge Point Regulations 2023,
+  used in line with the Open Government Licence v3.0.
+engagement:
+  status: open_anonymous
+  evidence:
+    - date: 2026-10-06
+      url: https://help.char.gy/support/solutions/articles/77000576948-public-charge-point-regulations-2023
+access_requested: null
+access_granted: null
+sources:
+  - url: https://help.char.gy/support/solutions/articles/77000576948-public-charge-point-regulations-2023
+    note: char.gy documents only /open-ocpi/locations and /open-ocpi/tariffs.
+notes: Fetching a single location by id is not documented and needs testing.
+enabled: true
