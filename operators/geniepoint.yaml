@@ -1,0 +1,29 @@
+# yaml-language-server: $schema=schema.json
+id: geniepoint
+display_name: GeniePoint
+ocpi_country_code: unknown
+ocpi_party_id: unknown
+adapter: static_file
+base_url: unknown
+endpoints: {}
+auth:
+  method: unknown
+  name: null
+  secret_name: null
+rate_limit:
+  min_seconds_between_requests: 2
+  documented: null
+supports_single_location: unknown
+cors: needs_testing
+attribution: null
+engagement:
+  status: unknown
+  evidence: []
+access_requested: null
+access_granted: null
+sources: []
+notes: >-
+  The blueprint lists GeniePoint as one of the three open feeds for Phase 1, published as
+  downloads for the static_file adapter, but gives no download URL or dated evidence.
+  Find and record the download page, its column layout and access terms before enabling.
+enabled: false

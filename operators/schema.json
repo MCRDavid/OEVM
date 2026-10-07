@@ -1,0 +1,412 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$defs": {
+    "Auth": {
+      "additionalProperties": false,
+      "properties": {
+        "method": {
+          "enum": [
+            "none",
+            "header",
+            "query_param",
+            "unknown"
+          ],
+          "title": "Method",
+          "type": "string"
+        },
+        "name": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Header or query parameter that carries the key, for example 'ec-subscription-key' or 'apiKey'. Write 'unknown' if not yet known.",
+          "title": "Name"
+        },
+        "secret_name": {
+          "anyOf": [
+            {
+              "description": "NAME of the GitHub Actions secret that holds the key, for example 'JOLT_API_KEY'. Never the key itself.",
+              "pattern": "^[A-Z][A-Z0-9_]*$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Secret Name"
+        }
+      },
+      "required": [
+        "method"
+      ],
+      "title": "Auth",
+      "type": "object"
+    },
+    "Endpoint": {
+      "additionalProperties": false,
+      "properties": {
+        "url": {
+          "pattern": "^https?://\\S+$",
+          "title": "Url",
+          "type": "string"
+        },
+        "status": {
+          "description": "'documented' if the operator or its host documents this URL, otherwise 'needs_testing'.",
+          "enum": [
+            "documented",
+            "needs_testing"
+          ],
+          "title": "Status",
+          "type": "string"
+        },
+        "note": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Note"
+        }
+      },
+      "required": [
+        "url",
+        "status"
+      ],
+      "title": "Endpoint",
+      "type": "object"
+    },
+    "Engagement": {
+      "additionalProperties": false,
+      "properties": {
+        "status": {
+          "enum": [
+            "open_anonymous",
+            "open_shared_key",
+            "key_on_request",
+            "signed_agreement_required",
+            "requested_no_reply",
+            "request_declined",
+            "no_public_feed_found",
+            "possibly_out_of_scope",
+            "unknown"
+          ],
+          "title": "Status",
+          "type": "string"
+        },
+        "evidence": {
+          "items": {
+            "$ref": "#/$defs/Evidence"
+          },
+          "title": "Evidence",
+          "type": "array"
+        }
+      },
+      "required": [
+        "status"
+      ],
+      "title": "Engagement",
+      "type": "object"
+    },
+    "Evidence": {
+      "additionalProperties": false,
+      "properties": {
+        "date": {
+          "anyOf": [
+            {
+              "format": "date",
+              "type": "string"
+            },
+            {
+              "const": "unknown",
+              "type": "string"
+            }
+          ],
+          "description": "Date the evidence was checked (YYYY-MM-DD), or 'unknown'.",
+          "title": "Date"
+        },
+        "url": {
+          "anyOf": [
+            {
+              "pattern": "^https?://\\S+$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Url"
+        },
+        "file": {
+          "anyOf": [
+            {
+              "pattern": "^evidence/[a-z0-9_]+/[^/].*$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Path of a saved copy under evidence/<operator id>/. No personal names or email addresses.",
+          "title": "File"
+        },
+        "note": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Note"
+        }
+      },
+      "required": [
+        "date"
+      ],
+      "title": "Evidence",
+      "type": "object"
+    },
+    "RateLimit": {
+      "additionalProperties": false,
+      "properties": {
+        "min_seconds_between_requests": {
+          "default": 2,
+          "description": "Delay this project leaves between requests. Our own politeness setting, kept at or above any limit the operator documents.",
+          "exclusiveMinimum": 0,
+          "title": "Min Seconds Between Requests",
+          "type": "number"
+        },
+        "documented": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "The operator's published limit and where it was found. Null if none known.",
+          "title": "Documented"
+        }
+      },
+      "title": "RateLimit",
+      "type": "object"
+    },
+    "Source": {
+      "additionalProperties": false,
+      "properties": {
+        "url": {
+          "pattern": "^https?://\\S+$",
+          "title": "Url",
+          "type": "string"
+        },
+        "note": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Note"
+        }
+      },
+      "required": [
+        "url"
+      ],
+      "title": "Source",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "id": {
+      "description": "Must match the file name.",
+      "pattern": "^[a-z0-9_]+$",
+      "title": "Id",
+      "type": "string"
+    },
+    "display_name": {
+      "minLength": 1,
+      "title": "Display Name",
+      "type": "string"
+    },
+    "ocpi_country_code": {
+      "pattern": "^([A-Z]{2}|unknown)$",
+      "title": "Ocpi Country Code",
+      "type": "string"
+    },
+    "ocpi_party_id": {
+      "pattern": "^([A-Z0-9]{3}|unknown)$",
+      "title": "Ocpi Party Id",
+      "type": "string"
+    },
+    "adapter": {
+      "enum": [
+        "ocpi_221",
+        "eco_movement_pcpr",
+        "gridserve",
+        "static_file",
+        "custom",
+        "unknown"
+      ],
+      "title": "Adapter",
+      "type": "string"
+    },
+    "base_url": {
+      "anyOf": [
+        {
+          "pattern": "^https?://\\S+$",
+          "type": "string"
+        },
+        {
+          "const": "unknown",
+          "type": "string"
+        }
+      ],
+      "title": "Base Url"
+    },
+    "endpoints": {
+      "additionalProperties": {
+        "$ref": "#/$defs/Endpoint"
+      },
+      "description": "Specific URLs, recorded only where the source of the URL is known.",
+      "propertyNames": {
+        "enum": [
+          "versions",
+          "locations",
+          "tariffs",
+          "statuses",
+          "download"
+        ]
+      },
+      "title": "Endpoints",
+      "type": "object"
+    },
+    "auth": {
+      "$ref": "#/$defs/Auth"
+    },
+    "rate_limit": {
+      "$ref": "#/$defs/RateLimit"
+    },
+    "supports_single_location": {
+      "enum": [
+        "supported",
+        "not_supported",
+        "needs_testing",
+        "unknown"
+      ],
+      "title": "Supports Single Location",
+      "type": "string"
+    },
+    "cors": {
+      "enum": [
+        "supported",
+        "not_supported",
+        "needs_testing",
+        "unknown"
+      ],
+      "title": "Cors",
+      "type": "string"
+    },
+    "attribution": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "description": "Attribution statement shown with this operator's data.",
+      "title": "Attribution"
+    },
+    "engagement": {
+      "$ref": "#/$defs/Engagement"
+    },
+    "access_requested": {
+      "anyOf": [
+        {
+          "format": "date",
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Access Requested"
+    },
+    "access_granted": {
+      "anyOf": [
+        {
+          "format": "date",
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Access Granted"
+    },
+    "sources": {
+      "description": "Where the technical facts in this file come from.",
+      "items": {
+        "$ref": "#/$defs/Source"
+      },
+      "title": "Sources",
+      "type": "array"
+    },
+    "notes": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Notes"
+    },
+    "enabled": {
+      "description": "True if the pipeline should fetch this operator.",
+      "title": "Enabled",
+      "type": "boolean"
+    }
+  },
+  "required": [
+    "id",
+    "display_name",
+    "ocpi_country_code",
+    "ocpi_party_id",
+    "adapter",
+    "base_url",
+    "auth",
+    "supports_single_location",
+    "cors",
+    "engagement",
+    "enabled"
+  ],
+  "title": "OperatorConfig",
+  "type": "object"
+}

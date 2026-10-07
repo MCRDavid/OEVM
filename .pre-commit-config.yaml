@@ -1,0 +1,32 @@
+# Checks that run before every commit. Install them once with:
+#   uv run pre-commit install
+# CI runs the same checks on every file in the repository.
+repos:
+  - repo: https://github.com/Yelp/detect-secrets
+    rev: v1.5.0
+    hooks:
+      - id: detect-secrets
+        # Known, reviewed findings live in .secrets.baseline. uv.lock holds package
+        # hashes, which look like secrets but are not.
+        args: ["--baseline", ".secrets.baseline"]
+        exclude: ^uv\.lock$
+
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v6.0.0
+    hooks:
+      - id: detect-private-key
+      - id: check-added-large-files
+      - id: check-merge-conflict
+      - id: check-yaml
+      - id: check-json
+      - id: end-of-file-fixer
+      - id: trailing-whitespace
+
+  - repo: local
+    hooks:
+      - id: no-em-dashes
+        name: no em dashes (project style rule)
+        language: pygrep
+        # "\u2014" is the em dash character, written as an escape so this file passes.
+        entry: "\u2014"
+        types: [text]

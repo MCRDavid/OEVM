@@ -1,0 +1,56 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  checks:
+    name: Lint, test and scan
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v5
+
+      - uses: astral-sh/setup-uv@v7
+
+      - name: Install dependencies from the lock file
+        run: uv sync --locked
+
+      - name: Lint
+        run: uv run ruff check .
+
+      - name: Check formatting
+        run: uv run ruff format --check .
+
+      - name: Run tests (offline, fixtures only)
+        run: uv run pytest -q
+
+      - name: Check exported JSON Schema is up to date
+        run: uv run python -m schema.export --check
+
+      - name: Validate operator registry
+        run: uv run python -m pipeline.registry --validate
+
+      - name: Secret scan and file checks (pre-commit, every file)
+        run: uv run pre-commit run --all-files --show-diff-on-failure
+
+      - name: Prove the secret scanner blocks a fake key
+        # The fake key is split in two so this workflow file does not contain it.
+        run: |
+          printf 'aws_access_key_id = "AKIA%s"\n' "IOSFODNN7EXAMPLE" > canary_fake_key.txt
+          if uv run pre-commit run detect-secrets --files canary_fake_key.txt; then
+            echo "::error::The secret scanner did not block a fake AWS key."
+            exit 1
+          fi
+          echo "The secret scanner blocked the fake key, as expected."
+          rm canary_fake_key.txt

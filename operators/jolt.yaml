@@ -1,0 +1,44 @@
+# yaml-language-server: $schema=schema.json
+id: jolt
+display_name: Jolt
+ocpi_country_code: unknown
+ocpi_party_id: unknown
+adapter: custom
+base_url: unknown
+endpoints:
+  locations:
+    url: https://api.joltcharge.com/v1/uk/public/locations
+    status: needs_testing
+    note: >-
+      Taken from the CORS test command in the blueprint. The apiKey query parameter is
+      added at fetch time from the secret below.
+auth:
+  method: query_param
+  name: apiKey
+  secret_name: JOLT_API_KEY
+rate_limit:
+  min_seconds_between_requests: 2
+  documented: null
+supports_single_location: needs_testing
+cors: needs_testing
+attribution: >-
+  Contains data from Jolt published under the Public Charge Point Regulations 2023,
+  used in line with the Open Government Licence v3.0.
+engagement:
+  status: open_shared_key
+  evidence:
+    - date: unknown
+      url: https://support.joltcharge.com/hc/en-gb/articles/27955558493207-UK-Public-Charge-Point-Regulations-Open-Data-Request
+      note: Jolt publishes a shared apiKey on this help page.
+access_requested: null
+access_granted: null
+sources:
+  - url: https://support.joltcharge.com/hc/en-gb/articles/27955558493207-UK-Public-Charge-Point-Regulations-Open-Data-Request
+    note: Shared apiKey; Jolt documents tariffs/{tariffId} for single tariffs.
+notes: >-
+  The blueprint says the published key could go in the registry because it is public.
+  This project keeps it in the GitHub Actions secret JOLT_API_KEY instead, so no key
+  value is ever committed. Copy the key from Jolt's help page into that secret.
+  Jolt could revoke the shared key. The full tariffs URL and fetching a location by id
+  need testing.
+enabled: true

@@ -1,0 +1,33 @@
+# yaml-language-server: $schema=schema.json
+id: gridserve
+display_name: Gridserve
+ocpi_country_code: unknown
+ocpi_party_id: unknown
+adapter: gridserve
+base_url: unknown
+endpoints: {}
+auth:
+  method: header
+  name: ec-subscription-key
+  secret_name: GRIDSERVE_SUBSCRIPTION_KEY
+rate_limit:
+  min_seconds_between_requests: 30
+  documented: >-
+    Slow rate limit. One request per 30 seconds comes from earlier research quoted in the
+    blueprint and has not been re-verified against the developer documentation.
+supports_single_location: supported
+cors: needs_testing
+attribution: null
+engagement:
+  status: unknown
+  evidence: []
+access_requested: null
+access_granted: null
+sources:
+  - url: https://www.gridserve.com/wp-content/uploads/2024/11/GRIDSERVE-PCPR-API-Developer-Documentation.pdf
+    note: Developer documentation. ec-subscription-key header; documents GET /locations/{location-id}.
+notes: >-
+  The base URL and how keys are issued are not recorded in the blueprint. Gridserve's terms
+  come from earlier research and have not been re-verified. Read the developer documentation
+  before enabling.
+enabled: false

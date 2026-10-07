@@ -1,0 +1,81 @@
+# yaml-language-server: $schema=schema.json
+#
+# Template for a new operator. Copy this file to operators/<id>.yaml, where <id>
+# is the operator's id (lower case letters, digits and underscores), then fill it in.
+# Files starting with "_" are ignored by the registry.
+#
+# Rules:
+# - Never put a key, token or password here. Store it as a GitHub Actions secret
+#   and write only the secret's NAME in auth.secret_name.
+# - Do not guess. Write "unknown" or "needs_testing" and open an issue.
+# - Check your work with: uv run python -m pipeline.registry --validate
+
+# Must match the file name, without ".yaml".
+id: example_operator
+
+# Name shown on the map.
+display_name: Example Operator
+
+# OCPI country code (two capital letters) and party id (three characters).
+# Only fill these in once confirmed from the operator's own data.
+ocpi_country_code: unknown
+ocpi_party_id: unknown
+
+# One of: ocpi_221, eco_movement_pcpr, gridserve, static_file, custom, unknown.
+adapter: unknown
+
+# Root URL of the feed, or "unknown".
+base_url: unknown
+
+# Specific URLs, only where you know where the URL came from. Each entry is one of
+# versions, locations, tariffs, statuses or download. Example:
+#   endpoints:
+#     locations:
+#       url: <full URL, with no key in it>
+#       status: documented        # or needs_testing
+#       note: <optional>
+endpoints: {}
+
+auth:
+  # One of: none, header, query_param, unknown.
+  method: unknown
+  # Header or query parameter that carries the key, or "unknown". Null if method is none.
+  name: null
+  # NAME of the GitHub Actions secret, for example EXAMPLE_OPERATOR_TOKEN. Never the key.
+  secret_name: null
+
+rate_limit:
+  # Seconds this project waits between requests. Keep it at or above any documented limit.
+  min_seconds_between_requests: 2
+  # The operator's published limit and where it was found, or null.
+  documented: null
+
+# One of: supported, not_supported, needs_testing, unknown.
+supports_single_location: unknown
+cors: unknown
+
+# Attribution statement, required before the operator is enabled. The usual wording is:
+# "Contains data from <Operator> published under the Public Charge Point Regulations 2023,
+# used in line with the Open Government Licence v3.0."
+attribution: null
+
+engagement:
+  # One of: open_anonymous, open_shared_key, key_on_request, signed_agreement_required,
+  # requested_no_reply, request_declined, no_public_feed_found, possibly_out_of_scope,
+  # unknown. Anything other than unknown needs at least one evidence entry.
+  status: unknown
+  # Each entry: date (YYYY-MM-DD or "unknown"), plus a url and/or a file saved under
+  # evidence/<id>/. No personal names or email addresses.
+  evidence: []
+
+# Dates (YYYY-MM-DD) access was requested and granted, or null.
+access_requested: null
+access_granted: null
+
+# Where the technical facts in this file come from: list of {url, note}.
+sources: []
+
+notes: null
+
+# True only when the pipeline should fetch this operator.
+enabled: false
