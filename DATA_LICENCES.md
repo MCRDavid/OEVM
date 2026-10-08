@@ -93,7 +93,7 @@ project code, and neither is relicensed.
 | Item | Source | Licence | Credit shown |
 |---|---|---|---|
 | Background map files (vector tiles) | OpenFreeMap, `https://tiles.openfreemap.org/styles/liberty` | Map data from OpenStreetMap under the ODbL; tiles built to the OpenMapTiles schema. Used under OpenFreeMap's terms, read 8 October 2026 | MapLibre's attribution control, always expanded, shows the style's credit ("OpenFreeMap © OpenMapTiles Data from OpenStreetMap", linking to openstreetmap.org/copyright). The page footer repeats it. Text only, no logos |
-| MapLibre GL JS 6.11.2 | npm package `maplibre-gl`, copied into the build by `pipeline/build_site.py` | BSD-3-Clause (its `LICENSE.txt`, published at `vendor/maplibre-gl/LICENSE.txt`) | Footer link to the licence, and `vendor/maplibre-gl/THIRD_PARTY_NOTICES.txt` with the licence of each package it bundles |
+| MapLibre GL JS (the version pinned in `package.json`) | npm package `maplibre-gl`, copied into the build by `pipeline/build_site.py` | BSD-3-Clause (its `LICENSE.txt`, published at `vendor/maplibre-gl/LICENSE.txt`) | Footer link to the licence, and `vendor/maplibre-gl/THIRD_PARTY_NOTICES.txt` with the licence of each package it bundles |
 
 OpenFreeMap's terms forbid automated collection without permission, so tests and CI use
 a plain local style (`--offline-style`) and never contact it. The operator data on the

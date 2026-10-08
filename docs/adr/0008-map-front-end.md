@@ -11,7 +11,8 @@ usable on a mid-range phone, Lighthouse accessibility score of 90 or more.
 - **No build tool.** The page is plain HTML, CSS and JavaScript modules in `site/`.
   `pipeline/build_site.py` copies them into a build folder with the map files, MapLibre
   and `assets/config.json`. The committed `site/` folder is never written to.
-- **MapLibre GL JS 6.11.2, served from the site.** It is pinned in `package.json` and
+- **MapLibre GL JS, served from the site.** It is pinned to one version in `package.json`
+  (6.11.2 when this was decided, updated by Dependabot since) and
   installed with `npm ci`; the build copies its three module files and CSS, its licence
   and a `THIRD_PARTY_NOTICES.txt` built from the licences of the packages it bundles.
   Visitors' browsers contact no script host. Version 6 needs WebGL2.
@@ -46,9 +47,12 @@ usable on a mid-range phone, Lighthouse accessibility score of 90 or more.
   send, so MapLibre's tile requests are also checked in the page: `transformRequest`
   lets requests go only to this site and the hosts listed in `config.json` (`origins`),
   and sends anything else to an address on this site that does not exist.
-- **Referrer policy `strict-origin`:** every request, to this site or the tile host,
-  carries only the site's origin, never the page address with its filters (which can
-  come from saved settings).
+- **Referrer policy `strict-origin`:** requests from the page, to this site or the tile
+  host, carry only the site's origin, never the page address with its filters. MapLibre's
+  worker is started from a file, so its tile requests follow the browser's default policy
+  instead, which for a request to another host also sends only the origin. Filters
+  loaded from saved settings are kept out of the address until the visitor changes one,
+  so a reload or bookmark does not send them to the web host either.
 - **Settings.** Filters live in the page address (`?minkw=50&plug=ccs`), written with
   `history.replaceState`, and MapLibre keeps the map position after the `#`. Values that
   are not valid are ignored. Saving to `localStorage` happens only after the visitor

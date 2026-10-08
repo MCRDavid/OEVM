@@ -477,7 +477,7 @@ body[data-view="list"] .map-view {
     height: auto;
   }
 
-  body.no-map.detail-open .list-view {
+  body.no-map.detail-open :is(.filters, main, .bottom) {
     margin-right: 28rem;
   }
 

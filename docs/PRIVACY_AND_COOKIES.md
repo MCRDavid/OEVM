@@ -43,8 +43,9 @@ the site goes live.
 2. **No third-party files that track.** Check every external font, map style, tile
    server or script before adding it, and record whether it sets cookies or uses storage.
    Prefer self-hosted files. Checked so far:
-   - **MapLibre GL JS 6.11.2:** served from the site itself, not from a script host. No
-     telemetry was found in its source.
+   - **MapLibre GL JS** (the version pinned in `package.json`): served from the site
+     itself, not from a script host. No telemetry was found in 6.11.2's source, nor in
+     6.12.0's bundles (searched 8 October 2026). Search again after major updates.
    - **OpenFreeMap** (`tiles.openfreemap.org`, Liberty style): the only outside host the
      page contacts. Header checks on 8 October 2026 saw no cookies and no storage. The
      responses carry Cloudflare's Network Error Logging (NEL) headers, which ask some
@@ -91,10 +92,15 @@ and fill in the date.
 > this device". If you do, your filters are saved in your browser's local storage so the
 > map opens the same way next time. They are not sent anywhere. Turn the switch off or
 > press "Forget my settings" at any time to delete them. Your browser may also keep copies
-> of the site's files and map files in its normal cache, as it does for any website.
+> of the site's files and map files in its normal cache, as it does for any website. When
+> the map loads, Cloudflare, which delivers OpenFreeMap's map files, may also ask your
+> browser to keep a small instruction to report failed connections to it (Network Error
+> Logging). The headers checked on 8 October 2026 asked browsers to keep it for up to 7
+> days. This site does not set or control it.
 >
-> **Links you share.** Your current filters can appear in the page address, and the map's
-> position appears after the # sign, so you can bookmark or share them. Anyone you send
+> **Links you share.** When you change a filter, your filters appear in the page address,
+> and the map's position appears after the # sign, so you can bookmark or share them.
+> Filters you saved on this device are not added to the address until you change one. Anyone you send
 > that link to can see those settings and the area you were looking at. The page tells
 > browsers to send only the site's address, not the full page address, with the requests
 > it makes.
