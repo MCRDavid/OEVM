@@ -57,7 +57,7 @@ FINDING_KINDS = {
 LINKS = (
     ("Disclaimer", f"{REPOSITORY_URL}/blob/main/DISCLAIMER.md"),
     ("Data sources and licences", f"{REPOSITORY_URL}/blob/main/DATA_LICENCES.md"),
-    ("Privacy and cookies", f"{REPOSITORY_URL}/blob/main/docs/PRIVACY_AND_COOKIES.md"),
+    ("Privacy and cookies", "../privacy/"),
     ("Security policy", f"{REPOSITORY_URL}/blob/main/SECURITY.md"),
     ("Report a mistake", f"{REPOSITORY_URL}/issues/new/choose"),
     ("Source code", REPOSITORY_URL),

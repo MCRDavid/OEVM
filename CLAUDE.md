@@ -18,6 +18,7 @@ decisions are in docs/adr/.
 - Daily run (workflows only, not locally): uv run python -m pipeline.run --live all --log-dir logs --publish build
 - After changing a model: uv run python -m schema.export (CI runs it with --check)
 - After changing operators/*.yaml: uv run python -m pipeline.transparency (CI runs it with --check)
+- After changing the notice in docs/PRIVACY_AND_COOKIES.md: uv run python -m pipeline.privacy (CI runs it with --check)
 - Secret scan and file checks: uv run pre-commit run --all-files
 - Dependency audit: see the pip-audit and npm audit steps in .github/workflows/ci.yml
 - Map page: npm ci, then uv run python -m pipeline.run --fixtures --publish build and

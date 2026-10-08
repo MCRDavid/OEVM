@@ -87,6 +87,18 @@ findings:
       it directly.
     handling: The map will use data fetched by the pipeline, not requests from visitors' browsers.
     evidence_url: https://char.gy/open-ocpi/locations
+  - date: 2026-10-08
+    kind: access
+    summary: >-
+      In the first daily run from a GitHub Actions runner, the locations feed answered
+      HTTP 403 to the request for offset 2900, after 58 pages had been fetched about 2.8
+      seconds apart. The same request answered normally from another network the same
+      evening. The server returns at most 50 locations a page, so a full fetch takes about
+      120 requests for locations alone.
+    handling: >-
+      char.gy was left out of that run and the feed health page shows the failure. Whether
+      a slower pace avoids the refusal needs testing.
+    evidence_url: https://github.com/MCRDavid/OEVM/actions/runs/37853739264
 notes: >-
   Paging uses the OCPI 2.2.1 Link, X-Total-Count and X-Limit headers. Fetching a single
   location by id needs testing.

@@ -62,9 +62,10 @@ def test_the_map_page_shows_the_short_disclaimer(page):
 
 
 def test_the_map_page_links_to_the_required_documents(page):
-    for path in ("DISCLAIMER.md", "DATA_LICENCES.md", "docs/PRIVACY_AND_COOKIES.md", "SECURITY.md"):
+    for path in ("DISCLAIMER.md", "DATA_LICENCES.md", "SECURITY.md"):
         assert f"{REPOSITORY_URL}/blob/main/{path}" in page.hrefs
     assert "transparency/" in page.hrefs
+    assert "privacy/" in page.hrefs
     github = [href for href in page.hrefs if urlsplit(href).hostname == "github.com"]
     assert github and all(
         href.startswith(f"{REPOSITORY_URL}/") or href == REPOSITORY_URL for href in github
