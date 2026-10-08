@@ -11,7 +11,7 @@
     "test": "node --test \"tests/js/*.test.js\""
   },
   "dependencies": {
-    "maplibre-gl": "6.11.2"
+    "maplibre-gl": "6.12.0"
   },
   "devDependencies": {
     "lighthouse": "13.5.0"
