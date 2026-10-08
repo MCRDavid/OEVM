@@ -55,14 +55,14 @@
       "attribution": "Contains data from char.gy published under the Public Charge Point Regulations 2023, used in line with the Open Government Licence v3.0.",
       "missing_publish_flag": null,
       "rate_limit": {
-        "our_gap_seconds": 2.0,
-        "our_max_per_hour": 1800,
-        "ours": "At least 2 s between requests to the operator's host, measured from the end of the previous request (at most 1800 in any hour), retries included.",
+        "our_gap_seconds": 6.0,
+        "our_max_per_hour": 600,
+        "ours": "At least 6 s between requests to the operator's host, measured from the end of the previous request (at most 600 in any hour), retries included.",
         "published": [],
         "limits_checked": "2026-10-07",
         "comparison": "No limit published (checked 2026-10-07). The gap is our own choice.",
         "difference_from_regulations": "Neither the operator nor the regulations set a limit.",
-        "notes": "char.gy's open data page states no rate limit. The 2 second gap is this project's own choice."
+        "notes": "char.gy's open data page states no rate limit. The gap is this project's own choice: 2 seconds until 8 October 2026, then 6 seconds after the feed refused requests from GitHub's servers part-way through the first daily run (see findings)."
       },
       "findings": [
         {
@@ -110,7 +110,7 @@
           "kind": "access",
           "kind_label": "Access",
           "summary": "In the first daily run from a GitHub Actions runner, the locations feed answered HTTP 403 to the request for offset 2900, after 58 pages had been fetched about 2.8 seconds apart. The same request answered normally from another network the same evening. The server returns at most 50 locations a page, so a full fetch takes about 120 requests for locations alone.",
-          "handling": "char.gy was left out of that run and the feed health page shows the failure. Whether a slower pace avoids the refusal needs testing.",
+          "handling": "char.gy was left out of that run and the feed health page shows the failure. The gap between requests was raised from 2 to 6 seconds the same day; whether that avoids the refusal needs testing in the next run.",
           "evidence_url": "https://github.com/MCRDavid/OEVM/actions/runs/37853739264",
           "status": "open",
           "resolved_date": null
