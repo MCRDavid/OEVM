@@ -505,6 +505,58 @@
       "title": "RateLimit",
       "type": "object"
     },
+    "Relay": {
+      "additionalProperties": false,
+      "description": "The repository owner's recorded decision to fetch this operator through a relay the\nproject runs, because the operator's server refused requests from the daily run.\n\nThe relay (relay/worker.js, on Cloudflare Workers) forwards only this operator's own\nfeed paths, unchanged, with the project's User-Agent, and the operator's rate limits\nstill apply. Records keep the operator's own URLs as their source. Only feeds that need\nno key may be relayed, so no key ever passes through it.",
+      "properties": {
+        "decided": {
+          "description": "Date the owner made the decision (YYYY-MM-DD).",
+          "format": "date",
+          "title": "Decided",
+          "type": "string"
+        },
+        "reason": {
+          "description": "Why direct requests cannot be used.",
+          "minLength": 1,
+          "title": "Reason",
+          "type": "string"
+        },
+        "evidence_url": {
+          "description": "Where the refusal can be seen, such as a run log.",
+          "pattern": "^https?://\\S+$",
+          "title": "Evidence Url",
+          "type": "string"
+        },
+        "url_variable": {
+          "description": "Environment variable (a GitHub Actions secret, so it is masked in logs) holding the relay's https address. Requests go direct only when neither this nor secret_name is set; one without the other stops the operator's fetch.",
+          "pattern": "^[A-Z][A-Z0-9_]*$",
+          "title": "Url Variable",
+          "type": "string"
+        },
+        "secret_name": {
+          "description": "Environment variable (a GitHub Actions secret) holding the relay's access token.",
+          "pattern": "^[A-Z][A-Z0-9_]*$",
+          "title": "Secret Name",
+          "type": "string"
+        },
+        "path_prefix": {
+          "description": "The relay path for this operator, for example /geniepoint.",
+          "pattern": "^/[a-z0-9-]+$",
+          "title": "Path Prefix",
+          "type": "string"
+        }
+      },
+      "required": [
+        "decided",
+        "reason",
+        "evidence_url",
+        "url_variable",
+        "secret_name",
+        "path_prefix"
+      ],
+      "title": "Relay",
+      "type": "object"
+    },
     "Source": {
       "additionalProperties": false,
       "properties": {
@@ -660,6 +712,18 @@
       ],
       "default": null,
       "description": "Only by the repository owner's decision: show locations that have no publish flag. Null means such locations are never kept."
+    },
+    "relay": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/Relay"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "description": "Only by the repository owner's decision: fetch through the project's relay. Null means requests go direct."
     },
     "engagement": {
       "$ref": "#/$defs/Engagement"

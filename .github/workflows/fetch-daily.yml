@@ -50,8 +50,12 @@ jobs:
       - name: Fetch every enabled operator, one at a time
         id: fetch
         # Keys are passed to this step only, by secret name, as the registry lists them.
+        # Operators with a relay decision (operators/<id>.yaml, relay) go through the
+        # project's one relay Worker, which these two secrets address.
         env:
           JOLT_API_KEY: ${{ secrets.JOLT_API_KEY }}
+          OEVM_RELAY_URL: ${{ secrets.OEVM_RELAY_URL }}
+          OEVM_RELAY_TOKEN: ${{ secrets.OEVM_RELAY_TOKEN }}
         run: |
           set +e
           uv run python -m pipeline.run --live all --log-dir logs --publish build

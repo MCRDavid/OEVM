@@ -314,6 +314,34 @@ class MissingPublishFlag(_Model):
     evidence_url: SafeUrl = Field(description="Where the operator says the data is public.")
 
 
+class Relay(_Model):
+    """The repository owner's recorded decision to fetch this operator through a relay the
+    project runs, because the operator's server refused requests from the daily run.
+
+    The relay (relay/worker.js, on Cloudflare Workers) forwards only this operator's own
+    feed paths, unchanged, with the project's User-Agent, and the operator's rate limits
+    still apply. Records keep the operator's own URLs as their source. Only feeds that need
+    no key may be relayed, so no key ever passes through it.
+    """
+
+    decided: dt.date = Field(description="Date the owner made the decision (YYYY-MM-DD).")
+    reason: NeutralText = Field(description="Why direct requests cannot be used.")
+    evidence_url: SafeUrl = Field(description="Where the refusal can be seen, such as a run log.")
+    url_variable: SecretName = Field(
+        description="Environment variable (a GitHub Actions secret, so it is masked in logs) "
+        "holding the relay's https address. Requests go direct only when neither this nor "
+        "secret_name is set; one without the other stops the operator's fetch."
+    )
+    secret_name: SecretName = Field(
+        description="Environment variable (a GitHub Actions secret) holding the relay's "
+        "access token."
+    )
+    path_prefix: str = Field(
+        pattern=r"^/[a-z0-9-]+$",
+        description="The relay path for this operator, for example /geniepoint.",
+    )
+
+
 class Engagement(_Model):
     status: EngagementStatus
     evidence: list[Evidence] = Field(default_factory=list)
@@ -350,6 +378,11 @@ class OperatorConfig(_Model):
         default=None,
         description="Only by the repository owner's decision: show locations that have no "
         "publish flag. Null means such locations are never kept.",
+    )
+    relay: Relay | None = Field(
+        default=None,
+        description="Only by the repository owner's decision: fetch through the project's "
+        "relay. Null means requests go direct.",
     )
     engagement: Engagement
     access_requested: dt.date | None = None
@@ -393,6 +426,11 @@ class OperatorConfig(_Model):
                 or self.licence.checked == "unknown"
             ):
                 problems.append("an enabled operator needs licence terms that have been checked")
+        if self.relay is not None:
+            if self.auth.method != "none":
+                problems.append("only a feed that needs no key may be relayed")
+            if self.relay.url_variable == self.relay.secret_name:
+                problems.append("relay url_variable and secret_name must differ")
         if self.auth.method in ("header", "query_param"):
             urls = [endpoint.url for endpoint in self.endpoints.values()]
             if self.base_url != "unknown":

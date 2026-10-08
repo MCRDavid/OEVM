@@ -54,6 +54,7 @@
       },
       "attribution": "Contains data from char.gy published under the Public Charge Point Regulations 2023, used in line with the Open Government Licence v3.0.",
       "missing_publish_flag": null,
+      "relay": null,
       "rate_limit": {
         "our_gap_seconds": 6.0,
         "our_max_per_hour": 600,
@@ -110,10 +111,10 @@
           "kind": "access",
           "kind_label": "Access",
           "summary": "In the first daily run from a GitHub Actions runner, the locations feed answered HTTP 403 to the request for offset 2900, after 58 pages had been fetched about 2.8 seconds apart. The same request answered normally from another network the same evening. The server returns at most 50 locations a page, so a full fetch takes about 120 requests for locations alone.",
-          "handling": "char.gy was left out of that run and the feed health page shows the failure. The gap between requests was raised from 2 to 6 seconds the same day; whether that avoids the refusal needs testing in the next run.",
+          "handling": "char.gy was left out of that run. The gap between requests was raised from 2 to 6 seconds the same day, and the next run (37856014933, the same evening) fetched every page and published 5,948 locations.",
           "evidence_url": "https://github.com/MCRDavid/OEVM/actions/runs/37853739264",
-          "status": "open",
-          "resolved_date": null
+          "status": "resolved",
+          "resolved_date": "2026-10-08"
         }
       ]
     },
@@ -153,6 +154,11 @@
       },
       "attribution": "Contains data from GeniePoint published under the Public Charge Point Regulations 2023, used in line with the Open Government Licence v3.0.",
       "missing_publish_flag": null,
+      "relay": {
+        "decided": "2026-10-08",
+        "reason": "The files answered HTTP 403 to the first request from a GitHub Actions runner in the first daily run, while answering normally from another network. The repository owner decided to fetch them through the project's relay on Cloudflare Workers, with the project's User-Agent and the same rate limits.",
+        "evidence_url": "https://github.com/MCRDavid/OEVM/actions/runs/37853739264"
+      },
       "rate_limit": {
         "our_gap_seconds": 2.0,
         "our_max_per_hour": 1800,
@@ -239,7 +245,7 @@
           "kind": "access",
           "kind_label": "Access",
           "summary": "In the first daily run from a GitHub Actions runner, the locations file answered HTTP 403 to the first request. The same file answered normally from another network the same evening.",
-          "handling": "GeniePoint was left out of that run and the feed health page shows the failure. How to fetch it from the daily run is to be decided by the repository owner.",
+          "handling": "GeniePoint was left out of that run and the feed health page shows the failure. The repository owner decided the same day to fetch it through the project's relay (see relay above). The owner chose not to contact GeniePoint about the refusal.",
           "evidence_url": "https://github.com/MCRDavid/OEVM/actions/runs/37853739264",
           "status": "open",
           "resolved_date": null
@@ -292,6 +298,7 @@
         "basis": "Jolt publishes this feed itself \"In accordance with the UK Public Charge Point Regulations (PCPR) Open Data requirement\", and none of its locations has a publish flag. The repository owner decided that locations with no flag may be shown. A flag set to false would still be respected.",
         "evidence_url": "https://support.joltcharge.com/hc/en-gb/articles/27955558493207-UK-Public-Charge-Point-Regulations-Open-Data-Request"
       },
+      "relay": null,
       "rate_limit": {
         "our_gap_seconds": 2.0,
         "our_max_per_hour": 1800,
@@ -462,6 +469,7 @@
       "licence": null,
       "attribution": null,
       "missing_publish_flag": null,
+      "relay": null,
       "rate_limit": {
         "our_gap_seconds": 125.0,
         "our_max_per_hour": 29,
@@ -554,6 +562,7 @@
       "licence": null,
       "attribution": null,
       "missing_publish_flag": null,
+      "relay": null,
       "rate_limit": {
         "our_gap_seconds": 125.0,
         "our_max_per_hour": 29,
@@ -630,6 +639,7 @@
       "licence": null,
       "attribution": null,
       "missing_publish_flag": null,
+      "relay": null,
       "rate_limit": {
         "our_gap_seconds": 2,
         "our_max_per_hour": 1800,
@@ -678,6 +688,7 @@
       },
       "attribution": null,
       "missing_publish_flag": null,
+      "relay": null,
       "rate_limit": {
         "our_gap_seconds": 31.0,
         "our_max_per_hour": 117,
@@ -760,6 +771,7 @@
       "licence": null,
       "attribution": null,
       "missing_publish_flag": null,
+      "relay": null,
       "rate_limit": {
         "our_gap_seconds": 2,
         "our_max_per_hour": 1800,
@@ -792,6 +804,7 @@
       "licence": null,
       "attribution": null,
       "missing_publish_flag": null,
+      "relay": null,
       "rate_limit": {
         "our_gap_seconds": 2.0,
         "our_max_per_hour": 1800,
@@ -834,6 +847,7 @@
       "licence": null,
       "attribution": null,
       "missing_publish_flag": null,
+      "relay": null,
       "rate_limit": {
         "our_gap_seconds": 125.0,
         "our_max_per_hour": 29,
@@ -926,6 +940,7 @@
       "licence": null,
       "attribution": null,
       "missing_publish_flag": null,
+      "relay": null,
       "rate_limit": {
         "our_gap_seconds": 125.0,
         "our_max_per_hour": 29,

@@ -154,6 +154,54 @@ others; the feed health page on the site says which one.
 
 Source: https://docs.github.com/en/pages/getting-started-with-github-pages/configuring-a-publishing-source-for-your-github-pages-site
 
+## 10. The relay (Cloudflare Workers)
+
+Some operators' servers refuse requests from GitHub's servers; GeniePoint is the first
+(see `operators/geniepoint.yaml`). The daily run fetches their files through one small
+Cloudflare Worker that you own. The Worker only fetches the files listed in it, only for
+requests carrying a secret token, and passes on the project's User-Agent unchanged. Each
+operator has its own path on it (for example `/geniepoint/...`), so a later operator only
+needs a new path in `relay/worker.js` and a decision in its file, not a new Worker or new
+secrets. The free plan allows up to 100 Workers, but one is enough. ADR 0010 explains the
+decision.
+
+**Make a token first.** Use your password manager's generator to make a random password of
+at least 40 letters and digits, with no spaces. You will paste the same value in two places
+(steps 7 and 9). Do not put it anywhere else, such as an issue, a commit or a chat.
+
+1. Sign up for a free Cloudflare account at https://dash.cloudflare.com/sign-up (no card is
+   needed for the free Workers plan), and confirm your email address. If Cloudflare asks you
+   to choose a workers.dev subdomain, pick a neutral one with no name, place or other
+   personal detail in it.
+2. In the Cloudflare dashboard, open **Workers & Pages** from the menu on the left.
+3. Select **Create application** (it may say **Create**). Choose the **Hello World**
+   starter, sometimes shown as **Start with Hello World!**.
+4. Name the Worker `oevm-relay` and select **Deploy**. Cloudflare shows its address,
+   something like `https://oevm-relay.<your-subdomain>.workers.dev`. Copy it.
+5. Select **Edit code**. Delete everything in the editor, paste the whole of
+   `relay/worker.js` from this repository, and select **Deploy**.
+6. Go back to the Worker's page and open **Settings**, then **Variables and Secrets**.
+7. Select **Add**, set **Type** to **Secret**, **Variable name** to `RELAY_TOKEN`, paste the
+   token as the **Value**, and select **Deploy**.
+8. In GitHub, open **Settings > Secrets and variables > Actions**. On the **Secrets** tab,
+   select **New repository secret**: name `OEVM_RELAY_URL`, value the Worker's
+   address from step 4 (starting `https://`, with nothing after `.dev`). It is a secret,
+   not a variable, so GitHub hides it in the public run logs.
+9. Select **New repository secret** again: name `OEVM_RELAY_TOKEN`, value the same
+   token as in step 7.
+10. Open the **Actions** tab, choose **Fetch daily** and select **Run workflow** on `main`.
+    The run's log shows whether GeniePoint came through.
+
+Menu names in Cloudflare's dashboard change from time to time; if a label differs, look
+for the nearest match. To stop using the relay, delete **both** GitHub secrets,
+`OEVM_RELAY_URL` and `OEVM_RELAY_TOKEN`: the daily run then asks GeniePoint
+directly again. Deleting only one stops GeniePoint's fetch with a message saying which is
+missing, on purpose, so a half-finished setup is noticed. If the Worker's code ever changes in the repository,
+paste the new version in step 5 again.
+
+Sources: https://developers.cloudflare.com/workers/get-started/dashboard/ and
+https://developers.cloudflare.com/workers/configuration/secrets/
+
 ## Later: security.txt on the website
 
 `site/.well-known/security.txt` only counts as a security contact when it is served from
