@@ -99,10 +99,12 @@ findings:
       evening. The server returns at most 50 locations a page, so a full fetch takes about
       120 requests for locations alone.
     handling: >-
-      char.gy was left out of that run and the feed health page shows the failure. The gap
-      between requests was raised from 2 to 6 seconds the same day; whether that avoids
-      the refusal needs testing in the next run.
+      char.gy was left out of that run. The gap between requests was raised from 2 to 6
+      seconds the same day, and the next run (37856014933, the same evening) fetched every
+      page and published 5,948 locations.
     evidence_url: https://github.com/MCRDavid/OEVM/actions/runs/37853739264
+    status: resolved
+    resolved_date: 2026-10-08
 notes: >-
   Paging uses the OCPI 2.2.1 Link, X-Total-Count and X-Limit headers. Fetching a single
   location by id needs testing.
