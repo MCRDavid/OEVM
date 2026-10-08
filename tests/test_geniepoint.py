@@ -64,7 +64,8 @@ def test_prices_show_in_pounds_and_pence_including_vat():
         assert "including VAT" in shown.text or shown.text == "Free"
 
 
-def test_geniepoint_stays_off_until_its_terms_of_use_are_read():
+def test_geniepoint_records_its_terms_and_the_owners_reading_of_them():
     config = load_registry()["geniepoint"]
-    assert config.adapter == "ocpi_221" and not config.enabled
-    assert "terms of use" in config.licence.basis
+    assert config.adapter == "ocpi_221" and config.enabled
+    assert "repository owner decided" in " ".join(config.licence.basis.split())
+    assert any(source.url == "https://www.equans.co.uk/terms-use" for source in config.sources)

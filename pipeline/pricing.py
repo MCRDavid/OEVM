@@ -12,13 +12,17 @@ regulations describe the price in reference data as "the price in pence per kilo
   published (OCPI prices exclude VAT) and marked "excluding VAT, VAT not stated".
 - Sums are done in exact decimal arithmetic, so half pennies round up as expected.
 - Reservation fees are not shown as charging prices.
+- Prices that apply only at some times or after some time are shown with their
+  conditions, read as OCPI 2.2.1 section 11 describes them: for each kind of charge, the
+  first tariff element whose restrictions match applies, and an element with no
+  restrictions after the others is the price "otherwise".
 """
 
 from dataclasses import dataclass
 from decimal import ROUND_HALF_UP, Decimal
 from typing import Literal
 
-from schema.models import PriceComponent, Tariff
+from schema.models import PriceComponent, Tariff, TariffElement, TariffRestrictions
 
 DISPLAY_CURRENCY = "GBP"
 NON_ENERGY_UNITS = (
@@ -26,6 +30,7 @@ NON_ENERGY_UNITS = (
     ("time", "per hour charging"),
     ("parking_time", "per hour parked"),
 )
+WEEK = ("monday", "tuesday", "wednesday", "thursday", "friday", "saturday", "sunday")
 
 
 @dataclass(frozen=True)
@@ -55,8 +60,97 @@ def _span(values: list[Decimal], fmt) -> str:
     return fmt(low) if low == high else f"{fmt(low)} to {fmt(high)}"
 
 
-def describe_tariff(tariff: Tariff) -> PriceDisplay:
-    """The price text the map shows for one tariff."""
+def _clock(value: str) -> str:
+    return "midnight" if value == "00:00" else value
+
+
+def _days(days: list[str]) -> str:
+    chosen = [day for day in WEEK if day in days]
+    if len(chosen) == 7:
+        return ""
+    if chosen == list(WEEK[:5]):
+        return "on weekdays"
+    if chosen == list(WEEK[5:]):
+        return "at weekends"
+    names = [day.capitalize() for day in chosen]
+    return "on " + (names[0] if len(names) == 1 else f"{', '.join(names[:-1])} and {names[-1]}")
+
+
+def _duration(seconds: int) -> str:
+    for size, unit in ((3600, "hour"), (60, "minute"), (1, "second")):
+        if seconds % size == 0:
+            count = seconds // size
+            return f"{count} {unit}" if count == 1 else f"{count} {unit}s"
+    raise AssertionError("unreachable")
+
+
+def conditions(restrictions: TariffRestrictions | None) -> str:
+    """When a tariff element applies, in plain words, following OCPI 2.2.1 section 11.4.6."""
+    if restrictions is None:
+        return ""
+    r = restrictions
+    parts = []
+    start, end = r.start_time, r.end_time
+    if start and end and not (start == end == "00:00"):
+        parts.append(f"from {_clock(start)} to {_clock(end)}")
+    elif start and not end:
+        parts.append(f"from {_clock(start)}")
+    elif end and not start:
+        parts.append(f"until {_clock(end)}")
+    if r.day_of_week:
+        parts.append(_days(r.day_of_week))
+    if r.start_date:
+        parts.append(f"from {r.start_date.day} {r.start_date:%B %Y}")
+    if r.end_date:
+        parts.append(f"before {r.end_date.day} {r.end_date:%B %Y}")
+    if r.min_duration:
+        parts.append(f"after {_duration(r.min_duration)}")
+    if r.max_duration:
+        parts.append(f"for the first {_duration(r.max_duration)}")
+    if r.min_kwh:
+        parts.append(f"after {r.min_kwh:g} kWh")
+    if r.max_kwh:
+        parts.append(f"for the first {r.max_kwh:g} kWh")
+    if r.min_power:
+        parts.append(f"while charging at {r.min_power:g} kW or more")
+    if r.max_power:
+        parts.append(f"while charging below {r.max_power:g} kW")
+    if r.min_current:
+        parts.append(f"while charging at {r.min_current:g} A or more")
+    if r.max_current:
+        parts.append(f"while charging below {r.max_current:g} A")
+    return " ".join(part for part in parts if part)
+
+
+def _charging_elements(tariff: Tariff) -> list[TariffElement]:
+    return [e for e in tariff.elements if not (e.restrictions and e.restrictions.reservation)]
+
+
+def _reachable(elements: list[TariffElement], kind: str) -> list[tuple[PriceComponent, str]]:
+    """Components of one kind that can apply: those before and including the first element
+    with no conditions. OCPI uses the first matching element, so later ones never apply."""
+    found = []
+    for element in elements:
+        when = conditions(element.restrictions)
+        found += [(c, when) for c in element.price_components if c.type == kind]
+        if not when and any(c.type == kind for c in element.price_components):
+            break
+    return found
+
+
+def _vat_stated(components: list[PriceComponent]) -> bool:
+    # A zero price is zero with or without VAT, so only priced components decide this.
+    return all(c.vat is not None for c in components if c.price > 0)
+
+
+def _amount(component: PriceComponent, vat_stated: bool) -> Decimal:
+    price = _decimal(component.price)
+    if vat_stated and component.vat is not None:
+        return price * (1 + _decimal(component.vat) / 100)
+    return price
+
+
+def _gbp_problem(tariff: Tariff) -> PriceDisplay | None:
     if tariff.currency != DISPLAY_CURRENCY:
         return PriceDisplay(
             "unknown",
@@ -64,44 +158,62 @@ def describe_tariff(tariff: Tariff) -> PriceDisplay:
             f"The operator published this tariff in {tariff.currency}, not GBP. "
             "Prices are never converted.",
         )
+    return None
+
+
+def energy_range(tariff: Tariff) -> tuple[Decimal, Decimal, bool] | None:
+    """Lowest and highest price per kWh that can apply, in pounds, and whether VAT is
+    included. None when the tariff is not in GBP or gives no energy price."""
+    if tariff.currency != DISPLAY_CURRENCY:
+        return None
+    elements = _charging_elements(tariff)
+    vat_stated = _vat_stated([c for e in elements for c in e.price_components])
+    energy = [_amount(c, vat_stated) for c, _ in _reachable(elements, "energy")]
+    if not energy:
+        return None
+    return min(energy), max(energy), vat_stated
+
+
+def describe_tariff(tariff: Tariff) -> PriceDisplay:
+    """The price text the map shows for one tariff."""
+    problem = _gbp_problem(tariff)
+    if problem:
+        return problem
     if tariff.price_state == "free_confirmed":
         return PriceDisplay("free", "Free")
     if tariff.price_state == "unknown":
         return PriceDisplay("unknown", "Price unknown", "The tariff has no price components.")
 
-    components: list[PriceComponent] = [
-        component
-        for element in tariff.elements
-        if not (element.restrictions and element.restrictions.reservation)
-        for component in element.price_components
-    ]
-    if not components:
+    elements = _charging_elements(tariff)
+    if not elements:
         return PriceDisplay(
             "unknown", "Price unknown", "The tariff only gives prices for reservations."
         )
-
-    # A zero price is zero with or without VAT, so only priced components decide this.
-    vat_stated = all(c.vat is not None for c in components if c.price > 0)
-
-    def amount(component: PriceComponent) -> Decimal:
-        price = _decimal(component.price)
-        if vat_stated and component.vat is not None:
-            return price * (1 + _decimal(component.vat) / 100)
-        return price
+    vat_stated = _vat_stated([c for e in elements for c in e.price_components])
 
     parts = []
-    energy = [amount(c) for c in components if c.type == "energy"]
-    if energy:
-        parts.append(f"{_span(energy, pence)} per kWh")
-    for kind, unit in NON_ENERGY_UNITS:
-        values = [amount(c) for c in components if c.type == kind and c.price > 0]
-        if values:
-            parts.append(f"{_span(values, pounds)} {unit}")
+    for kind, unit, fmt in (
+        ("energy", "per kWh", pence),
+        *((k, u, pounds) for k, u in NON_ENERGY_UNITS),
+    ):
+        found = [
+            (_amount(c, vat_stated), when)
+            for c, when in _reachable(elements, kind)
+            if kind == "energy" or c.price > 0
+        ]
+        pieces = [f"{fmt(amount)} {unit} {when}" for amount, when in found if when]
+        plain = [amount for amount, when in found if not when]
+        if plain:
+            pieces.append(("otherwise " if pieces else "") + f"{_span(plain, fmt)} {unit}")
+        if pieces:
+            parts.append(", ".join(pieces))
     if not parts:
         return PriceDisplay("unknown", "Price unknown", "No charging price could be shown.")
 
     vat_note = "including VAT" if vat_stated else "(excluding VAT, VAT not stated)"
-    text = f"{', plus '.join(parts)} {vat_note}"
+    # Semicolons separate kinds of charge when a list of conditional prices uses commas.
+    joiner = "; plus " if any(", " in part for part in parts) else ", plus "
+    text = f"{joiner.join(parts)} {vat_note}"
     if tariff.min_price:
         text += f"; minimum charge {pounds(tariff.min_price)} excluding VAT"
     return PriceDisplay("priced", text)

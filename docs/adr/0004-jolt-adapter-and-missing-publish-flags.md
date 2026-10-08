@@ -50,8 +50,12 @@ Jolt location would have been shown.
   blocks automated requests, links two files on opendata.geniepoint.co.uk. Both are OCPI
   2.2.1 responses holding every record, so the existing `ocpi_221` adapter reads them
   unchanged. No `static_file` adapter is built until a source needs one.
-- GeniePoint stays switched off until the Equans website's terms of use, linked from the
-  open data page, have been read.
+- GeniePoint stayed switched off until the Equans website's terms of use, linked from the
+  open data page, had been read. They restrict reproducing material on Equans' sites
+  without permission. On 2026-10-08 the repository owner decided to read them as not
+  covering the open data files, which regulation 10(5) requires to be available without
+  terms on their use, and GeniePoint was switched on. The reasoning is in its operator
+  file and on the transparency page.
 - The tariffs file repeats 22 identical tariffs 8 times each. The existing de-duplication
   keeps one copy and logs the repeats.
 
