@@ -18,6 +18,7 @@ import json
 import shutil
 import sys
 from pathlib import Path
+from urllib.parse import urlsplit
 
 from pipeline.project import REPOSITORY_URL
 from pipeline.registry import ROOT
@@ -49,6 +50,11 @@ LICENCE_NAMES = ("LICENSE", "LICENSE.txt", "LICENSE.md", "LICENCE", "LICENCE.txt
 
 class BuildError(Exception):
     """The site cannot be built as asked."""
+
+
+def _origin(url: str) -> str:
+    parts = urlsplit(url)
+    return f"{parts.scheme}://{parts.netloc}"
 
 
 def _package(name: str) -> dict:
@@ -90,8 +96,12 @@ def third_party_notices() -> str:
 
 def build(out: Path, *, offline_style: bool = False) -> list[str]:
     """Copy the site, MapLibre and config into out. Returns what was written."""
-    if out.resolve() == SITE.resolve():
-        raise BuildError("build into a separate folder, not the committed site/ folder")
+    target, site = out.resolve(), SITE.resolve()
+    if target == site or target.is_relative_to(site) or site.is_relative_to(target):
+        raise BuildError(
+            "build into a separate folder, not the committed site/ folder or one inside or "
+            "around it"
+        )
     version = _package("maplibre-gl")["version"]
     if version != MAPLIBRE_VERSION:
         raise BuildError(
@@ -107,8 +117,10 @@ def build(out: Path, *, offline_style: bool = False) -> list[str]:
     shutil.copy2(NODE_MODULES / "maplibre-gl" / "LICENSE.txt", vendor / "LICENSE.txt")
     (vendor / "THIRD_PARTY_NOTICES.txt").write_text(third_party_notices(), encoding="utf-8")
 
+    # origins: the only hosts besides this site the map may request (main.js enforces it).
     config = {
         "style": STYLE_URL,
+        "origins": [_origin(STYLE_URL)],
         "repository": REPOSITORY_URL,
         "maxBounds": MAX_BOUNDS,
         "maplibre": MAPLIBRE_VERSION,
@@ -118,6 +130,7 @@ def build(out: Path, *, offline_style: bool = False) -> list[str]:
             json.dumps(OFFLINE_STYLE, indent=2) + "\n", encoding="utf-8"
         )
         config["style"] = "assets/offline-style.json"
+        config["origins"] = []
     (out / "assets" / "config.json").write_text(
         json.dumps(config, indent=2) + "\n", encoding="utf-8"
     )

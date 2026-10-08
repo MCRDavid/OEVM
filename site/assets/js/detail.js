@@ -10,6 +10,14 @@ export function detailUrl(key) {
   return `data/loc/${key.slice(0, 2)}/${key}.json`;
 }
 
+function osmLink(latitude, longitude) {
+  const url = new URL("https://www.openstreetmap.org/");
+  url.searchParams.set("mlat", String(latitude));
+  url.searchParams.set("mlon", String(longitude));
+  url.hash = `map=18/${latitude}/${longitude}`;
+  return url.href;
+}
+
 function address(location) {
   const a = location.address ?? {};
   return [a.street, a.city, a.postal_code].filter(Boolean).join(", ") || "Address not given";
@@ -90,7 +98,8 @@ export function renderDetail(detail, { repository }) {
     h(
       "ul",
       { className: "detail-links" },
-      h("li", {}, h("a", { href: `geo:${latitude},${longitude}` }, "Open in your maps app")),
+      h("li", {}, safeLink(osmLink(latitude, longitude), "View this place on OpenStreetMap")),
+      h("li", {}, h("a", { href: `geo:${latitude},${longitude}` }, "Open in a maps app (Android and some other devices)")),
       h("li", {}, safeLink(report.href, "Report a mistake about this charger")),
     ),
   ];

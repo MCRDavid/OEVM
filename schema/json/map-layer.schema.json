@@ -1,6 +1,63 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$defs": {
+    "ConnectorSummary": {
+      "additionalProperties": false,
+      "description": "One kind of connector at a location, so filters can ask for one connector that meets\nevery condition at once. Connectors that would give the same entry appear once.",
+      "properties": {
+        "std": {
+          "description": "Connector standard (OCPI 2.2.1 name).",
+          "title": "Std",
+          "type": "string"
+        },
+        "kw": {
+          "anyOf": [
+            {
+              "minimum": 0,
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Maximum power, kW.",
+          "title": "Kw"
+        },
+        "price": {
+          "description": "'free' only when its price state is free_confirmed.",
+          "enum": [
+            "free",
+            "priced",
+            "unknown"
+          ],
+          "title": "Price",
+          "type": "string"
+        },
+        "ppk": {
+          "anyOf": [
+            {
+              "minimum": 0,
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Pence per kWh including VAT: the highest energy price that can apply. Null when the tariff states no VAT or gives no energy price.",
+          "title": "Ppk"
+        }
+      },
+      "required": [
+        "std",
+        "kw",
+        "price",
+        "ppk"
+      ],
+      "title": "ConnectorSummary",
+      "type": "object"
+    },
     "MapFeature": {
       "additionalProperties": false,
       "properties": {
@@ -86,7 +143,7 @@
           "type": "integer"
         },
         "price": {
-          "description": "'free' only when a connector's price state is free_confirmed.",
+          "description": "'free' only when every connector's price state is free_confirmed; 'priced' when any connector is priced; otherwise 'unknown'.",
           "enum": [
             "free",
             "priced",
@@ -95,19 +152,18 @@
           "title": "Price",
           "type": "string"
         },
-        "ppk": {
-          "anyOf": [
-            {
-              "minimum": 0,
-              "type": "number"
-            },
-            {
-              "type": "null"
-            }
-          ],
-          "default": null,
-          "description": "Pence per kWh including VAT: the lowest, across connectors, of the highest energy price that can apply. Null when no connector states VAT.",
-          "title": "Ppk"
+        "pt": {
+          "description": "Price summary worded by pipeline/pricing.py.",
+          "title": "Pt",
+          "type": "string"
+        },
+        "cons": {
+          "description": "Each kind of connector, sorted.",
+          "items": {
+            "$ref": "#/$defs/ConnectorSummary"
+          },
+          "title": "Cons",
+          "type": "array"
         }
       },
       "required": [
@@ -119,7 +175,8 @@
         "plugs",
         "evses",
         "price",
-        "ppk"
+        "pt",
+        "cons"
       ],
       "title": "MapProperties",
       "type": "object"

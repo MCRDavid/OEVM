@@ -73,8 +73,11 @@ def test_the_content_security_policy_allows_only_this_site_and_the_basemap(page)
     assert "unsafe-inline" not in policy and "unsafe-eval" not in policy
     hosts = set(re.findall(r"https://[^\s;]+", policy))
     assert hosts == {"https://tiles.openfreemap.org"}
+    assert build_site.STYLE_URL.startswith("https://tiles.openfreemap.org/")
     assert "default-src 'none'" in policy and "script-src 'self'" in policy
-    assert page.meta["referrer"] == "strict-origin-when-cross-origin"
+    # Only the origin, even to this site, so filters in the address (which can come from
+    # saved settings) are never sent in a Referer header.
+    assert page.meta["referrer"] == "strict-origin"
 
 
 def test_scripts_are_local_modules(page):
@@ -173,6 +176,7 @@ def test_build_copies_the_site_maplibre_and_notices(node_modules, tmp_path):
     config = json.loads((out / "assets" / "config.json").read_text(encoding="utf-8"))
     assert config == {
         "style": build_site.STYLE_URL,
+        "origins": ["https://tiles.openfreemap.org"],
         "repository": REPOSITORY_URL,
         "maxBounds": build_site.MAX_BOUNDS,
         "maplibre": build_site.MAPLIBRE_VERSION,
@@ -186,14 +190,17 @@ def test_offline_style_build_needs_no_outside_service(node_modules, tmp_path):
     build_site.build(out, offline_style=True)
     config = json.loads((out / "assets" / "config.json").read_text(encoding="utf-8"))
     assert config["style"] == "assets/offline-style.json"
+    assert config["origins"] == []
     style = json.loads((out / "assets" / "offline-style.json").read_text(encoding="utf-8"))
     assert style == build_site.OFFLINE_STYLE
     assert "http" not in json.dumps(style)
 
 
-def test_build_refuses_the_committed_site_folder(node_modules):
+@pytest.mark.parametrize("out", [Path("."), Path("site"), Path("site/build"), Path("site/a/b")])
+def test_build_refuses_the_committed_site_folder_and_folders_inside_or_around_it(node_modules, out):
     with pytest.raises(build_site.BuildError, match="not the committed site/"):
-        build_site.build(build_site.SITE)
+        build_site.build(ROOT / out)
+    assert not (build_site.SITE / "build").exists() and not (build_site.SITE / "a").exists()
 
 
 def test_build_needs_npm_ci(tmp_path, monkeypatch):

@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self'; worker-src 'self'; connect-src 'self' https://tiles.openfreemap.org; img-src 'self' data: blob: https://tiles.openfreemap.org; style-src 'self'; font-src 'self'; base-uri 'none'; form-action 'none'">
-<meta name="referrer" content="strict-origin-when-cross-origin">
+<meta name="referrer" content="strict-origin">
 <meta name="description" content="A map of UK public electric vehicle chargers, built from the open data operators publish under the Public Charge Point Regulations 2023.">
 <title>UK public EV chargers: OEVM</title>
 <link rel="icon" href="assets/icon.svg" type="image/svg+xml">
@@ -69,7 +69,7 @@
 </form>
 
 <main id="main">
-  <p id="notice" class="notice" role="status" hidden></p>
+  <p id="notice" class="notice" role="status"></p>
   <section id="map-view" class="map-view" aria-label="Map of chargers">
     <div id="map" class="map"></div>
     <div class="legend" aria-hidden="true">

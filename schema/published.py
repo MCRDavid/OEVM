@@ -26,6 +26,24 @@ class PointGeometry(_Model):
     coordinates: tuple[float, float] = Field(description="[longitude, latitude], WGS 84.")
 
 
+MapPrice = Literal["free", "priced", "unknown"]
+
+
+class ConnectorSummary(_Model):
+    """One kind of connector at a location, so filters can ask for one connector that meets
+    every condition at once. Connectors that would give the same entry appear once."""
+
+    std: str = Field(description="Connector standard (OCPI 2.2.1 name).")
+    kw: float | None = Field(default=None, ge=0, description="Maximum power, kW.")
+    price: MapPrice = Field(description="'free' only when its price state is free_confirmed.")
+    ppk: float | None = Field(
+        default=None,
+        ge=0,
+        description="Pence per kWh including VAT: the highest energy price that can apply. "
+        "Null when the tariff states no VAT or gives no energy price.",
+    )
+
+
 class MapProperties(_Model):
     id: RecordId
     key: Key = Field(description="Detail file: data/loc/<first two characters>/<key>.json.")
@@ -34,15 +52,12 @@ class MapProperties(_Model):
     kw: float | None = Field(default=None, ge=0, description="Highest connector power, kW.")
     plugs: list[str] = Field(description="Connector standards (OCPI 2.2.1 names), sorted.")
     evses: int = Field(ge=0)
-    price: Literal["free", "priced", "unknown"] = Field(
-        description="'free' only when a connector's price state is free_confirmed."
+    price: MapPrice = Field(
+        description="'free' only when every connector's price state is free_confirmed; "
+        "'priced' when any connector is priced; otherwise 'unknown'."
     )
-    ppk: float | None = Field(
-        default=None,
-        ge=0,
-        description="Pence per kWh including VAT: the lowest, across connectors, of the "
-        "highest energy price that can apply. Null when no connector states VAT.",
-    )
+    pt: str = Field(description="Price summary worded by pipeline/pricing.py.")
+    cons: list[ConnectorSummary] = Field(description="Each kind of connector, sorted.")
 
 
 class MapFeature(_Model):

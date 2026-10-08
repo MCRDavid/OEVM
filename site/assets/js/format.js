@@ -1,5 +1,5 @@
-// Wording and formatting for the map. Prices themselves are worded by the pipeline
-// (pipeline/pricing.py); this file only labels and formats what the data files hold.
+// Wording and formatting for the map. Prices are worded by the pipeline
+// (pipeline/pricing.py) and shown as given; this file never words a price.
 
 export const PLUG_GROUPS = {
   type2: { label: "Type 2", standards: ["IEC_62196_T2"] },
@@ -63,17 +63,6 @@ export function formatDateTime(iso) {
   if (!iso) return "date not given";
   const when = new Date(iso);
   return Number.isNaN(when.getTime()) ? "date not given" : DATE_TIME.format(when);
-}
-
-// One short line about price for a map point or list item. "Free" only for a confirmed
-// free connector; the full price text is in the detail file.
-export function priceSummary(props) {
-  if (props.price === "free") return "Free (confirmed)";
-  if (props.ppk !== null && props.ppk !== undefined) {
-    return `${Number(props.ppk).toFixed(1).replace(/\.0$/, "")}p per kWh, including VAT`;
-  }
-  if (props.price === "priced") return "Priced: see details";
-  return "Price unknown";
 }
 
 export function plugsSummary(plugs) {

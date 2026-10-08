@@ -53,7 +53,7 @@ the site goes live.
      decision:** whether this is acceptable under Schedule A1, after reading the ICO
      guidance. If not, the fallback is a self-hosted basemap (ADR 0008).
 3. **Prefer the address bar.** Settings carried in the page address (for example
-   `?free=1&connector=ccs`) store nothing on the device.
+   `?free=1&plug=ccs`) store nothing on the device.
 4. **Saving settings is opt-in.** Settings are saved to the device only after the visitor
    turns on "Remember my settings on this device", which is off by default. A short
    explanation sits beside the switch, and "Forget my settings" deletes everything saved.
@@ -94,7 +94,9 @@ and fill in the date.
 >
 > **Links you share.** Your current filters can appear in the page address, and the map's
 > position appears after the # sign, so you can bookmark or share them. Anyone you send
-> that link to can see those settings and the area you were looking at.
+> that link to can see those settings and the area you were looking at. The page tells
+> browsers to send only the site's address, not the full page address, with the requests
+> it makes.
 >
 > **Who else sees your visit.** This site is hosted by GitHub Pages. The background map
 > comes from OpenFreeMap (tiles.openfreemap.org), a free service delivered through

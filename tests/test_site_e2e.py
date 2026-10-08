@@ -35,9 +35,11 @@ WIDE = {"width": 1280, "height": 800}
 BROWSER_ARGS = [
     "--use-angle=swiftshader",
     "--enable-unsafe-swiftshader",
+    "--no-proxy-server",
     "--host-resolver-rules=MAP * ~NOTFOUND, EXCLUDE 127.0.0.1",
 ]
 LOCATIONS = 13  # in the recorded fixtures
+SERVED: list[str] = []  # every path the test server was asked for
 # MapLibre writes the map position after the # a moment after the map settles, starting
 # from 0/0/0.
 MAP_SETTLED = re.compile(r"#[1-9][0-9.]*/")
@@ -59,7 +61,7 @@ def site(tmp_path_factory) -> str:
 
     class Quiet(SimpleHTTPRequestHandler):
         def log_message(self, *args):
-            pass
+            SERVED.append(self.path)
 
     server = ThreadingHTTPServer(("127.0.0.1", 0), functools.partial(Quiet, directory=out))
     threading.Thread(target=server.serve_forever, daemon=True).start()
@@ -208,6 +210,8 @@ def test_details_show_provenance_and_return_focus(visit):
     assert "Where this comes from" in body and "Fetched " in body and "Licence:" in body
     report = page.get_attribute("text=Report a mistake about this charger", "href")
     assert report.startswith(f"{REPOSITORY_URL}/issues/new?template=correction.yml")
+    osm = page.get_attribute("text=View this place on OpenStreetMap", "href")
+    assert osm.startswith("https://www.openstreetmap.org/?mlat=")
     page.keyboard.press("Escape")
     assert page.is_hidden("#detail")
     assert page.evaluate("document.activeElement.classList.contains('item')")
@@ -247,11 +251,158 @@ HTMLCanvasElement.prototype.getContext = function (type, ...rest) {
 def test_without_webgl_the_list_is_shown_instead(visit):
     v = visit(init_script=NO_WEBGL)
     page = v.open(map_ready=False)
-    page.wait_for_selector("#notice:not([hidden])")
-    assert "shown as a list" in page.text_content("#notice")
+    expect(page.locator("#notice")).to_contain_text("could not start in this browser")
     assert page.is_visible("#list") and page.is_disabled("#show-map")
     assert page.locator("#list-items li").count() == LOCATIONS
     assert v.outside == []
+
+
+def test_if_the_basemap_cannot_load_the_list_takes_over(visit):
+    v = visit()
+    v.page.route("**/assets/offline-style.json", lambda route: route.fulfill(status=404))
+    page = v.open(map_ready=False)
+    expect(page.locator("#notice")).to_contain_text("background map could not be loaded")
+    assert page.is_visible("#list") and page.is_disabled("#show-map")
+    assert page.locator("#list-items li").count() == LOCATIONS
+    assert v.outside == []
+
+
+def test_widening_a_screen_that_opened_in_the_list_starts_the_map(visit):
+    page = visit({"width": 768, "height": 1024}).open("?view=list", map_ready=False)
+    expect(page.locator("#list-items li")).to_have_count(LOCATIONS)
+    assert page.locator("#map canvas").count() == 0
+    page.set_viewport_size(WIDE)
+    expect(page.locator("#map canvas")).to_have_count(1)
+    expect(page.locator("#list-summary")).to_contain_text("map area")
+
+
+def test_a_narrow_phone_header_wraps_without_pushing_the_map_off_screen(visit):
+    page = visit({"width": 360, "height": 740}).open()
+    header, map_view = (page.locator(selector).bounding_box() for selector in (".top", "#map-view"))
+    assert header["height"] > 60, "the header wraps at this width"
+    assert map_view["y"] + map_view["height"] < 740
+
+
+def test_on_a_wide_screen_details_cover_only_the_list(visit):
+    v = visit(WIDE)
+    page = v.open()
+    page.locator("#list-items button").first.click()
+    expect(page.locator("#detail-heading")).to_be_focused()
+    page.click("#toggle-filters", timeout=2000)  # the header stays usable
+    assert page.is_visible("#filters")
+    assert page.evaluate("document.getElementById('list').inert")
+    page.focus("#close-detail")
+    page.keyboard.press("Shift+Tab")
+    assert not page.evaluate("document.getElementById('list').contains(document.activeElement)")
+
+
+IN_DETAILS_OR_OUT_OF_PAGE = (
+    "document.activeElement === document.body"
+    " || document.getElementById('detail').contains(document.activeElement)"
+)
+
+
+def test_on_a_phone_focus_stays_in_the_details_until_they_close(visit):
+    page = visit().open("?view=list", map_ready=False)
+    expect(page.locator("#list-items li")).to_have_count(LOCATIONS)
+    page.locator("#list-items button").first.click()
+    expect(page.locator("#detail-heading")).to_be_focused()
+    for key in ["Tab"] * 12 + ["Shift+Tab"] * 12:
+        page.keyboard.press(key)
+        # Past the last link, focus may leave the page for the browser's own controls.
+        assert page.evaluate(IN_DETAILS_OR_OUT_OF_PAGE), key
+    page.keyboard.press("Escape")
+    assert page.evaluate("document.activeElement.classList.contains('item')")
+
+
+def test_a_slow_answer_never_replaces_newer_details(visit):
+    page = visit().open("?view=list", map_ready=False)
+    expect(page.locator("#list-items li")).to_have_count(LOCATIONS)
+    first, second = (page.locator("#list-items button").nth(i) for i in (0, 1))
+    held = []
+    page.route(f"**/{first.get_attribute('data-key')}.json", lambda route: held.append(route))
+    first.click()
+    page.keyboard.press("Escape")
+    second.click()
+    expect(page.locator("#detail-heading")).to_be_focused()
+    expected = page.text_content("#detail-heading")
+    held[0].continue_()
+    page.wait_for_timeout(500)
+    assert page.text_content("#detail-heading") == expected
+
+
+def test_filters_used_while_data_loads_keep_the_ones_in_the_address(visit):
+    v = visit()
+    held = []
+    v.page.route("**/data/locations.geojson", lambda route: held.append(route))
+    page = v.open("?minkw=50&op=geniepoint&view=list", map_ready=False)
+    open_filters(page)
+    assert page.input_value("#minkw") == "50"
+    page.check('input[name="plug"][value="ccs"]')
+    held[0].continue_()
+    expect(page.locator("#list-items li").first).to_be_visible()
+    assert "minkw=50&plug=ccs&op=geniepoint" in page.url
+    assert page.is_checked('input[name="op"][value="geniepoint"]')
+
+
+def test_a_network_missing_from_the_data_is_dropped_from_the_filters(visit):
+    page = visit().open("?op=not_in_the_data&view=list", map_ready=False)
+    expect(page.locator("#list-items li")).to_have_count(LOCATIONS)
+    assert "removed from the filters" in page.text_content("#notice")
+    assert "op=" not in page.url
+
+
+def test_forget_in_another_tab_is_not_undone(visit):
+    v = visit()
+    page = v.open()
+    open_filters(page)
+    page.check("#remember")
+    other = v.context.new_page()
+    other.goto(v.site)
+    open_filters(other)
+    other.click("#forget")
+    assert v.stored() == {}
+    expect(page.locator("#remember")).not_to_be_checked()
+    page.select_option("#minkw", "22")
+    assert v.stored() == {}
+
+
+def test_power_and_price_filters_apply_to_the_same_connector(visit):
+    # In the fixtures this site's 50 kW connectors cost 82.8p and only a 7 kW one costs less.
+    page = visit().open("?minkw=50&maxp=60&unknown=0&view=list", map_ready=False)
+    expect(page.locator("#list-summary")).not_to_contain_text("Loading")
+    assert page.locator("#list-items", has_text="Premier Inn Alnwick").count() == 0
+    page.goto(page.url.replace("maxp=60", "maxp=85"))
+    expect(page.locator("#list-items")).to_contain_text("Premier Inn Alnwick")
+    assert "Energy 57.6p to 82.8p per kWh including VAT" in page.text_content("#list-items")
+
+
+OUTSIDE_SOURCE = {
+    "type": "vector",
+    "tiles": ["https://outside.invalid/tiles/{z}/{x}/{y}.pbf"],
+    "maxzoom": 14,
+}
+
+
+def test_map_requests_to_other_hosts_are_stopped_in_the_page(visit):
+    v = visit()
+
+    def style(route):
+        data = json.loads(route.fetch().text())
+        data["sources"]["outside"] = OUTSIDE_SOURCE
+        data["layers"].append(
+            {"id": "outside", "type": "fill", "source": "outside", "source-layer": "any"}
+        )
+        route.fulfill(json=data)
+
+    v.page.route("**/assets/offline-style.json", style)
+    SERVED.clear()
+    page = v.open()
+    expect(page.locator("#map canvas")).to_have_count(1)
+    page.wait_for_timeout(1000)
+    assert any(path.startswith("/blocked-outside-request") for path in SERVED)
+    assert not any("outside.invalid" in url for url in v.outside)
+    assert page.is_hidden("#notice"), "a missing tile leaves the map in place"
 
 
 MARKUP = '<img src="x" onerror="window.injected = 1">'
@@ -302,7 +453,10 @@ def test_lighthouse_accessibility_score_on_a_phone(site, tmp_path):
             "--output=json",
             f"--output-path={report}",
             "--quiet",
-            "--chrome-flags=--headless=new --no-sandbox " + " ".join(BROWSER_ARGS[:2]),
+            # The host rule is quoted so its spaces survive Lighthouse's flag parsing.
+            "--chrome-flags=--headless=new --no-sandbox "
+            + " ".join(arg for arg in BROWSER_ARGS if not arg.startswith("--host-"))
+            + ' --host-resolver-rules="MAP * ~NOTFOUND, EXCLUDE 127.0.0.1"',
         ],
         check=True,
         timeout=180,

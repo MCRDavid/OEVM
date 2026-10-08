@@ -26,24 +26,41 @@ usable on a mid-range phone, Lighthouse accessibility score of 90 or more.
   centre of the map area first, up to 200 at a time with a note when there are more. A
   skip link leads to it. On small screens the page shows the map or the list, switched
   with two buttons; from 60em wide it shows both. If MapLibre cannot start (no WebGL2 or
-  no module support), the page says so and shows the list.
+  no module support) or the basemap style cannot be loaded, the page says so and shows
+  the list. A map hidden behind the list view starts only when it is first shown, so it
+  never opens at the wrong place.
+- **Details panel.** On a phone it is a sheet over the bottom of the page, and the rest of
+  the page is made inert while it is open, so keyboard focus cannot move behind it. On a
+  wide screen it covers only the list column, which is made inert, so the header,
+  filters and map stay usable. Escape or Close returns focus to what opened it.
 - **Text from feeds is never markup.** Every value is added with `textContent` or as a
   text node, links are made only for http and https addresses, and no MapLibre popup is
   used (its `setHTML` does not clean input). Tests feed markup through a location's name
   and attribution and check nothing runs.
 - **Content Security Policy** in a meta tag, as GitHub Pages cannot send headers: scripts,
   styles and fonts from the site only; connections and images also from
-  `tiles.openfreemap.org`. No inline scripts or styles. The referrer policy sends the
-  tile host the site's origin, not the page address with its filters.
+  `tiles.openfreemap.org`. No inline scripts or styles. A worker started from a file
+  takes its policy from that file's own response headers, which GitHub Pages does not
+  send, so MapLibre's tile requests are also checked in the page: `transformRequest`
+  lets requests go only to this site and the hosts listed in `config.json` (`origins`),
+  and sends anything else to an address on this site that does not exist.
+- **Referrer policy `strict-origin`:** every request, to this site or the tile host,
+  carries only the site's origin, never the page address with its filters (which can
+  come from saved settings).
 - **Settings.** Filters live in the page address (`?minkw=50&plug=ccs`), written with
   `history.replaceState`, and MapLibre keeps the map position after the `#`. Values that
   are not valid are ignored. Saving to `localStorage` happens only after the visitor
   turns on "Remember my settings on this device"; "Forget my settings" deletes the one
   key. Filters in the address take priority over saved ones.
-- **Price wording comes from the pipeline.** The details panel shows the text
-  `pipeline/pricing.py` wrote; the map and list use the slim layer's `price` and `ppk`.
-  "Free" appears only for `price == "free"`, which the layer sets only for
-  `free_confirmed`.
+- **Price wording comes from the pipeline.** The details panel shows each connector's
+  text and the list shows each location's summary (`pt`), both written by
+  `pipeline/pricing.py`; the page never words a price. A location is `free` only when
+  every connector is `free_confirmed`; a mix says "some connectors free (confirmed)".
+- **Filters apply to one connector at a time.** Each location in the slim layer lists
+  each kind of connector once (`cons`: standard, power, price state and pence per kWh
+  including VAT), and a location matches when one connector meets every connector
+  condition together. This adds about 17 bytes per location after gzip in the recorded
+  fixtures, roughly 0.85 MB for 50,000 locations.
 - **Tests never contact OpenFreeMap.** Its terms forbid automated collection, so the
   browser tests build with `--offline-style`, a plain local style, and run Chromium with
   every outside host blocked. They check that the page makes no outside requests, logs no

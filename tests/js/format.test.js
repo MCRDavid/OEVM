@@ -1,19 +1,7 @@
 import assert from "node:assert/strict";
 import { test } from "node:test";
 
-import { formatDateTime, formatKw, plugGroup, plugName, plugsSummary, priceSummary } from "../../site/assets/js/format.js";
-
-test("Free is shown only for a confirmed free location", () => {
-  assert.equal(priceSummary({ price: "free", ppk: 0 }), "Free (confirmed)");
-  assert.equal(priceSummary({ price: "priced", ppk: 0 }), "0p per kWh, including VAT");
-  assert.equal(priceSummary({ price: "unknown", ppk: null }), "Price unknown");
-  assert.equal(priceSummary({ price: "priced", ppk: null }), "Priced: see details");
-});
-
-test("pence per kWh keep one decimal place at most", () => {
-  assert.equal(priceSummary({ price: "priced", ppk: 79 }), "79p per kWh, including VAT");
-  assert.equal(priceSummary({ price: "priced", ppk: 49.25 }), "49.3p per kWh, including VAT");
-});
+import { formatDateTime, formatKw, plugGroup, plugName, plugsSummary } from "../../site/assets/js/format.js";
 
 test("power is never guessed", () => {
   assert.equal(formatKw(null), "Power unknown");

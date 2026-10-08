@@ -48,22 +48,32 @@ export function serialise(state) {
   return params.toString();
 }
 
-function priceKnown(props) {
-  return props.price === "free" || (props.ppk !== null && props.ppk !== undefined);
+// The conditions below apply to one connector at a time: a location matches when one of
+// its connectors meets all of them, so a fast connector's power is never paired with a
+// slow connector's price. Each entry in props.cons is one kind of connector (see
+// schema/published.py, ConnectorSummary).
+function priceKnown(connector) {
+  return connector.price === "free" || (connector.ppk !== null && connector.ppk !== undefined);
 }
 
-export function matches(props, state) {
-  if (state.minkw && !(Number.isFinite(props.kw) && props.kw >= state.minkw)) return false;
-  if (state.plugs.length) {
-    const groups = new Set((props.plugs ?? []).map(plugGroup));
-    if (!state.plugs.some((plug) => groups.has(plug))) return false;
-  }
-  if (state.ops.length && !state.ops.includes(props.op)) return false;
-  if (state.free && props.price !== "free") return false;
-  if (!state.unknown && !priceKnown(props)) return false;
-  if (state.maxp !== null && priceKnown(props)) {
-    const ppk = props.price === "free" ? 0 : Number(props.ppk);
+function connectorMatches(connector, state) {
+  if (state.minkw && !(Number.isFinite(connector.kw) && connector.kw >= state.minkw)) return false;
+  if (state.plugs.length && !state.plugs.includes(plugGroup(connector.std))) return false;
+  if (state.free && connector.price !== "free") return false;
+  if (!state.unknown && !priceKnown(connector)) return false;
+  if (state.maxp !== null && priceKnown(connector)) {
+    const ppk = connector.price === "free" ? 0 : Number(connector.ppk);
     if (ppk > state.maxp) return false;
   }
   return true;
+}
+
+function connectorFilters(state) {
+  return Boolean(state.minkw || state.plugs.length || state.free || state.maxp !== null || !state.unknown);
+}
+
+export function matches(props, state) {
+  if (state.ops.length && !state.ops.includes(props.op)) return false;
+  if (!connectorFilters(state)) return true;
+  return (props.cons ?? []).some((connector) => connectorMatches(connector, state));
 }

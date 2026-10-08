@@ -111,6 +111,12 @@ button[aria-expanded="true"] {
   background: var(--panel);
 }
 
+/* Empty but still in the page, so screen readers announce text added later. */
+.notice:empty {
+  padding: 0;
+  border: 0;
+}
+
 /* Header */
 
 .top {
@@ -433,6 +439,7 @@ body[data-view="list"] .map-view {
   body[data-view] .map-view {
     display: block;
     grid-column: 1;
+    grid-row: 2;
     height: calc(100dvh - var(--header));
   }
 
@@ -443,6 +450,7 @@ body[data-view="list"] .map-view {
   body[data-view] .list-view {
     display: block;
     grid-column: 2;
+    grid-row: 2;
     height: calc(100dvh - var(--header));
     overflow-y: auto;
     border-left: 1px solid var(--line);
@@ -459,9 +467,14 @@ body[data-view="list"] .map-view {
     border-left: 0;
   }
 
+  /* The details sit over the list column only, so the header, filters and map stay
+     usable beside them. */
   .detail {
-    inset: 0 0 0 auto;
-    width: 28rem;
+    position: relative;
+    inset: auto;
+    grid-column: 2;
+    grid-row: 2;
+    height: calc(100dvh - var(--header));
     max-height: none;
     border-top: 0;
     border-left: 2px solid var(--text);
