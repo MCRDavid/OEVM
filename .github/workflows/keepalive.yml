@@ -1,0 +1,33 @@
+name: Keepalive
+
+# GitHub turns off scheduled workflows in a public repository after 60 days with no
+# repository activity. Once a month this re-enables Fetch daily (and itself) through
+# the API, which needs no commit. Whether this restarts GitHub's 60 day count is not
+# documented by GitHub: needs testing (see docs/adr/0009-scheduled-workflows.md).
+
+on:
+  schedule:
+    - cron: "41 5 1 * *" # 05:41 UTC on the 1st of each month
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  keepalive:
+    name: Keep the scheduled workflows on
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    permissions:
+      actions: write # to enable workflows; nothing else
+    steps:
+      - name: Re-enable the scheduled workflows
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          for workflow in fetch-daily.yml keepalive.yml; do
+            gh api --method PUT \
+              "repos/$GITHUB_REPOSITORY/actions/workflows/$workflow/enable"
+            echo "Enabled $workflow"
+          done

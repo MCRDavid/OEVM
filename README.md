@@ -40,7 +40,10 @@ Early days. Blueprint tasks 1 to 9 are done:
    price, network), a details panel showing where each record came from and when, filters
    kept in the page address, opt-in saved settings and a list view that works without
    the map. The background map comes from OpenFreeMap; MapLibre GL JS is served from the
-   site itself. Not deployed yet (task 10).
+   site itself.
+10. **Workflows:** a daily fetch of every enabled operator, a deploy to GitHub Pages from
+    `main` and a monthly keepalive. See `docs/adr/0009-scheduled-workflows.md` and section
+    9 of `docs/GITHUB_SETTINGS.md` for the settings to switch on first.
 
 Also in place:
 
