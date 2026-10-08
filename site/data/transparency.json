@@ -245,10 +245,10 @@
           "kind": "access",
           "kind_label": "Access",
           "summary": "In the first daily run from a GitHub Actions runner, the locations file answered HTTP 403 to the first request. The same file answered normally from another network the same evening.",
-          "handling": "GeniePoint was left out of that run and the feed health page shows the failure. The repository owner decided the same day to fetch it through the project's relay (see relay above). The owner chose not to contact GeniePoint about the refusal.",
+          "handling": "GeniePoint was left out of that run and the feed health page shows the failure. The repository owner decided the same day to fetch it through the project's relay (see relay above). The owner chose not to contact GeniePoint about the refusal. The first run through the relay (37860826824, the same evening) fetched both files, 306 locations and 530 tariff records, and published 305 locations.",
           "evidence_url": "https://github.com/MCRDavid/OEVM/actions/runs/37853739264",
-          "status": "open",
-          "resolved_date": null
+          "status": "resolved",
+          "resolved_date": "2026-10-08"
         }
       ]
     },
