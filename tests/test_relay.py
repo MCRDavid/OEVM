@@ -9,7 +9,7 @@ import pytest
 from adapters import http
 from adapters.http import RELAY_TOKEN_HEADER, FeedError, PoliteClient, relay_route
 from pipeline import run
-from pipeline.registry import load_registry
+from pipeline.registry import ROOT, load_registry
 from schema.operator import OperatorConfig
 
 TOKEN = "test-relay-token-not-real"
@@ -146,3 +146,16 @@ def test_a_long_wait_asked_through_the_relay_stops_further_requests(geniepoint, 
     ):
         client.get("https://opendata.geniepoint.co.uk/locations")
     assert len(seen) == 1
+
+
+def test_the_worker_settings_deploy_the_relay_and_nothing_else():
+    import tomllib
+
+    relay = ROOT / "relay"
+    settings = tomllib.loads((relay / "wrangler.toml").read_text(encoding="utf-8"))
+    assert settings["name"] == "oevm-relay"
+    assert (relay / settings["main"]).is_file()
+    assert settings["preview_urls"] is False
+    assert not {"vars", "routes", "route", "triggers"} & settings.keys(), (
+        "secrets stay in Cloudflare"
+    )

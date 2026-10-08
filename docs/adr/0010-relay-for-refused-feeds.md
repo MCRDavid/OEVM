@@ -14,7 +14,12 @@ and to fetch the files from somewhere other than GitHub's servers.
   path prefix on it, and all share the two GitHub secrets `OEVM_RELAY_URL` and
   `OEVM_RELAY_TOKEN`, so another operator needs only a new route and a recorded decision.
   The free plan allows 100 Workers per account (limits page, read 8 October 2026), so
-  separate Workers would also be possible; one keeps setup and the token in one place. It is not a general proxy: it serves only the paths
+  separate Workers would also be possible; one keeps setup and the token in one place.
+- **Deployed from the repository.** Cloudflare's Git integration builds `relay/` from
+  `main` (`relay/wrangler.toml`), so the running Worker is always the reviewed code.
+  Preview builds for other branches are turned off and only changes under `relay/` start
+  a build. The Cloudflare app is given access to this repository only. The token is a
+  Worker secret set in the dashboard, never in the repository, and survives deploys. It is not a general proxy: it serves only the paths
   listed in its `ROUTES`, only GET, and only requests carrying a shared token in the
   `X-Relay-Token` header (a Worker secret and a GitHub Actions secret). It passes on the
   project's own User-Agent and nothing else from the request, passes the answer back as it

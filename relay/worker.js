@@ -10,8 +10,8 @@
 // - the answer is passed back as it came, with only the headers OCPI paging needs, and is
 //   never cached.
 //
-// To deploy, paste this whole file into the Worker's code editor in the Cloudflare
-// dashboard and select Deploy. Keep it identical to the copy in the repository.
+// Cloudflare deploys this folder from main through its Git integration (wrangler.toml and
+// docs/GITHUB_SETTINGS.md, section 10), so the deployed Worker is always this file.
 
 export const ROUTES = {
   "/geniepoint/locations": "https://opendata.geniepoint.co.uk/locations",
