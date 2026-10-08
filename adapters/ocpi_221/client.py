@@ -86,7 +86,28 @@ def fetch_module(
     page_size: int | None = None,
     max_pages: int | None = None,
 ) -> ModuleFetch:
-    """Fetch all pages of one module, or the first `max_pages` pages."""
+    """Fetch all pages of one module, or the first `max_pages` pages.
+
+    Saved pages and error messages have the operator's key removed, in case a server
+    echoes it back in a header, a link or the body.
+    """
+    try:
+        return _fetch_pages(
+            client, module, endpoint, date_from=date_from, page_size=page_size, max_pages=max_pages
+        )
+    except FeedError as exc:
+        raise FeedError(client.redact(str(exc))) from None
+
+
+def _fetch_pages(
+    client: PoliteClient,
+    module: str,
+    endpoint: str,
+    *,
+    date_from: datetime | None,
+    page_size: int | None,
+    max_pages: int | None,
+) -> ModuleFetch:
     params = {}
     if date_from is not None:
         params["date_from"] = format_ocpi_datetime(date_from)
@@ -108,7 +129,7 @@ def fetch_module(
         if response.status_code != 200:
             raise FeedError(f"{redact_url(url)} returned HTTP {response.status_code}")
         try:
-            body = response.json()
+            body = client.redact(response.json())
         except ValueError as exc:
             raise FeedError(f"{redact_url(url)} did not return JSON") from exc
         data = _ocpi_data(body, url)
@@ -116,9 +137,11 @@ def fetch_module(
         result.records.extend(data)
         result.pages.append(
             Page(
-                url=redact_url(url),
+                url=client.redact(redact_url(url)),
                 status_code=response.status_code,
-                headers={k: response.headers[k] for k in KEPT_HEADERS if k in response.headers},
+                headers=client.redact(
+                    {k: response.headers[k] for k in KEPT_HEADERS if k in response.headers}
+                ),
                 body=body,
             )
         )

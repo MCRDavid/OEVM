@@ -87,6 +87,7 @@ Finish the parts in square brackets when the site is built.
 > **Contact.** Open an issue on GitHub using the "Privacy question" form. Issues are
 > public, so please do not include personal information. If your question involves
 > personal data that should not be public, report it privately with the "Report a
-> vulnerability" button on the repository's Security tab.
+> vulnerability" button on the repository's Security and quality tab (called Security on
+> older pages). Both routes need a GitHub account.
 >
 > Last updated: [date].

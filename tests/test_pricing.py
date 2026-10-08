@@ -51,13 +51,13 @@ def test_vat_is_added_only_when_stated():
         "54p per kWh including VAT"
     )
     assert describe_tariff(tariff(components=[energy(0.45)])).text == (
-        "45p per kWh (VAT not stated)"
+        "45p per kWh (excluding VAT, VAT not stated)"
     )
 
 
 def test_mixed_vat_shows_all_prices_excluding_vat():
     shown = describe_tariff(tariff(components=[energy(0.45, vat=20), energy(0.30)]))
-    assert shown.text == "30p to 45p per kWh (VAT not stated)"
+    assert shown.text == "30p to 45p per kWh (excluding VAT, VAT not stated)"
 
 
 def test_a_free_extra_without_vat_does_not_hide_vat_on_the_real_price():
@@ -96,7 +96,8 @@ def test_other_charges_are_shown_in_pounds():
         )
     )
     assert shown.text == (
-        "50p per kWh, plus £1.00 per session, plus £6.00 per hour parked (VAT not stated)"
+        "50p per kWh, plus £1.00 per session, plus £6.00 per hour parked "
+        "(excluding VAT, VAT not stated)"
     )
 
 
@@ -140,7 +141,7 @@ def test_recorded_chargy_tariffs_show_only_pounds_and_pence():
         result = fetch(config, client, page_size=2, max_pages=2)
     shown = {t.currency: describe_tariff(t) for t in result.tariffs}
 
-    assert shown["GBP"].text == "32.5p to 49.2p per kWh (VAT not stated)"
+    assert shown["GBP"].text == "32.5p to 49.2p per kWh (excluding VAT, VAT not stated)"
     assert shown["EUR"].text == shown["USD"].text == "Price unknown"
     for display in shown.values():
         assert "€" not in display.text and "$" not in display.text

@@ -1,6 +1,6 @@
 # Data licences and sources
 
-General information, not legal advice. Last reviewed 7 October 2026.
+General information, not legal advice. Last reviewed 8 October 2026.
 
 ## The short version
 
@@ -61,10 +61,15 @@ read 7 October 2026:
 | Source | Data | Licence | Attribution | Terms checked | Used for |
 |---|---|---|---|---|---|
 | char.gy | https://char.gy/open-ocpi/locations and https://char.gy/open-ocpi/tariffs | OGL v3.0, on the PCPR basis above | Contains data from char.gy published under the Public Charge Point Regulations 2023, used in line with the Open Government Licence v3.0. | 7 October 2026: char.gy's open data page states no other licence or terms | Test fixtures in `tests/fixtures/chargy/`. Not yet published on a site. |
-| Jolt | https://api.joltcharge.com/v1/uk/public/locations and https://api.joltcharge.com/v1/uk/public/tariffs/{tariffId} | OGL v3.0, on the PCPR basis above | Contains data from Jolt published under the Public Charge Point Regulations 2023, used in line with the Open Government Licence v3.0. | 7 October 2026: Jolt's help page, read in a browser because it has a bot check, states no licence, terms or rate limits | Nothing yet. Switched off until its adapter is built. |
+| Jolt | https://api.joltcharge.com/v1/uk/public/locations and https://api.joltcharge.com/v1/uk/public/tariffs/{tariffId} | OGL v3.0, on the PCPR basis above | Contains data from Jolt published under the Public Charge Point Regulations 2023, used in line with the Open Government Licence v3.0. | 7 October 2026: Jolt's help page, read in a browser because it returns a browser check to automated requests, states no licence, terms or rate limits. 8 October 2026: the same article, read through the help centre's article data, says the same | Nothing yet. Switched off until its adapter is built. |
 
 The other operators in `operators/` have no data in this project yet. Each gets a row here
 when its terms have been checked and it is switched on.
+
+Gridserve's API Fair Use Policy was read on 8 October 2026. It says intellectual property
+in the API Data remains Gridserve's and describes the data as confidential and
+proprietary, so its licence is recorded as unknown and it stays switched off until the
+terms for the data are clarified with Gridserve (see `operators/gridserve.yaml`).
 
 ## Planned layers, kept separate
 

@@ -538,6 +538,12 @@ Best wishes,
 
 ## Caveats: what could not be verified
 
+> **Note added 2026-10-08:** this blueprint is the original brief and is not kept up to
+> date. The operator files in `operators/` are the current record. Some caveats below have
+> since been checked there; for example, the Eco-Movement locations URL, its user guide and
+> its `Authorization: Token` header were confirmed on 2026-10-07, and Gridserve's published
+> rate limit was found on 2026-10-08.
+
 - **Eco-Movement:** the user guide was not read. Still unconfirmed: the exact locations URL, how keys are issued, whether one token covers several operators, its terms, and its own list of UK operators.
 - **Untested:** CORS and single-location fetching for char.gy, Jolt, GeniePoint and Go Zero.
 - **OCPI:** the single-object GET is stated from general knowledge of the spec; confirm against the PDF.

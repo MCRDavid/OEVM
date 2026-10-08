@@ -79,6 +79,7 @@ def make_config(gap: float, limits: list[dict] | None = None) -> OperatorConfig:
 
 def limit(requests: int, per_seconds: float, endpoint: str = "all") -> dict:
     return {
+        "publisher": "Example Operator",
         "requests": requests,
         "per_seconds": per_seconds,
         "endpoint": endpoint,

@@ -12,33 +12,42 @@ All of these are free for public repositories.
 
 ## 1. Private vulnerability reporting
 
-Lets people report security problems privately, as `SECURITY.md` asks.
+Lets people report security problems privately, as `SECURITY.md` asks. **Do this before
+merging the pull request that adds `SECURITY.md`**: until it is on, the policy, the issue
+forms and `security.txt` point to a form that does not exist.
 
 1. Open the repository on GitHub and click **Settings**.
 2. In the sidebar's **Security and quality** section, click **Advanced Security**.
 3. Next to **Private vulnerability reporting**, click **Enable**.
-4. Check it works: open
-   https://github.com/MCRDavid/OEVM/security/advisories/new. You should see a "Report a
-   vulnerability" form. If you do not, tell Claude, because that address is used in
-   `site/.well-known/security.txt` and the issue forms and could not be checked from the
-   cloud session.
+4. Check it works. Open
+   `https://api.github.com/repos/<owner>/<repository>/private-vulnerability-reporting`
+   in a browser, where `<owner>/<repository>` is the part of the repository's address
+   after `github.com/` (see `REPOSITORY_URL` in `pipeline/project.py`). No sign-in is
+   needed. It should show `"enabled": true`. Your own view of the report form is not a
+   good check, because as the owner you can open it either way.
 5. To get an email when someone reports something: click **Watch** at the top of the
-   repository, then **Custom**, tick **Security alerts**, and click **Apply**.
+   repository, then **Custom**, tick **Security alerts**, and click **Apply**. Then open
+   https://github.com/settings/notifications and, under **Subscriptions**, then
+   **Watching**, make sure **Email** is selected.
 
 Source: https://docs.github.com/en/code-security/how-tos/report-and-fix-vulnerabilities/configure-vulnerability-reporting/configure-for-a-repository
 
 ## 2. Dependabot alerts and security updates
 
-Warns about known security problems in the packages the project uses and opens pull
-requests to fix them. Weekly version updates are already set up in
+Warns about known security problems and opens pull requests to fix them. Weekly version
+updates for Python packages, GitHub Actions and pre-commit hooks are already set up in
 `.github/dependabot.yml`.
+
+GitHub's list of ecosystems its dependency graph reads (checked 8 October 2026) has no
+entry for uv, so alerts will probably cover the GitHub Actions but not the Python
+packages in `uv.lock`. CI covers that gap: every run checks the locked packages against
+known vulnerabilities with pip-audit, and fails if one is found.
 
 1. **Settings > Advanced Security**.
 2. Next to **Dependabot alerts**, click **Enable**.
 3. Next to **Dependabot security updates**, click **Enable**.
-4. After a day, check **Insights > Dependency graph** lists the Python packages from
-   `uv.lock`. GitHub's documentation is unclear on whether security alerts cover
-   `uv.lock` yet.
+4. After a day, look at **Insights > Dependency graph**. If it lists the Python
+   packages from `uv.lock`, alerts cover them too.
 
 Source: https://docs.github.com/en/code-security/how-tos/secure-your-supply-chain/secure-your-dependencies/configure-security-updates
 
@@ -96,11 +105,22 @@ Makes every change go through a pull request with passing checks, as `CLAUDE.md`
 6. Keep **Block force pushes** and **Restrict deletions** ticked, then click **Create**.
 
 The older way also works: **Settings > Branches > Add classic branch protection rule**,
-branch name pattern `main`, with the same two options ticked.
+branch name pattern `main`, with the same two options ticked. Also tick **Do not allow
+bypassing the above settings**: without it, classic rules do not apply to the repository's
+owner, so pushes straight to `main` would still be allowed.
 
 Source: https://docs.github.com/en/repositories/configuring-branches-and-merges-in-your-repository/managing-rulesets/creating-rulesets-for-a-repository
 
-## 7. Your account
+## 7. Labels for the issue forms
+
+The issue forms add the labels `privacy` and `correction`. GitHub leaves out labels that
+do not exist yet, so create them once:
+
+1. Open the repository's **Issues** tab and click **Labels**.
+2. Click **New label**, name it `privacy`, and click **Create label**.
+3. Do the same for `correction`.
+
+## 8. Your account
 
 - Turn on two-factor authentication for your GitHub account if it is not on already
   (**Settings > Password and authentication**, from your profile picture).
@@ -117,5 +137,5 @@ the top. When the site is set up (blueprint task 10):
 - use a custom domain for the site, or put a copy in a separate `<user>.github.io`
   repository; and
 - if the site is published with GitHub Actions, use `actions/upload-pages-artifact@v5`
-  with `include-hidden-files: true`. Earlier versions leave out folders that start with a
-  dot, such as `.well-known`.
+  with `include-hidden-files: true`. Version 4 leaves out folders that start with a dot,
+  such as `.well-known`.

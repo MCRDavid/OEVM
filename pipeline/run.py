@@ -16,8 +16,10 @@ import time
 from collections.abc import Callable
 from datetime import UTC, datetime
 from pathlib import Path
+from typing import Annotated, Literal
 
 import httpx
+from pydantic import BaseModel, ConfigDict, Field
 
 import adapters.ocpi_221
 from adapters.http import FeedError, PoliteClient
@@ -76,9 +78,47 @@ def save_raw(result: AdapterResult, directory: Path) -> None:
             path.write_text(json.dumps(page.to_exchange(), indent=2) + "\n", encoding="utf-8")
 
 
+MAX_ISSUE_LENGTH = 500
+
+
+def _shorten(text: str) -> str:
+    return text if len(text) <= MAX_ISSUE_LENGTH else text[: MAX_ISSUE_LENGTH - 3] + "..."
+
+
+class _LogModel(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+
+
+class ModuleSummary(_LogModel):
+    pages: int = Field(ge=0)
+    records: int = Field(ge=0)
+    reported: int | None = Field(ge=0)
+    complete: bool
+
+
+class KeptCounts(_LogModel):
+    locations: int = Field(ge=0)
+    tariffs: int = Field(ge=0)
+
+
+class RunLog(_LogModel):
+    """The only fields a run log may have. The transparency page publishes nothing else."""
+
+    operator: str = Field(pattern=r"^[a-z0-9_]+$")
+    mode: Literal["fixtures", "live"]
+    fetched_at: str = Field(pattern=r"^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}Z$")
+    requests: int | None = Field(ge=0)
+    complete: bool
+    failed: bool
+    error: Annotated[str, Field(max_length=MAX_ISSUE_LENGTH)] | None
+    modules: dict[Literal["locations", "tariffs"], ModuleSummary]
+    kept: KeptCounts
+    issues: list[Annotated[str, Field(max_length=MAX_ISSUE_LENGTH)]]
+
+
 def run_log(result: AdapterResult, mode: str) -> dict:
     """A summary of one run for the transparency page: counts and issues, never records."""
-    return {
+    log = {
         "operator": result.operator_id,
         "mode": mode,
         "fetched_at": result.fetched_at.isoformat().replace("+00:00", "Z"),
@@ -96,13 +136,14 @@ def run_log(result: AdapterResult, mode: str) -> dict:
             for name, module in result.modules.items()
         },
         "kept": {"locations": len(result.locations), "tariffs": len(result.tariffs)},
-        "issues": result.issues,
+        "issues": [_shorten(issue) for issue in result.issues],
     }
+    return RunLog.model_validate(log).model_dump(mode="json")
 
 
 def failure_log(operator_id: str, mode: str, error: str, when: datetime) -> dict:
     """A summary of a run that stopped with an error, so the failure is visible."""
-    return {
+    log = {
         "operator": operator_id,
         "mode": mode,
         "fetched_at": when.astimezone(UTC)
@@ -112,11 +153,12 @@ def failure_log(operator_id: str, mode: str, error: str, when: datetime) -> dict
         "requests": None,
         "complete": False,
         "failed": True,
-        "error": error,
+        "error": _shorten(error),
         "modules": {},
         "kept": {"locations": 0, "tariffs": 0},
-        "issues": [f"Run failed: {error}"],
+        "issues": [_shorten(f"Run failed: {error}")],
     }
+    return RunLog.model_validate(log).model_dump(mode="json")
 
 
 def write_log(directory: Path, log: dict) -> None:

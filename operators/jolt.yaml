@@ -57,13 +57,20 @@ sources:
       Read 2026-10-07. Gives both API URLs and a shared apiKey. Says regulators and others
       needing "the extended open data" can ask by email with the subject line
       "UK PCPR Open Data Request".
+  - url: https://support.joltcharge.com/api/v2/help_center/en-gb/articles/27955558493207.json
+    note: >-
+      The same help article as data, read 2026-10-08. Gives the article's last update as
+      2025-01-30 and the same API URLs.
 findings:
   - date: 2026-10-07
     kind: access
     summary: >-
-      The help page that gives the open data details is behind a browser check, so
-      automated tools cannot read it.
-    handling: The page was read in a browser and its content recorded here.
+      The help page that gives the open data details returns a browser check (HTTP 403) to
+      automated requests.
+    handling: >-
+      The page was read in a browser on 2026-10-07. On 2026-10-08 the same article, last
+      updated 2025-01-30, was read through the help centre's article data, which automated
+      tools can reach.
     evidence_url: https://support.joltcharge.com/hc/en-gb/articles/27955558493207-UK-Public-Charge-Point-Regulations-Open-Data-Request
   - date: 2026-10-07
     kind: documentation

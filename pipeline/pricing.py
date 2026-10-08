@@ -9,7 +9,7 @@ regulations describe the price in reference data as "the price in pence per kilo
 - "Free" is shown only for a GBP tariff whose price_state is free_confirmed.
 - Energy prices are shown in pence per kWh, as the blueprint asks. VAT is added only when
   every component that costs something states it. Otherwise prices are shown as
-  published, excluding VAT, and marked "VAT not stated".
+  published (OCPI prices exclude VAT) and marked "excluding VAT, VAT not stated".
 - Sums are done in exact decimal arithmetic, so half pennies round up as expected.
 - Reservation fees are not shown as charging prices.
 """
@@ -100,7 +100,7 @@ def describe_tariff(tariff: Tariff) -> PriceDisplay:
     if not parts:
         return PriceDisplay("unknown", "Price unknown", "No charging price could be shown.")
 
-    vat_note = "including VAT" if vat_stated else "(VAT not stated)"
+    vat_note = "including VAT" if vat_stated else "(excluding VAT, VAT not stated)"
     text = f"{', plus '.join(parts)} {vat_note}"
     if tariff.min_price:
         text += f"; minimum charge {pounds(tariff.min_price)} excluding VAT"

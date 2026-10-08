@@ -24,26 +24,30 @@ auth:
 rate_limit:
   min_seconds_between_requests: 125
   limits:
-    - requests: 30
+    - publisher: Eco-Movement
+      requests: 30
       per_seconds: 3600
       endpoint: locations
       quote: The `locations` endpoint has a rate limit of 30 requests per 1 hour.
       source_url: https://developers.eco-movement.com/v2.2.1/reference/get-all-locations-pcpr-api
       checked: 2026-10-07
-    - requests: 30
+    - publisher: Eco-Movement
+      requests: 30
       per_seconds: 3600
       endpoint: locations
       scope: single location
       quote: The `locations/{id}` endpoint has a rate limit of 30 requests per 1 hour.
       source_url: https://developers.eco-movement.com/v2.2.1/reference/get-specific-location-pcpr-api
       checked: 2026-10-07
-    - requests: 30
+    - publisher: Eco-Movement
+      requests: 30
       per_seconds: 3600
       endpoint: tariffs
       quote: The `tariffs` endpoint has a rate limit of 30 requests per 1 hour.
       source_url: https://developers.eco-movement.com/reference/get-tariffs-pcpr-api
       checked: 2026-10-07
-    - requests: 1
+    - publisher: Eco-Movement
+      requests: 1
       per_seconds: 30
       endpoint: statuses
       quote: The `statuses` endpoint has a rate limit of 1 request per 30 seconds.

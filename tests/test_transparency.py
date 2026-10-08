@@ -1,5 +1,6 @@
 """Tests for the transparency page (pipeline/transparency.py)."""
 
+import html
 import json
 import re
 from datetime import UTC, datetime
@@ -62,6 +63,9 @@ def test_page_lists_every_operator_and_finding(page):
 
 def test_page_shows_the_short_disclaimer_and_required_links(page):
     assert transparency.short_disclaimer() in " ".join(parse(page).text)
+    footer = page[page.index("<footer>") :]
+    # DISCLAIMER.md asks for the short version in the footer of every page.
+    assert html.escape(transparency.short_disclaimer(), quote=True) in footer
     hrefs = {attrs.get("href") for tag, attrs in parse(page).tags if tag == "a"}
     for path in ("DISCLAIMER.md", "DATA_LICENCES.md", "docs/PRIVACY_AND_COOKIES.md"):
         assert f"{REPOSITORY_URL}/blob/main/{path}" in hrefs
@@ -90,6 +94,14 @@ def test_rate_limits_show_our_setting_and_the_regulation(page):
         assert gap >= 1
         # per_hour requests a gap apart fit in an hour; one more would not.
         assert (per_hour - 1) * gap < 3600 <= per_hour * gap
+
+
+def test_each_published_limit_names_its_publisher(page):
+    data = json.loads(transparency.outputs()[transparency.JSON_PATH])
+    published = [p for op in data["operators"] for p in op["rate_limit"]["published"]]
+    assert published and all(p["publisher"] for p in published)
+    assert "Published limit (operator or its data host)" in page
+    assert "published by Eco-Movement" in page and "published by Gridserve" in page
 
 
 @pytest.mark.parametrize(("gap", "expected"), [(2, 1800), (7, 515), (30, 120), (125, 29)])
@@ -171,7 +183,43 @@ def test_a_malformed_run_log_is_refused(tmp_path, capsys):
     (tmp_path / "chargy.json").write_text(json.dumps({"operator": "chargy", "mode": "live"}))
     out = tmp_path / "build"
     assert transparency.main(["--runs", str(tmp_path), "--out", str(out)]) == 1
-    assert "is not a run log" in capsys.readouterr().err
+    assert "chargy.json is not a valid run log" in capsys.readouterr().err
+
+
+def test_a_run_log_with_extra_fields_is_refused(tmp_path, capsys):
+    log = chargy_run_log()
+    log["raw_url"] = "https://example.invalid/locations?apiKey=never-published"
+    (tmp_path / "chargy.json").write_text(json.dumps(log))
+    assert transparency.main(["--runs", str(tmp_path), "--out", str(tmp_path / "out")]) == 1
+    error = capsys.readouterr().err
+    assert "raw_url" in error and "never-published" not in error
+    assert not (tmp_path / "out").exists()
+
+
+def test_a_run_log_must_be_named_after_its_operator(tmp_path):
+    (tmp_path / "jolt.json").write_text(json.dumps(chargy_run_log()))
+    with pytest.raises(ValueError, match=r"name it chargy\.json"):
+        transparency.load_runs(tmp_path)
+
+
+def test_a_run_log_for_an_unknown_operator_is_refused(tmp_path):
+    log = chargy_run_log() | {"operator": "nobody"}
+    (tmp_path / "nobody.json").write_text(json.dumps(log))
+    with pytest.raises(ValueError, match="not in the registry: nobody"):
+        transparency.build(load_registry(), transparency.load_runs(tmp_path))
+
+
+def test_only_known_run_log_fields_are_published(tmp_path):
+    (tmp_path / "chargy.json").write_text(json.dumps(chargy_run_log()))
+    data = transparency.build(load_registry(), transparency.load_runs(tmp_path))
+    chargy = next(op for op in data["operators"] if op["id"] == "chargy")
+    assert set(chargy["latest_run"]) == set(run.RunLog.model_fields)
+
+
+def test_long_issues_are_shortened_in_run_logs():
+    log = run.failure_log("chargy", "live", "x" * 2000, NOW_UTC)
+    assert len(log["error"]) == len(log["issues"][0]) == run.MAX_ISSUE_LENGTH
+    assert log["issues"][0].endswith("...")
 
 
 def test_runs_need_an_out_folder_so_the_committed_page_is_kept(tmp_path):

@@ -55,8 +55,8 @@ findings:
   - date: 2026-10-07
     kind: spec_conformance
     summary: >-
-      EVSE statuses are published as WORKING and FAULTED, which are not values in the
-      OCPI 2.2.1 Status list.
+      EVSE statuses are published as WORKING, and in a live run on 2026-10-07 also as
+      FAULTED. Neither is a value in the OCPI 2.2.1 Status list.
     handling: >-
       Shown as status unknown rather than guessed. Regulation 10(6)(a) uses "working" to
       mean an OCPI status of available, charging or reserved.
@@ -73,8 +73,12 @@ findings:
     evidence_url: https://char.gy/open-ocpi/tariffs
   - date: 2026-10-07
     kind: data_quality
-    summary: Tariff price components give no VAT figure.
-    handling: Prices are shown as published, excluding VAT, and marked "VAT not stated".
+    summary: >-
+      Tariff price components give no VAT figure. OCPI 2.2.1 says an omitted VAT means no
+      VAT is applicable.
+    handling: >-
+      VAT is not guessed. Prices are shown as published, which OCPI defines as excluding
+      VAT, and marked "excluding VAT, VAT not stated".
     evidence_url: https://char.gy/open-ocpi/tariffs
   - date: 2026-10-07
     kind: access

@@ -10,8 +10,9 @@
 - Honours every Retry-After header, in seconds or as an HTTP date, on any attempt. One
   that cannot be read is treated as a long wait. If the wait is longer than this project
   waits, nothing more is sent to that host until it has passed.
-- Adds the operator's key from the environment variable named by `auth.secret_name`.
-  Keys never appear in URLs this module returns, logs or raises.
+- Adds the operator's key from the environment variable named by `auth.secret_name`,
+  and only ever sends it over https. Keys never appear in URLs this module returns, logs
+  or raises, and `PoliteClient.redact` removes the key from anything a server sends back.
 - Does not follow redirects, so a key can never be sent on to another site.
 
 Timers live in memory, so they cover one run of the program. Runs that use the same host
@@ -21,11 +22,11 @@ must not be started in parallel.
 import os
 import re
 import time
-from collections.abc import Callable
+from collections.abc import Callable, Iterable
 from dataclasses import dataclass
 from datetime import UTC, datetime
 from email.utils import parsedate_to_datetime
-from urllib.parse import parse_qsl, urlencode, urlsplit, urlunsplit
+from urllib.parse import parse_qsl, quote, quote_plus, urlencode, urlsplit, urlunsplit
 
 import httpx
 
@@ -41,6 +42,7 @@ USER_AGENT = f"{NAME}/{VERSION} (+{REPOSITORY_URL})"
 RETRY_STATUSES = frozenset({429, 500, 502, 503, 504})
 MAX_RETRY_WAIT_SECONDS = 600
 UNREADABLE_RETRY_AFTER_SECONDS = 3600
+REDACTED = "REDACTED"
 
 
 class FeedError(Exception):
@@ -69,11 +71,11 @@ def with_params(url: str, params: dict[str, str]) -> str:
     return urlunsplit(parts._replace(query=urlencode(query, safe=":")))
 
 
-def credentials_for(config: OperatorConfig) -> tuple[dict[str, str], dict[str, str]]:
-    """Headers and query parameters that carry the operator's key."""
+def secret_value(config: OperatorConfig) -> str | None:
+    """The operator's key from the environment, or None if the feed needs no key."""
     auth = config.auth
     if auth.method == "none":
-        return {}, {}
+        return None
     if auth.method == "unknown" or auth.name in (None, "unknown") or not auth.secret_name:
         raise FeedError(f"{config.id}: auth details are not known yet")
     value = os.environ.get(auth.secret_name)
@@ -82,9 +84,51 @@ def credentials_for(config: OperatorConfig) -> tuple[dict[str, str], dict[str, s
             f"{config.id}: the environment variable {auth.secret_name} is not set. "
             "In GitHub Actions, add it as a repository secret with that name."
         )
+    return value
+
+
+def credentials_for(config: OperatorConfig) -> tuple[dict[str, str], dict[str, str]]:
+    """Headers and query parameters that carry the operator's key."""
+    value = secret_value(config)
+    if value is None:
+        return {}, {}
+    auth = config.auth
     if auth.method == "header":
         return {auth.name: f"{auth.scheme} {value}" if auth.scheme else value}, {}
     return {}, {auth.name: value}
+
+
+def scrub(value: object, secrets: Iterable[str]) -> object:
+    """value with every secret, as sent or URL-encoded, replaced by REDACTED.
+
+    Works through strings, lists and dict keys and values, so a whole response body can be
+    cleaned before it is saved or shown.
+    """
+    forms = sorted(
+        {
+            form
+            for secret in secrets
+            if secret
+            for form in (secret, quote(secret, safe=""), quote_plus(secret))
+        },
+        key=len,
+        reverse=True,
+    )
+    if not forms:
+        return value
+
+    def clean(item: object) -> object:
+        if isinstance(item, str):
+            for form in forms:
+                item = item.replace(form, REDACTED)
+            return item
+        if isinstance(item, list):
+            return [clean(part) for part in item]
+        if isinstance(item, dict):
+            return {clean(key): clean(part) for key, part in item.items()}
+        return item
+
+    return clean(value)
 
 
 def retry_after_seconds(response: httpx.Response, now: datetime) -> float | None:
@@ -157,6 +201,8 @@ class PoliteClient:
         timeout_seconds: float = 60.0,
     ):
         headers, self._auth_params = credentials_for(config)
+        secret = secret_value(config)
+        self._secrets = (secret,) if secret else ()
         self._client = httpx.Client(
             headers={"User-Agent": USER_AGENT, "Accept": "application/json", **headers},
             timeout=timeout_seconds,
@@ -176,6 +222,10 @@ class PoliteClient:
 
     def __exit__(self, *exc_info: object) -> None:
         self._client.close()
+
+    def redact(self, value: object) -> object:
+        """value with this operator's key removed, wherever a server may have echoed it."""
+        return scrub(value, self._secrets)
 
     def _refuse_if_held(self, timer: HostTimer, url: str) -> None:
         if timer.not_before is None:
@@ -200,6 +250,8 @@ class PoliteClient:
 
     def get(self, url: str) -> httpx.Response:
         """GET url, retrying temporary failures. Raises FeedError when retries run out."""
+        if self._secrets and urlsplit(url).scheme != "https":
+            raise FeedError(f"not sending a key over plain http: {redact_url(url)}")
         timer = host_timer(url)
         request_url = with_params(url, self._auth_params) if self._auth_params else url
         for attempt in range(self.max_retries + 1):

@@ -45,7 +45,8 @@ There is no map yet. The rules the site must follow for privacy and cookies are 
 - Every record carries its provenance: source, licence, when it was fetched and how far
   to trust it.
 - A charger is only ever shown as free when the operator's own tariff says every price
-  is zero. A missing tariff means "Price unknown"; missing VAT means "VAT not stated".
+  is zero. A missing tariff means "Price unknown"; missing VAT means "excluding VAT,
+  VAT not stated".
 - No secrets in the repository and no personal data.
 - Status pages use neutral, dated, evidenced wording.
 - Unknown facts are written as "unknown" or "needs_testing", never guessed.

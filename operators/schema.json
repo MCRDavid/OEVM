@@ -66,6 +66,12 @@
       "additionalProperties": false,
       "description": "One rate limit an operator, or the host serving its data, publishes.",
       "properties": {
+        "publisher": {
+          "description": "Who publishes the limit: the operator, or the company hosting its data, for example 'Eco-Movement'.",
+          "minLength": 1,
+          "title": "Publisher",
+          "type": "string"
+        },
         "requests": {
           "description": "How many requests are allowed per window.",
           "exclusiveMinimum": 0,
@@ -139,6 +145,7 @@
         }
       },
       "required": [
+        "publisher",
         "requests",
         "per_seconds",
         "quote",

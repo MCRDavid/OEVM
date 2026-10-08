@@ -374,6 +374,58 @@ def test_query_param_key_is_sent_but_never_recorded(monkeypatch):
     assert result.pages[0].url == f"{EXAMPLE}/locations"  # the key is added only when sending
 
 
+def test_an_echoed_key_is_removed_from_saved_pages_issues_and_errors(monkeypatch, tmp_path):
+    config = make_config(
+        auth={"method": "query_param", "name": "apiKey", "secret_name": PARAM_ENV_NAME},
+        licence={"name": "OGL-3.0", "basis": "test", "checked": "2026-10-07"},
+    )
+    echoed = "test-value/echo+1"  # has characters that change when URL-encoded
+    monkeypatch.setenv(PARAM_ENV_NAME, echoed)
+    encoded = "test-value%2Fecho%2B1"
+    echo = f"{EXAMPLE}/locations?apiKey={encoded}&offset=1"
+    location = raw_location("A", address=f"Key {echoed} here")
+
+    def handler(request):
+        if request.url.path.endswith("/tariffs"):
+            return httpx.Response(200, json=ocpi_body([]))
+        if request.url.params.get("offset"):
+            body = ocpi_body([]) | {"status_code": 2001, "status_message": f"bad key {echoed}"}
+            return httpx.Response(200, json=body)
+        return httpx.Response(
+            200,
+            json=ocpi_body([location, {"id": echoed, "publish": True}]),
+            headers={"Link": f'<{echo}>; rel="next"', "X-Total-Count": "3"},
+        )
+
+    with client_for(config, handler) as client, pytest.raises(FeedError) as error:
+        fetch(config, client, now=NOW)
+    assert echoed not in str(error.value) and "bad key REDACTED" in str(error.value)
+
+    with client_for(config, handler) as client:
+        result = fetch(config, client, now=NOW, max_pages=1)
+    run.save_raw(result, tmp_path)
+    saved = (tmp_path / "locations_page1.json").read_text()
+    assert "REDACTED" in saved
+    assert echoed not in saved and encoded not in saved
+    assert not [issue for issue in result.issues if echoed in issue]
+    assert [issue for issue in result.issues if "location 'REDACTED' skipped" in issue]
+    assert result.locations[0].address.street == "Key REDACTED here"
+
+
+def test_a_key_is_never_sent_over_plain_http(monkeypatch):
+    config = make_config(
+        auth={"method": "header", "name": "x-api-key", "secret_name": HEADER_ENV_NAME}
+    )
+    monkeypatch.setenv(HEADER_ENV_NAME, "test-value-321")
+    sent = []
+    with (
+        client_for(config, lambda r: sent.append(r) or httpx.Response(200)) as client,
+        pytest.raises(FeedError, match="not sending a key over plain http"),
+    ):
+        client.get("http://example.invalid/ocpi/locations")
+    assert sent == []
+
+
 # Converting records
 
 

@@ -181,6 +181,7 @@ def test_minimal_and_enabled_examples_are_valid():
                 "min_seconds_between_requests": 2,
                 "limits": [
                     {
+                        "publisher": "Example Operator",
                         "requests": 30,
                         "per_seconds": 3600,
                         "quote": "30 requests per 1 hour",
@@ -191,6 +192,30 @@ def test_minimal_and_enabled_examples_are_valid():
             }
         ),
         minimal(rate_limit={"min_seconds_between_requests": 0.5}),
+        minimal(
+            rate_limit={
+                "min_seconds_between_requests": 200,
+                "limits": [
+                    {
+                        "requests": 30,
+                        "per_seconds": 3600,
+                        "quote": "30 requests per 1 hour",
+                        "source_url": "https://example.invalid/terms",
+                        "checked": "2026-10-07",
+                    }
+                ],
+            }
+        ),
+        minimal(
+            auth={"method": "header", "name": "x-api-key", "secret_name": EXAMPLE_NAME},
+            base_url="http://example.invalid/ocpi",
+        ),
+        minimal(
+            auth={"method": "query_param", "name": "apiKey", "secret_name": EXAMPLE_NAME},
+            endpoints={
+                "locations": {"url": "http://example.invalid/locations", "status": "documented"}
+            },
+        ),
     ],
     ids=[
         "key-in-base-url",
@@ -230,6 +255,9 @@ def test_minimal_and_enabled_examples_are_valid():
         "finding-without-date",
         "gap-breaks-published-limit",
         "gap-below-project-minimum",
+        "limit-without-publisher",
+        "key-over-plain-http-base-url",
+        "key-over-plain-http-endpoint",
     ],
 )
 def test_invalid_operator_configs_are_rejected(data):

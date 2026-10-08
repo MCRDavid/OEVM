@@ -22,3 +22,14 @@ updates:
         applies-to: version-updates
         patterns:
           - "*"
+
+  # Hook versions in .pre-commit-config.yaml. Local hooks have no version and are skipped.
+  - package-ecosystem: "pre-commit"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+    groups:
+      pre-commit-hooks:
+        applies-to: version-updates
+        patterns:
+          - "*"

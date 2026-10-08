@@ -8,12 +8,17 @@ best-effort basis.
 
 Please report security problems **privately**, not in a public issue:
 
-1. Open the repository's **Security** tab.
+1. Open the repository's **Security and quality** tab (called **Security** on older
+   pages).
 2. Choose **Report a vulnerability**.
 3. Describe the problem, how to reproduce it and what it could affect.
 
 This uses GitHub's private vulnerability reporting, so only you and the maintainer can see
-the report.
+the report. It needs a GitHub account.
+
+If you cannot see **Report a vulnerability**, open a public issue titled "Private security
+contact needed" with no details of the problem, and the maintainer will set up a private
+route.
 
 Please use the same private route if you find a key, token, password or personal data
 that has been published in this repository by mistake.
@@ -40,7 +45,7 @@ In scope:
 Out of scope:
 
 - charge point operators' own systems and feeds (please report those to the operator);
-- GitHub, Cloudflare and other services the project uses (please report those to them);
+- GitHub and other services the project uses or may use (please report those to them);
 - reports from automated scanners that do not show a real impact;
 - denial of service, spam and social engineering.
 
@@ -55,6 +60,10 @@ the maintainer will not complain about your research to anyone.
 
 - No keys, tokens or passwords are stored in the repository. Operator keys live in GitHub
   Actions secrets and are referred to by name only.
-- A secret scanner runs before every commit and in CI on every file.
+- A secret scanner runs in CI on every file, and before each commit for anyone who has
+  installed the pre-commit hooks.
+- Keys are only sent over https, and are removed from anything saved or shown, in case a
+  server echoes them back.
+- CI checks the locked dependencies against known vulnerabilities.
 - Tests never call live operator feeds.
 - The website has no accounts, no cookies, no tracking and no scripts from third parties.

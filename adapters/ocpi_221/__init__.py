@@ -122,5 +122,5 @@ def fetch(
         except (KeyError, TypeError, ValueError) as exc:
             issues.add(f"tariff {raw.get('id')!r} skipped: {_describe(exc)}")
 
-    result.issues = issues.lines()
+    result.issues = [client.redact(line) for line in issues.lines()]
     return result

@@ -47,6 +47,14 @@ jobs:
       - name: Check the transparency page is up to date
         run: uv run python -m pipeline.transparency --check
 
+      - name: Check locked packages for known vulnerabilities
+        # Dependabot alerts may not read uv.lock, so audit an export of it with pip-audit.
+        run: |
+          uv export --format requirements-txt --frozen --all-groups --no-emit-project \
+            -o "$RUNNER_TEMP/requirements.txt"
+          uvx pip-audit==2.10.1 --disable-pip --require-hashes --progress-spinner off \
+            -r "$RUNNER_TEMP/requirements.txt"
+
       - name: Secret scan and file checks (pre-commit, every file)
         run: uv run pre-commit run --all-files --show-diff-on-failure
 

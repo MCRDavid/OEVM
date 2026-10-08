@@ -11,7 +11,8 @@ body:
 
         If your question involves personal data that should not be public (for example,
         personal data published by mistake), please report it privately instead, using
-        the "Report a vulnerability" button on the Security tab.
+        the "Report a vulnerability" button on the Security and quality tab (called
+        Security on older pages).
   - type: textarea
     id: question
     attributes:

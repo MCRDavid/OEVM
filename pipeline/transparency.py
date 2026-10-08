@@ -7,8 +7,9 @@ apply, and what has been found.
 
 The page is built only from the operator registry (operators/*.yaml) and, when given, run
 logs written by `python -m pipeline.run --log-dir DIR`. It has no scripts, no cookies and
-no third-party files. All wording comes from the registry, where it is checked for neutral
-language, or from this module.
+no third-party files. Wording comes from the registry, where it is checked for neutral
+language, or from this module. Issues in run logs may quote values from a feed; they are
+escaped and shown as logged.
 """
 
 import argparse
@@ -19,8 +20,11 @@ import sys
 from datetime import date
 from pathlib import Path
 
+from pydantic import ValidationError
+
 from pipeline.project import REPOSITORY_URL
 from pipeline.registry import ROOT, RegistryError, load_registry
+from pipeline.run import RunLog
 from schema.operator import ENGAGEMENT_LABELS, DocumentedLimit, OperatorConfig
 
 PAGE_PATH = ROOT / "site" / "transparency" / "index.html"
@@ -132,6 +136,7 @@ def rate_limit_view(config: OperatorConfig) -> dict:
         "published": [
             {
                 "text": describe_limit(limit),
+                "publisher": limit.publisher,
                 "quote": limit.quote,
                 "source_url": limit.source_url,
                 "checked": str(limit.checked),
@@ -212,37 +217,36 @@ def last_reviewed(operators: dict[str, OperatorConfig]) -> str:
     return max(dates).isoformat() if dates else "unknown"
 
 
-RUN_LOG_KEYS = {
-    "operator": str,
-    "mode": str,
-    "fetched_at": str,
-    "complete": bool,
-    "modules": dict,
-    "kept": dict,
-    "issues": list,
-}
-
-
 def load_runs(directory: Path | None) -> dict[str, dict]:
-    """Read run logs written by pipeline.run --log-dir. Raises ValueError if one is malformed."""
+    """Read run logs written by pipeline.run --log-dir. Raises ValueError if one is malformed.
+
+    Each log must match pipeline.run.RunLog exactly and be named after its operator, so
+    the page only ever publishes the fields that model allows.
+    """
     if directory is None:
         return {}
     runs = {}
     for path in sorted(directory.glob("*.json")):
         try:
-            run = json.loads(path.read_text(encoding="utf-8"))
-        except json.JSONDecodeError as exc:
-            raise ValueError(f"{path.name} is not valid JSON: {exc}") from exc
-        if not isinstance(run, dict):
-            raise ValueError(f"{path.name} is not a run log")
-        for key, kind in RUN_LOG_KEYS.items():
-            if not isinstance(run.get(key), kind):
-                raise ValueError(f"{path.name} is not a run log: {key!r} is missing or wrong")
-        runs[run["operator"]] = run
+            run = RunLog.model_validate_json(path.read_text(encoding="utf-8"))
+        except ValidationError as exc:
+            problem = exc.errors()[0]
+            where = ".".join(str(part) for part in problem["loc"]) or "the file"
+            raise ValueError(
+                f"{path.name} is not a valid run log: {where}: {problem['msg']}"
+            ) from None
+        if run.operator != path.stem:
+            raise ValueError(
+                f"{path.name} is the run log for {run.operator!r}; name it {run.operator}.json"
+            )
+        runs[run.operator] = run.model_dump(mode="json")
     return runs
 
 
 def build(operators: dict[str, OperatorConfig], runs: dict[str, dict]) -> dict:
+    unknown = sorted(set(runs) - set(operators))
+    if unknown:
+        raise ValueError(f"run logs for operators not in the registry: {', '.join(unknown)}")
     ordered = sorted(operators.values(), key=lambda c: (not c.enabled, c.display_name.lower()))
     return {
         "last_reviewed": last_reviewed(operators),
@@ -317,7 +321,8 @@ def _rate_table(data: dict) -> str:
     for op in data["operators"]:
         rate = op["rate_limit"]
         published = "<br>".join(
-            f"{_e(p['text'])}: &ldquo;{_e(p['quote'])}&rdquo; "
+            f"{_e(p['text'])}, published by {_e(p['publisher'])}: "
+            f"&ldquo;{_e(p['quote'])}&rdquo; "
             f"({_link(p['source_url'], 'source')}, checked {_e(p['checked'])})"
             for p in rate["published"]
         ) or (
@@ -338,8 +343,8 @@ def _rate_table(data: dict) -> str:
     return (
         "<table><caption>Rate limits: what each operator publishes and what this project "
         "does</caption>"
-        '<thead><tr><th scope="col">Operator</th><th scope="col">Operator&rsquo;s published '
-        'limit</th><th scope="col">This project&rsquo;s setting</th>'
+        '<thead><tr><th scope="col">Operator</th><th scope="col">Published limit (operator '
+        'or its data host)</th><th scope="col">This project&rsquo;s setting</th>'
         '<th scope="col">Comparison</th><th scope="col">Compared with the regulations</th>'
         f"</tr></thead><tbody>{''.join(rows)}</tbody></table>"
     )
@@ -444,10 +449,9 @@ def render_html(data: dict) -> str:
 <body>
 <header>
 <h1>Data sources and transparency</h1>
-<p class="note">{_e(data["disclaimer"])}</p>
-<p>Last reviewed: {_e(data["last_reviewed"])}. This page lists every source this project
-uses or plans to use, how each one publishes its data, the rate limits that apply, and
-what has been found while reading the data. It reports what was observed and when. It
+<p>Last reviewed: {_e(data["last_reviewed"])}. This page lists every operator source this
+project uses or plans to use, how each one publishes its data, the rate limits that apply,
+and what has been found while reading the data. It reports what was observed and when. It
 does not say whether anyone has met their legal duties.</p>
 </header>
 <main>
@@ -457,7 +461,8 @@ does not say whether anyone has met their legal duties.</p>
 <p>{_e(data["regulation"]["summary"])}</p>
 <ul>{regulation_quotes}</ul>
 <p>This project never sends more than one request per second to any operator's host, keeps
-within every limit an operator publishes with a safety margin on top, and waits as long as
+within every limit an operator, or the company hosting its data, publishes with a safety
+margin on top, and waits as long as
 a server asks before contacting it again. Gaps are measured from the end of the previous
 request and shared by every operator on the same host. Automated tests check these
 rules.</p>
@@ -471,6 +476,7 @@ are shown as unknown, never guessed. Only prices in pounds sterling are shown.</
 <div class="table-wrap">{_runs_section(data)}</div>
 </main>
 <footer>
+<p class="note">{_e(data["disclaimer"])}</p>
 <ul>{links}</ul>
 <p>This page has no cookies, no tracking and no scripts.</p>
 </footer>

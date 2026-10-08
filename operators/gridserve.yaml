@@ -18,19 +18,43 @@ auth:
   name: ec-subscription-key
   secret_name: GRIDSERVE_SUBSCRIPTION_KEY
 rate_limit:
-  min_seconds_between_requests: 30
-  limits: []
-  limits_checked: 2026-10-07
+  min_seconds_between_requests: 31
+  limits:
+    - publisher: Gridserve
+      requests: 1
+      per_seconds: 30
+      endpoint: all
+      quote: The default API call limit is 1 request per 30 seconds per API key.
+      source_url: https://www.gridserve.com/legal-area/open-data-api-terms-and-conditions/
+      checked: 2026-10-08
+  limits_checked: 2026-10-08
   notes: >-
-    The developer documentation (version 1.0, November 2024) states no rate limit. Earlier
-    research quoted in the blueprint mentioned a slow limit of one request per 30 seconds,
-    so this project keeps a 30 second gap until Gridserve confirms otherwise.
+    Gridserve's API Fair Use Policy sets the limit above, says "Default rate limits are set
+    to 1 call every 30 seconds", and says limits may change. This project waits 31 seconds
+    between any two requests to the host (30 seconds plus a safety margin). The developer
+    documentation (version 1.0, November 2024) states no limit.
 supports_single_location: supported
 cors: needs_testing
 attribution: null
+licence:
+  name: unknown
+  basis: >-
+    Gridserve's API Fair Use Policy (read 2026-10-08) says that by using the API you agree
+    to be bound by it, that intellectual property in the API and the API Data remains
+    Gridserve's, and that the API Data contains confidential and proprietary information.
+    It also says users must not copy the API or observe, study or test how it works, except
+    as far as the law allows. DfT's guidance says "Data must be open in line with the Open
+    Government Licence". How these fit together needs clarifying with Gridserve before any
+    data is used.
+  checked: 2026-10-08
 engagement:
-  status: unknown
-  evidence: []
+  status: key_on_request
+  evidence:
+    - date: 2026-10-08
+      url: https://www.gridserve.com/open-data/
+      note: >-
+        The page offers a form to request an API key. The form asks the requester to
+        confirm they have read and agree to Gridserve's API access and fair use terms.
 access_requested: null
 access_granted: null
 sources:
@@ -39,6 +63,13 @@ sources:
       Developer documentation, version 1.0, November 2024, read 2026-10-07. Gives the base
       URL, the ec-subscription-key header and GET /locations, /locations/{location-id} and
       /tariffs. States no rate limit and no licence or terms.
+  - url: https://www.gridserve.com/open-data/
+    note: Read 2026-10-08. A form to request an API key, which links to the API Fair Use Policy.
+  - url: https://www.gridserve.com/legal-area/open-data-api-terms-and-conditions/
+    note: >-
+      API Fair Use Policy, read 2026-10-08 (the page says it was last modified on
+      2026-06-19). Gives the default rate limit and the terms summarised in the licence
+      section.
 findings:
   - date: 2026-10-07
     kind: documentation
@@ -54,8 +85,27 @@ findings:
       is written as GET /locations/{location-id}.
     handling: Noted for when the adapter is built; the path form will be tested first.
     evidence_url: https://www.gridserve.com/wp-content/uploads/2024/11/GRIDSERVE-PCPR-API-Developer-Documentation.pdf
+  - date: 2026-10-08
+    kind: documentation
+    summary: >-
+      The API Fair Use Policy sets a default limit of 1 request per 30 seconds per API key;
+      the developer documentation (version 1.0, November 2024) states no limit.
+    handling: >-
+      This project follows the published limit with a safety margin: 31 seconds between
+      requests.
+    evidence_url: https://www.gridserve.com/legal-area/open-data-api-terms-and-conditions/
+  - date: 2026-10-08
+    kind: access
+    summary: >-
+      Keys are requested through a form that asks the requester to agree to the API Fair
+      Use Policy. The policy says intellectual property in the API Data remains Gridserve's
+      and describes the data as confidential and proprietary.
+    handling: >-
+      Licence recorded as unknown. The operator stays switched off, and no key has been
+      requested, until the terms for the data are clarified with Gridserve.
+    evidence_url: https://www.gridserve.com/legal-area/open-data-api-terms-and-conditions/
 notes: >-
-  How keys are issued, and any licence or terms, are not stated in the developer
-  documentation. Other Gridserve pages have not been checked. Read them, and record the
-  licence section, before enabling.
+  Keys are requested through the form on Gridserve's open data page, which needs
+  agreement to the API Fair Use Policy. Clarify the terms for the data with Gridserve,
+  and record the outcome in the licence section, before requesting a key or enabling.
 enabled: false

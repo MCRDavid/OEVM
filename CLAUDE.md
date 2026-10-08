@@ -15,6 +15,7 @@ decisions are in docs/adr/.
 - After changing a model: uv run python -m schema.export (CI runs it with --check)
 - After changing operators/*.yaml: uv run python -m pipeline.transparency (CI runs it with --check)
 - Secret scan and file checks: uv run pre-commit run --all-files
+- Dependency audit: see the pip-audit step in .github/workflows/ci.yml
 
 ## Where things live
 - schema/models.py: Location, EVSE, Connector, Tariff, Provenance. schema/operator.py: registry file model.
@@ -38,8 +39,8 @@ decisions are in docs/adr/.
 - Show prices only through pipeline/pricing.py: pounds and pence, GBP tariffs only. Never convert
   currencies; other currencies show as "Price unknown".
 - Never go below 1 second between requests to a host, or below any limit in an operator's
-  rate_limit.limits plus a 1 second margin. Record each published limit with an exact quote, source
-  URL and date; tests enforce these rules. Never run two fetches that use the same host in parallel.
+  rate_limit.limits plus a 1 second margin. Record each published limit with its publisher, an
+  exact quote, source URL and date; tests enforce these rules. Never run two fetches that use the same host in parallel.
 - Record spec differences, data quirks and access issues as dated findings in the operator file,
   in neutral words, then regenerate the transparency page.
 

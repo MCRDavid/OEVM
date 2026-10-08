@@ -46,8 +46,12 @@ Date: 2026-10-07. Status: accepted.
   versions of the client and registry were each caught by the tests (2026-10-08).
 - Re-checked on 2026-10-07: Eco-Movement publishes 30 requests an hour for locations,
   single locations and tariffs, and 1 per 30 seconds for statuses, so its operators use a
-  125 second gap. Gridserve's developer documentation states no limit; the 30 second gap
-  from earlier research is kept and the difference is shown on the transparency page.
+  125 second gap.
+- Checked on 2026-10-08: Gridserve's API Fair Use Policy sets a default of 1 request per
+  30 seconds per API key, although its developer documentation states no limit. The
+  policy's limit is recorded with an exact quote, Gridserve uses a 31 second gap, and the
+  difference is a finding on the transparency page. Each published limit now names its
+  publisher (the operator, or the company hosting its data), and the page shows it.
 
 ## Prices
 
@@ -56,15 +60,17 @@ Date: 2026-10-07. Status: accepted.
   converted. Regulation 10(6)(d)(iv) describes the price in reference data as "the price
   in pence per kilowatt hour".
 - VAT is added only when every component that costs something states it; otherwise
-  "VAT not stated". Sums use exact decimal arithmetic, so half pennies round up.
-  Reservation fees are not shown as charging prices.
+  prices are shown as published, which OCPI defines as excluding VAT, and marked
+  "excluding VAT, VAT not stated". Sums use exact decimal arithmetic, so half pennies
+  round up. Reservation fees are not shown as charging prices.
 
 ## Security
 
 - `SECURITY.md` asks for private reports through GitHub's private vulnerability
   reporting. `site/.well-known/security.txt` follows RFC 9116 and lists the report form
-  first and `SECURITY.md` second, because the report form's address could not be checked
-  from the cloud session. A test fails 30 days before its Expires date.
+  first and `SECURITY.md` second, because private reporting must be switched on by hand
+  (GitHub's public API showed it off on 2026-10-08), and `SECURITY.md` gives a fallback
+  route. A test fails 30 days before its Expires date.
 - security.txt only works at the top of a domain, so a GitHub Pages project site needs a
   custom domain or a `<user>.github.io` repository. Publishing with
   `actions/upload-pages-artifact@v4` drops dot folders; use v5 with
@@ -72,13 +78,22 @@ Date: 2026-10-07. Status: accepted.
 - `.github/dependabot.yml` sets weekly grouped updates for uv and GitHub Actions. Settings
   that must be switched on by hand are listed in `docs/GITHUB_SETTINGS.md`.
 - Privacy questions and data corrections use issue forms that warn issues are public.
+- Keys are only sent over https; the registry rejects plain http feed URLs for operators
+  that need a key, and the client refuses to send one. Anything a server sends back
+  (headers, links, bodies, error text and logged issues) has the key removed before it
+  is saved or shown, in case a server echoes it.
+- Run logs are checked against a fixed list of fields before the transparency page uses
+  them, and each log must be named after its operator.
+- CI checks the locked dependencies against known vulnerabilities with pip-audit, because
+  Dependabot alerts may not read `uv.lock`.
 
 ## Owner's privacy
 
 - The owner's name, location and places they use were removed from every file. Synthetic
   test data now uses an obviously made-up place (Exampletown, 52.0, -1.0).
 - Jolt's published key was replaced in the blueprint's example command by
-  `$JOLT_API_KEY`, so no key value is in the repository.
+  `$JOLT_API_KEY`, so no key value is in the current files. It remains in git history,
+  and a test checks that no tracked file contains a key-shaped value again.
 - The repository URL lives in one place (`pipeline/project.py`), plus security.txt and
   the issue forms, so it is easy to change if the repository moves.
 - Removing text from the current files does not remove it from git history or from the

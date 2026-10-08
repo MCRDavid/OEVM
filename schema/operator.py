@@ -165,6 +165,11 @@ class Auth(_Model):
 class DocumentedLimit(_Model):
     """One rate limit an operator, or the host serving its data, publishes."""
 
+    publisher: str = Field(
+        min_length=1,
+        description="Who publishes the limit: the operator, or the company hosting its data, "
+        "for example 'Eco-Movement'.",
+    )
     requests: int = Field(gt=0, description="How many requests are allowed per window.")
     per_seconds: float = Field(gt=0, description="Length of the window in seconds.")
     endpoint: EndpointKind | Literal["all"] = Field(
@@ -366,6 +371,15 @@ class OperatorConfig(_Model):
                 or self.licence.checked == "unknown"
             ):
                 problems.append("an enabled operator needs licence terms that have been checked")
+        if self.auth.method in ("header", "query_param"):
+            urls = [endpoint.url for endpoint in self.endpoints.values()]
+            if self.base_url != "unknown":
+                urls.append(self.base_url)
+            problems += [
+                f"{url} must use https, because requests to it carry a key"
+                for url in urls
+                if not url.startswith("https://")
+            ]
         if problems:
             raise ValueError("; ".join(problems))
         return self

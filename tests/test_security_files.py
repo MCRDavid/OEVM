@@ -4,9 +4,12 @@ The security.txt check depends on today's date on purpose: it fails when fewer t
 days remain before Expires, as a reminder to renew the file.
 """
 
+import re
+import subprocess
 from datetime import UTC, datetime, timedelta
 from pathlib import Path
 
+import pytest
 import yaml
 
 from pipeline.project import REPOSITORY_URL
@@ -15,6 +18,15 @@ ROOT = Path(__file__).resolve().parent.parent
 SECURITY_TXT = ROOT / "site" / ".well-known" / "security.txt"
 REPORT_URL = f"{REPOSITORY_URL}/security/advisories/new"
 POLICY_URL = f"{REPOSITORY_URL}/blob/main/SECURITY.md"
+# Keys such as Jolt's shared apiKey look like this. None may be committed.
+KEY_LIKE = re.compile(r"[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}", re.I)
+# Recorded feed data holds operators' own record ids, and the lock file holds hashes.
+KEY_SCAN_SKIPPED = ("tests/fixtures/", "uv.lock")
+# Public notice ids on the government's Contracts Finder site, cited in the blueprint.
+KEY_LIKE_ALLOWED = {
+    "https://www.contractsfinder.service.gov.uk/Notice/9b22d88e-38ba-4055-8e0e-84c58a196aa0",
+    "https://www.contractsfinder.service.gov.uk/Notice/Attachment/3f6da4fd-2533-4289-a49e-ebad9a25c086",
+}
 # RFC 9116 fields, plus CSAF and Bug-Bounty, which IANA's registry added later.
 RFC_9116_FIELDS = {
     "Acknowledgments",
@@ -82,6 +94,7 @@ def test_security_policy_explains_private_reporting():
 def test_issue_forms_point_security_reports_to_the_private_route():
     config = yaml.safe_load((ROOT / ".github" / "ISSUE_TEMPLATE" / "config.yml").read_text())
     assert [link["url"] for link in config["contact_links"]] == [REPORT_URL]
+    assert config["blank_issues_enabled"] is False, "every issue should start from a form"
 
 
 def test_issue_forms_warn_that_issues_are_public():
@@ -96,3 +109,28 @@ def test_issue_forms_warn_that_issues_are_public():
         assert checkboxes and all(
             option.get("required") for box in checkboxes for option in box["attributes"]["options"]
         ), path.name
+
+
+def tracked_files() -> list[str]:
+    try:
+        listing = subprocess.run(
+            ["git", "ls-files", "-z"], cwd=ROOT, capture_output=True, check=True
+        ).stdout
+    except (OSError, subprocess.CalledProcessError):
+        pytest.skip("not a git checkout")
+    return [name for name in listing.decode("utf-8").split("\0") if name]
+
+
+def test_no_tracked_file_contains_a_key_like_value():
+    found = []
+    for name in tracked_files():
+        if name.startswith(KEY_SCAN_SKIPPED):
+            continue
+        try:
+            text = (ROOT / name).read_text(encoding="utf-8")
+        except (UnicodeDecodeError, FileNotFoundError):
+            continue
+        for allowed in KEY_LIKE_ALLOWED:
+            text = text.replace(allowed, "")
+        found += [f"{name}: {match.group(0)[:8]}..." for match in KEY_LIKE.finditer(text)]
+    assert not found, "key-like values found; keep keys in GitHub Actions secrets"
