@@ -233,3 +233,6 @@ __marimo__/
 private/
 # Raw operator responses can echo keys back. Commit only trimmed fixtures.
 raw/
+
+# Front-end dependencies, installed with npm ci
+node_modules/

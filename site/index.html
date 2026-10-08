@@ -1,0 +1,114 @@
+<!doctype html>
+<html lang="en-GB">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self'; worker-src 'self'; connect-src 'self' https://tiles.openfreemap.org; img-src 'self' data: blob: https://tiles.openfreemap.org; style-src 'self'; font-src 'self'; base-uri 'none'; form-action 'none'">
+<meta name="referrer" content="strict-origin">
+<meta name="description" content="A map of UK public electric vehicle chargers, built from the open data operators publish under the Public Charge Point Regulations 2023.">
+<title>UK public EV chargers: OEVM</title>
+<link rel="icon" href="assets/icon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="vendor/maplibre-gl/maplibre-gl.css">
+<link rel="stylesheet" href="assets/app.css">
+<script type="module" src="assets/js/main.js"></script>
+</head>
+<body>
+<a class="skip" href="#list">Skip to the list of chargers</a>
+<header class="top">
+  <h1>UK public EV chargers</h1>
+  <div class="views" role="group" aria-label="Show chargers as">
+    <button type="button" id="show-map" aria-pressed="true">Map</button>
+    <button type="button" id="show-list" aria-pressed="false">List</button>
+  </div>
+  <button type="button" id="toggle-filters" aria-expanded="false" aria-controls="filters">Filters</button>
+</header>
+
+<form id="filters" class="filters" hidden aria-labelledby="filters-heading">
+  <h2 id="filters-heading">Filters</h2>
+  <fieldset>
+    <legend>Power</legend>
+    <label for="minkw">Minimum power</label>
+    <select id="minkw" name="minkw">
+      <option value="0">Any power</option>
+      <option value="7">7 kW or more</option>
+      <option value="22">22 kW or more</option>
+      <option value="50">50 kW or more (rapid)</option>
+      <option value="150">150 kW or more (ultra-rapid)</option>
+    </select>
+  </fieldset>
+  <fieldset>
+    <legend>Connector</legend>
+    <p class="hint" id="plugs-hint">Leave all unticked to show every connector.</p>
+    <label><input type="checkbox" name="plug" value="type2" aria-describedby="plugs-hint"> Type 2</label>
+    <label><input type="checkbox" name="plug" value="ccs" aria-describedby="plugs-hint"> CCS</label>
+    <label><input type="checkbox" name="plug" value="chademo" aria-describedby="plugs-hint"> CHAdeMO</label>
+    <label><input type="checkbox" name="plug" value="other" aria-describedby="plugs-hint"> Other</label>
+  </fieldset>
+  <fieldset>
+    <legend>Price</legend>
+    <label><input type="checkbox" id="free" name="free"> Free only (confirmed by the operator&rsquo;s tariff)</label>
+    <label for="maxp">Maximum price per kWh, including VAT (pence)</label>
+    <input type="number" id="maxp" name="maxp" inputmode="decimal" min="0" max="500" step="0.1" aria-describedby="maxp-hint">
+    <p class="hint" id="maxp-hint">Uses the operator&rsquo;s published tariff. Leave empty for any price.</p>
+    <label><input type="checkbox" id="unknown" name="unknown" checked> Include chargers whose price is unknown or has no VAT stated</label>
+  </fieldset>
+  <fieldset id="networks">
+    <legend>Network</legend>
+    <p class="hint">Leave all unticked to show every network.</p>
+  </fieldset>
+  <div class="actions">
+    <button type="button" id="reset">Clear filters</button>
+  </div>
+  <fieldset class="remember">
+    <legend>Your settings</legend>
+    <label><input type="checkbox" id="remember"> Remember my settings on this device</label>
+    <p class="hint">Off unless you turn it on. When on, your filters are saved in this browser&rsquo;s local storage so the map opens the same way next time. They are not sent anywhere. Turn this off, or press &ldquo;Forget my settings&rdquo;, to delete them.</p>
+    <button type="button" id="forget">Forget my settings</button>
+    <p class="hint" id="settings-message" role="status"></p>
+  </fieldset>
+</form>
+
+<main id="main">
+  <p id="notice" class="notice" role="status"></p>
+  <section id="map-view" class="map-view" aria-label="Map of chargers">
+    <div id="map" class="map"></div>
+    <div class="legend" aria-hidden="true">
+      <span><i class="dot free">F</i> Free (confirmed)</span>
+      <span><i class="dot priced">£</i> Priced</span>
+      <span><i class="dot unknown">?</i> Price unknown</span>
+    </div>
+  </section>
+  <section id="list" class="list-view" aria-labelledby="list-heading" tabindex="-1">
+    <h2 id="list-heading">Chargers</h2>
+    <p id="list-summary" role="status">Loading chargers&hellip;</p>
+    <ul id="list-items"></ul>
+  </section>
+  <aside id="detail" class="detail" aria-labelledby="detail-heading" hidden>
+    <button type="button" id="close-detail" class="close">Close<span class="visually-hidden"> charger details</span></button>
+    <div id="detail-body"></div>
+  </aside>
+</main>
+
+<noscript><p class="notice">This map needs JavaScript. The data it shows is published as files, listed on the <a href="transparency/">transparency page</a>.</p></noscript>
+
+<footer class="bottom">
+  <p class="note">OEVM is a personal, experimental project for learning about AI tools. Much of its code and text was written with an AI assistant, and it will contain mistakes. Charger data comes from the operators and other sources credited on every record, and remains their work. Everything is provided "as is", with no warranty or guarantee of any kind. Always check prices and availability at the charger.</p>
+  <details>
+    <summary>Data sources and credits</summary>
+    <ul id="attribution"></ul>
+    <p>Background map: <a href="https://openfreemap.org/">OpenFreeMap</a>, &copy; <a href="https://www.openmaptiles.org/">OpenMapTiles</a>, data from <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>. Map software: <a href="vendor/maplibre-gl/LICENSE.txt">MapLibre GL JS</a> (<a href="vendor/maplibre-gl/THIRD_PARTY_NOTICES.txt">notices</a>).</p>
+  </details>
+  <ul class="links">
+    <li><a href="https://github.com/MCRDavid/OEVM/blob/main/DISCLAIMER.md">Disclaimer</a></li>
+    <li><a href="https://github.com/MCRDavid/OEVM/blob/main/DATA_LICENCES.md">Data sources and licences</a></li>
+    <li><a href="https://github.com/MCRDavid/OEVM/blob/main/docs/PRIVACY_AND_COOKIES.md">Privacy and cookies</a></li>
+    <li><a href="https://github.com/MCRDavid/OEVM/blob/main/SECURITY.md">Security policy</a></li>
+    <li><a href="transparency/">Transparency</a></li>
+    <li><a href="status/">Feed health</a></li>
+    <li><a href="https://github.com/MCRDavid/OEVM/issues/new/choose">Report a mistake</a></li>
+    <li><a href="https://github.com/MCRDavid/OEVM">Source code</a></li>
+  </ul>
+  <p>No cookies, no tracking. Nothing is saved on your device unless you turn on &ldquo;Remember my settings&rdquo;. To draw the background map, your browser fetches map files for the area on screen from OpenFreeMap.</p>
+</footer>
+</body>
+</html>

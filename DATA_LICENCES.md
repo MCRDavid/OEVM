@@ -47,7 +47,7 @@ read 7 October 2026:
 
 | Requirement | What the project does |
 |---|---|
-| Attribution | Each operator's statement is in its registry file (`operators/<id>.yaml`) and listed below. The site will show attribution with the data and link to this page and the licence. |
+| Attribution | Each operator's statement is in its registry file (`operators/<id>.yaml`) and listed below. The map page shows every statement under "Data sources and credits", repeats the operator's statement and licence link in each charger's details, and links to this page. |
 | Provenance | Every record stores its source URL, licence, fetch time and method. |
 | No endorsement | Neutral wording only. [DISCLAIMER.md](DISCLAIMER.md) says the project is not affiliated with or endorsed by any operator or public body. |
 | No logos or trade marks | Operator logos and brand marks are never used. Names are used only to say where data comes from. |
@@ -83,6 +83,22 @@ before its layer is built.
 | `osm.geojson` | OpenStreetMap | ODbL. Kept as a separate layer so it is not merged into operator data. |
 | `ocm.geojson` | Open Charge Map | Open Charge Map's terms, recorded per record and per data provider |
 | `reports.geojson` | User reports | CC BY 4.0, with the reporter's consent |
+
+## The background map and software served with the site
+
+The map page (blueprint task 9, ADR 0008) shows a background map from an outside service
+and serves one open source library from the site itself. Neither is project data or
+project code, and neither is relicensed.
+
+| Item | Source | Licence | Credit shown |
+|---|---|---|---|
+| Background map files (vector tiles) | OpenFreeMap, `https://tiles.openfreemap.org/styles/liberty` | Map data from OpenStreetMap under the ODbL; tiles built to the OpenMapTiles schema. Used under OpenFreeMap's terms, read 8 October 2026 | MapLibre's attribution control, always expanded, shows the style's credit ("OpenFreeMap © OpenMapTiles Data from OpenStreetMap", linking to openstreetmap.org/copyright). The page footer repeats it. Text only, no logos |
+| MapLibre GL JS 6.11.2 | npm package `maplibre-gl`, copied into the build by `pipeline/build_site.py` | BSD-3-Clause (its `LICENSE.txt`, published at `vendor/maplibre-gl/LICENSE.txt`) | Footer link to the licence, and `vendor/maplibre-gl/THIRD_PARTY_NOTICES.txt` with the licence of each package it bundles |
+
+OpenFreeMap's terms forbid automated collection without permission, so tests and CI use
+a plain local style (`--offline-style`) and never contact it. The operator data on the
+map keeps its own licence and attribution, listed in the page's "Data sources and
+credits" and in every detail file.
 
 ## Other material this repository quotes
 

@@ -1,6 +1,7 @@
 """Tests for pipeline/pricing.py: prices are only ever shown in pounds and pence."""
 
 import json
+from decimal import Decimal
 from pathlib import Path
 
 import pytest
@@ -8,8 +9,9 @@ import pytest
 from adapters.http import PoliteClient
 from adapters.ocpi_221 import fetch
 from adapters.replay import ReplayTransport
-from pipeline.pricing import describe_tariff, pence, pounds
+from pipeline.pricing import describe_tariff, location_summary, pence, pounds
 from pipeline.registry import load_registry
+from pipeline.tariffs import ConnectorPrice
 from schema.models import Tariff
 
 FIXTURES = Path(__file__).parent / "fixtures"
@@ -148,3 +150,47 @@ def test_recorded_chargy_tariffs_show_only_pounds_and_pence():
     assert shown["EUR"].text == shown["USD"].text == "Price unknown"
     for display in shown.values():
         assert "€" not in display.text and "$" not in display.text
+
+
+def connector(state, low=None, high=None, vat=None):
+    return ConnectorPrice(
+        location_id="L",
+        evse_uid="E",
+        connector_id="1",
+        state=state,
+        text="",
+        energy_low=None if low is None else Decimal(low),
+        energy_high=None if high is None else Decimal(high),
+        includes_vat=vat,
+    )
+
+
+@pytest.mark.parametrize(
+    ("prices", "expected"),
+    [
+        ([], "Price unknown"),
+        ([connector("free_confirmed")] * 2, "Free (confirmed)"),
+        ([connector("unknown")], "Price unknown"),
+        ([connector("priced", "0.45", "0.79", True)], "Energy 45p to 79p per kWh including VAT"),
+        ([connector("priced", "0.5", "0.5", True)], "Energy 50p per kWh including VAT"),
+        (
+            [connector("priced", "0.4", "0.4", False)],
+            "Energy 40p per kWh excluding VAT, VAT not stated",
+        ),
+        ([connector("priced")], "Priced: see details"),
+        (
+            [connector("free_confirmed"), connector("priced", "0.79", "0.79", True)],
+            "Energy 79p per kWh including VAT; some connectors free (confirmed)",
+        ),
+        (
+            [connector("free_confirmed"), connector("unknown")],
+            "Some connectors free (confirmed); some prices unknown",
+        ),
+        (
+            [connector("priced", "0.5", "0.6", True), connector("priced", "0.3", "0.3", False)],
+            "Energy 50p to 60p per kWh including VAT; 30p per kWh excluding VAT, VAT not stated",
+        ),
+    ],
+)
+def test_location_summary_never_calls_a_mixed_location_free(prices, expected):
+    assert location_summary(prices) == expected

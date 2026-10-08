@@ -1,8 +1,9 @@
 # Privacy and cookies
 
 General information, not legal advice. Checked against the legislation on 7 October 2026.
-There is no website yet (blueprint task 9). These are the rules it must be built to, and
-a draft of the notice it must show.
+The map page (`site/index.html`, blueprint task 9) is built to these rules but is not
+deployed yet. This page sets out the rules, what the page does today and the notice it
+will show.
 
 ## The law in short
 
@@ -41,16 +42,28 @@ the site goes live.
    fingerprinting. (The blueprint already rules out analytics.)
 2. **No third-party files that track.** Check every external font, map style, tile
    server or script before adding it, and record whether it sets cookies or uses storage.
-   Prefer self-hosted files.
+   Prefer self-hosted files. Checked so far:
+   - **MapLibre GL JS 6.11.2:** served from the site itself, not from a script host. No
+     telemetry was found in its source.
+   - **OpenFreeMap** (`tiles.openfreemap.org`, Liberty style): the only outside host the
+     page contacts. Header checks on 8 October 2026 saw no cookies and no storage. The
+     responses carry Cloudflare's Network Error Logging (NEL) headers, which ask some
+     browsers to keep a reporting policy and to report failed connections to
+     `a.nel.cloudflare.com`. This site does not control that. **Needs the owner's
+     decision:** whether this is acceptable under Schedule A1, after reading the ICO
+     guidance. If not, the fallback is a self-hosted basemap (ADR 0008).
 3. **Prefer the address bar.** Settings carried in the page address (for example
-   `?free=1&connector=ccs`) store nothing on the device.
-4. **Saving settings is opt-in.** Filters, favourites and a home location are saved to the
-   device only after the visitor turns on "Remember my settings on this device", which is
-   off by default. A short explanation sits beside the switch, and "Forget my settings"
-   deletes everything saved. This gives consent under paragraph 2 and also meets
-   paragraph 6.
-5. **Nothing leaves the device.** Saved settings stay in the browser. The site never sends
-   them anywhere.
+   `?free=1&plug=ccs`) store nothing on the device.
+4. **Saving settings is opt-in.** Settings are saved to the device only after the visitor
+   turns on "Remember my settings on this device", which is off by default. A short
+   explanation sits beside the switch, and "Forget my settings" deletes everything saved.
+   This gives consent under paragraph 2 and also meets paragraph 6. Today only the
+   filters are saved, under one `localStorage` key (`oevm.settings.v1`). Favourites and a
+   home location are not built yet; they must follow this rule when they are.
+5. **Saved settings stay on the device.** The site never sends them anywhere. The map
+   still fetches map files for the area on screen (see the notice below), so a saved home
+   location, if one is added, would be visible to the map host as an area on every visit.
+   Do not open the map at a saved location without saying so in the notice.
 6. **No cookie banner is needed while rules 1 to 5 hold**, because nothing optional is
    stored until the visitor asks for it. Check what the hosting service itself stores when
    the site is deployed, and update this page if it stores anything.
@@ -63,9 +76,10 @@ the site goes live.
    issues are public. Anything involving personal data that should not be public goes
    through GitHub's private vulnerability reporting instead (see `SECURITY.md`).
 
-## Draft notice for the site
+## Notice for the site
 
-Finish the parts in square brackets when the site is built.
+To be published with the site. Check each statement against the deployed site first,
+and fill in the date.
 
 > **Privacy and cookies**
 >
@@ -73,16 +87,30 @@ Finish the parts in square brackets when the site is built.
 > personal data.
 >
 > **What is saved on your device.** Nothing, unless you turn on "Remember my settings on
-> this device". If you do, your filters, favourites and home location are saved in your
-> browser's local storage so the map opens the same way next time. They never leave your
-> device. Turn the switch off or press "Forget my settings" at any time to delete them.
+> this device". If you do, your filters are saved in your browser's local storage so the
+> map opens the same way next time. They are not sent anywhere. Turn the switch off or
+> press "Forget my settings" at any time to delete them. Your browser may also keep copies
+> of the site's files and map files in its normal cache, as it does for any website.
 >
-> **Links you share.** Your current filters can appear in the page address so you can
-> bookmark or share them. Anyone you send that link to can see those settings.
+> **Links you share.** Your current filters can appear in the page address, and the map's
+> position appears after the # sign, so you can bookmark or share them. Anyone you send
+> that link to can see those settings and the area you were looking at. The page tells
+> browsers to send only the site's address, not the full page address, with the requests
+> it makes.
 >
-> **Who else sees your visit.** This site is hosted by [hosting provider]. Map images come
-> from [map provider]. Like any web server, they receive your IP address and basic
-> browser details when your browser asks them for files. Their privacy notices: [links].
+> **Who else sees your visit.** This site is hosted by GitHub Pages. The background map
+> comes from OpenFreeMap (tiles.openfreemap.org), a free service delivered through
+> Cloudflare. To draw the map, your browser asks OpenFreeMap for the map files covering
+> the area on your screen. Like any web server, it receives your IP address, the address
+> of this site (not your filters) and basic browser details, and it can tell roughly which
+> area you are looking at. OpenFreeMap says it does not use cookies and does not keep IP
+> addresses in its access logs. When we checked on 8 October 2026, none of its map files
+> set a cookie. The map service also asks some browsers to report failed connections to
+> Cloudflare (a.nel.cloudflare.com). This is a browser feature called Network Error
+> Logging, and this site does not control it. Privacy notices: GitHub
+> (https://docs.github.com/en/site-policy/privacy-policies/github-general-privacy-statement),
+> OpenFreeMap (https://openfreemap.org/privacy/), Cloudflare
+> (https://www.cloudflare.com/privacypolicy/).
 >
 > **Contact.** Open an issue on GitHub using the "Privacy question" form. Issues are
 > public, so please do not include personal information. If your question involves
@@ -90,4 +118,8 @@ Finish the parts in square brackets when the site is built.
 > vulnerability" button on the repository's Security and quality tab (called Security on
 > older pages). Both routes need a GitHub account.
 >
-> Last updated: [date].
+> Last updated: [date of publishing].
+
+The OpenFreeMap statements come from its privacy page and response headers as read on
+8 October 2026 (ADR 0008). Re-check them before publishing and from time to time, because
+the service can change without notice.

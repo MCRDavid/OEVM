@@ -2,6 +2,7 @@
 
 import json
 from datetime import UTC, datetime
+from decimal import Decimal
 from pathlib import Path
 
 import jsonschema
@@ -9,6 +10,7 @@ import pytest
 
 from pipeline import publish, run
 from pipeline.registry import ROOT, load_registry
+from pipeline.tariffs import ConnectorPrice
 from schema.models import Coordinates
 
 SCHEMAS = ROOT / "schema" / "json"
@@ -118,24 +120,71 @@ def test_the_committed_site_folder_is_never_written(results):
         published(results, ROOT / "site")
 
 
-def test_free_is_only_shown_for_confirmed_free_connectors(results, tmp_path):
+def _layer_and_details(results, tmp_path):
     published(results, tmp_path)
     layer = json.loads((tmp_path / "data" / "locations.geojson").read_text())
     for feature in layer["features"]:
         key = feature["properties"]["key"]
         detail = json.loads((tmp_path / "data" / "loc" / key[:2] / f"{key}.json").read_text())
+        yield feature["properties"], detail
+
+
+def test_free_is_only_shown_when_every_connector_is_confirmed_free(results, tmp_path):
+    for properties, detail in _layer_and_details(results, tmp_path):
         states = {p["state"] for p in detail["prices"]}
-        assert (feature["properties"]["price"] == "free") == ("free_confirmed" in states)
+        assert (properties["price"] == "free") == (states == {"free_confirmed"})
+        assert ("Free (confirmed)" in properties["pt"]) == (states == {"free_confirmed"})
+
+
+def test_a_location_with_one_free_connector_is_not_called_free(results):
+    location = next(
+        loc
+        for result in results
+        for loc in result.locations
+        if sum(len(e.connectors) for e in loc.evses) >= 2
+    )
+    connectors = [(e, c) for e in location.evses for c in e.connectors]
+    prices = [
+        ConnectorPrice(
+            location_id=location.id,
+            evse_uid=evse.uid,
+            connector_id=c.id,
+            state="free_confirmed" if i == 0 else "priced",
+            text="",
+            energy_low=None if i == 0 else Decimal("0.79"),
+            energy_high=None if i == 0 else Decimal("0.79"),
+            includes_vat=None if i == 0 else True,
+        )
+        for i, (evse, c) in enumerate(connectors)
+    ]
+    properties = publish.map_properties(location, prices, "0" * 16)
+    assert properties.price == "priced"
+    assert properties.pt == "Energy 79p per kWh including VAT; some connectors free (confirmed)"
+    assert {c.price for c in properties.cons} == {"free", "priced"}
+    assert all((c.price == "free") == (c.ppk is None) for c in properties.cons)
+
+
+def test_each_kind_of_connector_is_listed_once_with_its_power_and_price(results, tmp_path):
+    for properties, detail in _layer_and_details(results, tmp_path):
+        connectors = [c for e in detail["location"]["evses"] for c in e["connectors"]]
+        kinds = {(c["std"], c["kw"], c["price"], c["ppk"]) for c in properties["cons"]}
+        assert len(kinds) == len(properties["cons"]), "no repeats"
+        assert {c["standard"] for c in connectors} == {c["std"] for c in properties["cons"]}
+        assert {c["max_kw"] for c in connectors} == {c["kw"] for c in properties["cons"]}
 
 
 def test_price_per_kwh_is_only_given_with_vat(results, tmp_path):
-    published(results, tmp_path)
-    layer = json.loads((tmp_path / "data" / "locations.geojson").read_text())
     by_operator = {}
-    for feature in layer["features"]:
-        by_operator.setdefault(feature["properties"]["op"], []).append(feature["properties"]["ppk"])
-    assert set(by_operator["chargy"]) == {None}  # char.gy states no VAT
+    for properties, _ in _layer_and_details(results, tmp_path):
+        by_operator.setdefault(properties["op"], set()).update(c["ppk"] for c in properties["cons"])
+    assert by_operator["chargy"] == {None}  # char.gy states no VAT
     assert 49.2 in by_operator["jolt"]
+
+
+def test_a_location_needs_a_price_for_each_connector(results):
+    location = next(loc for result in results for loc in result.locations if loc.evses)
+    with pytest.raises(publish.PublishError, match="a price for each connector"):
+        publish.map_properties(location, [], "0" * 16)
 
 
 def test_the_command_line_publishes_and_reports_sizes(tmp_path, capsys):

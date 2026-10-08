@@ -18,9 +18,10 @@ regulations describe the price in reference data as "the price in pence per kilo
   restrictions after the others is the price "otherwise".
 """
 
+from collections.abc import Sequence
 from dataclasses import dataclass
 from decimal import ROUND_HALF_UP, Decimal
-from typing import Literal
+from typing import Literal, Protocol
 
 from schema.models import PriceComponent, Tariff, TariffElement, TariffRestrictions
 
@@ -217,3 +218,43 @@ def describe_tariff(tariff: Tariff) -> PriceDisplay:
     if tariff.min_price:
         text += f"; minimum charge {pounds(tariff.min_price)} excluding VAT"
     return PriceDisplay("priced", text)
+
+
+class ConnectorPriceLike(Protocol):
+    state: str
+    energy_low: Decimal | None
+    energy_high: Decimal | None
+    includes_vat: bool | None
+
+
+def location_summary(prices: Sequence[ConnectorPriceLike]) -> str:
+    """One line about the prices at a location, for the map's list. "Free" only when every
+    connector is free_confirmed; a mix says which parts are free, priced or unknown. Only
+    energy prices are summarised, so the line starts "Energy"; the details give the rest."""
+    if not prices:
+        return "Price unknown"
+    states = {p.state for p in prices}
+    if states == {"free_confirmed"}:
+        return "Free (confirmed)"
+    energy = [p for p in prices if p.state == "priced" and p.energy_low is not None]
+    with_vat = [p for p in energy if p.includes_vat]
+    without_vat = [p for p in energy if not p.includes_vat]
+    parts = []
+    for group, note in (
+        (with_vat, "including VAT"),
+        (without_vat, "excluding VAT, VAT not stated"),
+    ):
+        if group:
+            low = min(p.energy_low for p in group)
+            high = max(p.energy_high for p in group)
+            parts.append(f"{_span([low, high], pence)} per kWh {note}")
+    if parts:
+        parts[0] = f"Energy {parts[0]}"
+    elif "priced" in states:
+        parts.append("Priced: see details")
+    if "free_confirmed" in states:
+        parts.append("some connectors free (confirmed)")
+    if "unknown" in states:
+        parts.append("some prices unknown" if parts else "Price unknown")
+    text = "; ".join(parts)
+    return text[0].upper() + text[1:]

@@ -31,12 +31,14 @@ from pathlib import Path
 
 from adapters.ocpi_221 import AdapterResult
 from pipeline.health import in_uk
+from pipeline.pricing import location_summary
 from pipeline.registry import ROOT
 from pipeline.tariffs import ConnectorPrice, price_locations
-from schema.models import Location
+from schema.models import Connector, Location
 from schema.operator import OperatorConfig
 from schema.published import (
     ConnectorPriceOut,
+    ConnectorSummary,
     FileEntry,
     LocationDetail,
     Manifest,
@@ -73,11 +75,36 @@ def _pence(amount: Decimal) -> float:
     return float((amount * 100).quantize(Decimal("0.1"), rounding=ROUND_HALF_UP))
 
 
+MAP_PRICE = {"free_confirmed": "free", "priced": "priced", "unknown": "unknown"}
+
+
+def _sortable(value: float | None) -> float:
+    """None sorts before every real value and never equals one."""
+    return -1.0 if value is None else value
+
+
+def _connector_summary(connector: Connector, price: ConnectorPrice) -> ConnectorSummary:
+    with_vat = price.state == "priced" and price.includes_vat and price.energy_high is not None
+    return ConnectorSummary(
+        std=connector.standard,
+        kw=connector.max_kw,
+        price=MAP_PRICE[price.state],
+        ppk=_pence(price.energy_high) if with_vat else None,
+    )
+
+
 def map_properties(location: Location, prices: list[ConnectorPrice], key: str) -> MapProperties:
+    """The slim properties of one location. prices holds one entry per connector, in the
+    order price_locations gives them."""
     connectors = [c for evse in location.evses for c in evse.connectors]
+    if len(prices) != len(connectors):
+        raise PublishError(f"{location.id}: expected a price for each connector")
     powers = [c.max_kw for c in connectors if c.max_kw is not None]
     states = {p.state for p in prices}
-    with_vat = [p.energy_high for p in prices if p.includes_vat and p.energy_high is not None]
+    summaries = {
+        (s.std, _sortable(s.kw), s.price, _sortable(s.ppk)): s
+        for s in (_connector_summary(c, p) for c, p in zip(connectors, prices, strict=True))
+    }
     return MapProperties(
         id=location.id,
         key=key,
@@ -88,10 +115,11 @@ def map_properties(location: Location, prices: list[ConnectorPrice], key: str) -
         evses=len(location.evses),
         price=(
             "free"
-            if "free_confirmed" in states
+            if states == {"free_confirmed"}
             else ("priced" if "priced" in states else "unknown")
         ),
-        ppk=_pence(min(with_vat)) if with_vat else None,
+        pt=location_summary(prices),
+        cons=[summaries[k] for k in sorted(summaries)],
     )
 
 
