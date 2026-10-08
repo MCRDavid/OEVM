@@ -68,8 +68,8 @@ def test_the_gap_is_kept_on_the_operators_own_host(geniepoint, relay_env):
         client.get("https://opendata.geniepoint.co.uk/locations")
         client.get("https://opendata.geniepoint.co.uk/tariffs")
     assert waits and waits[0] > 0
-    assert "opendata.geniepoint.co.uk" in http._HOST_TIMERS
-    assert "oevm-relay.example.workers.dev" not in http._HOST_TIMERS
+    # One timer, for the operator's own host; none for the relay.
+    assert set(http._HOST_TIMERS) == {"opendata.geniepoint.co.uk"}
 
 
 def test_messages_name_the_operators_url_and_never_the_token(geniepoint, relay_env):
