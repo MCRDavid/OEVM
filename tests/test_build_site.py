@@ -4,6 +4,7 @@ import json
 import re
 from html.parser import HTMLParser
 from pathlib import Path
+from urllib.parse import urlsplit
 
 import pytest
 
@@ -64,8 +65,10 @@ def test_the_map_page_links_to_the_required_documents(page):
     for path in ("DISCLAIMER.md", "DATA_LICENCES.md", "docs/PRIVACY_AND_COOKIES.md", "SECURITY.md"):
         assert f"{REPOSITORY_URL}/blob/main/{path}" in page.hrefs
     assert "transparency/" in page.hrefs
-    github = [href for href in page.hrefs if "github.com" in href]
-    assert github and all(href.startswith(REPOSITORY_URL) for href in github)
+    github = [href for href in page.hrefs if urlsplit(href).hostname == "github.com"]
+    assert github and all(
+        href.startswith(f"{REPOSITORY_URL}/") or href == REPOSITORY_URL for href in github
+    )
 
 
 def test_the_content_security_policy_allows_only_this_site_and_the_basemap(page):
