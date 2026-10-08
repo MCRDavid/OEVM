@@ -3,16 +3,19 @@
 - data/locations.geojson: one slim point per location, for the map and its filters.
 - data/loc/<shard>/<key>.json: everything about one location, loaded on click.
 - data/manifest.json: when each operator was fetched, attribution, counts and file sizes.
+- data/status.json: feed health for each operator, with a 30-day history.
 
 Every file is validated against these models before it is written, and their JSON Schema
 is exported to schema/json/ so the front end and CI can check the files too.
 """
 
+import datetime as dt
 from typing import Annotated, Literal
 
 from pydantic import AwareDatetime, Field
 
 from schema.models import Location, PriceState, RecordId, SourceId, Tariff, _Model
+from schema.runlog import RunLog
 
 Key = Annotated[str, Field(pattern=r"^[0-9a-f]{16}$")]
 SCHEMA_VERSION = 1
@@ -103,3 +106,29 @@ class Manifest(_Model):
     generated_at: AwareDatetime
     operators: dict[SourceId, OperatorEntry]
     files: list[FileEntry]
+
+
+class HistoryPoint(_Model):
+    """One day's latest run for one operator."""
+
+    date: dt.date
+    fetched_at: AwareDatetime
+    failed: bool
+    complete: bool
+    locations: int = Field(ge=0)
+    connectors_with_tariff_pct: float | None = Field(default=None, ge=0, le=100)
+    evses_with_status_pct: float | None = Field(default=None, ge=0, le=100)
+
+
+class OperatorStatus(_Model):
+    name: str
+    last_attempt: AwareDatetime | None = None
+    last_success: AwareDatetime | None = None
+    latest: RunLog | None = Field(default=None, description="The most recent run log.")
+    history: list[HistoryPoint] = Field(description="Up to 30 days, oldest first.")
+
+
+class StatusFile(_Model):
+    schema_version: Literal[1] = SCHEMA_VERSION
+    generated_at: AwareDatetime
+    operators: dict[SourceId, OperatorStatus]

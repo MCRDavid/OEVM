@@ -2,23 +2,17 @@
 
 import html
 import json
-import re
-from datetime import UTC, datetime
 from html.parser import HTMLParser
 from pathlib import Path
 
 import pytest
 
-from adapters.http import PoliteClient
-from adapters.ocpi_221 import fetch
-from adapters.replay import ReplayTransport
-from pipeline import run, transparency
+from pipeline import transparency
 from pipeline.project import REPOSITORY_URL
 from pipeline.registry import load_registry
 from schema.operator import OperatorConfig, neutral_text
 
 FIXTURES = Path(__file__).parent / "fixtures"
-NOW_UTC = datetime(2026, 10, 8, 3, 0, tzinfo=UTC)
 
 
 class TextAndTags(HTMLParser):
@@ -137,111 +131,14 @@ def test_text_from_the_registry_is_escaped():
             "enabled": False,
         }
     )
-    page = transparency.render_html(transparency.build({config.id: config}, {}))
+    page = transparency.render_html(transparency.build({config.id: config}))
     assert "<script>" not in page and "&lt;script&gt;" in page
     assert "<b>Operator</b>" not in page
 
 
-def test_run_logs_appear_on_the_page(tmp_path):
-    config = load_registry()["chargy"]
-    transport = ReplayTransport(FIXTURES / "chargy")
-    with PoliteClient(config, transport=transport, sleep=lambda _s: None) as client:
-        result = fetch(config, client, page_size=2, max_pages=2)
-    (tmp_path / "chargy.json").write_text(json.dumps(run.run_log(result, "fixtures")))
-
-    data = transparency.build(load_registry(), transparency.load_runs(tmp_path))
-    page = transparency.render_html(data)
-    assert "Latest run for each operator" in page
-    assert "WORKING" in page
-    assert re.search(r"4 records of 5946 reported, incomplete", page)
-
-
-def test_check_mode_refuses_run_logs(tmp_path):
-    with pytest.raises(SystemExit):
-        transparency.main(["--check", "--runs", str(tmp_path)])
-
-
-def chargy_run_log() -> dict:
-    config = load_registry()["chargy"]
-    transport = ReplayTransport(FIXTURES / "chargy")
-    with PoliteClient(config, transport=transport, sleep=lambda _s: None) as client:
-        result = fetch(config, client, page_size=2, max_pages=2)
-    return run.run_log(result, "fixtures")
-
-
-def test_a_reported_total_of_zero_is_shown_as_zero(tmp_path):
-    log = chargy_run_log()
-    log["modules"]["tariffs"].update(records=0, reported=0)
-    (tmp_path / "chargy.json").write_text(json.dumps(log))
-    page = transparency.render_html(
-        transparency.build(load_registry(), transparency.load_runs(tmp_path))
-    )
-    assert "tariffs: 0 records of 0 reported" in page
-
-
-def test_a_failed_run_is_shown_as_failed(tmp_path):
-    log = run.failure_log("chargy", "live", "gave up on https://char.gy/x: HTTP 503", NOW_UTC)
-    (tmp_path / "chargy.json").write_text(json.dumps(log))
-    page = transparency.render_html(
-        transparency.build(load_registry(), transparency.load_runs(tmp_path))
-    )
-    assert "Run failed" in page and "HTTP 503" in page
-
-
-def test_a_malformed_run_log_is_refused(tmp_path, capsys):
-    (tmp_path / "chargy.json").write_text(json.dumps({"operator": "chargy", "mode": "live"}))
-    out = tmp_path / "build"
-    assert transparency.main(["--runs", str(tmp_path), "--out", str(out)]) == 1
-    assert "chargy.json is not a valid run log" in capsys.readouterr().err
-
-
-def test_a_run_log_with_extra_fields_is_refused(tmp_path, capsys):
-    log = chargy_run_log()
-    log["raw_url"] = "https://example.invalid/locations?apiKey=never-published"
-    (tmp_path / "chargy.json").write_text(json.dumps(log))
-    assert transparency.main(["--runs", str(tmp_path), "--out", str(tmp_path / "out")]) == 1
-    error = capsys.readouterr().err
-    assert "raw_url" in error and "never-published" not in error
-    assert not (tmp_path / "out").exists()
-
-
-def test_a_run_log_must_be_named_after_its_operator(tmp_path):
-    (tmp_path / "jolt.json").write_text(json.dumps(chargy_run_log()))
-    with pytest.raises(ValueError, match=r"name it chargy\.json"):
-        transparency.load_runs(tmp_path)
-
-
-def test_a_run_log_for_an_unknown_operator_is_refused(tmp_path):
-    log = chargy_run_log() | {"operator": "nobody"}
-    (tmp_path / "nobody.json").write_text(json.dumps(log))
-    with pytest.raises(ValueError, match="not in the registry: nobody"):
-        transparency.build(load_registry(), transparency.load_runs(tmp_path))
-
-
-def test_only_known_run_log_fields_are_published(tmp_path):
-    (tmp_path / "chargy.json").write_text(json.dumps(chargy_run_log()))
-    data = transparency.build(load_registry(), transparency.load_runs(tmp_path))
-    chargy = next(op for op in data["operators"] if op["id"] == "chargy")
-    assert set(chargy["latest_run"]) == set(run.RunLog.model_fields)
-
-
-def test_long_issues_are_shortened_in_run_logs():
-    log = run.failure_log("chargy", "live", "x" * 2000, NOW_UTC)
-    assert len(log["error"]) == len(log["issues"][0]) == run.MAX_ISSUE_LENGTH
-    assert log["issues"][0].endswith("...")
-
-
-def test_runs_need_an_out_folder_so_the_committed_page_is_kept(tmp_path):
-    with pytest.raises(SystemExit):
-        transparency.main(["--runs", str(tmp_path)])
-    (tmp_path / "logs").mkdir()
-    (tmp_path / "logs" / "chargy.json").write_text(json.dumps(chargy_run_log()))
-    before = transparency.PAGE_PATH.read_text(encoding="utf-8")
-    out = tmp_path / "build"
-    assert transparency.main(["--runs", str(tmp_path / "logs"), "--out", str(out)]) == 0
-    assert "Latest run for each operator" in (out / "transparency" / "index.html").read_text()
-    assert (out / "data" / "transparency.json").exists()
-    assert transparency.PAGE_PATH.read_text(encoding="utf-8") == before
+def test_runs_are_on_the_feed_health_page_not_here(page):
+    assert 'href="../status/"' in page
+    assert "latest_run" not in transparency.outputs()[transparency.JSON_PATH]
 
 
 def test_url_templates_are_not_links(page):
