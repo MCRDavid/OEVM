@@ -105,8 +105,7 @@
           "status": "open",
           "resolved_date": null
         }
-      ],
-      "latest_run": null
+      ]
     },
     {
       "id": "geniepoint",
@@ -225,8 +224,7 @@
           "status": "open",
           "resolved_date": null
         }
-      ],
-      "latest_run": null
+      ]
     },
     {
       "id": "jolt",
@@ -405,8 +403,7 @@
           "status": "open",
           "resolved_date": null
         }
-      ],
-      "latest_run": null
+      ]
     },
     {
       "id": "bp_pulse",
@@ -505,8 +502,7 @@
           "status": "open",
           "resolved_date": null
         }
-      ],
-      "latest_run": null
+      ]
     },
     {
       "id": "community_by_shell_recharge",
@@ -598,8 +594,7 @@
           "status": "open",
           "resolved_date": null
         }
-      ],
-      "latest_run": null
+      ]
     },
     {
       "id": "go_zero",
@@ -625,8 +620,7 @@
         "difference_from_regulations": "Not known yet.",
         "notes": null
       },
-      "findings": [],
-      "latest_run": null
+      "findings": []
     },
     {
       "id": "gridserve",
@@ -723,8 +717,7 @@
           "status": "open",
           "resolved_date": null
         }
-      ],
-      "latest_run": null
+      ]
     },
     {
       "id": "instavolt",
@@ -757,8 +750,7 @@
         "difference_from_regulations": "Not known yet.",
         "notes": null
       },
-      "findings": [],
-      "latest_run": null
+      "findings": []
     },
     {
       "id": "pod",
@@ -790,8 +782,7 @@
         "difference_from_regulations": "Not known yet.",
         "notes": null
       },
-      "findings": [],
-      "latest_run": null
+      "findings": []
     },
     {
       "id": "shell_recharge",
@@ -883,8 +874,7 @@
           "status": "open",
           "resolved_date": null
         }
-      ],
-      "latest_run": null
+      ]
     },
     {
       "id": "ubitricity",
@@ -976,8 +966,7 @@
           "status": "open",
           "resolved_date": null
         }
-      ],
-      "latest_run": null
+      ]
     }
   ]
 }

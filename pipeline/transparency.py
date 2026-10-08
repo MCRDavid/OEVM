@@ -3,13 +3,11 @@ apply, and what has been found.
 
     uv run python -m pipeline.transparency            # write the page and its JSON
     uv run python -m pipeline.transparency --check    # fail if the committed files are stale
-    uv run python -m pipeline.transparency --runs DIR --out BUILD  # with run logs, for publishing
 
-The page is built only from the operator registry (operators/*.yaml) and, when given, run
-logs written by `python -m pipeline.run --log-dir DIR`. It has no scripts, no cookies and
-no third-party files. Wording comes from the registry, where it is checked for neutral
-language, or from this module. Issues in run logs may quote values from a feed; they are
-escaped and shown as logged.
+The page is built only from the operator registry (operators/*.yaml), so it is the same
+on every build. It has no scripts, no cookies and no third-party files. Wording comes from
+the registry, where it is checked for neutral language, or from this module. The results
+of each run are on the feed health page (pipeline/status.py).
 """
 
 import argparse
@@ -20,11 +18,8 @@ import sys
 from datetime import date
 from pathlib import Path
 
-from pydantic import ValidationError
-
 from pipeline.project import REPOSITORY_URL
 from pipeline.registry import ROOT, RegistryError, load_registry
-from pipeline.run import RunLog
 from schema.operator import ENGAGEMENT_LABELS, DocumentedLimit, OperatorConfig
 
 PAGE_PATH = ROOT / "site" / "transparency" / "index.html"
@@ -150,7 +145,7 @@ def rate_limit_view(config: OperatorConfig) -> dict:
     }
 
 
-def operator_view(config: OperatorConfig, run: dict | None) -> dict:
+def operator_view(config: OperatorConfig) -> dict:
     feeds = [
         {"kind": kind, "url": endpoint.url, "status": endpoint.status}
         for kind, endpoint in config.endpoints.items()
@@ -204,7 +199,6 @@ def operator_view(config: OperatorConfig, run: dict | None) -> dict:
             }
             for f in config.findings
         ],
-        "latest_run": run,
     }
 
 
@@ -227,42 +221,13 @@ def last_reviewed(operators: dict[str, OperatorConfig]) -> str:
     return max(dates).isoformat() if dates else "unknown"
 
 
-def load_runs(directory: Path | None) -> dict[str, dict]:
-    """Read run logs written by pipeline.run --log-dir. Raises ValueError if one is malformed.
-
-    Each log must match pipeline.run.RunLog exactly and be named after its operator, so
-    the page only ever publishes the fields that model allows.
-    """
-    if directory is None:
-        return {}
-    runs = {}
-    for path in sorted(directory.glob("*.json")):
-        try:
-            run = RunLog.model_validate_json(path.read_text(encoding="utf-8"))
-        except ValidationError as exc:
-            problem = exc.errors()[0]
-            where = ".".join(str(part) for part in problem["loc"]) or "the file"
-            raise ValueError(
-                f"{path.name} is not a valid run log: {where}: {problem['msg']}"
-            ) from None
-        if run.operator != path.stem:
-            raise ValueError(
-                f"{path.name} is the run log for {run.operator!r}; name it {run.operator}.json"
-            )
-        runs[run.operator] = run.model_dump(mode="json")
-    return runs
-
-
-def build(operators: dict[str, OperatorConfig], runs: dict[str, dict]) -> dict:
-    unknown = sorted(set(runs) - set(operators))
-    if unknown:
-        raise ValueError(f"run logs for operators not in the registry: {', '.join(unknown)}")
+def build(operators: dict[str, OperatorConfig]) -> dict:
     ordered = sorted(operators.values(), key=lambda c: (not c.enabled, c.display_name.lower()))
     return {
         "last_reviewed": last_reviewed(operators),
         "disclaimer": short_disclaimer(),
         "regulation": REGULATION,
-        "operators": [operator_view(c, runs.get(c.id)) for c in ordered],
+        "operators": [operator_view(c) for c in ordered],
     }
 
 
@@ -395,43 +360,6 @@ def _findings_section(data: dict) -> str:
     return "".join(parts) or "<p>Nothing recorded yet.</p>"
 
 
-def _runs_section(data: dict) -> str:
-    runs = [(op, op["latest_run"]) for op in data["operators"] if op["latest_run"]]
-    if not runs:
-        return (
-            "<p>No scheduled runs have been published yet. When the daily fetch is set up, the "
-            "latest run for each operator will appear here, with any problems it logged.</p>"
-        )
-    rows = []
-    for op, run in runs:
-        modules = "<br>".join(
-            f"{_e(name)}: {_e(m['records'])} records of "
-            f"{_e('unknown' if m['reported'] is None else m['reported'])} "
-            f"reported{'' if m['complete'] else ', incomplete'}"
-            for name, m in run["modules"].items()
-        )
-        if run.get("failed"):
-            modules = "<strong>Run failed</strong>" + (f"<br>{modules}" if modules else "")
-        issues = "<br>".join(_e(issue) for issue in run["issues"]) or "None"
-        rows.append(
-            "<tr>"
-            f'<th scope="row">{_e(op["name"])}</th>'
-            f"<td>{_e(run['fetched_at'])} ({_e(run['mode'])})</td>"
-            f"<td>{modules}</td>"
-            f"<td>{_e(run['kept']['locations'])} locations, {_e(run['kept']['tariffs'])} "
-            "tariffs</td>"
-            f"<td>{issues}</td>"
-            "</tr>"
-        )
-    return (
-        "<table><caption>Latest run for each operator</caption>"
-        '<thead><tr><th scope="col">Operator</th><th scope="col">When (UTC)</th>'
-        '<th scope="col">Fetched</th><th scope="col">Kept</th>'
-        '<th scope="col">Problems logged</th></tr></thead>'
-        f"<tbody>{''.join(rows)}</tbody></table>"
-    )
-
-
 STYLE = """
 :root { color-scheme: light dark; --fg: #1a1a1a; --bg: #ffffff; --muted: #555555;
   --line: #d0d0d0; --link: #0b57a4; --note: #f3f3f3; }
@@ -496,7 +424,8 @@ with the date it was seen and what this project does about it. Values that are n
 are shown as unknown, never guessed. Only prices in pounds sterling are shown.</p>
 <div class="table-wrap">{_findings_section(data)}</div>
 <h2>Latest runs</h2>
-<div class="table-wrap">{_runs_section(data)}</div>
+<p>The results of each daily run, with counts, problems logged and a 30-day history, are
+on the <a href="../status/">feed health page</a>.</p>
 </main>
 <footer>
 <p class="note">{_e(data["disclaimer"])}</p>
@@ -512,18 +441,10 @@ def render_json(data: dict) -> str:
     return json.dumps(data, indent=2, ensure_ascii=False) + "\n"
 
 
-def outputs(runs_dir: Path | None = None, out_dir: Path | None = None) -> dict[Path, str]:
-    """The page and its JSON, keyed by where they are written.
-
-    Without out_dir they go to the committed paths under site/. With out_dir they go to the
-    same layout under that folder, for a build that includes run logs.
-    """
-    data = build(load_registry(), load_runs(runs_dir))
-    page, json_file = PAGE_PATH, JSON_PATH
-    if out_dir is not None:
-        page = out_dir / PAGE_PATH.relative_to(ROOT / "site")
-        json_file = out_dir / JSON_PATH.relative_to(ROOT / "site")
-    return {page: render_html(data), json_file: render_json(data)}
+def outputs() -> dict[Path, str]:
+    """The page and its JSON, keyed by where they are committed."""
+    data = build(load_registry())
+    return {PAGE_PATH: render_html(data), JSON_PATH: render_json(data)}
 
 
 def _shown(path: Path) -> str:
@@ -533,16 +454,10 @@ def _shown(path: Path) -> str:
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(prog="python -m pipeline.transparency", description=__doc__)
     parser.add_argument("--check", action="store_true", help="fail if committed files are stale")
-    parser.add_argument("--runs", type=Path, help="folder of run logs from pipeline.run --log-dir")
-    parser.add_argument("--out", type=Path, help="write to this folder instead of site/")
     args = parser.parse_args(argv)
-    if args.check and (args.runs or args.out):
-        parser.error("--check compares the committed page, which never includes run logs")
-    if args.runs and not args.out:
-        parser.error("use --out with --runs, so the committed page is not overwritten")
 
     try:
-        files = outputs(args.runs, args.out)
+        files = outputs()
     except (RegistryError, ValueError) as exc:
         print(f"Error: {exc}", file=sys.stderr)
         return 1

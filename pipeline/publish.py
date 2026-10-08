@@ -30,6 +30,7 @@ from decimal import ROUND_HALF_UP, Decimal
 from pathlib import Path
 
 from adapters.ocpi_221 import AdapterResult
+from pipeline.health import in_uk
 from pipeline.registry import ROOT
 from pipeline.tariffs import ConnectorPrice, price_locations
 from schema.models import Location
@@ -46,10 +47,6 @@ from schema.published import (
     PointGeometry,
 )
 
-# Latitude and longitude limits that include the Isles of Scilly, Shetland, Northern
-# Ireland and the east coast. A point outside them is not plotted.
-UK_LATITUDE = (49.8, 60.95)
-UK_LONGITUDE = (-8.7, 1.8)
 LICENCE_NOTE = (
     "Charge point data belongs to each operator and is used in line with the Open "
     "Government Licence v3.0, with the attribution statements listed here. This project's "
@@ -70,11 +67,6 @@ class Published:
 def location_key(location_id: str) -> str:
     """A short, file-safe name for a location's detail file. Ids may contain spaces."""
     return hashlib.sha256(location_id.encode("utf-8")).hexdigest()[:16]
-
-
-def in_uk(location: Location) -> bool:
-    lat, lon = location.coordinates.latitude, location.coordinates.longitude
-    return UK_LATITUDE[0] <= lat <= UK_LATITUDE[1] and UK_LONGITUDE[0] <= lon <= UK_LONGITUDE[1]
 
 
 def _pence(amount: Decimal) -> float:

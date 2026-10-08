@@ -1,0 +1,399 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$defs": {
+    "Health": {
+      "additionalProperties": false,
+      "description": "Figures counted from what was received, for the feed health page.",
+      "properties": {
+        "locations": {
+          "minimum": 0,
+          "title": "Locations",
+          "type": "integer"
+        },
+        "locations_in_uk": {
+          "description": "Coordinates inside the UK limits.",
+          "minimum": 0,
+          "title": "Locations In Uk",
+          "type": "integer"
+        },
+        "evses": {
+          "minimum": 0,
+          "title": "Evses",
+          "type": "integer"
+        },
+        "evses_with_status": {
+          "description": "Status other than unknown.",
+          "minimum": 0,
+          "title": "Evses With Status",
+          "type": "integer"
+        },
+        "connectors": {
+          "minimum": 0,
+          "title": "Connectors",
+          "type": "integer"
+        },
+        "connectors_with_tariff": {
+          "description": "At least one listed tariff was found in the operator's tariffs.",
+          "minimum": 0,
+          "title": "Connectors With Tariff",
+          "type": "integer"
+        },
+        "median_last_updated_days": {
+          "anyOf": [
+            {
+              "minimum": 0,
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "description": "Median age, at fetch time, of the locations' own last_updated dates. Null when no location gives one.",
+          "title": "Median Last Updated Days"
+        }
+      },
+      "required": [
+        "locations",
+        "locations_in_uk",
+        "evses",
+        "evses_with_status",
+        "connectors",
+        "connectors_with_tariff",
+        "median_last_updated_days"
+      ],
+      "title": "Health",
+      "type": "object"
+    },
+    "HistoryPoint": {
+      "additionalProperties": false,
+      "description": "One day's latest run for one operator.",
+      "properties": {
+        "date": {
+          "format": "date",
+          "title": "Date",
+          "type": "string"
+        },
+        "fetched_at": {
+          "format": "date-time",
+          "title": "Fetched At",
+          "type": "string"
+        },
+        "failed": {
+          "title": "Failed",
+          "type": "boolean"
+        },
+        "complete": {
+          "title": "Complete",
+          "type": "boolean"
+        },
+        "locations": {
+          "minimum": 0,
+          "title": "Locations",
+          "type": "integer"
+        },
+        "connectors_with_tariff_pct": {
+          "anyOf": [
+            {
+              "maximum": 100,
+              "minimum": 0,
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Connectors With Tariff Pct"
+        },
+        "evses_with_status_pct": {
+          "anyOf": [
+            {
+              "maximum": 100,
+              "minimum": 0,
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Evses With Status Pct"
+        }
+      },
+      "required": [
+        "date",
+        "fetched_at",
+        "failed",
+        "complete",
+        "locations",
+        "connectors_with_tariff_pct",
+        "evses_with_status_pct"
+      ],
+      "title": "HistoryPoint",
+      "type": "object"
+    },
+    "KeptCounts": {
+      "additionalProperties": false,
+      "properties": {
+        "locations": {
+          "minimum": 0,
+          "title": "Locations",
+          "type": "integer"
+        },
+        "tariffs": {
+          "minimum": 0,
+          "title": "Tariffs",
+          "type": "integer"
+        }
+      },
+      "required": [
+        "locations",
+        "tariffs"
+      ],
+      "title": "KeptCounts",
+      "type": "object"
+    },
+    "ModuleSummary": {
+      "additionalProperties": false,
+      "properties": {
+        "pages": {
+          "minimum": 0,
+          "title": "Pages",
+          "type": "integer"
+        },
+        "records": {
+          "minimum": 0,
+          "title": "Records",
+          "type": "integer"
+        },
+        "reported": {
+          "anyOf": [
+            {
+              "minimum": 0,
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Reported"
+        },
+        "complete": {
+          "title": "Complete",
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "pages",
+        "records",
+        "reported",
+        "complete"
+      ],
+      "title": "ModuleSummary",
+      "type": "object"
+    },
+    "OperatorStatus": {
+      "additionalProperties": false,
+      "properties": {
+        "name": {
+          "title": "Name",
+          "type": "string"
+        },
+        "last_attempt": {
+          "anyOf": [
+            {
+              "format": "date-time",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Last Attempt"
+        },
+        "last_success": {
+          "anyOf": [
+            {
+              "format": "date-time",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Last Success"
+        },
+        "latest": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/RunLog"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "The most recent run log."
+        },
+        "history": {
+          "description": "Up to 30 days, oldest first.",
+          "items": {
+            "$ref": "#/$defs/HistoryPoint"
+          },
+          "title": "History",
+          "type": "array"
+        }
+      },
+      "required": [
+        "name",
+        "last_attempt",
+        "last_success",
+        "latest",
+        "history"
+      ],
+      "title": "OperatorStatus",
+      "type": "object"
+    },
+    "RunLog": {
+      "additionalProperties": false,
+      "description": "The only fields a run log may have.",
+      "properties": {
+        "operator": {
+          "pattern": "^[a-z0-9_]+$",
+          "title": "Operator",
+          "type": "string"
+        },
+        "mode": {
+          "enum": [
+            "fixtures",
+            "live"
+          ],
+          "title": "Mode",
+          "type": "string"
+        },
+        "fetched_at": {
+          "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}Z$",
+          "title": "Fetched At",
+          "type": "string"
+        },
+        "requests": {
+          "anyOf": [
+            {
+              "minimum": 0,
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Requests"
+        },
+        "complete": {
+          "title": "Complete",
+          "type": "boolean"
+        },
+        "failed": {
+          "title": "Failed",
+          "type": "boolean"
+        },
+        "error": {
+          "anyOf": [
+            {
+              "maxLength": 500,
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Error"
+        },
+        "modules": {
+          "additionalProperties": {
+            "$ref": "#/$defs/ModuleSummary"
+          },
+          "propertyNames": {
+            "enum": [
+              "locations",
+              "tariffs"
+            ]
+          },
+          "title": "Modules",
+          "type": "object"
+        },
+        "kept": {
+          "$ref": "#/$defs/KeptCounts"
+        },
+        "health": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Health"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "description": "Null when the run failed."
+        },
+        "issues": {
+          "items": {
+            "maxLength": 500,
+            "type": "string"
+          },
+          "title": "Issues",
+          "type": "array"
+        }
+      },
+      "required": [
+        "operator",
+        "mode",
+        "fetched_at",
+        "requests",
+        "complete",
+        "failed",
+        "error",
+        "modules",
+        "kept",
+        "health",
+        "issues"
+      ],
+      "title": "RunLog",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "schema_version": {
+      "const": 1,
+      "default": 1,
+      "title": "Schema Version",
+      "type": "integer"
+    },
+    "generated_at": {
+      "format": "date-time",
+      "title": "Generated At",
+      "type": "string"
+    },
+    "operators": {
+      "patternProperties": {
+        "^[a-z0-9_]+$": {
+          "$ref": "#/$defs/OperatorStatus"
+        }
+      },
+      "propertyNames": {
+        "description": "Operator id from the registry (for example 'chargy'), or a gap-filler source such as 'osm', 'ocm' or 'reports'."
+      },
+      "title": "Operators",
+      "type": "object"
+    }
+  },
+  "required": [
+    "schema_version",
+    "generated_at",
+    "operators"
+  ],
+  "title": "StatusFile",
+  "type": "object"
+}
