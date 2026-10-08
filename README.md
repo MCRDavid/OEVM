@@ -26,8 +26,7 @@ Early days. Blueprint tasks 1 to 5 are done:
    page, and converts them to the schema. char.gy is the first operator switched on.
 5. **Jolt adapter:** reads Jolt's own API format, which differs from OCPI 2.2.1 in ways
    recorded on the transparency page, and converts it the same way. GeniePoint's files
-   turned out to be standard OCPI 2.2.1, so the OCPI adapter reads them; GeniePoint is
-   switched off until its website's terms of use have been read.
+   turned out to be standard OCPI 2.2.1, so the OCPI adapter reads them.
 
 Also in place:
 

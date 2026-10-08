@@ -38,8 +38,13 @@ licence:
     GeniePoint's open data page says the data "must be publicly available in line with
     the Public Charge Point Regulations 2023", and DfT's guidance says "Data must be open
     in line with the Open Government Licence". The open data page, read in a browser on
-    2026-10-08, states no licence or terms for the data. The Equans website's general
-    terms of use, linked from the page footer, have not been read yet.
+    2026-10-08, states no licence or terms for the data. The Equans website's general terms
+    of use (read in a browser on 2026-10-08) cover www.equans.co.uk and "any subsidiary
+    Equans sites which are linked to such site", and say that apart from downloads "for
+    your personal and internal business use", other reproduction needs Equans' permission.
+    On 2026-10-08 the repository owner decided to read those general website terms as not
+    covering the open data files, which GeniePoint publishes under the regulations, and
+    regulation 10(5) requires them to be available without terms on their use.
   checked: 2026-10-08
 engagement:
   status: open_anonymous
@@ -56,6 +61,10 @@ sources:
     note: >-
       GeniePoint's open data page, read in a browser on 2026-10-08. Gives the two download
       links. It returns a browser check (HTTP 403) to automated requests.
+  - url: https://www.equans.co.uk/terms-use
+    note: >-
+      The Equans website's general terms of use, read in a browser on 2026-10-08 by the
+      repository owner. Summarised in the licence section.
 findings:
   - date: 2026-10-08
     kind: access
@@ -95,9 +104,19 @@ findings:
       them directly.
     handling: The map will use data fetched by the pipeline, not requests from visitors' browsers.
     evidence_url: https://opendata.geniepoint.co.uk/locations
+  - date: 2026-10-08
+    kind: access
+    summary: >-
+      The Equans website's general terms of use cover linked subsidiary sites and say that,
+      apart from downloads for personal and internal business use, reproduction needs
+      Equans' permission. The open data page says the data must be publicly available in
+      line with the regulations, and states no terms for the data.
+    handling: >-
+      The repository owner decided on 2026-10-08 to read the general website terms as not
+      covering the open data files. The reasoning is recorded in the licence section.
+    evidence_url: https://www.equans.co.uk/terms-use
 notes: >-
   The blueprint expected downloads for the static_file adapter. The files turned out to be
-  OCPI 2.2.1 responses, so the ocpi_221 adapter reads them. Switched off until the Equans
-  website's terms of use, linked from the open data page, have been read; the site blocks
-  automated requests, so they need reading in a browser.
-enabled: false
+  OCPI 2.2.1 responses, so the ocpi_221 adapter reads them. Switched on 2026-10-08 after
+  the open data page and the Equans website's terms of use were read.
+enabled: true
