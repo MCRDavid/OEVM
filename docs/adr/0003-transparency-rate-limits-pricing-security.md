@@ -9,8 +9,9 @@ Date: 2026-10-07. Status: accepted.
   reproducible and CI checks it is up to date. Its "last reviewed" date is the latest date
   in the registry, not today's date.
 - Run logs (`pipeline.run --log-dir`) can be added with `--runs`. They hold counts and
-  logged problems, never records or keys. The committed page never includes them; the
-  daily fetch (blueprint task 10) will add them when it publishes the site.
+  logged problems, never records or keys. A failed run writes a log too, so failures show
+  on the page. The committed page never includes run logs: building with `--runs` needs
+  `--out`, and the daily fetch (blueprint task 10) will publish that build.
 - Findings are recorded by hand in each operator file (`findings:`), dated, with a kind
   (spec conformance, data quality, access, documentation), how the project handles each
   one, and evidence.
@@ -25,20 +26,27 @@ Date: 2026-10-07. Status: accepted.
   10(4)'s 30-second rule is a duty on operators to update status data. DfT guidance allows
   "terms and conditions covering the means of access", which is where operators' limits
   come from.
-- Project floor: at least 1 second between any two requests to an operator.
+- Project floor: at least 1 second between any two requests to a host.
 - Each operator's published limits are recorded as numbers, with the exact quote, source
-  and date checked. The registry rejects a gap shorter than any limit needs. One gap
-  covers every endpoint of an operator, so the strictest limit decides it.
-- Tests simulate the client with a clock that only moves when it waits, so responses take
-  no time (the worst case). For every operator in the registry they check the gap between
-  requests, retries included, and the count in every window of each published limit.
-  A deliberately broken client (no waiting) fails 13 of these tests.
-- When a server asks for a wait longer than this project will make (Retry-After over 600
-  seconds), the client gives up and sends nothing more to that server until the wait has
-  passed, rather than retrying early.
+  and date checked. The registry rejects a gap shorter than any limit needs plus a 1
+  second safety margin. One gap covers every endpoint, so the strictest limit decides it.
+  The client also works the gap out again itself, so a gap that skipped validation
+  cannot make it faster.
+- The gap is measured from when the previous response finished, so uneven network delays
+  can never bring two requests closer together at the server than the gap.
+- Timers are kept per host and shared by every client in the process, so operators served
+  from the same host (the four Eco-Movement operators) share one gap and one Retry-After.
+  Timers live in memory: runs that use the same host must never be started in parallel,
+  and a future scheduled workflow needs a concurrency group for that.
+- Every Retry-After is honoured, in seconds or as an HTTP date, on any attempt including
+  the last. One that cannot be read counts as a one hour wait. A wait longer than 600
+  seconds makes the client stop and send nothing more to that host until it has passed.
+- Tests simulate the client with a fake clock, check arrival times at the server with
+  uneven network delays, and count windows inclusively. Eleven deliberately broken
+  versions of the client and registry were each caught by the tests (2026-10-08).
 - Re-checked on 2026-10-07: Eco-Movement publishes 30 requests an hour for locations,
   single locations and tariffs, and 1 per 30 seconds for statuses, so its operators use a
-  120 second gap. Gridserve's developer documentation states no limit; the 30 second gap
+  125 second gap. Gridserve's developer documentation states no limit; the 30 second gap
   from earlier research is kept and the difference is shown on the transparency page.
 
 ## Prices
@@ -47,7 +55,8 @@ Date: 2026-10-07. Status: accepted.
   only. Other currencies show as "Price unknown" with the reason, and are never
   converted. Regulation 10(6)(d)(iv) describes the price in reference data as "the price
   in pence per kilowatt hour".
-- VAT is added only when every component states it; otherwise "VAT not stated".
+- VAT is added only when every component that costs something states it; otherwise
+  "VAT not stated". Sums use exact decimal arithmetic, so half pennies round up.
   Reservation fees are not shown as charging prices.
 
 ## Security

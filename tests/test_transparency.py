@@ -2,6 +2,7 @@
 
 import json
 import re
+from datetime import UTC, datetime
 from html.parser import HTMLParser
 from pathlib import Path
 
@@ -16,6 +17,7 @@ from pipeline.registry import load_registry
 from schema.operator import OperatorConfig, neutral_text
 
 FIXTURES = Path(__file__).parent / "fixtures"
+NOW_UTC = datetime(2026, 10, 8, 3, 0, tzinfo=UTC)
 
 
 class TextAndTags(HTMLParser):
@@ -84,8 +86,15 @@ def test_rate_limits_show_our_setting_and_the_regulation(page):
     assert "set no limit" in data["regulation"]["summary"]
     for op in data["operators"]:
         rate = op["rate_limit"]
-        assert rate["our_gap_seconds"] >= 1
-        assert rate["our_max_per_hour"] == int(3600 // rate["our_gap_seconds"])
+        gap, per_hour = rate["our_gap_seconds"], rate["our_max_per_hour"]
+        assert gap >= 1
+        # per_hour requests a gap apart fit in an hour; one more would not.
+        assert (per_hour - 1) * gap < 3600 <= per_hour * gap
+
+
+@pytest.mark.parametrize(("gap", "expected"), [(2, 1800), (7, 515), (30, 120), (125, 29)])
+def test_hourly_maximum(gap, expected):
+    assert transparency.max_per_hour(gap) == expected
 
 
 def test_text_from_the_registry_is_escaped():
@@ -129,3 +138,84 @@ def test_run_logs_appear_on_the_page(tmp_path):
 def test_check_mode_refuses_run_logs(tmp_path):
     with pytest.raises(SystemExit):
         transparency.main(["--check", "--runs", str(tmp_path)])
+
+
+def chargy_run_log() -> dict:
+    config = load_registry()["chargy"]
+    transport = ReplayTransport(FIXTURES / "chargy")
+    with PoliteClient(config, transport=transport, sleep=lambda _s: None) as client:
+        result = fetch(config, client, page_size=2, max_pages=2)
+    return run.run_log(result, "fixtures")
+
+
+def test_a_reported_total_of_zero_is_shown_as_zero(tmp_path):
+    log = chargy_run_log()
+    log["modules"]["tariffs"].update(records=0, reported=0)
+    (tmp_path / "chargy.json").write_text(json.dumps(log))
+    page = transparency.render_html(
+        transparency.build(load_registry(), transparency.load_runs(tmp_path))
+    )
+    assert "tariffs: 0 records of 0 reported" in page
+
+
+def test_a_failed_run_is_shown_as_failed(tmp_path):
+    log = run.failure_log("chargy", "live", "gave up on https://char.gy/x: HTTP 503", NOW_UTC)
+    (tmp_path / "chargy.json").write_text(json.dumps(log))
+    page = transparency.render_html(
+        transparency.build(load_registry(), transparency.load_runs(tmp_path))
+    )
+    assert "Run failed" in page and "HTTP 503" in page
+
+
+def test_a_malformed_run_log_is_refused(tmp_path, capsys):
+    (tmp_path / "chargy.json").write_text(json.dumps({"operator": "chargy", "mode": "live"}))
+    out = tmp_path / "build"
+    assert transparency.main(["--runs", str(tmp_path), "--out", str(out)]) == 1
+    assert "is not a run log" in capsys.readouterr().err
+
+
+def test_runs_need_an_out_folder_so_the_committed_page_is_kept(tmp_path):
+    with pytest.raises(SystemExit):
+        transparency.main(["--runs", str(tmp_path)])
+    (tmp_path / "logs").mkdir()
+    (tmp_path / "logs" / "chargy.json").write_text(json.dumps(chargy_run_log()))
+    before = transparency.PAGE_PATH.read_text(encoding="utf-8")
+    out = tmp_path / "build"
+    assert transparency.main(["--runs", str(tmp_path / "logs"), "--out", str(out)]) == 0
+    assert "Latest run for each operator" in (out / "transparency" / "index.html").read_text()
+    assert (out / "data" / "transparency.json").exists()
+    assert transparency.PAGE_PATH.read_text(encoding="utf-8") == before
+
+
+def test_url_templates_are_not_links(page):
+    hrefs = [attrs.get("href", "") for tag, attrs in parse(page).tags if tag == "a"]
+    assert not [href for href in hrefs if "{" in href]
+    assert "<code>https://api.joltcharge.com/v1/uk/public/tariffs/{tariffId}</code>" in page
+
+
+def test_last_reviewed_counts_resolved_dates():
+    config = OperatorConfig.model_validate(
+        {
+            "id": "example_operator",
+            "display_name": "Example Operator",
+            "ocpi_country_code": "unknown",
+            "ocpi_party_id": "unknown",
+            "adapter": "unknown",
+            "base_url": "unknown",
+            "auth": {"method": "unknown"},
+            "supports_single_location": "unknown",
+            "cors": "unknown",
+            "engagement": {"status": "unknown"},
+            "findings": [
+                {
+                    "date": "2026-10-07",
+                    "kind": "data_quality",
+                    "summary": "Prices were missing.",
+                    "status": "resolved",
+                    "resolved_date": "2026-11-20",
+                }
+            ],
+            "enabled": False,
+        }
+    )
+    assert transparency.last_reviewed({config.id: config}) == "2026-11-20"

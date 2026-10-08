@@ -470,3 +470,15 @@ def test_live_mode_refuses_operators_that_are_not_enabled(capsys):
 def test_live_mode_rejects_unknown_operators(capsys):
     assert run.main(["--live", "nobody"]) == 1
     assert "no operator 'nobody'" in capsys.readouterr().err
+
+
+def test_a_failed_live_run_writes_a_failure_log(tmp_path, monkeypatch, capsys):
+    def fail(*args, **kwargs):
+        raise FeedError("gave up on https://char.gy/open-ocpi/locations: HTTP 503")
+
+    monkeypatch.setattr(run, "run_operator", fail)
+    assert run.main(["--live", "chargy", "--log-dir", str(tmp_path)]) == 1
+    log = json.loads((tmp_path / "chargy.json").read_text())
+    assert log["failed"] is True and log["complete"] is False
+    assert log["issues"] == ["Run failed: gave up on https://char.gy/open-ocpi/locations: HTTP 503"]
+    assert "HTTP 503" in capsys.readouterr().err

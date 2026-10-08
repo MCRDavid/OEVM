@@ -8,8 +8,9 @@ regulations describe the price in reference data as "the price in pence per kilo
   reason. Prices are never converted: a converted figure is not what the operator charges.
 - "Free" is shown only for a GBP tariff whose price_state is free_confirmed.
 - Energy prices are shown in pence per kWh, as the blueprint asks. VAT is added only when
-  every component states it. Otherwise prices are shown as published, excluding VAT, and
-  marked "VAT not stated".
+  every component that costs something states it. Otherwise prices are shown as
+  published, excluding VAT, and marked "VAT not stated".
+- Sums are done in exact decimal arithmetic, so half pennies round up as expected.
 - Reservation fees are not shown as charging prices.
 """
 
@@ -34,18 +35,22 @@ class PriceDisplay:
     reason: str | None = None
 
 
-def pence(amount: float) -> str:
+def _decimal(amount: float | Decimal) -> Decimal:
+    return amount if isinstance(amount, Decimal) else Decimal(str(amount))
+
+
+def pence(amount: float | Decimal) -> str:
     """0.45 becomes "45p"; 0.4917 becomes "49.2p"."""
-    value = (Decimal(str(amount)) * 100).quantize(Decimal("0.1"), rounding=ROUND_HALF_UP)
+    value = (_decimal(amount) * 100).quantize(Decimal("0.1"), rounding=ROUND_HALF_UP)
     return f"{value:f}".rstrip("0").rstrip(".") + "p"
 
 
-def pounds(amount: float) -> str:
+def pounds(amount: float | Decimal) -> str:
     """1.5 becomes "£1.50"."""
-    return f"£{Decimal(str(amount)).quantize(Decimal('0.01'), rounding=ROUND_HALF_UP):f}"
+    return f"£{_decimal(amount).quantize(Decimal('0.01'), rounding=ROUND_HALF_UP):f}"
 
 
-def _span(values: list[float], fmt) -> str:
+def _span(values: list[Decimal], fmt) -> str:
     low, high = min(values), max(values)
     return fmt(low) if low == high else f"{fmt(low)} to {fmt(high)}"
 
@@ -75,12 +80,14 @@ def describe_tariff(tariff: Tariff) -> PriceDisplay:
             "unknown", "Price unknown", "The tariff only gives prices for reservations."
         )
 
-    vat_stated = all(c.vat is not None for c in components)
+    # A zero price is zero with or without VAT, so only priced components decide this.
+    vat_stated = all(c.vat is not None for c in components if c.price > 0)
 
-    def amount(component: PriceComponent) -> float:
-        if vat_stated:
-            return component.price * (1 + component.vat / 100)
-        return component.price
+    def amount(component: PriceComponent) -> Decimal:
+        price = _decimal(component.price)
+        if vat_stated and component.vat is not None:
+            return price * (1 + _decimal(component.vat) / 100)
+        return price
 
     parts = []
     energy = [amount(c) for c in components if c.type == "energy"]

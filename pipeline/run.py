@@ -14,7 +14,7 @@ import json
 import sys
 import time
 from collections.abc import Callable
-from datetime import datetime
+from datetime import UTC, datetime
 from pathlib import Path
 
 import httpx
@@ -35,6 +35,7 @@ def run_operator(
     *,
     transport: httpx.BaseTransport | None = None,
     sleep: Callable[[float], None] = time.sleep,
+    clock: Callable[[], float] = time.monotonic,
     date_from: datetime | None = None,
     page_size: int | None = None,
     max_pages: int | None = None,
@@ -42,7 +43,7 @@ def run_operator(
     fetch = ADAPTERS.get(config.adapter)
     if fetch is None:
         raise FeedError(f"{config.id}: the {config.adapter} adapter is not built yet")
-    with PoliteClient(config, transport=transport, sleep=sleep) as client:
+    with PoliteClient(config, transport=transport, sleep=sleep, clock=clock) as client:
         result = fetch(
             config, client, date_from=date_from, page_size=page_size, max_pages=max_pages
         )
@@ -83,6 +84,8 @@ def run_log(result: AdapterResult, mode: str) -> dict:
         "fetched_at": result.fetched_at.isoformat().replace("+00:00", "Z"),
         "requests": result.requests,
         "complete": result.complete,
+        "failed": False,
+        "error": None,
         "modules": {
             name: {
                 "pages": len(module.pages),
@@ -95,6 +98,31 @@ def run_log(result: AdapterResult, mode: str) -> dict:
         "kept": {"locations": len(result.locations), "tariffs": len(result.tariffs)},
         "issues": result.issues,
     }
+
+
+def failure_log(operator_id: str, mode: str, error: str, when: datetime) -> dict:
+    """A summary of a run that stopped with an error, so the failure is visible."""
+    return {
+        "operator": operator_id,
+        "mode": mode,
+        "fetched_at": when.astimezone(UTC)
+        .replace(microsecond=0)
+        .isoformat()
+        .replace("+00:00", "Z"),
+        "requests": None,
+        "complete": False,
+        "failed": True,
+        "error": error,
+        "modules": {},
+        "kept": {"locations": 0, "tariffs": 0},
+        "issues": [f"Run failed: {error}"],
+    }
+
+
+def write_log(directory: Path, log: dict) -> None:
+    directory.mkdir(parents=True, exist_ok=True)
+    path = directory / f"{log['operator']}.json"
+    path.write_text(json.dumps(log, indent=2) + "\n", encoding="utf-8")
 
 
 def save_output(result: AdapterResult, directory: Path) -> None:
@@ -145,6 +173,7 @@ def main(argv: list[str] | None = None) -> int:
     )
     args = parser.parse_args(argv)
 
+    mode = "fixtures" if args.fixtures else "live"
     try:
         operators = load_registry()
         if args.fixtures:
@@ -157,14 +186,21 @@ def main(argv: list[str] | None = None) -> int:
                 raise FeedError(
                     f"{config.id} is not enabled in the registry; check its licence terms first"
                 )
-            results = [
-                run_operator(
-                    config,
-                    date_from=args.date_from,
-                    page_size=args.page_size,
-                    max_pages=args.max_pages,
-                )
-            ]
+            try:
+                results = [
+                    run_operator(
+                        config,
+                        date_from=args.date_from,
+                        page_size=args.page_size,
+                        max_pages=args.max_pages,
+                    )
+                ]
+            except FeedError as exc:
+                if args.log_dir:
+                    write_log(
+                        args.log_dir, failure_log(config.id, mode, str(exc), datetime.now(UTC))
+                    )
+                raise
     except (FeedError, RegistryError) as exc:
         print(f"Error: {exc}", file=sys.stderr)
         return 1
@@ -176,10 +212,7 @@ def main(argv: list[str] | None = None) -> int:
         if args.out:
             save_output(result, args.out / result.operator_id)
         if args.log_dir:
-            args.log_dir.mkdir(parents=True, exist_ok=True)
-            log = run_log(result, "fixtures" if args.fixtures else "live")
-            path = args.log_dir / f"{result.operator_id}.json"
-            path.write_text(json.dumps(log, indent=2) + "\n", encoding="utf-8")
+            write_log(args.log_dir, run_log(result, mode))
     if not results:
         print("No fixture sets found.")
     return 0

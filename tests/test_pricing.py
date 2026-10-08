@@ -60,6 +60,31 @@ def test_mixed_vat_shows_all_prices_excluding_vat():
     assert shown.text == "30p to 45p per kWh (VAT not stated)"
 
 
+def test_a_free_extra_without_vat_does_not_hide_vat_on_the_real_price():
+    shown = describe_tariff(
+        tariff(
+            components=[
+                energy(0.45, vat=20),
+                {"type": "flat", "price": 0, "vat": None, "step_size": 1},
+            ]
+        )
+    )
+    assert shown.text == "54p per kWh including VAT"
+
+
+@pytest.mark.parametrize(
+    ("components", "expected"),
+    [
+        ([{"type": "flat", "price": 0.4125, "vat": 20, "step_size": 1}], "£0.50 per session"),
+        ([{"type": "flat", "price": 1.90, "vat": 5, "step_size": 1}], "£2.00 per session"),
+        ([energy(0.57, vat=5)], "59.9p per kWh"),
+    ],
+    ids=["half-penny-flat", "half-penny-low-vat", "half-tenth-penny-energy"],
+)
+def test_vat_maths_is_exact_and_rounds_half_up(components, expected):
+    assert describe_tariff(tariff(components=components)).text == f"{expected} including VAT"
+
+
 def test_other_charges_are_shown_in_pounds():
     shown = describe_tariff(
         tariff(

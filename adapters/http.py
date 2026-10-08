@@ -1,27 +1,46 @@
 """A polite HTTP client for operator feeds.
 
 - Identifies the project in the User-Agent header.
-- Leaves at least `rate_limit.min_seconds_between_requests` between requests.
-- Retries connection errors, timeouts, HTTP 429 and HTTP 5xx with exponential backoff,
-  honouring a Retry-After header given in seconds.
+- Leaves at least the operator's gap between requests, measured from when the previous
+  response finished, so network delays can never squeeze two requests closer together
+  at the server's end.
+- Keeps one timer per host, shared by every client in the process, so operators served
+  from the same host share one gap and one Retry-After.
+- Retries connection errors, timeouts, HTTP 429 and HTTP 5xx with exponential backoff.
+- Honours every Retry-After header, in seconds or as an HTTP date, on any attempt. One
+  that cannot be read is treated as a long wait. If the wait is longer than this project
+  waits, nothing more is sent to that host until it has passed.
 - Adds the operator's key from the environment variable named by `auth.secret_name`.
   Keys never appear in URLs this module returns, logs or raises.
 - Does not follow redirects, so a key can never be sent on to another site.
+
+Timers live in memory, so they cover one run of the program. Runs that use the same host
+must not be started in parallel.
 """
 
 import os
+import re
 import time
 from collections.abc import Callable
+from dataclasses import dataclass
+from datetime import UTC, datetime
+from email.utils import parsedate_to_datetime
 from urllib.parse import parse_qsl, urlencode, urlsplit, urlunsplit
 
 import httpx
 
 from pipeline.project import NAME, REPOSITORY_URL, VERSION
-from schema.operator import OperatorConfig, is_credential_param
+from schema.operator import (
+    LIMIT_MARGIN_SECONDS,
+    MIN_SECONDS_BETWEEN_REQUESTS,
+    OperatorConfig,
+    is_credential_param,
+)
 
 USER_AGENT = f"{NAME}/{VERSION} (+{REPOSITORY_URL})"
 RETRY_STATUSES = frozenset({429, 500, 502, 503, 504})
 MAX_RETRY_WAIT_SECONDS = 600
+UNREADABLE_RETRY_AFTER_SECONDS = 3600
 
 
 class FeedError(Exception):
@@ -68,9 +87,58 @@ def credentials_for(config: OperatorConfig) -> tuple[dict[str, str], dict[str, s
     return {}, {auth.name: value}
 
 
-def _retry_after_seconds(response: httpx.Response) -> float | None:
-    value = response.headers.get("Retry-After", "")
-    return float(value) if value.strip().isdigit() else None
+def retry_after_seconds(response: httpx.Response, now: datetime) -> float | None:
+    """Seconds the server asked this project to wait, or None if it did not say.
+
+    RFC 9110 allows a whole number of seconds or an HTTP date. A value that cannot be
+    read is treated as a long wait, never as no wait.
+    """
+    value = response.headers.get("Retry-After")
+    if value is None:
+        return None
+    value = value.strip()
+    if re.fullmatch(r"[0-9]+", value):
+        return float(value)
+    try:
+        when = parsedate_to_datetime(value)
+    except (TypeError, ValueError, IndexError):
+        return float(UNREADABLE_RETRY_AFTER_SECONDS)
+    if when.tzinfo is None:
+        when = when.replace(tzinfo=UTC)
+    return max(0.0, (when - now).total_seconds())
+
+
+@dataclass
+class HostTimer:
+    """When the last request to one host finished, and the earliest the next may start."""
+
+    last_finished_at: float | None = None
+    not_before: float | None = None
+
+    def hold_until(self, moment: float) -> None:
+        self.not_before = moment if self.not_before is None else max(self.not_before, moment)
+
+
+_HOST_TIMERS: dict[str, HostTimer] = {}
+
+
+def host_timer(url: str) -> HostTimer:
+    return _HOST_TIMERS.setdefault(urlsplit(url).netloc.lower(), HostTimer())
+
+
+def reset_host_timers() -> None:
+    """Forget every timer. Tests call this because each test has its own fake clock."""
+    _HOST_TIMERS.clear()
+
+
+def required_gap(config: OperatorConfig) -> float:
+    """The gap the client keeps: never less than the floor or what any limit needs."""
+    rate = config.rate_limit
+    return max(
+        MIN_SECONDS_BETWEEN_REQUESTS,
+        rate.min_seconds_between_requests,
+        *(limit.min_interval + LIMIT_MARGIN_SECONDS for limit in rate.limits),
+    )
 
 
 class PoliteClient:
@@ -83,6 +151,7 @@ class PoliteClient:
         transport: httpx.BaseTransport | None = None,
         sleep: Callable[[float], None] = time.sleep,
         clock: Callable[[], float] = time.monotonic,
+        wall_clock: Callable[[], datetime] = lambda: datetime.now(UTC),
         max_retries: int = 3,
         backoff_seconds: float = 5.0,
         timeout_seconds: float = 60.0,
@@ -94,13 +163,12 @@ class PoliteClient:
             transport=transport,
             follow_redirects=False,
         )
-        self.min_interval = config.rate_limit.min_seconds_between_requests
+        self.min_interval = required_gap(config)
         self.max_retries = max_retries
         self.backoff_seconds = backoff_seconds
         self._sleep = sleep
         self._clock = clock
-        self._last_request_at: float | None = None
-        self._blocked_until: float | None = None
+        self._wall_clock = wall_clock
         self.requests_made = 0
 
     def __enter__(self) -> "PoliteClient":
@@ -109,46 +177,60 @@ class PoliteClient:
     def __exit__(self, *exc_info: object) -> None:
         self._client.close()
 
-    def _wait_turn(self) -> None:
-        if self._last_request_at is not None:
-            remaining = self.min_interval - (self._clock() - self._last_request_at)
-            if remaining > 0:
-                self._sleep(remaining)
-        self._last_request_at = self._clock()
+    def _refuse_if_held(self, timer: HostTimer, url: str) -> None:
+        if timer.not_before is None:
+            return
+        wait = timer.not_before - self._clock()
+        if wait > MAX_RETRY_WAIT_SECONDS:
+            raise FeedError(
+                f"not requesting {redact_url(url)}: the server asked this project to wait "
+                f"another {wait:g} s, longer than it waits ({MAX_RETRY_WAIT_SECONDS} s); "
+                "try later"
+            )
+
+    def _wait_turn(self, timer: HostTimer) -> None:
+        now = self._clock()
+        ready = now
+        if timer.last_finished_at is not None:
+            ready = max(ready, timer.last_finished_at + self.min_interval)
+        if timer.not_before is not None:
+            ready = max(ready, timer.not_before)
+        if ready > now:
+            self._sleep(ready - now)
 
     def get(self, url: str) -> httpx.Response:
         """GET url, retrying temporary failures. Raises FeedError when retries run out."""
+        timer = host_timer(url)
         request_url = with_params(url, self._auth_params) if self._auth_params else url
-        if self._blocked_until is not None and self._clock() < self._blocked_until:
-            raise FeedError(
-                f"not requesting {redact_url(url)}: the server asked this project to wait "
-                f"another {self._blocked_until - self._clock():g} s"
-            )
         for attempt in range(self.max_retries + 1):
-            self._wait_turn()
+            self._refuse_if_held(timer, url)
+            self._wait_turn(timer)
             self.requests_made += 1
+            response = None
             try:
                 response = self._client.get(request_url)
             except httpx.TransportError as exc:
                 problem, retry_after = type(exc).__name__, None
-            else:
+            finally:
+                timer.last_finished_at = self._clock()
+            if response is not None:
                 if response.status_code not in RETRY_STATUSES:
                     return response
-                problem, retry_after = (
-                    f"HTTP {response.status_code}",
-                    _retry_after_seconds(response),
-                )
+                problem = f"HTTP {response.status_code}"
+                retry_after = retry_after_seconds(response, self._wall_clock())
+
+            now = self._clock()
+            if retry_after is not None:
+                timer.hold_until(now + retry_after)
             if attempt == self.max_retries:
-                raise FeedError(
-                    f"gave up on {redact_url(url)} after {attempt + 1} attempts: {problem}"
+                asked = (
+                    f"; the server asked to wait {retry_after:g} s"
+                    if retry_after is not None
+                    else ""
                 )
-            if retry_after is not None and retry_after > MAX_RETRY_WAIT_SECONDS:
-                # Never contact the server sooner than it asked; give up instead.
-                self._blocked_until = self._clock() + retry_after
                 raise FeedError(
-                    f"{redact_url(url)} asked to wait {retry_after:g} s before retrying, "
-                    f"longer than this project waits ({MAX_RETRY_WAIT_SECONDS} s); try later"
+                    f"gave up on {redact_url(url)} after {attempt + 1} attempts: {problem}{asked}"
                 )
-            delay = retry_after if retry_after is not None else self.backoff_seconds * 2**attempt
-            self._sleep(delay)
+            if retry_after is None:
+                timer.hold_until(now + self.backoff_seconds * 2**attempt)
         raise AssertionError("unreachable")

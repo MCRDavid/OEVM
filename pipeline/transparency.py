@@ -3,7 +3,7 @@ apply, and what has been found.
 
     uv run python -m pipeline.transparency            # write the page and its JSON
     uv run python -m pipeline.transparency --check    # fail if the committed files are stale
-    uv run python -m pipeline.transparency --runs DIR # also show run logs from pipeline.run
+    uv run python -m pipeline.transparency --runs DIR --out BUILD  # with run logs, for publishing
 
 The page is built only from the operator registry (operators/*.yaml) and, when given, run
 logs written by `python -m pipeline.run --log-dir DIR`. It has no scripts, no cookies and
@@ -88,21 +88,30 @@ def human_seconds(seconds: float) -> str:
 
 def describe_limit(limit: DocumentedLimit) -> str:
     where = "all requests" if limit.endpoint == "all" else f"the {limit.endpoint} endpoint"
+    if limit.scope:
+        where += f" ({limit.scope})"
     return f"{limit.requests} per {human_seconds(limit.per_seconds)} for {where}"
+
+
+def max_per_hour(gap: float) -> int:
+    """Most requests that can start within any one hour when each is gap seconds apart."""
+    return math.ceil(3600 / gap - 1e-9)
 
 
 def rate_limit_view(config: OperatorConfig) -> dict:
     """Our setting next to the operator's published limits, and how they compare."""
     rate = config.rate_limit
     gap = rate.min_seconds_between_requests
-    per_hour = math.floor(3600 / gap)
-    ours = f"At least {gap:g} s between requests (at most {per_hour} an hour), retries included."
+    per_hour = max_per_hour(gap)
+    ours = (
+        f"At least {gap:g} s between requests to the operator's host, measured from the end "
+        f"of the previous request (at most {per_hour} in any hour), retries included."
+    )
     if rate.limits:
         needed = max(limit.min_interval for limit in rate.limits)
         comparison = (
-            "Matches the strictest published limit."
-            if gap == needed
-            else f"Stricter than the published limits, which need {needed:g} s between requests."
+            f"Within every published limit. The strictest needs {needed:g} s between "
+            f"requests; this project waits {gap:g} s, which includes a safety margin."
         )
         difference = (
             "The operator sets a limit; the regulations set none. DfT guidance allows such "
@@ -194,18 +203,41 @@ def last_reviewed(operators: dict[str, OperatorConfig]) -> str:
             config.licence.checked if config.licence else "unknown",
             *(e.date for e in config.engagement.evidence),
             *(f.date for f in config.findings),
+            *(f.resolved_date for f in config.findings),
             *(limit.checked for limit in config.rate_limit.limits),
+            config.access_requested,
+            config.access_granted,
         ]
         dates += [d for d in candidates if isinstance(d, date)]
     return max(dates).isoformat() if dates else "unknown"
 
 
+RUN_LOG_KEYS = {
+    "operator": str,
+    "mode": str,
+    "fetched_at": str,
+    "complete": bool,
+    "modules": dict,
+    "kept": dict,
+    "issues": list,
+}
+
+
 def load_runs(directory: Path | None) -> dict[str, dict]:
+    """Read run logs written by pipeline.run --log-dir. Raises ValueError if one is malformed."""
     if directory is None:
         return {}
     runs = {}
     for path in sorted(directory.glob("*.json")):
-        run = json.loads(path.read_text(encoding="utf-8"))
+        try:
+            run = json.loads(path.read_text(encoding="utf-8"))
+        except json.JSONDecodeError as exc:
+            raise ValueError(f"{path.name} is not valid JSON: {exc}") from exc
+        if not isinstance(run, dict):
+            raise ValueError(f"{path.name} is not a run log")
+        for key, kind in RUN_LOG_KEYS.items():
+            if not isinstance(run.get(key), kind):
+                raise ValueError(f"{path.name} is not a run log: {key!r} is missing or wrong")
         runs[run["operator"]] = run
     return runs
 
@@ -231,12 +263,17 @@ def _link(url: str | None, text: str) -> str:
     return f'<a href="{_e(url)}">{_e(text)}</a>' if url else _e(text)
 
 
+def _feed_url(url: str) -> str:
+    """A link, unless the URL is a template such as .../tariffs/{tariffId}."""
+    return f"<code>{_e(url)}</code>" if "{" in url else _link(url, url)
+
+
 def _sources_table(data: dict) -> str:
     rows = []
     for op in data["operators"]:
         feeds = (
             "<br>".join(
-                f"{_e(f['kind'])}: {_link(f['url'], f['url'])}"
+                f"{_e(f['kind'])}: {_feed_url(f['url'])}"
                 + ("" if f["status"] == "documented" else " (needs testing)")
                 for f in op["feeds"]
             )
@@ -344,10 +381,13 @@ def _runs_section(data: dict) -> str:
     rows = []
     for op, run in runs:
         modules = "<br>".join(
-            f"{_e(name)}: {_e(m['records'])} records of {_e(m['reported'] or 'unknown')} "
+            f"{_e(name)}: {_e(m['records'])} records of "
+            f"{_e('unknown' if m['reported'] is None else m['reported'])} "
             f"reported{'' if m['complete'] else ', stopped early'}"
             for name, m in run["modules"].items()
         )
+        if run.get("failed"):
+            modules = "<strong>Run failed</strong>" + (f"<br>{modules}" if modules else "")
         issues = "<br>".join(_e(issue) for issue in run["issues"]) or "None"
         rows.append(
             "<tr>"
@@ -416,8 +456,11 @@ does not say whether anyone has met their legal duties.</p>
 <h2>Rate limits</h2>
 <p>{_e(data["regulation"]["summary"])}</p>
 <ul>{regulation_quotes}</ul>
-<p>This project never sends more than one request per second to any operator, and keeps
-within every limit an operator publishes. Automated tests check both rules.</p>
+<p>This project never sends more than one request per second to any operator's host, keeps
+within every limit an operator publishes with a safety margin on top, and waits as long as
+a server asks before contacting it again. Gaps are measured from the end of the previous
+request and shared by every operator on the same host. Automated tests check these
+rules.</p>
 <div class="table-wrap">{_rate_table(data)}</div>
 <h2>What has been found</h2>
 <p>Differences from the OCPI 2.2.1 standard, quirks in the data and access issues, each
@@ -440,21 +483,37 @@ def render_json(data: dict) -> str:
     return json.dumps(data, indent=2, ensure_ascii=False) + "\n"
 
 
-def outputs(runs_dir: Path | None = None) -> dict[Path, str]:
+def outputs(runs_dir: Path | None = None, out_dir: Path | None = None) -> dict[Path, str]:
+    """The page and its JSON, keyed by where they are written.
+
+    Without out_dir they go to the committed paths under site/. With out_dir they go to the
+    same layout under that folder, for a build that includes run logs.
+    """
     data = build(load_registry(), load_runs(runs_dir))
-    return {PAGE_PATH: render_html(data), JSON_PATH: render_json(data)}
+    page, json_file = PAGE_PATH, JSON_PATH
+    if out_dir is not None:
+        page = out_dir / PAGE_PATH.relative_to(ROOT / "site")
+        json_file = out_dir / JSON_PATH.relative_to(ROOT / "site")
+    return {page: render_html(data), json_file: render_json(data)}
+
+
+def _shown(path: Path) -> str:
+    return str(path.relative_to(ROOT)) if path.is_relative_to(ROOT) else str(path)
 
 
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(prog="python -m pipeline.transparency", description=__doc__)
     parser.add_argument("--check", action="store_true", help="fail if committed files are stale")
     parser.add_argument("--runs", type=Path, help="folder of run logs from pipeline.run --log-dir")
+    parser.add_argument("--out", type=Path, help="write to this folder instead of site/")
     args = parser.parse_args(argv)
-    if args.check and args.runs:
+    if args.check and (args.runs or args.out):
         parser.error("--check compares the committed page, which never includes run logs")
+    if args.runs and not args.out:
+        parser.error("use --out with --runs, so the committed page is not overwritten")
 
     try:
-        files = outputs(args.runs)
+        files = outputs(args.runs, args.out)
     except (RegistryError, ValueError) as exc:
         print(f"Error: {exc}", file=sys.stderr)
         return 1
@@ -465,11 +524,11 @@ def main(argv: list[str] | None = None) -> int:
         if current == text:
             continue
         if args.check:
-            stale.append(str(path.relative_to(ROOT)))
+            stale.append(_shown(path))
         else:
             path.parent.mkdir(parents=True, exist_ok=True)
             path.write_text(text, encoding="utf-8")
-            print(f"Wrote {path.relative_to(ROOT)}")
+            print(f"Wrote {_shown(path)}")
     if stale:
         print(
             f"Out of date: {', '.join(stale)}. Run 'uv run python -m pipeline.transparency' "

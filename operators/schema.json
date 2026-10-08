@@ -99,6 +99,19 @@
           "description": "The endpoint the limit applies to, or 'all'.",
           "title": "Endpoint"
         },
+        "scope": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Narrower scope within the endpoint, for example 'single location'.",
+          "title": "Scope"
+        },
         "quote": {
           "description": "The operator's own wording, quoted exactly.",
           "minLength": 1,
@@ -409,7 +422,7 @@
       "properties": {
         "min_seconds_between_requests": {
           "default": 2,
-          "description": "Gap this project leaves between any two requests to the operator, retries included. Must be at least 1 second and at least the gap every documented limit needs.",
+          "description": "Gap this project leaves between any two requests to the operator's host, retries included. At least 1 second, and at least 1 second more than every documented limit needs.",
           "minimum": 1.0,
           "title": "Min Seconds Between Requests",
           "type": "number"

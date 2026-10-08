@@ -37,8 +37,9 @@ decisions are in docs/adr/.
 ## Prices and rate limits
 - Show prices only through pipeline/pricing.py: pounds and pence, GBP tariffs only. Never convert
   currencies; other currencies show as "Price unknown".
-- Never go below 1 second between requests or break any limit in an operator's rate_limit.limits.
-  Record each published limit with an exact quote, source URL and date; tests enforce both rules.
+- Never go below 1 second between requests to a host, or below any limit in an operator's
+  rate_limit.limits plus a 1 second margin. Record each published limit with an exact quote, source
+  URL and date; tests enforce these rules. Never run two fetches that use the same host in parallel.
 - Record spec differences, data quirks and access issues as dated findings in the operator file,
   in neutral words, then regenerate the transparency page.
 

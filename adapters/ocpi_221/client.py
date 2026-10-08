@@ -6,6 +6,7 @@ offset instead. date_from and limit are sent on the first request; servers keep 
 their Link.
 """
 
+import re
 from dataclasses import dataclass, field
 from datetime import UTC, datetime
 from urllib.parse import urlencode, urljoin, urlsplit
@@ -54,7 +55,7 @@ def format_ocpi_datetime(value: datetime) -> str:
 
 def _int_header(response: httpx.Response, name: str) -> int | None:
     value = response.headers.get(name, "").strip()
-    return int(value) if value.isdigit() else None
+    return int(value) if re.fullmatch(r"[0-9]+", value) else None
 
 
 def _same_site(url: str, other: str) -> bool:

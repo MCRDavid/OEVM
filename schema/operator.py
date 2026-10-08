@@ -57,6 +57,9 @@ RESERVED_IDS = frozenset({"osm", "ocm", "reports", "unknown"})
 # Project policy: never more than one request per second to any operator, whatever
 # the operator allows. Operators' own published limits are enforced on top of this.
 MIN_SECONDS_BETWEEN_REQUESTS = 1.0
+# Extra gap on top of what a published limit needs, so a server counting with inclusive
+# windows, or a slightly different clock, still never sees one request too many.
+LIMIT_MARGIN_SECONDS = 1.0
 
 # Published text must stay neutral (blueprint section 3): dated facts, no accusations.
 # This list is a coarse safety net, not a substitute for careful wording.
@@ -167,6 +170,10 @@ class DocumentedLimit(_Model):
     endpoint: EndpointKind | Literal["all"] = Field(
         default="all", description="The endpoint the limit applies to, or 'all'."
     )
+    scope: str | None = Field(
+        default=None,
+        description="Narrower scope within the endpoint, for example 'single location'.",
+    )
     quote: str = Field(min_length=1, description="The operator's own wording, quoted exactly.")
     source_url: SafeUrl
     checked: dt.date | Unknown = Field(
@@ -183,9 +190,9 @@ class RateLimit(_Model):
     min_seconds_between_requests: float = Field(
         default=2,
         ge=MIN_SECONDS_BETWEEN_REQUESTS,
-        description="Gap this project leaves between any two requests to the operator, "
-        "retries included. Must be at least 1 second and at least the gap every documented "
-        "limit needs.",
+        description="Gap this project leaves between any two requests to the operator's "
+        "host, retries included. At least 1 second, and at least 1 second more than every "
+        "documented limit needs.",
     )
     limits: list[DocumentedLimit] = Field(
         default_factory=list, description="Limits the operator publishes. Empty if none."
@@ -200,12 +207,14 @@ class RateLimit(_Model):
     @model_validator(mode="after")
     def _within_documented_limits(self) -> "RateLimit":
         for limit in self.limits:
-            if self.min_seconds_between_requests < limit.min_interval:
+            needed = limit.min_interval + LIMIT_MARGIN_SECONDS
+            if self.min_seconds_between_requests < needed:
                 raise ValueError(
                     f"min_seconds_between_requests ({self.min_seconds_between_requests:g} s) "
                     f"would break the documented limit of {limit.requests} requests per "
                     f"{limit.per_seconds:g} seconds for {limit.endpoint}, which needs at least "
-                    f"{limit.min_interval:g} s between requests"
+                    f"{needed:g} s between requests ({limit.min_interval:g} s plus a "
+                    f"{LIMIT_MARGIN_SECONDS:g} s safety margin)"
                 )
         return self
 

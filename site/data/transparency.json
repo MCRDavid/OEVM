@@ -56,7 +56,7 @@
       "rate_limit": {
         "our_gap_seconds": 2.0,
         "our_max_per_hour": 1800,
-        "ours": "At least 2 s between requests (at most 1800 an hour), retries included.",
+        "ours": "At least 2 s between requests to the operator's host, measured from the end of the previous request (at most 1800 in any hour), retries included.",
         "published": [],
         "limits_checked": "2026-10-07",
         "comparison": "No limit published (checked 2026-10-07). The gap is our own choice.",
@@ -144,9 +144,9 @@
       "licence": null,
       "attribution": null,
       "rate_limit": {
-        "our_gap_seconds": 120.0,
-        "our_max_per_hour": 30,
-        "ours": "At least 120 s between requests (at most 30 an hour), retries included.",
+        "our_gap_seconds": 125.0,
+        "our_max_per_hour": 29,
+        "ours": "At least 125 s between requests to the operator's host, measured from the end of the previous request (at most 29 in any hour), retries included.",
         "published": [
           {
             "text": "30 per 1 hour for the locations endpoint",
@@ -155,7 +155,7 @@
             "checked": "2026-10-07"
           },
           {
-            "text": "30 per 1 hour for the locations endpoint",
+            "text": "30 per 1 hour for the locations endpoint (single location)",
             "quote": "The `locations/{id}` endpoint has a rate limit of 30 requests per 1 hour.",
             "source_url": "https://developers.eco-movement.com/v2.2.1/reference/get-specific-location-pcpr-api",
             "checked": "2026-10-07"
@@ -174,9 +174,9 @@
           }
         ],
         "limits_checked": "2026-10-07",
-        "comparison": "Matches the strictest published limit.",
+        "comparison": "Within every published limit. The strictest needs 120 s between requests; this project waits 125 s, which includes a safety margin.",
         "difference_from_regulations": "The operator sets a limit; the regulations set none. DfT guidance allows such terms on access.",
-        "notes": "One gap of 120 seconds is used for every request, so this project sends at most 30 requests an hour across all endpoints combined, within every limit even if they share one allowance. Requests are sent one at a time; Eco-Movement \"strongly recommends limiting simultaneous GET requests to a maximum of 5\". It recommends retrieving the entire dataset once a day."
+        "notes": "One gap of 125 seconds (the 120 seconds the strictest limit needs, plus a safety margin) is kept between any two requests to open-chargepoints.com, shared by every operator served from it, so this project sends it at most 29 requests in any hour. Requests are sent one at a time; Eco-Movement \"strongly recommends limiting simultaneous GET requests to a maximum of 5\". It recommends retrieving the entire dataset once a day."
       },
       "findings": [
         {
@@ -194,7 +194,7 @@
           "kind": "documentation",
           "kind_label": "Documentation",
           "summary": "The rate limits are published, but the documentation does not say whether they apply per key or per address, what kind of time window is used, or what response is sent when a limit is reached.",
-          "handling": "This project assumes the strictest reading: one shared allowance across all endpoints, so it waits 120 seconds between any two requests.",
+          "handling": "This project assumes the strictest reading: one allowance shared by every endpoint and every operator on this host, so it waits 125 seconds between any two requests to it.",
           "evidence_url": "https://developers.eco-movement.com/v2.2.1/docs/eco-movement-pcpr-api-user-guide",
           "status": "open",
           "resolved_date": null
@@ -232,9 +232,9 @@
       "licence": null,
       "attribution": null,
       "rate_limit": {
-        "our_gap_seconds": 120.0,
-        "our_max_per_hour": 30,
-        "ours": "At least 120 s between requests (at most 30 an hour), retries included.",
+        "our_gap_seconds": 125.0,
+        "our_max_per_hour": 29,
+        "ours": "At least 125 s between requests to the operator's host, measured from the end of the previous request (at most 29 in any hour), retries included.",
         "published": [
           {
             "text": "30 per 1 hour for the locations endpoint",
@@ -243,7 +243,7 @@
             "checked": "2026-10-07"
           },
           {
-            "text": "30 per 1 hour for the locations endpoint",
+            "text": "30 per 1 hour for the locations endpoint (single location)",
             "quote": "The `locations/{id}` endpoint has a rate limit of 30 requests per 1 hour.",
             "source_url": "https://developers.eco-movement.com/v2.2.1/reference/get-specific-location-pcpr-api",
             "checked": "2026-10-07"
@@ -262,9 +262,9 @@
           }
         ],
         "limits_checked": "2026-10-07",
-        "comparison": "Matches the strictest published limit.",
+        "comparison": "Within every published limit. The strictest needs 120 s between requests; this project waits 125 s, which includes a safety margin.",
         "difference_from_regulations": "The operator sets a limit; the regulations set none. DfT guidance allows such terms on access.",
-        "notes": "One gap of 120 seconds is used for every request, so this project sends at most 30 requests an hour across all endpoints combined, within every limit even if they share one allowance. Requests are sent one at a time; Eco-Movement \"strongly recommends limiting simultaneous GET requests to a maximum of 5\". It recommends retrieving the entire dataset once a day."
+        "notes": "One gap of 125 seconds (the 120 seconds the strictest limit needs, plus a safety margin) is kept between any two requests to open-chargepoints.com, shared by every operator served from it, so this project sends it at most 29 requests in any hour. Requests are sent one at a time; Eco-Movement \"strongly recommends limiting simultaneous GET requests to a maximum of 5\". It recommends retrieving the entire dataset once a day."
       },
       "findings": [
         {
@@ -282,7 +282,7 @@
           "kind": "documentation",
           "kind_label": "Documentation",
           "summary": "The rate limits are published, but the documentation does not say whether they apply per key or per address, what kind of time window is used, or what response is sent when a limit is reached.",
-          "handling": "This project assumes the strictest reading: one shared allowance across all endpoints, so it waits 120 seconds between any two requests.",
+          "handling": "This project assumes the strictest reading: one allowance shared by every endpoint and every operator on this host, so it waits 125 seconds between any two requests to it.",
           "evidence_url": "https://developers.eco-movement.com/v2.2.1/docs/eco-movement-pcpr-api-user-guide",
           "status": "open",
           "resolved_date": null
@@ -306,7 +306,7 @@
       "rate_limit": {
         "our_gap_seconds": 2.0,
         "our_max_per_hour": 1800,
-        "ours": "At least 2 s between requests (at most 1800 an hour), retries included.",
+        "ours": "At least 2 s between requests to the operator's host, measured from the end of the previous request (at most 1800 in any hour), retries included.",
         "published": [],
         "limits_checked": "unknown",
         "comparison": "The operator's pages have not been checked for limits yet.",
@@ -332,7 +332,7 @@
       "rate_limit": {
         "our_gap_seconds": 2,
         "our_max_per_hour": 1800,
-        "ours": "At least 2 s between requests (at most 1800 an hour), retries included.",
+        "ours": "At least 2 s between requests to the operator's host, measured from the end of the previous request (at most 1800 in any hour), retries included.",
         "published": [],
         "limits_checked": "unknown",
         "comparison": "The operator's pages have not been checked for limits yet.",
@@ -369,7 +369,7 @@
       "rate_limit": {
         "our_gap_seconds": 30.0,
         "our_max_per_hour": 120,
-        "ours": "At least 30 s between requests (at most 120 an hour), retries included.",
+        "ours": "At least 30 s between requests to the operator's host, measured from the end of the previous request (at most 120 in any hour), retries included.",
         "published": [],
         "limits_checked": "2026-10-07",
         "comparison": "No limit published (checked 2026-10-07). The gap is our own choice.",
@@ -423,7 +423,7 @@
       "rate_limit": {
         "our_gap_seconds": 2,
         "our_max_per_hour": 1800,
-        "ours": "At least 2 s between requests (at most 1800 an hour), retries included.",
+        "ours": "At least 2 s between requests to the operator's host, measured from the end of the previous request (at most 1800 in any hour), retries included.",
         "published": [],
         "limits_checked": "unknown",
         "comparison": "The operator's pages have not been checked for limits yet.",
@@ -471,7 +471,7 @@
       "rate_limit": {
         "our_gap_seconds": 2.0,
         "our_max_per_hour": 1800,
-        "ours": "At least 2 s between requests (at most 1800 an hour), retries included.",
+        "ours": "At least 2 s between requests to the operator's host, measured from the end of the previous request (at most 1800 in any hour), retries included.",
         "published": [],
         "limits_checked": "2026-10-07",
         "comparison": "No limit published (checked 2026-10-07). The gap is our own choice.",
@@ -524,7 +524,7 @@
       "rate_limit": {
         "our_gap_seconds": 2.0,
         "our_max_per_hour": 1800,
-        "ours": "At least 2 s between requests (at most 1800 an hour), retries included.",
+        "ours": "At least 2 s between requests to the operator's host, measured from the end of the previous request (at most 1800 in any hour), retries included.",
         "published": [],
         "limits_checked": "unknown",
         "comparison": "The operator's pages have not been checked for limits yet.",
@@ -564,9 +564,9 @@
       "licence": null,
       "attribution": null,
       "rate_limit": {
-        "our_gap_seconds": 120.0,
-        "our_max_per_hour": 30,
-        "ours": "At least 120 s between requests (at most 30 an hour), retries included.",
+        "our_gap_seconds": 125.0,
+        "our_max_per_hour": 29,
+        "ours": "At least 125 s between requests to the operator's host, measured from the end of the previous request (at most 29 in any hour), retries included.",
         "published": [
           {
             "text": "30 per 1 hour for the locations endpoint",
@@ -575,7 +575,7 @@
             "checked": "2026-10-07"
           },
           {
-            "text": "30 per 1 hour for the locations endpoint",
+            "text": "30 per 1 hour for the locations endpoint (single location)",
             "quote": "The `locations/{id}` endpoint has a rate limit of 30 requests per 1 hour.",
             "source_url": "https://developers.eco-movement.com/v2.2.1/reference/get-specific-location-pcpr-api",
             "checked": "2026-10-07"
@@ -594,9 +594,9 @@
           }
         ],
         "limits_checked": "2026-10-07",
-        "comparison": "Matches the strictest published limit.",
+        "comparison": "Within every published limit. The strictest needs 120 s between requests; this project waits 125 s, which includes a safety margin.",
         "difference_from_regulations": "The operator sets a limit; the regulations set none. DfT guidance allows such terms on access.",
-        "notes": "One gap of 120 seconds is used for every request, so this project sends at most 30 requests an hour across all endpoints combined, within every limit even if they share one allowance. Requests are sent one at a time; Eco-Movement \"strongly recommends limiting simultaneous GET requests to a maximum of 5\". It recommends retrieving the entire dataset once a day."
+        "notes": "One gap of 125 seconds (the 120 seconds the strictest limit needs, plus a safety margin) is kept between any two requests to open-chargepoints.com, shared by every operator served from it, so this project sends it at most 29 requests in any hour. Requests are sent one at a time; Eco-Movement \"strongly recommends limiting simultaneous GET requests to a maximum of 5\". It recommends retrieving the entire dataset once a day."
       },
       "findings": [
         {
@@ -614,7 +614,7 @@
           "kind": "documentation",
           "kind_label": "Documentation",
           "summary": "The rate limits are published, but the documentation does not say whether they apply per key or per address, what kind of time window is used, or what response is sent when a limit is reached.",
-          "handling": "This project assumes the strictest reading: one shared allowance across all endpoints, so it waits 120 seconds between any two requests.",
+          "handling": "This project assumes the strictest reading: one allowance shared by every endpoint and every operator on this host, so it waits 125 seconds between any two requests to it.",
           "evidence_url": "https://developers.eco-movement.com/v2.2.1/docs/eco-movement-pcpr-api-user-guide",
           "status": "open",
           "resolved_date": null
@@ -652,9 +652,9 @@
       "licence": null,
       "attribution": null,
       "rate_limit": {
-        "our_gap_seconds": 120.0,
-        "our_max_per_hour": 30,
-        "ours": "At least 120 s between requests (at most 30 an hour), retries included.",
+        "our_gap_seconds": 125.0,
+        "our_max_per_hour": 29,
+        "ours": "At least 125 s between requests to the operator's host, measured from the end of the previous request (at most 29 in any hour), retries included.",
         "published": [
           {
             "text": "30 per 1 hour for the locations endpoint",
@@ -663,7 +663,7 @@
             "checked": "2026-10-07"
           },
           {
-            "text": "30 per 1 hour for the locations endpoint",
+            "text": "30 per 1 hour for the locations endpoint (single location)",
             "quote": "The `locations/{id}` endpoint has a rate limit of 30 requests per 1 hour.",
             "source_url": "https://developers.eco-movement.com/v2.2.1/reference/get-specific-location-pcpr-api",
             "checked": "2026-10-07"
@@ -682,9 +682,9 @@
           }
         ],
         "limits_checked": "2026-10-07",
-        "comparison": "Matches the strictest published limit.",
+        "comparison": "Within every published limit. The strictest needs 120 s between requests; this project waits 125 s, which includes a safety margin.",
         "difference_from_regulations": "The operator sets a limit; the regulations set none. DfT guidance allows such terms on access.",
-        "notes": "One gap of 120 seconds is used for every request, so this project sends at most 30 requests an hour across all endpoints combined, within every limit even if they share one allowance. Requests are sent one at a time; Eco-Movement \"strongly recommends limiting simultaneous GET requests to a maximum of 5\". It recommends retrieving the entire dataset once a day."
+        "notes": "One gap of 125 seconds (the 120 seconds the strictest limit needs, plus a safety margin) is kept between any two requests to open-chargepoints.com, shared by every operator served from it, so this project sends it at most 29 requests in any hour. Requests are sent one at a time; Eco-Movement \"strongly recommends limiting simultaneous GET requests to a maximum of 5\". It recommends retrieving the entire dataset once a day."
       },
       "findings": [
         {
@@ -702,7 +702,7 @@
           "kind": "documentation",
           "kind_label": "Documentation",
           "summary": "The rate limits are published, but the documentation does not say whether they apply per key or per address, what kind of time window is used, or what response is sent when a limit is reached.",
-          "handling": "This project assumes the strictest reading: one shared allowance across all endpoints, so it waits 120 seconds between any two requests.",
+          "handling": "This project assumes the strictest reading: one allowance shared by every endpoint and every operator on this host, so it waits 125 seconds between any two requests to it.",
           "evidence_url": "https://developers.eco-movement.com/v2.2.1/docs/eco-movement-pcpr-api-user-guide",
           "status": "open",
           "resolved_date": null
