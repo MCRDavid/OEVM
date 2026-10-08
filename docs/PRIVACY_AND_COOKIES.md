@@ -49,9 +49,10 @@ the site goes live.
      page contacts. Header checks on 8 October 2026 saw no cookies and no storage. The
      responses carry Cloudflare's Network Error Logging (NEL) headers, which ask some
      browsers to keep a reporting policy and to report failed connections to
-     `a.nel.cloudflare.com`. This site does not control that. **Needs the owner's
-     decision:** whether this is acceptable under Schedule A1, after reading the ICO
-     guidance. If not, the fallback is a self-hosted basemap (ADR 0008).
+     `a.nel.cloudflare.com`. This site does not control that. **Decided by the
+     repository owner on 8 October 2026:** acceptable, on condition that the privacy
+     notice below and the page footer say so. If that changes, the fallback is a
+     self-hosted basemap (ADR 0008).
 3. **Prefer the address bar.** Settings carried in the page address (for example
    `?free=1&plug=ccs`) store nothing on the device.
 4. **Saving settings is opt-in.** Settings are saved to the device only after the visitor

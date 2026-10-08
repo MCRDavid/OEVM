@@ -19,8 +19,10 @@ usable on a mid-range phone, Lighthouse accessibility score of 90 or more.
   2026 over a self-hosted extract. It needs no key and, by its own statement and our
   header checks that day, sets no cookies. A self-hosted Protomaps UK extract was sized
   at about 310 MB up to zoom 12 and over GitHub Pages' 1 GB site limit at zoom 14, so it
-  is the fallback if OpenFreeMap stops or its Network Error Logging headers are judged
-  unacceptable (see `docs/PRIVACY_AND_COOKIES.md`, rule 2).
+  is the fallback if OpenFreeMap stops. OpenFreeMap's responses carry Cloudflare's
+  Network Error Logging headers; the owner accepted them on 8 October 2026, on condition
+  that the privacy notice and the page footer mention them (`docs/PRIVACY_AND_COOKIES.md`,
+  rule 2).
 - **The list is the accessible view.** Points drawn on a map canvas cannot be reached by
   keyboard or screen reader, so the list shows the same chargers as buttons, nearest the
   centre of the map area first, up to 200 at a time with a note when there are more. A

@@ -14,6 +14,7 @@
   --priced: #1d4f9e;
   --unknown: #5c5c5c;
   --header: 3.5rem;
+  --header-measured: var(--header); /* set by main.js to the header's real height */
 }
 
 *,
@@ -205,7 +206,7 @@ button[aria-expanded="true"] {
 /* Leaves a little of the page showing below the map, so it is clear the page scrolls. */
 .map-view {
   position: relative;
-  height: calc(100dvh - var(--header) - 3rem);
+  height: calc(100dvh - var(--header-measured) - 3rem);
   min-height: 20rem;
 }
 
@@ -440,7 +441,7 @@ body[data-view="list"] .map-view {
     display: block;
     grid-column: 1;
     grid-row: 2;
-    height: calc(100dvh - var(--header));
+    height: calc(100dvh - var(--header-measured));
   }
 
   .top h1 {
@@ -451,7 +452,7 @@ body[data-view="list"] .map-view {
     display: block;
     grid-column: 2;
     grid-row: 2;
-    height: calc(100dvh - var(--header));
+    height: calc(100dvh - var(--header-measured));
     overflow-y: auto;
     border-left: 1px solid var(--line);
   }
@@ -467,6 +468,19 @@ body[data-view="list"] .map-view {
     border-left: 0;
   }
 
+  /* Without the map the list is the whole page, so the details stay in view at the
+     side, below the header, and the list makes room for them. */
+  body.no-map .detail {
+    position: fixed;
+    inset: var(--header-measured) 0 0 auto;
+    width: 28rem;
+    height: auto;
+  }
+
+  body.no-map.detail-open .list-view {
+    margin-right: 28rem;
+  }
+
   /* The details sit over the list column only, so the header, filters and map stay
      usable beside them. */
   .detail {
@@ -474,7 +488,7 @@ body[data-view="list"] .map-view {
     inset: auto;
     grid-column: 2;
     grid-row: 2;
-    height: calc(100dvh - var(--header));
+    height: calc(100dvh - var(--header-measured));
     max-height: none;
     border-top: 0;
     border-left: 2px solid var(--text);

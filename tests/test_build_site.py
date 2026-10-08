@@ -71,6 +71,14 @@ def test_the_map_page_links_to_the_required_documents(page):
     )
 
 
+def test_the_footer_tells_visitors_about_the_basemap_and_its_error_reports():
+    # The owner accepted OpenFreeMap's Network Error Logging headers on condition that the
+    # page says so (docs/PRIVACY_AND_COOKIES.md, rule 2).
+    text = " ".join(INDEX.read_text(encoding="utf-8").split())
+    assert "map files for the area on screen from OpenFreeMap" in text
+    assert "Network Error Logging" in text
+
+
 def test_the_content_security_policy_allows_only_this_site_and_the_basemap(page):
     policy = page.meta["content-security-policy"]
     assert "unsafe-inline" not in policy and "unsafe-eval" not in policy
