@@ -61,9 +61,9 @@ def test_page_shows_the_short_disclaimer_and_required_links(page):
     # DISCLAIMER.md asks for the short version in the footer of every page.
     assert html.escape(transparency.short_disclaimer(), quote=True) in footer
     hrefs = {attrs.get("href") for tag, attrs in parse(page).tags if tag == "a"}
-    for path in ("DISCLAIMER.md", "DATA_LICENCES.md", "docs/PRIVACY_AND_COOKIES.md"):
+    for path in ("DISCLAIMER.md", "DATA_LICENCES.md", "SECURITY.md"):
         assert f"{REPOSITORY_URL}/blob/main/{path}" in hrefs
-    assert f"{REPOSITORY_URL}/blob/main/SECURITY.md" in hrefs
+    assert "../privacy/" in hrefs  # the privacy notice, published on the site
 
 
 def test_page_loads_nothing_from_anywhere_else(page):

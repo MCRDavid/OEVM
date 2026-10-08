@@ -72,7 +72,8 @@ jobs:
       - name: Check the site has its map files and feed health page
         run: |
           for file in index.html data/locations.geojson data/manifest.json \
-            data/status.json status/index.html .well-known/security.txt; do
+            data/status.json status/index.html privacy/index.html transparency/index.html \
+            .well-known/security.txt; do
             test -f "build/$file" || { echo "::error::build/$file is missing"; exit 1; }
           done
 

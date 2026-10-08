@@ -47,6 +47,9 @@ jobs:
       - name: Check the transparency page is up to date
         run: uv run python -m pipeline.transparency --check
 
+      - name: Check the privacy notice page is up to date
+        run: uv run python -m pipeline.privacy --check
+
       - name: Check locked packages for known vulnerabilities
         # Dependabot alerts may not read uv.lock, so audit an export of it with pip-audit.
         run: |

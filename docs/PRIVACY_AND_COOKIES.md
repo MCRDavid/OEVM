@@ -1,9 +1,9 @@
 # Privacy and cookies
 
 General information, not legal advice. Checked against the legislation on 7 October 2026.
-The map page (`site/index.html`, blueprint task 9) is built to these rules but is not
-deployed yet. This page sets out the rules, what the page does today and the notice it
-will show.
+The site has been live at https://mcrdavid.github.io/OEVM/ since 8 October 2026 (blueprint
+task 10). This page sets out the rules it is built to, what it does and the notice it
+shows at `privacy/`.
 
 ## The law in short
 
@@ -80,8 +80,10 @@ the site goes live.
 
 ## Notice for the site
 
-To be published with the site. Check each statement against the deployed site first,
-and fill in the date.
+Published on the site as `privacy/` by `pipeline/privacy.py`, which turns the quoted text
+below into the page; CI fails if the page is out of date. Edit the notice here, then run
+`uv run python -m pipeline.privacy`. Check each statement against the deployed site when
+anything changes, and update the date.
 
 > **Privacy and cookies**
 >
@@ -100,8 +102,8 @@ and fill in the date.
 >
 > **Links you share.** When you change a filter, your filters appear in the page address,
 > and the map's position appears after the # sign, so you can bookmark or share them.
-> Filters you saved on this device are not added to the address until you change one. Anyone you send
-> that link to can see those settings and the area you were looking at. The page tells
+> Filters you saved on this device are not added to the address until you change one.
+> Anyone you send that link to can see those settings and the area you were looking at. The page tells
 > browsers to send only the site's address, not the full page address, with the requests
 > it makes.
 >
@@ -125,7 +127,7 @@ and fill in the date.
 > vulnerability" button on the repository's Security and quality tab (called Security on
 > older pages). Both routes need a GitHub account.
 >
-> Last updated: [date of publishing].
+> Last updated: 8 October 2026.
 
 The OpenFreeMap statements come from its privacy page and response headers as read on
 8 October 2026 (ADR 0008). Re-check them before publishing and from time to time, because

@@ -15,7 +15,8 @@ The full plan is in [docs/BLUEPRINT.md](docs/BLUEPRINT.md).
 
 ## Status
 
-Early days. Blueprint tasks 1 to 9 are done:
+Early days. The map is live at https://mcrdavid.github.io/OEVM/ (since 8 October 2026,
+with Jolt's data so far; see the feed health page). Blueprint tasks 1 to 10 are in place:
 
 1. **Scaffold:** uv, ruff, pytest, pre-commit secret scanning and a CI workflow.
 2. **Schema:** Pydantic models for Location, EVSE, Connector, Tariff and Provenance,
@@ -55,8 +56,9 @@ Also in place:
 - **Prices in pounds and pence only.** Tariffs in other currencies show as "Price unknown"
   and are never converted.
 
-The rules the site follows for privacy and cookies, and the notice it will show, are in
-[docs/PRIVACY_AND_COOKIES.md](docs/PRIVACY_AND_COOKIES.md).
+The rules the site follows for privacy and cookies are in
+[docs/PRIVACY_AND_COOKIES.md](docs/PRIVACY_AND_COOKIES.md), and the notice is published
+on the site at `privacy/` from the same file.
 
 ## Principles
 
@@ -128,7 +130,7 @@ pipeline/publish.py   writes the map files (GeoJSON layer, detail files, manifes
 pipeline/status.py    builds the feed health page from run logs
 pipeline/transparency.py  builds the transparency page
 pipeline/build_site.py  assembles the website in a build folder, with MapLibre
-site/                 files for the website (map page, transparency page, security.txt)
+site/                 files for the website (map, transparency and privacy pages, security.txt)
 site/assets/js/       the map page's scripts (filters, settings, details, map)
 package.json          front-end packages (MapLibre, and Lighthouse for tests)
 schema/models.py      Location, EVSE, Connector, Tariff and Provenance models
