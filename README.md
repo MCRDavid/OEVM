@@ -15,7 +15,7 @@ The full plan is in [docs/BLUEPRINT.md](docs/BLUEPRINT.md).
 
 ## Status
 
-Early days. Blueprint tasks 1 to 6 are done:
+Early days. Blueprint tasks 1 to 7 are done:
 
 1. **Scaffold:** uv, ruff, pytest, pre-commit secret scanning and a CI workflow.
 2. **Schema:** Pydantic models for Location, EVSE, Connector, Tariff and Provenance,
@@ -30,6 +30,9 @@ Early days. Blueprint tasks 1 to 6 are done:
 6. **Tariffs:** each connector's price comes from the tariffs it lists. "Free" only when
    every listed tariff is confirmed free; a missing or unreadable tariff means "Price
    unknown". Prices that apply only at some times, or after a while, say so.
+7. **Map files:** `--publish DIR` merges the operators into one slim GeoJSON layer, one
+   detail file per location and a manifest with attribution and file sizes. Every file
+   is validated before it is written.
 
 Also in place:
 
@@ -99,6 +102,7 @@ pipeline/registry.py  loads and validates the registry
 pipeline/run.py       runs adapters on recorded or live data
 pipeline/pricing.py   how prices are shown (pounds and pence only)
 pipeline/tariffs.py   the price for each connector, from its tariffs
+pipeline/publish.py   writes the map files (GeoJSON layer, detail files, manifest)
 pipeline/transparency.py  builds the transparency page
 site/                 files for the website (transparency page, security.txt)
 schema/models.py      Location, EVSE, Connector, Tariff and Provenance models

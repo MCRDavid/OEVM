@@ -1,0 +1,1127 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$defs": {
+    "Address": {
+      "additionalProperties": false,
+      "properties": {
+        "street": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Street and house number.",
+          "title": "Street"
+        },
+        "city": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "City"
+        },
+        "postal_code": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Postal Code"
+        },
+        "country": {
+          "anyOf": [
+            {
+              "pattern": "^[A-Z]{3}$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "ISO 3166-1 alpha-3, for example GBR.",
+          "title": "Country"
+        }
+      },
+      "required": [
+        "street",
+        "city",
+        "postal_code",
+        "country"
+      ],
+      "title": "Address",
+      "type": "object"
+    },
+    "Connector": {
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "minLength": 1,
+          "title": "Id",
+          "type": "string"
+        },
+        "standard": {
+          "description": "OCPI 2.2.1 ConnectorType value as published, for example 'IEC_62196_T2_COMBO', or 'unknown'.",
+          "pattern": "^[A-Za-z0-9_]+$",
+          "title": "Standard",
+          "type": "string"
+        },
+        "format": {
+          "default": "unknown",
+          "enum": [
+            "socket",
+            "cable",
+            "unknown"
+          ],
+          "title": "Format",
+          "type": "string"
+        },
+        "power_type": {
+          "default": "unknown",
+          "enum": [
+            "ac_1_phase",
+            "ac_2_phase",
+            "ac_2_phase_split",
+            "ac_3_phase",
+            "dc",
+            "unknown"
+          ],
+          "title": "Power Type",
+          "type": "string"
+        },
+        "max_kw": {
+          "anyOf": [
+            {
+              "minimum": 0,
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Max Kw"
+        },
+        "tariff_ids": {
+          "description": "Ids of Tariff records that apply to this connector.",
+          "items": {
+            "description": "'{source}:{country}:{party}:{id}', for example 'chargy:GB:CGY:1234'. Use 'unknown' for a country or party that is not known.",
+            "pattern": "^[a-z0-9_]+:[^:]+:[^:]+:.+$",
+            "type": "string"
+          },
+          "title": "Tariff Ids",
+          "type": "array"
+        }
+      },
+      "required": [
+        "id",
+        "standard",
+        "format",
+        "power_type",
+        "max_kw",
+        "tariff_ids"
+      ],
+      "title": "Connector",
+      "type": "object"
+    },
+    "ConnectorPriceOut": {
+      "additionalProperties": false,
+      "properties": {
+        "evse_uid": {
+          "title": "Evse Uid",
+          "type": "string"
+        },
+        "connector_id": {
+          "title": "Connector Id",
+          "type": "string"
+        },
+        "state": {
+          "enum": [
+            "priced",
+            "free_confirmed",
+            "unknown"
+          ],
+          "title": "State",
+          "type": "string"
+        },
+        "text": {
+          "description": "Worded by pipeline/pricing.py.",
+          "title": "Text",
+          "type": "string"
+        },
+        "reason": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Reason"
+        },
+        "indicative": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "For example '49.2p/kWh'.",
+          "title": "Indicative"
+        },
+        "tariff_ids": {
+          "items": {
+            "description": "'{source}:{country}:{party}:{id}', for example 'chargy:GB:CGY:1234'. Use 'unknown' for a country or party that is not known.",
+            "pattern": "^[a-z0-9_]+:[^:]+:[^:]+:.+$",
+            "type": "string"
+          },
+          "title": "Tariff Ids",
+          "type": "array"
+        },
+        "unresolved_ids": {
+          "items": {
+            "description": "'{source}:{country}:{party}:{id}', for example 'chargy:GB:CGY:1234'. Use 'unknown' for a country or party that is not known.",
+            "pattern": "^[a-z0-9_]+:[^:]+:[^:]+:.+$",
+            "type": "string"
+          },
+          "title": "Unresolved Ids",
+          "type": "array"
+        }
+      },
+      "required": [
+        "evse_uid",
+        "connector_id",
+        "state",
+        "text",
+        "reason",
+        "indicative",
+        "tariff_ids",
+        "unresolved_ids"
+      ],
+      "title": "ConnectorPriceOut",
+      "type": "object"
+    },
+    "Coordinates": {
+      "additionalProperties": false,
+      "properties": {
+        "latitude": {
+          "maximum": 90,
+          "minimum": -90,
+          "title": "Latitude",
+          "type": "number"
+        },
+        "longitude": {
+          "maximum": 180,
+          "minimum": -180,
+          "title": "Longitude",
+          "type": "number"
+        }
+      },
+      "required": [
+        "latitude",
+        "longitude"
+      ],
+      "title": "Coordinates",
+      "type": "object"
+    },
+    "EVSE": {
+      "additionalProperties": false,
+      "properties": {
+        "uid": {
+          "description": "OCPI EVSE uid, unique within its location.",
+          "minLength": 1,
+          "title": "Uid",
+          "type": "string"
+        },
+        "evse_id": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "eMI3 EVSE ID (for example 'GB*ABC*E123'), used to match across sources.",
+          "title": "Evse Id"
+        },
+        "status": {
+          "default": "unknown",
+          "enum": [
+            "available",
+            "blocked",
+            "charging",
+            "inoperative",
+            "out_of_order",
+            "planned",
+            "removed",
+            "reserved",
+            "unknown"
+          ],
+          "title": "Status",
+          "type": "string"
+        },
+        "status_at": {
+          "anyOf": [
+            {
+              "format": "date-time",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "When the status was last reported.",
+          "title": "Status At"
+        },
+        "connectors": {
+          "items": {
+            "$ref": "#/$defs/Connector"
+          },
+          "title": "Connectors",
+          "type": "array"
+        }
+      },
+      "required": [
+        "uid",
+        "evse_id",
+        "status",
+        "status_at",
+        "connectors"
+      ],
+      "title": "EVSE",
+      "type": "object"
+    },
+    "Location": {
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "description": "'{source}:{country}:{party}:{id}', for example 'chargy:GB:CGY:1234'. Use 'unknown' for a country or party that is not known.",
+          "pattern": "^[a-z0-9_]+:[^:]+:[^:]+:.+$",
+          "title": "Id",
+          "type": "string"
+        },
+        "name": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Name"
+        },
+        "address": {
+          "$ref": "#/$defs/Address"
+        },
+        "coordinates": {
+          "$ref": "#/$defs/Coordinates"
+        },
+        "time_zone": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "IANA time zone, for example 'Europe/London'.",
+          "title": "Time Zone"
+        },
+        "operator": {
+          "$ref": "#/$defs/Operator"
+        },
+        "access": {
+          "default": "unknown",
+          "enum": [
+            "public",
+            "customers",
+            "restricted",
+            "unknown"
+          ],
+          "title": "Access",
+          "type": "string"
+        },
+        "opening_hours": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/OpeningHours"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Null when the opening hours are unknown."
+        },
+        "evses": {
+          "items": {
+            "$ref": "#/$defs/EVSE"
+          },
+          "title": "Evses",
+          "type": "array"
+        },
+        "last_updated": {
+          "anyOf": [
+            {
+              "format": "date-time",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "When the source says it last changed this location.",
+          "title": "Last Updated"
+        },
+        "provenance": {
+          "$ref": "#/$defs/Provenance"
+        }
+      },
+      "required": [
+        "id",
+        "name",
+        "address",
+        "coordinates",
+        "time_zone",
+        "operator",
+        "access",
+        "opening_hours",
+        "evses",
+        "last_updated",
+        "provenance"
+      ],
+      "title": "Location",
+      "type": "object"
+    },
+    "OpeningHours": {
+      "additionalProperties": false,
+      "properties": {
+        "twenty_four_seven": {
+          "title": "Twenty Four Seven",
+          "type": "boolean"
+        },
+        "regular_hours": {
+          "items": {
+            "$ref": "#/$defs/RegularHours"
+          },
+          "title": "Regular Hours",
+          "type": "array"
+        }
+      },
+      "required": [
+        "twenty_four_seven",
+        "regular_hours"
+      ],
+      "title": "OpeningHours",
+      "type": "object"
+    },
+    "Operator": {
+      "additionalProperties": false,
+      "properties": {
+        "registry_id": {
+          "anyOf": [
+            {
+              "description": "Operator id from the registry (for example 'chargy'), or a gap-filler source such as 'osm', 'ocm' or 'reports'.",
+              "pattern": "^[a-z0-9_]+$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Id in operators/, or null if the operator is not registered.",
+          "title": "Registry Id"
+        },
+        "name": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Name"
+        }
+      },
+      "required": [
+        "registry_id",
+        "name"
+      ],
+      "title": "Operator",
+      "type": "object"
+    },
+    "PriceComponent": {
+      "additionalProperties": false,
+      "properties": {
+        "type": {
+          "enum": [
+            "energy",
+            "flat",
+            "parking_time",
+            "time"
+          ],
+          "title": "Type",
+          "type": "string"
+        },
+        "price": {
+          "description": "Price excluding VAT, in the tariff currency: per kWh for energy, per hour for time and parking_time, per session for flat (OCPI 2.2.1 units).",
+          "minimum": 0,
+          "title": "Price",
+          "type": "number"
+        },
+        "vat": {
+          "anyOf": [
+            {
+              "maximum": 100,
+              "minimum": 0,
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "VAT percentage. Null means the source gave no VAT figure, shown as 'VAT not stated'. OCPI 2.2.1 says an omitted VAT means no VAT is applicable, which is different from 0% VAT.",
+          "title": "Vat"
+        },
+        "step_size": {
+          "anyOf": [
+            {
+              "minimum": 0,
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Billing step as in OCPI. Null when not stated.",
+          "title": "Step Size"
+        }
+      },
+      "required": [
+        "type",
+        "price",
+        "vat",
+        "step_size"
+      ],
+      "title": "PriceComponent",
+      "type": "object"
+    },
+    "Provenance": {
+      "additionalProperties": false,
+      "description": "Where a record came from and how far to trust it.",
+      "properties": {
+        "source_id": {
+          "description": "Operator id from the registry (for example 'chargy'), or a gap-filler source such as 'osm', 'ocm' or 'reports'.",
+          "pattern": "^[a-z0-9_]+$",
+          "title": "Source Id",
+          "type": "string"
+        },
+        "source_url": {
+          "description": "The feed, file or page the record came from.",
+          "pattern": "^https?://\\S+$",
+          "title": "Source Url",
+          "type": "string"
+        },
+        "licence": {
+          "description": "Licence of the source data, for example 'OGL-3.0', 'ODbL-1.0' or 'CC-BY-4.0'.",
+          "minLength": 1,
+          "title": "Licence",
+          "type": "string"
+        },
+        "fetched_at": {
+          "description": "When this project retrieved the record.",
+          "format": "date-time",
+          "title": "Fetched At",
+          "type": "string"
+        },
+        "last_confirmed_at": {
+          "anyOf": [
+            {
+              "format": "date-time",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "When the source last confirmed the record, if known.",
+          "title": "Last Confirmed At"
+        },
+        "method": {
+          "enum": [
+            "operator_feed",
+            "operator_static_file",
+            "operator_website",
+            "foi",
+            "open_charge_map",
+            "openstreetmap",
+            "user_report"
+          ],
+          "title": "Method",
+          "type": "string"
+        },
+        "confidence": {
+          "enum": [
+            "high",
+            "medium_high",
+            "medium",
+            "low"
+          ],
+          "title": "Confidence",
+          "type": "string"
+        }
+      },
+      "required": [
+        "source_id",
+        "source_url",
+        "licence",
+        "fetched_at",
+        "last_confirmed_at",
+        "method",
+        "confidence"
+      ],
+      "title": "Provenance",
+      "type": "object"
+    },
+    "RegularHours": {
+      "additionalProperties": false,
+      "properties": {
+        "weekday": {
+          "description": "1 is Monday and 7 is Sunday, as in OCPI.",
+          "maximum": 7,
+          "minimum": 1,
+          "title": "Weekday",
+          "type": "integer"
+        },
+        "period_begin": {
+          "description": "HH:MM",
+          "pattern": "^([01]\\d|2[0-3]):[0-5]\\d$",
+          "title": "Period Begin",
+          "type": "string"
+        },
+        "period_end": {
+          "description": "HH:MM, or 24:00",
+          "pattern": "^(([01]\\d|2[0-3]):[0-5]\\d|24:00)$",
+          "title": "Period End",
+          "type": "string"
+        }
+      },
+      "required": [
+        "weekday",
+        "period_begin",
+        "period_end"
+      ],
+      "title": "RegularHours",
+      "type": "object"
+    },
+    "Tariff": {
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "description": "'{source}:{country}:{party}:{id}', for example 'chargy:GB:CGY:1234'. Use 'unknown' for a country or party that is not known.",
+          "pattern": "^[a-z0-9_]+:[^:]+:[^:]+:.+$",
+          "title": "Id",
+          "type": "string"
+        },
+        "currency": {
+          "description": "ISO 4217, for example GBP.",
+          "pattern": "^[A-Z]{3}$",
+          "title": "Currency",
+          "type": "string"
+        },
+        "type": {
+          "anyOf": [
+            {
+              "enum": [
+                "ad_hoc_payment",
+                "profile_cheap",
+                "profile_fast",
+                "profile_green",
+                "regular"
+              ],
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "OCPI tariff type, for example 'ad_hoc_payment' for paying at the charger.",
+          "title": "Type"
+        },
+        "elements": {
+          "items": {
+            "$ref": "#/$defs/TariffElement"
+          },
+          "title": "Elements",
+          "type": "array"
+        },
+        "min_price": {
+          "anyOf": [
+            {
+              "minimum": 0,
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Minimum cost of a session, excluding VAT.",
+          "title": "Min Price"
+        },
+        "max_price": {
+          "anyOf": [
+            {
+              "minimum": 0,
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Maximum cost of a session, excluding VAT.",
+          "title": "Max Price"
+        },
+        "alt_text": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "The operator's own text description of the tariff.",
+          "title": "Alt Text"
+        },
+        "alt_url": {
+          "anyOf": [
+            {
+              "pattern": "^https?://\\S+$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Alt Url"
+        },
+        "start_date_time": {
+          "anyOf": [
+            {
+              "format": "date-time",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Start Date Time"
+        },
+        "end_date_time": {
+          "anyOf": [
+            {
+              "format": "date-time",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "End Date Time"
+        },
+        "last_updated": {
+          "anyOf": [
+            {
+              "format": "date-time",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "When the source says it last changed this tariff.",
+          "title": "Last Updated"
+        },
+        "price_state": {
+          "default": "unknown",
+          "description": "Derived from the price components and min_price; never set by hand. 'free_confirmed' only when every component is zero and there is no minimum charge.",
+          "enum": [
+            "priced",
+            "free_confirmed",
+            "unknown"
+          ],
+          "title": "Price State",
+          "type": "string"
+        },
+        "provenance": {
+          "$ref": "#/$defs/Provenance"
+        }
+      },
+      "required": [
+        "id",
+        "currency",
+        "type",
+        "elements",
+        "min_price",
+        "max_price",
+        "alt_text",
+        "alt_url",
+        "start_date_time",
+        "end_date_time",
+        "last_updated",
+        "price_state",
+        "provenance"
+      ],
+      "title": "Tariff",
+      "type": "object"
+    },
+    "TariffElement": {
+      "additionalProperties": false,
+      "properties": {
+        "price_components": {
+          "items": {
+            "$ref": "#/$defs/PriceComponent"
+          },
+          "minItems": 1,
+          "title": "Price Components",
+          "type": "array"
+        },
+        "restrictions": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/TariffRestrictions"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        }
+      },
+      "required": [
+        "price_components",
+        "restrictions"
+      ],
+      "title": "TariffElement",
+      "type": "object"
+    },
+    "TariffRestrictions": {
+      "additionalProperties": false,
+      "description": "When a tariff element applies. Times are local to the location.",
+      "properties": {
+        "start_time": {
+          "anyOf": [
+            {
+              "description": "HH:MM",
+              "pattern": "^([01]\\d|2[0-3]):[0-5]\\d$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Start Time"
+        },
+        "end_time": {
+          "anyOf": [
+            {
+              "description": "HH:MM",
+              "pattern": "^([01]\\d|2[0-3]):[0-5]\\d$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "End Time"
+        },
+        "start_date": {
+          "anyOf": [
+            {
+              "format": "date",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Start Date"
+        },
+        "end_date": {
+          "anyOf": [
+            {
+              "format": "date",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "End Date"
+        },
+        "min_kwh": {
+          "anyOf": [
+            {
+              "minimum": 0,
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Min Kwh"
+        },
+        "max_kwh": {
+          "anyOf": [
+            {
+              "minimum": 0,
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Max Kwh"
+        },
+        "min_current": {
+          "anyOf": [
+            {
+              "minimum": 0,
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Amperes.",
+          "title": "Min Current"
+        },
+        "max_current": {
+          "anyOf": [
+            {
+              "minimum": 0,
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Amperes.",
+          "title": "Max Current"
+        },
+        "min_power": {
+          "anyOf": [
+            {
+              "minimum": 0,
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Kilowatts.",
+          "title": "Min Power"
+        },
+        "max_power": {
+          "anyOf": [
+            {
+              "minimum": 0,
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Kilowatts.",
+          "title": "Max Power"
+        },
+        "min_duration": {
+          "anyOf": [
+            {
+              "minimum": 0,
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Seconds.",
+          "title": "Min Duration"
+        },
+        "max_duration": {
+          "anyOf": [
+            {
+              "minimum": 0,
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Seconds.",
+          "title": "Max Duration"
+        },
+        "day_of_week": {
+          "items": {
+            "enum": [
+              "monday",
+              "tuesday",
+              "wednesday",
+              "thursday",
+              "friday",
+              "saturday",
+              "sunday"
+            ],
+            "type": "string"
+          },
+          "title": "Day Of Week",
+          "type": "array"
+        },
+        "reservation": {
+          "anyOf": [
+            {
+              "enum": [
+                "reservation",
+                "reservation_expires"
+              ],
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Set when the element prices a reservation, not charging.",
+          "title": "Reservation"
+        }
+      },
+      "required": [
+        "start_time",
+        "end_time",
+        "start_date",
+        "end_date",
+        "min_kwh",
+        "max_kwh",
+        "min_current",
+        "max_current",
+        "min_power",
+        "max_power",
+        "min_duration",
+        "max_duration",
+        "day_of_week",
+        "reservation"
+      ],
+      "title": "TariffRestrictions",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "location": {
+      "$ref": "#/$defs/Location"
+    },
+    "tariffs": {
+      "description": "The tariffs this location's connectors list.",
+      "items": {
+        "$ref": "#/$defs/Tariff"
+      },
+      "title": "Tariffs",
+      "type": "array"
+    },
+    "prices": {
+      "items": {
+        "$ref": "#/$defs/ConnectorPriceOut"
+      },
+      "title": "Prices",
+      "type": "array"
+    },
+    "attribution": {
+      "title": "Attribution",
+      "type": "string"
+    },
+    "licence": {
+      "title": "Licence",
+      "type": "string"
+    },
+    "licence_url": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Licence Url"
+    },
+    "fetched_at": {
+      "format": "date-time",
+      "title": "Fetched At",
+      "type": "string"
+    }
+  },
+  "required": [
+    "location",
+    "tariffs",
+    "prices",
+    "attribution",
+    "licence",
+    "licence_url",
+    "fetched_at"
+  ],
+  "title": "LocationDetail",
+  "type": "object"
+}

@@ -1,0 +1,202 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$defs": {
+    "MapFeature": {
+      "additionalProperties": false,
+      "properties": {
+        "type": {
+          "const": "Feature",
+          "default": "Feature",
+          "title": "Type",
+          "type": "string"
+        },
+        "geometry": {
+          "$ref": "#/$defs/PointGeometry"
+        },
+        "properties": {
+          "$ref": "#/$defs/MapProperties"
+        }
+      },
+      "required": [
+        "type",
+        "geometry",
+        "properties"
+      ],
+      "title": "MapFeature",
+      "type": "object"
+    },
+    "MapProperties": {
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "description": "'{source}:{country}:{party}:{id}', for example 'chargy:GB:CGY:1234'. Use 'unknown' for a country or party that is not known.",
+          "pattern": "^[a-z0-9_]+:[^:]+:[^:]+:.+$",
+          "title": "Id",
+          "type": "string"
+        },
+        "key": {
+          "description": "Detail file: data/loc/<first two characters>/<key>.json.",
+          "pattern": "^[0-9a-f]{16}$",
+          "title": "Key",
+          "type": "string"
+        },
+        "op": {
+          "description": "Operator registry id.",
+          "pattern": "^[a-z0-9_]+$",
+          "title": "Op",
+          "type": "string"
+        },
+        "name": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Name"
+        },
+        "kw": {
+          "anyOf": [
+            {
+              "minimum": 0,
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Highest connector power, kW.",
+          "title": "Kw"
+        },
+        "plugs": {
+          "description": "Connector standards (OCPI 2.2.1 names), sorted.",
+          "items": {
+            "type": "string"
+          },
+          "title": "Plugs",
+          "type": "array"
+        },
+        "evses": {
+          "minimum": 0,
+          "title": "Evses",
+          "type": "integer"
+        },
+        "price": {
+          "description": "'free' only when a connector's price state is free_confirmed.",
+          "enum": [
+            "free",
+            "priced",
+            "unknown"
+          ],
+          "title": "Price",
+          "type": "string"
+        },
+        "ppk": {
+          "anyOf": [
+            {
+              "minimum": 0,
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Pence per kWh including VAT: the lowest, across connectors, of the highest energy price that can apply. Null when no connector states VAT.",
+          "title": "Ppk"
+        }
+      },
+      "required": [
+        "id",
+        "key",
+        "op",
+        "name",
+        "kw",
+        "plugs",
+        "evses",
+        "price",
+        "ppk"
+      ],
+      "title": "MapProperties",
+      "type": "object"
+    },
+    "PointGeometry": {
+      "additionalProperties": false,
+      "properties": {
+        "type": {
+          "const": "Point",
+          "default": "Point",
+          "title": "Type",
+          "type": "string"
+        },
+        "coordinates": {
+          "description": "[longitude, latitude], WGS 84.",
+          "maxItems": 2,
+          "minItems": 2,
+          "prefixItems": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "number"
+            }
+          ],
+          "title": "Coordinates",
+          "type": "array"
+        }
+      },
+      "required": [
+        "type",
+        "coordinates"
+      ],
+      "title": "PointGeometry",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "type": {
+      "const": "FeatureCollection",
+      "default": "FeatureCollection",
+      "title": "Type",
+      "type": "string"
+    },
+    "generated_at": {
+      "format": "date-time",
+      "title": "Generated At",
+      "type": "string"
+    },
+    "attribution": {
+      "description": "One attribution statement per operator.",
+      "items": {
+        "type": "string"
+      },
+      "title": "Attribution",
+      "type": "array"
+    },
+    "licence_note": {
+      "title": "Licence Note",
+      "type": "string"
+    },
+    "features": {
+      "items": {
+        "$ref": "#/$defs/MapFeature"
+      },
+      "title": "Features",
+      "type": "array"
+    }
+  },
+  "required": [
+    "type",
+    "generated_at",
+    "attribution",
+    "licence_note",
+    "features"
+  ],
+  "title": "MapLayer",
+  "type": "object"
+}

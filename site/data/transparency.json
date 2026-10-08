@@ -214,6 +214,16 @@
           "evidence_url": "https://www.equans.co.uk/terms-use",
           "status": "open",
           "resolved_date": null
+        },
+        {
+          "date": "2026-10-08",
+          "kind": "data_quality",
+          "kind_label": "Data quirk",
+          "summary": "One location, \"Cheshire East Council - Crewe Civic\" (postcode CW1 2JZ), has longitude 2.444352, which is east of the UK. Its postcode is in Crewe, west of the Greenwich meridian.",
+          "handling": "Left off the map and listed in the manifest as not mapped. Coordinates are never corrected by this project.",
+          "evidence_url": "https://opendata.geniepoint.co.uk/locations",
+          "status": "open",
+          "resolved_date": null
         }
       ],
       "latest_run": null

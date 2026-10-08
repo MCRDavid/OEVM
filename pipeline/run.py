@@ -26,7 +26,7 @@ import adapters.ocpi_221
 from adapters.http import FeedError, PoliteClient
 from adapters.ocpi_221 import AdapterResult
 from adapters.replay import ReplayTransport
-from pipeline import tariffs
+from pipeline import publish, tariffs
 from pipeline.registry import ROOT, RegistryError, load_registry
 from schema.operator import OperatorConfig
 
@@ -223,6 +223,12 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--save-raw", type=Path, help="save each response here (use raw/)")
     parser.add_argument("--out", type=Path, help="save converted records here")
     parser.add_argument(
+        "--publish",
+        type=Path,
+        metavar="DIR",
+        help="merge the results and write the map files under DIR/data (not site/)",
+    )
+    parser.add_argument(
         "--log-dir",
         type=Path,
         help="save a run summary per operator here, for the transparency page",
@@ -271,6 +277,19 @@ def main(argv: list[str] | None = None) -> int:
             write_log(args.log_dir, run_log(result, mode))
     if not results:
         print("No fixture sets found.")
+    elif args.publish:
+        try:
+            published = publish.publish(
+                results,
+                operators,
+                args.publish,
+                mode=mode,
+                generated_at=max(r.fetched_at for r in results),
+            )
+        except publish.PublishError as exc:
+            print(f"Error: {exc}", file=sys.stderr)
+            return 1
+        print("\n".join(published.report))
     return 0
 
 

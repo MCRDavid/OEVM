@@ -14,6 +14,7 @@ from pathlib import Path
 
 from schema.models import Location, Tariff
 from schema.operator import OperatorConfig
+from schema.published import LocationDetail, Manifest, MapLayer
 
 ROOT = Path(__file__).resolve().parent.parent
 DIALECT = "https://json-schema.org/draft/2020-12/schema"
@@ -30,6 +31,15 @@ def build_schemas() -> dict[Path, dict]:
             mode="serialization"
         ),
         ROOT / "schema" / "json" / "tariff.schema.json": Tariff.model_json_schema(
+            mode="serialization"
+        ),
+        ROOT / "schema" / "json" / "map-layer.schema.json": MapLayer.model_json_schema(
+            mode="serialization"
+        ),
+        ROOT / "schema" / "json" / "location-detail.schema.json": LocationDetail.model_json_schema(
+            mode="serialization"
+        ),
+        ROOT / "schema" / "json" / "manifest.schema.json": Manifest.model_json_schema(
             mode="serialization"
         ),
         ROOT / "operators" / "schema.json": OperatorConfig.model_json_schema(mode="validation"),

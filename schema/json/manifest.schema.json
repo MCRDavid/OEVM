@@ -1,0 +1,167 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$defs": {
+    "FileEntry": {
+      "additionalProperties": false,
+      "properties": {
+        "path": {
+          "title": "Path",
+          "type": "string"
+        },
+        "files": {
+          "minimum": 1,
+          "title": "Files",
+          "type": "integer"
+        },
+        "bytes": {
+          "minimum": 0,
+          "title": "Bytes",
+          "type": "integer"
+        },
+        "gzip_bytes": {
+          "description": "Size after gzip, as most browsers receive it.",
+          "minimum": 0,
+          "title": "Gzip Bytes",
+          "type": "integer"
+        }
+      },
+      "required": [
+        "path",
+        "files",
+        "bytes",
+        "gzip_bytes"
+      ],
+      "title": "FileEntry",
+      "type": "object"
+    },
+    "OperatorEntry": {
+      "additionalProperties": false,
+      "properties": {
+        "name": {
+          "title": "Name",
+          "type": "string"
+        },
+        "fetched_at": {
+          "format": "date-time",
+          "title": "Fetched At",
+          "type": "string"
+        },
+        "mode": {
+          "enum": [
+            "fixtures",
+            "live"
+          ],
+          "title": "Mode",
+          "type": "string"
+        },
+        "complete": {
+          "title": "Complete",
+          "type": "boolean"
+        },
+        "mapped": {
+          "description": "Locations on the map.",
+          "minimum": 0,
+          "title": "Mapped",
+          "type": "integer"
+        },
+        "not_mapped": {
+          "description": "Locations left off: coordinates outside the UK.",
+          "minimum": 0,
+          "title": "Not Mapped",
+          "type": "integer"
+        },
+        "not_mapped_ids": {
+          "description": "Ids of the locations left off.",
+          "items": {
+            "description": "'{source}:{country}:{party}:{id}', for example 'chargy:GB:CGY:1234'. Use 'unknown' for a country or party that is not known.",
+            "pattern": "^[a-z0-9_]+:[^:]+:[^:]+:.+$",
+            "type": "string"
+          },
+          "title": "Not Mapped Ids",
+          "type": "array"
+        },
+        "tariffs": {
+          "minimum": 0,
+          "title": "Tariffs",
+          "type": "integer"
+        },
+        "attribution": {
+          "title": "Attribution",
+          "type": "string"
+        },
+        "licence": {
+          "title": "Licence",
+          "type": "string"
+        },
+        "licence_url": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Licence Url"
+        }
+      },
+      "required": [
+        "name",
+        "fetched_at",
+        "mode",
+        "complete",
+        "mapped",
+        "not_mapped",
+        "not_mapped_ids",
+        "tariffs",
+        "attribution",
+        "licence",
+        "licence_url"
+      ],
+      "title": "OperatorEntry",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "schema_version": {
+      "const": 1,
+      "default": 1,
+      "title": "Schema Version",
+      "type": "integer"
+    },
+    "generated_at": {
+      "format": "date-time",
+      "title": "Generated At",
+      "type": "string"
+    },
+    "operators": {
+      "patternProperties": {
+        "^[a-z0-9_]+$": {
+          "$ref": "#/$defs/OperatorEntry"
+        }
+      },
+      "propertyNames": {
+        "description": "Operator id from the registry (for example 'chargy'), or a gap-filler source such as 'osm', 'ocm' or 'reports'."
+      },
+      "title": "Operators",
+      "type": "object"
+    },
+    "files": {
+      "items": {
+        "$ref": "#/$defs/FileEntry"
+      },
+      "title": "Files",
+      "type": "array"
+    }
+  },
+  "required": [
+    "schema_version",
+    "generated_at",
+    "operators",
+    "files"
+  ],
+  "title": "Manifest",
+  "type": "object"
+}

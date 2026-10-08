@@ -11,6 +11,7 @@ decisions are in docs/adr/.
 - Test: uv run pytest -q
 - Validate registry: uv run python -m pipeline.registry --validate
 - Offline pipeline: uv run python -m pipeline.run --fixtures
+- Map files from fixtures: uv run python -m pipeline.run --fixtures --publish build (never site/)
 - One live page (sparingly, enabled operators only): uv run python -m pipeline.run --live chargy --max-pages 1
 - After changing a model: uv run python -m schema.export (CI runs it with --check)
 - After changing operators/*.yaml: uv run python -m pipeline.transparency (CI runs it with --check)
@@ -22,7 +23,7 @@ decisions are in docs/adr/.
 - adapters/http.py: polite client. adapters/ocpi_221/: paging and OCPI conversion. adapters/replay.py: fixtures.
 - pipeline/registry.py, pipeline/run.py. operators/*.yaml: one file per operator.
 - pipeline/pricing.py: the only way prices are shown. pipeline/tariffs.py: price per connector.
-- pipeline/transparency.py: site/transparency/.
+- pipeline/transparency.py: site/transparency/. pipeline/publish.py: map files; schema/published.py.
 - pipeline/project.py: repository URL (also in site/.well-known/security.txt and .github/ISSUE_TEMPLATE).
 
 ## Hard rules

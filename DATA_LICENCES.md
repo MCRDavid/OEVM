@@ -79,7 +79,7 @@ before its layer is built.
 
 | File | Source | Licence |
 |---|---|---|
-| `operators-combined.geojson` | Operator feeds | OGL v3.0, with each operator's attribution |
+| `locations.geojson` (operator layer, built by `pipeline/publish.py`) | Operator feeds | OGL v3.0, with each operator's attribution in the file, in every detail file and in `manifest.json` |
 | `osm.geojson` | OpenStreetMap | ODbL. Kept as a separate layer so it is not merged into operator data. |
 | `ocm.geojson` | Open Charge Map | Open Charge Map's terms, recorded per record and per data provider |
 | `reports.geojson` | User reports | CC BY 4.0, with the reporter's consent |
