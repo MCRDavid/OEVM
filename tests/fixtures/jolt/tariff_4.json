@@ -1,0 +1,41 @@
+{
+  "request": {
+    "method": "GET",
+    "url": "https://api.joltcharge.com/v1/uk/public/tariffs/4"
+  },
+  "response": {
+    "status_code": 200,
+    "headers": {
+      "content-type": "application/json",
+      "access-control-allow-origin": "*"
+    },
+    "body": {
+      "country_code": "GB",
+      "party_id": "JLT",
+      "id": "4",
+      "currency": "GBP",
+      "type": "AD_HOC_PAYMENT",
+      "tariff_alt_text": [
+        "Contactless / Ad-hoc"
+      ],
+      "tariff_alt_url": null,
+      "min_price": 0,
+      "max_price": null,
+      "elements": [
+        {
+          "price_components": [
+            {
+              "type": "ENERGY",
+              "price": 0.41,
+              "vat": 20,
+              "step_size": 1
+            }
+          ]
+        }
+      ],
+      "start_date_time": null,
+      "end_date_time": null,
+      "last_updated": "2026-08-21T03:14:21+00:00"
+    }
+  }
+}

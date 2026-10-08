@@ -85,6 +85,33 @@ class IssueLog:
         return [m if n == 1 else f"{m} ({n} times)" for m, n in sorted(self._counts.items())]
 
 
+def publish_allowed(raw: dict, config: OperatorConfig, issues: IssueLog) -> bool:
+    """Whether a location may be kept, going by its OCPI 2.2.1 publish flag.
+
+    OCPI 2.2.1 says a location with publish set to false may not be shown on a website or
+    app, so those are never kept. A location with no flag is skipped too, unless the
+    operator file records the owner's decision to show such locations
+    (missing_publish_flag). Any other value is skipped.
+    """
+    publish = raw.get("publish")
+    if publish is True:
+        return True
+    if publish is False:
+        issues.add("location not kept: publish is false")
+        return False
+    if publish is None:
+        if config.missing_publish_flag is not None:
+            issues.add(
+                "location has no publish flag; kept under the decision recorded in the "
+                "operator file"
+            )
+            return True
+        issues.add("location not kept: publish flag missing")
+        return False
+    issues.add(f"location not kept: publish flag {publish!r} is not true or false")
+    return False
+
+
 def parse_ocpi_datetime(value: object) -> datetime | None:
     """OCPI timestamps are UTC; one without a time zone designator means UTC."""
     if value in (None, ""):

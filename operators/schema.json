@@ -424,6 +424,37 @@
       "title": "Licence",
       "type": "object"
     },
+    "MissingPublishFlag": {
+      "additionalProperties": false,
+      "description": "The repository owner's recorded decision to show locations that have no publish flag.\n\nOCPI 2.2.1 requires every location to have a publish flag, and a location with publish\nset to false may not be shown on a website or app. Without this decision, locations\nwith no flag are never kept. A flag set to false is always respected, whatever is\nrecorded here.",
+      "properties": {
+        "decided": {
+          "description": "Date the owner made the decision (YYYY-MM-DD).",
+          "format": "date",
+          "title": "Decided",
+          "type": "string"
+        },
+        "basis": {
+          "description": "Why locations with no flag may be shown, for example that the operator publishes the feed itself as open data under the regulations.",
+          "minLength": 1,
+          "title": "Basis",
+          "type": "string"
+        },
+        "evidence_url": {
+          "description": "Where the operator says the data is public.",
+          "pattern": "^https?://\\S+$",
+          "title": "Evidence Url",
+          "type": "string"
+        }
+      },
+      "required": [
+        "decided",
+        "basis",
+        "evidence_url"
+      ],
+      "title": "MissingPublishFlag",
+      "type": "object"
+    },
     "RateLimit": {
       "additionalProperties": false,
       "properties": {
@@ -617,6 +648,18 @@
       ],
       "default": null,
       "description": "Licence terms for this operator's data. Null if not yet known."
+    },
+    "missing_publish_flag": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/MissingPublishFlag"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "description": "Only by the repository owner's decision: show locations that have no publish flag. Null means such locations are never kept."
     },
     "engagement": {
       "$ref": "#/$defs/Engagement"

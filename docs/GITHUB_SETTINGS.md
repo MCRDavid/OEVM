@@ -116,7 +116,10 @@ Source: https://docs.github.com/en/repositories/configuring-branches-and-merges-
 The issue forms add the labels `privacy` and `correction`. GitHub leaves out labels that
 do not exist yet, so create them once:
 
-1. Open the repository's **Issues** tab and click **Labels**.
+1. Open the labels page directly: add `/labels` to the end of the repository's address,
+   for example `https://github.com/<owner>/<repository>/labels`. (It can also be reached
+   from the **Issues** tab, where the **Labels** button sits next to the search box,
+   although newer layouts sometimes hide it.)
 2. Click **New label**, name it `privacy`, and click **Create label**.
 3. Do the same for `correction`.
 

@@ -15,7 +15,14 @@ import httpx
 
 from adapters.http import FeedError, PoliteClient, redact_url, with_params
 
-KEPT_HEADERS = ("content-type", "link", "x-total-count", "x-limit", "retry-after")
+KEPT_HEADERS = (
+    "content-type",
+    "link",
+    "x-total-count",
+    "x-limit",
+    "retry-after",
+    "access-control-allow-origin",
+)
 PAGE_SAFETY_LIMIT = 10_000
 
 

@@ -515,7 +515,7 @@ def test_fixtures_mode_runs_offline(capsys):
 
 
 def test_live_mode_refuses_operators_that_are_not_enabled(capsys):
-    assert run.main(["--live", "jolt"]) == 1
+    assert run.main(["--live", "gridserve"]) == 1
     assert "not enabled" in capsys.readouterr().err
 
 

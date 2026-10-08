@@ -96,6 +96,15 @@ def test_rate_limits_show_our_setting_and_the_regulation(page):
         assert (per_hour - 1) * gap < 3600 <= per_hour * gap
 
 
+def test_a_decision_on_missing_publish_flags_is_shown(page):
+    data = json.loads(transparency.outputs()[transparency.JSON_PATH])
+    decisions = {op["id"]: op["missing_publish_flag"] for op in data["operators"]}
+    assert decisions["jolt"]["decided"] == "2026-10-08"
+    assert decisions["chargy"] is None
+    assert "Locations with no publish flag" in page
+    assert "Shown: Jolt publishes this feed itself" in " ".join(page.split())
+
+
 def test_each_published_limit_names_its_publisher(page):
     data = json.loads(transparency.outputs()[transparency.JSON_PATH])
     published = [p for op in data["operators"] for p in op["rate_limit"]["published"]]

@@ -297,6 +297,23 @@ class Licence(_Model):
     )
 
 
+class MissingPublishFlag(_Model):
+    """The repository owner's recorded decision to show locations that have no publish flag.
+
+    OCPI 2.2.1 requires every location to have a publish flag, and a location with publish
+    set to false may not be shown on a website or app. Without this decision, locations
+    with no flag are never kept. A flag set to false is always respected, whatever is
+    recorded here.
+    """
+
+    decided: dt.date = Field(description="Date the owner made the decision (YYYY-MM-DD).")
+    basis: NeutralText = Field(
+        description="Why locations with no flag may be shown, for example that the operator "
+        "publishes the feed itself as open data under the regulations.",
+    )
+    evidence_url: SafeUrl = Field(description="Where the operator says the data is public.")
+
+
 class Engagement(_Model):
     status: EngagementStatus
     evidence: list[Evidence] = Field(default_factory=list)
@@ -328,6 +345,11 @@ class OperatorConfig(_Model):
     )
     licence: Licence | None = Field(
         default=None, description="Licence terms for this operator's data. Null if not yet known."
+    )
+    missing_publish_flag: MissingPublishFlag | None = Field(
+        default=None,
+        description="Only by the repository owner's decision: show locations that have no "
+        "publish flag. Null means such locations are never kept.",
     )
     engagement: Engagement
     access_requested: dt.date | None = None

@@ -21,6 +21,7 @@ from typing import Annotated, Literal
 import httpx
 from pydantic import BaseModel, ConfigDict, Field
 
+import adapters.jolt
 import adapters.ocpi_221
 from adapters.http import FeedError, PoliteClient
 from adapters.ocpi_221 import AdapterResult
@@ -30,6 +31,10 @@ from schema.operator import OperatorConfig
 
 FIXTURES_DIR = ROOT / "tests" / "fixtures"
 ADAPTERS = {"ocpi_221": adapters.ocpi_221.fetch}
+# Operators whose registry adapter is "custom", by operator id.
+CUSTOM_ADAPTERS = {"jolt": adapters.jolt.fetch}
+# Sent in place of a real key when replaying fixtures, which never reach the network.
+FIXTURE_KEY = "fixture-replay-not-a-real-key"
 
 
 def run_operator(
@@ -41,11 +46,17 @@ def run_operator(
     date_from: datetime | None = None,
     page_size: int | None = None,
     max_pages: int | None = None,
+    key: str | None = None,
 ) -> AdapterResult:
-    fetch = ADAPTERS.get(config.adapter)
-    if fetch is None:
-        raise FeedError(f"{config.id}: the {config.adapter} adapter is not built yet")
-    with PoliteClient(config, transport=transport, sleep=sleep, clock=clock) as client:
+    if config.adapter == "custom":
+        fetch = CUSTOM_ADAPTERS.get(config.id)
+        if fetch is None:
+            raise FeedError(f"{config.id}: its custom adapter is not built yet")
+    else:
+        fetch = ADAPTERS.get(config.adapter)
+        if fetch is None:
+            raise FeedError(f"{config.id}: the {config.adapter} adapter is not built yet")
+    with PoliteClient(config, transport=transport, sleep=sleep, clock=clock, key=key) as client:
         result = fetch(
             config, client, date_from=date_from, page_size=page_size, max_pages=max_pages
         )
@@ -189,6 +200,7 @@ def run_fixtures(operators: dict[str, OperatorConfig]) -> list[AdapterResult]:
                 date_from=datetime.fromisoformat(date_from) if date_from else None,
                 page_size=manifest.get("page_size"),
                 max_pages=manifest.get("max_pages"),
+                key=FIXTURE_KEY,
             )
         )
     return results

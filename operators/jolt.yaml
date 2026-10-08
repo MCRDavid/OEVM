@@ -1,8 +1,8 @@
 # yaml-language-server: $schema=schema.json
 id: jolt
 display_name: Jolt
-ocpi_country_code: unknown
-ocpi_party_id: unknown
+ocpi_country_code: GB
+ocpi_party_id: JLT # Confirmed from the feed's own country_code and party_id on 2026-10-08.
 adapter: custom
 base_url: unknown
 endpoints:
@@ -25,10 +25,13 @@ auth:
 rate_limit:
   min_seconds_between_requests: 2
   limits: []
-  limits_checked: 2026-10-07
-  notes: Jolt's page states no rate limit. The 2 second gap is this project's own choice.
+  limits_checked: 2026-10-08
+  notes: >-
+    Jolt's page states no rate limit (re-read 2026-10-08). The 2 second gap is this
+    project's own choice. A full run makes one request for locations and one per tariff
+    (6 requests on 2026-10-08).
 supports_single_location: needs_testing
-cors: needs_testing
+cors: supported # access-control-allow-origin: * seen on 2026-10-08
 attribution: >-
   Contains data from Jolt published under the Public Charge Point Regulations 2023,
   used in line with the Open Government Licence v3.0.
@@ -41,6 +44,14 @@ licence:
     the Open Government Licence". Jolt's page, read on 2026-10-07, states no licence, terms
     of use or rate limits for the data.
   checked: 2026-10-07
+missing_publish_flag:
+  decided: 2026-10-08
+  basis: >-
+    Jolt publishes this feed itself "In accordance with the UK Public Charge Point
+    Regulations (PCPR) Open Data requirement", and none of its locations has a publish
+    flag. The repository owner decided that locations with no flag may be shown. A flag
+    set to false would still be respected.
+  evidence_url: https://support.joltcharge.com/hc/en-gb/articles/27955558493207-UK-Public-Charge-Point-Regulations-Open-Data-Request
 engagement:
   status: open_shared_key
   evidence:
@@ -49,6 +60,11 @@ engagement:
       note: >-
         Read in a browser by the project owner. Gives the Reference Data API URL with a
         shared apiKey and the Pricing Reference API URL.
+    - date: 2026-10-08
+      url: https://support.joltcharge.com/api/v2/help_center/en-gb/articles/27955558493207.json
+      note: >-
+        Re-read through the help centre's article data. Unchanged; last updated
+        2025-01-30.
 access_requested: null
 access_granted: null
 sources:
@@ -79,9 +95,96 @@ findings:
       key.
     handling: The key is kept in the GitHub Actions secret JOLT_API_KEY and is never committed.
     evidence_url: https://support.joltcharge.com/hc/en-gb/articles/27955558493207-UK-Public-Charge-Point-Regulations-Open-Data-Request
+  - date: 2026-10-08
+    kind: spec_conformance
+    summary: >-
+      Responses do not use the OCPI 2.2.1 response format (data, status_code, timestamp).
+      All locations come in one response as {"locations": [...]}, with no paging headers,
+      and each tariff comes as a bare object from tariffs/{tariffId}.
+    handling: >-
+      A custom adapter reads this format. It stops with an error if a next page link ever
+      appears, so a partial feed is never taken for the whole one.
+    evidence_url: https://api.joltcharge.com/v1/uk/public/locations
+  - date: 2026-10-08
+    kind: spec_conformance
+    summary: >-
+      Locations have no publish flag, which OCPI 2.2.1 requires (none of 72 on
+      2026-10-08).
+    handling: >-
+      Shown under the repository owner's decision recorded in missing_publish_flag,
+      because Jolt publishes the feed as open data under the regulations. A flag set to
+      false would always be respected.
+    evidence_url: https://api.joltcharge.com/v1/uk/public/locations
+  - date: 2026-10-08
+    kind: spec_conformance
+    summary: >-
+      Locations have no id, which OCPI 2.2.1 requires. Their names, such as BAR004, were
+      unique on 2026-10-08. Some locations have no time_zone (7 of 72).
+    handling: >-
+      The name is used as the location id, so ids will change if Jolt renames a site. A
+      missing time zone is recorded as unknown.
+    evidence_url: https://api.joltcharge.com/v1/uk/public/locations
+  - date: 2026-10-08
+    kind: spec_conformance
+    summary: >-
+      EVSE statuses are lower case, such as available and charging, and some EVSEs
+      report preparing, which is not an OCPI 2.2.1 status.
+    handling: >-
+      A lower-case value that matches an OCPI 2.2.1 status is read as that status.
+      preparing is shown as unknown.
+    evidence_url: https://api.joltcharge.com/v1/uk/public/locations
+  - date: 2026-10-08
+    kind: spec_conformance
+    summary: >-
+      EVSEs have a null uid and no last_updated. evse_id is a number, such as 143, rather
+      than an eMI3 EVSE ID, and connector ids are numbers rather than strings.
+    handling: >-
+      evse_id is used as the EVSE uid and no eMI3 EVSE ID is recorded. Statuses are dated
+      with the time they were fetched.
+    evidence_url: https://api.joltcharge.com/v1/uk/public/locations
+  - date: 2026-10-08
+    kind: spec_conformance
+    summary: >-
+      Connectors give the standard CCS2, which is not an OCPI 2.2.1 connector type.
+    handling: Read as IEC_62196_T2_COMBO, the OCPI 2.2.1 name for the CCS Combo 2 connector.
+    evidence_url: https://api.joltcharge.com/v1/uk/public/locations
+  - date: 2026-10-08
+    kind: data_quality
+    summary: >-
+      Many DC connectors give max_amperage 0 alongside a max_electric_power figure (128 of
+      160 on 2026-10-08).
+    handling: Power is taken from max_electric_power.
+    evidence_url: https://api.joltcharge.com/v1/uk/public/locations
+  - date: 2026-10-08
+    kind: data_quality
+    summary: >-
+      Some connectors list no tariff (24 of 160 on 2026-10-08), and the tariff "UK
+      discounted tariff" (id 13) has an energy price of null.
+    handling: These show as price unknown.
+    evidence_url: https://api.joltcharge.com/v1/uk/public/tariffs/13
+  - date: 2026-10-08
+    kind: data_quality
+    summary: >-
+      The feed includes 7 locations named IONITY, such as IONITY Cambridge, with Jolt's
+      party_id JLT and the tariff "Ionity United Kingdom - Roaming Tariff Group: Base
+      tariff". The feed does not say who operates them.
+    handling: >-
+      Shown as published, with Jolt named as the operator because the feed gives no
+      operator. Who operates these sites needs checking.
+    evidence_url: https://api.joltcharge.com/v1/uk/public/locations
+  - date: 2026-10-08
+    kind: spec_conformance
+    summary: >-
+      Tariffs give tariff_alt_text as a list of plain strings, and min_price and
+      max_price as plain numbers, where OCPI 2.2.1 uses DisplayText and Price objects.
+    handling: >-
+      Alt text is read as text with no language. A min_price or max_price of 0 is read as
+      no minimum or maximum. Any other plain number does not say whether it includes VAT,
+      so that tariff would show as price unknown.
+    evidence_url: https://api.joltcharge.com/v1/uk/public/tariffs/4
 notes: >-
   The blueprint says the published key could go in the registry because it is public. This
   project keeps it in a GitHub Actions secret instead, so no key value is ever committed.
-  Jolt could change or withdraw the shared key. Switched off until the custom adapter
-  (blueprint task 5) is built.
-enabled: false
+  Jolt could change or withdraw the shared key. Fetched by the custom adapter in
+  adapters/jolt.py (blueprint task 5).
+enabled: true
