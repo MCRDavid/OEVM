@@ -26,6 +26,7 @@ import adapters.ocpi_221
 from adapters.http import FeedError, PoliteClient
 from adapters.ocpi_221 import AdapterResult
 from adapters.replay import ReplayTransport
+from pipeline import tariffs
 from pipeline.registry import ROOT, RegistryError, load_registry
 from schema.operator import OperatorConfig
 
@@ -75,6 +76,7 @@ def report(result: AdapterResult) -> str:
             f"{state}"
         )
     lines.append(f"  kept: {len(result.locations)} locations, {len(result.tariffs)} tariffs")
+    lines.append(f"  {tariffs.summary(tariffs.price_locations(result.locations, result.tariffs))}")
     lines.append(f"  issues ({len(result.issues)}):")
     lines += [f"    - {issue}" for issue in result.issues] or ["    none"]
     return "\n".join(lines)

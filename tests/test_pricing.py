@@ -141,7 +141,10 @@ def test_recorded_chargy_tariffs_show_only_pounds_and_pence():
         result = fetch(config, client, page_size=2, max_pages=2)
     shown = {t.currency: describe_tariff(t) for t in result.tariffs}
 
-    assert shown["GBP"].text == "32.5p to 49.2p per kWh (excluding VAT, VAT not stated)"
+    assert shown["GBP"].text == (
+        "45p per kWh at weekends, 32.5p per kWh from midnight to 07:00 on weekdays, "
+        "49.2p per kWh from 07:00 to midnight on weekdays (excluding VAT, VAT not stated)"
+    )
     assert shown["EUR"].text == shown["USD"].text == "Price unknown"
     for display in shown.values():
         assert "€" not in display.text and "$" not in display.text

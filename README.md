@@ -15,7 +15,7 @@ The full plan is in [docs/BLUEPRINT.md](docs/BLUEPRINT.md).
 
 ## Status
 
-Early days. Blueprint tasks 1 to 5 are done:
+Early days. Blueprint tasks 1 to 6 are done:
 
 1. **Scaffold:** uv, ruff, pytest, pre-commit secret scanning and a CI workflow.
 2. **Schema:** Pydantic models for Location, EVSE, Connector, Tariff and Provenance,
@@ -27,6 +27,9 @@ Early days. Blueprint tasks 1 to 5 are done:
 5. **Jolt adapter:** reads Jolt's own API format, which differs from OCPI 2.2.1 in ways
    recorded on the transparency page, and converts it the same way. GeniePoint's files
    turned out to be standard OCPI 2.2.1, so the OCPI adapter reads them.
+6. **Tariffs:** each connector's price comes from the tariffs it lists. "Free" only when
+   every listed tariff is confirmed free; a missing or unreadable tariff means "Price
+   unknown". Prices that apply only at some times, or after a while, say so.
 
 Also in place:
 
@@ -95,6 +98,7 @@ adapters/             code that reads operator feeds (ocpi_221, jolt)
 pipeline/registry.py  loads and validates the registry
 pipeline/run.py       runs adapters on recorded or live data
 pipeline/pricing.py   how prices are shown (pounds and pence only)
+pipeline/tariffs.py   the price for each connector, from its tariffs
 pipeline/transparency.py  builds the transparency page
 site/                 files for the website (transparency page, security.txt)
 schema/models.py      Location, EVSE, Connector, Tariff and Provenance models

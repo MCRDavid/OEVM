@@ -21,7 +21,8 @@ decisions are in docs/adr/.
 - schema/models.py: Location, EVSE, Connector, Tariff, Provenance. schema/operator.py: registry file model.
 - adapters/http.py: polite client. adapters/ocpi_221/: paging and OCPI conversion. adapters/replay.py: fixtures.
 - pipeline/registry.py, pipeline/run.py. operators/*.yaml: one file per operator.
-- pipeline/pricing.py: the only way prices are shown. pipeline/transparency.py: site/transparency/.
+- pipeline/pricing.py: the only way prices are shown. pipeline/tariffs.py: price per connector.
+- pipeline/transparency.py: site/transparency/.
 - pipeline/project.py: repository URL (also in site/.well-known/security.txt and .github/ISSUE_TEMPLATE).
 
 ## Hard rules
