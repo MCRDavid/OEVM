@@ -58,7 +58,7 @@ function priceKnown(connector) {
 
 function connectorMatches(connector, state) {
   if (state.minkw && !(Number.isFinite(connector.kw) && connector.kw >= state.minkw)) return false;
-  if (state.plugs.length && !state.plugs.includes(plugGroup(connector.std))) return false;
+  if (state.plugs.length && !(connector.std && state.plugs.includes(plugGroup(connector.std)))) return false;
   if (state.free && connector.price !== "free") return false;
   if (!state.unknown && !priceKnown(connector)) return false;
   if (state.maxp !== null && priceKnown(connector)) {
@@ -72,8 +72,13 @@ function connectorFilters(state) {
   return Boolean(state.minkw || state.plugs.length || state.free || state.maxp !== null || !state.unknown);
 }
 
+// A location with no connectors listed is treated as one connector about which nothing is
+// known, so "include unknown prices" keeps it while any other connector condition drops it.
+const NOTHING_KNOWN = [{ std: null, kw: null, price: "unknown", ppk: null }];
+
 export function matches(props, state) {
   if (state.ops.length && !state.ops.includes(props.op)) return false;
   if (!connectorFilters(state)) return true;
-  return (props.cons ?? []).some((connector) => connectorMatches(connector, state));
+  const cons = props.cons?.length ? props.cons : NOTHING_KNOWN;
+  return cons.some((connector) => connectorMatches(connector, state));
 }

@@ -15,7 +15,11 @@ file per location and a manifest. Accept: outputs validate; size logged.
   count, a price summary ("free" only when a connector is free_confirmed) and `ppk`, the
   cheapest connector's highest price per kWh including VAT, given only when VAT is
   stated. It holds no live status: a daily snapshot would look current when it is not.
-  Statuses are in the detail files with their dates.
+  Statuses are in the detail files with their dates. Amended by ADR 0008: `ppk` was
+  replaced by `pt`, a price summary worded by `pipeline/pricing.py`, and `cons`, each
+  kind of connector with its own price state and price per kWh, so filters can test one
+  connector at a time. A location is "free" only when every connector is
+  free_confirmed.
 - **Detail files** are named by the first 16 hexadecimal characters of the SHA-256 of the
   location id, because ids can contain spaces, and sharded by the first two characters.
   A clash stops the run. Old detail files are removed on each publish.

@@ -100,8 +100,11 @@ Makes every change go through a pull request with passing checks, as `CLAUDE.md`
 4. Under **Branch protections**, tick **Require a pull request before merging**. Set the
    number of required approvals to **0**: GitHub does not let you approve your own pull
    request, so any higher number would stop you merging.
-5. Tick **Require status checks to pass before merging**, and add the check
-   **Lint, test and scan**.
+5. Tick **Require status checks to pass before merging**, and add the checks
+   **Lint, test and scan** and **Map page (build, browser tests, accessibility)**. If you
+   set this up before the second check existed, edit the ruleset and add it. (GitHub
+   only offers checks it has seen run in the last week, so open a pull request first if
+   it is not listed.)
 6. Keep **Block force pushes** and **Restrict deletions** ticked, then click **Create**.
 
 The older way also works: **Settings > Branches > Add classic branch protection rule**,

@@ -35,9 +35,13 @@ test("bad values are ignored, not guessed", () => {
   assert.equal(parse("maxp=0").maxp, 0);
 });
 
-test("with no connector filters every location matches, even one with no connectors", () => {
+test("a location with no connectors counts as one about which nothing is known", () => {
   assert.equal(matches(point([]), defaults()), true);
   assert.equal(matches(point([]), { ...defaults(), minkw: 7 }), false);
+  assert.equal(matches(point([]), { ...defaults(), maxp: 50 }), true, "unknown prices are included");
+  assert.equal(matches(point([]), { ...defaults(), maxp: 50, unknown: false }), false);
+  assert.equal(matches(point([]), { ...defaults(), plugs: ["other"] }), false);
+  assert.equal(matches(point([]), { ...defaults(), free: true }), false);
 });
 
 test("minimum power needs a known power", () => {

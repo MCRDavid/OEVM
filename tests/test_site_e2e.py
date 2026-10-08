@@ -283,6 +283,51 @@ def test_a_narrow_phone_header_wraps_without_pushing_the_map_off_screen(visit):
     assert map_view["y"] + map_view["height"] < 740
 
 
+def test_the_header_shrinks_back_after_it_has_wrapped(visit):
+    page = visit({"width": 360, "height": 740}).open()
+    wrapped = page.locator(".top").bounding_box()["height"]
+    assert wrapped > 60, "the header wraps at this width"
+    # Widen to a desktop width, where the header fits one row whatever fonts the system has.
+    page.set_viewport_size(WIDE)
+    page.wait_for_timeout(300)
+    one_row = page.locator(".top").bounding_box()["height"]
+    assert one_row < 70 and one_row < wrapped
+    measured = page.evaluate(
+        "getComputedStyle(document.documentElement).getPropertyValue('--header-measured')"
+    )
+    assert measured.strip() == f"{round(one_row)}px"
+    map_view = page.locator("#map-view").bounding_box()
+    assert abs(map_view["y"] + map_view["height"] - WIDE["height"]) < 2
+
+
+def test_without_the_map_a_wide_screen_keeps_details_in_view_beside_the_list(visit):
+    v = visit({"width": 1400, "height": 800})
+    v.page.route("**/assets/offline-style.json", lambda route: route.fulfill(status=404))
+    page = v.open(map_ready=False)
+    expect(page.locator("#notice")).to_contain_text("background map could not be loaded")
+    items = page.locator("#list-items button")
+    items.nth(8).click()
+    expect(page.locator("#detail-heading")).to_be_focused()
+    first = page.text_content("#detail-heading")
+    page.mouse.wheel(0, 900)
+    page.wait_for_timeout(300)
+    panel = page.locator("#detail").bounding_box()
+    assert 0 <= panel["y"] < 800, "the panel stays on screen"
+    items.nth(10).click()
+    expect(page.locator("#detail-heading")).not_to_have_text(first)
+
+
+def test_the_skip_link_closes_open_details_on_a_wide_screen(visit):
+    page = visit(WIDE).open()
+    page.locator("#list-items button").first.click()
+    expect(page.locator("#detail-heading")).to_be_focused()
+    page.focus(".skip")
+    page.keyboard.press("Enter")
+    assert page.is_hidden("#detail")
+    assert page.evaluate("document.activeElement.id") == "list"
+    assert not page.evaluate("document.getElementById('list').inert")
+
+
 def test_on_a_wide_screen_details_cover_only_the_list(visit):
     v = visit(WIDE)
     page = v.open()

@@ -213,10 +213,13 @@ function listButton(key) {
 }
 
 // While the panel is open, what it covers cannot be reached: on a small screen that is the
-// whole page behind it, on a wide screen the list it sits over.
+// whole page behind it, on a wide screen the list it sits over. Without the map, a wide
+// screen shows the panel beside the list instead, so the list stays usable.
 function coverPage(open) {
   const narrow = !WIDE.matches;
-  $("list").inert = open;
+  const besideList = !narrow && document.body.classList.contains("no-map");
+  document.body.classList.toggle("detail-open", open);
+  $("list").inert = open && !besideList;
   for (const element of [
     document.querySelector(".skip"),
     document.querySelector(".top"),
@@ -425,6 +428,7 @@ function mapUnavailable(message) {
   app.area = null;
   app.mapPending = false;
   document.body.classList.add("no-map");
+  if (!$("detail").hidden) coverPage(true);
   $("show-map").disabled = true;
   notice(message);
   setView("list");
@@ -465,10 +469,12 @@ function setUpSettings() {
   });
 }
 
-// The map height depends on the header's, which wraps on narrow screens.
+// The map height depends on the header's, which wraps on narrow screens. It is measured
+// into its own variable: the header's minimum height must not grow with it, or a header
+// that wrapped once (a phone turned sideways and back) would never shrink again.
 function trackHeaderHeight() {
   const header = document.querySelector(".top");
-  const update = () => document.documentElement.style.setProperty("--header", `${header.offsetHeight}px`);
+  const update = () => document.documentElement.style.setProperty("--header-measured", `${header.offsetHeight}px`);
   update();
   if ("ResizeObserver" in window) new ResizeObserver(update).observe(header);
 }
@@ -506,6 +512,7 @@ function wireUp() {
   // position there.
   document.querySelector(".skip").addEventListener("click", (event) => {
     event.preventDefault();
+    if (!$("detail").hidden) closeDetail();
     if (!WIDE.matches && app.state.view !== "list") {
       setView("list");
       writeAddress();
