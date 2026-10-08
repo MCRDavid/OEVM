@@ -286,12 +286,18 @@ def test_a_narrow_phone_header_wraps_without_pushing_the_map_off_screen(visit):
 def test_the_header_shrinks_back_after_it_has_wrapped(visit):
     page = visit({"width": 360, "height": 740}).open()
     wrapped = page.locator(".top").bounding_box()["height"]
-    page.set_viewport_size(PHONE)
+    assert wrapped > 60, "the header wraps at this width"
+    # Widen to a desktop width, where the header fits one row whatever fonts the system has.
+    page.set_viewport_size(WIDE)
     page.wait_for_timeout(300)
     one_row = page.locator(".top").bounding_box()["height"]
-    assert one_row < wrapped and one_row < 60
+    assert one_row < 70 and one_row < wrapped
+    measured = page.evaluate(
+        "getComputedStyle(document.documentElement).getPropertyValue('--header-measured')"
+    )
+    assert measured.strip() == f"{round(one_row)}px"
     map_view = page.locator("#map-view").bounding_box()
-    assert map_view["y"] + map_view["height"] < PHONE["height"]
+    assert abs(map_view["y"] + map_view["height"] - WIDE["height"]) < 2
 
 
 def test_without_the_map_a_wide_screen_keeps_details_in_view_beside_the_list(visit):
