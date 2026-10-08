@@ -18,7 +18,8 @@ export const ROUTES = {
   "/geniepoint/tariffs": "https://opendata.geniepoint.co.uk/tariffs",
 };
 
-const PASSED_BACK = ["content-type", "x-total-count", "x-limit", "link", "last-modified", "etag"];
+// Retry-After matters: the daily run waits as long as the operator asks before trying again.
+const PASSED_BACK = ["content-type", "x-total-count", "x-limit", "link", "retry-after", "last-modified", "etag"];
 
 function plain(status, text) {
   return new Response(text, { status, headers: { "content-type": "text/plain; charset=utf-8" } });

@@ -328,8 +328,9 @@ class Relay(_Model):
     reason: NeutralText = Field(description="Why direct requests cannot be used.")
     evidence_url: SafeUrl = Field(description="Where the refusal can be seen, such as a run log.")
     url_variable: SecretName = Field(
-        description="Environment variable (a GitHub Actions variable) holding the relay's "
-        "https address. When it is not set, requests go direct."
+        description="Environment variable (a GitHub Actions secret, so it is masked in logs) "
+        "holding the relay's https address. Requests go direct only when neither this nor "
+        "secret_name is set; one without the other stops the operator's fetch."
     )
     secret_name: SecretName = Field(
         description="Environment variable (a GitHub Actions secret) holding the relay's "

@@ -76,6 +76,10 @@ test("the feed is fetched with the project's User-Agent and its paging parameter
 test("the operator's answer is passed back as it came, refusals included", async () => {
   upstream(403);
   assert.equal((await ask("/geniepoint/locations")).status, 403);
+  upstream(429, { "retry-after": "3600" });
+  const busy = await ask("/geniepoint/locations");
+  assert.equal(busy.status, 429);
+  assert.equal(busy.headers.get("retry-after"), "3600", "the operator's wait reaches the daily run");
   globalThis.fetch = async () => {
     throw new TypeError("network down");
   };

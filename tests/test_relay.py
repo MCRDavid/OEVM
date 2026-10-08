@@ -23,8 +23,8 @@ def geniepoint() -> OperatorConfig:
 
 @pytest.fixture
 def relay_env(monkeypatch):
-    monkeypatch.setenv("GENIEPOINT_RELAY_URL", RELAY)
-    monkeypatch.setenv("GENIEPOINT_RELAY_TOKEN", TOKEN)
+    monkeypatch.setenv("OEVM_RELAY_URL", RELAY)
+    monkeypatch.setenv("OEVM_RELAY_TOKEN", TOKEN)
 
 
 def recorder(status: int = 200):
@@ -38,8 +38,8 @@ def recorder(status: int = 200):
 
 
 def test_requests_go_direct_when_the_relay_is_not_set(geniepoint, monkeypatch):
-    monkeypatch.delenv("GENIEPOINT_RELAY_URL", raising=False)
-    monkeypatch.delenv("GENIEPOINT_RELAY_TOKEN", raising=False)
+    monkeypatch.delenv("OEVM_RELAY_URL", raising=False)
+    monkeypatch.delenv("OEVM_RELAY_TOKEN", raising=False)
     assert relay_route(geniepoint) is None
     seen, transport = recorder()
     with PoliteClient(geniepoint, transport=transport, sleep=lambda _: None) as client:
@@ -94,21 +94,21 @@ def test_other_hosts_are_never_relayed(geniepoint, relay_env):
 @pytest.mark.parametrize(
     ("url", "token", "problem"),
     [
-        (RELAY, "", "needs GENIEPOINT_RELAY_TOKEN"),
-        ("", TOKEN, "needs GENIEPOINT_RELAY_URL"),
+        (RELAY, "", "needs OEVM_RELAY_TOKEN"),
+        ("", TOKEN, "needs OEVM_RELAY_URL"),
         ("http://relay.example.org", TOKEN, "must be an https address"),
     ],
 )
 def test_half_set_or_plain_http_relays_stop_the_run(geniepoint, monkeypatch, url, token, problem):
-    monkeypatch.setenv("GENIEPOINT_RELAY_URL", url)
-    monkeypatch.setenv("GENIEPOINT_RELAY_TOKEN", token)
+    monkeypatch.setenv("OEVM_RELAY_URL", url)
+    monkeypatch.setenv("OEVM_RELAY_TOKEN", token)
     with pytest.raises(FeedError, match=problem):
         relay_route(geniepoint)
 
 
 def test_a_relay_on_a_sub_path_keeps_its_path(geniepoint, monkeypatch):
-    monkeypatch.setenv("GENIEPOINT_RELAY_URL", "https://relay.example.org/oevm/")
-    monkeypatch.setenv("GENIEPOINT_RELAY_TOKEN", TOKEN)
+    monkeypatch.setenv("OEVM_RELAY_URL", "https://relay.example.org/oevm/")
+    monkeypatch.setenv("OEVM_RELAY_TOKEN", TOKEN)
     route = relay_route(geniepoint)
     assert route.url("https://opendata.geniepoint.co.uk/locations?a=1") == (
         "https://relay.example.org/oevm/geniepoint/locations?a=1"
@@ -129,3 +129,20 @@ def test_feeds_that_need_a_key_can_never_be_relayed(geniepoint):
 def test_fixture_replays_never_use_the_relay(relay_env):
     results = run.run_fixtures(load_registry())
     assert any(result.operator_id == "geniepoint" for result in results)
+
+
+def test_a_long_wait_asked_through_the_relay_stops_further_requests(geniepoint, relay_env):
+    seen = []
+
+    def busy(request: httpx.Request) -> httpx.Response:
+        seen.append(request)
+        return httpx.Response(429, headers={"Retry-After": "3600"})
+
+    with (
+        PoliteClient(
+            geniepoint, transport=httpx.MockTransport(busy), sleep=lambda _: None
+        ) as client,
+        pytest.raises(FeedError, match="asked this project to wait"),
+    ):
+        client.get("https://opendata.geniepoint.co.uk/locations")
+    assert len(seen) == 1

@@ -9,20 +9,27 @@ and to fetch the files from somewhere other than GitHub's servers.
 
 ## Decisions
 
-- **A Cloudflare Worker the owner runs** (`relay/worker.js`, free plan) fetches the
-  operator's files for the daily run. It is not a general proxy: it serves only the paths
+- **One Cloudflare Worker the owner runs** (`relay/worker.js`, named `oevm-relay`, free
+  plan) fetches the operator's files for the daily run. Each relayed operator has its own
+  path prefix on it, and all share the two GitHub secrets `OEVM_RELAY_URL` and
+  `OEVM_RELAY_TOKEN`, so another operator needs only a new route and a recorded decision.
+  The free plan allows 100 Workers per account (limits page, read 8 October 2026), so
+  separate Workers would also be possible; one keeps setup and the token in one place. It is not a general proxy: it serves only the paths
   listed in its `ROUTES`, only GET, and only requests carrying a shared token in the
   `X-Relay-Token` header (a Worker secret and a GitHub Actions secret). It passes on the
   project's own User-Agent and nothing else from the request, passes the answer back as it
   came with only the headers OCPI paging needs, and never caches.
 - **The operator file records the decision** (`relay` in `operators/geniepoint.yaml`):
-  the date, the reason, the evidence (the run log), and the names of the GitHub variable
-  holding the Worker's address and the secret holding its token. Like the publish flag
+  the date, the reason, the evidence (the run log), and the names of the two GitHub
+  secrets holding the Worker's address and its token. The address is a secret too, so it
+  is masked in the public run logs. Like the publish flag
   decision, only the owner adds one, and the transparency page shows it.
 - **Nothing else changes.** `adapters/http.py` sends the request to the Worker only when
   both settings are present, under the same path and query. Gaps between requests,
   retries and every message still use the operator's own host and URLs, and records keep
-  the operator's URLs as their source. Without the settings, requests go direct.
+  the operator's URLs as their source. Without either setting, requests go direct; with
+  only one, the operator's fetch stops with a message, so a half-finished setup is noticed.
+  The Worker passes the operator's Retry-After back, so a request to wait is honoured.
 - **Only feeds that need no key may be relayed,** so no key ever passes through a third
   party. The registry refuses a relay on an operator with a key.
 - **No disguise.** Requests still name the project and link to this repository, at the

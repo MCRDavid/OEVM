@@ -29,7 +29,8 @@ def test_the_daily_fetch_passes_every_relay_setting():
     for config in load_registry().values():
         if config.enabled and config.relay:
             relay = config.relay
-            assert env.get(relay.url_variable) == f"${{{{ vars.{relay.url_variable} }}}}"
+            # A secret, not a variable, so the address is masked in the public run logs.
+            assert env.get(relay.url_variable) == f"${{{{ secrets.{relay.url_variable} }}}}"
             assert env.get(relay.secret_name) == f"${{{{ secrets.{relay.secret_name} }}}}"
 
 

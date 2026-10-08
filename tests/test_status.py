@@ -2,6 +2,7 @@
 
 import json
 import re
+import shutil
 from datetime import UTC, datetime, timedelta
 from html.parser import HTMLParser
 from pathlib import Path
@@ -108,12 +109,17 @@ def test_history_keeps_one_run_a_day_for_30_days(logs, tmp_path):
 
 
 def test_a_later_run_on_the_same_day_replaces_the_earlier_one(logs, tmp_path):
-    _, first = render(logs, tmp_path / "a")
-    log = json.loads((logs / "jolt.json").read_text())
+    # Fixed times on one day, so the test does not depend on when it runs (an hour after
+    # 23:00 UTC is the next day).
+    earlier = tmp_path / "earlier"
+    shutil.copytree(logs, earlier)
+    log = json.loads((earlier / "jolt.json").read_text())
+    log["fetched_at"] = (NOW - timedelta(hours=2)).strftime("%Y-%m-%dT%H:%M:%SZ")
+    (earlier / "jolt.json").write_text(json.dumps(log))
+    _, first = render(earlier, tmp_path / "a")
     later = tmp_path / "later"
     later.mkdir()
-    fetched = datetime.fromisoformat(log["fetched_at"].replace("Z", "+00:00")) + timedelta(hours=1)
-    log |= {"fetched_at": fetched.strftime("%Y-%m-%dT%H:%M:%SZ")}
+    log["fetched_at"] = (NOW - timedelta(hours=1)).strftime("%Y-%m-%dT%H:%M:%SZ")
     log["kept"]["locations"] = 3
     (later / "jolt.json").write_text(json.dumps(log))
     _, second = render(later, tmp_path / "b", tmp_path / "a" / "data" / "status.json")

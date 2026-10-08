@@ -125,7 +125,7 @@ def summary(operators: dict[str, OperatorConfig]) -> str:
             "Enabled operators that need a GitHub Actions secret: " + ", ".join(needs_secret),
         ]
     relayed = [
-        f"{c.id} (variable {c.relay.url_variable}, secret {c.relay.secret_name})"
+        f"{c.id} (secrets {c.relay.url_variable} and {c.relay.secret_name})"
         for c in operators.values()
         if c.enabled and c.relay
     ]

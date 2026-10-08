@@ -54,8 +54,8 @@ relay:
     decided to fetch them through the project's relay on Cloudflare Workers, with the
     project's User-Agent and the same rate limits.
   evidence_url: https://github.com/MCRDavid/OEVM/actions/runs/37853739264
-  url_variable: GENIEPOINT_RELAY_URL
-  secret_name: GENIEPOINT_RELAY_TOKEN
+  url_variable: OEVM_RELAY_URL
+  secret_name: OEVM_RELAY_TOKEN
   path_prefix: /geniepoint
 engagement:
   status: open_anonymous

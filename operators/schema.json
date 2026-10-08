@@ -528,7 +528,7 @@
           "type": "string"
         },
         "url_variable": {
-          "description": "Environment variable (a GitHub Actions variable) holding the relay's https address. When it is not set, requests go direct.",
+          "description": "Environment variable (a GitHub Actions secret, so it is masked in logs) holding the relay's https address. Requests go direct only when neither this nor secret_name is set; one without the other stops the operator's fetch.",
           "pattern": "^[A-Z][A-Z0-9_]*$",
           "title": "Url Variable",
           "type": "string"

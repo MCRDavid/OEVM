@@ -331,13 +331,6 @@ def _rate_table(data: dict) -> str:
             else "Not checked yet"
         )
         notes = f"<br>{_e(rate['notes'])}" if rate["notes"] else ""
-        relay = op["relay"]
-        fetched = "Yes" if op["enabled"] else "No"
-        if op["enabled"] and relay:
-            fetched += (
-                f", through the project's relay since {_e(relay['decided'])}: "
-                f"{_e(relay['reason'])} ({_link(relay['evidence_url'], 'evidence')})"
-            )
         rows.append(
             "<tr>"
             f'<th scope="row">{_e(op["name"])}</th>'
