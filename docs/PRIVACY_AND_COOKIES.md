@@ -91,10 +91,15 @@ and fill in the date.
 > this device". If you do, your filters are saved in your browser's local storage so the
 > map opens the same way next time. They are not sent anywhere. Turn the switch off or
 > press "Forget my settings" at any time to delete them. Your browser may also keep copies
-> of the site's files and map files in its normal cache, as it does for any website.
+> of the site's files and map files in its normal cache, as it does for any website. When
+> the map loads, Cloudflare, which delivers OpenFreeMap's map files, may also ask your
+> browser to keep a small instruction to report failed connections to it (Network Error
+> Logging). The headers checked on 8 October 2026 asked browsers to keep it for up to 7
+> days. This site does not set or control it.
 >
-> **Links you share.** Your current filters can appear in the page address, and the map's
-> position appears after the # sign, so you can bookmark or share them. Anyone you send
+> **Links you share.** When you change a filter, your filters appear in the page address,
+> and the map's position appears after the # sign, so you can bookmark or share them.
+> Filters you saved on this device are not added to the address until you change one. Anyone you send
 > that link to can see those settings and the area you were looking at. The page tells
 > browsers to send only the site's address, not the full page address, with the requests
 > it makes.

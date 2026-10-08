@@ -17,6 +17,7 @@ import shutil
 import subprocess
 import threading
 from http.server import SimpleHTTPRequestHandler, ThreadingHTTPServer
+from urllib.parse import urlsplit
 
 import pytest
 from playwright.sync_api import expect
@@ -193,6 +194,11 @@ def test_settings_are_saved_only_after_opting_in_and_forget_deletes_them(visit):
     open_filters(page)
     assert page.is_checked('input[name="plug"][value="ccs"]')
     assert page.is_checked("#remember")
+    # Saved settings stay out of the address, so a reload never sends them to the host,
+    # until the visitor changes a filter.
+    assert urlsplit(page.url).query == ""
+    page.select_option("#minkw", "22")
+    page.wait_for_url("**?minkw=22&plug=ccs**")
 
     page.click("#forget")
     assert v.stored() == {}
@@ -315,6 +321,15 @@ def test_without_the_map_a_wide_screen_keeps_details_in_view_beside_the_list(vis
     assert 0 <= panel["y"] < 800, "the panel stays on screen"
     items.nth(10).click()
     expect(page.locator("#detail-heading")).not_to_have_text(first)
+    # The footer (disclaimer, links, privacy line) is never hidden behind the panel.
+    page.keyboard.press("End")
+    page.mouse.wheel(0, 5000)
+    page.wait_for_timeout(300)
+    panel = page.locator("#detail").bounding_box()
+    for link in page.locator(".bottom a, .bottom p").all():
+        box = link.bounding_box()
+        if box and box["height"]:
+            assert box["x"] + box["width"] <= panel["x"] + 1, link.text_content()[:40]
 
 
 def test_the_skip_link_closes_open_details_on_a_wide_screen(visit):

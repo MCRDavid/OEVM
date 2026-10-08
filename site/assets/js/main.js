@@ -37,6 +37,7 @@ const app = {
   lastTrigger: null,
   lastKey: null,
   detailRequest: 0,
+  savedOnly: false,
 };
 
 async function loadJson(url) {
@@ -59,8 +60,10 @@ function hasFilterParams() {
   return keys.some((key) => params.has(key));
 }
 
+// Filters loaded from saved settings stay out of the address until the visitor changes
+// one, so a reload or bookmark never sends saved settings to the web host.
 function writeAddress() {
-  const query = serialise(app.state);
+  const query = app.savedOnly ? "" : serialise(app.state);
   const url = `${window.location.pathname}${query ? `?${query}` : ""}${window.location.hash}`;
   window.history.replaceState(null, "", url);
 }
@@ -102,6 +105,7 @@ function formToState() {
 }
 
 function stateChanged() {
+  app.savedOnly = false;
   writeAddress();
   saveIfRemembered();
   applyFilters();
@@ -531,7 +535,10 @@ function wireUp() {
 
 async function start() {
   if (hasFilterParams()) app.state = parse(window.location.search);
-  else if (settings.isRemembered()) app.state = settings.load() ?? defaults();
+  else if (settings.isRemembered()) {
+    app.state = settings.load() ?? defaults();
+    app.savedOnly = true;
+  }
   trackHeaderHeight();
   wireUp();
   setUpSettings();

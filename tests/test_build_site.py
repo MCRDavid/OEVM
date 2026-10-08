@@ -77,6 +77,7 @@ def test_the_footer_tells_visitors_about_the_basemap_and_its_error_reports():
     text = " ".join(INDEX.read_text(encoding="utf-8").split())
     assert "map files for the area on screen from OpenFreeMap" in text
     assert "Network Error Logging" in text
+    assert "ask your browser to keep" in text, "the stored policy is mentioned, not only reports"
 
 
 def test_the_content_security_policy_allows_only_this_site_and_the_basemap(page):

@@ -46,9 +46,12 @@ usable on a mid-range phone, Lighthouse accessibility score of 90 or more.
   send, so MapLibre's tile requests are also checked in the page: `transformRequest`
   lets requests go only to this site and the hosts listed in `config.json` (`origins`),
   and sends anything else to an address on this site that does not exist.
-- **Referrer policy `strict-origin`:** every request, to this site or the tile host,
-  carries only the site's origin, never the page address with its filters (which can
-  come from saved settings).
+- **Referrer policy `strict-origin`:** requests from the page, to this site or the tile
+  host, carry only the site's origin, never the page address with its filters. MapLibre's
+  worker is started from a file, so its tile requests follow the browser's default policy
+  instead, which for a request to another host also sends only the origin. Filters
+  loaded from saved settings are kept out of the address until the visitor changes one,
+  so a reload or bookmark does not send them to the web host either.
 - **Settings.** Filters live in the page address (`?minkw=50&plug=ccs`), written with
   `history.replaceState`, and MapLibre keeps the map position after the `#`. Values that
   are not valid are ignored. Saving to `localStorage` happens only after the visitor
