@@ -1,0 +1,15 @@
+# Wrangler settings for the OEVM relay Worker (relay/worker.js, ADR 0010).
+#
+# Cloudflare's Git integration deploys it from main by running "npx wrangler deploy" in
+# this folder (the root directory set in the Worker's build settings). The name must
+# match the Worker's name in the Cloudflare dashboard. Its token, RELAY_TOKEN, is a Worker
+# secret set in the dashboard; it is never in this file, and deploys keep it.
+name = "oevm-relay"
+main = "worker.js"
+compatibility_date = "2026-10-01"
+workers_dev = true
+# No extra addresses for uploaded versions: only the workers.dev address answers.
+preview_urls = false
+
+[observability]
+enabled = false

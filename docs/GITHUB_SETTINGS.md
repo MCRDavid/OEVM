@@ -167,40 +167,54 @@ decision.
 
 **Make a token first.** Use your password manager's generator to make a random password of
 at least 40 letters and digits, with no spaces. You will paste the same value in two places
-(steps 7 and 9). Do not put it anywhere else, such as an issue, a commit or a chat.
+(steps 8 and 10). Do not put it anywhere else, such as an issue, a commit or a chat.
+
+Cloudflare builds the Worker from this repository's `relay/` folder (its Git integration),
+so each change to `relay/` merged into `main` is deployed without copying code by hand.
 
 1. Sign up for a free Cloudflare account at https://dash.cloudflare.com/sign-up (no card is
    needed for the free Workers plan), and confirm your email address. If Cloudflare asks you
    to choose a workers.dev subdomain, pick a neutral one with no name, place or other
    personal detail in it.
-2. In the Cloudflare dashboard, open **Workers & Pages** from the menu on the left.
-3. Select **Create application** (it may say **Create**). Choose the **Hello World**
-   starter, sometimes shown as **Start with Hello World!**.
-4. Name the Worker `oevm-relay` and select **Deploy**. Cloudflare shows its address,
-   something like `https://oevm-relay.<your-subdomain>.workers.dev`. Copy it.
-5. Select **Edit code**. Delete everything in the editor, paste the whole of
-   `relay/worker.js` from this repository, and select **Deploy**.
-6. Go back to the Worker's page and open **Settings**, then **Variables and Secrets**.
-7. Select **Add**, set **Type** to **Secret**, **Variable name** to `RELAY_TOKEN`, paste the
-   token as the **Value**, and select **Deploy**.
-8. In GitHub, open **Settings > Secrets and variables > Actions**. On the **Secrets** tab,
-   select **New repository secret**: name `OEVM_RELAY_URL`, value the Worker's
-   address from step 4 (starting `https://`, with nothing after `.dev`). It is a secret,
-   not a variable, so GitHub hides it in the public run logs.
-9. Select **New repository secret** again: name `OEVM_RELAY_TOKEN`, value the same
-   token as in step 7.
-10. Open the **Actions** tab, choose **Fetch daily** and select **Run workflow** on `main`.
+2. In the Cloudflare dashboard, open **Workers & Pages**, select **Create application**,
+   then **Get started** next to **Import a repository**.
+3. Connect your GitHub account when asked. On GitHub's page for the **Cloudflare Workers
+   and Pages** app, choose **Only select repositories** and pick only this repository.
+4. Back in Cloudflare, choose this repository and set:
+   - **Project name**: `oevm-relay` (it must match `name` in `relay/wrangler.toml`);
+   - **Git branch** (production branch): `main`;
+   - **Root directory**: `relay`;
+   - **Build command**: leave empty;
+   - **Deploy command**: `npx wrangler deploy` (the default).
+   Then select **Save and Deploy**. Note the address it shows, something like
+   `https://oevm-relay.<your-subdomain>.workers.dev`.
+5. Open the Worker's **Settings > Build**. Under **Branch control**, untick **Enable
+   Preview Builds**, so only `main` is ever deployed. Under **Build watch paths**, set the
+   include paths to `relay/*`, so other changes to the repository do not start a build.
+6. Still in **Settings**, open **Variables and Secrets**.
+7. Select **Add**, set **Type** to **Secret** and **Variable name** to `RELAY_TOKEN`.
+8. Paste the token as the **Value** and select **Deploy**. Until this is set, the Worker
+   refuses every request.
+9. In GitHub, open **Settings > Secrets and variables > Actions**. On the **Secrets** tab,
+   select **New repository secret**: name `OEVM_RELAY_URL`, value the Worker's address
+   from step 4 (starting `https://`, with nothing after `.dev`). It is a secret, not a
+   variable, so GitHub hides it in the public run logs.
+10. Select **New repository secret** again: name `OEVM_RELAY_TOKEN`, value the same token
+    as in step 8.
+11. Open the **Actions** tab, choose **Fetch daily** and select **Run workflow** on `main`.
     The run's log shows whether GeniePoint came through.
 
+Cloudflare's app posts a build result on commits and pull requests that change `relay/`.
 Menu names in Cloudflare's dashboard change from time to time; if a label differs, look
 for the nearest match. To stop using the relay, delete **both** GitHub secrets,
-`OEVM_RELAY_URL` and `OEVM_RELAY_TOKEN`: the daily run then asks GeniePoint
-directly again. Deleting only one stops GeniePoint's fetch with a message saying which is
-missing, on purpose, so a half-finished setup is noticed. If the Worker's code ever changes in the repository,
-paste the new version in step 5 again.
+`OEVM_RELAY_URL` and `OEVM_RELAY_TOKEN`: the daily run then asks GeniePoint directly again.
+Deleting only one stops GeniePoint's fetch with a message saying which is missing, on
+purpose, so a half-finished setup is noticed. To stop Cloudflare deploying from the
+repository, use **Disconnect** in the Worker's build settings.
 
-Sources: https://developers.cloudflare.com/workers/get-started/dashboard/ and
-https://developers.cloudflare.com/workers/configuration/secrets/
+Sources: https://developers.cloudflare.com/workers/ci-cd/builds/ (with its configuration,
+build branches, build watch paths and GitHub integration pages) and
+https://developers.cloudflare.com/workers/configuration/secrets/, read 8 October 2026.
 
 ## Later: security.txt on the website
 
