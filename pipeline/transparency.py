@@ -181,6 +181,15 @@ def operator_view(config: OperatorConfig, run: dict | None) -> dict:
             else None
         ),
         "attribution": config.attribution,
+        "missing_publish_flag": (
+            {
+                "decided": str(config.missing_publish_flag.decided),
+                "basis": config.missing_publish_flag.basis,
+                "evidence_url": config.missing_publish_flag.evidence_url,
+            }
+            if config.missing_publish_flag
+            else None
+        ),
         "rate_limit": rate_limit_view(config),
         "findings": [
             {
@@ -212,6 +221,7 @@ def last_reviewed(operators: dict[str, OperatorConfig]) -> str:
             *(limit.checked for limit in config.rate_limit.limits),
             config.access_requested,
             config.access_granted,
+            config.missing_publish_flag.decided if config.missing_publish_flag else None,
         ]
         dates += [d for d in candidates if isinstance(d, date)]
     return max(dates).isoformat() if dates else "unknown"
@@ -289,6 +299,13 @@ def _sources_table(data: dict) -> str:
             if licence
             else "Not checked yet"
         )
+        decision = op["missing_publish_flag"]
+        no_flag = (
+            f"Shown: {_e(decision['basis'])} (decided {_e(decision['decided'])}, "
+            f"{_link(decision['evidence_url'], 'evidence')})"
+            if decision
+            else "Not shown"
+        )
         evidence = (
             "<br>".join(
                 _link(e["url"], "date not recorded" if e["date"] == "unknown" else e["date"])
@@ -304,6 +321,7 @@ def _sources_table(data: dict) -> str:
             f"<td>{'Yes' if op['enabled'] else 'No'}</td>"
             f"<td>{feeds}</td>"
             f"<td>{licence_text}</td>"
+            f"<td>{no_flag}</td>"
             f"<td>{evidence}</td>"
             "</tr>"
         )
@@ -311,7 +329,8 @@ def _sources_table(data: dict) -> str:
         "<table><caption>Sources and how each one publishes its data</caption>"
         '<thead><tr><th scope="col">Operator</th><th scope="col">How data is published</th>'
         '<th scope="col">Fetched by this project</th><th scope="col">Feeds</th>'
-        '<th scope="col">Licence</th><th scope="col">Evidence</th></tr></thead>'
+        '<th scope="col">Licence</th><th scope="col">Locations with no publish flag</th>'
+        '<th scope="col">Evidence</th></tr></thead>'
         f"<tbody>{''.join(rows)}</tbody></table>"
     )
 
@@ -388,7 +407,7 @@ def _runs_section(data: dict) -> str:
         modules = "<br>".join(
             f"{_e(name)}: {_e(m['records'])} records of "
             f"{_e('unknown' if m['reported'] is None else m['reported'])} "
-            f"reported{'' if m['complete'] else ', stopped early'}"
+            f"reported{'' if m['complete'] else ', incomplete'}"
             for name, m in run["modules"].items()
         )
         if run.get("failed"):
@@ -456,6 +475,10 @@ does not say whether anyone has met their legal duties.</p>
 </header>
 <main>
 <h2>Sources</h2>
+<p>OCPI 2.2.1 says a location whose publish flag is false may not be shown on a website
+or app, so those are never shown. Locations with no flag are not shown either, unless the
+repository owner has recorded a decision for that operator, with the reason and date
+below. A flag set to false is always respected.</p>
 <div class="table-wrap">{_sources_table(data)}</div>
 <h2>Rate limits</h2>
 <p>{_e(data["regulation"]["summary"])}</p>

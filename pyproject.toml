@@ -28,10 +28,19 @@ testpaths = ["tests"]
 pythonpath = ["."]
 addopts = "-ra --strict-markers"
 
+[tool.coverage.run]
+source = ["adapters", "pipeline", "schema"]
+
+[tool.coverage.report]
+# CI fails if test coverage drops below this. Raise it as coverage improves; never lower
+# it to get a change through.
+fail_under = 93
+
 [dependency-groups]
 dev = [
     "jsonschema>=4.26.0",
     "pre-commit>=4.6.2",
     "pytest>=9.1.1",
+    "pytest-cov>=7",
     "ruff>=0.16.10",
 ]

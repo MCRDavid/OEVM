@@ -48,7 +48,8 @@ decisions are in docs/adr/.
 - Apache-2.0 covers our code only. Never apply it, or any other licence, to data. Data keeps its source's licence.
 - Every record keeps its provenance. Every source gets attribution and a row in DATA_LICENCES.md.
 - Never use operator logos or suggest any operator or public body endorses the project.
-- Never keep locations whose OCPI publish flag is false or missing.
+- Never keep locations whose OCPI publish flag is false. Keep ones with no flag only when the
+  operator file records the owner's decision in missing_publish_flag; never add one yourself.
 - Switch an operator on only after reading its own terms and filling in its licence section.
 
 ## The site (docs/PRIVACY_AND_COOKIES.md)

@@ -5,7 +5,10 @@ Records that cannot be used are skipped and logged, as OCPI 2.2.1 section 4.1.4.
 advises, so one bad record never hides the rest of a feed.
 
 Locations with publish set to false are never kept: OCPI 2.2.1 says such a location may
-not be published on a website or app. Locations without a publish flag are skipped too.
+not be published on a website or app. Locations without a publish flag are skipped too,
+unless the operator file records the owner's decision to show them (see
+normalise.publish_allowed). Other adapters reuse `convert_records`, so the same rules
+apply to every feed.
 """
 
 from dataclasses import dataclass, field
@@ -15,7 +18,12 @@ from pydantic import ValidationError
 
 from adapters.http import FeedError, PoliteClient
 from adapters.ocpi_221.client import ModuleFetch, fetch_module
-from adapters.ocpi_221.normalise import IssueLog, location_from_ocpi, tariff_from_ocpi
+from adapters.ocpi_221.normalise import (
+    IssueLog,
+    location_from_ocpi,
+    publish_allowed,
+    tariff_from_ocpi,
+)
 from schema.models import Location, Tariff
 from schema.operator import OperatorConfig
 
@@ -89,38 +97,54 @@ def fetch(
         )
         for module in MODULES
     }
-    issues = IssueLog()
     result = AdapterResult(operator_id=config.id, fetched_at=fetched_at, modules=modules)
+    issues = IssueLog()
+    convert_records(
+        config,
+        result,
+        locations=modules["locations"].records,
+        tariffs=modules["tariffs"].records,
+        issues=issues,
+    )
+    result.issues = [client.redact(line) for line in issues.lines()]
+    return result
 
-    source = modules["locations"].endpoint
-    for raw in _latest_by_id(modules["locations"].records, "location", issues):
-        publish = raw.get("publish")
-        if publish is not True:
-            issues.add(
-                "location not kept: publish is false"
-                if publish is False
-                else "location not kept: publish flag missing"
-            )
+
+def convert_records(
+    config: OperatorConfig,
+    result: AdapterResult,
+    *,
+    locations: list[dict],
+    tariffs: list[dict],
+    issues: IssueLog,
+    tariff_sources: dict[str, str] | None = None,
+) -> None:
+    """Convert OCPI 2.2.1 location and tariff objects into result, logging any problems.
+
+    tariff_sources maps a tariff id to the URL it was fetched from, for feeds that serve
+    one tariff per request; otherwise each record's source is its module's endpoint.
+    """
+    source = result.modules["locations"].endpoint
+    for raw in _latest_by_id(locations, "location", issues):
+        if not publish_allowed(raw, config, issues):
             continue
         try:
             result.locations.append(
                 location_from_ocpi(
-                    raw, config, source_url=source, fetched_at=fetched_at, issues=issues
+                    raw, config, source_url=source, fetched_at=result.fetched_at, issues=issues
                 )
             )
-        except (KeyError, TypeError, ValueError) as exc:
+        except (AttributeError, KeyError, TypeError, ValueError) as exc:
             issues.add(f"location {raw.get('id')!r} skipped: {_describe(exc)}")
 
-    source = modules["tariffs"].endpoint
-    for raw in _latest_by_id(modules["tariffs"].records, "tariff", issues):
+    endpoint = result.modules["tariffs"].endpoint
+    for raw in _latest_by_id(tariffs, "tariff", issues):
+        source = (tariff_sources or {}).get(str(raw.get("id")), endpoint)
         try:
             result.tariffs.append(
                 tariff_from_ocpi(
-                    raw, config, source_url=source, fetched_at=fetched_at, issues=issues
+                    raw, config, source_url=source, fetched_at=result.fetched_at, issues=issues
                 )
             )
-        except (KeyError, TypeError, ValueError) as exc:
+        except (AttributeError, KeyError, TypeError, ValueError) as exc:
             issues.add(f"tariff {raw.get('id')!r} skipped: {_describe(exc)}")
-
-    result.issues = [client.redact(line) for line in issues.lines()]
-    return result

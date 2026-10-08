@@ -30,3 +30,13 @@ repos:
         # "\u2014" is the em dash character, written as an escape so this file passes.
         entry: "\u2014"
         types: [text]
+
+      - id: british-spelling
+        name: British spelling in documents and operator files (project style rule)
+        language: pygrep
+        # Common American spellings. Code is not checked, because names such as the HTTP
+        # Authorization header and CSS color must keep their spelling.
+        entry: '\b(colors?|behaviors?|favorites?|organiz\w*|analyz\w*|catalogs?|centers?|defense|honor\w*|labor|neighbor\w*|optimiz\w*|recogniz\w*|summariz\w*|prioritiz\w*|minimiz\w*|apologiz\w*|utiliz\w*|customiz\w*|authoriz(?!ation\b)\w*)\b'
+        args: [--ignore-case]
+        files: '\.(md|ya?ml)$'
+        exclude: '^(tests/fixtures/|uv\.lock$|\.pre-commit-config\.yaml$)'

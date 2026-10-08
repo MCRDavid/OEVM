@@ -15,7 +15,7 @@ The full plan is in [docs/BLUEPRINT.md](docs/BLUEPRINT.md).
 
 ## Status
 
-Early days. Blueprint tasks 1 to 4 are done:
+Early days. Blueprint tasks 1 to 5 are done:
 
 1. **Scaffold:** uv, ruff, pytest, pre-commit secret scanning and a CI workflow.
 2. **Schema:** Pydantic models for Location, EVSE, Connector, Tariff and Provenance,
@@ -24,6 +24,10 @@ Early days. Blueprint tasks 1 to 4 are done:
    a validator.
 4. **OCPI 2.2.1 adapter:** fetches an operator's locations and tariffs politely, page by
    page, and converts them to the schema. char.gy is the first operator switched on.
+5. **Jolt adapter:** reads Jolt's own API format, which differs from OCPI 2.2.1 in ways
+   recorded on the transparency page, and converts it the same way. GeniePoint's files
+   turned out to be standard OCPI 2.2.1, so the OCPI adapter reads them; GeniePoint is
+   switched off until its website's terms of use have been read.
 
 Also in place:
 
@@ -88,7 +92,7 @@ feeds. Use `--live` sparingly. It only works for operators switched on in the re
 
 ```
 operators/            one YAML file per operator, _template.yaml and schema.json
-adapters/             code that reads operator feeds (ocpi_221 so far)
+adapters/             code that reads operator feeds (ocpi_221, jolt)
 pipeline/registry.py  loads and validates the registry
 pipeline/run.py       runs adapters on recorded or live data
 pipeline/pricing.py   how prices are shown (pounds and pence only)

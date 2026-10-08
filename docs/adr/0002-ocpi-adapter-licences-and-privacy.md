@@ -15,7 +15,8 @@ Date: 2026-10-07. Status: accepted.
   moment of sending, so saved URLs and error messages never contain them.
 - Records that cannot be used are skipped and logged, as section 4.1.4.1 advises.
   Duplicates keep the last copy.
-- Locations with `publish` false or missing are never kept (section 8.3.1).
+- Locations with `publish` false or missing are never kept (section 8.3.1). Amended by ADR
+  0004: the owner can record a decision to show locations with no flag.
 - A value that is not valid OCPI becomes "unknown" with a logged issue. On 7 October 2026
   char.gy used the EVSE statuses `WORKING` and `FAULTED`. Regulation 10(6)(a) defines
   "working" as an OCPI status of available, charging or reserved, so `WORKING` cannot be

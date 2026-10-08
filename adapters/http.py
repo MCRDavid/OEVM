@@ -71,14 +71,18 @@ def with_params(url: str, params: dict[str, str]) -> str:
     return urlunsplit(parts._replace(query=urlencode(query, safe=":")))
 
 
-def secret_value(config: OperatorConfig) -> str | None:
-    """The operator's key from the environment, or None if the feed needs no key."""
+def secret_value(config: OperatorConfig, key: str | None = None) -> str | None:
+    """The operator's key, or None if the feed needs no key.
+
+    The key comes from the environment variable named by auth.secret_name, unless `key` is
+    given. Only fixture replays and tests pass `key`, with a made-up value.
+    """
     auth = config.auth
     if auth.method == "none":
         return None
     if auth.method == "unknown" or auth.name in (None, "unknown") or not auth.secret_name:
         raise FeedError(f"{config.id}: auth details are not known yet")
-    value = os.environ.get(auth.secret_name)
+    value = key or os.environ.get(auth.secret_name)
     if not value:
         raise FeedError(
             f"{config.id}: the environment variable {auth.secret_name} is not set. "
@@ -87,9 +91,11 @@ def secret_value(config: OperatorConfig) -> str | None:
     return value
 
 
-def credentials_for(config: OperatorConfig) -> tuple[dict[str, str], dict[str, str]]:
+def credentials_for(
+    config: OperatorConfig, key: str | None = None
+) -> tuple[dict[str, str], dict[str, str]]:
     """Headers and query parameters that carry the operator's key."""
-    value = secret_value(config)
+    value = secret_value(config, key)
     if value is None:
         return {}, {}
     auth = config.auth
@@ -199,9 +205,10 @@ class PoliteClient:
         max_retries: int = 3,
         backoff_seconds: float = 5.0,
         timeout_seconds: float = 60.0,
+        key: str | None = None,
     ):
-        headers, self._auth_params = credentials_for(config)
-        secret = secret_value(config)
+        headers, self._auth_params = credentials_for(config, key)
+        secret = secret_value(config, key)
         self._secrets = (secret,) if secret else ()
         self._client = httpx.Client(
             headers={"User-Agent": USER_AGENT, "Accept": "application/json", **headers},

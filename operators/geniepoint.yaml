@@ -1,31 +1,103 @@
 # yaml-language-server: $schema=schema.json
 id: geniepoint
 display_name: GeniePoint
-ocpi_country_code: unknown
-ocpi_party_id: unknown
-adapter: static_file
+ocpi_country_code: GB
+ocpi_party_id: GPT # Confirmed from the feed's own country_code and party_id on 2026-10-08.
+adapter: ocpi_221
 base_url: unknown
-endpoints: {}
+endpoints:
+  locations:
+    url: https://opendata.geniepoint.co.uk/locations
+    status: documented
+    note: Linked as "Locations data" from GeniePoint's open data page (read 2026-10-08).
+  tariffs:
+    url: https://opendata.geniepoint.co.uk/tariffs
+    status: documented
+    note: Linked as "Tariffs data" from GeniePoint's open data page (read 2026-10-08).
 auth:
-  method: unknown
+  method: none
   name: null
   secret_name: null
 rate_limit:
   min_seconds_between_requests: 2
   limits: []
-  limits_checked: unknown
-  notes: null
-supports_single_location: unknown
-cors: needs_testing
-attribution: null
+  limits_checked: 2026-10-08
+  notes: >-
+    GeniePoint's open data page states no rate limit. The 2 second gap is this project's
+    own choice. Each file holds every record, so a full run makes two requests (about 1.6
+    MB on 2026-10-08).
+supports_single_location: needs_testing
+cors: not_supported # no access-control-allow-origin header on 2026-10-08
+attribution: >-
+  Contains data from GeniePoint published under the Public Charge Point Regulations 2023,
+  used in line with the Open Government Licence v3.0.
+licence:
+  name: OGL-3.0
+  url: https://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/
+  basis: >-
+    GeniePoint's open data page says the data "must be publicly available in line with
+    the Public Charge Point Regulations 2023", and DfT's guidance says "Data must be open
+    in line with the Open Government Licence". The open data page, read in a browser on
+    2026-10-08, states no licence or terms for the data. The Equans website's general
+    terms of use, linked from the page footer, have not been read yet.
+  checked: 2026-10-08
 engagement:
-  status: unknown
-  evidence: []
+  status: open_anonymous
+  evidence:
+    - date: 2026-10-08
+      url: https://www.equans.co.uk/drivers-geniepoint/open-data
+      note: >-
+        Read in a browser by the repository owner. Links "Locations data" and "Tariffs
+        data" as .json files and states no licence, terms or rate limit.
 access_requested: null
 access_granted: null
-sources: []
+sources:
+  - url: https://www.equans.co.uk/drivers-geniepoint/open-data
+    note: >-
+      GeniePoint's open data page, read in a browser on 2026-10-08. Gives the two download
+      links. It returns a browser check (HTTP 403) to automated requests.
+findings:
+  - date: 2026-10-08
+    kind: access
+    summary: >-
+      The open data page returns a browser check (HTTP 403) to automated requests. The
+      download links, on opendata.geniepoint.co.uk, answer automated requests normally.
+    handling: >-
+      The page was read in a browser by the repository owner and its links recorded here.
+      The files are fetched directly.
+    evidence_url: https://www.equans.co.uk/drivers-geniepoint/open-data
+  - date: 2026-10-08
+    kind: spec_conformance
+    summary: >-
+      Each file holds every record in one response (306 locations and 530 tariffs on
+      2026-10-08), matching X-Total-Count, but sends X-Limit 0. OCPI 2.2.1 describes
+      X-Limit as the maximum number of objects the server can return.
+    handling: The adapter reads each file in one request and checks the count against X-Total-Count.
+    evidence_url: https://opendata.geniepoint.co.uk/tariffs
+  - date: 2026-10-08
+    kind: data_quality
+    summary: >-
+      The tariffs file repeats 22 tariffs 8 times each (530 records, 376 distinct ids on
+      2026-10-08). The copies are identical and no location refers to them.
+    handling: One copy of each is kept and the repeats are logged.
+    evidence_url: https://opendata.geniepoint.co.uk/tariffs
+  - date: 2026-10-08
+    kind: data_quality
+    summary: >-
+      Tariff descriptions (tariff_alt_text) are internal names, such as Tariff_Fast or
+      Tariff_Rapid followed by an id.
+    handling: Kept as published. Prices are described from the price components, not this text.
+    evidence_url: https://opendata.geniepoint.co.uk/tariffs
+  - date: 2026-10-08
+    kind: access
+    summary: >-
+      The files send no Access-Control-Allow-Origin header, so web browsers cannot read
+      them directly.
+    handling: The map will use data fetched by the pipeline, not requests from visitors' browsers.
+    evidence_url: https://opendata.geniepoint.co.uk/locations
 notes: >-
-  The blueprint lists GeniePoint as one of the three open feeds for Phase 1, published as
-  downloads for the static_file adapter, but gives no download URL or dated evidence.
-  Find and record the download page, its column layout and access terms before enabling.
+  The blueprint expected downloads for the static_file adapter. The files turned out to be
+  OCPI 2.2.1 responses, so the ocpi_221 adapter reads them. Switched off until the Equans
+  website's terms of use, linked from the open data page, have been read; the site blocks
+  automated requests, so they need reading in a browser.
 enabled: false

@@ -1,0 +1,1230 @@
+{
+  "request": {
+    "method": "GET",
+    "url": "https://opendata.geniepoint.co.uk/locations"
+  },
+  "response": {
+    "status_code": 200,
+    "headers": {
+      "content-type": "application/json; charset=utf-8",
+      "x-total-count": "5",
+      "x-limit": "0"
+    },
+    "body": {
+      "data": [
+        {
+          "country_code": "GB",
+          "party_id": "GPT",
+          "id": "e4ccc591-1b08-4b11-8b54-af1e010bae61",
+          "publish": true,
+          "publish_allowed_to": null,
+          "name": "Premier Inn Alnwick",
+          "address": "Premier Inn Alnwick",
+          "city": "Alnwick",
+          "postal_code": "NE66 2PF",
+          "state": null,
+          "country": "GBR",
+          "coordinates": {
+            "latitude": "55.402470",
+            "longitude": "-1.689292"
+          },
+          "related_locations": null,
+          "parking_type": "PARKING_LOT",
+          "evses": [
+            {
+              "uid": "cadc4ad8-7591-430a-8b6d-af1e00f4a202",
+              "evse_id": "GB*GPT*ELXCND20BZRJEDFCUZV36HMS8",
+              "status": "OUTOFORDER",
+              "status_schedule": null,
+              "capabilities": [
+                "REMOTE_START_STOP_CAPABLE",
+                "RFID_READER",
+                "UNLOCK_CAPABLE"
+              ],
+              "connectors": [
+                {
+                  "id": "1",
+                  "standard": "IEC_62196_T2",
+                  "format": "SOCKET",
+                  "power_type": "AC_1_PHASE",
+                  "max_voltage": 240,
+                  "max_amperage": 29,
+                  "max_electric_power": 7000,
+                  "tariff_ids": [
+                    "cd19e1ec-7e7e-4521-9af5-af1e00f46e02"
+                  ],
+                  "terms_and_conditions": null,
+                  "last_updated": "2026-03-24T17:05:02Z"
+                }
+              ],
+              "floor_level": null,
+              "coordinates": {
+                "latitude": "55.402470",
+                "longitude": "-1.689213"
+              },
+              "physical_reference": "GP13700",
+              "directions": [
+                {
+                  "language": "en",
+                  "text": "Located in Hotel Car Park"
+                }
+              ],
+              "parking_restrictions": [
+                "PLUGGED",
+                "CUSTOMERS"
+              ],
+              "images": null,
+              "last_updated": "2026-03-24T17:05:02Z"
+            },
+            {
+              "uid": "4c122cb9-3f9b-480a-9d2a-af1e00f4a202",
+              "evse_id": "GB*GPT*ELXCND20BWCZ0SYR7R2FBRWZ7",
+              "status": "OUTOFORDER",
+              "status_schedule": null,
+              "capabilities": [
+                "REMOTE_START_STOP_CAPABLE",
+                "RFID_READER",
+                "UNLOCK_CAPABLE"
+              ],
+              "connectors": [
+                {
+                  "id": "2",
+                  "standard": "IEC_62196_T2",
+                  "format": "SOCKET",
+                  "power_type": "AC_1_PHASE",
+                  "max_voltage": 240,
+                  "max_amperage": 29,
+                  "max_electric_power": 7000,
+                  "tariff_ids": [
+                    "cd19e1ec-7e7e-4521-9af5-af1e00f46e02"
+                  ],
+                  "terms_and_conditions": null,
+                  "last_updated": "2026-03-24T17:05:02Z"
+                }
+              ],
+              "floor_level": null,
+              "coordinates": {
+                "latitude": "55.402470",
+                "longitude": "-1.689213"
+              },
+              "physical_reference": "GP13700",
+              "directions": [
+                {
+                  "language": "en",
+                  "text": "Located in Hotel Car Park"
+                }
+              ],
+              "parking_restrictions": [
+                "PLUGGED",
+                "CUSTOMERS"
+              ],
+              "images": null,
+              "last_updated": "2026-03-24T17:05:02Z"
+            },
+            {
+              "uid": "059ca631-7bc5-450a-b864-af1e010c16cb",
+              "evse_id": "GB*GPT*E1DDMB7R90DFHRHB2R5C075N9TP",
+              "status": "AVAILABLE",
+              "status_schedule": null,
+              "capabilities": [
+                "REMOTE_START_STOP_CAPABLE",
+                "RFID_READER",
+                "UNLOCK_CAPABLE"
+              ],
+              "connectors": [
+                {
+                  "id": "1",
+                  "standard": "CHADEMO",
+                  "format": "CABLE",
+                  "power_type": "DC",
+                  "max_voltage": 400,
+                  "max_amperage": 125,
+                  "max_electric_power": 50000,
+                  "tariff_ids": [
+                    "fdca1466-c9d2-4621-b220-b4a8017b92a2"
+                  ],
+                  "terms_and_conditions": null,
+                  "last_updated": "2026-10-08T03:08:10Z"
+                }
+              ],
+              "floor_level": null,
+              "coordinates": {
+                "latitude": "55.402470",
+                "longitude": "-1.689213"
+              },
+              "physical_reference": "GP14513",
+              "directions": [
+                {
+                  "language": "en",
+                  "text": "Located in Hotel Car Park"
+                }
+              ],
+              "parking_restrictions": [
+                "PLUGGED",
+                "CUSTOMERS"
+              ],
+              "images": null,
+              "last_updated": "2026-10-08T03:08:10Z"
+            },
+            {
+              "uid": "626421e4-8f90-440a-99cb-af1e010c16cb",
+              "evse_id": "GB*GPT*E1DDMB7R90DLPV74DJWBHBW9MY8",
+              "status": "AVAILABLE",
+              "status_schedule": null,
+              "capabilities": [
+                "REMOTE_START_STOP_CAPABLE",
+                "RFID_READER",
+                "UNLOCK_CAPABLE"
+              ],
+              "connectors": [
+                {
+                  "id": "2",
+                  "standard": "IEC_62196_T2_COMBO",
+                  "format": "CABLE",
+                  "power_type": "DC",
+                  "max_voltage": 400,
+                  "max_amperage": 125,
+                  "max_electric_power": 50000,
+                  "tariff_ids": [
+                    "fdca1466-c9d2-4621-b220-b4a8017b92a2"
+                  ],
+                  "terms_and_conditions": null,
+                  "last_updated": "2026-10-08T03:08:10Z"
+                }
+              ],
+              "floor_level": null,
+              "coordinates": {
+                "latitude": "55.402470",
+                "longitude": "-1.689213"
+              },
+              "physical_reference": "GP14513",
+              "directions": [
+                {
+                  "language": "en",
+                  "text": "Located in Hotel Car Park"
+                }
+              ],
+              "parking_restrictions": [
+                "PLUGGED",
+                "CUSTOMERS"
+              ],
+              "images": null,
+              "last_updated": "2026-10-08T03:08:10Z"
+            },
+            {
+              "uid": "2c9de344-4b55-420a-adfe-af1e010c16cb",
+              "evse_id": "GB*GPT*E1DDMB7R90DP9A0Z1K1LK15DHJ4",
+              "status": "AVAILABLE",
+              "status_schedule": null,
+              "capabilities": [
+                "REMOTE_START_STOP_CAPABLE",
+                "RFID_READER",
+                "UNLOCK_CAPABLE"
+              ],
+              "connectors": [
+                {
+                  "id": "3",
+                  "standard": "IEC_62196_T2",
+                  "format": "SOCKET",
+                  "power_type": "AC_3_PHASE",
+                  "max_voltage": 240,
+                  "max_amperage": 31,
+                  "max_electric_power": 22000,
+                  "tariff_ids": [
+                    "5a6b22ed-389a-4921-9b7b-b4a8017b92a2"
+                  ],
+                  "terms_and_conditions": null,
+                  "last_updated": "2026-10-08T03:08:10Z"
+                }
+              ],
+              "floor_level": null,
+              "coordinates": {
+                "latitude": "55.402470",
+                "longitude": "-1.689213"
+              },
+              "physical_reference": "GP14513",
+              "directions": [
+                {
+                  "language": "en",
+                  "text": "Located in Hotel Car Park"
+                }
+              ],
+              "parking_restrictions": [
+                "PLUGGED",
+                "CUSTOMERS"
+              ],
+              "images": null,
+              "last_updated": "2026-10-08T03:08:10Z"
+            }
+          ],
+          "directions": [
+            {
+              "language": "en",
+              "text": "Located in Hotel Car Park"
+            }
+          ],
+          "operator": null,
+          "suboperator": null,
+          "owner": {
+            "name": "GeniePoint",
+            "website": "https://drivers.geniepoint.co.uk/",
+            "logo": {
+              "url": "https://geniepoint.co.uk/ds/Content/images/equans-geniepoint-logo.svg",
+              "thumbnail": null,
+              "category": "NETWORK",
+              "type": "svg",
+              "width": 0,
+              "height": 0
+            }
+          },
+          "facilities": [
+            "HOTEL"
+          ],
+          "time_zone": "Europe/London",
+          "opening_times": {
+            "twentyfourseven": true,
+            "regular_hours": [],
+            "exceptional_openings": [],
+            "exceptional_closings": []
+          },
+          "charging_when_closed": false,
+          "images": null,
+          "energy_mix": null,
+          "last_updated": "2024-10-28T16:48:15Z"
+        },
+        {
+          "country_code": "GB",
+          "party_id": "GPT",
+          "id": "3a4607aa-b1f4-4111-a91e-b012009e0a82",
+          "publish": true,
+          "publish_allowed_to": null,
+          "name": "Premier Inn Dumbarton/ Loch Lomond",
+          "address": "Premier Inn",
+          "city": "Dumbarton",
+          "postal_code": "G82 2QU",
+          "state": null,
+          "country": "GBR",
+          "coordinates": {
+            "latitude": "55.957027",
+            "longitude": "-4.560159"
+          },
+          "related_locations": null,
+          "parking_type": "PARKING_LOT",
+          "evses": [
+            {
+              "uid": "4220ceb2-6c13-4d0a-9526-b012009e0abb",
+              "evse_id": "GB*GPT*E19NA97UG4LKTK5LWD9MGCLTMH4",
+              "status": "INOPERATIVE",
+              "status_schedule": null,
+              "capabilities": [
+                "REMOTE_START_STOP_CAPABLE",
+                "RFID_READER",
+                "UNLOCK_CAPABLE",
+                "CREDIT_CARD_PAYABLE"
+              ],
+              "connectors": [
+                {
+                  "id": "1",
+                  "standard": "IEC_62196_T2_COMBO",
+                  "format": "CABLE",
+                  "power_type": "DC",
+                  "max_voltage": 400,
+                  "max_amperage": 150,
+                  "max_electric_power": 60000,
+                  "tariff_ids": [
+                    "6687b56e-782f-4f21-927d-b4a8017b92a2",
+                    "fdca1466-c9d2-4621-b220-b4a8017b92a2"
+                  ],
+                  "terms_and_conditions": null,
+                  "last_updated": "2026-10-08T06:57:30Z"
+                }
+              ],
+              "floor_level": null,
+              "coordinates": {
+                "latitude": "55.957027",
+                "longitude": "-4.560159"
+              },
+              "physical_reference": "GP14587",
+              "directions": [
+                {
+                  "language": "en",
+                  "text": "Located in Hotel Car Park"
+                }
+              ],
+              "parking_restrictions": [
+                "PLUGGED",
+                "CUSTOMERS"
+              ],
+              "images": null,
+              "last_updated": "2026-10-08T06:57:30Z"
+            },
+            {
+              "uid": "106bac0f-b6d9-470a-b5b8-b012009e0abb",
+              "evse_id": "GB*GPT*E19NA97UG4LT5PURWPL149E8QVM",
+              "status": "INOPERATIVE",
+              "status_schedule": null,
+              "capabilities": [
+                "REMOTE_START_STOP_CAPABLE",
+                "RFID_READER",
+                "UNLOCK_CAPABLE",
+                "CREDIT_CARD_PAYABLE"
+              ],
+              "connectors": [
+                {
+                  "id": "2",
+                  "standard": "CHADEMO",
+                  "format": "CABLE",
+                  "power_type": "DC",
+                  "max_voltage": 400,
+                  "max_amperage": 150,
+                  "max_electric_power": 60000,
+                  "tariff_ids": [
+                    "6687b56e-782f-4f21-927d-b4a8017b92a2",
+                    "fdca1466-c9d2-4621-b220-b4a8017b92a2"
+                  ],
+                  "terms_and_conditions": null,
+                  "last_updated": "2026-10-08T06:57:13Z"
+                }
+              ],
+              "floor_level": null,
+              "coordinates": {
+                "latitude": "55.957027",
+                "longitude": "-4.560159"
+              },
+              "physical_reference": "GP14587",
+              "directions": [
+                {
+                  "language": "en",
+                  "text": "Located in Hotel Car Park"
+                }
+              ],
+              "parking_restrictions": [
+                "PLUGGED",
+                "CUSTOMERS"
+              ],
+              "images": null,
+              "last_updated": "2026-10-08T06:57:13Z"
+            },
+            {
+              "uid": "b5b9cd26-fd08-490a-9010-b012009e0abb",
+              "evse_id": "GB*GPT*E19NA97UG4LJPVL5K6APK8LXWCW",
+              "status": "INOPERATIVE",
+              "status_schedule": null,
+              "capabilities": [
+                "REMOTE_START_STOP_CAPABLE",
+                "RFID_READER",
+                "UNLOCK_CAPABLE",
+                "CREDIT_CARD_PAYABLE"
+              ],
+              "connectors": [
+                {
+                  "id": "3",
+                  "standard": "IEC_62196_T2",
+                  "format": "CABLE",
+                  "power_type": "AC_3_PHASE",
+                  "max_voltage": 240,
+                  "max_amperage": 31,
+                  "max_electric_power": 22000,
+                  "tariff_ids": [
+                    "2a9aa482-87a1-4321-8725-b4a8017b92a2",
+                    "5a6b22ed-389a-4921-9b7b-b4a8017b92a2"
+                  ],
+                  "terms_and_conditions": null,
+                  "last_updated": "2026-10-08T06:57:38Z"
+                }
+              ],
+              "floor_level": null,
+              "coordinates": {
+                "latitude": "55.957027",
+                "longitude": "-4.560159"
+              },
+              "physical_reference": "GP14587",
+              "directions": [
+                {
+                  "language": "en",
+                  "text": "Located in Hotel Car Park"
+                }
+              ],
+              "parking_restrictions": [
+                "PLUGGED",
+                "CUSTOMERS"
+              ],
+              "images": null,
+              "last_updated": "2026-10-08T06:57:38Z"
+            },
+            {
+              "uid": "8b05dfaf-e54c-460a-ab30-b012009e0362",
+              "evse_id": "GB*GPT*ENVTHESHGL8TKNDJXKH2BHEJK1",
+              "status": "OUTOFORDER",
+              "status_schedule": null,
+              "capabilities": [
+                "REMOTE_START_STOP_CAPABLE",
+                "RFID_READER",
+                "UNLOCK_CAPABLE",
+                "CREDIT_CARD_PAYABLE"
+              ],
+              "connectors": [
+                {
+                  "id": "1",
+                  "standard": "IEC_62196_T2_COMBO",
+                  "format": "CABLE",
+                  "power_type": "DC",
+                  "max_voltage": 400,
+                  "max_amperage": 150,
+                  "max_electric_power": 60000,
+                  "tariff_ids": [
+                    "6687b56e-782f-4f21-927d-b4a8017b92a2",
+                    "fdca1466-c9d2-4621-b220-b4a8017b92a2"
+                  ],
+                  "terms_and_conditions": null,
+                  "last_updated": "2026-10-08T06:16:30Z"
+                }
+              ],
+              "floor_level": null,
+              "coordinates": {
+                "latitude": "55.957027",
+                "longitude": "-4.560078"
+              },
+              "physical_reference": "GP14586",
+              "directions": [
+                {
+                  "language": "en",
+                  "text": "Located in Hotel Car Park"
+                }
+              ],
+              "parking_restrictions": [
+                "PLUGGED",
+                "CUSTOMERS"
+              ],
+              "images": null,
+              "last_updated": "2026-10-08T06:16:30Z"
+            },
+            {
+              "uid": "50715074-d821-4a0a-b08e-b012009e0362",
+              "evse_id": "GB*GPT*ENVTHESHGLDJHQZJLUE8X86XVE",
+              "status": "AVAILABLE",
+              "status_schedule": null,
+              "capabilities": [
+                "REMOTE_START_STOP_CAPABLE",
+                "RFID_READER",
+                "UNLOCK_CAPABLE",
+                "CREDIT_CARD_PAYABLE"
+              ],
+              "connectors": [
+                {
+                  "id": "2",
+                  "standard": "CHADEMO",
+                  "format": "CABLE",
+                  "power_type": "DC",
+                  "max_voltage": 400,
+                  "max_amperage": 150,
+                  "max_electric_power": 60000,
+                  "tariff_ids": [
+                    "6687b56e-782f-4f21-927d-b4a8017b92a2",
+                    "fdca1466-c9d2-4621-b220-b4a8017b92a2"
+                  ],
+                  "terms_and_conditions": null,
+                  "last_updated": "2026-10-07T21:22:15Z"
+                }
+              ],
+              "floor_level": null,
+              "coordinates": {
+                "latitude": "55.957027",
+                "longitude": "-4.560078"
+              },
+              "physical_reference": "GP14586",
+              "directions": [
+                {
+                  "language": "en",
+                  "text": "Located in Hotel Car Park"
+                }
+              ],
+              "parking_restrictions": [
+                "PLUGGED",
+                "CUSTOMERS"
+              ],
+              "images": null,
+              "last_updated": "2026-10-07T21:22:15Z"
+            },
+            {
+              "uid": "3a5d5b59-87a3-400a-90b5-b012009e0362",
+              "evse_id": "GB*GPT*ENVTHESHGLFH2AF3SVU976DB9K",
+              "status": "AVAILABLE",
+              "status_schedule": null,
+              "capabilities": [
+                "REMOTE_START_STOP_CAPABLE",
+                "RFID_READER",
+                "UNLOCK_CAPABLE",
+                "CREDIT_CARD_PAYABLE"
+              ],
+              "connectors": [
+                {
+                  "id": "3",
+                  "standard": "IEC_62196_T2",
+                  "format": "CABLE",
+                  "power_type": "AC_3_PHASE",
+                  "max_voltage": 240,
+                  "max_amperage": 31,
+                  "max_electric_power": 22000,
+                  "tariff_ids": [
+                    "2a9aa482-87a1-4321-8725-b4a8017b92a2",
+                    "5a6b22ed-389a-4921-9b7b-b4a8017b92a2"
+                  ],
+                  "terms_and_conditions": null,
+                  "last_updated": "2026-10-08T06:16:16Z"
+                }
+              ],
+              "floor_level": null,
+              "coordinates": {
+                "latitude": "55.957027",
+                "longitude": "-4.560078"
+              },
+              "physical_reference": "GP14586",
+              "directions": [
+                {
+                  "language": "en",
+                  "text": "Located in Hotel Car Park"
+                }
+              ],
+              "parking_restrictions": [
+                "PLUGGED",
+                "CUSTOMERS"
+              ],
+              "images": null,
+              "last_updated": "2026-10-08T06:16:16Z"
+            }
+          ],
+          "directions": [
+            {
+              "language": "en",
+              "text": "Located in Hotel Car Park"
+            }
+          ],
+          "operator": null,
+          "suboperator": null,
+          "owner": {
+            "name": "GeniePoint",
+            "website": "https://drivers.geniepoint.co.uk/",
+            "logo": {
+              "url": "https://geniepoint.co.uk/ds/Content/images/equans-geniepoint-logo.svg",
+              "thumbnail": null,
+              "category": "NETWORK",
+              "type": "svg",
+              "width": 0,
+              "height": 0
+            }
+          },
+          "facilities": [
+            "HOTEL"
+          ],
+          "time_zone": "Europe/London",
+          "opening_times": {
+            "twentyfourseven": true,
+            "regular_hours": [],
+            "exceptional_openings": [],
+            "exceptional_closings": []
+          },
+          "charging_when_closed": false,
+          "images": null,
+          "energy_mix": null,
+          "last_updated": "2024-10-29T09:39:16Z"
+        },
+        {
+          "country_code": "GB",
+          "party_id": "GPT",
+          "id": "6f381f6d-992a-4b11-b80d-b12a00afae04",
+          "publish": true,
+          "publish_allowed_to": null,
+          "name": "Burley Road Car Park (B)",
+          "address": "Burley Road",
+          "city": "Leeds",
+          "postal_code": "LS3 1JP",
+          "state": null,
+          "country": "GBR",
+          "coordinates": {
+            "latitude": "53.802170",
+            "longitude": "-1.565562"
+          },
+          "related_locations": null,
+          "parking_type": "PARKING_LOT",
+          "evses": [
+            {
+              "uid": "2272a6f9-fabd-4e0a-8861-b12a00afae5d",
+              "evse_id": "GB*GPT*EMVER9740QGPJCTQ2HK4JQG54V",
+              "status": "CHARGING",
+              "status_schedule": null,
+              "capabilities": [
+                "REMOTE_START_STOP_CAPABLE",
+                "RFID_READER",
+                "UNLOCK_CAPABLE",
+                "CREDIT_CARD_PAYABLE"
+              ],
+              "connectors": [
+                {
+                  "id": "1",
+                  "standard": "IEC_62196_T2",
+                  "format": "CABLE",
+                  "power_type": "AC_3_PHASE",
+                  "max_voltage": 240,
+                  "max_amperage": 31,
+                  "max_electric_power": 22000,
+                  "tariff_ids": [
+                    "aaf3ec3b-f7ba-4821-ba54-b4a801789d77",
+                    "a82dfd5e-6427-4e21-8247-b4a801789d77"
+                  ],
+                  "terms_and_conditions": null,
+                  "last_updated": "2026-10-08T07:19:17Z"
+                }
+              ],
+              "floor_level": null,
+              "coordinates": {
+                "latitude": "53.802170",
+                "longitude": "-1.565562"
+              },
+              "physical_reference": "GP17232",
+              "directions": [
+                {
+                  "language": "en",
+                  "text": "Located in Car Park"
+                }
+              ],
+              "parking_restrictions": [
+                "PLUGGED"
+              ],
+              "images": null,
+              "last_updated": "2026-10-08T07:19:17Z"
+            },
+            {
+              "uid": "111c2572-8919-450a-b711-b12a00afae5d",
+              "evse_id": "GB*GPT*EMVER9740QCNWXX6JSSFLRQWJ6",
+              "status": "AVAILABLE",
+              "status_schedule": null,
+              "capabilities": [
+                "REMOTE_START_STOP_CAPABLE",
+                "RFID_READER",
+                "UNLOCK_CAPABLE",
+                "CREDIT_CARD_PAYABLE"
+              ],
+              "connectors": [
+                {
+                  "id": "2",
+                  "standard": "IEC_62196_T2_COMBO",
+                  "format": "CABLE",
+                  "power_type": "DC",
+                  "max_voltage": 400,
+                  "max_amperage": 125,
+                  "max_electric_power": 50000,
+                  "tariff_ids": [
+                    "c4583ecf-207b-4b21-ac5c-b4a801789d77",
+                    "b899aaac-602c-4d21-8b1a-b4a801789d77"
+                  ],
+                  "terms_and_conditions": null,
+                  "last_updated": "2026-10-08T07:19:36Z"
+                }
+              ],
+              "floor_level": null,
+              "coordinates": {
+                "latitude": "53.802170",
+                "longitude": "-1.565562"
+              },
+              "physical_reference": "GP17232",
+              "directions": [
+                {
+                  "language": "en",
+                  "text": "Located in Car Park"
+                }
+              ],
+              "parking_restrictions": [
+                "PLUGGED"
+              ],
+              "images": null,
+              "last_updated": "2026-10-08T07:19:36Z"
+            },
+            {
+              "uid": "aa7b5df3-5376-490a-9523-b12a00afae5d",
+              "evse_id": "GB*GPT*EMVER9740QDKGUH7K9XZ5DZ7C7",
+              "status": "BLOCKED",
+              "status_schedule": null,
+              "capabilities": [
+                "REMOTE_START_STOP_CAPABLE",
+                "RFID_READER",
+                "UNLOCK_CAPABLE",
+                "CREDIT_CARD_PAYABLE"
+              ],
+              "connectors": [
+                {
+                  "id": "3",
+                  "standard": "CHADEMO",
+                  "format": "CABLE",
+                  "power_type": "DC",
+                  "max_voltage": 400,
+                  "max_amperage": 125,
+                  "max_electric_power": 50000,
+                  "tariff_ids": [
+                    "c4583ecf-207b-4b21-ac5c-b4a801789d77",
+                    "b899aaac-602c-4d21-8b1a-b4a801789d77"
+                  ],
+                  "terms_and_conditions": null,
+                  "last_updated": "2026-10-08T07:19:36Z"
+                }
+              ],
+              "floor_level": null,
+              "coordinates": {
+                "latitude": "53.802170",
+                "longitude": "-1.565562"
+              },
+              "physical_reference": "GP17232",
+              "directions": [
+                {
+                  "language": "en",
+                  "text": "Located in Car Park"
+                }
+              ],
+              "parking_restrictions": [
+                "PLUGGED"
+              ],
+              "images": null,
+              "last_updated": "2026-10-08T07:19:36Z"
+            }
+          ],
+          "directions": [],
+          "operator": null,
+          "suboperator": null,
+          "owner": {
+            "name": "GeniePoint",
+            "website": "https://drivers.geniepoint.co.uk/",
+            "logo": {
+              "url": "https://geniepoint.co.uk/ds/Content/images/equans-geniepoint-logo.svg",
+              "thumbnail": null,
+              "category": "NETWORK",
+              "type": "svg",
+              "width": 0,
+              "height": 0
+            }
+          },
+          "facilities": [
+            "PARKING_LOT"
+          ],
+          "time_zone": "Europe/London",
+          "opening_times": {
+            "twentyfourseven": true,
+            "regular_hours": [],
+            "exceptional_openings": [],
+            "exceptional_closings": []
+          },
+          "charging_when_closed": false,
+          "images": null,
+          "energy_mix": null,
+          "last_updated": "2024-11-04T10:48:48Z"
+        },
+        {
+          "country_code": "GB",
+          "party_id": "GPT",
+          "id": "9260f98e-8f9e-4c11-8823-b12600ab6fcc",
+          "publish": true,
+          "publish_allowed_to": null,
+          "name": "Morley Leisure Centre",
+          "address": "Morley Leisure Centre",
+          "city": "Leeds",
+          "postal_code": "LS27 9JP",
+          "state": null,
+          "country": "GBR",
+          "coordinates": {
+            "latitude": "53.745560",
+            "longitude": "-1.605554"
+          },
+          "related_locations": null,
+          "parking_type": "PARKING_LOT",
+          "evses": [
+            {
+              "uid": "165e10c7-c464-4b0a-a9f4-b12600ab7041",
+              "evse_id": "GB*GPT*EF9ALQZ8GT25NFJSVGSMDKRZ35",
+              "status": "CHARGING",
+              "status_schedule": null,
+              "capabilities": [
+                "REMOTE_START_STOP_CAPABLE",
+                "RFID_READER",
+                "UNLOCK_CAPABLE",
+                "CREDIT_CARD_PAYABLE"
+              ],
+              "connectors": [
+                {
+                  "id": "1",
+                  "standard": "IEC_62196_T2",
+                  "format": "CABLE",
+                  "power_type": "AC_3_PHASE",
+                  "max_voltage": 240,
+                  "max_amperage": 60,
+                  "max_electric_power": 43000,
+                  "tariff_ids": [
+                    "c4583ecf-207b-4b21-ac5c-b4a801789d77",
+                    "b899aaac-602c-4d21-8b1a-b4a801789d77"
+                  ],
+                  "terms_and_conditions": null,
+                  "last_updated": "2026-10-08T06:53:22Z"
+                }
+              ],
+              "floor_level": null,
+              "coordinates": {
+                "latitude": "53.745560",
+                "longitude": "-1.605554"
+              },
+              "physical_reference": "GP17219",
+              "directions": [
+                {
+                  "language": "en",
+                  "text": "Located in Car Park"
+                }
+              ],
+              "parking_restrictions": [
+                "PLUGGED"
+              ],
+              "images": null,
+              "last_updated": "2026-10-08T06:53:22Z"
+            },
+            {
+              "uid": "d6e063eb-9254-410a-b819-b12600ab7041",
+              "evse_id": "GB*GPT*EF9ALQZ8GSR4VR85WPWYB4QUPD",
+              "status": "UNKNOWN",
+              "status_schedule": null,
+              "capabilities": [
+                "REMOTE_START_STOP_CAPABLE",
+                "RFID_READER",
+                "UNLOCK_CAPABLE",
+                "CREDIT_CARD_PAYABLE"
+              ],
+              "connectors": [
+                {
+                  "id": "2",
+                  "standard": "IEC_62196_T2_COMBO",
+                  "format": "CABLE",
+                  "power_type": "DC",
+                  "max_voltage": 400,
+                  "max_amperage": 125,
+                  "max_electric_power": 50000,
+                  "tariff_ids": [
+                    "c4583ecf-207b-4b21-ac5c-b4a801789d77",
+                    "b899aaac-602c-4d21-8b1a-b4a801789d77"
+                  ],
+                  "terms_and_conditions": null,
+                  "last_updated": "2026-10-08T05:59:41Z"
+                }
+              ],
+              "floor_level": null,
+              "coordinates": {
+                "latitude": "53.745560",
+                "longitude": "-1.605554"
+              },
+              "physical_reference": "GP17219",
+              "directions": [
+                {
+                  "language": "en",
+                  "text": "Located in Car Park"
+                }
+              ],
+              "parking_restrictions": [
+                "PLUGGED"
+              ],
+              "images": null,
+              "last_updated": "2026-10-08T05:59:41Z"
+            },
+            {
+              "uid": "a00548e9-08eb-4c0a-9347-b12600ab7041",
+              "evse_id": "GB*GPT*EF9ALQZ8GSTFCLMAGBJE2UVZEZ",
+              "status": "AVAILABLE",
+              "status_schedule": null,
+              "capabilities": [
+                "REMOTE_START_STOP_CAPABLE",
+                "RFID_READER",
+                "UNLOCK_CAPABLE",
+                "CREDIT_CARD_PAYABLE"
+              ],
+              "connectors": [
+                {
+                  "id": "3",
+                  "standard": "CHADEMO",
+                  "format": "CABLE",
+                  "power_type": "DC",
+                  "max_voltage": 400,
+                  "max_amperage": 125,
+                  "max_electric_power": 50000,
+                  "tariff_ids": [
+                    "c4583ecf-207b-4b21-ac5c-b4a801789d77",
+                    "b899aaac-602c-4d21-8b1a-b4a801789d77"
+                  ],
+                  "terms_and_conditions": null,
+                  "last_updated": "2026-10-04T16:17:06Z"
+                }
+              ],
+              "floor_level": null,
+              "coordinates": {
+                "latitude": "53.745560",
+                "longitude": "-1.605554"
+              },
+              "physical_reference": "GP17219",
+              "directions": [
+                {
+                  "language": "en",
+                  "text": "Located in Car Park"
+                }
+              ],
+              "parking_restrictions": [
+                "PLUGGED"
+              ],
+              "images": null,
+              "last_updated": "2026-10-04T16:17:06Z"
+            }
+          ],
+          "directions": [],
+          "operator": null,
+          "suboperator": null,
+          "owner": {
+            "name": "GeniePoint",
+            "website": "https://drivers.geniepoint.co.uk/",
+            "logo": {
+              "url": "https://geniepoint.co.uk/ds/Content/images/equans-geniepoint-logo.svg",
+              "thumbnail": null,
+              "category": "NETWORK",
+              "type": "svg",
+              "width": 0,
+              "height": 0
+            }
+          },
+          "facilities": [
+            "SPORT"
+          ],
+          "time_zone": "Europe/London",
+          "opening_times": null,
+          "charging_when_closed": false,
+          "images": null,
+          "energy_mix": null,
+          "last_updated": "2024-11-04T10:44:08Z"
+        },
+        {
+          "country_code": "GB",
+          "party_id": "GPT",
+          "id": "754376a2-7ced-4d11-8eaa-ac4500f35b23",
+          "publish": true,
+          "publish_allowed_to": null,
+          "name": "Webbs Hagley Garden Centre",
+          "address": "The Garden Building Centre",
+          "city": "Stourbridge",
+          "postal_code": "DY9 0JB",
+          "state": null,
+          "country": "GBR",
+          "coordinates": {
+            "latitude": "52.411384",
+            "longitude": "-2.155507"
+          },
+          "related_locations": null,
+          "parking_type": "PARKING_LOT",
+          "evses": [
+            {
+              "uid": "94230af6-acea-480a-a642-ac4600abbdb7",
+              "evse_id": "GB*GPT*E18W3QUCSL14DZRV3QBQXRFGDN6",
+              "status": "AVAILABLE",
+              "status_schedule": null,
+              "capabilities": [
+                "REMOTE_START_STOP_CAPABLE",
+                "RFID_READER",
+                "UNLOCK_CAPABLE",
+                "CREDIT_CARD_PAYABLE"
+              ],
+              "connectors": [
+                {
+                  "id": "1",
+                  "standard": "CHADEMO",
+                  "format": "CABLE",
+                  "power_type": "DC",
+                  "max_voltage": 400,
+                  "max_amperage": 125,
+                  "max_electric_power": 50000,
+                  "tariff_ids": [
+                    "0b219b49-1d84-4021-bfbd-b4a8017b543a"
+                  ],
+                  "terms_and_conditions": null,
+                  "last_updated": "2026-10-07T14:11:20Z"
+                }
+              ],
+              "floor_level": null,
+              "coordinates": {
+                "latitude": "52.411822",
+                "longitude": "-2.155881"
+              },
+              "physical_reference": "GP14310",
+              "directions": [
+                {
+                  "language": "en",
+                  "text": "Located in Car Park"
+                }
+              ],
+              "parking_restrictions": [
+                "PLUGGED"
+              ],
+              "images": null,
+              "last_updated": "2026-10-07T14:11:20Z"
+            },
+            {
+              "uid": "1bc4d34d-f5a2-4c0a-ad0f-ac4600abbdb7",
+              "evse_id": "GB*GPT*E18W3QUCSL11UR2SJHP68Y5U285",
+              "status": "AVAILABLE",
+              "status_schedule": null,
+              "capabilities": [
+                "REMOTE_START_STOP_CAPABLE",
+                "RFID_READER",
+                "UNLOCK_CAPABLE",
+                "CREDIT_CARD_PAYABLE"
+              ],
+              "connectors": [
+                {
+                  "id": "2",
+                  "standard": "IEC_62196_T2_COMBO",
+                  "format": "CABLE",
+                  "power_type": "DC",
+                  "max_voltage": 400,
+                  "max_amperage": 125,
+                  "max_electric_power": 50000,
+                  "tariff_ids": [
+                    "0b219b49-1d84-4021-bfbd-b4a8017b543a"
+                  ],
+                  "terms_and_conditions": null,
+                  "last_updated": "2026-10-07T14:15:17Z"
+                }
+              ],
+              "floor_level": null,
+              "coordinates": {
+                "latitude": "52.411822",
+                "longitude": "-2.155881"
+              },
+              "physical_reference": "GP14310",
+              "directions": [
+                {
+                  "language": "en",
+                  "text": "Located in Car Park"
+                }
+              ],
+              "parking_restrictions": [
+                "PLUGGED"
+              ],
+              "images": null,
+              "last_updated": "2026-10-07T14:15:17Z"
+            },
+            {
+              "uid": "99ca392b-a0e6-440a-889f-ac4600abbdb7",
+              "evse_id": "GB*GPT*E18W3QUCSL192ZNTFN2VY0LVYJX",
+              "status": "AVAILABLE",
+              "status_schedule": null,
+              "capabilities": [
+                "REMOTE_START_STOP_CAPABLE",
+                "RFID_READER",
+                "UNLOCK_CAPABLE",
+                "CREDIT_CARD_PAYABLE"
+              ],
+              "connectors": [
+                {
+                  "id": "3",
+                  "standard": "IEC_62196_T2",
+                  "format": "CABLE",
+                  "power_type": "AC_3_PHASE",
+                  "max_voltage": 240,
+                  "max_amperage": 60,
+                  "max_electric_power": 43000,
+                  "tariff_ids": [
+                    "0b219b49-1d84-4021-bfbd-b4a8017b543a"
+                  ],
+                  "terms_and_conditions": null,
+                  "last_updated": "2026-09-28T10:05:31Z"
+                }
+              ],
+              "floor_level": null,
+              "coordinates": {
+                "latitude": "52.411822",
+                "longitude": "-2.155881"
+              },
+              "physical_reference": "GP14310",
+              "directions": [
+                {
+                  "language": "en",
+                  "text": "Located in Car Park"
+                }
+              ],
+              "parking_restrictions": [
+                "PLUGGED"
+              ],
+              "images": null,
+              "last_updated": "2026-09-28T10:05:31Z"
+            }
+          ],
+          "directions": [],
+          "operator": null,
+          "suboperator": null,
+          "owner": {
+            "name": "GeniePoint",
+            "website": "https://drivers.geniepoint.co.uk/",
+            "logo": {
+              "url": "https://geniepoint.co.uk/ds/Content/images/equans-geniepoint-logo.svg",
+              "thumbnail": null,
+              "category": "NETWORK",
+              "type": "svg",
+              "width": 0,
+              "height": 0
+            }
+          },
+          "facilities": [
+            "PARKING_LOT"
+          ],
+          "time_zone": "Europe/London",
+          "opening_times": {
+            "twentyfourseven": false,
+            "regular_hours": [
+              {
+                "weekday": 1,
+                "period_begin": "09:00",
+                "period_end": "18:00"
+              },
+              {
+                "weekday": 2,
+                "period_begin": "09:00",
+                "period_end": "18:00"
+              },
+              {
+                "weekday": 3,
+                "period_begin": "09:00",
+                "period_end": "18:00"
+              },
+              {
+                "weekday": 4,
+                "period_begin": "09:00",
+                "period_end": "18:00"
+              },
+              {
+                "weekday": 5,
+                "period_begin": "09:00",
+                "period_end": "18:00"
+              },
+              {
+                "weekday": 6,
+                "period_begin": "09:00",
+                "period_end": "18:00"
+              },
+              {
+                "weekday": 7,
+                "period_begin": "10:30",
+                "period_end": "16:30"
+              }
+            ],
+            "exceptional_openings": [],
+            "exceptional_closings": []
+          },
+          "charging_when_closed": false,
+          "images": null,
+          "energy_mix": null,
+          "last_updated": "2024-11-04T11:38:11Z"
+        }
+      ],
+      "status_code": 1000,
+      "status_message": "Success",
+      "timestamp": "2026-10-08T07:54:28Z"
+    }
+  }
+}

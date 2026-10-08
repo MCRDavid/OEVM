@@ -1,0 +1,361 @@
+{
+  "request": {
+    "method": "GET",
+    "url": "https://api.joltcharge.com/v1/uk/public/locations"
+  },
+  "response": {
+    "status_code": 200,
+    "headers": {
+      "content-type": "application/json",
+      "access-control-allow-origin": "*"
+    },
+    "body": {
+      "locations": [
+        {
+          "country_code": "GB",
+          "party_id": "JLT",
+          "name": "BAR004",
+          "address": "780-782 High Rd, London N12 9QR, UK",
+          "city": "London",
+          "country": "GBR",
+          "postal_code": "N12 9QR",
+          "coordinates": {
+            "latitude": 51.6158782,
+            "longitude": -0.1766442
+          },
+          "parking_type": "ON_STREET",
+          "evses": [
+            {
+              "uid": null,
+              "evse_id": 143,
+              "status": "available",
+              "status_schedule": {},
+              "capabilities": [
+                "CHARGING_PROFILE_CAPABLE",
+                "CHARGING_PREFERENCES_CAPABLE",
+                "CONTACTLESS_CARD_SUPPORT",
+                "CREDIT_CARD_PAYABLE",
+                "DEBIT_CARD_PAYABLE",
+                "REMOTE_START_STOP_CAPABLE",
+                "RESERVABLE"
+              ],
+              "connectors": [
+                {
+                  "id": 143,
+                  "standard": "CHADEMO",
+                  "format": "CABLE",
+                  "power_type": "DC",
+                  "max_voltage": 400,
+                  "max_amperage": 0,
+                  "max_electric_power": 25000,
+                  "tariff_ids": [
+                    "4",
+                    "5",
+                    "13",
+                    "14"
+                  ],
+                  "terms_and_conditions": "https://joltcharge.com/uk/terms/",
+                  "last_updated": "2026-10-08T00:37:26+00:00"
+                }
+              ],
+              "coordinates": {
+                "latitude": 51.6158782,
+                "longitude": -0.1766442
+              },
+              "physical_reference": "6998",
+              "parking_restrictions": null
+            },
+            {
+              "uid": null,
+              "evse_id": 144,
+              "status": "preparing",
+              "status_schedule": {},
+              "capabilities": [
+                "CHARGING_PROFILE_CAPABLE",
+                "CHARGING_PREFERENCES_CAPABLE",
+                "CONTACTLESS_CARD_SUPPORT",
+                "CREDIT_CARD_PAYABLE",
+                "DEBIT_CARD_PAYABLE",
+                "REMOTE_START_STOP_CAPABLE",
+                "RESERVABLE"
+              ],
+              "connectors": [
+                {
+                  "id": 144,
+                  "standard": "CCS2",
+                  "format": "CABLE",
+                  "power_type": "DC",
+                  "max_voltage": 400,
+                  "max_amperage": 0,
+                  "max_electric_power": 25000,
+                  "tariff_ids": [
+                    "4",
+                    "5",
+                    "13",
+                    "14"
+                  ],
+                  "terms_and_conditions": "https://joltcharge.com/uk/terms/",
+                  "last_updated": "2026-10-08T00:37:26+00:00"
+                }
+              ],
+              "coordinates": {
+                "latitude": 51.6158782,
+                "longitude": -0.1766442
+              },
+              "physical_reference": "7168",
+              "parking_restrictions": null
+            }
+          ],
+          "time_zone": "Europe/London"
+        },
+        {
+          "country_code": "GB",
+          "party_id": "JLT",
+          "name": "BAR070",
+          "address": "1189 FINCHLEY ROAD NW11 0AA",
+          "city": "London",
+          "country": "GBR",
+          "postal_code": "NW11 0AA",
+          "coordinates": {
+            "latitude": 51.584599,
+            "longitude": -0.1999685
+          },
+          "parking_type": "ON_STREET",
+          "evses": [
+            {
+              "uid": null,
+              "evse_id": 292,
+              "status": "available",
+              "status_schedule": {},
+              "capabilities": [
+                "CHARGING_PROFILE_CAPABLE",
+                "CHARGING_PREFERENCES_CAPABLE",
+                "CONTACTLESS_CARD_SUPPORT",
+                "CREDIT_CARD_PAYABLE",
+                "DEBIT_CARD_PAYABLE",
+                "REMOTE_START_STOP_CAPABLE",
+                "RESERVABLE"
+              ],
+              "connectors": [],
+              "coordinates": {
+                "latitude": 51.584599,
+                "longitude": -0.1999685
+              },
+              "physical_reference": "2865",
+              "parking_restrictions": null
+            },
+            {
+              "uid": null,
+              "evse_id": 293,
+              "status": "available",
+              "status_schedule": {},
+              "capabilities": [
+                "CHARGING_PROFILE_CAPABLE",
+                "CHARGING_PREFERENCES_CAPABLE",
+                "CONTACTLESS_CARD_SUPPORT",
+                "CREDIT_CARD_PAYABLE",
+                "DEBIT_CARD_PAYABLE",
+                "REMOTE_START_STOP_CAPABLE",
+                "RESERVABLE"
+              ],
+              "connectors": [],
+              "coordinates": {
+                "latitude": 51.584599,
+                "longitude": -0.1999685
+              },
+              "physical_reference": "3258",
+              "parking_restrictions": null
+            }
+          ],
+          "time_zone": "Europe/London"
+        },
+        {
+          "country_code": "GB",
+          "party_id": "JLT",
+          "name": "BAR114",
+          "address": "137 Brent St, London NW4 4DJ, UK",
+          "city": "London",
+          "country": "GBR",
+          "postal_code": "NW4 4DJ",
+          "state": "England",
+          "coordinates": {
+            "latitude": 51.5884246,
+            "longitude": -0.2215148
+          },
+          "parking_type": "ON_STREET",
+          "evses": [
+            {
+              "uid": null,
+              "evse_id": 396,
+              "status": "inoperative",
+              "status_schedule": {},
+              "capabilities": [
+                "CHARGING_PROFILE_CAPABLE",
+                "CHARGING_PREFERENCES_CAPABLE",
+                "CONTACTLESS_CARD_SUPPORT",
+                "CREDIT_CARD_PAYABLE",
+                "DEBIT_CARD_PAYABLE",
+                "REMOTE_START_STOP_CAPABLE",
+                "RESERVABLE"
+              ],
+              "connectors": [
+                {
+                  "id": 398,
+                  "standard": "CHADEMO",
+                  "format": "CABLE",
+                  "power_type": "DC",
+                  "max_voltage": 400,
+                  "max_amperage": 0,
+                  "max_electric_power": 25000,
+                  "tariff_ids": [
+                    "4",
+                    "5",
+                    "13",
+                    "14"
+                  ],
+                  "terms_and_conditions": "https://joltcharge.com/uk/terms/",
+                  "last_updated": "2026-10-08T07:26:16+00:00"
+                }
+              ],
+              "coordinates": {
+                "latitude": 51.5884246,
+                "longitude": -0.2215148
+              },
+              "physical_reference": "8657",
+              "parking_restrictions": null
+            },
+            {
+              "uid": null,
+              "evse_id": 397,
+              "status": "charging",
+              "status_schedule": {},
+              "capabilities": [
+                "CHARGING_PROFILE_CAPABLE",
+                "CHARGING_PREFERENCES_CAPABLE",
+                "CONTACTLESS_CARD_SUPPORT",
+                "CREDIT_CARD_PAYABLE",
+                "DEBIT_CARD_PAYABLE",
+                "REMOTE_START_STOP_CAPABLE",
+                "RESERVABLE"
+              ],
+              "connectors": [
+                {
+                  "id": 399,
+                  "standard": "CCS2",
+                  "format": "CABLE",
+                  "power_type": "DC",
+                  "max_voltage": 400,
+                  "max_amperage": 0,
+                  "max_electric_power": 25000,
+                  "tariff_ids": [
+                    "4",
+                    "5",
+                    "13",
+                    "14"
+                  ],
+                  "terms_and_conditions": "https://joltcharge.com/uk/terms/",
+                  "last_updated": "2026-10-08T07:26:16+00:00"
+                }
+              ],
+              "coordinates": {
+                "latitude": 51.5884246,
+                "longitude": -0.2215148
+              },
+              "physical_reference": "2638",
+              "parking_restrictions": null
+            }
+          ],
+          "time_zone": "Europe/London"
+        },
+        {
+          "country_code": "GB",
+          "party_id": "JLT",
+          "name": "IONITY Nottingham VH",
+          "address": "Brailsford Way",
+          "city": "Nottingham,",
+          "country": "GBR",
+          "postal_code": "NG9 6DL",
+          "coordinates": {
+            "latitude": 52.903156,
+            "longitude": -1.241187
+          },
+          "parking_type": "ON_STREET",
+          "evses": [
+            {
+              "uid": null,
+              "evse_id": 2857,
+              "status": "available",
+              "status_schedule": {},
+              "capabilities": [
+                "CHARGING_PROFILE_CAPABLE",
+                "CHARGING_PREFERENCES_CAPABLE",
+                "CONTACTLESS_CARD_SUPPORT",
+                "CREDIT_CARD_PAYABLE",
+                "DEBIT_CARD_PAYABLE",
+                "REMOTE_START_STOP_CAPABLE",
+                "RESERVABLE"
+              ],
+              "connectors": [
+                {
+                  "id": 2862,
+                  "standard": "CCS2",
+                  "format": "CABLE",
+                  "power_type": "DC",
+                  "max_voltage": 920,
+                  "max_amperage": 500,
+                  "max_electric_power": 400000,
+                  "tariff_ids": [
+                    "25"
+                  ],
+                  "terms_and_conditions": "https://joltcharge.com/uk/terms/",
+                  "last_updated": "2026-08-12T00:02:54+00:00"
+                }
+              ],
+              "coordinates": {
+                "latitude": 52.903156,
+                "longitude": -1.241187
+              },
+              "physical_reference": "GB*IOY*E470471",
+              "parking_restrictions": null
+            },
+            {
+              "uid": null,
+              "evse_id": 2858,
+              "status": "inoperative",
+              "status_schedule": {},
+              "capabilities": [
+                "CHARGING_PROFILE_CAPABLE",
+                "CHARGING_PREFERENCES_CAPABLE",
+                "CONTACTLESS_CARD_SUPPORT",
+                "CREDIT_CARD_PAYABLE",
+                "DEBIT_CARD_PAYABLE",
+                "REMOTE_START_STOP_CAPABLE",
+                "RESERVABLE"
+              ],
+              "connectors": [
+                {
+                  "id": 2863,
+                  "standard": "CCS2",
+                  "format": "CABLE",
+                  "power_type": "DC",
+                  "max_voltage": 920,
+                  "max_amperage": 500,
+                  "max_electric_power": 400000,
+                  "tariff_ids": [],
+                  "terms_and_conditions": "https://joltcharge.com/uk/terms/",
+                  "last_updated": "2026-08-12T00:02:54+00:00"
+                }
+              ],
+              "coordinates": {
+                "latitude": 52.903156,
+                "longitude": -1.241187
+              },
+              "physical_reference": "GB*IOY*E470472",
+              "parking_restrictions": null
+            }
+          ]
+        }
+      ]
+    }
+  }
+}
