@@ -15,7 +15,7 @@ The full plan is in [docs/BLUEPRINT.md](docs/BLUEPRINT.md).
 
 ## Status
 
-Early days. Blueprint tasks 1 to 8 are done:
+Early days. Blueprint tasks 1 to 9 are done:
 
 1. **Scaffold:** uv, ruff, pytest, pre-commit secret scanning and a CI workflow.
 2. **Schema:** Pydantic models for Location, EVSE, Connector, Tariff and Provenance,
@@ -36,6 +36,11 @@ Early days. Blueprint tasks 1 to 8 are done:
 8. **Feed health page:** each run logs health figures (locations with UK coordinates,
    EVSEs with a status, connectors with a tariff that was found). `pipeline.status` turns
    the logs into a page with a 30-day history, in neutral, dated wording.
+9. **Map page** (`site/index.html`): a clustered map with filters (power, connector,
+   price, network), a details panel showing where each record came from and when, filters
+   kept in the page address, opt-in saved settings and a list view that works without
+   the map. The background map comes from OpenFreeMap; MapLibre GL JS is served from the
+   site itself. Not deployed yet (task 10).
 
 Also in place:
 
@@ -47,7 +52,7 @@ Also in place:
 - **Prices in pounds and pence only.** Tariffs in other currencies show as "Price unknown"
   and are never converted.
 
-There is no map yet. The rules the site must follow for privacy and cookies are in
+The rules the site follows for privacy and cookies, and the notice it will show, are in
 [docs/PRIVACY_AND_COOKIES.md](docs/PRIVACY_AND_COOKIES.md).
 
 ## Principles
@@ -79,6 +84,13 @@ There is no map yet. The rules the site must follow for privacy and cookies are 
    uv run pre-commit install
    ```
 
+4. For the map page only: install [Node.js](https://nodejs.org/) 22 or later, then
+   install MapLibre and Lighthouse from the lock file:
+
+   ```bash
+   npm ci
+   ```
+
 ## Everyday commands
 
 | Task | Command |
@@ -92,6 +104,10 @@ There is no map yet. The rules the site must follow for privacy and cookies are 
 | Rebuild the transparency page after editing `operators/` | `uv run python -m pipeline.transparency` |
 | Regenerate JSON Schema after changing a model | `uv run python -m schema.export` |
 | Run every pre-commit check on every file | `uv run pre-commit run --all-files` |
+| Build the map page from recorded data into `build/` | `uv run python -m pipeline.run --fixtures --publish build && uv run python -m pipeline.build_site --out build` |
+| Look at the built page | `python -m http.server -d build 8000`, then open http://localhost:8000 |
+| JavaScript unit tests | `npm test` |
+| Browser tests and Lighthouse (needs `npm ci` and Chrome or Chromium) | `CHROME_PATH=/path/to/chrome uv run pytest -q -m e2e` |
 
 CI runs all of these on every pull request, except the live fetch: tests never call real
 feeds. Use `--live` sparingly. It only works for operators switched on in the registry.
@@ -108,12 +124,16 @@ pipeline/tariffs.py   the price for each connector, from its tariffs
 pipeline/publish.py   writes the map files (GeoJSON layer, detail files, manifest)
 pipeline/status.py    builds the feed health page from run logs
 pipeline/transparency.py  builds the transparency page
-site/                 files for the website (transparency page, security.txt)
+pipeline/build_site.py  assembles the website in a build folder, with MapLibre
+site/                 files for the website (map page, transparency page, security.txt)
+site/assets/js/       the map page's scripts (filters, settings, details, map)
+package.json          front-end packages (MapLibre, and Lighthouse for tests)
 schema/models.py      Location, EVSE, Connector, Tariff and Provenance models
 schema/operator.py    the model for an operator registry file
 schema/export.py      writes the JSON Schema files
 schema/json/          exported JSON Schema for published data
 tests/                tests; tests/fixtures/ holds sample data, never live calls
+tests/js/             unit tests for the map page's scripts (npm test)
 docs/BLUEPRINT.md     the project brief
 docs/adr/             records of decisions
 ```

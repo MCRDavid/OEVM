@@ -18,7 +18,10 @@ decisions are in docs/adr/.
 - After changing a model: uv run python -m schema.export (CI runs it with --check)
 - After changing operators/*.yaml: uv run python -m pipeline.transparency (CI runs it with --check)
 - Secret scan and file checks: uv run pre-commit run --all-files
-- Dependency audit: see the pip-audit step in .github/workflows/ci.yml
+- Dependency audit: see the pip-audit and npm audit steps in .github/workflows/ci.yml
+- Map page: npm ci, then uv run python -m pipeline.run --fixtures --publish build and
+  uv run python -m pipeline.build_site --out build (add --offline-style for tests)
+- Front-end tests: npm test; browser tests and Lighthouse: CHROME_PATH=<chrome> uv run pytest -q -m e2e
 
 ## Where things live
 - schema/models.py: Location, EVSE, Connector, Tariff, Provenance. schema/operator.py: registry file model.
@@ -27,7 +30,8 @@ decisions are in docs/adr/.
 - pipeline/pricing.py: the only way prices are shown. pipeline/tariffs.py: price per connector.
 - pipeline/transparency.py: site/transparency/. pipeline/publish.py: map files; schema/published.py.
 - pipeline/status.py: feed health page. schema/runlog.py: run log format. pipeline/health.py: figures.
-- pipeline/project.py: repository URL (also in site/.well-known/security.txt and .github/ISSUE_TEMPLATE).
+- pipeline/project.py: repository URL (also in site/index.html, site/.well-known/security.txt and .github/ISSUE_TEMPLATE).
+- site/index.html, site/assets/: the map page. pipeline/build_site.py: build folder with MapLibre.
 
 ## Hard rules
 - Never commit or print secrets. Reference keys by secret_name only, even keys an operator publishes.
@@ -59,6 +63,8 @@ decisions are in docs/adr/.
 
 ## The site (docs/PRIVACY_AND_COOKIES.md)
 - No analytics, ads, tracking or third-party files that set cookies or use storage.
+- Text from feeds goes into the page as text only (textContent), never as HTML.
+- Tests never contact the basemap (OpenFreeMap): use --offline-style.
 - Nothing is stored on a visitor's device until they opt in; "Forget my settings" deletes it all.
 - Every page shows the short disclaimer and links to DISCLAIMER.md, data sources, the privacy notice
   and SECURITY.md.

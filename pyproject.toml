@@ -27,6 +27,7 @@ select = ["E", "F", "W", "I", "UP", "B", "SIM", "RUF"]
 testpaths = ["tests"]
 pythonpath = ["."]
 addopts = "-ra --strict-markers"
+markers = ["e2e: the built map page in a real browser (needs npm ci and Chromium)"]
 
 [tool.coverage.run]
 source = ["adapters", "pipeline", "schema"]
@@ -39,6 +40,7 @@ fail_under = 93
 [dependency-groups]
 dev = [
     "jsonschema>=4.26.0",
+    "playwright>=1.63.0",
     "pre-commit>=4.6.2",
     "pytest>=9.1.1",
     "pytest-cov>=7",

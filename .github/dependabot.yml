@@ -23,6 +23,19 @@ updates:
         patterns:
           - "*"
 
+  # MapLibre GL JS (served with the site) and Lighthouse (tests only). After a MapLibre
+  # update, check its licence and the notices of what it bundles (THIRD_PARTY_NOTICES.txt).
+  - package-ecosystem: "npm"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+    groups:
+      npm-minor-and-patch:
+        applies-to: version-updates
+        update-types:
+          - "minor"
+          - "patch"
+
   # Hook versions in .pre-commit-config.yaml. Local hooks have no version and are skipped.
   - package-ecosystem: "pre-commit"
     directory: "/"

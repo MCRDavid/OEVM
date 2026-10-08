@@ -1,0 +1,19 @@
+{
+  "name": "oevm-site",
+  "private": true,
+  "description": "Front-end dependencies for the OEVM map. The site has no build tool: pipeline/build_site.py copies these files next to the pages.",
+  "license": "Apache-2.0",
+  "type": "module",
+  "engines": {
+    "node": ">=22"
+  },
+  "scripts": {
+    "test": "node --test \"tests/js/*.test.js\""
+  },
+  "dependencies": {
+    "maplibre-gl": "6.11.2"
+  },
+  "devDependencies": {
+    "lighthouse": "13.5.0"
+  }
+}

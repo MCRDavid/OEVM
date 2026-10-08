@@ -68,3 +68,36 @@ jobs:
           fi
           echo "The secret scanner blocked the fake key, as expected."
           rm canary_fake_key.txt
+
+  site:
+    name: Map page (build, browser tests, accessibility)
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: actions/setup-node@v6
+        with:
+          node-version: 22
+          cache: npm
+
+      - uses: astral-sh/setup-uv@v7
+
+      - name: Install dependencies from the lock files
+        run: |
+          npm ci
+          uv sync --locked
+
+      - name: Check locked front-end packages for known vulnerabilities
+        run: npm audit
+
+      - name: JavaScript unit tests
+        run: npm test
+
+      - name: Browser tests and Lighthouse accessibility score (offline map style, no outside hosts)
+        # Builds the site from the recorded fixtures and drives the Chrome that GitHub's
+        # Ubuntu runners include. OEVM_REQUIRE_E2E makes a missing browser fail, not skip.
+        env:
+          CHROME_PATH: /usr/bin/google-chrome
+          OEVM_REQUIRE_E2E: "1"
+        run: uv run pytest -q -m e2e
