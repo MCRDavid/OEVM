@@ -1,0 +1,103 @@
+name: Fetch daily
+
+# Fetches every operator that is enabled in the registry, publishes the map files and
+# the feed health page, then deploys the site. Blueprint task 10.
+
+on:
+  schedule:
+    - cron: "17 4 * * *" # 04:17 UTC every day, away from the busy top of the hour
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+# Never run two fetches at once: they would use the same operator hosts in parallel.
+concurrency:
+  group: fetch-daily
+  cancel-in-progress: false
+
+jobs:
+  fetch:
+    name: Fetch operator feeds
+    # Only main publishes, so a run started on another branch cannot replace the site.
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    permissions:
+      contents: read
+      actions: read # to find the feed health history from the last run
+    outputs:
+      some-failed: ${{ steps.fetch.outputs.some-failed }}
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+
+      - uses: astral-sh/setup-uv@v7
+
+      - name: Install dependencies from the lock file
+        run: uv sync --locked
+
+      - name: Validate operator registry
+        run: uv run python -m pipeline.registry --validate
+
+      - name: Get the feed health history from the last run
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+        run: .github/scripts/download-site-data.sh previous
+
+      - name: Fetch every enabled operator, one at a time
+        id: fetch
+        # Keys are passed to this step only, by secret name, as the registry lists them.
+        env:
+          JOLT_API_KEY: ${{ secrets.JOLT_API_KEY }}
+        run: |
+          set +e
+          uv run python -m pipeline.run --live all --log-dir logs --publish build
+          code=$?
+          set -e
+          if [ "$code" -eq 2 ]; then
+            echo "::warning::At least one operator failed and was left out. See the log above."
+            echo "some-failed=true" >> "$GITHUB_OUTPUT"
+          elif [ "$code" -ne 0 ]; then
+            exit "$code"
+          fi
+
+      - name: Build the feed health page
+        run: |
+          uv run python -m pipeline.status --runs logs --out build \
+            --previous previous/data/status.json
+
+      - name: Keep the map files and feed health page for the deploy
+        uses: actions/upload-artifact@v4
+        with:
+          name: site-data
+          path: build
+          retention-days: 30
+          if-no-files-found: error
+
+  deploy:
+    name: Deploy
+    needs: fetch
+    uses: ./.github/workflows/deploy.yml
+    with:
+      from-this-run: true
+    permissions:
+      contents: read
+      actions: read
+      pages: write
+      id-token: write
+
+  report:
+    name: Report failed operators
+    needs: [fetch, deploy]
+    if: needs.fetch.outputs.some-failed == 'true'
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      # The site was still deployed with the operators that worked. Failing here makes
+      # the run show red, so the failure is noticed; the feed health page says which.
+      - run: |
+          echo "::error::At least one operator failed today. The feed health page and the Fetch operator feeds log say which."
+          exit 1

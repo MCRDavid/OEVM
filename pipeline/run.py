@@ -2,11 +2,16 @@
 
     uv run python -m pipeline.run --fixtures
     uv run python -m pipeline.run --live chargy --max-pages 1
+    uv run python -m pipeline.run --live all --log-dir logs --publish build
 
 --fixtures replays the recorded responses in tests/fixtures/<operator>/ and never uses
 the network. --live calls the operator's real feed, so use it sparingly. It only runs
 for operators that are enabled in the registry, which requires their licence terms to
 have been checked.
+
+--live all fetches every enabled operator, one after another (the daily workflow). If
+one operator fails, its failure is logged, the others are still fetched and published,
+and the exit code is 2, so the failure is visible without holding back the rest.
 """
 
 import argparse
@@ -35,6 +40,10 @@ ADAPTERS = {"ocpi_221": adapters.ocpi_221.fetch}
 CUSTOM_ADAPTERS = {"jolt": adapters.jolt.fetch}
 # Sent in place of a real key when replaying fixtures, which never reach the network.
 FIXTURE_KEY = "fixture-replay-not-a-real-key"
+# --live ALL_ENABLED fetches every operator that is enabled in the registry.
+ALL_ENABLED = "all"
+# Exit code when --live all published some operators but at least one failed.
+EXIT_SOME_FAILED = 2
 
 
 def run_operator(
@@ -179,7 +188,11 @@ def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(prog="python -m pipeline.run", description=__doc__)
     mode = parser.add_mutually_exclusive_group(required=True)
     mode.add_argument("--fixtures", action="store_true", help="replay recorded responses")
-    mode.add_argument("--live", metavar="OPERATOR", help="fetch one operator's real feed")
+    mode.add_argument(
+        "--live",
+        metavar="OPERATOR",
+        help=f"fetch one operator's real feed, or {ALL_ENABLED!r} for every enabled one",
+    )
     parser.add_argument("--max-pages", type=int, help="stop after this many pages per module")
     parser.add_argument("--page-size", type=int, help="ask the server for this many records")
     parser.add_argument(
@@ -203,33 +216,47 @@ def main(argv: list[str] | None = None) -> int:
     args = parser.parse_args(argv)
 
     mode = "fixtures" if args.fixtures else "live"
+    failed: list[str] = []
     try:
         operators = load_registry()
         if args.fixtures:
             results = run_fixtures(operators)
         else:
-            config = operators.get(args.live)
-            if config is None:
-                raise FeedError(f"no operator {args.live!r} in the registry")
-            if not config.enabled:
-                raise FeedError(
-                    f"{config.id} is not enabled in the registry; check its licence terms first"
-                )
-            try:
-                results = [
-                    run_operator(
-                        config,
-                        date_from=args.date_from,
-                        page_size=args.page_size,
-                        max_pages=args.max_pages,
+            if args.live == ALL_ENABLED:
+                configs = [operators[i] for i in sorted(operators) if operators[i].enabled]
+                if not configs:
+                    raise FeedError("no operator is enabled in the registry")
+            else:
+                config = operators.get(args.live)
+                if config is None:
+                    raise FeedError(f"no operator {args.live!r} in the registry")
+                if not config.enabled:
+                    raise FeedError(
+                        f"{config.id} is not enabled in the registry; check its licence terms first"
                     )
-                ]
-            except FeedError as exc:
-                if args.log_dir:
-                    write_log(
-                        args.log_dir, failure_log(config.id, mode, str(exc), datetime.now(UTC))
+                configs = [config]
+            results = []
+            # One operator at a time, never in parallel (CLAUDE.md, rate limits).
+            for config in configs:
+                try:
+                    results.append(
+                        run_operator(
+                            config,
+                            date_from=args.date_from,
+                            page_size=args.page_size,
+                            max_pages=args.max_pages,
+                        )
                     )
-                raise
+                except FeedError as exc:
+                    if args.log_dir:
+                        when = datetime.now(UTC)
+                        write_log(args.log_dir, failure_log(config.id, mode, str(exc), when))
+                    if len(configs) == 1:
+                        raise
+                    print(f"Error: {exc}", file=sys.stderr)
+                    failed.append(config.id)
+            if not results:
+                raise FeedError(f"every operator failed: {', '.join(failed)}")
     except (FeedError, RegistryError) as exc:
         print(f"Error: {exc}", file=sys.stderr)
         return 1
@@ -257,6 +284,9 @@ def main(argv: list[str] | None = None) -> int:
             print(f"Error: {exc}", file=sys.stderr)
             return 1
         print("\n".join(published.report))
+    if failed:
+        print(f"Failed, so left out: {', '.join(failed)}", file=sys.stderr)
+        return EXIT_SOME_FAILED
     return 0
 
 

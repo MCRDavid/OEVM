@@ -1,0 +1,88 @@
+name: Deploy site
+
+# Builds the site from main with the newest published map files and deploys it to
+# GitHub Pages. Runs after each change to main, by hand, and at the end of Fetch daily.
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+  workflow_call:
+    inputs:
+      from-this-run:
+        description: Use the site-data artifact made earlier in the same workflow run
+        type: boolean
+        default: false
+
+permissions:
+  contents: read
+
+jobs:
+  deploy:
+    name: Build and deploy to GitHub Pages
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    permissions:
+      contents: read
+      actions: read # to download the map files
+      pages: write
+      id-token: write
+    # One deploy at a time; a waiting deploy is not cancelled, so the newest data wins.
+    concurrency:
+      group: pages-deploy
+      cancel-in-progress: false
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+
+      - uses: actions/setup-node@v6
+        with:
+          node-version: 22
+          cache: npm
+
+      - uses: astral-sh/setup-uv@v7
+
+      - name: Install dependencies from the lock files
+        run: |
+          npm ci
+          uv sync --locked
+
+      - name: Get the map files from this run
+        if: inputs.from-this-run
+        uses: actions/download-artifact@v4
+        with:
+          name: site-data
+          path: build
+
+      - name: Get the newest published map files
+        if: ${{ !inputs.from-this-run }}
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+        run: .github/scripts/download-site-data.sh build --required
+
+      - name: Assemble the site (OpenFreeMap basemap)
+        run: uv run python -m pipeline.build_site --out build
+
+      - name: Check the site has its map files and feed health page
+        run: |
+          for file in index.html data/locations.geojson data/manifest.json \
+            data/status.json status/index.html .well-known/security.txt; do
+            test -f "build/$file" || { echo "::error::build/$file is missing"; exit 1; }
+          done
+
+      - name: Package the site for GitHub Pages
+        uses: actions/upload-pages-artifact@v5
+        with:
+          path: build
+          # Keeps .well-known/security.txt, which is left out unless this is set.
+          include-hidden-files: true
+
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4

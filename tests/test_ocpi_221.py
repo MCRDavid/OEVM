@@ -534,3 +534,36 @@ def test_a_failed_live_run_writes_a_failure_log(tmp_path, monkeypatch, capsys):
     assert log["failed"] is True and log["complete"] is False
     assert log["issues"] == ["Run failed: gave up on https://char.gy/open-ocpi/locations: HTTP 503"]
     assert "HTTP 503" in capsys.readouterr().err
+
+
+def test_live_all_fetches_every_enabled_operator_in_turn(tmp_path, monkeypatch):
+    fetched = []
+
+    def fake(config, **kwargs):
+        fetched.append(config.id)
+        raise FeedError(f"{config.id}: stopped by the test")
+
+    monkeypatch.setattr(run, "run_operator", fake)
+    assert run.main(["--live", "all", "--log-dir", str(tmp_path)]) == 1
+    enabled = sorted(i for i, c in load_registry().items() if c.enabled)
+    assert fetched == enabled
+    assert sorted(p.stem for p in tmp_path.glob("*.json")) == enabled
+
+
+def test_live_all_publishes_the_rest_when_one_operator_fails(tmp_path, monkeypatch, capsys):
+    replayed = {r.operator_id: r for r in run.run_fixtures(load_registry())}
+
+    def fake(config, **kwargs):
+        if config.id == "jolt":
+            raise FeedError("gave up on the Jolt feed: HTTP 503")
+        return replayed[config.id]
+
+    monkeypatch.setattr(run, "run_operator", fake)
+    logs, out = tmp_path / "logs", tmp_path / "build"
+    code = run.main(["--live", "all", "--log-dir", str(logs), "--publish", str(out)])
+    assert code == run.EXIT_SOME_FAILED
+    assert json.loads((logs / "jolt.json").read_text())["failed"] is True
+    manifest = json.loads((out / "data" / "manifest.json").read_text())
+    assert "jolt" not in manifest["operators"]
+    assert set(manifest["operators"]) == set(replayed) - {"jolt"}
+    assert "left out: jolt" in capsys.readouterr().err

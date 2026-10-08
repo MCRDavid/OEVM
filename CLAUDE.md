@@ -15,6 +15,7 @@ decisions are in docs/adr/.
 - Feed health page: uv run python -m pipeline.run --fixtures --log-dir logs, then
   uv run python -m pipeline.status --runs logs --out build
 - One live page (sparingly, enabled operators only): uv run python -m pipeline.run --live chargy --max-pages 1
+- Daily run (workflows only, not locally): uv run python -m pipeline.run --live all --log-dir logs --publish build
 - After changing a model: uv run python -m schema.export (CI runs it with --check)
 - After changing operators/*.yaml: uv run python -m pipeline.transparency (CI runs it with --check)
 - Secret scan and file checks: uv run pre-commit run --all-files
@@ -32,6 +33,7 @@ decisions are in docs/adr/.
 - pipeline/status.py: feed health page. schema/runlog.py: run log format. pipeline/health.py: figures.
 - pipeline/project.py: repository URL (also in site/index.html, site/.well-known/security.txt and .github/ISSUE_TEMPLATE).
 - site/index.html, site/assets/: the map page. pipeline/build_site.py: build folder with MapLibre.
+- .github/workflows/: ci, fetch-daily (cron, calls deploy), deploy (Pages from main), keepalive.
 
 ## Hard rules
 - Never commit or print secrets. Reference keys by secret_name only, even keys an operator publishes.

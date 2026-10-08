@@ -130,15 +130,35 @@ do not exist yet, so create them once:
 - In **Settings > Emails**, keep **Keep my email addresses private** ticked, so commits
   you make on GitHub show a private noreply address. Your commits already do.
 
+## 9. GitHub Pages and the Jolt key
+
+Needed before the first run of the **Fetch daily** workflow (`.github/workflows/`).
+
+1. **Settings > Pages**. Under **Build and deployment**, set **Source** to **GitHub
+   Actions**.
+2. **Settings > Environments > github-pages** (it appears after step 1). Under
+   **Deployment branches and tags**, keep it to `main` only.
+3. **Settings > Secrets and variables > Actions > New repository secret**. Name it
+   `JOLT_API_KEY` and paste the key from Jolt's own open data page (its address is in
+   `operators/jolt.yaml`). Jolt publishes this key, but it is still kept out of the
+   repository, as `CLAUDE.md` asks.
+4. Open the **Actions** tab, choose **Fetch daily**, and click **Run workflow** on
+   `main`. When it finishes, the site's address is shown on the run's summary page.
+   From then on it runs every day at 04:17 UTC.
+
+A run shows red if any operator failed, even though the site was still updated with the
+others; the feed health page on the site says which one.
+
+Source: https://docs.github.com/en/pages/getting-started-with-github-pages/configuring-a-publishing-source-for-your-github-pages-site
+
 ## Later: security.txt on the website
 
 `site/.well-known/security.txt` only counts as a security contact when it is served from
 the top of a domain, at `https://<domain>/.well-known/security.txt` (RFC 9116). A GitHub
 Pages project site lives at `https://<user>.github.io/OEVM/`, so the file would not be at
-the top. When the site is set up (blueprint task 10):
+the top. Now that the site is published by a workflow (blueprint task 10):
 
 - use a custom domain for the site, or put a copy in a separate `<user>.github.io`
   repository; and
-- if the site is published with GitHub Actions, use `actions/upload-pages-artifact@v5`
-  with `include-hidden-files: true`. Version 4 leaves out folders that start with a dot,
-  such as `.well-known`.
+- the deploy workflow already uses `actions/upload-pages-artifact@v5` with
+  `include-hidden-files: true`, so `.well-known` is published.

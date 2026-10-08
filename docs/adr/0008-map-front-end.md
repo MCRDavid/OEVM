@@ -72,7 +72,7 @@ usable on a mid-range phone, Lighthouse accessibility score of 90 or more.
 
 - Favourites and a home location (the privacy rules already cover them; a home location
   would be visible to the map host as an area, so the notice must say so first).
-- Deployment to GitHub Pages and the daily data run (blueprint task 10).
+- Deployment to GitHub Pages and the daily data run (blueprint task 10; see ADR 0009).
 - Live status on click (blueprint section 2, later phase).
 - Testing with a real screen reader and on real phones. The phone check so far is a
   412 by 823 pixel browser window with software WebGL.
