@@ -43,8 +43,9 @@ the site goes live.
 2. **No third-party files that track.** Check every external font, map style, tile
    server or script before adding it, and record whether it sets cookies or uses storage.
    Prefer self-hosted files. Checked so far:
-   - **MapLibre GL JS 6.11.2:** served from the site itself, not from a script host. No
-     telemetry was found in its source.
+   - **MapLibre GL JS** (the version pinned in `package.json`): served from the site
+     itself, not from a script host. No telemetry was found in 6.11.2's source, nor in
+     6.12.0's bundles (searched 8 October 2026). Search again after major updates.
    - **OpenFreeMap** (`tiles.openfreemap.org`, Liberty style): the only outside host the
      page contacts. Header checks on 8 October 2026 saw no cookies and no storage. The
      responses carry Cloudflare's Network Error Logging (NEL) headers, which ask some

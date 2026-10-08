@@ -11,7 +11,8 @@ usable on a mid-range phone, Lighthouse accessibility score of 90 or more.
 - **No build tool.** The page is plain HTML, CSS and JavaScript modules in `site/`.
   `pipeline/build_site.py` copies them into a build folder with the map files, MapLibre
   and `assets/config.json`. The committed `site/` folder is never written to.
-- **MapLibre GL JS 6.11.2, served from the site.** It is pinned in `package.json` and
+- **MapLibre GL JS, served from the site.** It is pinned to one version in `package.json`
+  (6.11.2 when this was decided, updated by Dependabot since) and
   installed with `npm ci`; the build copies its three module files and CSS, its licence
   and a `THIRD_PARTY_NOTICES.txt` built from the licences of the packages it bundles.
   Visitors' browsers contact no script host. Version 6 needs WebGL2.
