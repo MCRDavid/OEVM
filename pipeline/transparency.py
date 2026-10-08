@@ -407,7 +407,7 @@ def _runs_section(data: dict) -> str:
         modules = "<br>".join(
             f"{_e(name)}: {_e(m['records'])} records of "
             f"{_e('unknown' if m['reported'] is None else m['reported'])} "
-            f"reported{'' if m['complete'] else ', stopped early'}"
+            f"reported{'' if m['complete'] else ', incomplete'}"
             for name, m in run["modules"].items()
         )
         if run.get("failed"):

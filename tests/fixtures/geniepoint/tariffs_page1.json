@@ -1,0 +1,861 @@
+{
+  "request": {
+    "method": "GET",
+    "url": "https://opendata.geniepoint.co.uk/tariffs"
+  },
+  "response": {
+    "status_code": 200,
+    "headers": {
+      "content-type": "application/json; charset=utf-8",
+      "x-total-count": "12",
+      "x-limit": "0"
+    },
+    "body": {
+      "data": [
+        {
+          "country_code": "GB",
+          "party_id": "GPT",
+          "id": "0b219b49-1d84-4021-bfbd-b4a8017b543a",
+          "currency": "GBP",
+          "type": "REGULAR",
+          "tariff_alt_text": [
+            {
+              "language": "en",
+              "text": "Tariff_Rapid31be6335-8c20-430d-bc48-ac4500e15adb"
+            }
+          ],
+          "tariff_alt_url": null,
+          "min_price": null,
+          "max_price": null,
+          "elements": [
+            {
+              "price_components": [
+                {
+                  "type": "ENERGY",
+                  "price": 0.69,
+                  "vat": 20.0,
+                  "step_size": 1
+                },
+                {
+                  "type": "TIME",
+                  "price": 0.0,
+                  "vat": 20.0,
+                  "step_size": 1
+                },
+                {
+                  "type": "FLAT",
+                  "price": 0.0,
+                  "vat": 20.0,
+                  "step_size": 1
+                }
+              ],
+              "restrictions": null
+            },
+            {
+              "price_components": [
+                {
+                  "type": "PARKING_TIME",
+                  "price": 5.56,
+                  "vat": 20.0,
+                  "step_size": 5400
+                }
+              ],
+              "restrictions": {
+                "start_time": null,
+                "end_time": null,
+                "start_date": null,
+                "end_date": null,
+                "min_kwh": null,
+                "max_kwh": null,
+                "min_current": null,
+                "max_current": null,
+                "min_power": null,
+                "max_power": null,
+                "min_duration": 5400,
+                "day_of_week": null,
+                "reservation": null
+              }
+            }
+          ],
+          "start_date_time": null,
+          "end_date_time": null,
+          "energy_mix": null,
+          "last_updated": "2026-08-16T23:01:05Z"
+        },
+        {
+          "country_code": "GB",
+          "party_id": "GPT",
+          "id": "6687b56e-782f-4f21-927d-b4a8017b92a2",
+          "currency": "GBP",
+          "type": "AD_HOC_PAYMENT",
+          "tariff_alt_text": [
+            {
+              "language": "en",
+              "text": "Tariff_Contactless_Rapid7ab83c27-57b5-450d-8ba7-ad3d00fe579c"
+            }
+          ],
+          "tariff_alt_url": null,
+          "min_price": null,
+          "max_price": null,
+          "elements": [
+            {
+              "price_components": [
+                {
+                  "type": "ENERGY",
+                  "price": 0.77,
+                  "vat": 20.0,
+                  "step_size": 1
+                },
+                {
+                  "type": "TIME",
+                  "price": 0.0,
+                  "vat": 20.0,
+                  "step_size": 1
+                },
+                {
+                  "type": "FLAT",
+                  "price": 0.0,
+                  "vat": 20.0,
+                  "step_size": 1
+                }
+              ],
+              "restrictions": null
+            },
+            {
+              "price_components": [
+                {
+                  "type": "PARKING_TIME",
+                  "price": 5.56,
+                  "vat": 20.0,
+                  "step_size": 5400
+                }
+              ],
+              "restrictions": {
+                "start_time": null,
+                "end_time": null,
+                "start_date": null,
+                "end_date": null,
+                "min_kwh": null,
+                "max_kwh": null,
+                "min_current": null,
+                "max_current": null,
+                "min_power": null,
+                "max_power": null,
+                "min_duration": 5400,
+                "day_of_week": null,
+                "reservation": null
+              }
+            }
+          ],
+          "start_date_time": null,
+          "end_date_time": null,
+          "energy_mix": null,
+          "last_updated": "2026-08-16T23:01:58Z"
+        },
+        {
+          "country_code": "GB",
+          "party_id": "GPT",
+          "id": "2a9aa482-87a1-4321-8725-b4a8017b92a2",
+          "currency": "GBP",
+          "type": "AD_HOC_PAYMENT",
+          "tariff_alt_text": [
+            {
+              "language": "en",
+              "text": "Tariff_Contactless_Fast7ab83c27-57b5-450d-8ba7-ad3d00fe579c"
+            }
+          ],
+          "tariff_alt_url": null,
+          "min_price": null,
+          "max_price": null,
+          "elements": [
+            {
+              "price_components": [
+                {
+                  "type": "ENERGY",
+                  "price": 0.77,
+                  "vat": 20.0,
+                  "step_size": 1
+                },
+                {
+                  "type": "TIME",
+                  "price": 0.0,
+                  "vat": 20.0,
+                  "step_size": 1
+                },
+                {
+                  "type": "FLAT",
+                  "price": 0.0,
+                  "vat": 20.0,
+                  "step_size": 1
+                }
+              ],
+              "restrictions": null
+            },
+            {
+              "price_components": [
+                {
+                  "type": "PARKING_TIME",
+                  "price": 2.08,
+                  "vat": 20.0,
+                  "step_size": 14400
+                }
+              ],
+              "restrictions": {
+                "start_time": null,
+                "end_time": null,
+                "start_date": null,
+                "end_date": null,
+                "min_kwh": null,
+                "max_kwh": null,
+                "min_current": null,
+                "max_current": null,
+                "min_power": null,
+                "max_power": null,
+                "min_duration": 14400,
+                "day_of_week": null,
+                "reservation": null
+              }
+            }
+          ],
+          "start_date_time": null,
+          "end_date_time": null,
+          "energy_mix": null,
+          "last_updated": "2026-08-16T23:01:58Z"
+        },
+        {
+          "country_code": "GB",
+          "party_id": "GPT",
+          "id": "5a6b22ed-389a-4921-9b7b-b4a8017b92a2",
+          "currency": "GBP",
+          "type": "REGULAR",
+          "tariff_alt_text": [
+            {
+              "language": "en",
+              "text": "Tariff_Fast7ab83c27-57b5-450d-8ba7-ad3d00fe579c"
+            }
+          ],
+          "tariff_alt_url": null,
+          "min_price": null,
+          "max_price": null,
+          "elements": [
+            {
+              "price_components": [
+                {
+                  "type": "ENERGY",
+                  "price": 0.69,
+                  "vat": 20.0,
+                  "step_size": 1
+                },
+                {
+                  "type": "TIME",
+                  "price": 0.0,
+                  "vat": 20.0,
+                  "step_size": 1
+                },
+                {
+                  "type": "FLAT",
+                  "price": 0.0,
+                  "vat": 20.0,
+                  "step_size": 1
+                }
+              ],
+              "restrictions": null
+            },
+            {
+              "price_components": [
+                {
+                  "type": "PARKING_TIME",
+                  "price": 2.08,
+                  "vat": 20.0,
+                  "step_size": 14400
+                }
+              ],
+              "restrictions": {
+                "start_time": null,
+                "end_time": null,
+                "start_date": null,
+                "end_date": null,
+                "min_kwh": null,
+                "max_kwh": null,
+                "min_current": null,
+                "max_current": null,
+                "min_power": null,
+                "max_power": null,
+                "min_duration": 14400,
+                "day_of_week": null,
+                "reservation": null
+              }
+            }
+          ],
+          "start_date_time": null,
+          "end_date_time": null,
+          "energy_mix": null,
+          "last_updated": "2026-08-16T23:01:58Z"
+        },
+        {
+          "country_code": "GB",
+          "party_id": "GPT",
+          "id": "fdca1466-c9d2-4621-b220-b4a8017b92a2",
+          "currency": "GBP",
+          "type": "REGULAR",
+          "tariff_alt_text": [
+            {
+              "language": "en",
+              "text": "Tariff_Rapid7ab83c27-57b5-450d-8ba7-ad3d00fe579c"
+            }
+          ],
+          "tariff_alt_url": null,
+          "min_price": null,
+          "max_price": null,
+          "elements": [
+            {
+              "price_components": [
+                {
+                  "type": "ENERGY",
+                  "price": 0.69,
+                  "vat": 20.0,
+                  "step_size": 1
+                },
+                {
+                  "type": "TIME",
+                  "price": 0.0,
+                  "vat": 20.0,
+                  "step_size": 1
+                },
+                {
+                  "type": "FLAT",
+                  "price": 0.0,
+                  "vat": 20.0,
+                  "step_size": 1
+                }
+              ],
+              "restrictions": null
+            },
+            {
+              "price_components": [
+                {
+                  "type": "PARKING_TIME",
+                  "price": 5.56,
+                  "vat": 20.0,
+                  "step_size": 5400
+                }
+              ],
+              "restrictions": {
+                "start_time": null,
+                "end_time": null,
+                "start_date": null,
+                "end_date": null,
+                "min_kwh": null,
+                "max_kwh": null,
+                "min_current": null,
+                "max_current": null,
+                "min_power": null,
+                "max_power": null,
+                "min_duration": 5400,
+                "day_of_week": null,
+                "reservation": null
+              }
+            }
+          ],
+          "start_date_time": null,
+          "end_date_time": null,
+          "energy_mix": null,
+          "last_updated": "2026-08-16T23:01:58Z"
+        },
+        {
+          "country_code": "GB",
+          "party_id": "GPT",
+          "id": "cd19e1ec-7e7e-4521-9af5-af1e00f46e02",
+          "currency": "GBP",
+          "type": "REGULAR",
+          "tariff_alt_text": [
+            {
+              "language": "en",
+              "text": "Tariff_Fast26d9559f-ae75-440d-b080-af1e00f2f3b6"
+            }
+          ],
+          "tariff_alt_url": null,
+          "min_price": null,
+          "max_price": null,
+          "elements": [
+            {
+              "price_components": [
+                {
+                  "type": "ENERGY",
+                  "price": 0.48,
+                  "vat": 20.0,
+                  "step_size": 1
+                },
+                {
+                  "type": "TIME",
+                  "price": 0.0,
+                  "vat": 20.0,
+                  "step_size": 1
+                },
+                {
+                  "type": "FLAT",
+                  "price": 0.0,
+                  "vat": 20.0,
+                  "step_size": 1
+                }
+              ],
+              "restrictions": null
+            },
+            {
+              "price_components": [
+                {
+                  "type": "PARKING_TIME",
+                  "price": 0.35,
+                  "vat": 20.0,
+                  "step_size": 86400
+                }
+              ],
+              "restrictions": {
+                "start_time": null,
+                "end_time": null,
+                "start_date": null,
+                "end_date": null,
+                "min_kwh": null,
+                "max_kwh": null,
+                "min_current": null,
+                "max_current": null,
+                "min_power": null,
+                "max_power": null,
+                "min_duration": 86400,
+                "day_of_week": null,
+                "reservation": null
+              }
+            }
+          ],
+          "start_date_time": null,
+          "end_date_time": null,
+          "energy_mix": null,
+          "last_updated": "2022-09-28T14:49:56Z"
+        },
+        {
+          "country_code": "GB",
+          "party_id": "GPT",
+          "id": "c4583ecf-207b-4b21-ac5c-b4a801789d77",
+          "currency": "GBP",
+          "type": "REGULAR",
+          "tariff_alt_text": [
+            {
+              "language": "en",
+              "text": "Tariff_Rapid6afdf467-27d4-4e0d-ad97-b11c0113ae2e"
+            }
+          ],
+          "tariff_alt_url": null,
+          "min_price": null,
+          "max_price": null,
+          "elements": [
+            {
+              "price_components": [
+                {
+                  "type": "ENERGY",
+                  "price": 0.69,
+                  "vat": 20.0,
+                  "step_size": 1
+                },
+                {
+                  "type": "TIME",
+                  "price": 0.0,
+                  "vat": 20.0,
+                  "step_size": 1
+                },
+                {
+                  "type": "FLAT",
+                  "price": 0.0,
+                  "vat": 20.0,
+                  "step_size": 1
+                }
+              ],
+              "restrictions": null
+            },
+            {
+              "price_components": [
+                {
+                  "type": "PARKING_TIME",
+                  "price": 5.56,
+                  "vat": 20.0,
+                  "step_size": 5400
+                }
+              ],
+              "restrictions": {
+                "start_time": null,
+                "end_time": null,
+                "start_date": null,
+                "end_date": null,
+                "min_kwh": null,
+                "max_kwh": null,
+                "min_current": null,
+                "max_current": null,
+                "min_power": null,
+                "max_power": null,
+                "min_duration": 5400,
+                "day_of_week": null,
+                "reservation": null
+              }
+            }
+          ],
+          "start_date_time": null,
+          "end_date_time": null,
+          "energy_mix": null,
+          "last_updated": "2026-08-16T22:51:12Z"
+        },
+        {
+          "country_code": "GB",
+          "party_id": "GPT",
+          "id": "b899aaac-602c-4d21-8b1a-b4a801789d77",
+          "currency": "GBP",
+          "type": "AD_HOC_PAYMENT",
+          "tariff_alt_text": [
+            {
+              "language": "en",
+              "text": "Tariff_Contactless_Rapid6afdf467-27d4-4e0d-ad97-b11c0113ae2e"
+            }
+          ],
+          "tariff_alt_url": null,
+          "min_price": null,
+          "max_price": null,
+          "elements": [
+            {
+              "price_components": [
+                {
+                  "type": "ENERGY",
+                  "price": 0.77,
+                  "vat": 20.0,
+                  "step_size": 1
+                },
+                {
+                  "type": "TIME",
+                  "price": 0.0,
+                  "vat": 20.0,
+                  "step_size": 1
+                },
+                {
+                  "type": "FLAT",
+                  "price": 0.0,
+                  "vat": 20.0,
+                  "step_size": 1
+                }
+              ],
+              "restrictions": null
+            },
+            {
+              "price_components": [
+                {
+                  "type": "PARKING_TIME",
+                  "price": 5.56,
+                  "vat": 20.0,
+                  "step_size": 5400
+                }
+              ],
+              "restrictions": {
+                "start_time": null,
+                "end_time": null,
+                "start_date": null,
+                "end_date": null,
+                "min_kwh": null,
+                "max_kwh": null,
+                "min_current": null,
+                "max_current": null,
+                "min_power": null,
+                "max_power": null,
+                "min_duration": 5400,
+                "day_of_week": null,
+                "reservation": null
+              }
+            }
+          ],
+          "start_date_time": null,
+          "end_date_time": null,
+          "energy_mix": null,
+          "last_updated": "2026-08-16T22:51:12Z"
+        },
+        {
+          "country_code": "GB",
+          "party_id": "GPT",
+          "id": "aaf3ec3b-f7ba-4821-ba54-b4a801789d77",
+          "currency": "GBP",
+          "type": "REGULAR",
+          "tariff_alt_text": [
+            {
+              "language": "en",
+              "text": "Tariff_Fast6afdf467-27d4-4e0d-ad97-b11c0113ae2e"
+            }
+          ],
+          "tariff_alt_url": null,
+          "min_price": null,
+          "max_price": null,
+          "elements": [
+            {
+              "price_components": [
+                {
+                  "type": "ENERGY",
+                  "price": 0.69,
+                  "vat": 20.0,
+                  "step_size": 1
+                },
+                {
+                  "type": "TIME",
+                  "price": 0.0,
+                  "vat": 20.0,
+                  "step_size": 1
+                },
+                {
+                  "type": "FLAT",
+                  "price": 0.0,
+                  "vat": 20.0,
+                  "step_size": 1
+                }
+              ],
+              "restrictions": null
+            },
+            {
+              "price_components": [
+                {
+                  "type": "PARKING_TIME",
+                  "price": 2.08,
+                  "vat": 20.0,
+                  "step_size": 14400
+                }
+              ],
+              "restrictions": {
+                "start_time": null,
+                "end_time": null,
+                "start_date": null,
+                "end_date": null,
+                "min_kwh": null,
+                "max_kwh": null,
+                "min_current": null,
+                "max_current": null,
+                "min_power": null,
+                "max_power": null,
+                "min_duration": 14400,
+                "day_of_week": null,
+                "reservation": null
+              }
+            }
+          ],
+          "start_date_time": null,
+          "end_date_time": null,
+          "energy_mix": null,
+          "last_updated": "2026-08-16T22:51:12Z"
+        },
+        {
+          "country_code": "GB",
+          "party_id": "GPT",
+          "id": "a82dfd5e-6427-4e21-8247-b4a801789d77",
+          "currency": "GBP",
+          "type": "AD_HOC_PAYMENT",
+          "tariff_alt_text": [
+            {
+              "language": "en",
+              "text": "Tariff_Contactless_Fast6afdf467-27d4-4e0d-ad97-b11c0113ae2e"
+            }
+          ],
+          "tariff_alt_url": null,
+          "min_price": null,
+          "max_price": null,
+          "elements": [
+            {
+              "price_components": [
+                {
+                  "type": "ENERGY",
+                  "price": 0.77,
+                  "vat": 20.0,
+                  "step_size": 1
+                },
+                {
+                  "type": "TIME",
+                  "price": 0.0,
+                  "vat": 20.0,
+                  "step_size": 1
+                },
+                {
+                  "type": "FLAT",
+                  "price": 0.0,
+                  "vat": 20.0,
+                  "step_size": 1
+                }
+              ],
+              "restrictions": null
+            },
+            {
+              "price_components": [
+                {
+                  "type": "PARKING_TIME",
+                  "price": 2.08,
+                  "vat": 20.0,
+                  "step_size": 14400
+                }
+              ],
+              "restrictions": {
+                "start_time": null,
+                "end_time": null,
+                "start_date": null,
+                "end_date": null,
+                "min_kwh": null,
+                "max_kwh": null,
+                "min_current": null,
+                "max_current": null,
+                "min_power": null,
+                "max_power": null,
+                "min_duration": 14400,
+                "day_of_week": null,
+                "reservation": null
+              }
+            }
+          ],
+          "start_date_time": null,
+          "end_date_time": null,
+          "energy_mix": null,
+          "last_updated": "2026-08-16T22:51:12Z"
+        },
+        {
+          "country_code": "GB",
+          "party_id": "GPT",
+          "id": "12b32ab2-942f-4b21-913c-b00300a32510",
+          "currency": "GBP",
+          "type": "REGULAR",
+          "tariff_alt_text": [
+            {
+              "language": "en",
+              "text": "Tariff________OffPeakRapid61ccaf98-63b6-440d-b8b4-aec4009a2d08"
+            }
+          ],
+          "tariff_alt_url": null,
+          "min_price": null,
+          "max_price": null,
+          "elements": [
+            {
+              "price_components": [
+                {
+                  "type": "ENERGY",
+                  "price": 0.62,
+                  "vat": 20.0,
+                  "step_size": 1
+                },
+                {
+                  "type": "TIME",
+                  "price": 0.0,
+                  "vat": 20.0,
+                  "step_size": 1
+                },
+                {
+                  "type": "FLAT",
+                  "price": 0.0,
+                  "vat": 20.0,
+                  "step_size": 1
+                }
+              ],
+              "restrictions": null
+            },
+            {
+              "price_components": [
+                {
+                  "type": "PARKING_TIME",
+                  "price": 5.56,
+                  "vat": 20.0,
+                  "step_size": 5400
+                }
+              ],
+              "restrictions": {
+                "start_time": null,
+                "end_time": null,
+                "start_date": null,
+                "end_date": null,
+                "min_kwh": null,
+                "max_kwh": null,
+                "min_current": null,
+                "max_current": null,
+                "min_power": null,
+                "max_power": null,
+                "min_duration": 5400,
+                "day_of_week": null,
+                "reservation": null
+              }
+            }
+          ],
+          "start_date_time": null,
+          "end_date_time": null,
+          "energy_mix": null,
+          "last_updated": "2023-05-15T09:53:59Z"
+        },
+        {
+          "country_code": "GB",
+          "party_id": "GPT",
+          "id": "12b32ab2-942f-4b21-913c-b00300a32510",
+          "currency": "GBP",
+          "type": "REGULAR",
+          "tariff_alt_text": [
+            {
+              "language": "en",
+              "text": "Tariff________OffPeakRapid61ccaf98-63b6-440d-b8b4-aec4009a2d08"
+            }
+          ],
+          "tariff_alt_url": null,
+          "min_price": null,
+          "max_price": null,
+          "elements": [
+            {
+              "price_components": [
+                {
+                  "type": "ENERGY",
+                  "price": 0.62,
+                  "vat": 20.0,
+                  "step_size": 1
+                },
+                {
+                  "type": "TIME",
+                  "price": 0.0,
+                  "vat": 20.0,
+                  "step_size": 1
+                },
+                {
+                  "type": "FLAT",
+                  "price": 0.0,
+                  "vat": 20.0,
+                  "step_size": 1
+                }
+              ],
+              "restrictions": null
+            },
+            {
+              "price_components": [
+                {
+                  "type": "PARKING_TIME",
+                  "price": 5.56,
+                  "vat": 20.0,
+                  "step_size": 5400
+                }
+              ],
+              "restrictions": {
+                "start_time": null,
+                "end_time": null,
+                "start_date": null,
+                "end_date": null,
+                "min_kwh": null,
+                "max_kwh": null,
+                "min_current": null,
+                "max_current": null,
+                "min_power": null,
+                "max_power": null,
+                "min_duration": 5400,
+                "day_of_week": null,
+                "reservation": null
+              }
+            }
+          ],
+          "start_date_time": null,
+          "end_date_time": null,
+          "energy_mix": null,
+          "last_updated": "2023-05-15T09:53:59Z"
+        }
+      ],
+      "status_code": 1000,
+      "status_message": "Success",
+      "timestamp": "2026-10-08T07:54:33Z"
+    }
+  }
+}

@@ -1,4 +1,4 @@
-# 0004: Jolt adapter and locations with no publish flag
+# 0004: Jolt and GeniePoint adapters, and locations with no publish flag
 
 Date: 2026-10-08. Status: accepted.
 
@@ -42,6 +42,28 @@ Jolt location would have been shown.
 - **Fixtures.** `pipeline.run --fixtures` replays recorded responses with a made-up key,
   so CI needs no secret. The real key is only needed for live runs, from the
   `JOLT_API_KEY` environment variable or GitHub Actions secret.
+
+## GeniePoint
+
+- The blueprint expected GeniePoint to publish downloads for a `static_file` adapter. Its
+  open data page, read in a browser by the repository owner on 2026-10-08 because it
+  blocks automated requests, links two files on opendata.geniepoint.co.uk. Both are OCPI
+  2.2.1 responses holding every record, so the existing `ocpi_221` adapter reads them
+  unchanged. No `static_file` adapter is built until a source needs one.
+- GeniePoint stays switched off until the Equans website's terms of use, linked from the
+  open data page, have been read.
+- The tariffs file repeats 22 identical tariffs 8 times each. The existing de-duplication
+  keeps one copy and logs the repeats.
+
+## Review fixes and automatic checks
+
+- A review on 2026-10-08 found nine robustness gaps in the Jolt adapter (for example, one
+  failing tariff request stopped the whole run). Each is fixed and has a test.
+- To keep rules from depending on careful review alone, these now run on every change:
+  tests cannot open network connections; CI fails below 93% test coverage; every
+  switched-on operator must have an adapter, fixtures, a checked licence and a row in
+  `DATA_LICENCES.md`; every fixture set needs a source and licence section; and a
+  pre-commit hook rejects common American spellings in documents and operator files.
 
 ## Other
 

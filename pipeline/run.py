@@ -68,7 +68,7 @@ def report(result: AdapterResult) -> str:
     lines = [f"{result.operator_id}: fetched {result.fetched_at:%Y-%m-%dT%H:%M:%SZ}"]
     for module in result.modules.values():
         total = "unknown" if module.total_reported is None else module.total_reported
-        state = "complete" if module.complete else "stopped early (page limit)"
+        state = "complete" if module.complete else "incomplete (page limit, or see issues)"
         pages = f"{len(module.pages)} page" + ("" if len(module.pages) == 1 else "s")
         lines.append(
             f"  {module.module}: {pages}, {len(module.records)} records of {total} reported, "

@@ -21,20 +21,33 @@ from datetime import UTC, datetime
 
 from adapters.http import FeedError, PoliteClient, redact_url
 from adapters.ocpi_221 import AdapterResult, convert_records
-from adapters.ocpi_221.client import KEPT_HEADERS, ModuleFetch, Page
+from adapters.ocpi_221.client import KEPT_HEADERS, ModuleFetch, Page, _int_header
 from adapters.ocpi_221.normalise import EVSE_STATUSES, IssueLog
 from schema.operator import OperatorConfig
 
 STANDARDS = {"CCS2": "IEC_62196_T2_COMBO"}
 TARIFF_ID = re.compile(r"[A-Za-z0-9_-]{1,36}")  # OCPI ids are at most 36 characters
 MAX_TARIFFS = 100
+EMI3_EVSE_ID = re.compile(r"[A-Z]{2}\*?[A-Z0-9]{3}\*?E[A-Z0-9*]{1,30}")
 
 
-def _get(client: PoliteClient, url: str) -> tuple[int, object, Page | None]:
-    """GET url and parse JSON with the key removed. Body and page are None unless HTTP 200."""
+def _text_id(value: object) -> str | None:
+    """An id as text: a non-empty string, or a whole number written as text."""
+    if isinstance(value, str) and value.strip():
+        return value
+    if isinstance(value, int) and not isinstance(value, bool):
+        return str(value)
+    return None
+
+
+def _get(client: PoliteClient, url: str) -> tuple[int, object, Page | None, int | None]:
+    """GET url and parse JSON with the key removed: status, body, page and X-Total-Count.
+
+    Body and page are None unless the reply is HTTP 200.
+    """
     response = client.get(url)
     if response.status_code != 200:
-        return response.status_code, None, None
+        return response.status_code, None, None, None
     if "next" in response.links:
         raise FeedError(f"{redact_url(url)} has a next page link; this adapter reads one page")
     try:
@@ -42,16 +55,23 @@ def _get(client: PoliteClient, url: str) -> tuple[int, object, Page | None]:
     except ValueError as exc:
         raise FeedError(f"{redact_url(url)} did not return JSON") from exc
     headers = {k: response.headers[k] for k in KEPT_HEADERS if k in response.headers}
-    return 200, body, Page(redact_url(url), 200, client.redact(headers), body)
+    page = Page(redact_url(url), 200, client.redact(headers), body)
+    return 200, body, page, _int_header(response, "X-Total-Count")
 
 
 def _fetch_locations(client: PoliteClient, url: str) -> ModuleFetch:
-    status, body, page = _get(client, url)
+    status, body, page, total = _get(client, url)
     if status != 200:
         raise FeedError(f"{redact_url(url)} returned HTTP {status}")
     if not isinstance(body, dict) or not isinstance(body.get("locations"), list):
         raise FeedError(f"{redact_url(url)} returned no list of locations")
-    return ModuleFetch("locations", url, body["locations"], [page], complete=True)
+    records = body["locations"]
+    if total is not None and total > len(records):
+        raise FeedError(
+            f"{redact_url(url)} reports {total} locations but sent {len(records)}; "
+            "this adapter reads one page"
+        )
+    return ModuleFetch("locations", url, records, [page], total_reported=total, complete=True)
 
 
 def _fetch_tariffs(
@@ -64,7 +84,12 @@ def _fetch_tariffs(
     for number, tariff_id in enumerate(ids[:MAX_TARIFFS]):
         if max_pages is not None and number >= max_pages:
             return module
-        status, body, page = _get(client, template.replace("{tariffId}", tariff_id))
+        try:
+            status, body, page, _ = _get(client, template.replace("{tariffId}", tariff_id))
+        except FeedError as exc:
+            missed = True
+            issues.add(f"tariff {tariff_id!r} not used: {exc}")
+            continue
         if isinstance(body, dict):
             module.records.append(body)
             module.pages.append(page)
@@ -76,39 +101,48 @@ def _fetch_tariffs(
     return module
 
 
-def _connector(raw: dict) -> dict:
+def _connector(raw: dict, issues: IssueLog) -> dict:
     standard = raw.get("standard")
-    return {
+    connector = {
         **raw,
-        "id": None if raw.get("id") is None else str(raw["id"]),
+        "id": _text_id(raw.get("id")),
         "standard": STANDARDS.get(standard, standard) if isinstance(standard, str) else standard,
     }
+    if isinstance(raw.get("tariff_ids"), list):
+        connector["tariff_ids"] = [_text_id(t) for t in raw["tariff_ids"] if _text_id(t)]
+        for bad in [t for t in raw["tariff_ids"] if not _text_id(t)]:
+            issues.add(f"tariff id {bad!r} not used: not an id")
+    return connector
 
 
-def _evse(raw: dict, fetched_at: datetime) -> dict:
+def _evse(raw: dict, fetched_at: datetime, issues: IssueLog) -> dict:
     evse = dict(raw)
     status = raw.get("status")
     if isinstance(status, str) and status.upper() in EVSE_STATUSES:
         evse["status"] = status.upper()
     uid, number = raw.get("uid"), raw.get("evse_id")
-    evse["uid"] = str(uid) if uid is not None else (None if number is None else str(number))
-    # Jolt's evse_id is a number such as 143, not an eMI3 EVSE ID, so it is not kept as one.
-    evse["evse_id"] = number if isinstance(number, str) else None
+    evse["uid"] = _text_id(uid) or _text_id(number)
+    # Jolt's evse_id is a number such as 143, not an eMI3 EVSE ID, so it is kept only as the
+    # uid. A value shaped like an eMI3 EVSE ID (for example GB*JLT*E143) would be kept.
+    is_emi3 = isinstance(number, str) and EMI3_EVSE_ID.fullmatch(number)
+    evse["evse_id"] = number if is_emi3 else None
     if not raw.get("last_updated"):
         # The status is as Jolt reported it when fetched; Jolt gives no time of its own.
         evse["last_updated"] = fetched_at.isoformat()
-    evse["connectors"] = [_connector(c) for c in raw.get("connectors") or []]
+    evse["connectors"] = [_connector(c, issues) for c in raw.get("connectors") or []]
     return evse
 
 
-def ocpi_location(raw: dict, fetched_at: datetime) -> dict:
+def ocpi_location(raw: dict, fetched_at: datetime, issues: IssueLog) -> dict:
     """Reshape one Jolt location into an OCPI 2.2.1 Location. Raises ValueError if unusable."""
     location = dict(raw)
     # Jolt's names, such as BAR004, were unique on 2026-10-08 and stand in for the missing id.
-    location["id"] = raw.get("id") or raw.get("name")
-    if not isinstance(location["id"], str) or not location["id"].strip():
-        raise ValueError("location has no id or name")
-    location["evses"] = [_evse(evse, fetched_at) for evse in raw.get("evses") or []]
+    location["id"] = _text_id(raw.get("id")) or _text_id(raw.get("name"))
+    if location["id"] is None:
+        raise ValueError(
+            f"location has no usable id or name (id {raw.get('id')!r}, name {raw.get('name')!r})"
+        )
+    location["evses"] = [_evse(evse, fetched_at, issues) for evse in raw.get("evses") or []]
     return location
 
 
@@ -116,6 +150,8 @@ def ocpi_tariff(raw: dict) -> dict:
     """Reshape one Jolt tariff into an OCPI 2.2.1 Tariff. Raises ValueError if unusable."""
     tariff = dict(raw)
     alt_text = raw.get("tariff_alt_text")
+    if isinstance(alt_text, str):
+        alt_text = [alt_text]
     if isinstance(alt_text, list):
         tariff["tariff_alt_text"] = [t if isinstance(t, dict) else {"text": t} for t in alt_text]
     for name in ("min_price", "max_price"):
@@ -123,7 +159,8 @@ def ocpi_tariff(raw: dict) -> dict:
         if value is None or isinstance(value, dict):
             continue
         if value == 0 and not isinstance(value, bool):
-            tariff[name] = {"excl_vat": 0}
+            # No minimum charge; for max_price, no maximum, rather than a maximum of 0.
+            tariff[name] = {"excl_vat": 0} if name == "min_price" else None
         else:
             raise ValueError(f"{name} {value!r} does not say whether it includes VAT")
     return tariff
@@ -147,12 +184,12 @@ def fetch(
     raw_locations = []
     for raw in locations.records:
         try:
-            raw_locations.append(ocpi_location(raw, fetched_at))
+            raw_locations.append(ocpi_location(raw, fetched_at, issues))
         except (AttributeError, TypeError, ValueError) as exc:
             issues.add(f"location skipped: {exc}")
     ids = sorted(
         {
-            str(tariff_id)
+            tariff_id
             for location in raw_locations
             for evse in location["evses"]
             for connector in evse["connectors"]
@@ -166,12 +203,20 @@ def fetch(
     tariffs = _fetch_tariffs(client, config.endpoints["tariffs"].url, ids, max_pages, issues)
 
     result = AdapterResult(config.id, fetched_at, {"locations": locations, "tariffs": tariffs})
-    raw_tariffs = []
-    for raw in tariffs.records:
+    raw_tariffs, sources = [], {}
+    for raw, page in zip(tariffs.records, tariffs.pages, strict=True):
         try:
             raw_tariffs.append(ocpi_tariff(raw))
         except ValueError as exc:
             issues.add(f"tariff {raw.get('id')!r} skipped: {exc}")
-    convert_records(config, result, locations=raw_locations, tariffs=raw_tariffs, issues=issues)
+        sources[str(raw.get("id"))] = page.url
+    convert_records(
+        config,
+        result,
+        locations=raw_locations,
+        tariffs=raw_tariffs,
+        issues=issues,
+        tariff_sources=sources,
+    )
     result.issues = [client.redact(line) for line in issues.lines()]
     return result

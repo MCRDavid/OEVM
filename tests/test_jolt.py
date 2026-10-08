@@ -267,7 +267,7 @@ def test_options_jolt_does_not_offer_are_refused(kwargs):
 @pytest.mark.parametrize(
     ("record", "message"),
     [
-        ({**one_location(), "name": None}, "location skipped: location has no id or name"),
+        ({**one_location(), "name": None}, "location skipped: location has no usable id"),
         ("not a location", "location skipped:"),
         ({**one_location(), "evses": ["not an evse"]}, "location skipped:"),
     ],
@@ -286,6 +286,7 @@ def test_unusable_locations_are_skipped_and_the_rest_kept(record, message):
         ("min_price", {"excl_vat": 1.0, "incl_vat": 1.2}, False),
         ("min_price", 1.5, True),
         ("max_price", 30, True),
+        ("max_price", 0, False),
         ("min_price", True, True),
     ],
 )
@@ -343,3 +344,83 @@ def test_jolt_records_the_decision_and_its_findings():
     assert cfg.missing_publish_flag is not None
     assert cfg.missing_publish_flag.evidence_url.startswith("https://support.joltcharge.com/")
     assert any("publish flag" in finding.summary for finding in cfg.findings)
+
+
+# Findings from the review on 2026-10-08
+
+
+def test_a_failing_tariff_does_not_lose_the_locations():
+    def handler(request):
+        if request.url.path.endswith("/locations"):
+            return httpx.Response(200, json={"locations": [one_location()]})
+        if request.url.path.endswith("/5"):
+            return httpx.Response(503)
+        return httpx.Response(200, json=recorded("tariff_4.json"))
+
+    result = run_with(handler)
+    assert [location.name for location in result.locations] == ["BAR004"]
+    assert any(i.startswith("tariff '5' not used: gave up") for i in result.issues)
+    assert not result.modules["tariffs"].complete
+
+
+def test_a_plain_string_where_ocpi_has_an_object_is_logged_not_fatal():
+    tariff = {**recorded("tariff_4.json"), "tariff_alt_text": "Contactless / Ad-hoc"}
+    broken = one_location(name="B2", operator="Jolt")
+    location = one_location()
+    for evse in location["evses"]:
+        evse["connectors"][0]["tariff_ids"] = ["4"]
+    result = run_with(serve({"locations": [location, broken]}, {"4": tariff}))
+    assert [loc.name for loc in result.locations] == ["BAR004"]
+    assert any(i.startswith("location 'B2' skipped") for i in result.issues)
+    assert result.tariffs[0].alt_text == "Contactless / Ad-hoc"
+
+
+def test_a_numeric_location_id_is_used_as_text():
+    result = run_with(serve({"locations": [one_location(id=1000)]}))
+    assert result.locations[0].id == "jolt:GB:JLT:1000"
+
+
+def test_max_price_zero_means_no_maximum():
+    tariff = {**recorded("tariff_4.json"), "max_price": 0}
+    location = one_location()
+    for evse in location["evses"]:
+        evse["connectors"][0]["tariff_ids"] = ["4"]
+    result = run_with(serve({"locations": [location]}, {"4": tariff}))
+    assert result.tariffs[0].max_price is None
+    assert result.tariffs[0].min_price == 0
+
+
+def test_each_tariff_records_the_url_it_came_from():
+    result, _ = replay()
+    sources = {t.id: t.provenance.source_url for t in result.tariffs}
+    assert sources["jolt:GB:JLT:4"] == TARIFFS + "4"
+    assert all("{" not in url for url in sources.values())
+
+
+def test_a_feed_reporting_more_locations_than_it_sent_stops_the_run():
+    handler = serve({"locations": [one_location()]}, **{"X-Total-Count": "72"})
+    with pytest.raises(FeedError, match="reports 72 locations but sent 1"):
+        run_with(handler)
+
+
+@pytest.mark.parametrize(
+    ("evse_id", "kept"), [("143", None), (143, None), ("GB*JLT*E143", "GB*JLT*E143")]
+)
+def test_only_emi3_shaped_evse_ids_are_kept(evse_id, kept):
+    location = one_location()
+    location["evses"][0]["evse_id"] = evse_id
+    result = run_with(serve({"locations": [location]}))
+    first = result.locations[0].evses[0]
+    assert first.evse_id == kept
+    assert first.uid == str(evse_id)
+
+
+def test_null_tariff_ids_are_dropped_not_requested():
+    location = one_location()
+    location["evses"][0]["connectors"][0]["tariff_ids"] = ["4", None]
+    location["evses"][1]["connectors"][0]["tariff_ids"] = []
+    handler = serve({"locations": [location]})
+    result = run_with(handler)
+    assert handler.seen[1:] == [f"{TARIFFS}4?apiKey={FAKE}"]
+    assert result.locations[0].evses[0].connectors[0].tariff_ids == ["jolt:GB:JLT:4"]
+    assert "tariff id None not used: not an id" in result.issues

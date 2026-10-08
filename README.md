@@ -15,7 +15,7 @@ The full plan is in [docs/BLUEPRINT.md](docs/BLUEPRINT.md).
 
 ## Status
 
-Early days. Blueprint tasks 1 to 4 are done, and task 5 is under way:
+Early days. Blueprint tasks 1 to 5 are done:
 
 1. **Scaffold:** uv, ruff, pytest, pre-commit secret scanning and a CI workflow.
 2. **Schema:** Pydantic models for Location, EVSE, Connector, Tariff and Provenance,
@@ -25,8 +25,9 @@ Early days. Blueprint tasks 1 to 4 are done, and task 5 is under way:
 4. **OCPI 2.2.1 adapter:** fetches an operator's locations and tariffs politely, page by
    page, and converts them to the schema. char.gy is the first operator switched on.
 5. **Jolt adapter:** reads Jolt's own API format, which differs from OCPI 2.2.1 in ways
-   recorded on the transparency page, and converts it the same way. The GeniePoint
-   adapter is still to come.
+   recorded on the transparency page, and converts it the same way. GeniePoint's files
+   turned out to be standard OCPI 2.2.1, so the OCPI adapter reads them; GeniePoint is
+   switched off until its website's terms of use have been read.
 
 Also in place:
 

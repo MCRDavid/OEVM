@@ -117,8 +117,13 @@ def convert_records(
     locations: list[dict],
     tariffs: list[dict],
     issues: IssueLog,
+    tariff_sources: dict[str, str] | None = None,
 ) -> None:
-    """Convert OCPI 2.2.1 location and tariff objects into result, logging any problems."""
+    """Convert OCPI 2.2.1 location and tariff objects into result, logging any problems.
+
+    tariff_sources maps a tariff id to the URL it was fetched from, for feeds that serve
+    one tariff per request; otherwise each record's source is its module's endpoint.
+    """
     source = result.modules["locations"].endpoint
     for raw in _latest_by_id(locations, "location", issues):
         if not publish_allowed(raw, config, issues):
@@ -129,16 +134,17 @@ def convert_records(
                     raw, config, source_url=source, fetched_at=result.fetched_at, issues=issues
                 )
             )
-        except (KeyError, TypeError, ValueError) as exc:
+        except (AttributeError, KeyError, TypeError, ValueError) as exc:
             issues.add(f"location {raw.get('id')!r} skipped: {_describe(exc)}")
 
-    source = result.modules["tariffs"].endpoint
+    endpoint = result.modules["tariffs"].endpoint
     for raw in _latest_by_id(tariffs, "tariff", issues):
+        source = (tariff_sources or {}).get(str(raw.get("id")), endpoint)
         try:
             result.tariffs.append(
                 tariff_from_ocpi(
                     raw, config, source_url=source, fetched_at=result.fetched_at, issues=issues
                 )
             )
-        except (KeyError, TypeError, ValueError) as exc:
+        except (AttributeError, KeyError, TypeError, ValueError) as exc:
             issues.add(f"tariff {raw.get('id')!r} skipped: {_describe(exc)}")

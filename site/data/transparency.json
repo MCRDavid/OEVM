@@ -485,27 +485,100 @@
       "id": "geniepoint",
       "name": "GeniePoint",
       "enabled": false,
-      "adapter": "static_file",
+      "adapter": "ocpi_221",
       "engagement": {
-        "status": "unknown",
-        "label": "Not yet established",
-        "evidence": []
+        "status": "open_anonymous",
+        "label": "Open, no registration",
+        "evidence": [
+          {
+            "date": "2026-10-08",
+            "url": "https://www.equans.co.uk/drivers-geniepoint/open-data",
+            "file": null,
+            "note": "Read in a browser by the repository owner. Links \"Locations data\" and \"Tariffs data\" as .json files and states no licence, terms or rate limit."
+          }
+        ]
       },
-      "feeds": [],
-      "licence": null,
-      "attribution": null,
+      "feeds": [
+        {
+          "kind": "locations",
+          "url": "https://opendata.geniepoint.co.uk/locations",
+          "status": "documented"
+        },
+        {
+          "kind": "tariffs",
+          "url": "https://opendata.geniepoint.co.uk/tariffs",
+          "status": "documented"
+        }
+      ],
+      "licence": {
+        "name": "OGL-3.0",
+        "url": "https://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/",
+        "checked": "2026-10-08"
+      },
+      "attribution": "Contains data from GeniePoint published under the Public Charge Point Regulations 2023, used in line with the Open Government Licence v3.0.",
       "missing_publish_flag": null,
       "rate_limit": {
         "our_gap_seconds": 2.0,
         "our_max_per_hour": 1800,
         "ours": "At least 2 s between requests to the operator's host, measured from the end of the previous request (at most 1800 in any hour), retries included.",
         "published": [],
-        "limits_checked": "unknown",
-        "comparison": "The operator's pages have not been checked for limits yet.",
-        "difference_from_regulations": "Not known yet.",
-        "notes": null
+        "limits_checked": "2026-10-08",
+        "comparison": "No limit published (checked 2026-10-08). The gap is our own choice.",
+        "difference_from_regulations": "Neither the operator nor the regulations set a limit.",
+        "notes": "GeniePoint's open data page states no rate limit. The 2 second gap is this project's own choice. Each file holds every record, so a full run makes two requests (about 1.6 MB on 2026-10-08)."
       },
-      "findings": [],
+      "findings": [
+        {
+          "date": "2026-10-08",
+          "kind": "access",
+          "kind_label": "Access",
+          "summary": "The open data page returns a browser check (HTTP 403) to automated requests. The download links, on opendata.geniepoint.co.uk, answer automated requests normally.",
+          "handling": "The page was read in a browser by the repository owner and its links recorded here. The files are fetched directly.",
+          "evidence_url": "https://www.equans.co.uk/drivers-geniepoint/open-data",
+          "status": "open",
+          "resolved_date": null
+        },
+        {
+          "date": "2026-10-08",
+          "kind": "spec_conformance",
+          "kind_label": "Differs from OCPI 2.2.1",
+          "summary": "Each file holds every record in one response (306 locations and 530 tariffs on 2026-10-08), matching X-Total-Count, but sends X-Limit 0. OCPI 2.2.1 describes X-Limit as the maximum number of objects the server can return.",
+          "handling": "The adapter reads each file in one request and checks the count against X-Total-Count.",
+          "evidence_url": "https://opendata.geniepoint.co.uk/tariffs",
+          "status": "open",
+          "resolved_date": null
+        },
+        {
+          "date": "2026-10-08",
+          "kind": "data_quality",
+          "kind_label": "Data quirk",
+          "summary": "The tariffs file repeats 22 tariffs 8 times each (530 records, 376 distinct ids on 2026-10-08). The copies are identical and no location refers to them.",
+          "handling": "One copy of each is kept and the repeats are logged.",
+          "evidence_url": "https://opendata.geniepoint.co.uk/tariffs",
+          "status": "open",
+          "resolved_date": null
+        },
+        {
+          "date": "2026-10-08",
+          "kind": "data_quality",
+          "kind_label": "Data quirk",
+          "summary": "Tariff descriptions (tariff_alt_text) are internal names, such as Tariff_Fast or Tariff_Rapid followed by an id.",
+          "handling": "Kept as published. Prices are described from the price components, not this text.",
+          "evidence_url": "https://opendata.geniepoint.co.uk/tariffs",
+          "status": "open",
+          "resolved_date": null
+        },
+        {
+          "date": "2026-10-08",
+          "kind": "access",
+          "kind_label": "Access",
+          "summary": "The files send no Access-Control-Allow-Origin header, so web browsers cannot read them directly.",
+          "handling": "The map will use data fetched by the pipeline, not requests from visitors' browsers.",
+          "evidence_url": "https://opendata.geniepoint.co.uk/locations",
+          "status": "open",
+          "resolved_date": null
+        }
+      ],
       "latest_run": null
     },
     {

@@ -153,7 +153,7 @@ def test_run_logs_appear_on_the_page(tmp_path):
     page = transparency.render_html(data)
     assert "Latest run for each operator" in page
     assert "WORKING" in page
-    assert re.search(r"4 records of 5946 reported, stopped early", page)
+    assert re.search(r"4 records of 5946 reported, incomplete", page)
 
 
 def test_check_mode_refuses_run_logs(tmp_path):
