@@ -24,6 +24,8 @@ AdapterName = Literal[
 AuthMethod = Literal["none", "header", "query_param", "unknown"]
 EndpointKind = Literal["versions", "locations", "tariffs", "statuses", "download"]
 EndpointStatus = Literal["documented", "needs_testing"]
+FindingKind = Literal["spec_conformance", "data_quality", "access", "documentation"]
+FindingStatus = Literal["open", "resolved"]
 EngagementStatus = Literal[
     "open_anonymous",
     "open_shared_key",
@@ -51,6 +53,35 @@ ENGAGEMENT_LABELS: dict[str, str] = {
 
 # Source ids used for gap-filler data, so no operator may take them.
 RESERVED_IDS = frozenset({"osm", "ocm", "reports", "unknown"})
+
+# Project policy: never more than one request per second to any operator, whatever
+# the operator allows. Operators' own published limits are enforced on top of this.
+MIN_SECONDS_BETWEEN_REQUESTS = 1.0
+# Extra gap on top of what a published limit needs, so a server counting with inclusive
+# windows, or a slightly different clock, still never sees one request too many.
+LIMIT_MARGIN_SECONDS = 1.0
+
+# Published text must stay neutral (blueprint section 3): dated facts, no accusations.
+# This list is a coarse safety net, not a substitute for careful wording.
+_ACCUSATORY = re.compile(
+    r"illegal|unlawful|breach|break(s|ing)? the law|broke the law|violat|contraven|"
+    r"non-?compliant|not compliant|fail(s|ed|ing)? to comply|offence|fraud|scam|shame",
+    re.IGNORECASE,
+)
+
+
+def neutral_text(text: str) -> str:
+    """Reject wording that accuses anyone of breaking the law or of bad faith."""
+    match = _ACCUSATORY.search(text)
+    if match:
+        raise ValueError(
+            f"wording must stay neutral and factual; avoid {match.group(0)!r}. Describe what "
+            "was observed and when, not whether anyone broke a rule"
+        )
+    return text
+
+
+NeutralText = Annotated[str, Field(min_length=1), AfterValidator(neutral_text)]
 
 _CREDENTIAL_PARAM = re.compile(
     r"key|token|secret|passw|pwd|signature|auth|credential", re.IGNORECASE
@@ -109,9 +140,17 @@ class Auth(_Model):
         "'ec-subscription-key' or 'apiKey'. Write 'unknown' if not yet known.",
     )
     secret_name: SecretName | None = None
+    scheme: str | None = Field(
+        default=None,
+        pattern=r"^[A-Za-z][A-Za-z0-9-]*$",
+        description="Word sent before the key in a header, such as 'Token' for "
+        "'Authorization: Token <key>'. Null if the header holds only the key.",
+    )
 
     @model_validator(mode="after")
     def _check(self) -> "Auth":
+        if self.scheme is not None and self.method != "header":
+            raise ValueError("scheme only applies when method is 'header'")
         if self.method == "none":
             if self.name is not None or self.secret_name is not None:
                 raise ValueError("name and secret_name must be null when method is 'none'")
@@ -123,17 +162,90 @@ class Auth(_Model):
         return self
 
 
+class DocumentedLimit(_Model):
+    """One rate limit an operator, or the host serving its data, publishes."""
+
+    publisher: str = Field(
+        min_length=1,
+        description="Who publishes the limit: the operator, or the company hosting its data, "
+        "for example 'Eco-Movement'.",
+    )
+    requests: int = Field(gt=0, description="How many requests are allowed per window.")
+    per_seconds: float = Field(gt=0, description="Length of the window in seconds.")
+    endpoint: EndpointKind | Literal["all"] = Field(
+        default="all", description="The endpoint the limit applies to, or 'all'."
+    )
+    scope: str | None = Field(
+        default=None,
+        description="Narrower scope within the endpoint, for example 'single location'.",
+    )
+    quote: str = Field(min_length=1, description="The operator's own wording, quoted exactly.")
+    source_url: SafeUrl
+    checked: dt.date | Unknown = Field(
+        description="Date the wording was last read at source_url (YYYY-MM-DD), or 'unknown'."
+    )
+
+    @property
+    def min_interval(self) -> float:
+        """The shortest gap between requests that keeps within this limit."""
+        return self.per_seconds / self.requests
+
+
 class RateLimit(_Model):
     min_seconds_between_requests: float = Field(
         default=2,
-        gt=0,
-        description="Delay this project leaves between requests. Our own politeness setting, "
-        "kept at or above any limit the operator documents.",
+        ge=MIN_SECONDS_BETWEEN_REQUESTS,
+        description="Gap this project leaves between any two requests to the operator's "
+        "host, retries included. At least 1 second, and at least 1 second more than every "
+        "documented limit needs.",
     )
-    documented: str | None = Field(
-        default=None,
-        description="The operator's published limit and where it was found. Null if none known.",
+    limits: list[DocumentedLimit] = Field(
+        default_factory=list, description="Limits the operator publishes. Empty if none."
     )
+    limits_checked: dt.date | Unknown = Field(
+        default="unknown",
+        description="Date the operator's pages were last checked for rate limits. With no "
+        "limits listed, a date here means none were stated.",
+    )
+    notes: str | None = Field(default=None, description="Anything else about request rates.")
+
+    @model_validator(mode="after")
+    def _within_documented_limits(self) -> "RateLimit":
+        for limit in self.limits:
+            needed = limit.min_interval + LIMIT_MARGIN_SECONDS
+            if self.min_seconds_between_requests < needed:
+                raise ValueError(
+                    f"min_seconds_between_requests ({self.min_seconds_between_requests:g} s) "
+                    f"would break the documented limit of {limit.requests} requests per "
+                    f"{limit.per_seconds:g} seconds for {limit.endpoint}, which needs at least "
+                    f"{needed:g} s between requests ({limit.min_interval:g} s plus a "
+                    f"{LIMIT_MARGIN_SECONDS:g} s safety margin)"
+                )
+        return self
+
+
+class Finding(_Model):
+    """Something observed about a source: a spec difference, a data quirk or an access issue."""
+
+    date: dt.date = Field(description="Date it was observed (YYYY-MM-DD).")
+    kind: FindingKind
+    summary: NeutralText = Field(description="One neutral, factual sentence.")
+    handling: NeutralText | None = Field(
+        default=None, description="What this project does about it."
+    )
+    evidence_url: SafeUrl | None = None
+    status: FindingStatus = "open"
+    resolved_date: dt.date | None = None
+
+    @model_validator(mode="after")
+    def _check(self) -> "Finding":
+        if self.status == "resolved" and self.resolved_date is None:
+            raise ValueError("a resolved finding needs resolved_date")
+        if self.status == "open" and self.resolved_date is not None:
+            raise ValueError("an open finding cannot have resolved_date")
+        if self.resolved_date is not None and self.resolved_date < self.date:
+            raise ValueError("resolved_date is earlier than date")
+        return self
 
 
 class Endpoint(_Model):
@@ -161,7 +273,7 @@ class Evidence(_Model):
         description="Path of a saved copy under evidence/<operator id>/. No personal names "
         "or email addresses.",
     )
-    note: str | None = None
+    note: NeutralText | None = None
 
     @model_validator(mode="after")
     def _check(self) -> "Evidence":
@@ -176,8 +288,7 @@ class Licence(_Model):
         description="Licence the data is used under, for example 'OGL-3.0', or 'unknown'.",
     )
     url: SafeUrl | None = Field(default=None, description="Link to the licence text.")
-    basis: str = Field(
-        min_length=1,
+    basis: NeutralText = Field(
         description="Why this licence applies, in plain words, and what the operator's own "
         "pages say about terms.",
     )
@@ -225,7 +336,11 @@ class OperatorConfig(_Model):
         default_factory=list,
         description="Where the technical facts in this file come from.",
     )
-    notes: str | None = None
+    findings: list[Finding] = Field(
+        default_factory=list,
+        description="Dated observations shown on the transparency page.",
+    )
+    notes: NeutralText | None = None
     enabled: bool = Field(description="True if the pipeline should fetch this operator.")
 
     @model_validator(mode="after")
@@ -256,6 +371,15 @@ class OperatorConfig(_Model):
                 or self.licence.checked == "unknown"
             ):
                 problems.append("an enabled operator needs licence terms that have been checked")
+        if self.auth.method in ("header", "query_param"):
+            urls = [endpoint.url for endpoint in self.endpoints.values()]
+            if self.base_url != "unknown":
+                urls.append(self.base_url)
+            problems += [
+                f"{url} must use https, because requests to it carry a key"
+                for url in urls
+                if not url.startswith("https://")
+            ]
         if problems:
             raise ValueError("; ".join(problems))
         return self

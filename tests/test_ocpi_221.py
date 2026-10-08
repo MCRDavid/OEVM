@@ -65,7 +65,7 @@ def raw_location(location_id: str = "LOC1", **overrides) -> dict:
         "address": "1 Example Street",
         "city": "Exampletown",
         "country": "GBR",
-        "coordinates": {"latitude": "53.48080", "longitude": "-2.24260"},
+        "coordinates": {"latitude": "52.00000", "longitude": "-1.00000"},
         "time_zone": "Europe/London",
         "evses": [
             {
@@ -272,7 +272,7 @@ def test_requests_are_spaced_by_the_registry_delay():
 
 
 def test_temporary_failures_are_retried_with_backoff_and_retry_after():
-    config = make_config(rate_limit={"min_seconds_between_requests": 0.001})
+    config = make_config(rate_limit={"min_seconds_between_requests": 1})
     responses = iter(
         [
             httpx.Response(503),
@@ -283,7 +283,7 @@ def test_temporary_failures_are_retried_with_backoff_and_retry_after():
     sleeps = Recorder()
     with client_for(config, lambda r: next(responses), sleeps) as client:
         assert client.get(f"{EXAMPLE}/a").status_code == 200
-    retry_waits = [s for s in sleeps.sleeps if s > 0.001]
+    retry_waits = [s for s in sleeps.sleeps if s > 1]
     assert retry_waits == [5.0, 30.0]
 
 
@@ -322,6 +322,27 @@ def test_header_key_comes_from_the_environment(monkeypatch):
     assert seen["x-api-key"] == "test-value-123"
 
 
+def test_header_scheme_is_sent_before_the_key(monkeypatch):
+    config = make_config(
+        auth={
+            "method": "header",
+            "name": "Authorization",
+            "scheme": "Token",
+            "secret_name": HEADER_ENV_NAME,
+        }
+    )
+    monkeypatch.setenv(HEADER_ENV_NAME, "test-value-789")
+    seen = {}
+
+    def handler(request):
+        seen.update(request.headers)
+        return httpx.Response(200, json=ocpi_body([]))
+
+    with client_for(config, handler) as client:
+        client.get(f"{EXAMPLE}/a")
+    assert seen["authorization"] == "Token test-value-789"
+
+
 def test_missing_key_names_the_secret_without_a_value(monkeypatch):
     config = make_config(
         auth={"method": "header", "name": "x-api-key", "secret_name": HEADER_ENV_NAME}
@@ -351,6 +372,58 @@ def test_query_param_key_is_sent_but_never_recorded(monkeypatch):
     with client_for(config, serve_pages(pages)) as client:
         result = fetch_module(client, "locations", f"{EXAMPLE}/locations")
     assert result.pages[0].url == f"{EXAMPLE}/locations"  # the key is added only when sending
+
+
+def test_an_echoed_key_is_removed_from_saved_pages_issues_and_errors(monkeypatch, tmp_path):
+    config = make_config(
+        auth={"method": "query_param", "name": "apiKey", "secret_name": PARAM_ENV_NAME},
+        licence={"name": "OGL-3.0", "basis": "test", "checked": "2026-10-07"},
+    )
+    echoed = "test-value/echo+1"  # has characters that change when URL-encoded
+    monkeypatch.setenv(PARAM_ENV_NAME, echoed)
+    encoded = "test-value%2Fecho%2B1"
+    echo = f"{EXAMPLE}/locations?apiKey={encoded}&offset=1"
+    location = raw_location("A", address=f"Key {echoed} here")
+
+    def handler(request):
+        if request.url.path.endswith("/tariffs"):
+            return httpx.Response(200, json=ocpi_body([]))
+        if request.url.params.get("offset"):
+            body = ocpi_body([]) | {"status_code": 2001, "status_message": f"bad key {echoed}"}
+            return httpx.Response(200, json=body)
+        return httpx.Response(
+            200,
+            json=ocpi_body([location, {"id": echoed, "publish": True}]),
+            headers={"Link": f'<{echo}>; rel="next"', "X-Total-Count": "3"},
+        )
+
+    with client_for(config, handler) as client, pytest.raises(FeedError) as error:
+        fetch(config, client, now=NOW)
+    assert echoed not in str(error.value) and "bad key REDACTED" in str(error.value)
+
+    with client_for(config, handler) as client:
+        result = fetch(config, client, now=NOW, max_pages=1)
+    run.save_raw(result, tmp_path)
+    saved = (tmp_path / "locations_page1.json").read_text()
+    assert "REDACTED" in saved
+    assert echoed not in saved and encoded not in saved
+    assert not [issue for issue in result.issues if echoed in issue]
+    assert [issue for issue in result.issues if "location 'REDACTED' skipped" in issue]
+    assert result.locations[0].address.street == "Key REDACTED here"
+
+
+def test_a_key_is_never_sent_over_plain_http(monkeypatch):
+    config = make_config(
+        auth={"method": "header", "name": "x-api-key", "secret_name": HEADER_ENV_NAME}
+    )
+    monkeypatch.setenv(HEADER_ENV_NAME, "test-value-321")
+    sent = []
+    with (
+        client_for(config, lambda r: sent.append(r) or httpx.Response(200)) as client,
+        pytest.raises(FeedError, match="not sending a key over plain http"),
+    ):
+        client.get("http://example.invalid/ocpi/locations")
+    assert sent == []
 
 
 # Converting records
@@ -449,3 +522,15 @@ def test_live_mode_refuses_operators_that_are_not_enabled(capsys):
 def test_live_mode_rejects_unknown_operators(capsys):
     assert run.main(["--live", "nobody"]) == 1
     assert "no operator 'nobody'" in capsys.readouterr().err
+
+
+def test_a_failed_live_run_writes_a_failure_log(tmp_path, monkeypatch, capsys):
+    def fail(*args, **kwargs):
+        raise FeedError("gave up on https://char.gy/open-ocpi/locations: HTTP 503")
+
+    monkeypatch.setattr(run, "run_operator", fail)
+    assert run.main(["--live", "chargy", "--log-dir", str(tmp_path)]) == 1
+    log = json.loads((tmp_path / "chargy.json").read_text())
+    assert log["failed"] is True and log["complete"] is False
+    assert log["issues"] == ["Run failed: gave up on https://char.gy/open-ocpi/locations: HTTP 503"]
+    assert "HTTP 503" in capsys.readouterr().err

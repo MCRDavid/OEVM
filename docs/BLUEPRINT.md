@@ -113,7 +113,7 @@ Run these and check the response for an `access-control-allow-origin` header:
 
 ```bash
 curl -s -D - -o /dev/null -H "Origin: https://example.github.io" "https://char.gy/open-ocpi/locations"
-curl -s -D - -o /dev/null -H "Origin: https://example.github.io" "https://api.joltcharge.com/v1/uk/public/locations?apiKey=890f53ea-e42c-469d-8e21-efdc6f30d6ba"
+curl -s -D - -o /dev/null -H "Origin: https://example.github.io" "https://api.joltcharge.com/v1/uk/public/locations?apiKey=$JOLT_API_KEY"
 ```
 
 Even if CORS turns out to be open, route requests through your proxy. It keeps visitors' IP addresses private, respects rate limits and gives you caching.
@@ -301,7 +301,7 @@ Every record carries `source_id`, `source_url`, `licence`, `fetched_at`, `last_c
 | 4 | DfT | "Please list the operators that have notified roaming providers under regulation 6(2) or 6(3)." This is close to a full list of non-micro operators. |
 | 5 | DfT | "Please provide summary results of the 2025 reliability reports under regulation 8." |
 | 6 | DfT | "Please provide the final National Chargepoint Registry dataset and the records explaining why there is no public replacement." |
-| 7 | Manchester City Council, TfGM, local NHS trusts | "Please list each EV charger you own or host: location, operator, power, tariff (including free units) and access restrictions." |
+| 7 | Local councils, combined transport authorities and NHS trusts | "Please list each EV charger you own or host: location, operator, power, tariff (including free units) and access restrictions." |
 
 **Existing requests:** there is a WhatDoTheyKnow series to English councils about PCPR compliance; for example, Halton Borough Council's response is marked successful (https://www.whatdotheyknow.com/request/private_public_charge_point_stat_68). [whatdotheyknow](https://www.whatdotheyknow.com/request/private_public_charge_point_stat_68) Other topics were not checked, so search WhatDoTheyKnow before filing.
 
@@ -319,14 +319,14 @@ Every record carries `source_id`, `source_url`, `licence`, `fetched_at`, `last_c
 - **No power threshold in reg 10.** The 8kW threshold appears only in reg 5 (contactless: "a new public charge point with a power of 8 kilowatts or above"). The 50kW threshold defines "rapid charge point", which matters for contactless on existing units and for reliability (regs 5(2) and 7). [legislation](https://legislation.gov.uk/uksi/2023/1168/made)
 - **What counts as public (reg 3, formatting simplified):** a "public charge point" is one "intended for use primarily by members of the general public". This includes points accessible only "during specific hours" or "situated in a public car park, whether or not that car park is available only to persons intending to purchase specific goods or services". It excludes workplace charge points and points "restricted for the exclusive use by" a specific manufacturer's vehicles, "a person engaged in a specific occupation", or "an occupier of, or visitor to, residential premises". [legislation](https://legislation.gov.uk/uksi/2023/1168/made)
 - **Free and simple chargers (guidance):** coverage "includes public charge points which provide electricity free of charge". Also: "For any public charge point that is not technically capable of transmitting data and is akin to a 3-pin plug, the charge point operator must make public only the reference data." [www](https://www.gov.uk/government/publications/the-public-charge-point-regulations-2023-guidance/public-charge-point-regulations-2023-guidance) [www](https://www.gov.uk/government/publications/the-public-charge-point-regulations-2023-guidance/public-charge-point-regulations-2023-guidance)
-- **So the operator page claiming the rules only apply at "8kW and above" is wrong** as far as open data goes.
+- **So any statement that the rules only apply at "8kW and above" is wrong** as far as open data goes.
 
-**Your hospital Pod Point:** if the public can use it, it is in scope. For a free tariff, OCPI says `tariff_ids` "should be set and point to a defined 'free of charge' tariff" (DfT guidance, table 11). [www](https://www.gov.uk/government/publications/the-public-charge-point-regulations-2023-guidance/public-charge-point-regulations-2023-guidance) A free unit showing no price is therefore a data-quality gap worth logging. If the bays are staff-only, they are probably workplace chargers and out of scope.
+**Chargers at hospitals, leisure centres and similar sites:** if the public can use a charger, it is in scope. For a free tariff, OCPI says `tariff_ids` "should be set and point to a defined 'free of charge' tariff" (DfT guidance, table 11). [www](https://www.gov.uk/government/publications/the-public-charge-point-regulations-2023-guidance/public-charge-point-regulations-2023-guidance) A free unit showing no price is therefore a data-quality gap worth logging. If the bays are staff-only, they are probably workplace chargers and out of scope.
 
 | Not in regulated feeds | Best source |
 |---|---|
 | Micro-business operators | Open Charge Map, OSM, user reports |
-| Workplace and staff-only (e.g. hospital staff bays) | NHS trust FOI; label "restricted" |
+| Workplace and staff-only (e.g. staff bays at offices, hospitals or depots) | FOI to the site owner; label "restricted" |
 | Residential and driveway peer-to-peer (the guidance lists "charge points located on a private driveway which are made available for peer-to-peer charging" as not public) [www](https://www.gov.uk/government/publications/the-public-charge-point-regulations-2023-guidance/public-charge-point-regulations-2023-guidance) | Platform sites where their terms allow |
 | Manufacturer-exclusive | Operator website; OSM |
 | Occupation-only (taxi, emergency services) | Council FOI; label "restricted" |
@@ -422,7 +422,7 @@ Public hotel, pub and supermarket chargers **are in scope**; the guidance lists 
 ## Goal
 A free public map of UK public EV chargers built from operator open data published under the Public
 Charge Point Regulations 2023 (SI 2023/1168, reg 10, OCPI 2.2.1), with tariffs, a data-health status page
-and an operator engagement log. Owner: David (Manchester), a hobbyist, not a professional developer.
+and an operator engagement log. Owner: a hobbyist, not a professional developer.
 
 ## Principles (non-negotiable)
 1. Operator feeds first. OSM, Open Charge Map and user reports only fill gaps, in separate layers.
@@ -511,7 +511,7 @@ Subject: Request for access to your open charge point data (Public Charge Point 
 
 Hello,
 
-I'm David, a volunteer in Manchester building a free, non-commercial map of UK public EV chargers,
+I'm a volunteer building a free, non-commercial map of UK public EV chargers,
 using prices and availability from operators' own data. It's open source and I credit every operator.
 
 Regulation 10(5) of the Public Charge Point Regulations 2023 asks operators to make reference and
@@ -530,13 +530,19 @@ any conditions, please let me know so I can describe your access route accuratel
 Thank you very much for your help.
 
 Best wishes,
-David
+[project name]
 [project URL]
 ```
 
 ---
 
 ## Caveats: what could not be verified
+
+> **Note added 2026-10-08:** this blueprint is the original brief and is not kept up to
+> date. The operator files in `operators/` are the current record. Some caveats below have
+> since been checked there; for example, the Eco-Movement locations URL, its user guide and
+> its `Authorization: Token` header were confirmed on 2026-10-07, and Gridserve's published
+> rate limit was found on 2026-10-08.
 
 - **Eco-Movement:** the user guide was not read. Still unconfirmed: the exact locations URL, how keys are issued, whether one token covers several operators, its terms, and its own list of UK operators.
 - **Untested:** CORS and single-location fetching for char.gy, Jolt, GeniePoint and Go Zero.

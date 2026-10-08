@@ -25,6 +25,16 @@ Early days. Blueprint tasks 1 to 4 are done:
 4. **OCPI 2.2.1 adapter:** fetches an operator's locations and tariffs politely, page by
    page, and converts them to the schema. char.gy is the first operator switched on.
 
+Also in place:
+
+- **Transparency page** (`site/transparency/index.html`): every source, how it publishes
+  its data, its licence, the rate limits that apply, and dated findings such as
+  differences from the OCPI standard. Built from the registry.
+- **Rate limits:** at least 1 second between requests to any operator, and never more
+  than an operator's published limit. Tests check both.
+- **Prices in pounds and pence only.** Tariffs in other currencies show as "Price unknown"
+  and are never converted.
+
 There is no map yet. The rules the site must follow for privacy and cookies are in
 [docs/PRIVACY_AND_COOKIES.md](docs/PRIVACY_AND_COOKIES.md).
 
@@ -35,7 +45,8 @@ There is no map yet. The rules the site must follow for privacy and cookies are 
 - Every record carries its provenance: source, licence, when it was fetched and how far
   to trust it.
 - A charger is only ever shown as free when the operator's own tariff says every price
-  is zero. A missing tariff means "Price unknown"; missing VAT means "VAT not stated".
+  is zero. A missing tariff means "Price unknown"; missing VAT means "excluding VAT,
+  VAT not stated".
 - No secrets in the repository and no personal data.
 - Status pages use neutral, dated, evidenced wording.
 - Unknown facts are written as "unknown" or "needs_testing", never guessed.
@@ -66,6 +77,7 @@ There is no map yet. The rules the site must follow for privacy and cookies are 
 | Validate the operator registry | `uv run python -m pipeline.registry --validate` |
 | Run the adapters on recorded data (no network) | `uv run python -m pipeline.run --fixtures` |
 | Fetch one page from a real feed | `uv run python -m pipeline.run --live chargy --max-pages 1` |
+| Rebuild the transparency page after editing `operators/` | `uv run python -m pipeline.transparency` |
 | Regenerate JSON Schema after changing a model | `uv run python -m schema.export` |
 | Run every pre-commit check on every file | `uv run pre-commit run --all-files` |
 
@@ -79,6 +91,9 @@ operators/            one YAML file per operator, _template.yaml and schema.json
 adapters/             code that reads operator feeds (ocpi_221 so far)
 pipeline/registry.py  loads and validates the registry
 pipeline/run.py       runs adapters on recorded or live data
+pipeline/pricing.py   how prices are shown (pounds and pence only)
+pipeline/transparency.py  builds the transparency page
+site/                 files for the website (transparency page, security.txt)
 schema/models.py      Location, EVSE, Connector, Tariff and Provenance models
 schema/operator.py    the model for an operator registry file
 schema/export.py      writes the JSON Schema files
@@ -110,6 +125,10 @@ every field.
   design, so the registry tests separately reject UUID-shaped values in operator files.
 - If the scanner flags something that is not a secret, add the comment
   `pragma: allowlist secret` to that line and explain why in the pull request.
+- To report a security problem, see [SECURITY.md](SECURITY.md). GitHub settings that
+  protect the repository are listed in [docs/GITHUB_SETTINGS.md](docs/GITHUB_SETTINGS.md).
+- Privacy questions and data corrections go through GitHub issue forms. Issues are public,
+  so never include personal information.
 
 ## Licences
 

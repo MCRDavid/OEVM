@@ -1,0 +1,7 @@
+# Security contact for the OEVM project. Format: RFC 9116.
+# Renew Expires before it passes; a test fails when fewer than 30 days remain.
+Contact: https://github.com/MCRDavid/OEVM/security/advisories/new
+Contact: https://github.com/MCRDavid/OEVM/blob/main/SECURITY.md
+Expires: 2027-04-07T00:00:00.000Z
+Preferred-Languages: en
+Policy: https://github.com/MCRDavid/OEVM/blob/main/SECURITY.md

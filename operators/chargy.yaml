@@ -18,7 +18,9 @@ auth:
   secret_name: null
 rate_limit:
   min_seconds_between_requests: 2
-  documented: None stated on char.gy's open data page (checked 2026-10-07).
+  limits: []
+  limits_checked: 2026-10-07
+  notes: char.gy's open data page states no rate limit. The 2 second gap is this project's own choice.
 supports_single_location: needs_testing
 cors: not_supported
 attribution: >-
@@ -49,10 +51,43 @@ sources:
       Read 2026-10-07. Gives the host https://char.gy, the locations path
       /open-ocpi/locations and the tariffs path /open-ocpi/tariffs, and points to the OCPI
       standard. States no licence, terms or rate limits.
+findings:
+  - date: 2026-10-07
+    kind: spec_conformance
+    summary: >-
+      EVSE statuses are published as WORKING, and in a live run on 2026-10-07 also as
+      FAULTED. Neither is a value in the OCPI 2.2.1 Status list.
+    handling: >-
+      Shown as status unknown rather than guessed. Regulation 10(6)(a) uses "working" to
+      mean an OCPI status of available, charging or reserved.
+    evidence_url: https://char.gy/open-ocpi/locations
+  - date: 2026-10-07
+    kind: data_quality
+    summary: >-
+      Tariffs are published in three currencies (EUR, USD and GBP). Locations refer only
+      to the GBP tariff.
+    handling: >-
+      Only GBP prices are shown, in pence per kWh, which is how regulation 10(6)(d)(iv)
+      describes the price in reference data. Other currencies show as price unknown and are
+      never converted.
+    evidence_url: https://char.gy/open-ocpi/tariffs
+  - date: 2026-10-07
+    kind: data_quality
+    summary: >-
+      Tariff price components give no VAT figure. OCPI 2.2.1 says an omitted VAT means no
+      VAT is applicable.
+    handling: >-
+      VAT is not guessed. Prices are shown as published, which OCPI defines as excluding
+      VAT, and marked "excluding VAT, VAT not stated".
+    evidence_url: https://char.gy/open-ocpi/tariffs
+  - date: 2026-10-07
+    kind: access
+    summary: >-
+      The feed sends no Access-Control-Allow-Origin header, so web browsers cannot read
+      it directly.
+    handling: The map will use data fetched by the pipeline, not requests from visitors' browsers.
+    evidence_url: https://char.gy/open-ocpi/locations
 notes: >-
-  CORS tested 2026-10-07: a request sent with an Origin header got no
-  Access-Control-Allow-Origin header back, so browsers cannot read the feed directly.
-  Paging uses the OCPI 2.2.1 Link, X-Total-Count and X-Limit headers. On 2026-10-07 the
-  feed used the EVSE statuses WORKING and FAULTED, which are not OCPI 2.2.1 values, and
-  published tariffs in EUR, USD and GBP. Fetching a single location by id needs testing.
+  Paging uses the OCPI 2.2.1 Link, X-Total-Count and X-Limit headers. Fetching a single
+  location by id needs testing.
 enabled: true

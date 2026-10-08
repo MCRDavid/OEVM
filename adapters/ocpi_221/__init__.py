@@ -30,6 +30,7 @@ class AdapterResult:
     locations: list[Location] = field(default_factory=list)
     tariffs: list[Tariff] = field(default_factory=list)
     issues: list[str] = field(default_factory=list)
+    requests: int = 0
 
     @property
     def complete(self) -> bool:
@@ -121,5 +122,5 @@ def fetch(
         except (KeyError, TypeError, ValueError) as exc:
             issues.add(f"tariff {raw.get('id')!r} skipped: {_describe(exc)}")
 
-    result.issues = issues.lines()
+    result.issues = [client.redact(line) for line in issues.lines()]
     return result

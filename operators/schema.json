@@ -40,12 +40,119 @@
           ],
           "default": null,
           "title": "Secret Name"
+        },
+        "scheme": {
+          "anyOf": [
+            {
+              "pattern": "^[A-Za-z][A-Za-z0-9-]*$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Word sent before the key in a header, such as 'Token' for 'Authorization: Token <key>'. Null if the header holds only the key.",
+          "title": "Scheme"
         }
       },
       "required": [
         "method"
       ],
       "title": "Auth",
+      "type": "object"
+    },
+    "DocumentedLimit": {
+      "additionalProperties": false,
+      "description": "One rate limit an operator, or the host serving its data, publishes.",
+      "properties": {
+        "publisher": {
+          "description": "Who publishes the limit: the operator, or the company hosting its data, for example 'Eco-Movement'.",
+          "minLength": 1,
+          "title": "Publisher",
+          "type": "string"
+        },
+        "requests": {
+          "description": "How many requests are allowed per window.",
+          "exclusiveMinimum": 0,
+          "title": "Requests",
+          "type": "integer"
+        },
+        "per_seconds": {
+          "description": "Length of the window in seconds.",
+          "exclusiveMinimum": 0,
+          "title": "Per Seconds",
+          "type": "number"
+        },
+        "endpoint": {
+          "anyOf": [
+            {
+              "enum": [
+                "versions",
+                "locations",
+                "tariffs",
+                "statuses",
+                "download"
+              ],
+              "type": "string"
+            },
+            {
+              "const": "all",
+              "type": "string"
+            }
+          ],
+          "default": "all",
+          "description": "The endpoint the limit applies to, or 'all'.",
+          "title": "Endpoint"
+        },
+        "scope": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Narrower scope within the endpoint, for example 'single location'.",
+          "title": "Scope"
+        },
+        "quote": {
+          "description": "The operator's own wording, quoted exactly.",
+          "minLength": 1,
+          "title": "Quote",
+          "type": "string"
+        },
+        "source_url": {
+          "pattern": "^https?://\\S+$",
+          "title": "Source Url",
+          "type": "string"
+        },
+        "checked": {
+          "anyOf": [
+            {
+              "format": "date",
+              "type": "string"
+            },
+            {
+              "const": "unknown",
+              "type": "string"
+            }
+          ],
+          "description": "Date the wording was last read at source_url (YYYY-MM-DD), or 'unknown'.",
+          "title": "Checked"
+        }
+      },
+      "required": [
+        "publisher",
+        "requests",
+        "per_seconds",
+        "quote",
+        "source_url",
+        "checked"
+      ],
+      "title": "DocumentedLimit",
       "type": "object"
     },
     "Endpoint": {
@@ -164,6 +271,7 @@
         "note": {
           "anyOf": [
             {
+              "minLength": 1,
               "type": "string"
             },
             {
@@ -178,6 +286,90 @@
         "date"
       ],
       "title": "Evidence",
+      "type": "object"
+    },
+    "Finding": {
+      "additionalProperties": false,
+      "description": "Something observed about a source: a spec difference, a data quirk or an access issue.",
+      "properties": {
+        "date": {
+          "description": "Date it was observed (YYYY-MM-DD).",
+          "format": "date",
+          "title": "Date",
+          "type": "string"
+        },
+        "kind": {
+          "enum": [
+            "spec_conformance",
+            "data_quality",
+            "access",
+            "documentation"
+          ],
+          "title": "Kind",
+          "type": "string"
+        },
+        "summary": {
+          "description": "One neutral, factual sentence.",
+          "minLength": 1,
+          "title": "Summary",
+          "type": "string"
+        },
+        "handling": {
+          "anyOf": [
+            {
+              "minLength": 1,
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "What this project does about it.",
+          "title": "Handling"
+        },
+        "evidence_url": {
+          "anyOf": [
+            {
+              "pattern": "^https?://\\S+$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Evidence Url"
+        },
+        "status": {
+          "default": "open",
+          "enum": [
+            "open",
+            "resolved"
+          ],
+          "title": "Status",
+          "type": "string"
+        },
+        "resolved_date": {
+          "anyOf": [
+            {
+              "format": "date",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Resolved Date"
+        }
+      },
+      "required": [
+        "date",
+        "kind",
+        "summary"
+      ],
+      "title": "Finding",
       "type": "object"
     },
     "Licence": {
@@ -237,12 +429,35 @@
       "properties": {
         "min_seconds_between_requests": {
           "default": 2,
-          "description": "Delay this project leaves between requests. Our own politeness setting, kept at or above any limit the operator documents.",
-          "exclusiveMinimum": 0,
+          "description": "Gap this project leaves between any two requests to the operator's host, retries included. At least 1 second, and at least 1 second more than every documented limit needs.",
+          "minimum": 1.0,
           "title": "Min Seconds Between Requests",
           "type": "number"
         },
-        "documented": {
+        "limits": {
+          "description": "Limits the operator publishes. Empty if none.",
+          "items": {
+            "$ref": "#/$defs/DocumentedLimit"
+          },
+          "title": "Limits",
+          "type": "array"
+        },
+        "limits_checked": {
+          "anyOf": [
+            {
+              "format": "date",
+              "type": "string"
+            },
+            {
+              "const": "unknown",
+              "type": "string"
+            }
+          ],
+          "default": "unknown",
+          "description": "Date the operator's pages were last checked for rate limits. With no limits listed, a date here means none were stated.",
+          "title": "Limits Checked"
+        },
+        "notes": {
           "anyOf": [
             {
               "type": "string"
@@ -252,8 +467,8 @@
             }
           ],
           "default": null,
-          "description": "The operator's published limit and where it was found. Null if none known.",
-          "title": "Documented"
+          "description": "Anything else about request rates.",
+          "title": "Notes"
         }
       },
       "title": "RateLimit",
@@ -440,9 +655,18 @@
       "title": "Sources",
       "type": "array"
     },
+    "findings": {
+      "description": "Dated observations shown on the transparency page.",
+      "items": {
+        "$ref": "#/$defs/Finding"
+      },
+      "title": "Findings",
+      "type": "array"
+    },
     "notes": {
       "anyOf": [
         {
+          "minLength": 1,
           "type": "string"
         },
         {

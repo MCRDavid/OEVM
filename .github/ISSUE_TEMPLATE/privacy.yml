@@ -1,0 +1,29 @@
+name: Privacy question
+description: Ask about privacy or cookies on this project. Issues are public.
+title: "Privacy: "
+labels: ["privacy"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        **Issues are public.** Please do not include personal information, such as your
+        name, email address, home address or where you live.
+
+        If your question involves personal data that should not be public (for example,
+        personal data published by mistake), please report it privately instead, using
+        the "Report a vulnerability" button on the Security and quality tab (called
+        Security on older pages).
+  - type: textarea
+    id: question
+    attributes:
+      label: Your question
+      description: What would you like to know?
+    validations:
+      required: true
+  - type: checkboxes
+    id: public
+    attributes:
+      label: Before you post
+      options:
+        - label: I understand this issue is public and I have not included personal information.
+          required: true

@@ -14,10 +14,12 @@ import json
 import sys
 import time
 from collections.abc import Callable
-from datetime import datetime
+from datetime import UTC, datetime
 from pathlib import Path
+from typing import Annotated, Literal
 
 import httpx
+from pydantic import BaseModel, ConfigDict, Field
 
 import adapters.ocpi_221
 from adapters.http import FeedError, PoliteClient
@@ -35,6 +37,7 @@ def run_operator(
     *,
     transport: httpx.BaseTransport | None = None,
     sleep: Callable[[float], None] = time.sleep,
+    clock: Callable[[], float] = time.monotonic,
     date_from: datetime | None = None,
     page_size: int | None = None,
     max_pages: int | None = None,
@@ -42,8 +45,12 @@ def run_operator(
     fetch = ADAPTERS.get(config.adapter)
     if fetch is None:
         raise FeedError(f"{config.id}: the {config.adapter} adapter is not built yet")
-    with PoliteClient(config, transport=transport, sleep=sleep) as client:
-        return fetch(config, client, date_from=date_from, page_size=page_size, max_pages=max_pages)
+    with PoliteClient(config, transport=transport, sleep=sleep, clock=clock) as client:
+        result = fetch(
+            config, client, date_from=date_from, page_size=page_size, max_pages=max_pages
+        )
+        result.requests = client.requests_made
+        return result
 
 
 def report(result: AdapterResult) -> str:
@@ -69,6 +76,95 @@ def save_raw(result: AdapterResult, directory: Path) -> None:
         for number, page in enumerate(module.pages, start=1):
             path = directory / f"{module.module}_page{number}.json"
             path.write_text(json.dumps(page.to_exchange(), indent=2) + "\n", encoding="utf-8")
+
+
+MAX_ISSUE_LENGTH = 500
+
+
+def _shorten(text: str) -> str:
+    return text if len(text) <= MAX_ISSUE_LENGTH else text[: MAX_ISSUE_LENGTH - 3] + "..."
+
+
+class _LogModel(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+
+
+class ModuleSummary(_LogModel):
+    pages: int = Field(ge=0)
+    records: int = Field(ge=0)
+    reported: int | None = Field(ge=0)
+    complete: bool
+
+
+class KeptCounts(_LogModel):
+    locations: int = Field(ge=0)
+    tariffs: int = Field(ge=0)
+
+
+class RunLog(_LogModel):
+    """The only fields a run log may have. The transparency page publishes nothing else."""
+
+    operator: str = Field(pattern=r"^[a-z0-9_]+$")
+    mode: Literal["fixtures", "live"]
+    fetched_at: str = Field(pattern=r"^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}Z$")
+    requests: int | None = Field(ge=0)
+    complete: bool
+    failed: bool
+    error: Annotated[str, Field(max_length=MAX_ISSUE_LENGTH)] | None
+    modules: dict[Literal["locations", "tariffs"], ModuleSummary]
+    kept: KeptCounts
+    issues: list[Annotated[str, Field(max_length=MAX_ISSUE_LENGTH)]]
+
+
+def run_log(result: AdapterResult, mode: str) -> dict:
+    """A summary of one run for the transparency page: counts and issues, never records."""
+    log = {
+        "operator": result.operator_id,
+        "mode": mode,
+        "fetched_at": result.fetched_at.isoformat().replace("+00:00", "Z"),
+        "requests": result.requests,
+        "complete": result.complete,
+        "failed": False,
+        "error": None,
+        "modules": {
+            name: {
+                "pages": len(module.pages),
+                "records": len(module.records),
+                "reported": module.total_reported,
+                "complete": module.complete,
+            }
+            for name, module in result.modules.items()
+        },
+        "kept": {"locations": len(result.locations), "tariffs": len(result.tariffs)},
+        "issues": [_shorten(issue) for issue in result.issues],
+    }
+    return RunLog.model_validate(log).model_dump(mode="json")
+
+
+def failure_log(operator_id: str, mode: str, error: str, when: datetime) -> dict:
+    """A summary of a run that stopped with an error, so the failure is visible."""
+    log = {
+        "operator": operator_id,
+        "mode": mode,
+        "fetched_at": when.astimezone(UTC)
+        .replace(microsecond=0)
+        .isoformat()
+        .replace("+00:00", "Z"),
+        "requests": None,
+        "complete": False,
+        "failed": True,
+        "error": _shorten(error),
+        "modules": {},
+        "kept": {"locations": 0, "tariffs": 0},
+        "issues": [_shorten(f"Run failed: {error}")],
+    }
+    return RunLog.model_validate(log).model_dump(mode="json")
+
+
+def write_log(directory: Path, log: dict) -> None:
+    directory.mkdir(parents=True, exist_ok=True)
+    path = directory / f"{log['operator']}.json"
+    path.write_text(json.dumps(log, indent=2) + "\n", encoding="utf-8")
 
 
 def save_output(result: AdapterResult, directory: Path) -> None:
@@ -112,8 +208,14 @@ def main(argv: list[str] | None = None) -> int:
     )
     parser.add_argument("--save-raw", type=Path, help="save each response here (use raw/)")
     parser.add_argument("--out", type=Path, help="save converted records here")
+    parser.add_argument(
+        "--log-dir",
+        type=Path,
+        help="save a run summary per operator here, for the transparency page",
+    )
     args = parser.parse_args(argv)
 
+    mode = "fixtures" if args.fixtures else "live"
     try:
         operators = load_registry()
         if args.fixtures:
@@ -126,14 +228,21 @@ def main(argv: list[str] | None = None) -> int:
                 raise FeedError(
                     f"{config.id} is not enabled in the registry; check its licence terms first"
                 )
-            results = [
-                run_operator(
-                    config,
-                    date_from=args.date_from,
-                    page_size=args.page_size,
-                    max_pages=args.max_pages,
-                )
-            ]
+            try:
+                results = [
+                    run_operator(
+                        config,
+                        date_from=args.date_from,
+                        page_size=args.page_size,
+                        max_pages=args.max_pages,
+                    )
+                ]
+            except FeedError as exc:
+                if args.log_dir:
+                    write_log(
+                        args.log_dir, failure_log(config.id, mode, str(exc), datetime.now(UTC))
+                    )
+                raise
     except (FeedError, RegistryError) as exc:
         print(f"Error: {exc}", file=sys.stderr)
         return 1
@@ -144,6 +253,8 @@ def main(argv: list[str] | None = None) -> int:
             save_raw(result, args.save_raw / result.operator_id)
         if args.out:
             save_output(result, args.out / result.operator_id)
+        if args.log_dir:
+            write_log(args.log_dir, run_log(result, mode))
     if not results:
         print("No fixture sets found.")
     return 0

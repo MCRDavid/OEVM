@@ -1,0 +1,23 @@
+name: Something else
+description: A bug, a question or an idea that is not a data correction or privacy request. Issues are public.
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thank you. This is a personal, experimental project, so replies may be slow.
+
+        **Issues are public.** Please do not include personal information, keys or
+        passwords. Report security problems privately instead (see SECURITY.md).
+  - type: textarea
+    id: details
+    attributes:
+      label: What would you like to tell us?
+    validations:
+      required: true
+  - type: checkboxes
+    id: public
+    attributes:
+      label: Before you post
+      options:
+        - label: I understand this issue is public and I have not included personal information.
+          required: true
