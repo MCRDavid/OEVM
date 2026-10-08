@@ -134,7 +134,7 @@ def _fetch_pages(
 
         response = client.get(url)
         if response.status_code != 200:
-            raise FeedError(f"{redact_url(url)} returned HTTP {response.status_code}")
+            raise FeedError(f"{client.describe(url)} returned HTTP {response.status_code}")
         try:
             body = client.redact(response.json())
         except ValueError as exc:

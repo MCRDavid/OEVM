@@ -170,9 +170,11 @@ def run_fixtures(operators: dict[str, OperatorConfig]) -> list[AdapterResult]:
     for manifest_path in sorted(FIXTURES_DIR.glob("*/manifest.json")):
         manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
         date_from = manifest.get("date_from")
+        # Replays never go through the relay: the recordings hold the operator's own URLs.
+        config = operators[manifest["operator"]].model_copy(update={"relay": None})
         results.append(
             run_operator(
-                operators[manifest["operator"]],
+                config,
                 transport=ReplayTransport(manifest_path.parent),
                 sleep=lambda _seconds: None,
                 date_from=datetime.fromisoformat(date_from) if date_from else None,

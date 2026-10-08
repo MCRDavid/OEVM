@@ -14,6 +14,10 @@
   and only ever sends it over https. Keys never appear in URLs this module returns, logs
   or raises, and `PoliteClient.redact` removes the key from anything a server sends back.
 - Does not follow redirects, so a key can never be sent on to another site.
+- Sends an operator's requests through the project's relay when the operator file
+  records that decision and the relay's address and token are set in the environment.
+  The relay gets the same request path and User-Agent; gaps, retries and every message
+  still refer to the operator's own host and URLs. Only feeds with no key are relayed.
 
 Timers live in memory, so they cover one run of the program. Runs that use the same host
 must not be started in parallel.
@@ -181,6 +185,57 @@ def reset_host_timers() -> None:
     _HOST_TIMERS.clear()
 
 
+RELAY_TOKEN_HEADER = "X-Relay-Token"
+
+
+@dataclass(frozen=True)
+class RelayRoute:
+    """Where an operator's requests go when they are relayed."""
+
+    base: str
+    prefix: str
+    token: str
+    hosts: frozenset[str]
+
+    def url(self, url: str) -> str:
+        """The relay address for an operator URL: same path and query, under the prefix."""
+        parts = urlsplit(url)
+        return urlunsplit(
+            urlsplit(self.base)._replace(
+                path=self.base_path + self.prefix + parts.path, query=parts.query
+            )
+        )
+
+    @property
+    def base_path(self) -> str:
+        return urlsplit(self.base).path.rstrip("/")
+
+
+def relay_route(config: OperatorConfig) -> RelayRoute | None:
+    """The relay to use for this operator, or None to request its feed directly.
+
+    Relayed only when the operator file records the owner's decision and both the relay's
+    address and token are set; one without the other is a mistake worth stopping for.
+    """
+    relay = config.relay
+    if relay is None:
+        return None
+    base = os.environ.get(relay.url_variable, "").strip()
+    token = os.environ.get(relay.secret_name, "").strip()
+    if not base and not token:
+        return None
+    if not base or not token:
+        missing = relay.url_variable if not base else relay.secret_name
+        raise FeedError(f"{config.id}: the relay needs {missing} as well")
+    if urlsplit(base).scheme != "https" or not urlsplit(base).netloc:
+        raise FeedError(f"{config.id}: {relay.url_variable} must be an https address")
+    urls = [endpoint.url for endpoint in config.endpoints.values()]
+    if config.base_url != "unknown":
+        urls.append(config.base_url)
+    hosts = frozenset(urlsplit(url).netloc.lower() for url in urls)
+    return RelayRoute(base=base, prefix=relay.path_prefix, token=token, hosts=hosts)
+
+
 def required_gap(config: OperatorConfig) -> float:
     """The gap the client keeps: never less than the floor or what any limit needs."""
     rate = config.rate_limit
@@ -209,7 +264,10 @@ class PoliteClient:
     ):
         headers, self._auth_params = credentials_for(config, key)
         secret = secret_value(config, key)
-        self._secrets = (secret,) if secret else ()
+        self._relay = relay_route(config)
+        self._secrets = tuple(
+            value for value in (secret, self._relay.token if self._relay else None) if value
+        )
         self._client = httpx.Client(
             headers={"User-Agent": USER_AGENT, "Accept": "application/json", **headers},
             timeout=timeout_seconds,
@@ -229,6 +287,11 @@ class PoliteClient:
 
     def __exit__(self, *exc_info: object) -> None:
         self._client.close()
+
+    def describe(self, url: str) -> str:
+        """url for messages: credentials removed, and marked when it goes through the relay."""
+        relayed = self._relay is not None and urlsplit(url).netloc.lower() in self._relay.hosts
+        return redact_url(url) + (" (through the relay)" if relayed else "")
 
     def redact(self, value: object) -> object:
         """value with this operator's key removed, wherever a server may have echoed it."""
@@ -261,13 +324,19 @@ class PoliteClient:
             raise FeedError(f"not sending a key over plain http: {redact_url(url)}")
         timer = host_timer(url)
         request_url = with_params(url, self._auth_params) if self._auth_params else url
+        relayed = self._relay is not None and urlsplit(url).netloc.lower() in self._relay.hosts
+        headers = {}
+        if relayed:
+            request_url = self._relay.url(request_url)
+            headers = {RELAY_TOKEN_HEADER: self._relay.token}
+        via = " (through the relay)" if relayed else ""
         for attempt in range(self.max_retries + 1):
             self._refuse_if_held(timer, url)
             self._wait_turn(timer)
             self.requests_made += 1
             response = None
             try:
-                response = self._client.get(request_url)
+                response = self._client.get(request_url, headers=headers)
             except httpx.TransportError as exc:
                 problem, retry_after = type(exc).__name__, None
             finally:
@@ -288,7 +357,8 @@ class PoliteClient:
                     else ""
                 )
                 raise FeedError(
-                    f"gave up on {redact_url(url)} after {attempt + 1} attempts: {problem}{asked}"
+                    f"gave up on {redact_url(url)}{via} after {attempt + 1} attempts: "
+                    f"{problem}{asked}"
                 )
             if retry_after is None:
                 timer.hold_until(now + self.backoff_seconds * 2**attempt)

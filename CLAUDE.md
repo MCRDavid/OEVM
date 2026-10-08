@@ -63,6 +63,9 @@ decisions are in docs/adr/.
 - Never keep locations whose OCPI publish flag is false. Keep ones with no flag only when the
   operator file records the owner's decision in missing_publish_flag; never add one yourself.
 - Switch an operator on only after reading its own terms and filling in its licence section.
+- Fetch through the relay (relay/worker.js) only when the operator file records the owner's
+  decision in relay; only feeds that need no key; same User-Agent and rate limits; never
+  rotate addresses or disguise the project. Keep relay/worker.js in step with the deployed Worker.
 
 ## The site (docs/PRIVACY_AND_COOKIES.md)
 - No analytics, ads, tracking or third-party files that set cookies or use storage.

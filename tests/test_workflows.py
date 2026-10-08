@@ -24,8 +24,22 @@ def test_the_daily_fetch_passes_every_key_an_enabled_operator_needs():
             assert env.get(name) == f"${{{{ secrets.{name} }}}}", f"{config.id} needs {name}"
 
 
+def test_the_daily_fetch_passes_every_relay_setting():
+    env = _fetch_step().get("env", {})
+    for config in load_registry().values():
+        if config.enabled and config.relay:
+            relay = config.relay
+            assert env.get(relay.url_variable) == f"${{{{ vars.{relay.url_variable} }}}}"
+            assert env.get(relay.secret_name) == f"${{{{ secrets.{relay.secret_name} }}}}"
+
+
 def test_the_daily_fetch_passes_no_other_secrets():
-    needed = {c.auth.secret_name for c in load_registry().values() if c.enabled}
+    needed = set()
+    for config in load_registry().values():
+        if config.enabled:
+            needed.add(config.auth.secret_name)
+            if config.relay:
+                needed |= {config.relay.url_variable, config.relay.secret_name}
     assert set(_fetch_step().get("env", {})) <= needed
 
 
@@ -39,7 +53,9 @@ def test_secrets_are_used_only_in_the_fetch_step():
     for path in WORKFLOWS.glob("*.yml"):
         text = path.read_text(encoding="utf-8")
         uses = text.count("secrets.")
-        expected = len(_fetch_step().get("env", {})) if path.name == "fetch-daily.yml" else 0
+        env = _fetch_step().get("env", {})
+        secrets = [value for value in env.values() if "secrets." in value]
+        expected = len(secrets) if path.name == "fetch-daily.yml" else 0
         assert uses == expected, f"{path.name} uses secrets outside the fetch step"
 
 

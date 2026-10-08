@@ -50,8 +50,11 @@ jobs:
       - name: Fetch every enabled operator, one at a time
         id: fetch
         # Keys are passed to this step only, by secret name, as the registry lists them.
+        # GeniePoint goes through the project's relay (operators/geniepoint.yaml, relay).
         env:
           JOLT_API_KEY: ${{ secrets.JOLT_API_KEY }}
+          GENIEPOINT_RELAY_URL: ${{ vars.GENIEPOINT_RELAY_URL }}
+          GENIEPOINT_RELAY_TOKEN: ${{ secrets.GENIEPOINT_RELAY_TOKEN }}
         run: |
           set +e
           uv run python -m pipeline.run --live all --log-dir logs --publish build

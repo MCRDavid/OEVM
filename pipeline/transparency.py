@@ -185,6 +185,15 @@ def operator_view(config: OperatorConfig) -> dict:
             if config.missing_publish_flag
             else None
         ),
+        "relay": (
+            {
+                "decided": str(config.relay.decided),
+                "reason": config.relay.reason,
+                "evidence_url": config.relay.evidence_url,
+            }
+            if config.relay
+            else None
+        ),
         "rate_limit": rate_limit_view(config),
         "findings": [
             {
@@ -279,11 +288,18 @@ def _sources_table(data: dict) -> str:
             )
             or "None yet"
         )
+        relay = op["relay"]
+        fetched = "Yes" if op["enabled"] else "No"
+        if op["enabled"] and relay:
+            fetched += (
+                f", through the project's relay since {_e(relay['decided'])}: "
+                f"{_e(relay['reason'])} ({_link(relay['evidence_url'], 'evidence')})"
+            )
         rows.append(
             "<tr>"
             f'<th scope="row">{_e(op["name"])}</th>'
             f"<td>{_e(op['engagement']['label'])}</td>"
-            f"<td>{'Yes' if op['enabled'] else 'No'}</td>"
+            f"<td>{fetched}</td>"
             f"<td>{feeds}</td>"
             f"<td>{licence_text}</td>"
             f"<td>{no_flag}</td>"
@@ -315,6 +331,13 @@ def _rate_table(data: dict) -> str:
             else "Not checked yet"
         )
         notes = f"<br>{_e(rate['notes'])}" if rate["notes"] else ""
+        relay = op["relay"]
+        fetched = "Yes" if op["enabled"] else "No"
+        if op["enabled"] and relay:
+            fetched += (
+                f", through the project's relay since {_e(relay['decided'])}: "
+                f"{_e(relay['reason'])} ({_link(relay['evidence_url'], 'evidence')})"
+            )
         rows.append(
             "<tr>"
             f'<th scope="row">{_e(op["name"])}</th>'
