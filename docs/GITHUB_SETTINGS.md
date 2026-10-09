@@ -152,6 +152,11 @@ Needed before the first run of the **Fetch daily** workflow (`.github/workflows/
 A run shows red if any operator failed, even though the site was still updated with the
 others; the feed health page on the site says which one.
 
+To watch a run while it fetches, open it, then the **Fetch operator feeds** job, then the
+**Fetch every enabled operator, one at a time** step. It prints a line as each operator
+starts and finishes, and every ten pages in between, with the page reached, the
+percentage done and an estimate of the time left where the feed gives its total.
+
 Source: https://docs.github.com/en/pages/getting-started-with-github-pages/configuring-a-publishing-source-for-your-github-pages-site
 
 ## 10. The relay (Cloudflare Workers)

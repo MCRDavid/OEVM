@@ -23,6 +23,7 @@ from adapters.http import FeedError, PoliteClient, redact_url
 from adapters.ocpi_221 import AdapterResult, convert_records
 from adapters.ocpi_221.client import KEPT_HEADERS, ModuleFetch, Page, _int_header
 from adapters.ocpi_221.normalise import EVSE_STATUSES, IssueLog
+from adapters.progress import NO_PROGRESS, PageProgress
 from schema.operator import OperatorConfig
 
 STANDARDS = {"CCS2": "IEC_62196_T2_COMBO"}
@@ -59,7 +60,7 @@ def _get(client: PoliteClient, url: str) -> tuple[int, object, Page | None, int 
     return 200, body, page, _int_header(response, "X-Total-Count")
 
 
-def _fetch_locations(client: PoliteClient, url: str) -> ModuleFetch:
+def _fetch_locations(client: PoliteClient, url: str, progress: PageProgress) -> ModuleFetch:
     status, body, page, total = _get(client, url)
     if status != 200:
         raise FeedError(f"{redact_url(url)} returned HTTP {status}")
@@ -71,33 +72,45 @@ def _fetch_locations(client: PoliteClient, url: str) -> ModuleFetch:
             f"{redact_url(url)} reports {total} locations but sent {len(records)}; "
             "this adapter reads one page"
         )
+    progress.page("locations", pages=1, records=len(records), total_records=total)
+    progress.module_done("locations", pages=1, records=len(records), complete=True)
     return ModuleFetch("locations", url, records, [page], total_reported=total, complete=True)
 
 
 def _fetch_tariffs(
-    client: PoliteClient, template: str, ids: list[str], max_pages: int | None, issues: IssueLog
+    client: PoliteClient,
+    template: str,
+    ids: list[str],
+    max_pages: int | None,
+    issues: IssueLog,
+    progress: PageProgress,
 ) -> ModuleFetch:
     module = ModuleFetch("tariffs", template)
     if len(ids) > MAX_TARIFFS:
         issues.add(f"{len(ids) - MAX_TARIFFS} tariff ids not fetched: more than {MAX_TARIFFS}")
     missed = len(ids) > MAX_TARIFFS
-    for number, tariff_id in enumerate(ids[:MAX_TARIFFS]):
-        if max_pages is not None and number >= max_pages:
-            return module
+    limit = MAX_TARIFFS if max_pages is None else max(0, min(MAX_TARIFFS, max_pages))
+    wanted = ids[:limit]
+    for number, tariff_id in enumerate(wanted, start=1):
         try:
             status, body, page, _ = _get(client, template.replace("{tariffId}", tariff_id))
         except FeedError as exc:
             missed = True
             issues.add(f"tariff {tariff_id!r} not used: {exc}")
-            continue
-        if isinstance(body, dict):
-            module.records.append(body)
-            module.pages.append(page)
         else:
-            missed = True
-            problem = f"HTTP {status}" if status != 200 else "not a tariff object"
-            issues.add(f"tariff {tariff_id!r} not used: {problem}")
-    module.complete = not missed
+            if isinstance(body, dict):
+                module.records.append(body)
+                module.pages.append(page)
+            else:
+                missed = True
+                problem = f"HTTP {status}" if status != 200 else "not a tariff object"
+                issues.add(f"tariff {tariff_id!r} not used: {problem}")
+        progress.page("tariffs", pages=number, records=len(module.records), total_pages=len(wanted))
+    stopped = len(wanted) < len(ids[:MAX_TARIFFS])
+    module.complete = not missed and not stopped
+    progress.module_done(
+        "tariffs", pages=len(module.pages), records=len(module.records), complete=module.complete
+    )
     return module
 
 
@@ -174,13 +187,14 @@ def fetch(
     page_size: int | None = None,
     max_pages: int | None = None,
     now: datetime | None = None,
+    progress: PageProgress = NO_PROGRESS,
 ) -> AdapterResult:
     """Fetch every Jolt location, then each tariff they refer to (one request each)."""
     if date_from is not None or page_size is not None:
         raise FeedError(f"{config.id}: Jolt's API has no date_from or page size")
     fetched_at = now or datetime.now(UTC).replace(microsecond=0)
     issues = IssueLog()
-    locations = _fetch_locations(client, config.endpoints["locations"].url)
+    locations = _fetch_locations(client, config.endpoints["locations"].url, progress)
     raw_locations = []
     for raw in locations.records:
         try:
@@ -200,7 +214,9 @@ def fetch(
     for bad in [tariff_id for tariff_id in ids if not TARIFF_ID.fullmatch(tariff_id)]:
         issues.add(f"tariff id {bad!r} not fetched: unexpected characters")
     ids = [tariff_id for tariff_id in ids if TARIFF_ID.fullmatch(tariff_id)]
-    tariffs = _fetch_tariffs(client, config.endpoints["tariffs"].url, ids, max_pages, issues)
+    tariffs = _fetch_tariffs(
+        client, config.endpoints["tariffs"].url, ids, max_pages, issues, progress
+    )
 
     result = AdapterResult(config.id, fetched_at, {"locations": locations, "tariffs": tariffs})
     raw_tariffs, sources = [], {}

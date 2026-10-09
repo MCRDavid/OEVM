@@ -256,6 +256,14 @@ def test_max_pages_limits_tariff_requests():
     assert not result.complete
 
 
+@pytest.mark.parametrize("max_pages", [0, -1, -3])
+def test_a_zero_or_negative_page_limit_fetches_no_tariffs(max_pages):
+    handler = serve({"locations": [one_location()]})
+    result = run_with(handler, max_pages=max_pages)
+    assert len(handler.seen) == 1  # the locations request only
+    assert not result.modules["tariffs"].complete
+
+
 @pytest.mark.parametrize(
     "kwargs", [{"date_from": NOW}, {"page_size": 10}], ids=["date-from", "page-size"]
 )

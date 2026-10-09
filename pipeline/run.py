@@ -11,7 +11,8 @@ have been checked.
 
 --live all fetches every enabled operator, one after another (the daily workflow). If
 one operator fails, its failure is logged, the others are still fetched and published,
-and the exit code is 2, so the failure is visible without holding back the rest.
+and the exit code is 2, so the failure is visible without holding back the rest. Live
+runs print how far each operator has got as they go (pipeline.progress).
 """
 
 import argparse
@@ -28,8 +29,10 @@ import adapters.jolt
 import adapters.ocpi_221
 from adapters.http import FeedError, PoliteClient
 from adapters.ocpi_221 import AdapterResult
+from adapters.progress import NO_PROGRESS, PageProgress
 from adapters.replay import ReplayTransport
 from pipeline import health, publish, tariffs
+from pipeline.progress import RunProgress
 from pipeline.registry import ROOT, RegistryError, load_registry
 from schema.operator import OperatorConfig
 from schema.runlog import MAX_ISSUE_LENGTH, RunLog
@@ -56,6 +59,7 @@ def run_operator(
     page_size: int | None = None,
     max_pages: int | None = None,
     key: str | None = None,
+    progress: PageProgress = NO_PROGRESS,
 ) -> AdapterResult:
     if config.adapter == "custom":
         fetch = CUSTOM_ADAPTERS.get(config.id)
@@ -67,7 +71,12 @@ def run_operator(
             raise FeedError(f"{config.id}: the {config.adapter} adapter is not built yet")
     with PoliteClient(config, transport=transport, sleep=sleep, clock=clock, key=key) as client:
         result = fetch(
-            config, client, date_from=date_from, page_size=page_size, max_pages=max_pages
+            config,
+            client,
+            date_from=date_from,
+            page_size=page_size,
+            max_pages=max_pages,
+            progress=progress,
         )
         result.requests = client.requests_made
         return result
@@ -238,18 +247,21 @@ def main(argv: list[str] | None = None) -> int:
                     )
                 configs = [config]
             results = []
+            progress = RunProgress(max_pages=args.max_pages)
+            progress.run_started([config.id for config in configs])
             # One operator at a time, never in parallel (CLAUDE.md, rate limits).
-            for config in configs:
+            for number, config in enumerate(configs, start=1):
                 try:
-                    results.append(
-                        run_operator(
-                            config,
-                            date_from=args.date_from,
-                            page_size=args.page_size,
-                            max_pages=args.max_pages,
-                        )
+                    progress.operator_started(config, number=number, count=len(configs))
+                    result = run_operator(
+                        config,
+                        date_from=args.date_from,
+                        page_size=args.page_size,
+                        max_pages=args.max_pages,
+                        progress=progress,
                     )
                 except FeedError as exc:
+                    progress.operator_failed(config.id)
                     if args.log_dir:
                         when = datetime.now(UTC)
                         write_log(args.log_dir, failure_log(config.id, mode, str(exc), when))
@@ -257,6 +269,10 @@ def main(argv: list[str] | None = None) -> int:
                         raise
                     print(f"Error: {exc}", file=sys.stderr)
                     failed.append(config.id)
+                else:
+                    progress.operator_done(config.id, requests=result.requests)
+                    results.append(result)
+            progress.run_done(fetched=len(results), failed=failed)
             if not results:
                 raise FeedError(f"every operator failed: {', '.join(failed)}")
     except (FeedError, RegistryError) as exc:
