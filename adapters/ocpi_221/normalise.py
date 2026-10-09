@@ -1,7 +1,9 @@
 """Convert OCPI 2.2.1 Location and Tariff objects into the project's own models.
 
 Field meanings follow OCPI 2.2.1 sections 8 (Locations) and 11 (Tariffs). A value that
-is not valid OCPI is recorded as "unknown" and logged as an issue, never guessed.
+is not valid OCPI is recorded as "unknown" and logged as an issue, never guessed. The one
+exception is an EVSE status the operator file maps in nonstandard_statuses, the owner's
+recorded decision, which may read such a value only as working or out_of_order.
 """
 
 from collections import Counter

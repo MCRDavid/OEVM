@@ -190,8 +190,10 @@ At the top of the details screen, above the connectors, the map will show:
 | Available | Green `#17733a` / `#6fd08f` | available |
 | In use | Orange `#8a5300` / `#ffc46b` | charging, reserved |
 | Reported out of service | Red `#8a2a12` / `#ffab91` | out_of_order, inoperative, planned, removed |
-| Blocked, working or status unknown | Grey `#4d5559` / `#b4bcc2` | blocked, unknown, and "working" (not an OCPI status; see below) |
+| Blocked or status unknown | Grey `#4d5559` / `#b4bcc2` | blocked, unknown |
 
+- "Working" (not an OCPI status; see "char.gy's statuses") is also grey, with its own chip
+  reading "2 working (free or in use, not stated)", and is never counted as available.
 - "Reported out of service" uses exactly the statuses of the map's "Hide out of service"
   filter (ADR 0012, `OUT_OF_SERVICE` in `pipeline/publish.py`); a test keeps them the same.
   "Blocked" usually means a parked vehicle, so it is not counted as out of service.
@@ -214,8 +216,9 @@ such a location reads "4 of 4 charge points working (free or in use, not stated)
 
 Because `FAULTED` is now out of order, the map's "Hide out of service" filter (ADR 0012)
 also hides char.gy charge points the feed reports as faulted, and the details panel shows
-the new wording, once this pull request is merged. The feed health page still counts
-`WORKING` as no OCPI status, so its figures do not change.
+the new wording, once this pull request is merged. The feed health page's "EVSEs with a
+status" for char.gy then counts these readings too, so it rises from near 0% to near
+100%; the finding in the operator file still records that the values are not OCPI ones.
 
 ## Notices to change before the map calls the Worker
 

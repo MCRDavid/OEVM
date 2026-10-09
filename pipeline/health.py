@@ -36,9 +36,7 @@ def health(result: AdapterResult) -> Health:
         locations=len(locations),
         locations_in_uk=sum(in_uk(location) for location in locations),
         evses=len(evses),
-        # "working" is not an OCPI status (shown only by an owner's decision), so the feed
-        # health figure still counts it as no status.
-        evses_with_status=sum(evse.status not in {"unknown", "working"} for evse in evses),
+        evses_with_status=sum(evse.status != "unknown" for evse in evses),
         connectors=len(prices),
         connectors_with_tariff=sum(bool(price.tariff_ids) for price in prices),
         median_last_updated_days=round(max(median(ages), 0), 1) if ages else None,
