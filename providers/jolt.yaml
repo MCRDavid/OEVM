@@ -1,0 +1,24 @@
+# yaml-language-server: $schema=schema.json
+# Jolt: an operator's own app and plans. Rules are in schema/provider.py.
+id: jolt
+name: Jolt
+kind: operator
+website: https://joltcharge.com/uk/
+terms:
+  url: https://joltcharge.com/uk/terms/
+  reuse: forbidden
+  quote: >-
+    Except where necessary for viewing the material on the JOLT Website or in the JOLT
+    App on your browser, or as permitted under the Copyright Act 1968 (Cth) or other
+    applicable laws or these Terms, no material on the JOLT Website or in the JOLT App
+    may be reproduced, adapted, uploaded to a third party, linked to, framed,
+    distributed, displayed or transmitted in any form by any process without the
+    specific written consent of JOLT.
+  attribution: null
+  checked: 2026-10-09
+plans: []
+notes: >-
+  Plans are not listed because Jolt's terms do not allow material on its website or app
+  to be reproduced without its written consent, and clause 4 of the terms also asks users
+  not to scrape or data-mine its services. Terms checked on 2026-10-09 (terms page last
+  modified 2026-03-03).

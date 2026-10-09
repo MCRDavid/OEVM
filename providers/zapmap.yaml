@@ -1,0 +1,15 @@
+# yaml-language-server: $schema=schema.json
+# Zapmap: roaming app with Zap-Pay and a Zapmap Premium subscription.
+# Rules are in schema/provider.py.
+id: zapmap
+name: Zapmap
+kind: roaming
+website: https://www.zapmap.com
+terms:
+  url: https://www.zapmap.com/terms-of-use
+  reuse: forbidden
+  quote: "6.5.3 attempt or undertake any activity involving text or data mining, web scraping or the use of any bot, spider, scraper or automated device, program, tool, algorithm, code, process or methodology to access, obtain, copy, monitor or republish any portion of the data visible on or used by the Website, App or Services; ... 13.3 With the exception of data sourced under a Creative Commons Share-Alike licence (see Section 13.5), the database rights will be infringed by any person who, without consent, extracts or re-utilises all or a substantial part of the contents of the database without the express written permission of Zapmap."
+  attribution: null
+  checked: 2026-10-09
+plans: []
+notes: "Plans are not listed because the provider's terms of use do not allow text or data mining, or extracting or re-using the contents of its database without express written permission (checked 2026-10-09)."

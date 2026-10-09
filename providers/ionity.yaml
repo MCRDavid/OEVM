@@ -1,0 +1,14 @@
+# yaml-language-server: $schema=schema.json
+# IONITY: operator network with its own app and subscriptions. Rules are in schema/provider.py.
+id: ionity
+name: IONITY
+kind: operator
+website: https://www.ionity.eu/
+terms:
+  url: https://www.ionity.eu/policies/imprint
+  reuse: forbidden
+  quote: "The copyrights or rights of use under copyrights respectively are exclusively owned by us and the use and exploitation of copyright protected content is prohibited without our explicit written consent, unless provided for by statutory law."
+  attribution: null
+  checked: 2026-10-09
+plans: []
+notes: "Plans are not listed because the provider's imprint does not allow use of its copyright protected content without explicit written consent; the site links only an imprint and a privacy policy, and no separate website terms of use were found (checked 2026-10-09)."

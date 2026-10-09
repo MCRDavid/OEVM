@@ -1,0 +1,15 @@
+# yaml-language-server: $schema=schema.json
+# Raw Charging: operator network with contactless, RFID and app payment.
+# Rules are in schema/provider.py.
+id: raw_charging
+name: Raw Charging
+kind: operator
+website: https://rawcharging.com/
+terms:
+  url: https://rawcharging.com/legal-information
+  reuse: forbidden
+  quote: "Users of this website are permitted to download extracts on the basis that no material may be copied, modified, added to or distributed in any way. You may download one copy of the material on any single computer for private use only. You are not permitted to publish the contents of the site including but not limited to publication on any other website or computer environment."
+  attribution: null
+  checked: 2026-10-09
+plans: []
+notes: "Plans are not listed because the provider's legal information page does not allow its material to be copied or published (checked 2026-10-09). Its own pages publish no per kWh price, fee or subscription."

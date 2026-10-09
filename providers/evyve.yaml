@@ -1,0 +1,15 @@
+# yaml-language-server: $schema=schema.json
+# EVYVE: operator network with its own app, pay as you go and contactless.
+# Rules are in schema/provider.py.
+id: evyve
+name: EVYVE
+kind: operator
+website: https://evyve.co.uk/
+terms:
+  url: https://evyve.co.uk/terms-and-conditions/
+  reuse: forbidden
+  quote: "23.2 Subject to your compliance with this Agreement, we grant you a limited, non-exclusive, non-transferable, revocable licence to access and use the App, Website and Services for your personal, non-commercial use. 23.3 Except as expressly permitted by this Agreement or by law, you must not copy, modify, distribute, publish, rent, lease, sell, sublicense, reverse engineer, decompile or attempt to extract source code from the App/Website or any part of the Services (and you must not assist anyone else to do so)."
+  attribution: null
+  checked: 2026-10-09
+plans: []
+notes: "Plans are not listed because the provider's terms allow use of its website for personal, non-commercial use only and do not allow it to be copied or published (checked 2026-10-09)."

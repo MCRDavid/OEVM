@@ -1,0 +1,20 @@
+# yaml-language-server: $schema=schema.json
+# Pod (Pod Point): operator network with its own app and contactless payment.
+# Rules are in schema/provider.py.
+id: pod
+name: Pod
+kind: operator
+website: https://podenergy.com/
+terms:
+  url: https://podenergy.com/legal/public-charger-terms-of-use
+  reuse: no_restriction_found
+  quote: null
+  attribution: null
+  checked: 2026-10-09
+plans: []
+notes: 'No clause on copying or reusing content was found in the Public Charger Network Terms
+  of Use (updated 11 September 2023, checked 2026-10-09); the general terms and conditions page
+  was not re-checked. Pod''s own pages give no network-wide price per kWh, so no prices are listed;
+  third-party price figures were not used. A Pod Point guide page on charging costs returned 404
+  when checked. Not listed as plans because the provider publishes no fee or price for them: Pay
+  as you go (app), Contactless.'

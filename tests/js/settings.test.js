@@ -84,3 +84,18 @@ test("a light or dark choice is saved only when given, and forget deletes it", (
   assert.equal(storage.items.size, 0);
   assert.equal(createSettings(blocked).theme(), null);
 });
+
+test("ticked charging plans are saved only with the settings, and forget removes them", () => {
+  const storage = memoryStorage();
+  const settings = createSettings(storage);
+  assert.deepEqual(settings.plans(), []);
+  settings.save(defaults(), null, ["electroverse.ionity"]);
+  assert.deepEqual(settings.plans(), ["electroverse.ionity"]);
+  settings.save(defaults(), null, []);
+  assert.equal(JSON.parse(storage.items.get(STORAGE_KEY)).plans, undefined);
+  storage.items.set(STORAGE_KEY, JSON.stringify({ version: 1, filters: "", plans: ["a", 3, null] }));
+  assert.deepEqual(settings.plans(), ["a"]);
+  settings.forget();
+  assert.deepEqual(settings.plans(), []);
+  assert.deepEqual(createSettings(blocked).plans(), []);
+});

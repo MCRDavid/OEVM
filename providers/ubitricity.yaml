@@ -1,0 +1,15 @@
+# yaml-language-server: $schema=schema.json
+# ubitricity: operator of lamp post and kerbside charge points, part of Shell Recharge.
+# Rules are in schema/provider.py.
+id: ubitricity
+name: ubitricity
+kind: operator
+website: https://ubitricity.com/en/
+terms:
+  url: https://ubitricity.com/en/legal-notice/
+  reuse: forbidden
+  quote: "All contents and designs published on these webpages are protected by copy right. Any further use of the contents of these pages that is not covered by German copy right must receive prior written consent of the author or creator. This specifically refers to duplication, adaptation, translation, saving, converting or repetition in data bases or other electronic media or systems. Contents or contributions of third parties are marked as such. The unauthorised replication or dissemination of any contents or complete webpages is liable to prosecution. Copying or downloading contents for private and non-commercial use is authorised."
+  attribution: null
+  checked: 2026-10-09
+plans: []
+notes: "Plans are not listed because the provider's legal notice requires prior written consent for duplication, saving or repetition in databases, and allows copying only for private and non-commercial use (checked 2026-10-09). The pricing page is https://ubitricity.com/en/driver/pricing/."

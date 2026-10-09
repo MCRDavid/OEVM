@@ -1,0 +1,15 @@
+# yaml-language-server: $schema=schema.json
+# bp pulse: operator network with its own app, contactless payment and a subscription.
+# Rules are in schema/provider.py.
+id: bp_pulse
+name: bp pulse
+kind: operator
+website: https://www.bppulse.com/en-gb
+terms:
+  url: https://www.bppulse.com/en-gb/legal-notice
+  reuse: forbidden
+  quote: "We permit you to make copies of this website as necessary incidental acts during your viewing of it; and you may take a print for your personal use of so much of the site as is reasonable for private purposes. All other use is strictly prohibited."
+  attribution: null
+  checked: 2026-10-09
+plans: []
+notes: "Plans are not listed because the provider's legal notice allows copies only for viewing and personal use, and does not allow its content to be republished, compiled or used in a database (checked 2026-10-09)."

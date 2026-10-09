@@ -37,7 +37,8 @@ from pathlib import Path
 
 from adapters.ocpi_221 import AdapterResult
 from pipeline.health import in_uk
-from pipeline.pricing import location_summary
+from pipeline.plans import load_providers
+from pipeline.pricing import location_summary, plan_fee_text, plan_price_text
 from pipeline.registry import ROOT
 from pipeline.tariffs import ConnectorPrice, TariffOption, price_locations, site_tariffs
 from schema.models import Connector, Coordinates, Location
@@ -53,6 +54,8 @@ from schema.published import (
     MapLayer,
     MapProperties,
     OperatorEntry,
+    PlanOut,
+    PlansFile,
     PointGeometry,
     TariffOptionOut,
 )
@@ -171,6 +174,7 @@ def _option_out(option: TariffOption) -> TariffOptionOut:
     return TariffOptionOut(
         tariff_id=option.tariff_id,
         name=option.name,
+        original_name=option.original_name,
         kind=option.kind,
         state=option.state,
         text=option.text,
@@ -181,6 +185,52 @@ def _option_out(option: TariffOption) -> TariffOptionOut:
         ppk_high=None if high is None else _pence(high),
         includes_vat=option.includes_vat if low is not None else None,
     )
+
+
+PLANS_NOTE = (
+    "Copied by hand from each provider's own published pages, on the date shown with each "
+    "plan, and only where the provider's terms allow reuse. Plans and prices change often: "
+    "check with the provider before signing up."
+)
+
+
+def plans_file(operators: dict[str, OperatorConfig], generated_at: datetime) -> PlansFile:
+    """Every listed plan, for the map's plan list, details and calculator."""
+    plans = []
+    for provider in load_providers(operator_ids=set(operators)).values():
+        attribution = provider.terms.attribution if provider.terms.reuse == "attribution" else None
+        for plan in provider.plans:
+            fixed = plan.price_per_kwh is not None and plan.includes_vat
+            plans.append(
+                PlanOut(
+                    id=f"{provider.id}.{plan.id}",
+                    provider=provider.name,
+                    provider_kind=provider.kind,
+                    name=plan.name,
+                    pay_by=plan.pay_by,
+                    fee_text=plan_fee_text(plan.monthly_fee),
+                    price_text=plan_price_text(
+                        plan.price_per_kwh,
+                        plan.discount_percent,
+                        plan.discount_of,
+                        plan.includes_vat,
+                    ),
+                    monthly_fee=None if plan.monthly_fee is None else float(plan.monthly_fee),
+                    ppk=_pence(plan.price_per_kwh) if fixed else None,
+                    discount_percent=(
+                        None if plan.discount_percent is None else float(plan.discount_percent)
+                    ),
+                    networks=plan.networks,
+                    operator_ids=plan.operator_ids,
+                    conditions=plan.conditions,
+                    needs_testing=plan.needs_testing,
+                    fee_note=plan.fee_note,
+                    attribution=attribution,
+                    source_url=plan.source.url,
+                    checked=plan.source.checked,
+                )
+            )
+    return PlansFile(generated_at=generated_at, note=PLANS_NOTE, plans=plans)
 
 
 def _dump(model, *, indent: int | None = None) -> bytes:
@@ -318,6 +368,8 @@ def publish(
     files = [_size("data/locations.geojson", [layer_bytes])]
     if details:
         files.append(_size("data/loc/", list(details.values())))
+    plans_bytes = _validated(PlansFile, _dump(plans_file(operators, generated_at)))
+    files.append(_size("data/plans.json", [plans_bytes]))
     manifest = Manifest(generated_at=generated_at, operators=entries, files=files)
 
     data = out_dir / "data"
@@ -328,6 +380,7 @@ def publish(
         path = data / "loc" / key[:2] / f"{key}.json"
         path.parent.mkdir(parents=True, exist_ok=True)
         path.write_bytes(blob)
+    (data / "plans.json").write_bytes(plans_bytes)
     (data / "manifest.json").write_bytes(_validated(Manifest, _dump(manifest, indent=2)))
 
     report = [f"published to {data}:"]

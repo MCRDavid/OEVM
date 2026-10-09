@@ -1,0 +1,215 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$defs": {
+    "PlanOut": {
+      "additionalProperties": false,
+      "description": "One charging plan from a provider's own published page (providers/*.yaml).",
+      "properties": {
+        "id": {
+          "description": "<provider id>.<plan id>, unique across providers.",
+          "title": "Id",
+          "type": "string"
+        },
+        "provider": {
+          "title": "Provider",
+          "type": "string"
+        },
+        "provider_kind": {
+          "enum": [
+            "roaming",
+            "operator"
+          ],
+          "title": "Provider Kind",
+          "type": "string"
+        },
+        "name": {
+          "title": "Name",
+          "type": "string"
+        },
+        "pay_by": {
+          "title": "Pay By",
+          "type": "string"
+        },
+        "fee_text": {
+          "description": "Worded by pipeline/pricing.py.",
+          "title": "Fee Text",
+          "type": "string"
+        },
+        "price_text": {
+          "description": "Worded by pipeline/pricing.py.",
+          "title": "Price Text",
+          "type": "string"
+        },
+        "monthly_fee": {
+          "anyOf": [
+            {
+              "minimum": 0,
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Pounds a month including VAT; null when not published.",
+          "title": "Monthly Fee"
+        },
+        "ppk": {
+          "anyOf": [
+            {
+              "minimum": 0,
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Fixed price in pence per kWh including VAT. Null for discounts, prices not published, or prices that exclude VAT.",
+          "title": "Ppk"
+        },
+        "discount_percent": {
+          "anyOf": [
+            {
+              "exclusiveMaximum": 100,
+              "exclusiveMinimum": 0,
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Discount Percent"
+        },
+        "networks": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Networks",
+          "type": "array"
+        },
+        "operator_ids": {
+          "description": "Operator registry ids the plan applies to.",
+          "items": {
+            "type": "string"
+          },
+          "title": "Operator Ids",
+          "type": "array"
+        },
+        "conditions": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Conditions"
+        },
+        "needs_testing": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Needs Testing"
+        },
+        "fee_note": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Fee Note"
+        },
+        "attribution": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Attribution"
+        },
+        "source_url": {
+          "title": "Source Url",
+          "type": "string"
+        },
+        "checked": {
+          "format": "date",
+          "title": "Checked",
+          "type": "string"
+        }
+      },
+      "required": [
+        "id",
+        "provider",
+        "provider_kind",
+        "name",
+        "pay_by",
+        "fee_text",
+        "price_text",
+        "monthly_fee",
+        "ppk",
+        "discount_percent",
+        "networks",
+        "operator_ids",
+        "conditions",
+        "needs_testing",
+        "fee_note",
+        "attribution",
+        "source_url",
+        "checked"
+      ],
+      "title": "PlanOut",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "schema_version": {
+      "const": 1,
+      "default": 1,
+      "title": "Schema Version",
+      "type": "integer"
+    },
+    "generated_at": {
+      "format": "date-time",
+      "title": "Generated At",
+      "type": "string"
+    },
+    "note": {
+      "title": "Note",
+      "type": "string"
+    },
+    "plans": {
+      "items": {
+        "$ref": "#/$defs/PlanOut"
+      },
+      "title": "Plans",
+      "type": "array"
+    }
+  },
+  "required": [
+    "schema_version",
+    "generated_at",
+    "note",
+    "plans"
+  ],
+  "title": "PlansFile",
+  "type": "object"
+}

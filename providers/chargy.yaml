@@ -1,0 +1,66 @@
+# yaml-language-server: $schema=schema.json
+# char.gy: operator network of on-street chargers, paid through its app or website.
+# Rules are in schema/provider.py.
+id: chargy
+name: char.gy
+kind: operator
+website: https://char.gy/
+terms:
+  url: https://char.gy/terms-of-use
+  reuse: no_restriction_found
+  quote: null
+  attribution: null
+  checked: 2026-10-09
+plans:
+  - id: chargy_weekday_night
+    name: Weekday Night
+    pay_by: char.gy app or website, pay as you go
+    monthly_fee: 0
+    fee_note: No subscription listed.
+    price_per_kwh: 0.39
+    discount_percent: null
+    discount_of: null
+    includes_vat: null
+    networks: [char.gy network]
+    operator_ids: [chargy]
+    conditions: "Monday to Friday 00:00 to 06:59. Billing adjusts automatically when a session crosses tariff times. A £25 card pre-authorisation hold is placed when a session starts and is not a charge. The provider says prices may vary across its network and should be checked on the charge point or app before charging."
+    needs_testing: null
+    source:
+      url: https://char.gy/pricing
+      quote: "£0.39/kWh Weekday Night 00:00 - 06:59"
+      checked: 2026-10-09
+  - id: chargy_weekday_day
+    name: Weekday Day
+    pay_by: char.gy app or website, pay as you go
+    monthly_fee: 0
+    fee_note: No subscription listed.
+    price_per_kwh: 0.59
+    discount_percent: null
+    discount_of: null
+    includes_vat: null
+    networks: [char.gy network]
+    operator_ids: [chargy]
+    conditions: "Monday to Friday 07:00 to 23:59. A £25 card pre-authorisation hold is placed when a session starts. The provider says prices may vary across its network and should be checked on the charge point or app before charging."
+    needs_testing: null
+    source:
+      url: https://char.gy/pricing
+      quote: "£0.59/kWh Weekday Day 07:00 - 23:59"
+      checked: 2026-10-09
+  - id: chargy_weekend
+    name: Weekend
+    pay_by: char.gy app or website, pay as you go
+    monthly_fee: 0
+    fee_note: No subscription listed.
+    price_per_kwh: 0.54
+    discount_percent: null
+    discount_of: null
+    includes_vat: null
+    networks: [char.gy network]
+    operator_ids: [chargy]
+    conditions: "Saturday and Sunday 00:00 to 23:59. A £25 card pre-authorisation hold is placed when a session starts. The provider says prices may vary across its network and should be checked on the charge point or app before charging."
+    needs_testing: null
+    source:
+      url: https://char.gy/pricing
+      quote: "£0.54/kWh Weekend 00:00 - 23:59"
+      checked: 2026-10-09
+notes: "No clause in the terms of use deals specifically with reusing content or prices; clause 11.1 says the format and content of the service is protected by copyright (checked 2026-10-09). The pricing page has no date; the provider's help article (modified 29 July 2026) gives the same three prices. VAT treatment is not stated, so the prices are shown with VAT not stated and left out of price comparisons."

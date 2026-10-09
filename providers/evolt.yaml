@@ -1,0 +1,21 @@
+# yaml-language-server: $schema=schema.json
+# Evolt Network: operator network (its home page calls it the new home of SWARCO E.Connect).
+# Rules are in schema/provider.py.
+id: evolt
+name: Evolt Network
+kind: operator
+website: https://evoltnetwork.co.uk/
+terms:
+  url: https://evoltnetwork.co.uk/terms-of-use/
+  reuse: no_restriction_found
+  quote: null
+  attribution: null
+  checked: 2026-10-09
+plans: []
+notes: 'No clause in the terms of use deals with copying or reusing content; the footer says only
+  "© 2026 Evolt Charging LTD All rights reserved" (checked 2026-10-09). The terms version heading
+  is "Evolt Charging Terms and Conditions 02/2023". The FAQ links an open data tariff feed for
+  roaming partners, which was not fetched. No Evolt page read mentions Source, and https://www.sourceev.co.uk/
+  could not be read, so any link to Source is unknown. There is no registry file for this network
+  yet. Not listed as plans because the provider publishes no fee or price for them: Pay as you
+  go.'

@@ -1,0 +1,336 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$defs": {
+    "Plan": {
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "pattern": "^[a-z0-9][a-z0-9_]*$",
+          "title": "Id",
+          "type": "string"
+        },
+        "name": {
+          "description": "The plan's name as the provider writes it.",
+          "minLength": 1,
+          "title": "Name",
+          "type": "string"
+        },
+        "pay_by": {
+          "description": "How the driver pays, in plain words, for example 'Electroverse app or Electrocard'.",
+          "minLength": 1,
+          "title": "Pay By",
+          "type": "string"
+        },
+        "monthly_fee": {
+          "anyOf": [
+            {
+              "minimum": 0.0,
+              "type": "number"
+            },
+            {
+              "pattern": "^(?!^[-+.]*$)[+-]?0*(?:\\d{0,4}|(?=[\\d.]{1,9}0*$)\\d{0,4}\\.\\d{0,4}0*$)",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Pounds per month including VAT; 0 for no fee; null when not published.",
+          "title": "Monthly Fee"
+        },
+        "fee_note": {
+          "anyOf": [
+            {
+              "minLength": 1,
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Minimum term, annual option, trial and so on.",
+          "title": "Fee Note"
+        },
+        "price_per_kwh": {
+          "anyOf": [
+            {
+              "minimum": 0.0,
+              "type": "number"
+            },
+            {
+              "pattern": "^(?!^[-+.]*$)[+-]?0*(?:\\d{0,4}|(?=[\\d.]{1,9}0*$)\\d{0,4}\\.\\d{0,4}0*$)",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Pounds per kWh including VAT, when a fixed price is published.",
+          "title": "Price Per Kwh"
+        },
+        "discount_percent": {
+          "anyOf": [
+            {
+              "exclusiveMaximum": 100.0,
+              "exclusiveMinimum": 0.0,
+              "type": "number"
+            },
+            {
+              "pattern": "^(?!^[-+.]*$)[+-]?0*\\d*\\.?\\d*$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Percentage off, when the plan is published as a discount.",
+          "title": "Discount Percent"
+        },
+        "discount_of": {
+          "anyOf": [
+            {
+              "minLength": 1,
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "What the discount is taken off, in plain words, for example \"Electroverse's own price on the IONITY network\".",
+          "title": "Discount Of"
+        },
+        "includes_vat": {
+          "anyOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "description": "Whether the provider says its prices include VAT; null when not stated.",
+          "title": "Includes Vat"
+        },
+        "networks": {
+          "description": "Networks the plan applies to, as the provider names them.",
+          "items": {
+            "type": "string"
+          },
+          "minItems": 1,
+          "title": "Networks",
+          "type": "array"
+        },
+        "operator_ids": {
+          "description": "Ids from operators/ for those networks, so the map can show the plan at their locations. Only networks this project has a registry file for.",
+          "items": {
+            "type": "string"
+          },
+          "title": "Operator Ids",
+          "type": "array"
+        },
+        "conditions": {
+          "anyOf": [
+            {
+              "minLength": 1,
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Times of day, charger speeds, caps or other fees.",
+          "title": "Conditions"
+        },
+        "needs_testing": {
+          "anyOf": [
+            {
+              "minLength": 1,
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Set when the provider's own pages disagree or something is unclear.",
+          "title": "Needs Testing"
+        },
+        "source": {
+          "$ref": "#/$defs/PlanSource"
+        }
+      },
+      "required": [
+        "id",
+        "name",
+        "pay_by",
+        "includes_vat",
+        "networks",
+        "source"
+      ],
+      "title": "Plan",
+      "type": "object"
+    },
+    "PlanSource": {
+      "additionalProperties": false,
+      "properties": {
+        "url": {
+          "pattern": "^https?://\\S+$",
+          "title": "Url",
+          "type": "string"
+        },
+        "quote": {
+          "description": "Copied word for word from the page.",
+          "minLength": 1,
+          "title": "Quote",
+          "type": "string"
+        },
+        "checked": {
+          "format": "date",
+          "title": "Checked",
+          "type": "string"
+        }
+      },
+      "required": [
+        "url",
+        "quote",
+        "checked"
+      ],
+      "title": "PlanSource",
+      "type": "object"
+    },
+    "ProviderTerms": {
+      "additionalProperties": false,
+      "properties": {
+        "url": {
+          "anyOf": [
+            {
+              "pattern": "^https?://\\S+$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "The provider's terms page.",
+          "title": "Url"
+        },
+        "reuse": {
+          "description": "What the terms say about copying or reusing content.",
+          "enum": [
+            "no_restriction_found",
+            "attribution",
+            "personal_use_only",
+            "forbidden",
+            "not_read"
+          ],
+          "title": "Reuse",
+          "type": "string"
+        },
+        "quote": {
+          "anyOf": [
+            {
+              "minLength": 1,
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "The clause on reuse, word for word, or null when none was found.",
+          "title": "Quote"
+        },
+        "attribution": {
+          "anyOf": [
+            {
+              "minLength": 1,
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Wording to show when the terms ask for attribution.",
+          "title": "Attribution"
+        },
+        "checked": {
+          "format": "date",
+          "title": "Checked",
+          "type": "string"
+        }
+      },
+      "required": [
+        "reuse",
+        "checked"
+      ],
+      "title": "ProviderTerms",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "id": {
+      "pattern": "^[a-z0-9][a-z0-9_]*$",
+      "title": "Id",
+      "type": "string"
+    },
+    "name": {
+      "minLength": 1,
+      "title": "Name",
+      "type": "string"
+    },
+    "kind": {
+      "enum": [
+        "roaming",
+        "operator"
+      ],
+      "title": "Kind",
+      "type": "string"
+    },
+    "website": {
+      "pattern": "^https?://\\S+$",
+      "title": "Website",
+      "type": "string"
+    },
+    "terms": {
+      "$ref": "#/$defs/ProviderTerms"
+    },
+    "plans": {
+      "items": {
+        "$ref": "#/$defs/Plan"
+      },
+      "title": "Plans",
+      "type": "array"
+    },
+    "notes": {
+      "anyOf": [
+        {
+          "minLength": 1,
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Notes"
+    }
+  },
+  "required": [
+    "id",
+    "name",
+    "kind",
+    "website",
+    "terms"
+  ],
+  "title": "ProviderFile",
+  "type": "object"
+}

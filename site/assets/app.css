@@ -734,3 +734,38 @@ body[data-view="list"] .map-view {
     animation: none !important;
   }
 }
+
+/* Charging plans and the calculator */
+.mine {
+  font-weight: 600;
+}
+
+.cheapest {
+  font-weight: 600;
+}
+
+.my-plans .plan-group {
+  margin: 0.5rem 0;
+  border: 0;
+  padding: 0;
+}
+
+.my-plans .plan-group legend {
+  font-weight: 600;
+}
+
+.calculator {
+  margin: 0.75rem 0;
+}
+
+.calc {
+  display: grid;
+  gap: 0.3rem;
+  max-width: 28rem;
+}
+
+.calc input,
+.calc select {
+  font: inherit;
+  padding: 0.3rem;
+}
