@@ -97,6 +97,7 @@ def fetch(
             page_size=page_size,
             max_pages=max_pages,
             progress=progress,
+            envelope=config.response_envelope,
         )
         for module in MODULES
     }

@@ -1,0 +1,132 @@
+# yaml-language-server: $schema=schema.json
+id: clenergy_ev
+display_name: Clenergy EV
+ocpi_country_code: GB
+ocpi_party_id: CEV # Confirmed from the feed's own country_code and party_id on 2026-10-09.
+adapter: ocpi_221
+base_url: unknown
+endpoints:
+  locations:
+    url: https://api.clenergy.online/development/pcpr/locations
+    status: documented
+    note: Linked as "locations" from Clenergy EV's open data page (read 2026-10-09).
+  tariffs:
+    url: https://api.clenergy.online/development/pcpr/tariffs
+    status: documented
+    note: Linked as "tariffs" from Clenergy EV's open data page (read 2026-10-09).
+response_envelope: data_list
+auth:
+  method: none
+  name: null
+  secret_name: null
+rate_limit:
+  min_seconds_between_requests: 11
+  limits: []
+  limits_checked: 2026-10-09
+  notes: >-
+    Clenergy EV's open data page states no rate limit. Responses carry X-RateLimit-Limit 6
+    with no window stated (see findings). The 11 second gap is this project's own choice: it
+    would stay within 6 requests a minute, plus a 1 second margin, if that is what the
+    header means. Each file holds every record, so a full run makes two requests (about 2.2
+    MB on 2026-10-09).
+supports_single_location: needs_testing
+cors: supported # access-control-allow-origin "*" on 2026-10-09
+attribution: >-
+  Contains data from Clenergy EV published under the Public Charge Point Regulations 2023,
+  used in line with the Open Government Licence v3.0.
+licence:
+  name: OGL-3.0
+  url: https://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/
+  basis: >-
+    Clenergy EV's open data page says the data "can be found here to meet UK Government
+    Public Charge Point Regulations" and links the locations and tariffs files. It states
+    no licence or terms for the data, and the site's footer links no terms of use, only a
+    privacy policy and a complaints policy (read 2026-10-09). Regulation 10(5) of the
+    Public Charge Point Regulations 2023 requires the data to be available without terms
+    on its use, and DfT's guidance says "Data must be open in line with the Open
+    Government Licence".
+  checked: 2026-10-09
+engagement:
+  status: open_anonymous
+  evidence:
+    - date: 2026-10-09
+      url: https://www.clenergy-ev.com/open-data/
+      note: >-
+        Links "locations" and "tariffs" on api.clenergy.online in "a machine-readable OCPI
+        format" and states no licence, terms or rate limit.
+access_requested: null
+access_granted: null
+sources:
+  - url: https://www.clenergy-ev.com/open-data/
+    note: >-
+      Clenergy EV's open data page, read on 2026-10-09. Gives the two links. Answers
+      automated requests normally.
+findings:
+  - date: 2026-10-09
+    kind: spec_conformance
+    summary: >-
+      Responses wrap the records as {"name": "OK", "message": "ok", "data": [...], "error":
+      null, "forcelogout": false}, with no status_code or timestamp. OCPI 2.2.1 section 4.1.7
+      describes a response object with status_code and timestamp. The records themselves
+      follow OCPI 2.2.1.
+    handling: >-
+      The operator file sets response_envelope to data_list, so the adapter accepts a list
+      in data with no status_code and stops if error is set. Every other feed is still
+      checked strictly.
+    evidence_url: https://api.clenergy.online/development/pcpr/locations
+  - date: 2026-10-09
+    kind: documentation
+    summary: >-
+      Responses carry X-RateLimit-Limit 6, X-RateLimit-Remaining and X-RateLimit-Reset
+      headers. No page states the window or whether the limit is per path.
+    handling: >-
+      Treated as unknown. The project leaves 11 seconds between requests and makes two
+      requests a run.
+    evidence_url: https://api.clenergy.online/development/pcpr/tariffs
+  - date: 2026-10-09
+    kind: documentation
+    summary: The feed address contains the word "development".
+    handling: >-
+      Used as published, since the operator's open data page links it. The feed health
+      page will show any change.
+    evidence_url: https://www.clenergy-ev.com/open-data/
+  - date: 2026-10-09
+    kind: data_quality
+    summary: >-
+      The operator field is null on every location (1,400 on 2026-10-09), and tariffs have
+      no country_code or party_id.
+    handling: >-
+      Locations show Clenergy EV, the name of the operator publishing the feed. Tariff ids
+      use the party GB CEV from the operator file.
+    evidence_url: https://api.clenergy.online/development/pcpr/locations
+  - date: 2026-10-09
+    kind: data_quality
+    summary: >-
+      Every location's last_updated is the time of the request, so it does not show when a
+      location last changed. Each EVSE's last_updated varies.
+    handling: Kept as published.
+    evidence_url: https://api.clenergy.online/development/pcpr/locations
+  - date: 2026-10-09
+    kind: data_quality
+    summary: >-
+      Every location has country GBR, but some coordinates are outside the UK (for example
+      in the Caribbean, Canada and Ireland), and some appear to have latitude and longitude
+      the other way round.
+    handling: >-
+      Locations whose coordinates fall outside the map's UK limits are left off the map and
+      listed in the manifest as not mapped. Those limits also take in the Republic of
+      Ireland, so points there are shown as published. Coordinates are never corrected by
+      this project.
+    evidence_url: https://api.clenergy.online/development/pcpr/locations
+  - date: 2026-10-09
+    kind: data_quality
+    summary: >-
+      5 of 129 tariffs are in a currency other than GBP (3 EUR, 1 USD, 1 CAD on
+      2026-10-09).
+    handling: Their connectors show "Price unknown". Currencies are never converted.
+    evidence_url: https://api.clenergy.online/development/pcpr/tariffs
+notes: >-
+  Clenergy EV's files are OCPI 2.2.1 records inside a different wrapper, so the ocpi_221
+  adapter reads them with response_envelope set to data_list (task A6 in
+  docs/ADAPTERS_PLAN.md).
+enabled: true

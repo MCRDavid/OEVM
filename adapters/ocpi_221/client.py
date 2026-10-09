@@ -71,10 +71,21 @@ def _same_site(url: str, other: str) -> bool:
     return (a.scheme, a.netloc) == (b.scheme, b.netloc)
 
 
-def _ocpi_data(body: object, url: str) -> list:
-    if not isinstance(body, dict) or "status_code" not in body:
+def _ocpi_data(body: object, url: str, envelope: str = "ocpi") -> list:
+    """Return the records in a response, checking its wrapper.
+
+    With envelope "data_list" (an operator file setting), a body with no status_code is
+    accepted if it holds a list in "data" and a null or empty "error". A status_code, when
+    present, is always checked.
+    """
+    if not isinstance(body, dict):
         raise FeedError(f"{redact_url(url)} did not return an OCPI response object")
-    if not 1000 <= int(body["status_code"]) <= 1999:
+    if "status_code" not in body:
+        if envelope != "data_list":
+            raise FeedError(f"{redact_url(url)} did not return an OCPI response object")
+        if body.get("error"):
+            raise FeedError(f"{redact_url(url)} returned an error: {body.get('message')}")
+    elif not 1000 <= int(body["status_code"]) <= 1999:
         raise FeedError(
             f"{redact_url(url)} returned OCPI status {body['status_code']}: "
             f"{body.get('status_message')}"
@@ -94,8 +105,11 @@ def fetch_module(
     page_size: int | None = None,
     max_pages: int | None = None,
     progress: PageProgress = NO_PROGRESS,
+    envelope: str = "ocpi",
 ) -> ModuleFetch:
     """Fetch all pages of one module, or the first `max_pages` pages.
+
+    envelope is the operator file's response_envelope setting (see _ocpi_data).
 
     Saved pages and error messages have the operator's key removed, in case a server
     echoes it back in a header, a link or the body.
@@ -109,6 +123,7 @@ def fetch_module(
             page_size=page_size,
             max_pages=max_pages,
             progress=progress,
+            envelope=envelope,
         )
     except FeedError as exc:
         raise FeedError(client.redact(str(exc))) from None
@@ -123,6 +138,7 @@ def _fetch_pages(
     page_size: int | None,
     max_pages: int | None,
     progress: PageProgress,
+    envelope: str,
 ) -> ModuleFetch:
     params = {}
     if date_from is not None:
@@ -151,7 +167,7 @@ def _fetch_pages(
             body = client.redact(response.json())
         except ValueError as exc:
             raise FeedError(f"{redact_url(url)} did not return JSON") from exc
-        data = _ocpi_data(body, url)
+        data = _ocpi_data(body, url, envelope)
 
         result.records.extend(data)
         result.pages.append(

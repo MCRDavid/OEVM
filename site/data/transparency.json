@@ -1,5 +1,5 @@
 {
-  "last_reviewed": "2026-10-08",
+  "last_reviewed": "2026-10-09",
   "disclaimer": "OEVM is a personal, experimental project for learning about AI tools. Much of its code and text was written with an AI assistant, and it will contain mistakes. Charger data comes from the operators and other sources credited on every record, and remains their work. Everything is provided \"as is\", with no warranty or guarantee of any kind. Always check prices and availability at the charger.",
   "regulation": {
     "summary": "The Public Charge Point Regulations 2023 set no limit on how often data users may request the data. Regulation 10(5) requires the data to be available free of charge without terms on its use. DfT's guidance allows terms covering the means of access, which is where operators' rate limits come from.",
@@ -115,6 +115,126 @@
           "evidence_url": "https://github.com/MCRDavid/OEVM/actions/runs/37853739264",
           "status": "resolved",
           "resolved_date": "2026-10-08"
+        }
+      ]
+    },
+    {
+      "id": "clenergy_ev",
+      "name": "Clenergy EV",
+      "enabled": true,
+      "adapter": "ocpi_221",
+      "engagement": {
+        "status": "open_anonymous",
+        "label": "Open, no registration",
+        "evidence": [
+          {
+            "date": "2026-10-09",
+            "url": "https://www.clenergy-ev.com/open-data/",
+            "file": null,
+            "note": "Links \"locations\" and \"tariffs\" on api.clenergy.online in \"a machine-readable OCPI format\" and states no licence, terms or rate limit."
+          }
+        ]
+      },
+      "feeds": [
+        {
+          "kind": "locations",
+          "url": "https://api.clenergy.online/development/pcpr/locations",
+          "status": "documented"
+        },
+        {
+          "kind": "tariffs",
+          "url": "https://api.clenergy.online/development/pcpr/tariffs",
+          "status": "documented"
+        }
+      ],
+      "licence": {
+        "name": "OGL-3.0",
+        "url": "https://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/",
+        "checked": "2026-10-09"
+      },
+      "attribution": "Contains data from Clenergy EV published under the Public Charge Point Regulations 2023, used in line with the Open Government Licence v3.0.",
+      "missing_publish_flag": null,
+      "relay": null,
+      "rate_limit": {
+        "our_gap_seconds": 11.0,
+        "our_max_per_hour": 328,
+        "ours": "At least 11 s between requests to the operator's host, measured from the end of the previous request (at most 328 in any hour), retries included.",
+        "published": [],
+        "limits_checked": "2026-10-09",
+        "comparison": "No limit published (checked 2026-10-09). The gap is our own choice.",
+        "difference_from_regulations": "Neither the operator nor the regulations set a limit.",
+        "notes": "Clenergy EV's open data page states no rate limit. Responses carry X-RateLimit-Limit 6 with no window stated (see findings). The 11 second gap is this project's own choice: it would stay within 6 requests a minute, plus a 1 second margin, if that is what the header means. Each file holds every record, so a full run makes two requests (about 2.2 MB on 2026-10-09)."
+      },
+      "findings": [
+        {
+          "date": "2026-10-09",
+          "kind": "spec_conformance",
+          "kind_label": "Differs from OCPI 2.2.1",
+          "summary": "Responses wrap the records as {\"name\": \"OK\", \"message\": \"ok\", \"data\": [...], \"error\": null, \"forcelogout\": false}, with no status_code or timestamp. OCPI 2.2.1 section 4.1.7 describes a response object with status_code and timestamp. The records themselves follow OCPI 2.2.1.",
+          "handling": "The operator file sets response_envelope to data_list, so the adapter accepts a list in data with no status_code and stops if error is set. Every other feed is still checked strictly.",
+          "evidence_url": "https://api.clenergy.online/development/pcpr/locations",
+          "status": "open",
+          "resolved_date": null
+        },
+        {
+          "date": "2026-10-09",
+          "kind": "documentation",
+          "kind_label": "Documentation",
+          "summary": "Responses carry X-RateLimit-Limit 6, X-RateLimit-Remaining and X-RateLimit-Reset headers. No page states the window or whether the limit is per path.",
+          "handling": "Treated as unknown. The project leaves 11 seconds between requests and makes two requests a run.",
+          "evidence_url": "https://api.clenergy.online/development/pcpr/tariffs",
+          "status": "open",
+          "resolved_date": null
+        },
+        {
+          "date": "2026-10-09",
+          "kind": "documentation",
+          "kind_label": "Documentation",
+          "summary": "The feed address contains the word \"development\".",
+          "handling": "Used as published, since the operator's open data page links it. The feed health page will show any change.",
+          "evidence_url": "https://www.clenergy-ev.com/open-data/",
+          "status": "open",
+          "resolved_date": null
+        },
+        {
+          "date": "2026-10-09",
+          "kind": "data_quality",
+          "kind_label": "Data quirk",
+          "summary": "The operator field is null on every location (1,400 on 2026-10-09), and tariffs have no country_code or party_id.",
+          "handling": "Locations show Clenergy EV, the name of the operator publishing the feed. Tariff ids use the party GB CEV from the operator file.",
+          "evidence_url": "https://api.clenergy.online/development/pcpr/locations",
+          "status": "open",
+          "resolved_date": null
+        },
+        {
+          "date": "2026-10-09",
+          "kind": "data_quality",
+          "kind_label": "Data quirk",
+          "summary": "Every location's last_updated is the time of the request, so it does not show when a location last changed. Each EVSE's last_updated varies.",
+          "handling": "Kept as published.",
+          "evidence_url": "https://api.clenergy.online/development/pcpr/locations",
+          "status": "open",
+          "resolved_date": null
+        },
+        {
+          "date": "2026-10-09",
+          "kind": "data_quality",
+          "kind_label": "Data quirk",
+          "summary": "Every location has country GBR, but some coordinates are outside the UK (for example in the Caribbean, Canada and Ireland), and some appear to have latitude and longitude the other way round.",
+          "handling": "Locations whose coordinates fall outside the map's UK limits are left off the map and listed in the manifest as not mapped. Those limits also take in the Republic of Ireland, so points there are shown as published. Coordinates are never corrected by this project.",
+          "evidence_url": "https://api.clenergy.online/development/pcpr/locations",
+          "status": "open",
+          "resolved_date": null
+        },
+        {
+          "date": "2026-10-09",
+          "kind": "data_quality",
+          "kind_label": "Data quirk",
+          "summary": "5 of 129 tariffs are in a currency other than GBP (3 EUR, 1 USD, 1 CAD on 2026-10-09).",
+          "handling": "Their connectors show \"Price unknown\". Currencies are never converted.",
+          "evidence_url": "https://api.clenergy.online/development/pcpr/tariffs",
+          "status": "open",
+          "resolved_date": null
         }
       ]
     },

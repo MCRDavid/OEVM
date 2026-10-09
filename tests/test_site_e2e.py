@@ -39,7 +39,8 @@ BROWSER_ARGS = [
     "--no-proxy-server",
     "--host-resolver-rules=MAP * ~NOTFOUND, EXCLUDE 127.0.0.1",
 ]
-LOCATIONS = 13  # in the recorded fixtures
+LOCATIONS = 19  # in the recorded fixtures
+OUT_OF_SERVICE = 1  # fixture locations with every charger reported out of service
 SERVED: list[str] = []  # every path the test server was asked for
 # MapLibre writes the map position after the # a moment after the map settles, starting
 # from 0/0/0.
@@ -569,7 +570,7 @@ def test_chargers_reported_out_of_service_can_be_hidden(visit):
     expect(page.locator("#list-items li")).to_have_count(LOCATIONS)
     expect(page.locator("#list-items")).to_contain_text("Reported out of service")
     page.goto(page.url.split("?")[0] + "?view=list&ok=1")
-    expect(page.locator("#list-items li")).to_have_count(LOCATIONS - 1)
+    expect(page.locator("#list-items li")).to_have_count(LOCATIONS - 1 - OUT_OF_SERVICE)
     assert "Reported out of service" not in page.text_content("#list-items")
 
 
