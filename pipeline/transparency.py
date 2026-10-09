@@ -20,7 +20,14 @@ from pathlib import Path
 
 from pipeline.project import REPOSITORY_URL
 from pipeline.registry import ROOT, RegistryError, load_registry
-from schema.operator import ENGAGEMENT_LABELS, DocumentedLimit, OperatorConfig
+from schema.operator import (
+    CHANNELS,
+    ENGAGEMENT_ACTIONS,
+    ENGAGEMENT_LABELS,
+    DocumentedLimit,
+    Engagement,
+    OperatorConfig,
+)
 
 PAGE_PATH = ROOT / "site" / "transparency" / "index.html"
 JSON_PATH = ROOT / "site" / "data" / "transparency.json"
@@ -145,6 +152,56 @@ def rate_limit_view(config: OperatorConfig) -> dict:
     }
 
 
+def _plural(count: int, word: str) -> str:
+    return f"{count} {word}" if count == 1 else f"{count} {word}s"
+
+
+def engagement_headline(engagement: Engagement) -> str:
+    """The status label with its date, for example "Requested, no reply after 14 days"."""
+    label = ENGAGEMENT_LABELS[engagement.status]
+    as_of = engagement.as_of
+    sent = engagement.last_sent()
+    if engagement.status == "requested_no_reply" and sent is not None and as_of is not None:
+        waited = (as_of - sent.date).days
+        if waited > 0:
+            return f"{label} after {_plural(waited, 'day')} (as of {as_of})"
+        return f"{label} yet (sent {sent.date})"
+    if as_of is None:
+        return f"{label} (no dated check yet)"
+    return f"{label} (as of {as_of})"
+
+
+def engagement_view(engagement: Engagement) -> dict:
+    sent = engagement.last_sent()
+    return {
+        "status": engagement.status,
+        "label": ENGAGEMENT_LABELS[engagement.status],
+        "headline": engagement_headline(engagement),
+        "as_of": str(engagement.as_of) if engagement.as_of else None,
+        "awaiting_reply_since": (
+            str(sent.date) if sent is not None and engagement.awaiting_reply() else None
+        ),
+        "evidence": [
+            {"date": str(e.date), "url": e.url, "file": e.file, "note": e.note}
+            for e in engagement.evidence
+        ],
+        "log": [
+            {
+                "date": str(e.date),
+                "action": e.action,
+                "action_label": ENGAGEMENT_ACTIONS[e.action],
+                "channel": e.channel,
+                "channel_label": CHANNELS[e.channel] if e.channel else None,
+                "summary": e.summary,
+                "quote": e.quote,
+                "evidence_url": e.evidence_url,
+                "evidence_file": e.evidence_file,
+            }
+            for e in engagement.log
+        ],
+    }
+
+
 def operator_view(config: OperatorConfig) -> dict:
     feeds = [
         {"kind": kind, "url": endpoint.url, "status": endpoint.status}
@@ -157,14 +214,9 @@ def operator_view(config: OperatorConfig) -> dict:
         "name": config.display_name,
         "enabled": config.enabled,
         "adapter": config.adapter,
-        "engagement": {
-            "status": config.engagement.status,
-            "label": ENGAGEMENT_LABELS[config.engagement.status],
-            "evidence": [
-                {"date": str(e.date), "url": e.url, "file": e.file, "note": e.note}
-                for e in config.engagement.evidence
-            ],
-        },
+        "engagement": engagement_view(config.engagement),
+        "access_requested": str(config.access_requested) if config.access_requested else None,
+        "access_granted": str(config.access_granted) if config.access_granted else None,
         "feeds": feeds,
         "licence": (
             {
@@ -219,12 +271,14 @@ def last_reviewed(operators: dict[str, OperatorConfig]) -> str:
             config.rate_limit.limits_checked,
             config.licence.checked if config.licence else "unknown",
             *(e.date for e in config.engagement.evidence),
+            *(e.date for e in config.engagement.log),
             *(f.date for f in config.findings),
             *(f.resolved_date for f in config.findings),
             *(limit.checked for limit in config.rate_limit.limits),
             config.access_requested,
             config.access_granted,
             config.missing_publish_flag.decided if config.missing_publish_flag else None,
+            config.relay.decided if config.relay else None,
         ]
         dates += [d for d in candidates if isinstance(d, date)]
     return max(dates).isoformat() if dates else "unknown"
@@ -314,6 +368,69 @@ def _sources_table(data: dict) -> str:
         '<th scope="col">Evidence</th></tr></thead>'
         f"<tbody>{''.join(rows)}</tbody></table>"
     )
+
+
+def _evidence_link(url: str | None, file: str | None) -> str:
+    if url:
+        return _link(url, "evidence")
+    if file:
+        return _link(f"{REPOSITORY_URL}/blob/main/{file}", "saved copy")
+    return ""
+
+
+def _engagement_table(data: dict) -> str:
+    rows = []
+    for op in data["operators"]:
+        engagement = op["engagement"]
+        latest = engagement["log"][-1] if engagement["log"] else None
+        step = (
+            f"{_e(latest['date'])}: {_e(latest['action_label'])}. {_e(latest['summary'])}"
+            if latest
+            else "None recorded"
+        )
+        rows.append(
+            "<tr>"
+            f'<th scope="row">{_e(op["name"])}</th>'
+            f"<td>{_e(engagement['headline'])}</td>"
+            f"<td>{_e(op['access_requested'] or 'Not requested')}</td>"
+            f"<td>{_e(op['access_granted'] or 'No')}</td>"
+            f"<td>{step}</td>"
+            "</tr>"
+        )
+    return (
+        "<table><caption>Access status for every known operator</caption>"
+        '<thead><tr><th scope="col">Operator</th><th scope="col">Status</th>'
+        '<th scope="col">Access requested</th><th scope="col">Key issued</th>'
+        '<th scope="col">Latest step</th></tr></thead>'
+        f"<tbody>{''.join(rows)}</tbody></table>"
+    )
+
+
+def _engagement_logs(data: dict) -> str:
+    parts = []
+    for op in data["operators"]:
+        log = op["engagement"]["log"]
+        if not log:
+            continue
+        rows = "".join(
+            "<tr>"
+            f"<td>{_e(e['date'])}</td>"
+            f"<td>{_e(e['action_label'])}</td>"
+            f"<td>{_e(e['channel_label'] or '')}</td>"
+            f"<td>{_e(e['summary'])}</td>"
+            f"<td>{'&ldquo;' + _e(e['quote']) + '&rdquo;' if e['quote'] else ''}</td>"
+            f"<td>{_evidence_link(e['evidence_url'], e['evidence_file'])}</td>"
+            "</tr>"
+            for e in log
+        )
+        parts.append(
+            f"<table><caption>{_e(op['name'])}</caption>"
+            '<thead><tr><th scope="col">Date</th><th scope="col">Step</th>'
+            '<th scope="col">Channel</th><th scope="col">What happened</th>'
+            '<th scope="col">Operator&rsquo;s words</th><th scope="col">Evidence</th>'
+            f"</tr></thead><tbody>{rows}</tbody></table>"
+        )
+    return "".join(parts) or "<p>Nothing recorded yet.</p>"
 
 
 def _rate_table(data: dict) -> str:
@@ -424,6 +541,15 @@ or app, so those are never shown. Locations with no flag are not shown either, u
 repository owner has recorded a decision for that operator, with the reason and date
 below. A flag set to false is always respected.</p>
 <div class="table-wrap">{_sources_table(data)}</div>
+<h2>Access and engagement</h2>
+<p>How this project has tried to reach each operator&rsquo;s data, with the date of every
+step. Each status is dated by the latest check or step recorded for that operator.
+&ldquo;No reply&rdquo; means none has been recorded here; it says nothing about why.
+No personal names or contact details are published. Any operator can correct or reply to
+an entry by <a href="{_e(REPOSITORY_URL)}/issues/new/choose">opening an issue</a>, and
+replies are added to its log.</p>
+<div class="table-wrap">{_engagement_table(data)}</div>
+<div class="table-wrap">{_engagement_logs(data)}</div>
 <h2>Rate limits</h2>
 <p>{_e(data["regulation"]["summary"])}</p>
 <ul>{regulation_quotes}</ul>

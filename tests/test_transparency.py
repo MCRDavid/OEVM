@@ -173,3 +173,108 @@ def test_last_reviewed_counts_resolved_dates():
         }
     )
     assert transparency.last_reviewed({config.id: config}) == "2026-11-20"
+
+
+# The engagement log
+
+REQUEST = {
+    "date": "2026-10-01",
+    "action": "request_sent",
+    "channel": "web_form",
+    "summary": "Requested access through the operator's form.",
+}
+
+
+def operator_with(engagement: dict, **overrides) -> OperatorConfig:
+    data = {
+        "id": "example_operator",
+        "display_name": "Example Operator",
+        "ocpi_country_code": "unknown",
+        "ocpi_party_id": "unknown",
+        "adapter": "unknown",
+        "base_url": "unknown",
+        "auth": {"method": "unknown"},
+        "supports_single_location": "unknown",
+        "cors": "unknown",
+        "engagement": engagement,
+        "enabled": False,
+    }
+    data.update(overrides)
+    return OperatorConfig.model_validate(data)
+
+
+def test_every_operator_appears_in_the_engagement_table(page):
+    table = page[page.index("Access status for every known operator") :]
+    table = table[: table.index("</table>")]
+    for config in load_registry().values():
+        assert html.escape(config.display_name) in table
+
+
+def test_status_is_dated_by_the_latest_log_entry():
+    check = {
+        "date": "2026-10-09",
+        "action": "page_checked",
+        "summary": "Read the page.",
+        "evidence_url": "https://example.invalid/open-data",
+    }
+    config = operator_with(
+        {
+            "status": "key_on_request",
+            "evidence": [{"date": "2026-10-02", "url": "https://example.invalid/open-data"}],
+            "log": [check],
+        }
+    )
+    assert transparency.engagement_headline(config.engagement) == (
+        "Key issued on request (as of 2026-10-09)"
+    )
+    assert transparency.last_reviewed({config.id: config}) == "2026-10-09"
+
+
+def test_no_reply_counts_days_up_to_the_latest_entry():
+    chase = {**REQUEST, "date": "2026-10-15", "action": "follow_up_sent"}
+    check = {"date": "2026-10-29", "action": "page_checked", "summary": "No reply yet."}
+    config = operator_with(
+        {"status": "requested_no_reply", "log": [REQUEST, chase, check]},
+        access_requested="2026-10-01",
+    )
+    assert transparency.engagement_headline(config.engagement) == (
+        "Requested, no reply after 14 days (as of 2026-10-29)"
+    )
+    view = transparency.operator_view(config)
+    assert view["engagement"]["awaiting_reply_since"] == "2026-10-15"
+    assert view["access_requested"] == "2026-10-01"
+
+
+def test_a_request_on_the_day_reads_as_no_reply_yet():
+    config = operator_with(
+        {"status": "requested_no_reply", "log": [REQUEST]}, access_requested="2026-10-01"
+    )
+    assert transparency.engagement_headline(config.engagement) == (
+        "Requested, no reply yet (sent 2026-10-01)"
+    )
+
+
+def test_an_undated_status_says_so():
+    config = operator_with({"status": "unknown"})
+    assert transparency.engagement_headline(config.engagement) == (
+        "Not yet established (no dated check yet)"
+    )
+
+
+def test_a_declined_request_shows_the_operators_words_and_saved_copy():
+    decline = {
+        "date": "2026-10-20",
+        "action": "request_declined",
+        "channel": "email",
+        "summary": "The operator replied that it does not offer a feed to individuals.",
+        "quote": "We are <not> able to offer access.",
+        "evidence_file": "evidence/example_operator/2026-10-20-reply.md",
+    }
+    config = operator_with(
+        {"status": "request_declined", "log": [REQUEST, decline]},
+        access_requested="2026-10-01",
+    )
+    page = transparency.render_html(transparency.build({config.id: config}))
+    assert "&ldquo;We are &lt;not&gt; able to offer access.&rdquo;" in page
+    assert f"{REPOSITORY_URL}/blob/main/evidence/example_operator/2026-10-20-reply.md" in page
+    neutral_text(" ".join(parse(page).text))

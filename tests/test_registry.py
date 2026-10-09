@@ -1,5 +1,6 @@
 """Tests for the operator registry: the YAML schema rules, the loader and the seed files."""
 
+import datetime as dt
 import re
 from pathlib import Path
 from typing import get_args
@@ -304,7 +305,7 @@ def test_loader_checks_evidence_files_exist(tmp_path):
     evidence = {"date": "2026-10-06", "file": "evidence/example_operator/reply.md"}
     write_operator(
         operators_dir,
-        minimal(engagement={"status": "request_declined", "evidence": [evidence]}),
+        minimal(engagement={"status": "key_on_request", "evidence": [evidence]}),
     )
     with pytest.raises(registry.RegistryError, match="does not exist"):
         registry.load_registry(operators_dir)
@@ -318,7 +319,7 @@ def test_loader_checks_evidence_files_exist(tmp_path):
 def test_loader_rejects_evidence_in_another_operators_folder(tmp_path):
     evidence = {"date": "2026-10-06", "file": "evidence/someone_else/reply.md"}
     write_operator(
-        tmp_path, minimal(engagement={"status": "request_declined", "evidence": [evidence]})
+        tmp_path, minimal(engagement={"status": "key_on_request", "evidence": [evidence]})
     )
     with pytest.raises(registry.RegistryError, match="must be under evidence/example_operator/"):
         registry.load_registry(tmp_path)
@@ -340,7 +341,9 @@ def test_undated_evidence_produces_a_warning():
         )
     )
     assert registry.warnings_for(config) == [
-        "example_operator: evidence https://example.invalid/help has no date; add the date checked"
+        "example_operator: evidence https://example.invalid/help has no date; add the date checked",
+        "example_operator: no dated status yet; record a page_checked or feed_searched entry "
+        "in engagement.log",
     ]
 
 
@@ -358,3 +361,146 @@ def test_resolved_finding_with_date_is_valid():
             ]
         )
     )
+
+
+# The engagement log
+
+REQUEST = {
+    "date": "2026-10-01",
+    "action": "request_sent",
+    "channel": "web_form",
+    "summary": "Requested access through the operator's form.",
+}
+REPLY = {
+    "date": "2026-10-05",
+    "action": "reply_received",
+    "channel": "email",
+    "summary": "The operator replied that the request is being reviewed.",
+    "evidence_file": "evidence/example_operator/2026-10-05-reply.md",
+}
+GRANTED = {
+    "date": "2026-10-08",
+    "action": "key_granted",
+    "channel": "email",
+    "summary": "A key was issued.",
+    "evidence_file": "evidence/example_operator/2026-10-08-key.md",
+}
+
+
+def test_a_complete_log_is_valid():
+    OperatorConfig.model_validate(
+        minimal(
+            engagement={"status": "key_on_request", "log": [REQUEST, REPLY, GRANTED]},
+            access_requested="2026-10-01",
+            access_granted="2026-10-08",
+        )
+    )
+    OperatorConfig.model_validate(
+        minimal(
+            engagement={"status": "requested_awaiting_decision", "log": [REQUEST, REPLY]},
+            access_requested="2026-10-01",
+        )
+    )
+
+
+@pytest.mark.parametrize(
+    "data",
+    [
+        minimal(engagement={"status": "requested_no_reply", "log": [REQUEST]}),
+        minimal(
+            engagement={"status": "requested_no_reply", "log": [REQUEST, REPLY]},
+            access_requested="2026-10-01",
+        ),
+        minimal(engagement={"status": "unknown", "log": [REPLY, REQUEST]}),
+        minimal(engagement={"status": "unknown", "log": [{**REQUEST, "channel": None}]}),
+        minimal(
+            engagement={"status": "unknown", "log": [{**REPLY, "evidence_file": None}]},
+        ),
+        minimal(
+            engagement={
+                "status": "request_declined",
+                "log": [{**REPLY, "action": "request_declined"}],
+            }
+        ),
+        minimal(engagement={"status": "request_declined", "log": [REPLY]}),
+        minimal(
+            engagement={
+                "status": "unknown",
+                "log": [{**REQUEST, "summary": "Wrote to opendata@example.invalid for a key."}],
+            }
+        ),
+        minimal(
+            engagement={
+                "status": "unknown",
+                "log": [{**REQUEST, "summary": "The operator is in breach of the rules."}],
+            }
+        ),
+        minimal(engagement={"status": "unknown", "log": [REQUEST]}),
+        minimal(access_requested="2026-10-01"),
+        minimal(
+            engagement={"status": "unknown", "log": [REQUEST, GRANTED]},
+            access_requested="2026-10-01",
+        ),
+        minimal(engagement={"status": "unknown", "log": [{**REQUEST, "date": "unknown"}]}),
+        minimal(engagement={"status": "unknown", "log": [{**REQUEST, "action": "chased"}]}),
+    ],
+    ids=[
+        "no-reply-without-access-requested",
+        "no-reply-after-a-reply",
+        "log-out-of-order",
+        "request-without-channel",
+        "reply-without-evidence",
+        "decline-without-quote",
+        "declined-status-without-decline",
+        "email-address-in-summary",
+        "accusatory-summary",
+        "request-without-access-requested",
+        "access-requested-without-request",
+        "key-without-access-granted",
+        "undated-step",
+        "unknown-action",
+    ],
+)
+def test_invalid_engagement_logs_are_rejected(data):
+    with pytest.raises(ValidationError):
+        OperatorConfig.model_validate(data)
+
+
+def test_loader_checks_log_evidence_files_exist(tmp_path):
+    operators_dir = tmp_path / "operators"
+    operators_dir.mkdir()
+    write_operator(
+        operators_dir,
+        minimal(
+            engagement={"status": "requested_awaiting_decision", "log": [REQUEST, REPLY]},
+            access_requested="2026-10-01",
+        ),
+    )
+    with pytest.raises(registry.RegistryError, match=r"2026-10-05-reply\.md does not exist"):
+        registry.load_registry(operators_dir)
+    saved = tmp_path / REPLY["evidence_file"]
+    saved.parent.mkdir(parents=True)
+    saved.write_text("Dated summary of the reply.\n", encoding="utf-8")
+    assert "example_operator" in registry.load_registry(operators_dir)
+
+
+def test_validator_suggests_a_follow_up_after_two_weeks():
+    config = OperatorConfig.model_validate(
+        minimal(
+            engagement={"status": "requested_no_reply", "log": [REQUEST]},
+            access_requested="2026-10-01",
+        )
+    )
+    assert registry.warnings_for(config, today=dt.date(2026, 10, 14)) == []
+    assert registry.warnings_for(config, today=dt.date(2026, 10, 15)) == [
+        "example_operator: no reply recorded 14 days after the 2026-10-01 request sent; "
+        "consider a follow-up"
+    ]
+
+
+def test_seed_operators_without_a_dated_status_are_flagged():
+    for config in registry.load_registry().values():
+        undated = config.engagement.as_of is None
+        assert undated == any("no dated status yet" in w for w in registry.warnings_for(config)), (
+            config.id
+        )
