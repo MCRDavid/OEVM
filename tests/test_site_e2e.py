@@ -39,7 +39,7 @@ BROWSER_ARGS = [
     "--no-proxy-server",
     "--host-resolver-rules=MAP * ~NOTFOUND, EXCLUDE 127.0.0.1",
 ]
-LOCATIONS = 13  # in the recorded fixtures
+LOCATIONS = 17  # in the recorded fixtures
 SERVED: list[str] = []  # every path the test server was asked for
 # MapLibre writes the map position after the # a moment after the map settles, starting
 # from 0/0/0.
