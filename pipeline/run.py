@@ -9,10 +9,12 @@ the network. --live calls the operator's real feed, so use it sparingly. It only
 for operators that are enabled in the registry, which requires their licence terms to
 have been checked.
 
---live all fetches every enabled operator, one after another (the daily workflow). If
-one operator fails, its failure is logged, the others are still fetched and published,
-and the exit code is 2, so the failure is visible without holding back the rest. Live
-runs print how far each operator has got as they go (pipeline.progress).
+--live all fetches every enabled operator (the daily workflow). Operators that share a
+host are fetched one after another; groups that share no host are fetched at the same
+time, so a slow feed no longer holds up the others. If one operator fails, its failure
+is logged, the others are still fetched and published, and the exit code is 2, so the
+failure is visible without holding back the rest. Live runs print how far each operator
+has got as they go (pipeline.progress).
 """
 
 import argparse
@@ -20,6 +22,7 @@ import json
 import sys
 import time
 from collections.abc import Callable
+from concurrent.futures import ThreadPoolExecutor
 from datetime import UTC, datetime
 from pathlib import Path
 
@@ -27,7 +30,7 @@ import httpx
 
 import adapters.jolt
 import adapters.ocpi_221
-from adapters.http import FeedError, PoliteClient
+from adapters.http import FeedError, PoliteClient, operator_hosts
 from adapters.ocpi_221 import AdapterResult
 from adapters.progress import NO_PROGRESS, PageProgress
 from adapters.replay import ReplayTransport
@@ -47,6 +50,26 @@ FIXTURE_KEY = "fixture-replay-not-a-real-key"
 ALL_ENABLED = "all"
 # Exit code when --live all published some operators but at least one failed.
 EXIT_SOME_FAILED = 2
+
+
+def host_groups(configs: list[OperatorConfig]) -> list[list[OperatorConfig]]:
+    """Split operators into groups that share no host, keeping the given order.
+
+    Two operators go in the same group when they share a host, directly or through other
+    operators, so no host is ever asked by two fetches at once (CLAUDE.md, rate limits).
+    """
+    groups: list[tuple[set[str], list[OperatorConfig]]] = []
+    for config in configs:
+        hosts = set(operator_hosts(config))
+        members = [config]
+        for group in [g for g in groups if g[0] & hosts]:
+            groups.remove(group)
+            hosts |= group[0]
+            members = group[1] + members
+        groups.append((hosts, members))
+    order = {config.id: number for number, config in enumerate(configs)}
+    ordered = [sorted(members, key=lambda c: order[c.id]) for _, members in groups]
+    return sorted(ordered, key=lambda members: order[members[0].id])
 
 
 def run_operator(
@@ -246,32 +269,47 @@ def main(argv: list[str] | None = None) -> int:
                         f"{config.id} is not enabled in the registry; check its licence terms first"
                     )
                 configs = [config]
-            results = []
             progress = RunProgress(max_pages=args.max_pages)
-            progress.run_started([config.id for config in configs])
-            # One operator at a time, never in parallel (CLAUDE.md, rate limits).
-            for number, config in enumerate(configs, start=1):
-                try:
-                    progress.operator_started(config, number=number, count=len(configs))
-                    result = run_operator(
-                        config,
-                        date_from=args.date_from,
-                        page_size=args.page_size,
-                        max_pages=args.max_pages,
-                        progress=progress,
-                    )
-                except FeedError as exc:
-                    progress.operator_failed(config.id)
-                    if args.log_dir:
-                        when = datetime.now(UTC)
-                        write_log(args.log_dir, failure_log(config.id, mode, str(exc), when))
-                    if len(configs) == 1:
-                        raise
-                    print(f"Error: {exc}", file=sys.stderr)
-                    failed.append(config.id)
-                else:
-                    progress.operator_done(config.id, requests=result.requests)
-                    results.append(result)
+            groups = host_groups(configs)
+            progress.run_started([[config.id for config in group] for group in groups])
+            numbers = {config.id: number for number, config in enumerate(configs, start=1)}
+
+            def fetch_group(group: list[OperatorConfig]) -> list[AdapterResult | str]:
+                """Fetch one group, one operator at a time. Failures come back as ids."""
+                outcomes: list[AdapterResult | str] = []
+                for config in group:
+                    try:
+                        reporter = progress.operator_started(
+                            config, number=numbers[config.id], count=len(configs)
+                        )
+                        result = run_operator(
+                            config,
+                            date_from=args.date_from,
+                            page_size=args.page_size,
+                            max_pages=args.max_pages,
+                            progress=reporter,
+                        )
+                    except FeedError as exc:
+                        progress.operator_failed(config.id)
+                        if args.log_dir:
+                            when = datetime.now(UTC)
+                            write_log(args.log_dir, failure_log(config.id, mode, str(exc), when))
+                        if len(configs) == 1:
+                            raise
+                        print(f"Error: {exc}", file=sys.stderr, flush=True)
+                        outcomes.append(config.id)
+                    else:
+                        progress.operator_done(config.id, requests=result.requests)
+                        outcomes.append(result)
+                return outcomes
+
+            # Groups share no host, so they run at the same time; within a group, one
+            # operator at a time (CLAUDE.md, rate limits).
+            with ThreadPoolExecutor(max_workers=len(groups)) as pool:
+                outcomes = [o for group in pool.map(fetch_group, groups) for o in group]
+            fetched = {o.operator_id: o for o in outcomes if not isinstance(o, str)}
+            failed = [c.id for c in configs if c.id not in fetched]
+            results = [fetched[c.id] for c in configs if c.id in fetched]
             progress.run_done(fetched=len(results), failed=failed)
             if not results:
                 raise FeedError(f"every operator failed: {', '.join(failed)}")

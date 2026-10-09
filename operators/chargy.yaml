@@ -17,13 +17,15 @@ auth:
   name: null
   secret_name: null
 rate_limit:
-  min_seconds_between_requests: 6
+  min_seconds_between_requests: 4
   limits: []
   limits_checked: 2026-10-07
   notes: >-
     char.gy's open data page states no rate limit. The gap is this project's own choice:
     2 seconds until 8 October 2026, then 6 seconds after the feed refused requests from
-    GitHub's servers part-way through the first daily run (see findings).
+    GitHub's servers part-way through the first daily run (see findings). Lowered to 4
+    seconds on 9 October 2026 by the repository owner's decision, to shorten the daily
+    run; if the feed refuses requests again, the gap goes back to 6 seconds.
 supports_single_location: needs_testing
 cors: not_supported
 attribution: >-

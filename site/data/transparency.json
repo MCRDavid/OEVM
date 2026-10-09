@@ -74,14 +74,14 @@
       },
       "relay": null,
       "rate_limit": {
-        "our_gap_seconds": 6.0,
-        "our_max_per_hour": 600,
-        "ours": "At least 6 s between requests to the operator's host, measured from the end of the previous request (at most 600 in any hour), retries included.",
+        "our_gap_seconds": 4.0,
+        "our_max_per_hour": 900,
+        "ours": "At least 4 s between requests to the operator's host, measured from the end of the previous request (at most 900 in any hour), retries included.",
         "published": [],
         "limits_checked": "2026-10-07",
         "comparison": "No limit published (checked 2026-10-07). The gap is our own choice.",
         "difference_from_regulations": "Neither the operator nor the regulations set a limit.",
-        "notes": "char.gy's open data page states no rate limit. The gap is this project's own choice: 2 seconds until 8 October 2026, then 6 seconds after the feed refused requests from GitHub's servers part-way through the first daily run (see findings)."
+        "notes": "char.gy's open data page states no rate limit. The gap is this project's own choice: 2 seconds until 8 October 2026, then 6 seconds after the feed refused requests from GitHub's servers part-way through the first daily run (see findings). Lowered to 4 seconds on 9 October 2026 by the repository owner's decision, to shorten the daily run; if the feed refuses requests again, the gap goes back to 6 seconds."
       },
       "findings": [
         {

@@ -47,7 +47,7 @@ jobs:
           GH_REPO: ${{ github.repository }}
         run: .github/scripts/download-site-data.sh previous
 
-      - name: Fetch every enabled operator, one at a time
+      - name: Fetch every enabled operator, never two on one host at once
         id: fetch
         # Keys are passed to this step only, by secret name, as the registry lists them.
         # Operators with a relay decision (operators/<id>.yaml, relay) go through the
