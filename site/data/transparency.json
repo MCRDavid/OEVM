@@ -721,8 +721,8 @@
       "engagement": {
         "status": "key_on_request",
         "label": "Key issued on request",
-        "headline": "Key issued on request (no dated check yet)",
-        "as_of": null,
+        "headline": "Key issued on request (as of 2026-10-09)",
+        "as_of": "2026-10-09",
         "last_request": null,
         "last_response": null,
         "last_response_text": "No request sent",
@@ -734,7 +734,19 @@
             "note": "bp pulse's FAQ uses a request form. Whether a contract is also required is not known."
           }
         ],
-        "log": []
+        "log": [
+          {
+            "date": "2026-10-09",
+            "action": "page_checked",
+            "action_label": "Operator's page checked",
+            "channel": null,
+            "channel_label": null,
+            "summary": "bp pulse's Public Charge Point Regulations FAQ was read in a browser by the repository owner. It links to a request form asking for a name, email address and, optionally, organisation and purpose. The form mentions no key, licence, terms, agreement or rate limit.",
+            "quote": "Once received we will process your request and will contact you to provide instruction on how you can gain access to this data in a machine readable format",
+            "evidence_url": "https://www.bppulse.com/en-gb/help-and-support/public-ev-charging/public-charge-point-regulations",
+            "evidence_file": null
+          }
+        ]
       },
       "access_requested": null,
       "access_granted": null,
@@ -831,13 +843,25 @@
       "engagement": {
         "status": "unknown",
         "label": "Not yet established",
-        "headline": "Not yet established (no dated check yet)",
-        "as_of": null,
+        "headline": "Not yet established (as of 2026-10-09)",
+        "as_of": "2026-10-09",
         "last_request": null,
         "last_response": null,
         "last_response_text": "No request sent",
         "evidence": [],
-        "log": []
+        "log": [
+          {
+            "date": "2026-10-09",
+            "action": "page_checked",
+            "action_label": "Operator's page checked",
+            "channel": null,
+            "channel_label": null,
+            "summary": "Shell's open data request form was checked in a browser by the repository owner. Its network choices are All Networks, Shell Recharge and ubitricity; Community by Shell Recharge is not named. No page of its own about open data was found.",
+            "quote": null,
+            "evidence_url": "https://www.shell.co.uk/electric-vehicle-charging/shell-recharge-open-data-request.html",
+            "evidence_file": null
+          }
+        ]
       },
       "access_requested": null,
       "access_granted": null,
@@ -1202,13 +1226,32 @@
       "engagement": {
         "status": "unknown",
         "label": "Not yet established",
-        "headline": "Not yet established (no dated check yet)",
-        "as_of": null,
+        "headline": "Not yet established (as of 2026-10-09)",
+        "as_of": "2026-10-09",
         "last_request": null,
         "last_response": null,
         "last_response_text": "No request sent",
-        "evidence": [],
-        "log": []
+        "evidence": [
+          {
+            "date": "2026-10-09",
+            "url": "https://www.shell.co.uk/electric-vehicle-charging/shell-recharge-open-data-request.html",
+            "file": null,
+            "note": "Read in a browser by the repository owner. A request form asks for contact details, organisation, the network wanted and the planned use, and names no licence, terms, key, agreement or rate limit."
+          }
+        ],
+        "log": [
+          {
+            "date": "2026-10-09",
+            "action": "page_checked",
+            "action_label": "Operator's page checked",
+            "channel": null,
+            "channel_label": null,
+            "summary": "Shell's open data request page and its Public Charge Point Regulations page were read in a browser by the repository owner. Both carry the same request form, which asks which network the data is for and says the request is passed to Eco-Movement. Data is to be provided in a suitable format after review.",
+            "quote": "Your request will be shared with Eco-Movement, who will act on behalf of Shell, to fulfil your request.",
+            "evidence_url": "https://www.shell.co.uk/electric-vehicle-charging/public-charge-point-regulations.html",
+            "evidence_file": null
+          }
+        ]
       },
       "access_requested": null,
       "access_granted": null,

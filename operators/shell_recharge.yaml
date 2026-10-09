@@ -66,7 +66,25 @@ cors: needs_testing
 attribution: null
 engagement:
   status: unknown
-  evidence: []
+  evidence:
+    - date: 2026-10-09
+      url: https://www.shell.co.uk/electric-vehicle-charging/shell-recharge-open-data-request.html
+      note: >-
+        Read in a browser by the repository owner. A request form asks for contact details,
+        organisation, the network wanted and the planned use, and names no licence, terms,
+        key, agreement or rate limit.
+  log:
+    - date: 2026-10-09
+      action: page_checked
+      summary: >-
+        Shell's open data request page and its Public Charge Point Regulations page were
+        read in a browser by the repository owner. Both carry the same request form, which
+        asks which network the data is for and says the request is passed to
+        Eco-Movement. Data is to be provided in a suitable format after review.
+      quote: >-
+        Your request will be shared with Eco-Movement, who will act on behalf of Shell, to
+        fulfil your request.
+      evidence_url: https://www.shell.co.uk/electric-vehicle-charging/public-charge-point-regulations.html
 access_requested: null
 access_granted: null
 sources:
