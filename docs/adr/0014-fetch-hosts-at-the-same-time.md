@@ -1,4 +1,4 @@
-# 0011: Fetch operators on different hosts at the same time
+# 0014: Fetch operators on different hosts at the same time
 
 Date: 2026-10-09. Status: proposed.
 

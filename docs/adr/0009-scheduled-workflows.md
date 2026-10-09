@@ -8,7 +8,7 @@ from main, and a keepalive. Accept: three green scheduled runs in a row; site li
 ## Decisions
 
 - **`pipeline.run --live all`** fetches every operator enabled in the registry, one after
-  another, never in parallel. (Changed 9 October 2026 by ADR 0011: operators that share
+  another, never in parallel. (Changed 9 October 2026 by ADR 0014: operators that share
   no host are fetched at the same time; operators that share a host still one after
   another.) If one fails, its failure log is written, the others are
   still fetched and published, and the exit code is 2. If every operator fails, nothing
