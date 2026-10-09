@@ -14,7 +14,7 @@ writes, under build/data/:
 
 Rules:
 - Only operators switched on in the registry are published (their terms have been read).
-- Locations whose coordinates are not in the UK (pipeline/geography.py, ADR 0016) are
+- Locations whose coordinates are not in the UK (pipeline/geography.py, ADR 0017) are
   left off the map and counted.
   Operator data is not corrected, with one exception the owner decides per operator
   (swapped_coordinates in the operator file, ADR 0013): a point whose latitude and
