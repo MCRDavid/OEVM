@@ -67,3 +67,20 @@ test("blocked or missing storage never throws", () => {
     assert.equal(settings.forget(), storage === null);
   }
 });
+
+test("a light or dark choice is saved only when given, and forget deletes it", () => {
+  const storage = memoryStorage();
+  const settings = createSettings(storage);
+  assert.equal(settings.theme(), null);
+  settings.save(defaults());
+  assert.equal(settings.theme(), null, "no choice made, so the page follows the device");
+  settings.save(defaults(), "dark");
+  assert.equal(settings.theme(), "dark");
+  assert.deepEqual(settings.load(), defaults());
+  settings.save(defaults(), "purple");
+  assert.equal(settings.theme(), null);
+  settings.forget();
+  assert.equal(settings.theme(), null);
+  assert.equal(storage.items.size, 0);
+  assert.equal(createSettings(blocked).theme(), null);
+});

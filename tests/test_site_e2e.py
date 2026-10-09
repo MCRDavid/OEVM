@@ -89,9 +89,11 @@ def browser():
 class Visit:
     """One fresh browser profile on the map page, recording problems and outside requests."""
 
-    def __init__(self, browser, site: str, viewport: dict, init_script: str | None = None):
+    def __init__(
+        self, browser, site: str, viewport: dict, init_script: str | None = None, **options
+    ):
         self.site = site
-        self.context = browser.new_context(viewport=viewport, locale="en-GB")
+        self.context = browser.new_context(viewport=viewport, locale="en-GB", **options)
         if init_script:
             self.context.add_init_script(init_script)
         self.page = self.context.new_page()
@@ -127,8 +129,8 @@ class Visit:
 def visit(site, browser):
     visits = []
 
-    def start(viewport=PHONE, init_script=None):
-        visits.append(Visit(browser, site, viewport, init_script))
+    def start(viewport=PHONE, init_script=None, **options):
+        visits.append(Visit(browser, site, viewport, init_script, **options))
         return visits[-1]
 
     yield start
@@ -529,3 +531,96 @@ def test_lighthouse_accessibility_score_on_a_phone(site, tmp_path):
         if audit.get("scoreDisplayMode") == "binary" and audit.get("score") == 0
     ]
     assert result["categories"]["accessibility"]["score"] >= 0.9, failed
+
+
+def test_quick_filters_match_the_form_and_the_address(visit):
+    v = visit()
+    page = v.open()
+    page.click("#quick-rapid")
+    page.wait_for_url("**?minkw=50**")
+    assert page.get_attribute("#quick-rapid", "aria-pressed") == "true"
+    assert page.text_content("#toggle-filters") == "Filters (1)"
+    assert page.input_value("#minkw") == "50"
+    page.click("#quick-working")
+    page.wait_for_url("**?minkw=50&ok=1**")
+    assert page.text_content("#toggle-filters") == "Filters (2)"
+    open_filters(page)
+    assert page.is_checked("#working")
+    page.click("#reset")
+    assert page.get_attribute("#quick-rapid", "aria-pressed") == "false"
+    assert page.text_content("#toggle-filters") == "Filters"
+    page.click("#done")
+    assert page.is_hidden("#filters")
+    assert page.evaluate("document.activeElement.id") == "toggle-filters"
+    assert v.stored() == {}
+
+
+def test_chargers_reported_out_of_service_can_be_hidden(visit):
+    v = visit()
+
+    def layer(route):
+        data = json.loads(route.fetch().text())
+        for connector in data["features"][0]["properties"]["cons"]:
+            connector["out"] = True
+        route.fulfill(json=data)
+
+    v.page.route("**/data/locations.geojson", layer)
+    page = v.open("?view=list", map_ready=False)
+    expect(page.locator("#list-items li")).to_have_count(LOCATIONS)
+    expect(page.locator("#list-items")).to_contain_text("Reported out of service")
+    page.goto(page.url.split("?")[0] + "?view=list&ok=1")
+    expect(page.locator("#list-items li")).to_have_count(LOCATIONS - 1)
+    assert "Reported out of service" not in page.text_content("#list-items")
+
+
+def test_dark_mode_follows_the_device_and_the_button_switches_the_map(visit):
+    v = visit(WIDE, color_scheme="dark")
+    SERVED.clear()
+    page = v.open()
+    assert page.get_attribute("html", "data-theme") == "dark"
+    assert page.get_attribute("#toggle-theme", "aria-pressed") == "true"
+    assert any(path.endswith("offline-style-dark.json") for path in SERVED)
+    background = page.evaluate("getComputedStyle(document.documentElement).backgroundColor")
+    page.click("#toggle-theme")
+    assert page.get_attribute("html", "data-theme") == "light"
+    assert page.evaluate("getComputedStyle(document.documentElement).backgroundColor") != background
+    expect(page.locator("#list-summary")).to_contain_text("map area")
+    page.wait_for_timeout(500)
+    assert any(path.endswith("offline-style.json") for path in SERVED)
+    # The chargers are drawn again on the new style, so a cluster still opens.
+    assert page.locator("#list-items li").count() == LOCATIONS
+    assert v.stored() == {}, "picking light or dark saves nothing until the visitor opts in"
+    open_filters(page)
+    page.check("#remember")
+    saved = json.loads(v.stored()["oevm.settings.v1"])
+    assert saved == {"version": 1, "filters": "", "theme": "light"}
+    v.open()
+    assert page.get_attribute("html", "data-theme") == "light", "the saved choice wins"
+    assert v.errors == [] and v.outside == []
+
+
+def test_find_my_location_moves_the_map_there(visit):
+    v = visit(
+        WIDE,
+        geolocation={"latitude": 51.507, "longitude": -0.128},
+        permissions=["geolocation"],
+    )
+    page = v.open()
+    page.click("button.maplibregl-ctrl-geolocate")
+    expect(page).to_have_url(
+        re.compile(r"#1[0-2](\.[0-9]+)?/51\.5[0-9]*/-0\.1[0-9]*$"), timeout=15000
+    )
+    assert v.stored() == {} and v.outside == [] and v.errors == []
+
+
+REFUSE_LOCATION = """
+navigator.geolocation.getCurrentPosition = (success, failure) =>
+  failure({ code: 1, PERMISSION_DENIED: 1, message: "User denied Geolocation" });
+"""
+
+
+def test_a_refused_location_is_explained(visit):
+    v = visit(WIDE, init_script=REFUSE_LOCATION)
+    page = v.open()
+    page.click("button.maplibregl-ctrl-geolocate")
+    expect(page.locator("#notice")).to_contain_text("did not allow the map to use your location")

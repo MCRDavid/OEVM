@@ -87,6 +87,7 @@ def test_the_content_security_policy_allows_only_this_site_and_the_basemap(page)
     hosts = set(re.findall(r"https://[^\s;]+", policy))
     assert hosts == {"https://tiles.openfreemap.org"}
     assert build_site.STYLE_URL.startswith("https://tiles.openfreemap.org/")
+    assert build_site.DARK_STYLE_URL.startswith("https://tiles.openfreemap.org/")
     assert "default-src 'none'" in policy and "script-src 'self'" in policy
     # Only the origin, even to this site, so filters in the address (which can come from
     # saved settings) are never sent in a Referer header.
@@ -189,6 +190,7 @@ def test_build_copies_the_site_maplibre_and_notices(node_modules, tmp_path):
     config = json.loads((out / "assets" / "config.json").read_text(encoding="utf-8"))
     assert config == {
         "style": build_site.STYLE_URL,
+        "darkStyle": build_site.DARK_STYLE_URL,
         "origins": ["https://tiles.openfreemap.org"],
         "repository": REPOSITORY_URL,
         "maxBounds": build_site.MAX_BOUNDS,
@@ -207,6 +209,10 @@ def test_offline_style_build_needs_no_outside_service(node_modules, tmp_path):
     style = json.loads((out / "assets" / "offline-style.json").read_text(encoding="utf-8"))
     assert style == build_site.OFFLINE_STYLE
     assert "http" not in json.dumps(style)
+    assert config["darkStyle"] == "assets/offline-style-dark.json"
+    dark = json.loads((out / "assets" / "offline-style-dark.json").read_text(encoding="utf-8"))
+    assert dark == build_site.OFFLINE_DARK_STYLE
+    assert "http" not in json.dumps(dark)
 
 
 @pytest.mark.parametrize("out", [Path("."), Path("site"), Path("site/build"), Path("site/a/b")])
