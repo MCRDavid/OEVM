@@ -1,0 +1,66 @@
+# yaml-language-server: $schema=schema.json
+# Bonnet: roaming app with pay as you go and Boost subscriptions.
+# Rules are in schema/provider.py.
+id: bonnet
+name: Bonnet
+kind: roaming
+website: https://www.joinbonnet.com
+terms:
+  url: https://www.joinbonnet.com/terms-conditions
+  reuse: no_restriction_found
+  quote: null
+  attribution: null
+  checked: 2026-10-09
+plans:
+  - id: bonnet_payg
+    name: PAYG
+    pay_by: Bonnet app
+    monthly_fee: 0
+    fee_note: null
+    price_per_kwh: null
+    discount_percent: null
+    discount_of: null
+    includes_vat: true
+    networks: [All chargers on Bonnet]
+    operator_ids: []
+    conditions: "Rates are set by the charging networks and shown for each charger in the app. No access to Boost benefits."
+    needs_testing: null
+    source:
+      url: https://www.joinbonnet.com/pricing
+      quote: "PAYG Free Our PAYG rates are set by the charging networks and are clearly displayed for each charger on Bonnet."
+      checked: 2026-10-09
+  - id: bonnet_light_boost
+    name: Light Boost
+    pay_by: Bonnet app
+    monthly_fee: 2
+    fee_note: "For regional pricing please check the Bonnet app. Change or cancel your plan anytime."
+    price_per_kwh: null
+    discount_percent: 10
+    discount_of: the PAYG rate set by each charging network, as shown in the Bonnet app
+    includes_vat: true
+    networks: [All chargers on Bonnet]
+    operator_ids: []
+    conditions: "10% off the PAYG rate set by the charging networks, on every charge."
+    needs_testing: null
+    source:
+      url: https://www.joinbonnet.com/pricing
+      quote: "Light Boost 10% off £2/mo Get 10% off the PAYG rate set by the charging networks for every charge"
+      checked: 2026-10-09
+  - id: bonnet_turbo_boost
+    name: Turbo Boost
+    pay_by: Bonnet app
+    monthly_fee: 8
+    fee_note: "For regional pricing please check the Bonnet app. Change or cancel your plan anytime."
+    price_per_kwh: null
+    discount_percent: 15
+    discount_of: the PAYG rate set by each charging network, as shown in the Bonnet app
+    includes_vat: true
+    networks: [All chargers on Bonnet]
+    operator_ids: []
+    conditions: "15% off the PAYG rate set by the charging networks, on every charge. Includes the route planner."
+    needs_testing: null
+    source:
+      url: https://www.joinbonnet.com/pricing
+      quote: "Turbo Boost 15% off £8/mo Get 15% off the PAYG rate set by the charging networks for every charge"
+      checked: 2026-10-09
+notes: "No clause on reusing or copying content or prices was found in the terms (Last Updated: 19 March 2026); the site footer carries a general copyright notice. VAT is taken from terms clause 5.5, which says all prices are inclusive of any applicable VAT; the pricing page itself does not mention VAT. Per-charger rates are shown only in the app. The page https://www.joinbonnet.com/boost returned HTTP 404 (checked 2026-10-09)."

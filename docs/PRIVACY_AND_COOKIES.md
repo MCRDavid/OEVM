@@ -62,8 +62,11 @@ the site goes live.
    turns on "Remember my settings on this device", which is off by default. A short
    explanation sits beside the switch, and "Forget my settings" deletes everything saved.
    This gives consent under paragraph 2 and also meets paragraph 6. Today the filters
-   are saved, and the choice of light or dark mode if the visitor pressed the button,
-   under one `localStorage` key (`oevm.settings.v1`). Without that switch, light or dark
+   are saved, the charging plans the visitor ticked under "Your charging plans" (as plan
+   ids from `data/plans.json`, added 9 October 2026), and the choice of light or dark mode
+   if the visitor pressed the button, all under one `localStorage` key
+   (`oevm.settings.v1`). Ticked plans are used only in the page to order and compare
+   prices, and are never sent anywhere. Without that switch, light or dark
    mode lasts only for the visit. Favourites and a home location are not built yet; they
    must follow this rule when they are.
 5. **Saved settings stay on the device.** The site never sends them anywhere. The map
@@ -100,7 +103,7 @@ anything changes, and update the date.
 > personal data.
 >
 > **What is saved on your device.** Nothing, unless you turn on "Remember my settings on
-> this device". If you do, your filters, and light or dark mode if you picked one, are
+> this device". If you do, your filters, the charging plans you ticked, and light or dark mode if you picked one, are
 > saved in your browser's local storage so the map opens the same way next time. They are not sent anywhere. Turn the switch off or
 > press "Forget my settings" at any time to delete them. Your browser may also keep copies
 > of the site's files and map files in its normal cache, as it does for any website. When

@@ -1,0 +1,83 @@
+# yaml-language-server: $schema=schema.json
+# Connected Kerb: operator network of on-street and residential chargers, paid through its app.
+# Rules are in schema/provider.py.
+id: connected_kerb
+name: Connected Kerb
+kind: operator
+website: https://connectedkerb.com/
+terms:
+  url: https://connectedkerb.com/media/j3slgral/connected-kerb-app-terms-and-conditions-09012024.pdf
+  reuse: no_restriction_found
+  quote: null
+  attribution: null
+  checked: 2026-10-09
+plans:
+  - id: connected_kerb_smart_night
+    name: Smart charging night rate
+    pay_by: Connected Kerb app, pay as you go with smart charging switched on
+    monthly_fee: 0
+    fee_note: The smart charging page says there are no additional charges or fees.
+    price_per_kwh: 0.44
+    discount_percent: null
+    discount_of: null
+    includes_vat: true
+    networks: [Connected Kerb network (locations with smart charging)]
+    operator_ids: []
+    conditions: "Midnight to 7am, with smart charging switched on in the app. A typical rate that may vary by location. VAT inclusion is taken from clause 5.2 of the app terms: \"These tariffs include VAT.\""
+    needs_testing: "The provider's own pages disagree, checked 2026-10-09: a nationwide launch blog post gives the night period as midnight to 6am, and the find a charging point FAQ gives £0.45 per kWh at night."
+    source:
+      url: https://connectedkerb.com/charge-your-car/drivers/
+      quote: "£0.44/kWh nights (Midnight - 7 am)"
+      checked: 2026-10-09
+  - id: connected_kerb_smart_day
+    name: Smart charging day rate
+    pay_by: Connected Kerb app, pay as you go with smart charging switched on
+    monthly_fee: 0
+    fee_note: The smart charging page says there are no additional charges or fees.
+    price_per_kwh: 0.54
+    discount_percent: null
+    discount_of: null
+    includes_vat: true
+    networks: [Connected Kerb network (locations with smart charging)]
+    operator_ids: []
+    conditions: "7am to midnight, with smart charging switched on in the app. A typical rate that may vary by location. VAT inclusion is taken from clause 5.2 of the app terms: \"These tariffs include VAT.\""
+    needs_testing: "The provider's own pages disagree, checked 2026-10-09: a nationwide launch blog post gives the day period as 6am to midnight, and the find a charging point FAQ gives £0.52 per kWh in the day."
+    source:
+      url: https://connectedkerb.com/charge-your-car/drivers/
+      quote: "£0.54/kWh days (7 am - Midnight)"
+      checked: 2026-10-09
+  - id: connected_kerb_west_sussex_night
+    name: Smart charging night rate (West Sussex Chargepoint Network)
+    pay_by: Connected Kerb app, pay as you go with smart charging
+    monthly_fee: 0
+    fee_note: null
+    price_per_kwh: 0.43
+    discount_percent: null
+    discount_of: null
+    includes_vat: true
+    networks: [West Sussex Chargepoint Network]
+    operator_ids: []
+    conditions: "Midnight to 7am with smart charging. The page says to check the app for detailed pricing and non-smart charging rates. VAT inclusion is taken from clause 5.2 of the app terms."
+    needs_testing: null
+    source:
+      url: https://connectedkerb.com/charge-your-car/community-pages/west-sussex-chargepoint-network-residents/
+      quote: "£0.43/kWh nights (Midnight-7 am)"
+      checked: 2026-10-09
+  - id: connected_kerb_west_sussex_day
+    name: Smart charging day rate (West Sussex Chargepoint Network)
+    pay_by: Connected Kerb app, pay as you go with smart charging
+    monthly_fee: 0
+    fee_note: null
+    price_per_kwh: 0.52
+    discount_percent: null
+    discount_of: null
+    includes_vat: true
+    networks: [West Sussex Chargepoint Network]
+    operator_ids: []
+    conditions: "7am to midnight with smart charging. The page says to check the app for detailed pricing and non-smart charging rates. VAT inclusion is taken from clause 5.2 of the app terms."
+    needs_testing: null
+    source:
+      url: https://connectedkerb.com/charge-your-car/community-pages/west-sussex-chargepoint-network-residents/
+      quote: "£0.52/kWh days (7 am-Midnight)"
+      checked: 2026-10-09
+notes: "Checked 2026-10-09. No website terms of use page was found; the app terms and conditions PDF has no clause on reusing content. The pay as you go rate of £0.50 per kWh on most of the network is not listed as a plan because its verified source is the App Store listing, not the provider's own site. Connected Kerb has no registry file in operators/, so operator_ids are empty."

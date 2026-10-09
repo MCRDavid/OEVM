@@ -4,6 +4,7 @@
 - data/loc/<shard>/<key>.json: everything about one location, loaded on click.
 - data/manifest.json: when each operator was fetched, attribution, counts and file sizes.
 - data/status.json: feed health for each operator, with a 30-day history.
+- data/plans.json: charging plans copied from providers' own pages (providers/*.yaml).
 
 Every file is validated against these models before it is written, and their JSON Schema
 is exported to schema/json/ so the front end and CI can check the files too.
@@ -94,7 +95,14 @@ class TariffOptionOut(_Model):
     """One tariff listed at a location, so people can compare them."""
 
     tariff_id: RecordId
-    name: str | None = Field(default=None, description="The operator's own description.")
+    name: str | None = Field(
+        default=None,
+        description="The operator's own description, made readable when it looks like a "
+        "system name (see pipeline/pricing.py readable_name).",
+    )
+    original_name: str | None = Field(
+        default=None, description="The operator's text exactly, when name differs from it."
+    )
     kind: str = Field(description="How it is paid for, from its OCPI type, in plain words.")
     state: MapPrice = Field(description="'free' only when its price state is free_confirmed.")
     text: str = Field(description="Worded by pipeline/pricing.py.")
@@ -144,6 +152,46 @@ class LocationDetail(_Model):
     licence: str
     licence_url: str | None = None
     fetched_at: AwareDatetime
+
+
+ProviderKindOut = Literal["roaming", "operator"]
+
+
+class PlanOut(_Model):
+    """One charging plan from a provider's own published page (providers/*.yaml)."""
+
+    id: str = Field(description="<provider id>.<plan id>, unique across providers.")
+    provider: str
+    provider_kind: ProviderKindOut
+    name: str
+    pay_by: str
+    fee_text: str = Field(description="Worded by pipeline/pricing.py.")
+    price_text: str = Field(description="Worded by pipeline/pricing.py.")
+    monthly_fee: float | None = Field(
+        default=None, ge=0, description="Pounds a month including VAT; null when not published."
+    )
+    ppk: float | None = Field(
+        default=None,
+        ge=0,
+        description="Fixed price in pence per kWh including VAT. Null for discounts, prices "
+        "not published, or prices that exclude VAT.",
+    )
+    discount_percent: float | None = Field(default=None, gt=0, lt=100)
+    networks: list[str]
+    operator_ids: list[str] = Field(description="Operator registry ids the plan applies to.")
+    conditions: str | None = None
+    needs_testing: str | None = None
+    fee_note: str | None = None
+    attribution: str | None = None
+    source_url: str
+    checked: dt.date
+
+
+class PlansFile(_Model):
+    schema_version: Literal[1] = SCHEMA_VERSION
+    generated_at: AwareDatetime
+    note: str
+    plans: list[PlanOut]
 
 
 class OperatorEntry(_Model):

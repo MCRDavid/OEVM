@@ -1,0 +1,15 @@
+# yaml-language-server: $schema=schema.json
+# Arnold Clark Charge: operator network with its own app and a subscription sold through
+# Octopus Electroverse. Rules are in schema/provider.py.
+id: arnold_clark_charge
+name: Arnold Clark Charge
+kind: operator
+website: https://www.arnoldclark.com/charge
+terms:
+  url: https://www.arnoldclark.com/terms-of-use
+  reuse: forbidden
+  quote: "This website, accounts portal and the Arnold Clark app, including but not limited to, their content, layout and design, are copyright of Arnold Clark Automobiles Limited and its licensors. No part of these platforms may be reproduced in any form without the express permission of Arnold Clark Automobiles Limited. However, permission is granted to you to electronically copy and to print in hard copy portions of any pages of these platforms for the sole purpose of conducting business with Arnold Clark Automobiles Limited."
+  attribution: null
+  checked: 2026-10-09
+plans: []
+notes: "Plans are not listed because the provider's terms of use do not allow its pages to be reproduced without express permission (checked 2026-10-09)."

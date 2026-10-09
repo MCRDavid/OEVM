@@ -1,0 +1,49 @@
+# yaml-language-server: $schema=schema.json
+# MFG EV Power: operator network with its own app and contactless payment.
+# Rules are in schema/provider.py.
+id: mfg_ev_power
+name: MFG EV Power
+kind: operator
+website: https://www.motorfuelgroup.com/ev-power/
+terms:
+  url: null
+  reuse: no_restriction_found
+  quote: null
+  attribution: null
+  checked: 2026-10-09
+plans:
+  - id: mfg_ev_power_app_exclusive
+    name: App Exclusive
+    pay_by: MFG EV app
+    monthly_fee: 0
+    fee_note: "Page says \"No subscription, no connection charge\"."
+    price_per_kwh: 0.59
+    discount_percent: null
+    discount_of: null
+    includes_vat: null
+    networks: [MFG EV Power]
+    operator_ids: [mfg_ev_power]
+    conditions: "Session started through the MFG EV app. The page also calls the app \"MFG Connect App\"."
+    needs_testing: "The same page also says \"Our current tariffs range from 69p to 79p per kWh\", which does not match this 59p app rate, so the rate may be out of date. The operator's open tariffs feed lists prices that differ from charger to charger."
+    source:
+      url: https://www.motorfuelgroup.com/ev-power/
+      quote: "59p per kWh – App Exclusive. Start your session through the MFG EV app to unlock our lowest rate."
+      checked: 2026-10-09
+  - id: mfg_ev_power_contactless
+    name: Contactless
+    pay_by: Contactless or card payment at the charger
+    monthly_fee: 0
+    fee_note: "Page says \"No subscription, no connection charge\"."
+    price_per_kwh: 0.79
+    discount_percent: null
+    discount_of: null
+    includes_vat: null
+    networks: [MFG EV Power]
+    operator_ids: [mfg_ev_power]
+    conditions: "Applies to contactless and card payments at the charger. Customers charging through a third-party provider or roaming network pay the rate set by that provider."
+    needs_testing: null
+    source:
+      url: https://www.motorfuelgroup.com/ev-power/
+      quote: "79p per kWh – Standard rate. Applies to contactless and card payments at the charger."
+      checked: 2026-10-09
+notes: "No terms of use page was found (checked 2026-10-09): https://www.motorfuelgroup.com/terms-and-conditions/ returned 404, the EV Power page links only to the privacy policy, and the footer says \"© Copyright Motor Fuel Limited 2026. All rights reserved.\" The domain mfgevpower.co.uk redirects to a page with no content. The page does not say whether prices include VAT. The open tariffs feed at https://opendata.motorfuelgroup.net/tariffs shows no licence or terms text."

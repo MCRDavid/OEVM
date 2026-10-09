@@ -1,0 +1,15 @@
+# yaml-language-server: $schema=schema.json
+# Believ: operator network with its own app, pay as you go and membership.
+# Rules are in schema/provider.py.
+id: believ
+name: Believ
+kind: operator
+website: https://www.believ.com/
+terms:
+  url: https://www.believ.com/legal-notices/
+  reuse: forbidden
+  quote: "You may not (a) copy or permit any copying, reproduce, publish, transmit, distribute, perform, post, modify, create derivative works from, sell, license or otherwise exploit this website or any of its content or (b) access or use this website for any competitive or commercial purposes."
+  attribution: null
+  checked: 2026-10-09
+plans: []
+notes: "Plans are not listed because the provider's legal notices do not allow its website or content to be copied or reproduced (checked 2026-10-09). Its driver terms, clause 11.2, also prohibit distribution of all or part of the website, app or Believ Map."

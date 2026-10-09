@@ -15,7 +15,8 @@ from pathlib import Path
 from schema.live import LiveSnapshot
 from schema.models import Location, Tariff
 from schema.operator import OperatorConfig
-from schema.published import LocationDetail, Manifest, MapLayer, StatusFile
+from schema.provider import ProviderFile
+from schema.published import LocationDetail, Manifest, MapLayer, PlansFile, StatusFile
 
 ROOT = Path(__file__).resolve().parent.parent
 DIALECT = "https://json-schema.org/draft/2020-12/schema"
@@ -49,7 +50,11 @@ def build_schemas() -> dict[Path, dict]:
         ROOT / "schema" / "json" / "live-snapshot.schema.json": LiveSnapshot.model_json_schema(
             mode="serialization"
         ),
+        ROOT / "schema" / "json" / "plans.schema.json": PlansFile.model_json_schema(
+            mode="serialization"
+        ),
         ROOT / "operators" / "schema.json": OperatorConfig.model_json_schema(mode="validation"),
+        ROOT / "providers" / "schema.json": ProviderFile.model_json_schema(mode="validation"),
     }
 
 

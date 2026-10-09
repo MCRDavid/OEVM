@@ -1,0 +1,19 @@
+# yaml-language-server: $schema=schema.json
+# Osprey Charging: operator network with its own app, Osprey Go and contactless payment.
+# Rules are in schema/provider.py.
+id: osprey
+name: Osprey Charging
+kind: operator
+website: https://www.ospreycharging.co.uk/
+terms:
+  url: https://www.ospreycharging.co.uk/terms-conditions
+  reuse: personal_use_only
+  quote: "The Services must only be used for your personal non-commercial use."
+  attribution: null
+  checked: 2026-10-09
+plans: []
+notes: >-
+  Plans are not listed because Osprey's terms (valid from 15 March 2023, clause 6.3, read
+  on 2026-10-09) limit the services to personal non-commercial use. No clause expressly
+  on copying website content or prices was found. Osprey publishes app, contactless and
+  saver prices at https://www.ospreycharging.co.uk/pricing.

@@ -1,0 +1,219 @@
+# yaml-language-server: $schema=schema.json
+# Octopus Electroverse: roaming app and Electrocard. Rules are in schema/provider.py.
+id: electroverse
+name: Octopus Electroverse
+kind: roaming
+website: https://electroverse.com
+terms:
+  url: https://electroverse.com/legal/terms
+  reuse: no_restriction_found
+  quote: null
+  attribution: null
+  checked: 2026-10-09
+plans:
+  - id: payg
+    name: Pay as you go (app)
+    pay_by: Electroverse app or Electrocard
+    monthly_fee: 0
+    fee_note: >-
+      The FAQ says Electroverse never charges subscription or transaction fees. This refers
+      to the basic service; the optional paid subscriptions are separate.
+    price_per_kwh: null
+    discount_percent: null
+    discount_of: null
+    includes_vat: null
+    networks: [All networks on Electroverse]
+    operator_ids: []
+    conditions: >-
+      Prices for each charger are shown only in the app. The rates come from the charge
+      point operators and can change.
+    needs_testing: null
+    source:
+      url: https://electroverse.com/faqs
+      quote: >-
+        We also never charge any subscription or transaction fees. This means a low-cost
+        and convenient public charging service for you. The latest pricing for every
+        operator and each specific charging point is displayed in the Electroverse app.
+      checked: 2026-10-09
+  - id: ionity_subscription
+    name: IONITY subscription (via Electroverse)
+    pay_by: Electroverse app or Electrocard
+    monthly_fee: 10.50
+    fee_note: >-
+      The page says the fee varies by where you sign up and to check the app for pricing
+      in your currency.
+    price_per_kwh: null
+    discount_percent: 40
+    discount_of: the price of charging on the IONITY network through Electroverse
+    includes_vat: true
+    networks: [IONITY]
+    operator_ids: []
+    conditions: >-
+      The discount varies by country, and the UK row on the page says 40%. No per kWh price
+      is published. The Subscription Terms say the subscription fee includes VAT.
+    needs_testing: null
+    source:
+      url: https://electroverse.com/community/electroverse-features/electroverse-subscriptions-what-are-they-and-how-to-sign-up
+      quote: >-
+        The cost for the subscription will vary depending on where you are signing up from
+        but you can expect to pay £10.50 / €11.99 per month. We recommend checking the
+        Electroverse app for currency specific pricing!
+      checked: 2026-10-09
+  - id: shell_recharge_subscription
+    name: Shell Recharge subscription (via Electroverse)
+    pay_by: Electroverse app or Electrocard
+    monthly_fee: 9.99
+    fee_note: null
+    price_per_kwh: null
+    discount_percent: 25
+    discount_of: the price of charging on the Shell Recharge network through Electroverse
+    includes_vat: true
+    networks: [Shell Recharge]
+    operator_ids: [shell_recharge]
+    conditions: UK only. The Subscription Terms say the subscription fee includes VAT.
+    needs_testing: >-
+      Electroverse's own help article (checked 2026-10-09) gives different figures: £7.99 a
+      month for a 23% discount. The two Electroverse pages disagree, so this needs testing
+      in the app.
+    source:
+      url: https://electroverse.com/community/electroverse-features/electroverse-subscriptions-what-are-they-and-how-to-sign-up
+      quote: >-
+        The Shell Recharge subscription is back and better than ever! Sign up via
+        Electroverse and get 25% off charging for just £9.99 per month.
+      checked: 2026-10-09
+  - id: be_ev_subscription
+    name: Be.EV subscription (via Electroverse)
+    pay_by: Electroverse app or Electrocard
+    monthly_fee: 9.99
+    fee_note: >-
+      This subscription has a one month joining plan, by signing up for the subscription
+      you agree to a one month minimum term.
+    price_per_kwh: null
+    discount_percent: 51
+    discount_of: the price of charging on Be.EV chargers through Electroverse
+    includes_vat: true
+    networks: [Be.EV]
+    operator_ids: []
+    conditions: >-
+      One month minimum term. The Subscription Terms say the subscription fee includes VAT.
+    needs_testing: >-
+      Electroverse's own help article (checked 2026-10-09) gives different figures: 20% off
+      for £9 a month. The two Electroverse pages disagree, so this needs testing in the app.
+    source:
+      url: https://electroverse.com/community/electroverse-features/electroverse-subscriptions-what-are-they-and-how-to-sign-up
+      quote: >-
+        Electroverse users get 51% off with Be.EV chargers for a monthly subscription cost
+        of £9.99. By signing up you get access to cheaper charging immediately and you will
+        be billed monthly!
+      checked: 2026-10-09
+  - id: arnold_clark_subscription
+    name: Arnold Clark Charge subscription (via Electroverse)
+    pay_by: Electroverse app or Electrocard
+    monthly_fee: 8.99
+    fee_note: null
+    price_per_kwh: null
+    discount_percent: 29
+    discount_of: the price of charging on Arnold Clark chargers through Electroverse
+    includes_vat: true
+    networks: [Arnold Clark Charge]
+    operator_ids: []
+    conditions: The Subscription Terms say the subscription fee includes VAT.
+    needs_testing: null
+    source:
+      url: https://electroverse.com/community/electroverse-features/electroverse-subscriptions-what-are-they-and-how-to-sign-up
+      quote: >-
+        Electroverse users can now get 29% off Arnold Clark chargers by subscribing for
+        £8.99 a month! Once you sign up, you'll have instant access to cheaper charging!
+      checked: 2026-10-09
+  - id: octopus_go_discount
+    name: Octopus Go customer discount
+    pay_by: Electroverse app with a linked Octopus Energy account
+    monthly_fee: 0
+    fee_note: No separate fee is stated for the discount.
+    price_per_kwh: null
+    discount_percent: 5
+    discount_of: the price of charging on any network through Electroverse
+    includes_vat: null
+    networks: [All networks on Electroverse]
+    operator_ids: []
+    conditions: >-
+      Only for Octopus Go customers, who must link their Octopus Energy account in the app. The terms say multiple discounts are
+      applied one after another on a compounding basis.
+    needs_testing: null
+    source:
+      url: https://electroverse.com/community/ev-blogs-and-guides/which-charging-discounts-can-ev-drivers-get-with-octopus-electroverse
+      quote: >-
+        If you are an Octopus Go customer or an Intelligent Octopus Go customer, you can get
+        a 5% or 8% discount across the whole of the Electroverse.
+      checked: 2026-10-09
+  - id: intelligent_octopus_go_discount
+    name: Intelligent Octopus Go customer discount
+    pay_by: Electroverse app with a linked Octopus Energy account
+    monthly_fee: 0
+    fee_note: No separate fee is stated for the discount.
+    price_per_kwh: null
+    discount_percent: 8
+    discount_of: the price of charging on any network through Electroverse
+    includes_vat: null
+    networks: [All networks on Electroverse]
+    operator_ids: []
+    conditions: >-
+      Only for Intelligent Octopus Go customers, who must link their Octopus Energy account in the app. The terms say multiple discounts are
+      applied one after another on a compounding basis.
+    needs_testing: null
+    source:
+      url: https://electroverse.com/community/ev-blogs-and-guides/which-charging-discounts-can-ev-drivers-get-with-octopus-electroverse
+      quote: >-
+        If you are an Octopus Go customer or an Intelligent Octopus Go customer, you can get
+        a 5% or 8% discount across the whole of the Electroverse.
+      checked: 2026-10-09
+  - id: evyve_discount
+    name: Evyve discount (via Electroverse)
+    pay_by: Electroverse app or Electrocard
+    monthly_fee: 0
+    fee_note: null
+    price_per_kwh: null
+    discount_percent: 15
+    discount_of: the price of charging on Evyve chargers through Electroverse
+    includes_vat: null
+    networks: [Evyve]
+    operator_ids: []
+    conditions: >-
+      Applied automatically when a charge is started with the Electroverse app or
+      Electrocard. Listed under 'Limited-time discounts and benefits', with no end date
+      given.
+    needs_testing: null
+    source:
+      url: https://electroverse.com/community/ev-blogs-and-guides/which-charging-discounts-can-ev-drivers-get-with-octopus-electroverse
+      quote: >-
+        Automatically get 15% off Evyve chargers when you start a charge via the
+        Electroverse app or charging card (Electrocard)!
+      checked: 2026-10-09
+  - id: source_ev_discount
+    name: Source EV discount (via Electroverse)
+    pay_by: Electroverse app or Electrocard
+    monthly_fee: 0
+    fee_note: null
+    price_per_kwh: null
+    discount_percent: 20
+    discount_of: the price of charging at Source EV sites through Electroverse
+    includes_vat: null
+    networks: [Source EV]
+    operator_ids: []
+    conditions: >-
+      Limited-time offer, network wide at Source EV sites. The start date is given as
+      'Monday the 27th of October' with no year and no end date.
+    needs_testing: >-
+      The page gives no year or end date for the offer, so whether it is running needs
+      testing in the app.
+    source:
+      url: https://electroverse.com/community/ev-blogs-and-guides/which-charging-discounts-can-ev-drivers-get-with-octopus-electroverse
+      quote: >-
+        Starting Monday the 27th of October and running you will be able to stop and charge
+        at any Source EV site and get a cool 20% discount!
+      checked: 2026-10-09
+notes: >-
+  Terms checked 2026-10-09: electroverse.com/legal/terms holds the General Terms and the
+  Subscription Terms, with no clause found on copying or reusing website content or prices.
+  Per charger prices are shown only in the Electroverse app. https://octopusev.com/ev-hub/electroverse
+  returned HTTP 404 on 2026-10-09.

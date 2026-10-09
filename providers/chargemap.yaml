@@ -1,0 +1,13 @@
+# yaml-language-server: $schema=schema.json
+id: chargemap
+name: Chargemap
+kind: roaming
+website: https://chargemap.com/en-gb
+terms:
+  url: https://community-optins.chargemap.com/conditions/3/document?locale=en_GB
+  reuse: forbidden
+  quote: "CHARGEMAP only grants you an authorisation to view its Editorial Content on a private basis, excluding any public viewing or use. Thus, any representation, reproduction or extraction of CHARGEMAP, of its Editorial Content or its Website as well as any other Intellectual Property Rights is strictly forbidden, without the written authorization of Chargemap. Offenders will be prosecuted."
+  attribution: null
+  checked: 2026-10-09
+plans: []
+notes: "Plans are not listed because Chargemap's terms forbid reproduction or extraction of its content without written permission (terms checked 9 October 2026). The Ionity subscription via Chargemap was also left out: its support page could not be re-read, its fee is published in euros only, and its rates may be out of date."

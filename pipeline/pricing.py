@@ -22,6 +22,7 @@ regulations describe the price in reference data as "the price in pence per kilo
   folded into that comparison, so it says so.
 """
 
+import re
 from collections.abc import Sequence
 from dataclasses import dataclass
 from decimal import ROUND_HALF_UP, Decimal
@@ -343,3 +344,59 @@ def comparison(options: Sequence[TariffOptionLike]) -> str | None:
     which = "" if kind == UNSTATED_KIND else f" ({kind[0].lower()}{kind[1:]})"
     when = " at some times" if all(o.energy_high != low for o in cheapest) else ""
     return f"Lowest energy price listed here: {pence(low)} per kWh {vat}{when}{which}. {rest}"
+
+
+_UUID = re.compile(r"[_\s-]*[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$", re.I)
+_CAMEL = re.compile(r"(?<=[a-z])(?=[A-Z][a-z])")
+
+
+def readable_name(text: str | None) -> str | None:
+    """A tariff description that is easier to read, when the operator's own text looks like
+    a system name such as "Tariff_Contactless_Rapid7ab83c27-57b5-...": the trailing id and
+    a leading "Tariff" are dropped and the words are split, giving "Contactless rapid".
+    Text that already reads as words is kept exactly. None when nothing readable is left.
+    The original is always published next to it, so nothing the operator said is lost."""
+    if not text:
+        return None
+    stripped = _UUID.sub("", text.strip())
+    if stripped == text.strip() and "_" not in stripped:
+        return text.strip()
+    stripped = re.sub(r"^tariff(?=[_\s]|$)", "", stripped, flags=re.I)
+    parts = [p for p in re.split(r"[_\s]+", stripped) if p]
+    words = [
+        " ".join(
+            w if w.isupper() or any(c.isdigit() for c in w) else w.lower()
+            for w in _CAMEL.split(part)
+        )
+        for part in parts
+    ]
+    if not words:
+        return None
+    label = " ".join(words)
+    return label[0].upper() + label[1:]
+
+
+def plan_fee_text(monthly_fee: Decimal | None) -> str:
+    """ "£9.99 a month", "No monthly fee" or "Monthly fee not published"."""
+    if monthly_fee is None:
+        return "Monthly fee not published"
+    if monthly_fee == 0:
+        return "No monthly fee"
+    return f"{pounds(monthly_fee)} a month"
+
+
+def plan_price_text(
+    price_per_kwh: Decimal | None,
+    discount_percent: Decimal | None,
+    discount_of: str | None,
+    includes_vat: bool | None,
+) -> str:
+    """The price a charging plan gives, as its provider publishes it: a fixed price per kWh
+    or a discount off another price. Discounts are never turned into a price here, because
+    the price they are taken off is often only shown in the provider's app."""
+    if price_per_kwh is not None:
+        vat = {True: "including VAT", False: "excluding VAT"}.get(includes_vat, "(VAT not stated)")
+        return f"{pence(price_per_kwh)} per kWh {vat}"
+    if discount_percent is not None:
+        return f"{discount_percent:g}% off {discount_of}"
+    return "Price per kWh not published"

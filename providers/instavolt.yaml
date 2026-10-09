@@ -1,0 +1,15 @@
+# yaml-language-server: $schema=schema.json
+# InstaVolt: operator network with its own app, RFID and contactless payment.
+# Rules are in schema/provider.py.
+id: instavolt
+name: InstaVolt
+kind: operator
+website: https://instavolt.co.uk/
+terms:
+  url: https://instavolt.co.uk/app-terms-conditions/
+  reuse: personal_use_only
+  quote: "You may print off one copy, and may download extracts, of any page(s) from our Platform for your personal use"
+  attribution: null
+  checked: 2026-10-09
+plans: []
+notes: "Plans are not listed because the provider's app terms (last updated on and effective from 30 September 2026) allow copies of its pages for personal use only and do not allow its content to be used for commercial purposes (checked 2026-10-09). No separate website terms of use page was found. The terms text was read through a summarising fetch tool because a direct request returned 403, so the wording needs testing against the page."

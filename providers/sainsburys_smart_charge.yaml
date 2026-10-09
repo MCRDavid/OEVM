@@ -1,0 +1,15 @@
+# yaml-language-server: $schema=schema.json
+# Sainsbury's Smart Charge: operator network paid by debit or credit card at the charger.
+# Rules are in schema/provider.py.
+id: sainsburys_smart_charge
+name: Sainsbury's Smart Charge
+kind: operator
+website: https://smartcharge.co.uk/
+terms:
+  url: https://smartcharge.co.uk/
+  reuse: forbidden
+  quote: "You may as part of your use copy electronically and print portions of the website but you should not use such access or content to generate income of any kind. Any other use of materials on this website (including without limitation reproduction for a purpose other than that noted above and any modification, distribution or republication) without our prior written permission is prohibited. In particular, you may not use any data or information made available on or by this website in connection with any business or commercial undertaking (whether or not for profit)."
+  attribution: null
+  checked: 2026-10-09
+plans: []
+notes: "Plans are not listed because the provider's website terms do not allow reproduction or republication of its materials without prior written permission (checked 2026-10-09). The terms are shown in a 'Terms & conditions' pop-up in the footer of the home page, with no separate URL; /terms and /terms-and-conditions returned 404."

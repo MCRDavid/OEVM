@@ -1,0 +1,15 @@
+# yaml-language-server: $schema=schema.json
+# Mer UK: operator network with its own app and charge tag.
+# Rules are in schema/provider.py.
+id: mer
+name: Mer UK
+kind: operator
+website: https://uk.mer.eco/
+terms:
+  url: https://uk.mer.eco/mer/legal/terms-and-conditions/
+  reuse: forbidden
+  quote: "We grant you a revocable right to use the Content for your personal (non-commercial) use in accordance with these Terms. No title or any intellectual property rights are transferred to you. You must not copy, reproduce, republish, upload, broadcast, post, transmit or distribute or otherwise deal with the Content (or permit others to do the same) except as expressly permitted by these Terms. Permission in writing for all other uses of Content must be obtained from us in advance."
+  attribution: null
+  checked: 2026-10-09
+plans: []
+notes: "Plans are not listed because the provider's terms allow its content to be used for personal (non-commercial) use only and do not allow it to be copied, reproduced or republished without written permission (checked 2026-10-09). The pricing page says Mer public chargers are moving to the Be.EV network."
