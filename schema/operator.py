@@ -24,6 +24,7 @@ AdapterName = Literal[
 AuthMethod = Literal["none", "header", "query_param", "unknown"]
 EndpointKind = Literal["versions", "locations", "tariffs", "statuses", "download"]
 EndpointStatus = Literal["documented", "needs_testing"]
+ResponseEnvelope = Literal["ocpi", "data_list"]
 FindingKind = Literal["spec_conformance", "data_quality", "access", "documentation"]
 FindingStatus = Literal["open", "resolved"]
 EngagementStatus = Literal[
@@ -32,6 +33,7 @@ EngagementStatus = Literal[
     "key_on_request",
     "signed_agreement_required",
     "requested_no_reply",
+    "requested_awaiting_decision",
     "request_declined",
     "no_public_feed_found",
     "possibly_out_of_scope",
@@ -45,11 +47,47 @@ ENGAGEMENT_LABELS: dict[str, str] = {
     "key_on_request": "Key issued on request",
     "signed_agreement_required": "Signed agreement required",
     "requested_no_reply": "Requested, no reply",
+    "requested_awaiting_decision": "Requested, awaiting a decision",
     "request_declined": "Request declined",
     "no_public_feed_found": "No public feed found",
     "possibly_out_of_scope": "Possibly out of scope",
     "unknown": "Not yet established",
 }
+
+EngagementAction = Literal[
+    "page_checked",
+    "feed_searched",
+    "request_sent",
+    "follow_up_sent",
+    "reply_received",
+    "agreement_offered",
+    "key_granted",
+    "request_declined",
+]
+Channel = Literal["web_form", "email", "support_ticket", "post", "other"]
+
+# Neutral wording for each step in the engagement log.
+ENGAGEMENT_ACTIONS: dict[str, str] = {
+    "page_checked": "Operator's page checked",
+    "feed_searched": "Searched for a feed",
+    "request_sent": "Access requested",
+    "follow_up_sent": "Follow-up sent",
+    "reply_received": "Reply received",
+    "agreement_offered": "Agreement offered",
+    "key_granted": "Key issued",
+    "request_declined": "Request declined",
+}
+CHANNELS: dict[str, str] = {
+    "web_form": "Web form",
+    "email": "Email",
+    "support_ticket": "Support ticket",
+    "post": "Post",
+    "other": "Other",
+}
+# Steps that answer a request. A request counts as unanswered until one of these follows it.
+RESPONSES = frozenset({"reply_received", "agreement_offered", "key_granted", "request_declined"})
+# Steps this project takes towards an operator, so they must say how they were sent.
+SENT = frozenset({"request_sent", "follow_up_sent"})
 
 # Source ids used for gap-filler data, so no operator may take them.
 RESERVED_IDS = frozenset({"osm", "ocm", "reports", "unknown"})
@@ -82,6 +120,29 @@ def neutral_text(text: str) -> str:
 
 
 NeutralText = Annotated[str, Field(min_length=1), AfterValidator(neutral_text)]
+
+_EMAIL_ADDRESS = re.compile(r"[^\s@<>()]+@[^\s@<>()]+\.[A-Za-z]{2,}")
+
+
+def no_email_address(text: str) -> str:
+    """Reject email addresses, so the log never publishes anyone's contact details."""
+    if _EMAIL_ADDRESS.search(text):
+        raise ValueError(
+            "remove the email address: the engagement log is public and holds no contact "
+            "details. Describe the channel instead, for example 'the open data address'"
+        )
+    return text
+
+
+LogText = Annotated[NeutralText, AfterValidator(no_email_address)]
+EvidenceFile = Annotated[
+    str,
+    Field(
+        pattern=r"^evidence/[a-z0-9_]+/[^/].*$",
+        description="Path of a saved copy under evidence/<operator id>/. No personal names "
+        "or email addresses.",
+    ),
+]
 
 _CREDENTIAL_PARAM = re.compile(
     r"key|token|secret|passw|pwd|signature|auth|credential", re.IGNORECASE
@@ -267,12 +328,7 @@ class Evidence(_Model):
         description="Date the evidence was checked (YYYY-MM-DD), or 'unknown'."
     )
     url: SafeUrl | None = None
-    file: str | None = Field(
-        default=None,
-        pattern=r"^evidence/[a-z0-9_]+/[^/].*$",
-        description="Path of a saved copy under evidence/<operator id>/. No personal names "
-        "or email addresses.",
-    )
+    file: EvidenceFile | None = None
     note: NeutralText | None = None
 
     @model_validator(mode="after")
@@ -314,6 +370,20 @@ class MissingPublishFlag(_Model):
     evidence_url: SafeUrl = Field(description="Where the operator says the data is public.")
 
 
+class SwappedCoordinates(_Model):
+    """The repository owner's recorded decision to correct obviously swapped coordinates.
+
+    A location is corrected only when its published point is outside the UK, the same
+    numbers the other way round fall inside the UK, its country is GBR and its postcode is
+    a UK postcode. The published point is kept with the location, the map says it was
+    corrected, and the operator's findings record it. Without this decision such locations
+    are left off the map.
+    """
+
+    decided: dt.date = Field(description="Date the owner made the decision (YYYY-MM-DD).")
+    basis: NeutralText = Field(description="Why swapped coordinates may be corrected.")
+
+
 class Relay(_Model):
     """The repository owner's recorded decision to fetch this operator through a relay the
     project runs, because the operator's server refused requests from the daily run.
@@ -342,14 +412,99 @@ class Relay(_Model):
     )
 
 
+class EngagementEvent(_Model):
+    """One dated step in getting access to an operator's data: a check, a request, a reply."""
+
+    date: dt.date = Field(description="Date of the step (YYYY-MM-DD).")
+    action: EngagementAction
+    channel: Channel | None = Field(
+        default=None,
+        description="How a request or follow-up was sent, or how a reply came. Required for "
+        "request_sent and follow_up_sent.",
+    )
+    summary: LogText = Field(
+        description="One neutral, factual sentence. No personal names or email addresses."
+    )
+    quote: LogText | None = Field(
+        default=None,
+        description="The operator's own words, quoted exactly, with any personal names and "
+        "contact details left out. Required for request_declined.",
+    )
+    evidence_url: SafeUrl | None = None
+    evidence_file: EvidenceFile | None = None
+
+    @model_validator(mode="after")
+    def _check(self) -> "EngagementEvent":
+        if self.action in SENT and self.channel is None:
+            raise ValueError(f"{self.action} needs a channel")
+        if self.action == "request_declined" and self.quote is None:
+            raise ValueError("request_declined needs the operator's words in quote")
+        if self.action in RESPONSES and self.evidence_url is None and self.evidence_file is None:
+            raise ValueError(
+                f"{self.action} needs evidence_url or evidence_file, such as a copy of the "
+                "reply saved under evidence/<operator id>/ with names and addresses removed"
+            )
+        return self
+
+
 class Engagement(_Model):
     status: EngagementStatus
     evidence: list[Evidence] = Field(default_factory=list)
+    log: list[EngagementEvent] = Field(
+        default_factory=list,
+        description="Dated steps taken to reach the data, oldest first. Shown on the "
+        "transparency page.",
+    )
+
+    @property
+    def as_of(self) -> dt.date | None:
+        """Date of the latest evidence or log entry: the date the status was last confirmed."""
+        dates = [e.date for e in self.evidence if isinstance(e.date, dt.date)]
+        dates += [event.date for event in self.log]
+        return max(dates, default=None)
+
+    def _last_sent_index(self) -> int | None:
+        return next(
+            (i for i in range(len(self.log) - 1, -1, -1) if self.log[i].action in SENT), None
+        )
+
+    def last_sent(self) -> EngagementEvent | None:
+        """The latest request or follow-up, if any."""
+        index = self._last_sent_index()
+        return None if index is None else self.log[index]
+
+    def last_response(self) -> EngagementEvent | None:
+        """The operator's latest reply, agreement, key or refusal, if any."""
+        return next((e for e in reversed(self.log) if e.action in RESPONSES), None)
+
+    def awaiting_reply(self) -> bool:
+        """True if the latest request or follow-up has had no response since."""
+        index = self._last_sent_index()
+        if index is None:
+            return False
+        return not any(e.action in RESPONSES for e in self.log[index + 1 :])
 
     @model_validator(mode="after")
     def _check(self) -> "Engagement":
-        if self.status != "unknown" and not self.evidence:
-            raise ValueError(f"status {self.status!r} needs at least one evidence entry")
+        if self.status != "unknown" and not self.evidence and not self.log:
+            raise ValueError(
+                f"status {self.status!r} needs at least one evidence entry or log entry"
+            )
+        dates = [event.date for event in self.log]
+        if dates != sorted(dates):
+            raise ValueError("engagement.log must be in date order, oldest first")
+        actions = {event.action for event in self.log}
+        requested = self.status in ("requested_no_reply", "requested_awaiting_decision")
+        if requested and "request_sent" not in actions:
+            raise ValueError(f"status {self.status!r} needs a request_sent entry in the log")
+        if self.status == "requested_no_reply" and self.last_response() is not None:
+            raise ValueError(
+                "status 'requested_no_reply' does not match the log: a response from the "
+                "operator is recorded. Use 'requested_awaiting_decision' or the status the "
+                "response gives"
+            )
+        if self.status == "request_declined" and "request_declined" not in actions:
+            raise ValueError("status 'request_declined' needs a request_declined entry in the log")
         return self
 
 
@@ -363,6 +518,13 @@ class OperatorConfig(_Model):
     endpoints: dict[EndpointKind, Endpoint] = Field(
         default_factory=dict,
         description="Specific URLs, recorded only where the source of the URL is known.",
+    )
+    response_envelope: ResponseEnvelope = Field(
+        default="ocpi",
+        description="'ocpi' (the default) requires each response to be an OCPI 2.2.1 "
+        "response object with a status_code. 'data_list' also accepts an object with a "
+        "list of OCPI records in 'data' and no status_code, for feeds whose records are OCPI "
+        "but whose wrapper is not. Record the reason as a finding. ocpi_221 only.",
     )
     auth: Auth
     rate_limit: RateLimit = Field(default_factory=RateLimit)
@@ -378,6 +540,11 @@ class OperatorConfig(_Model):
         default=None,
         description="Only by the repository owner's decision: show locations that have no "
         "publish flag. Null means such locations are never kept.",
+    )
+    swapped_coordinates: SwappedCoordinates | None = Field(
+        default=None,
+        description="Only by the repository owner's decision: correct coordinates that are "
+        "obviously the wrong way round. Null means such locations are left off the map.",
     )
     relay: Relay | None = Field(
         default=None,
@@ -403,8 +570,19 @@ class OperatorConfig(_Model):
         problems = []
         if self.id in RESERVED_IDS:
             problems.append(f"id {self.id!r} is reserved for gap-filler sources")
-        if self.engagement.status == "requested_no_reply" and self.access_requested is None:
-            problems.append("status 'requested_no_reply' needs access_requested")
+        log = self.engagement.log
+        requested = next((e.date for e in log if e.action == "request_sent"), None)
+        granted = next((e.date for e in log if e.action == "key_granted"), None)
+        if requested != self.access_requested:
+            problems.append(
+                "access_requested must be the date of the first request_sent entry in "
+                f"engagement.log ({requested or 'none recorded'})"
+            )
+        if granted != self.access_granted:
+            problems.append(
+                "access_granted must be the date of the first key_granted entry in "
+                f"engagement.log ({granted or 'none recorded'})"
+            )
         if (
             self.access_requested is not None
             and self.access_granted is not None
@@ -426,6 +604,8 @@ class OperatorConfig(_Model):
                 or self.licence.checked == "unknown"
             ):
                 problems.append("an enabled operator needs licence terms that have been checked")
+        if self.response_envelope != "ocpi" and self.adapter != "ocpi_221":
+            problems.append("response_envelope only applies to the ocpi_221 adapter")
         if self.relay is not None:
             if self.auth.method != "none":
                 problems.append("only a feed that needs no key may be relayed")

@@ -10,6 +10,7 @@ from pathlib import Path
 
 import httpx
 import pytest
+from pydantic import ValidationError
 
 from adapters.http import FeedError, PoliteClient
 from adapters.ocpi_221 import fetch
@@ -257,6 +258,58 @@ def test_bad_responses_raise_feed_errors(response, message):
         pytest.raises(FeedError, match=message),
     ):
         fetch_module(client, "locations", url)
+
+
+# Feeds whose records are OCPI but whose wrapper is not (response_envelope: data_list)
+
+
+def plain_body(data, **extra) -> dict:
+    return {"name": "OK", "message": "ok", "data": data, "error": None, **extra}
+
+
+def test_a_wrapper_without_status_code_is_refused_by_default():
+    config = make_config()
+    url = f"{EXAMPLE}/locations"
+    pages = {url: httpx.Response(200, json=plain_body([{}]))}
+    with (
+        client_for(config, serve_pages(pages)) as client,
+        pytest.raises(FeedError, match="OCPI response object"),
+    ):
+        fetch_module(client, "locations", url)
+
+
+def test_data_list_accepts_a_wrapper_without_status_code():
+    config = make_config()
+    url = f"{EXAMPLE}/locations"
+    pages = {url: httpx.Response(200, json=plain_body([{}, {}]))}
+    with client_for(config, serve_pages(pages)) as client:
+        result = fetch_module(client, "locations", url, envelope="data_list")
+    assert len(result.records) == 2 and result.complete
+
+
+@pytest.mark.parametrize(
+    ("body", "message"),
+    [
+        (plain_body([], error="Server error", message="failed"), "returned an error: failed"),
+        ({"name": "OK", "data": {}}, "no list of records"),
+        ({"status_code": 2001, "status_message": "Invalid", "data": []}, "OCPI status 2001"),
+        ([1, 2], "OCPI response object"),
+    ],
+    ids=["error-set", "data-not-a-list", "status-code-still-checked", "not-an-object"],
+)
+def test_data_list_still_rejects_bad_responses(body, message):
+    config = make_config()
+    url = f"{EXAMPLE}/locations"
+    with (
+        client_for(config, serve_pages({url: httpx.Response(200, json=body)})) as client,
+        pytest.raises(FeedError, match=message),
+    ):
+        fetch_module(client, "locations", url, envelope="data_list")
+
+
+def test_response_envelope_only_applies_to_ocpi_221():
+    with pytest.raises(ValidationError, match="response_envelope"):
+        make_config(adapter="custom", response_envelope="data_list")
 
 
 # Politeness and retries

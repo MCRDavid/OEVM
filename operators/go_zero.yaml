@@ -16,6 +16,12 @@ attribution: null
 engagement:
   status: unknown
   evidence: []
+  log:
+    - date: 2026-10-09
+      action: feed_searched
+      summary: >-
+        A web search for a Go Zero open data or Public Charge Point Regulations page found
+        none. Go Zero's own website was not searched directly; this needs checking.
 access_requested: null
 access_granted: null
 sources: []

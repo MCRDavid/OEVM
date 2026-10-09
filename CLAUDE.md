@@ -56,6 +56,8 @@ decisions are in docs/adr/.
   exact quote, source URL and date; tests enforce these rules. Never run two fetches that use the same host in parallel.
 - Record spec differences, data quirks and access issues as dated findings in the operator file,
   in neutral words, then regenerate the transparency page.
+- Record every access request, follow-up, reply and check as a dated step in engagement.log
+  (see operators/_template.yaml); saved replies go in evidence/<id>/ with names and addresses removed.
 
 ## Data licences (DATA_LICENCES.md)
 - Apache-2.0 covers our code only. Never apply it, or any other licence, to data. Data keeps its source's licence.
@@ -63,6 +65,8 @@ decisions are in docs/adr/.
 - Never use operator logos or suggest any operator or public body endorses the project.
 - Never keep locations whose OCPI publish flag is false. Keep ones with no flag only when the
   operator file records the owner's decision in missing_publish_flag; never add one yourself.
+- Correct coordinates only where the operator file records the owner's decision in
+  swapped_coordinates, and only obvious latitude/longitude swaps (ADR 0013); show and record each one.
 - Switch an operator on only after reading its own terms and filling in its licence section.
 - Fetch through the relay (relay/worker.js) only when the operator file records the owner's
   decision in relay; only feeds that need no key; same User-Agent and rate limits; never

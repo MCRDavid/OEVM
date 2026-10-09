@@ -25,6 +25,12 @@ attribution: null
 engagement:
   status: unknown
   evidence: []
+  log:
+    - date: 2026-10-09
+      action: feed_searched
+      summary: >-
+        Two web searches for a Pod open data or Public Charge Point Regulations page found
+        none. Pod's own website was not searched directly; this needs checking.
 access_requested: null
 access_granted: null
 sources: []

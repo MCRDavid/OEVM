@@ -10,6 +10,7 @@ Files whose names start with "_" (such as _template.yaml) are not operators.
 """
 
 import argparse
+import datetime as dt
 import sys
 from pathlib import Path
 
@@ -17,6 +18,9 @@ import yaml
 from pydantic import ValidationError
 
 from schema.operator import OperatorConfig
+
+# Days after a request or follow-up with no reply before the validator suggests a follow-up.
+FOLLOW_UP_AFTER_DAYS = 14
 
 ROOT = Path(__file__).resolve().parent.parent
 OPERATORS_DIR = ROOT / "operators"
@@ -77,13 +81,15 @@ def load_registry(directory: Path = OPERATORS_DIR) -> dict[str, OperatorConfig]:
 
         if config.id != path.stem:
             problems.append(f"{path.name}: id {config.id!r} must match the file name")
-        for evidence in config.engagement.evidence:
-            if evidence.file is None:
+        files = [e.file for e in config.engagement.evidence]
+        files += [e.evidence_file for e in config.engagement.log]
+        for file in files:
+            if file is None:
                 continue
-            if not evidence.file.startswith(f"evidence/{config.id}/"):
+            if not file.startswith(f"evidence/{config.id}/"):
                 problems.append(f"{path.name}: evidence file must be under evidence/{config.id}/")
-            elif not (directory.parent / evidence.file).is_file():
-                problems.append(f"{path.name}: evidence file {evidence.file} does not exist")
+            elif not (directory.parent / file).is_file():
+                problems.append(f"{path.name}: evidence file {file} does not exist")
         operators[config.id] = config
 
     if problems:
@@ -91,27 +97,44 @@ def load_registry(directory: Path = OPERATORS_DIR) -> dict[str, OperatorConfig]:
     return operators
 
 
-def warnings_for(config: OperatorConfig) -> list[str]:
+def warnings_for(config: OperatorConfig, today: dt.date | None = None) -> list[str]:
     """Things that are allowed but should be fixed when possible."""
+    today = today or dt.date.today()
+    engagement = config.engagement
     warnings = []
-    for evidence in config.engagement.evidence:
+    for evidence in engagement.evidence:
         if evidence.date == "unknown":
             where = evidence.url or evidence.file
             warnings.append(f"{config.id}: evidence {where} has no date; add the date checked")
+    if engagement.as_of is None:
+        warnings.append(
+            f"{config.id}: no dated status yet; record a page_checked or feed_searched entry "
+            "in engagement.log"
+        )
+    sent = engagement.last_sent()
+    if sent is not None and engagement.awaiting_reply():
+        waited = (today - sent.date).days
+        if waited >= FOLLOW_UP_AFTER_DAYS:
+            warnings.append(
+                f"{config.id}: no reply recorded {waited} days after the {sent.date} "
+                f"{sent.action.replace('_', ' ')}; consider a follow-up"
+            )
     return warnings
 
 
-def summary(operators: dict[str, OperatorConfig]) -> str:
+def summary(operators: dict[str, OperatorConfig], today: dt.date | None = None) -> str:
     enabled = sum(1 for c in operators.values() if c.enabled)
     lines = [
         f"Operator registry is valid: {len(operators)} operators, {enabled} enabled.",
         "",
-        f"{'id':<30} {'adapter':<18} {'engagement':<26} {'enabled':<8} secret_name",
+        f"{'id':<30} {'adapter':<18} {'engagement':<28} {'as of':<11} {'enabled':<8} secret_name",
     ]
     for config in operators.values():
+        as_of = config.engagement.as_of
         lines.append(
-            f"{config.id:<30} {config.adapter:<18} {config.engagement.status:<26} "
-            f"{'yes' if config.enabled else 'no':<8} {config.auth.secret_name or '-'}"
+            f"{config.id:<30} {config.adapter:<18} {config.engagement.status:<28} "
+            f"{as_of or '-'!s:<11} {'yes' if config.enabled else 'no':<8} "
+            f"{config.auth.secret_name or '-'}"
         )
 
     needs_secret = [
@@ -132,7 +155,7 @@ def summary(operators: dict[str, OperatorConfig]) -> str:
     if relayed:
         lines += ["Enabled operators fetched through the relay: " + ", ".join(relayed)]
 
-    warnings = [w for c in operators.values() for w in warnings_for(c)]
+    warnings = [w for c in operators.values() for w in warnings_for(c, today)]
     if warnings:
         lines += ["", f"Warnings ({len(warnings)}):"] + [f"  - {w}" for w in warnings]
     return "\n".join(lines)
