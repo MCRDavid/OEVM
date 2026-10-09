@@ -69,3 +69,23 @@ export function plugsSummary(plugs) {
   const names = [...new Set((plugs ?? []).map((p) => PLUG_GROUPS[plugGroup(p)].label))];
   return names.length ? names.join(", ") : "Connector unknown";
 }
+
+// Map point colours group chargers by their fastest connector. 8 kW is where the Public
+// Charge Point Regulations 2023 start requiring contactless payment; 50 kW is where they
+// call a charge point rapid. 150 kW matches the ultra-rapid step in the power filter.
+export const SPEED_BANDS = [
+  { id: "ultra", min: 150, label: "150 kW or more (ultra-rapid)" },
+  { id: "rapid", min: 50, label: "50 to 149 kW (rapid)" },
+  { id: "fast", min: 8, label: "8 to 49 kW" },
+  { id: "slow", min: 0, label: "Under 8 kW" },
+];
+
+export function speedBand(kw) {
+  if (kw === null || kw === undefined || !Number.isFinite(kw)) return "unknown";
+  return SPEED_BANDS.find((band) => kw >= band.min).id;
+}
+
+// True when every connector was reported out of service in the last daily fetch.
+export function allOut(props) {
+  return Boolean(props.cons?.length) && props.cons.every((c) => c.out === true);
+}
