@@ -65,7 +65,7 @@ supports_single_location: supported
 cors: needs_testing
 attribution: null
 engagement:
-  status: key_on_request
+  status: unknown
   evidence:
     - date: 2026-10-09
       url: https://ubitricity.com/en/pcpr-data-request/

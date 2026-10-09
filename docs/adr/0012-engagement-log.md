@@ -37,8 +37,9 @@ filled in.
 
 ## Dated on 2026-10-09
 
-InstaVolt and ubitricity pages were read and logged, ubitricity's status moved from
-unknown to "Key issued on request". Web searches for Pod and Go Zero open data pages found
+InstaVolt and ubitricity pages were read and logged. ubitricity's page offers a request
+form but names no key, licence or agreement, so its status stays "Not yet established"
+until a request shows what is issued. Web searches for Pod and Go Zero open data pages found
 none, recorded as `feed_searched` with the method stated. bp pulse's page answered an
 automated fetch with HTTP 403, and Shell Recharge's pages showed no readable text, so
 bp pulse, Shell Recharge and Community by Shell Recharge still need a check in a browser.

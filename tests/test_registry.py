@@ -411,6 +411,17 @@ def test_a_complete_log_is_valid():
             engagement={"status": "requested_no_reply", "log": [REQUEST, REPLY]},
             access_requested="2026-10-01",
         ),
+        minimal(
+            engagement={
+                "status": "requested_no_reply",
+                "log": [
+                    REQUEST,
+                    REPLY,
+                    {**REQUEST, "date": "2026-10-06", "action": "follow_up_sent"},
+                ],
+            },
+            access_requested="2026-10-01",
+        ),
         minimal(engagement={"status": "unknown", "log": [REPLY, REQUEST]}),
         minimal(engagement={"status": "unknown", "log": [{**REQUEST, "channel": None}]}),
         minimal(
@@ -447,6 +458,7 @@ def test_a_complete_log_is_valid():
     ids=[
         "no-reply-without-access-requested",
         "no-reply-after-a-reply",
+        "no-reply-after-a-reply-and-follow-up",
         "log-out-of-order",
         "request-without-channel",
         "reply-without-evidence",
@@ -504,3 +516,14 @@ def test_seed_operators_without_a_dated_status_are_flagged():
         assert undated == any("no dated status yet" in w for w in registry.warnings_for(config)), (
             config.id
         )
+
+
+def test_a_repeated_same_day_request_counts_from_its_own_position():
+    reply = {**REPLY, "date": "2026-10-01"}
+    config = OperatorConfig.model_validate(
+        minimal(
+            engagement={"status": "requested_awaiting_decision", "log": [REQUEST, reply, REQUEST]},
+            access_requested="2026-10-01",
+        )
+    )
+    assert config.engagement.awaiting_reply()

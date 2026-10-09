@@ -448,9 +448,15 @@ class Engagement(_Model):
         dates += [event.date for event in self.log]
         return max(dates, default=None)
 
+    def _last_sent_index(self) -> int | None:
+        return next(
+            (i for i in range(len(self.log) - 1, -1, -1) if self.log[i].action in SENT), None
+        )
+
     def last_sent(self) -> EngagementEvent | None:
         """The latest request or follow-up, if any."""
-        return next((e for e in reversed(self.log) if e.action in SENT), None)
+        index = self._last_sent_index()
+        return None if index is None else self.log[index]
 
     def last_response(self) -> EngagementEvent | None:
         """The operator's latest reply, agreement, key or refusal, if any."""
@@ -458,10 +464,9 @@ class Engagement(_Model):
 
     def awaiting_reply(self) -> bool:
         """True if the latest request or follow-up has had no response since."""
-        sent = self.last_sent()
-        if sent is None:
+        index = self._last_sent_index()
+        if index is None:
             return False
-        index = self.log.index(sent)
         return not any(e.action in RESPONSES for e in self.log[index + 1 :])
 
     @model_validator(mode="after")
@@ -477,10 +482,11 @@ class Engagement(_Model):
         requested = self.status in ("requested_no_reply", "requested_awaiting_decision")
         if requested and "request_sent" not in actions:
             raise ValueError(f"status {self.status!r} needs a request_sent entry in the log")
-        if self.status == "requested_no_reply" and not self.awaiting_reply():
+        if self.status == "requested_no_reply" and self.last_response() is not None:
             raise ValueError(
-                "status 'requested_no_reply' does not match the log: a response is recorded "
-                "after the latest request"
+                "status 'requested_no_reply' does not match the log: a response from the "
+                "operator is recorded. Use 'requested_awaiting_decision' or the status the "
+                "response gives"
             )
         if self.status == "request_declined" and "request_declined" not in actions:
             raise ValueError("status 'request_declined' needs a request_declined entry in the log")

@@ -1032,9 +1032,9 @@
       "enabled": false,
       "adapter": "eco_movement_pcpr",
       "engagement": {
-        "status": "key_on_request",
-        "label": "Key issued on request",
-        "headline": "Key issued on request (as of 2026-10-09)",
+        "status": "unknown",
+        "label": "Not yet established",
+        "headline": "Not yet established (as of 2026-10-09)",
         "as_of": "2026-10-09",
         "last_request": null,
         "last_response": null,

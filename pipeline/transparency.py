@@ -386,7 +386,7 @@ def _engagement_table(data: dict) -> str:
         step = (
             f"{_e(latest['date'])}: {_e(latest['action_label'])}. {_e(latest['summary'])}"
             if latest
-            else "None recorded"
+            else "No log entry yet"
         )
         rows.append(
             "<tr>"
