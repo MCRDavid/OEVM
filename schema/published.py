@@ -85,10 +85,46 @@ class ConnectorPriceOut(_Model):
     unresolved_ids: list[RecordId]
 
 
+class TariffOptionOut(_Model):
+    """One tariff listed at a location, so people can compare them."""
+
+    tariff_id: RecordId
+    name: str | None = Field(default=None, description="The operator's own description.")
+    kind: str = Field(description="How it is paid for, from its OCPI type, in plain words.")
+    state: MapPrice = Field(description="'free' only when its price state is free_confirmed.")
+    text: str = Field(description="Worded by pipeline/pricing.py.")
+    reason: str | None = None
+    varies: str | None = Field(
+        default=None, description="What the price depends on, such as the time of day."
+    )
+    connectors: int = Field(ge=0, description="How many of the location's connectors list it.")
+    ppk_low: float | None = Field(
+        default=None, ge=0, description="Lowest energy price that can apply, pence per kWh."
+    )
+    ppk_high: float | None = Field(
+        default=None, ge=0, description="Highest energy price that can apply, pence per kWh."
+    )
+    includes_vat: bool | None = Field(
+        default=None, description="Whether ppk_low and ppk_high include VAT."
+    )
+
+
 class LocationDetail(_Model):
     location: Location
-    tariffs: list[Tariff] = Field(description="The tariffs this location's connectors list.")
+    tariffs: list[Tariff] = Field(
+        description="Every tariff this location's connectors list that was found."
+    )
     prices: list[ConnectorPriceOut]
+    tariff_options: list[TariffOptionOut] = Field(
+        default_factory=list,
+        description="Every tariff the connectors list, in the order first listed, "
+        "including ones that could not be found.",
+    )
+    tariff_comparison: str | None = Field(
+        default=None,
+        description="Which listed tariff has the lowest energy price, worded by "
+        "pipeline/pricing.py; null when they cannot be compared fairly.",
+    )
     attribution: str
     licence: str
     licence_url: str | None = None

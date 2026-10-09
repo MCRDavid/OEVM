@@ -192,3 +192,15 @@ def test_the_command_line_publishes_and_reports_sizes(tmp_path, capsys):
     out = capsys.readouterr().out
     assert "data/locations.geojson: 1 file(s)" in out and "gzipped" in out
     assert run.FIXTURE_KEY not in (tmp_path / "data" / "locations.geojson").read_text()
+
+
+def test_details_list_every_tariff_the_connectors_refer_to(results, tmp_path):
+    for _, detail in _layer_and_details(results, tmp_path):
+        connectors = [c for e in detail["location"]["evses"] for c in e["connectors"]]
+        listed = list(dict.fromkeys(i for c in connectors for i in c["tariff_ids"]))
+        assert [o["tariff_id"] for o in detail["tariff_options"]] == listed
+        found = {t["id"] for t in detail["tariffs"]}
+        for option in detail["tariff_options"]:
+            reason = option["reason"] or ""
+            missing = "could not be read from the operator's tariff data" in reason
+            assert (option["tariff_id"] in found) != missing

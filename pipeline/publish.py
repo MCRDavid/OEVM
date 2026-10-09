@@ -33,7 +33,7 @@ from adapters.ocpi_221 import AdapterResult
 from pipeline.health import in_uk
 from pipeline.pricing import location_summary
 from pipeline.registry import ROOT
-from pipeline.tariffs import ConnectorPrice, price_locations
+from pipeline.tariffs import ConnectorPrice, TariffOption, price_locations, site_tariffs
 from schema.models import Connector, Location
 from schema.operator import OperatorConfig
 from schema.published import (
@@ -47,6 +47,7 @@ from schema.published import (
     MapProperties,
     OperatorEntry,
     PointGeometry,
+    TariffOptionOut,
 )
 
 LICENCE_NOTE = (
@@ -136,6 +137,23 @@ def _price_out(price: ConnectorPrice) -> ConnectorPriceOut:
     )
 
 
+def _option_out(option: TariffOption) -> TariffOptionOut:
+    low, high = option.energy_low, option.energy_high
+    return TariffOptionOut(
+        tariff_id=option.tariff_id,
+        name=option.name,
+        kind=option.kind,
+        state=option.state,
+        text=option.text,
+        reason=option.reason,
+        varies=option.varies,
+        connectors=option.connectors,
+        ppk_low=None if low is None else _pence(low),
+        ppk_high=None if high is None else _pence(high),
+        includes_vat=option.includes_vat if low is not None else None,
+    )
+
+
 def _dump(model, *, indent: int | None = None) -> bytes:
     data = model.model_dump(mode="json")
     separators = None if indent else (",", ":")
@@ -191,11 +209,14 @@ def publish(
             if key in details:
                 raise PublishError(f"two locations share the detail file name {key}")
             prices = by_location[location.id]
-            listed = sorted({i for p in prices for i in p.tariff_ids})
+            site = site_tariffs(location, tariffs)
+            listed = sorted(o.tariff_id for o in site.options if o.tariff_id in tariffs)
             detail = LocationDetail(
                 location=location,
                 tariffs=[tariffs[i] for i in listed],
                 prices=[_price_out(p) for p in prices],
+                tariff_options=[_option_out(o) for o in site.options],
+                tariff_comparison=site.comparison,
                 attribution=attribution[-1],
                 licence=config.licence.name,
                 licence_url=config.licence.url,

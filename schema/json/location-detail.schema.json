@@ -845,6 +845,138 @@
       "title": "TariffElement",
       "type": "object"
     },
+    "TariffOptionOut": {
+      "additionalProperties": false,
+      "description": "One tariff listed at a location, so people can compare them.",
+      "properties": {
+        "tariff_id": {
+          "description": "'{source}:{country}:{party}:{id}', for example 'chargy:GB:CGY:1234'. Use 'unknown' for a country or party that is not known.",
+          "pattern": "^[a-z0-9_]+:[^:]+:[^:]+:.+$",
+          "title": "Tariff Id",
+          "type": "string"
+        },
+        "name": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "The operator's own description.",
+          "title": "Name"
+        },
+        "kind": {
+          "description": "How it is paid for, from its OCPI type, in plain words.",
+          "title": "Kind",
+          "type": "string"
+        },
+        "state": {
+          "description": "'free' only when its price state is free_confirmed.",
+          "enum": [
+            "free",
+            "priced",
+            "unknown"
+          ],
+          "title": "State",
+          "type": "string"
+        },
+        "text": {
+          "description": "Worded by pipeline/pricing.py.",
+          "title": "Text",
+          "type": "string"
+        },
+        "reason": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Reason"
+        },
+        "varies": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "What the price depends on, such as the time of day.",
+          "title": "Varies"
+        },
+        "connectors": {
+          "description": "How many of the location's connectors list it.",
+          "minimum": 0,
+          "title": "Connectors",
+          "type": "integer"
+        },
+        "ppk_low": {
+          "anyOf": [
+            {
+              "minimum": 0,
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Lowest energy price that can apply, pence per kWh.",
+          "title": "Ppk Low"
+        },
+        "ppk_high": {
+          "anyOf": [
+            {
+              "minimum": 0,
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Highest energy price that can apply, pence per kWh.",
+          "title": "Ppk High"
+        },
+        "includes_vat": {
+          "anyOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Whether ppk_low and ppk_high include VAT.",
+          "title": "Includes Vat"
+        }
+      },
+      "required": [
+        "tariff_id",
+        "name",
+        "kind",
+        "state",
+        "text",
+        "reason",
+        "varies",
+        "connectors",
+        "ppk_low",
+        "ppk_high",
+        "includes_vat"
+      ],
+      "title": "TariffOptionOut",
+      "type": "object"
+    },
     "TariffRestrictions": {
       "additionalProperties": false,
       "description": "When a tariff element applies. Times are local to the location.",
@@ -1073,7 +1205,7 @@
       "$ref": "#/$defs/Location"
     },
     "tariffs": {
-      "description": "The tariffs this location's connectors list.",
+      "description": "Every tariff this location's connectors list that was found.",
       "items": {
         "$ref": "#/$defs/Tariff"
       },
@@ -1086,6 +1218,27 @@
       },
       "title": "Prices",
       "type": "array"
+    },
+    "tariff_options": {
+      "description": "Every tariff the connectors list, in the order first listed, including ones that could not be found.",
+      "items": {
+        "$ref": "#/$defs/TariffOptionOut"
+      },
+      "title": "Tariff Options",
+      "type": "array"
+    },
+    "tariff_comparison": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "description": "Which listed tariff has the lowest energy price, worded by pipeline/pricing.py; null when they cannot be compared fairly.",
+      "title": "Tariff Comparison"
     },
     "attribution": {
       "title": "Attribution",
@@ -1117,6 +1270,8 @@
     "location",
     "tariffs",
     "prices",
+    "tariff_options",
+    "tariff_comparison",
     "attribution",
     "licence",
     "licence_url",

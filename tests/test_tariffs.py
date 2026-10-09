@@ -11,8 +11,8 @@ from adapters.ocpi_221 import fetch
 from adapters.replay import ReplayTransport
 from pipeline.pricing import conditions, describe_tariff, energy_range
 from pipeline.registry import load_registry
-from pipeline.tariffs import price_connector, price_locations, summary
-from schema.models import Connector, Tariff, TariffRestrictions
+from pipeline.tariffs import price_connector, price_locations, site_tariffs, summary
+from schema.models import Connector, Location, Tariff, TariffRestrictions
 
 FIXTURES = Path(__file__).parent / "fixtures"
 PROVENANCE = json.loads((FIXTURES / "normalised" / "tariff.json").read_text())["provenance"]
@@ -219,3 +219,96 @@ def test_recorded_geniepoint_parking_fees_show_their_conditions():
     texts = {p.text for p in price_locations(result.locations, result.tariffs)}
     assert any("per hour parked after 90 minutes" in text for text in texts)
     assert all("per hour parked" not in text or " after " in text for text in texts)
+
+
+# Every tariff at a site, for comparing them
+
+
+def site(*connectors: Connector) -> Location:
+    data = json.loads((FIXTURES / "normalised" / "location.json").read_text())
+    data["evses"] = [
+        {"uid": f"E{n}", "connectors": [c.model_dump()]} for n, c in enumerate(connectors)
+    ]
+    return Location.model_validate(data)
+
+
+def index(*tariffs: Tariff) -> dict[str, Tariff]:
+    return {t.id: t for t in tariffs}
+
+
+def energy(price, vat=20, **restrictions):
+    element = {"price_components": [component("energy", price, vat)]}
+    if restrictions:
+        element["restrictions"] = restrictions
+    return element
+
+
+def test_every_listed_tariff_is_shown_not_only_the_preferred_one():
+    ad_hoc = tariff("A", type_="ad_hoc_payment", alt_text="Contactless")
+    member = tariff("M", [energy(0.30)], type_="regular", alt_text="Members")
+    shown = site_tariffs(site(connector("A", "M", "GONE")), index(ad_hoc, member))
+    assert [(o.name, o.kind, o.text) for o in shown.options] == [
+        ("Contactless", "Pay at the charger, for example by card", "48p per kWh including VAT"),
+        (
+            "Members",
+            "With an account, app or card from a charging provider",
+            "36p per kWh including VAT",
+        ),
+        (None, "How to pay is not stated", "Price unknown"),
+    ]
+    assert shown.options[2].state == "unknown" and "could not be read" in shown.options[2].reason
+    assert shown.comparison == (
+        "Lowest energy price listed here: 36p per kWh including VAT "
+        "(with an account, app or card from a charging provider). "
+        "Other charges, such as fees per session or per hour, are not compared."
+    )
+
+
+def test_time_and_day_differences_are_named():
+    peak = tariff(
+        "P",
+        [energy(0.25, start_time="00:00", end_time="07:00", day_of_week=["saturday"]), energy(0.5)],
+    )
+    shown = site_tariffs(site(connector("P"), connector("T1")), index(peak, tariff("T1")))
+    option = shown.options[0]
+    assert option.text == (
+        "30p per kWh from midnight to 07:00 on Saturday, otherwise 60p per kWh including VAT"
+    )
+    assert option.varies == "Price depends on time of day and day of the week."
+    assert shown.options[1].varies is None
+    assert [o.connectors for o in shown.options] == [1, 1] and shown.connectors == 2
+    assert shown.comparison.startswith("Lowest energy price listed here: 30p per kWh")
+    assert "including VAT at some times (how to pay" not in shown.comparison
+    assert "including VAT at some times." in shown.comparison
+
+
+def test_prices_on_different_vat_bases_are_never_compared():
+    stated = tariff("S", [energy(0.30)])
+    unstated = tariff("U", [energy(0.20, vat=None)])
+    assert site_tariffs(site(connector("S", "U")), index(stated, unstated)).comparison is None
+
+
+def test_matching_prices_say_so_and_one_tariff_is_not_compared():
+    a, b = tariff("A"), tariff("B")
+    both = site_tariffs(site(connector("A", "B")), index(a, b))
+    assert both.comparison.startswith("Every priced tariff here charges 48p per kWh including VAT")
+    assert site_tariffs(site(connector("A")), index(a)).comparison is None
+
+
+def test_a_tariff_in_another_currency_is_listed_but_never_compared():
+    euro = tariff("E", currency="EUR")
+    shown = site_tariffs(site(connector("T1", "E")), index(tariff("T1"), euro))
+    assert shown.options[1].text == "Price unknown" and "EUR" in shown.options[1].reason
+    assert shown.comparison is None
+
+
+def test_recorded_geniepoint_sites_show_the_account_and_contactless_prices():
+    result = replay("geniepoint")
+    tariffs = index(*result.tariffs)
+    shown = [site_tariffs(location, tariffs) for location in result.locations]
+    kinds = {o.kind for s in shown for o in s.options}
+    assert {
+        "Pay at the charger, for example by card",
+        "With an account, app or card from a charging provider",
+    } <= kinds
+    assert any(s.comparison and "Lowest energy price" in s.comparison for s in shown)
