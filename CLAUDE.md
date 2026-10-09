@@ -72,7 +72,7 @@ decisions are in docs/adr/.
   operator file records the owner's decision in nonstandard_statuses; never add one yourself.
 - Never keep locations whose OCPI publish flag is false. Keep ones with no flag only when the
   operator file records the owner's decision in missing_publish_flag; never add one yourself.
-- Map only locations whose coordinates are genuinely in the UK (pipeline/geography.py, ADR 0016).
+- Map only locations whose coordinates are genuinely in the UK (pipeline/geography.py, ADR 0017).
 - Correct coordinates only where the operator file records the owner's decision in
   swapped_coordinates, and only obvious latitude/longitude swaps (ADR 0013); show and record each one.
 - Switch an operator on only after reading its own terms and filling in its licence section.

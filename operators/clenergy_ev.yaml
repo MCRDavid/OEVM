@@ -122,7 +122,7 @@ findings:
       Only locations whose coordinates are in the UK are shown, so these are left off the
       map and listed in the manifest as not mapped. Until 2026-10-09 the map used latitude
       and longitude limits that also took in the Republic of Ireland, so 6 locations in
-      Dublin and Maynooth were shown; since then the UK's own outline is used (ADR 0016).
+      Dublin and Maynooth were shown; since then the UK's own outline is used (ADR 0017).
     evidence_url: https://api.clenergy.online/development/pcpr/locations
   - date: 2026-10-09
     kind: data_quality
