@@ -16,7 +16,8 @@ The full plan is in [docs/BLUEPRINT.md](docs/BLUEPRINT.md).
 ## Status
 
 Early days. The map is live at https://mcrdavid.github.io/OEVM/ (since 8 October 2026,
-with char.gy's, GeniePoint's and Jolt's data so far; see the feed health page). Blueprint tasks 1 to 10 are in place:
+with char.gy's, GeniePoint's and Jolt's data so far, and MFG EV Power's from 9 October 2026; see
+the feed health page). Blueprint tasks 1 to 10 are in place:
 
 1. **Scaffold:** uv, ruff, pytest, pre-commit secret scanning and a CI workflow.
 2. **Schema:** Pydantic models for Location, EVSE, Connector, Tariff and Provenance,
@@ -27,7 +28,8 @@ with char.gy's, GeniePoint's and Jolt's data so far; see the feed health page). 
    page, and converts them to the schema. char.gy is the first operator switched on.
 5. **Jolt adapter:** reads Jolt's own API format, which differs from OCPI 2.2.1 in ways
    recorded on the transparency page, and converts it the same way. GeniePoint's files
-   turned out to be standard OCPI 2.2.1, so the OCPI adapter reads them.
+   turned out to be standard OCPI 2.2.1, so the OCPI adapter reads them, as it does MFG EV
+   Power's.
 6. **Tariffs:** each connector's price comes from the tariffs it lists. "Free" only when
    every listed tariff is confirmed free; a missing or unreadable tariff means "Price
    unknown". Prices that apply only at some times, or after a while, say so.

@@ -614,6 +614,86 @@
       ]
     },
     {
+      "id": "mfg_ev_power",
+      "name": "MFG EV Power",
+      "enabled": true,
+      "adapter": "ocpi_221",
+      "engagement": {
+        "status": "open_anonymous",
+        "label": "Open, no registration",
+        "headline": "Open, no registration (as of 2026-10-09)",
+        "as_of": "2026-10-09",
+        "last_request": null,
+        "last_response": null,
+        "last_response_text": "No request sent",
+        "evidence": [
+          {
+            "date": "2026-10-09",
+            "url": "https://www.motorfuelgroup.com/ev-power/",
+            "file": null,
+            "note": "The section \"Public Charge Point Regulations - Open Data\" links the locations and tariffs files and states no licence, terms or rate limit."
+          }
+        ],
+        "log": []
+      },
+      "access_requested": null,
+      "access_granted": null,
+      "feeds": [
+        {
+          "kind": "locations",
+          "url": "https://opendata.motorfuelgroup.net/locations",
+          "status": "documented"
+        },
+        {
+          "kind": "tariffs",
+          "url": "https://opendata.motorfuelgroup.net/tariffs",
+          "status": "documented"
+        }
+      ],
+      "licence": {
+        "name": "OGL-3.0",
+        "url": "https://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/",
+        "checked": "2026-10-09"
+      },
+      "attribution": "Contains data from MFG EV Power published under the Public Charge Point Regulations 2023, used in line with the Open Government Licence v3.0.",
+      "missing_publish_flag": null,
+      "swapped_coordinates": null,
+      "nonstandard_statuses": null,
+      "relay": null,
+      "rate_limit": {
+        "our_gap_seconds": 2.0,
+        "our_max_per_hour": 1800,
+        "ours": "At least 2 s between requests to the operator's host, measured from the end of the previous request (at most 1800 in any hour), retries included.",
+        "published": [],
+        "limits_checked": "2026-10-09",
+        "comparison": "No limit published (checked 2026-10-09). The gap is our own choice.",
+        "difference_from_regulations": "Neither the operator nor the regulations set a limit.",
+        "notes": "MFG's EV Power page states no rate limit. The 2 second gap is this project's own choice. Each file holds every record, so a full run makes two requests (about 3.6 MB on 2026-10-09)."
+      },
+      "findings": [
+        {
+          "date": "2026-10-09",
+          "kind": "spec_conformance",
+          "kind_label": "Differs from OCPI 2.2.1",
+          "summary": "Each file holds every record in one response (597 locations and 8 tariffs on 2026-10-09) and sends no X-Total-Count, X-Limit or Link header. OCPI 2.2.1 describes these headers for paginated responses.",
+          "handling": "The adapter reads each file in one request. With no X-Total-Count the record count cannot be checked against the server's own total.",
+          "evidence_url": "https://opendata.motorfuelgroup.net/locations",
+          "status": "open",
+          "resolved_date": null
+        },
+        {
+          "date": "2026-10-09",
+          "kind": "access",
+          "kind_label": "Access",
+          "summary": "The files send no Access-Control-Allow-Origin header, so web browsers cannot read them directly.",
+          "handling": "The map uses data fetched by the pipeline, not requests from visitors' browsers.",
+          "evidence_url": "https://opendata.motorfuelgroup.net/locations",
+          "status": "open",
+          "resolved_date": null
+        }
+      ]
+    },
+    {
       "id": "bp_pulse",
       "name": "bp pulse",
       "enabled": false,

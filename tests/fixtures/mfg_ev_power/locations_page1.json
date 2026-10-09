@@ -1,0 +1,1201 @@
+{
+  "request": {
+    "method": "GET",
+    "url": "https://opendata.motorfuelgroup.net/locations"
+  },
+  "response": {
+    "status_code": 200,
+    "headers": {
+      "content-type": "application/json"
+    },
+    "body": {
+      "status_code": 1000,
+      "status_message": "Success",
+      "timestamp": "2026-10-09T07:13:19.119Z",
+      "data": [
+        {
+          "country_code": "GB",
+          "party_id": "MFL",
+          "owner": {
+            "name": "MFG EV Power"
+          },
+          "suboperator": {
+            "name": "MFG EV Power"
+          },
+          "operator": {
+            "name": "MFG EV Power"
+          },
+          "id": "23",
+          "address": "John Kempe Way, Camp Hill Middleway",
+          "name": "Camp Hill Circus Retail Park",
+          "directions": [],
+          "city": "Birmingham",
+          "postal_code": "B12 0HU",
+          "country": "GBR",
+          "coordinates": {
+            "latitude": "52.467464",
+            "longitude": "-1.879828"
+          },
+          "images": [],
+          "last_updated": "2026-10-08T17:34:23Z",
+          "time_zone": "Europe/London",
+          "opening_times": {
+            "twentyfourseven": false,
+            "regular_hours": [
+              {
+                "weekday": 1,
+                "period_begin": "09:00",
+                "period_end": "20:00"
+              },
+              {
+                "weekday": 2,
+                "period_begin": "09:00",
+                "period_end": "20:00"
+              },
+              {
+                "weekday": 3,
+                "period_begin": "09:00",
+                "period_end": "20:00"
+              },
+              {
+                "weekday": 4,
+                "period_begin": "09:00",
+                "period_end": "20:00"
+              },
+              {
+                "weekday": 5,
+                "period_begin": "09:00",
+                "period_end": "20:00"
+              },
+              {
+                "weekday": 6,
+                "period_begin": "09:00",
+                "period_end": "18:00"
+              },
+              {
+                "weekday": 7,
+                "period_begin": "09:00",
+                "period_end": "17:00"
+              }
+            ]
+          },
+          "charging_when_closed": true,
+          "energy_mix": {
+            "is_green_energy": false
+          },
+          "facilities": [],
+          "access_methods": [],
+          "publish": true,
+          "related_locations": [],
+          "evses": [
+            {
+              "uid": "2481",
+              "physical_reference": "MFG7002002",
+              "evse_id": "GB*MFL*E8011",
+              "directions": [],
+              "status": "AVAILABLE",
+              "capabilities": [
+                "REMOTE_START_STOP_CAPABLE",
+                "RFID_READER"
+              ],
+              "last_updated": "2026-10-08T18:40:51Z",
+              "floor_level": "Camp",
+              "coordinates": {
+                "latitude": "52.467464",
+                "longitude": "-1.879828"
+              },
+              "images": [],
+              "status_schedule": [],
+              "connectors": [
+                {
+                  "id": "663",
+                  "standard": "IEC_62196_T2_COMBO",
+                  "format": "CABLE",
+                  "tariff_ids": [
+                    "21"
+                  ],
+                  "max_voltage": 400,
+                  "power_type": "DC",
+                  "max_amperage": 400,
+                  "max_electric_power": 150000,
+                  "last_updated": "2026-10-07T17:10:34Z"
+                }
+              ]
+            },
+            {
+              "uid": "2486",
+              "physical_reference": "MFG7002003",
+              "evse_id": "GB*MFL*E8021",
+              "directions": [],
+              "status": "AVAILABLE",
+              "capabilities": [
+                "REMOTE_START_STOP_CAPABLE",
+                "RFID_READER"
+              ],
+              "last_updated": "2026-10-08T22:10:35Z",
+              "floor_level": "Camp",
+              "coordinates": {
+                "latitude": "52.467464",
+                "longitude": "-1.879828"
+              },
+              "images": [],
+              "status_schedule": [],
+              "connectors": [
+                {
+                  "id": "668",
+                  "standard": "IEC_62196_T2_COMBO",
+                  "format": "CABLE",
+                  "tariff_ids": [
+                    "21"
+                  ],
+                  "max_voltage": 400,
+                  "power_type": "DC",
+                  "max_amperage": 400,
+                  "max_electric_power": 150000,
+                  "last_updated": "2026-10-07T18:06:59Z"
+                }
+              ]
+            },
+            {
+              "uid": "2485",
+              "physical_reference": "MFG7002004",
+              "evse_id": "GB*MFL*E8031",
+              "directions": [],
+              "status": "AVAILABLE",
+              "capabilities": [
+                "REMOTE_START_STOP_CAPABLE",
+                "RFID_READER"
+              ],
+              "last_updated": "2026-10-08T15:14:58Z",
+              "floor_level": "Camp",
+              "coordinates": {
+                "latitude": "52.467464",
+                "longitude": "-1.879828"
+              },
+              "images": [],
+              "status_schedule": [],
+              "connectors": [
+                {
+                  "id": "670",
+                  "standard": "IEC_62196_T2_COMBO",
+                  "format": "CABLE",
+                  "tariff_ids": [
+                    "21"
+                  ],
+                  "max_voltage": 400,
+                  "power_type": "DC",
+                  "max_amperage": 400,
+                  "max_electric_power": 150000,
+                  "last_updated": "2026-10-08T15:14:58Z"
+                }
+              ]
+            },
+            {
+              "uid": "2476",
+              "physical_reference": "MFG7002001",
+              "evse_id": "GB*MFL*E8001",
+              "directions": [],
+              "status": "AVAILABLE",
+              "capabilities": [
+                "REMOTE_START_STOP_CAPABLE",
+                "RFID_READER"
+              ],
+              "last_updated": "2026-10-08T18:53:57Z",
+              "floor_level": "Camp",
+              "coordinates": {
+                "latitude": "52.467464",
+                "longitude": "-1.879828"
+              },
+              "images": [],
+              "status_schedule": [],
+              "connectors": [
+                {
+                  "id": "664",
+                  "standard": "IEC_62196_T2_COMBO",
+                  "format": "CABLE",
+                  "tariff_ids": [
+                    "21"
+                  ],
+                  "max_voltage": 400,
+                  "power_type": "DC",
+                  "max_amperage": 400,
+                  "max_electric_power": 150000,
+                  "last_updated": "2026-10-08T17:34:23Z"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "country_code": "GB",
+          "party_id": "MFL",
+          "owner": {
+            "name": "MFG EV Power"
+          },
+          "suboperator": {
+            "name": "MFG EV Power"
+          },
+          "operator": {
+            "name": "MFG EV Power"
+          },
+          "id": "610",
+          "address": "582 Pershore Road",
+          "name": "MFG Pershore",
+          "directions": [],
+          "city": "Birmingham",
+          "postal_code": "B29 7HQ",
+          "country": "GBR",
+          "state": "West Midlands",
+          "coordinates": {
+            "latitude": "52.447876",
+            "longitude": "-1.912812"
+          },
+          "images": [],
+          "last_updated": "2026-10-08T21:38:13Z",
+          "time_zone": "Europe/London",
+          "opening_times": {
+            "twentyfourseven": true
+          },
+          "charging_when_closed": true,
+          "energy_mix": {
+            "is_green_energy": true
+          },
+          "facilities": [],
+          "access_methods": [],
+          "publish": true,
+          "related_locations": [],
+          "evses": [
+            {
+              "uid": "3140",
+              "physical_reference": "MFG1059001_LEFT",
+              "evse_id": "GB*MFL*E1918",
+              "directions": [],
+              "status": "AVAILABLE",
+              "capabilities": [
+                "REMOTE_START_STOP_CAPABLE",
+                "RFID_READER"
+              ],
+              "last_updated": "2026-10-08T23:26:03Z",
+              "floor_level": "MFG ",
+              "coordinates": {
+                "latitude": "52.447876",
+                "longitude": "-1.912812"
+              },
+              "images": [],
+              "status_schedule": [],
+              "connectors": [
+                {
+                  "id": "3316",
+                  "standard": "IEC_62196_T2_COMBO",
+                  "format": "CABLE",
+                  "tariff_ids": [
+                    "13"
+                  ],
+                  "max_voltage": 400,
+                  "power_type": "DC",
+                  "max_amperage": 750,
+                  "max_electric_power": 300000,
+                  "last_updated": "2026-10-08T21:38:12Z"
+                }
+              ]
+            },
+            {
+              "uid": "3141",
+              "physical_reference": "MFG1059001_RIGHT",
+              "evse_id": "GB*MFL*E2629",
+              "directions": [],
+              "status": "AVAILABLE",
+              "capabilities": [
+                "REMOTE_START_STOP_CAPABLE",
+                "RFID_READER"
+              ],
+              "last_updated": "2026-10-08T23:26:03Z",
+              "floor_level": "MFG ",
+              "coordinates": {
+                "latitude": "52.447876",
+                "longitude": "-1.912812"
+              },
+              "images": [],
+              "status_schedule": [],
+              "connectors": [
+                {
+                  "id": "3318",
+                  "standard": "IEC_62196_T2_COMBO",
+                  "format": "CABLE",
+                  "tariff_ids": [
+                    "13"
+                  ],
+                  "max_voltage": 400,
+                  "power_type": "DC",
+                  "max_amperage": 750,
+                  "max_electric_power": 300000,
+                  "last_updated": "2026-10-08T17:08:09Z"
+                }
+              ]
+            },
+            {
+              "uid": "3142",
+              "physical_reference": "MFG1059002_LEFT",
+              "evse_id": "GB*MFL*E8246",
+              "directions": [],
+              "status": "AVAILABLE",
+              "capabilities": [
+                "REMOTE_START_STOP_CAPABLE",
+                "RFID_READER"
+              ],
+              "last_updated": "2026-10-08T17:25:19Z",
+              "floor_level": "MFG ",
+              "coordinates": {
+                "latitude": "52.447876",
+                "longitude": "-1.912812"
+              },
+              "images": [],
+              "status_schedule": [],
+              "connectors": [
+                {
+                  "id": "3319",
+                  "standard": "IEC_62196_T2_COMBO",
+                  "format": "CABLE",
+                  "tariff_ids": [
+                    "13"
+                  ],
+                  "max_voltage": 400,
+                  "power_type": "DC",
+                  "max_amperage": 375,
+                  "max_electric_power": 150000,
+                  "last_updated": "2026-10-08T17:25:19Z"
+                }
+              ]
+            },
+            {
+              "uid": "3143",
+              "physical_reference": "MFG1059002_RIGHT",
+              "evse_id": "GB*MFL*E7197",
+              "directions": [],
+              "status": "AVAILABLE",
+              "capabilities": [
+                "REMOTE_START_STOP_CAPABLE",
+                "RFID_READER"
+              ],
+              "last_updated": "2026-10-08T14:45:25Z",
+              "floor_level": "MFG ",
+              "coordinates": {
+                "latitude": "52.447876",
+                "longitude": "-1.912812"
+              },
+              "images": [],
+              "status_schedule": [],
+              "connectors": [
+                {
+                  "id": "3321",
+                  "standard": "CHADEMO",
+                  "format": "CABLE",
+                  "tariff_ids": [
+                    "13"
+                  ],
+                  "max_voltage": 400,
+                  "power_type": "DC",
+                  "max_amperage": 125,
+                  "max_electric_power": 50000,
+                  "last_updated": "2026-10-08T14:45:25Z"
+                }
+              ]
+            },
+            {
+              "uid": "3144",
+              "physical_reference": "MFG1059003_LEFT",
+              "evse_id": "GB*MFL*E8808",
+              "directions": [],
+              "status": "AVAILABLE",
+              "capabilities": [
+                "REMOTE_START_STOP_CAPABLE",
+                "RFID_READER"
+              ],
+              "last_updated": "2026-10-08T17:32:05Z",
+              "floor_level": "MFG ",
+              "coordinates": {
+                "latitude": "52.447876",
+                "longitude": "-1.912812"
+              },
+              "images": [],
+              "status_schedule": [],
+              "connectors": [
+                {
+                  "id": "3322",
+                  "standard": "IEC_62196_T2_COMBO",
+                  "format": "CABLE",
+                  "tariff_ids": [
+                    "13"
+                  ],
+                  "max_voltage": 400,
+                  "power_type": "DC",
+                  "max_amperage": 375,
+                  "max_electric_power": 150000,
+                  "last_updated": "2026-10-08T17:32:05Z"
+                }
+              ]
+            },
+            {
+              "uid": "3145",
+              "physical_reference": "MFG1059003_RIGHT",
+              "evse_id": "GB*MFL*E9929",
+              "directions": [],
+              "status": "AVAILABLE",
+              "capabilities": [
+                "REMOTE_START_STOP_CAPABLE",
+                "RFID_READER"
+              ],
+              "last_updated": "2026-10-08T17:31:51Z",
+              "floor_level": "MFG ",
+              "coordinates": {
+                "latitude": "52.447876",
+                "longitude": "-1.912812"
+              },
+              "images": [],
+              "status_schedule": [],
+              "connectors": [
+                {
+                  "id": "3324",
+                  "standard": "CHADEMO",
+                  "format": "CABLE",
+                  "tariff_ids": [
+                    "13"
+                  ],
+                  "max_voltage": 400,
+                  "power_type": "DC",
+                  "max_amperage": 125,
+                  "max_electric_power": 50000,
+                  "last_updated": "2026-10-08T17:31:51Z"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "country_code": "GB",
+          "party_id": "MFL",
+          "owner": {
+            "name": "MFG EV Power"
+          },
+          "suboperator": {
+            "name": "MFG EV Power"
+          },
+          "operator": {
+            "name": "MFG EV Power"
+          },
+          "id": "7",
+          "address": "Shannon Corner, New Malden",
+          "name": "MFG Kingston",
+          "directions": [],
+          "city": "London",
+          "postal_code": "KT3 6HF",
+          "country": "GBR",
+          "coordinates": {
+            "latitude": "51.398656",
+            "longitude": "-0.243830"
+          },
+          "images": [],
+          "last_updated": "2026-10-09T07:08:32.761Z",
+          "time_zone": "Europe/London",
+          "opening_times": {
+            "twentyfourseven": true
+          },
+          "charging_when_closed": true,
+          "energy_mix": {
+            "is_green_energy": false
+          },
+          "access_methods": [],
+          "publish": true,
+          "related_locations": [],
+          "evses": [
+            {
+              "uid": "37",
+              "physical_reference": "MFG0911001_LEFT",
+              "evse_id": "GB*MFL*E621",
+              "directions": [],
+              "status": "CHARGING",
+              "capabilities": [
+                "REMOTE_START_STOP_CAPABLE",
+                "RFID_READER"
+              ],
+              "last_updated": "2026-10-09T07:08:32.761Z",
+              "floor_level": "MFG ",
+              "coordinates": {
+                "latitude": "51.398656",
+                "longitude": "-0.243830"
+              },
+              "images": [],
+              "status_schedule": [],
+              "connectors": [
+                {
+                  "id": "46",
+                  "standard": "IEC_62196_T2_COMBO",
+                  "format": "CABLE",
+                  "tariff_ids": [
+                    "21"
+                  ],
+                  "max_voltage": 400,
+                  "power_type": "DC",
+                  "max_amperage": 250,
+                  "max_electric_power": 150000,
+                  "last_updated": "2026-10-08T21:22:25Z"
+                }
+              ]
+            },
+            {
+              "uid": "40",
+              "physical_reference": "MFG0911001_RIGHT",
+              "evse_id": "GB*MFL*E622",
+              "directions": [],
+              "status": "AVAILABLE",
+              "capabilities": [
+                "REMOTE_START_STOP_CAPABLE",
+                "RFID_READER"
+              ],
+              "last_updated": "2026-10-08T21:18:36Z",
+              "floor_level": "MFG ",
+              "coordinates": {
+                "latitude": "51.398656",
+                "longitude": "-0.243830"
+              },
+              "images": [],
+              "status_schedule": [],
+              "connectors": [
+                {
+                  "id": "51",
+                  "standard": "CHADEMO",
+                  "format": "CABLE",
+                  "tariff_ids": [
+                    "21"
+                  ],
+                  "max_voltage": 400,
+                  "power_type": "DC",
+                  "max_amperage": 125,
+                  "max_electric_power": 50000,
+                  "last_updated": "2026-10-08T21:18:36Z"
+                }
+              ]
+            },
+            {
+              "uid": "39",
+              "physical_reference": "MFG0911003_RIGHT",
+              "evse_id": "GB*MFL*E642",
+              "directions": [],
+              "status": "AVAILABLE",
+              "capabilities": [
+                "REMOTE_START_STOP_CAPABLE",
+                "RFID_READER"
+              ],
+              "last_updated": "2026-10-09T06:47:27.870Z",
+              "floor_level": "MFG ",
+              "coordinates": {
+                "latitude": "51.398656",
+                "longitude": "-0.243830"
+              },
+              "images": [],
+              "status_schedule": [],
+              "connectors": [
+                {
+                  "id": "48",
+                  "standard": "CHADEMO",
+                  "format": "CABLE",
+                  "tariff_ids": [
+                    "21"
+                  ],
+                  "max_voltage": 400,
+                  "power_type": "DC",
+                  "max_amperage": 125,
+                  "max_electric_power": 50000,
+                  "last_updated": "2026-10-08T21:16:28Z"
+                }
+              ]
+            },
+            {
+              "uid": "44",
+              "physical_reference": "MFG0911003_LEFT",
+              "evse_id": "GB*MFL*E641",
+              "directions": [],
+              "status": "AVAILABLE",
+              "capabilities": [
+                "REMOTE_START_STOP_CAPABLE",
+                "RFID_READER"
+              ],
+              "last_updated": "2026-10-09T06:47:45.686Z",
+              "floor_level": "MFG ",
+              "coordinates": {
+                "latitude": "51.398656",
+                "longitude": "-0.243830"
+              },
+              "images": [],
+              "status_schedule": [],
+              "connectors": [
+                {
+                  "id": "44",
+                  "standard": "IEC_62196_T2_COMBO",
+                  "format": "CABLE",
+                  "tariff_ids": [
+                    "21"
+                  ],
+                  "max_voltage": 400,
+                  "power_type": "DC",
+                  "max_amperage": 250,
+                  "max_electric_power": 150000,
+                  "last_updated": "2026-10-08T21:16:24Z"
+                }
+              ]
+            },
+            {
+              "uid": "42",
+              "physical_reference": "MFG0911004_RIGHT",
+              "evse_id": "GB*MFL*E682",
+              "directions": [],
+              "status": "OUTOFORDER",
+              "capabilities": [
+                "REMOTE_START_STOP_CAPABLE",
+                "RFID_READER"
+              ],
+              "last_updated": "2026-10-06T22:24:29Z",
+              "floor_level": "MFG ",
+              "coordinates": {
+                "latitude": "51.398656",
+                "longitude": "-0.243830"
+              },
+              "images": [],
+              "status_schedule": [],
+              "connectors": [
+                {
+                  "id": "45",
+                  "standard": "CHADEMO",
+                  "format": "CABLE",
+                  "tariff_ids": [
+                    "21"
+                  ],
+                  "max_voltage": 400,
+                  "power_type": "DC",
+                  "max_amperage": 125,
+                  "max_electric_power": 50000,
+                  "last_updated": "2026-10-06T20:32:37Z"
+                }
+              ]
+            },
+            {
+              "uid": "43",
+              "physical_reference": "MFG0911004_LEFT",
+              "evse_id": "GB*MFL*E681",
+              "directions": [],
+              "status": "OUTOFORDER",
+              "capabilities": [
+                "REMOTE_START_STOP_CAPABLE",
+                "RFID_READER"
+              ],
+              "last_updated": "2026-10-07T01:46:50Z",
+              "floor_level": "MFG ",
+              "coordinates": {
+                "latitude": "51.398656",
+                "longitude": "-0.243830"
+              },
+              "images": [],
+              "status_schedule": [],
+              "connectors": [
+                {
+                  "id": "49",
+                  "standard": "IEC_62196_T2_COMBO",
+                  "format": "CABLE",
+                  "tariff_ids": [
+                    "21"
+                  ],
+                  "max_voltage": 400,
+                  "power_type": "DC",
+                  "max_amperage": 250,
+                  "max_electric_power": 150000,
+                  "last_updated": "2026-10-06T20:32:37Z"
+                }
+              ]
+            },
+            {
+              "uid": "38",
+              "physical_reference": "MFG0911002_LEFT",
+              "evse_id": "GB*MFL*E631",
+              "directions": [],
+              "status": "AVAILABLE",
+              "capabilities": [
+                "REMOTE_START_STOP_CAPABLE",
+                "RFID_READER"
+              ],
+              "last_updated": "2026-10-09T00:41:05.036Z",
+              "floor_level": "MFG ",
+              "coordinates": {
+                "latitude": "51.398656",
+                "longitude": "-0.243830"
+              },
+              "images": [],
+              "status_schedule": [],
+              "connectors": [
+                {
+                  "id": "50",
+                  "standard": "IEC_62196_T2_COMBO",
+                  "format": "CABLE",
+                  "tariff_ids": [
+                    "21"
+                  ],
+                  "max_voltage": 400,
+                  "power_type": "DC",
+                  "max_amperage": 250,
+                  "max_electric_power": 150000,
+                  "last_updated": "2026-10-08T19:30:26Z"
+                }
+              ]
+            },
+            {
+              "uid": "41",
+              "physical_reference": "MFG0911002_RIGHT",
+              "evse_id": "GB*MFL*E632",
+              "directions": [],
+              "status": "AVAILABLE",
+              "capabilities": [
+                "REMOTE_START_STOP_CAPABLE",
+                "RFID_READER"
+              ],
+              "last_updated": "2026-10-09T00:40:26.346Z",
+              "floor_level": "MFG ",
+              "coordinates": {
+                "latitude": "51.398656",
+                "longitude": "-0.243830"
+              },
+              "images": [],
+              "status_schedule": [],
+              "connectors": [
+                {
+                  "id": "47",
+                  "standard": "CHADEMO",
+                  "format": "CABLE",
+                  "tariff_ids": [
+                    "21"
+                  ],
+                  "max_voltage": 400,
+                  "power_type": "DC",
+                  "max_amperage": 125,
+                  "max_electric_power": 50000,
+                  "last_updated": "2026-10-08T19:30:27Z"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "country_code": "GB",
+          "party_id": "MFL",
+          "owner": {
+            "name": "MFG EV Power"
+          },
+          "suboperator": {
+            "name": "MFG EV Power"
+          },
+          "operator": {
+            "name": "MFG EV Power"
+          },
+          "id": "101",
+          "address": "Fishguard Road",
+          "name": "MFG Haverfordwest",
+          "directions": [],
+          "city": "Haverfordwest",
+          "postal_code": "SA62 4BT",
+          "country": "GBR",
+          "coordinates": {
+            "latitude": "51.822863",
+            "longitude": "-4.966283"
+          },
+          "images": [],
+          "last_updated": "2026-10-09T07:09:22.169Z",
+          "time_zone": "Europe/London",
+          "opening_times": {
+            "twentyfourseven": true
+          },
+          "charging_when_closed": true,
+          "energy_mix": {
+            "is_green_energy": false
+          },
+          "access_methods": [],
+          "publish": true,
+          "related_locations": [],
+          "evses": [
+            {
+              "uid": "2048",
+              "physical_reference": "MFG0256003_RIGHT",
+              "evse_id": "GB*MFL*E5792",
+              "directions": [],
+              "status": "AVAILABLE",
+              "capabilities": [
+                "REMOTE_START_STOP_CAPABLE",
+                "RFID_READER"
+              ],
+              "last_updated": "2026-10-09T07:08:56.469Z",
+              "floor_level": "MFG ",
+              "coordinates": {
+                "latitude": "51.822863",
+                "longitude": "-4.966283"
+              },
+              "images": [],
+              "status_schedule": [],
+              "connectors": [
+                {
+                  "id": "237",
+                  "standard": "CHADEMO",
+                  "format": "CABLE",
+                  "tariff_ids": [
+                    "21"
+                  ],
+                  "max_voltage": 400,
+                  "power_type": "DC",
+                  "max_amperage": 125,
+                  "max_electric_power": 50000,
+                  "last_updated": "2026-10-08T19:08:58Z"
+                }
+              ]
+            },
+            {
+              "uid": "2053",
+              "physical_reference": "MFG0256003_LEFT",
+              "evse_id": "GB*MFL*E5791",
+              "directions": [],
+              "status": "INOPERATIVE",
+              "capabilities": [
+                "REMOTE_START_STOP_CAPABLE",
+                "RFID_READER"
+              ],
+              "last_updated": "2026-10-09T07:08:55.304Z",
+              "floor_level": "MFG ",
+              "coordinates": {
+                "latitude": "51.822863",
+                "longitude": "-4.966283"
+              },
+              "images": [],
+              "status_schedule": [],
+              "connectors": [
+                {
+                  "id": "221",
+                  "standard": "IEC_62196_T2_COMBO",
+                  "format": "CABLE",
+                  "tariff_ids": [
+                    "21"
+                  ],
+                  "max_voltage": 400,
+                  "power_type": "DC",
+                  "max_amperage": 400,
+                  "max_electric_power": 150000,
+                  "last_updated": "2026-10-08T19:09:24Z"
+                }
+              ]
+            },
+            {
+              "uid": "2044",
+              "physical_reference": "MFG0256002_LEFT",
+              "evse_id": "GB*MFL*E5781",
+              "directions": [],
+              "status": "AVAILABLE",
+              "capabilities": [
+                "REMOTE_START_STOP_CAPABLE",
+                "RFID_READER"
+              ],
+              "last_updated": "2026-10-09T07:09:22.169Z",
+              "floor_level": "MFG ",
+              "coordinates": {
+                "latitude": "51.822863",
+                "longitude": "-4.966283"
+              },
+              "images": [],
+              "status_schedule": [],
+              "connectors": [
+                {
+                  "id": "228",
+                  "standard": "IEC_62196_T2_COMBO",
+                  "format": "CABLE",
+                  "tariff_ids": [
+                    "21"
+                  ],
+                  "max_voltage": 400,
+                  "power_type": "DC",
+                  "max_amperage": 400,
+                  "max_electric_power": 150000,
+                  "last_updated": "2026-10-08T16:14:26Z"
+                }
+              ]
+            },
+            {
+              "uid": "2049",
+              "physical_reference": "MFG0256002_RIGHT",
+              "evse_id": "GB*MFL*E5782",
+              "directions": [],
+              "status": "AVAILABLE",
+              "capabilities": [
+                "REMOTE_START_STOP_CAPABLE",
+                "RFID_READER"
+              ],
+              "last_updated": "2026-10-09T07:09:07.787Z",
+              "floor_level": "MFG ",
+              "coordinates": {
+                "latitude": "51.822863",
+                "longitude": "-4.966283"
+              },
+              "images": [],
+              "status_schedule": [],
+              "connectors": [
+                {
+                  "id": "220",
+                  "standard": "CHADEMO",
+                  "format": "CABLE",
+                  "tariff_ids": [
+                    "21"
+                  ],
+                  "max_voltage": 400,
+                  "power_type": "DC",
+                  "max_amperage": 125,
+                  "max_electric_power": 50000,
+                  "last_updated": "2026-10-08T16:14:14Z"
+                }
+              ]
+            },
+            {
+              "uid": "2046",
+              "physical_reference": "MFG0256001_LEFT",
+              "evse_id": "GB*MFL*E5771",
+              "directions": [],
+              "status": "AVAILABLE",
+              "capabilities": [
+                "REMOTE_START_STOP_CAPABLE",
+                "RFID_READER"
+              ],
+              "last_updated": "2026-10-07T15:27:51Z",
+              "floor_level": "MFG ",
+              "coordinates": {
+                "latitude": "51.822863",
+                "longitude": "-4.966283"
+              },
+              "images": [],
+              "status_schedule": [],
+              "connectors": [
+                {
+                  "id": "224",
+                  "standard": "IEC_62196_T2_COMBO",
+                  "format": "CABLE",
+                  "tariff_ids": [
+                    "21"
+                  ],
+                  "max_voltage": 400,
+                  "power_type": "DC",
+                  "max_amperage": 400,
+                  "max_electric_power": 150000,
+                  "last_updated": "2026-10-07T15:27:51Z"
+                }
+              ]
+            },
+            {
+              "uid": "2047",
+              "physical_reference": "MFG0256001_RIGHT",
+              "evse_id": "GB*MFL*E5772",
+              "directions": [],
+              "status": "AVAILABLE",
+              "capabilities": [
+                "REMOTE_START_STOP_CAPABLE",
+                "RFID_READER"
+              ],
+              "last_updated": "2026-10-07T15:27:51Z",
+              "floor_level": "MFG ",
+              "coordinates": {
+                "latitude": "51.822863",
+                "longitude": "-4.966283"
+              },
+              "images": [],
+              "status_schedule": [],
+              "connectors": [
+                {
+                  "id": "226",
+                  "standard": "CHADEMO",
+                  "format": "CABLE",
+                  "tariff_ids": [
+                    "21"
+                  ],
+                  "max_voltage": 400,
+                  "power_type": "DC",
+                  "max_amperage": 125,
+                  "max_electric_power": 50000,
+                  "last_updated": "2026-10-07T15:27:51Z"
+                }
+              ]
+            },
+            {
+              "uid": "2051",
+              "physical_reference": "MFG0256004_RIGHT",
+              "evse_id": "GB*MFL*E5802",
+              "directions": [],
+              "status": "INOPERATIVE",
+              "capabilities": [
+                "REMOTE_START_STOP_CAPABLE",
+                "RFID_READER"
+              ],
+              "last_updated": "2026-10-09T06:52:09.443Z",
+              "floor_level": "MFG ",
+              "coordinates": {
+                "latitude": "51.822863",
+                "longitude": "-4.966283"
+              },
+              "images": [],
+              "status_schedule": [],
+              "connectors": [
+                {
+                  "id": "233",
+                  "standard": "CHADEMO",
+                  "format": "CABLE",
+                  "tariff_ids": [
+                    "21"
+                  ],
+                  "max_voltage": 400,
+                  "power_type": "DC",
+                  "max_amperage": 125,
+                  "max_electric_power": 50000,
+                  "last_updated": "2026-10-08T17:13:27Z"
+                }
+              ]
+            },
+            {
+              "uid": "2057",
+              "physical_reference": "MFG0256004_LEFT",
+              "evse_id": "GB*MFL*E5801",
+              "directions": [],
+              "status": "CHARGING",
+              "capabilities": [
+                "REMOTE_START_STOP_CAPABLE",
+                "RFID_READER"
+              ],
+              "last_updated": "2026-10-09T06:52:03.451Z",
+              "floor_level": "MFG ",
+              "coordinates": {
+                "latitude": "51.822863",
+                "longitude": "-4.966283"
+              },
+              "images": [],
+              "status_schedule": [],
+              "connectors": [
+                {
+                  "id": "231",
+                  "standard": "IEC_62196_T2_COMBO",
+                  "format": "CABLE",
+                  "tariff_ids": [
+                    "21"
+                  ],
+                  "max_voltage": 400,
+                  "power_type": "DC",
+                  "max_amperage": 400,
+                  "max_electric_power": 150000,
+                  "last_updated": "2026-10-08T17:13:29Z"
+                }
+              ]
+            },
+            {
+              "uid": "2054",
+              "physical_reference": "MFG0256005_LEFT",
+              "evse_id": "GB*MFL*E5811",
+              "directions": [],
+              "status": "UNKNOWN",
+              "capabilities": [
+                "REMOTE_START_STOP_CAPABLE",
+                "RFID_READER"
+              ],
+              "last_updated": "2026-10-08T15:41:48Z",
+              "floor_level": "MFG ",
+              "coordinates": {
+                "latitude": "51.822863",
+                "longitude": "-4.966283"
+              },
+              "images": [],
+              "status_schedule": [],
+              "connectors": [
+                {
+                  "id": "234",
+                  "standard": "IEC_62196_T2_COMBO",
+                  "format": "CABLE",
+                  "tariff_ids": [
+                    "21"
+                  ],
+                  "max_voltage": 400,
+                  "power_type": "DC",
+                  "max_amperage": 400,
+                  "max_electric_power": 300000,
+                  "last_updated": "2026-10-07T00:00:24Z"
+                }
+              ]
+            },
+            {
+              "uid": "2055",
+              "physical_reference": "MFG0256005_RIGHT",
+              "evse_id": "GB*MFL*E5813",
+              "directions": [],
+              "status": "UNKNOWN",
+              "capabilities": [
+                "REMOTE_START_STOP_CAPABLE",
+                "RFID_READER"
+              ],
+              "last_updated": "2026-10-07T12:34:02Z",
+              "floor_level": "MFG ",
+              "coordinates": {
+                "latitude": "51.822863",
+                "longitude": "-4.966283"
+              },
+              "images": [],
+              "status_schedule": [],
+              "connectors": [
+                {
+                  "id": "239",
+                  "standard": "IEC_62196_T2_COMBO",
+                  "format": "CABLE",
+                  "tariff_ids": [
+                    "21"
+                  ],
+                  "max_voltage": 400,
+                  "power_type": "DC",
+                  "max_amperage": 400,
+                  "max_electric_power": 300000,
+                  "last_updated": "2026-10-07T00:00:27Z"
+                }
+              ]
+            },
+            {
+              "uid": "2056",
+              "physical_reference": "MFG0256005_MID",
+              "evse_id": "GB*MFL*E5812",
+              "directions": [],
+              "status": "UNKNOWN",
+              "capabilities": [
+                "REMOTE_START_STOP_CAPABLE",
+                "RFID_READER"
+              ],
+              "last_updated": "2026-10-07T00:15:44Z",
+              "floor_level": "MFG ",
+              "coordinates": {
+                "latitude": "51.822863",
+                "longitude": "-4.966283"
+              },
+              "images": [],
+              "status_schedule": [],
+              "connectors": [
+                {
+                  "id": "238",
+                  "standard": "CHADEMO",
+                  "format": "CABLE",
+                  "tariff_ids": [
+                    "21"
+                  ],
+                  "max_voltage": 400,
+                  "power_type": "DC",
+                  "max_amperage": 125,
+                  "max_electric_power": 50000,
+                  "last_updated": "2026-10-07T00:00:25Z"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  }
+}
