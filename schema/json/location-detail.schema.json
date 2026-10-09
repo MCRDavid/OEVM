@@ -886,8 +886,21 @@
             }
           ],
           "default": null,
-          "description": "The operator's own description.",
+          "description": "The operator's own description, made readable when it looks like a system name (see pipeline/pricing.py readable_name).",
           "title": "Name"
+        },
+        "original_name": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "The operator's text exactly, when name differs from it.",
+          "title": "Original Name"
         },
         "kind": {
           "description": "How it is paid for, from its OCPI type, in plain words.",
@@ -985,6 +998,7 @@
       "required": [
         "tariff_id",
         "name",
+        "original_name",
         "kind",
         "state",
         "text",

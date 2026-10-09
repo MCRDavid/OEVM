@@ -94,7 +94,14 @@ class TariffOptionOut(_Model):
     """One tariff listed at a location, so people can compare them."""
 
     tariff_id: RecordId
-    name: str | None = Field(default=None, description="The operator's own description.")
+    name: str | None = Field(
+        default=None,
+        description="The operator's own description, made readable when it looks like a "
+        "system name (see pipeline/pricing.py readable_name).",
+    )
+    original_name: str | None = Field(
+        default=None, description="The operator's text exactly, when name differs from it."
+    )
     kind: str = Field(description="How it is paid for, from its OCPI type, in plain words.")
     state: MapPrice = Field(description="'free' only when its price state is free_confirmed.")
     text: str = Field(description="Worded by pipeline/pricing.py.")

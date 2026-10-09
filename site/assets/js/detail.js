@@ -67,11 +67,14 @@ export function tariffSection(detail) {
     h(
       "li",
       {},
-      h("p", {}, h("strong", { text: option.name || "Tariff with no description" })),
-      h("p", { className: "hint", text: option.kind }),
+      h("p", {}, h("strong", { text: option.name || option.kind })),
+      option.name ? h("p", { className: "hint", text: option.kind }) : null,
       h("p", { className: "price", text: option.text }),
       option.varies ? h("p", { text: option.varies }) : null,
       option.reason ? h("p", { className: "hint", text: option.reason }) : null,
+      option.original_name
+        ? h("p", { className: "hint", text: `Operator's name for it: ${option.original_name}` })
+        : null,
       option.connectors < total
         ? h("p", { className: "hint", text: `Listed for ${option.connectors} of ${total} connectors.` })
         : null,

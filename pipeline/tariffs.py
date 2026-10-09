@@ -32,6 +32,7 @@ from pipeline.pricing import (
     describe_tariff,
     energy_range,
     pence,
+    readable_name,
     tariff_kind,
     varies_text,
     varies_with,
@@ -150,6 +151,7 @@ class TariffOption:
     kind: str
     state: Literal["priced", "free", "unknown"]
     text: str
+    original_name: str | None = None
     reason: str | None = None
     varies: str | None = None
     connectors: int = 0
@@ -170,7 +172,10 @@ def _option(tariff: Tariff, count: int) -> TariffOption:
     energy = energy_range(tariff)
     return TariffOption(
         tariff_id=tariff.id,
-        name=tariff.alt_text,
+        name=readable_name(tariff.alt_text),
+        original_name=(
+            tariff.alt_text if readable_name(tariff.alt_text) != tariff.alt_text else None
+        ),
         kind=tariff_kind(tariff),
         state=shown.state,
         text=shown.text,

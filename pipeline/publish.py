@@ -171,6 +171,7 @@ def _option_out(option: TariffOption) -> TariffOptionOut:
     return TariffOptionOut(
         tariff_id=option.tariff_id,
         name=option.name,
+        original_name=option.original_name,
         kind=option.kind,
         state=option.state,
         text=option.text,
