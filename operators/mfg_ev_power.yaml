@@ -1,0 +1,82 @@
+# yaml-language-server: $schema=schema.json
+id: mfg_ev_power
+display_name: MFG EV Power
+ocpi_country_code: GB
+ocpi_party_id: MFL # Confirmed from the feed's own country_code and party_id on 2026-10-09.
+adapter: ocpi_221
+base_url: unknown
+endpoints:
+  locations:
+    url: https://opendata.motorfuelgroup.net/locations
+    status: documented
+    note: Linked as "Locations" from MFG's EV Power page, under its open data FAQ (read 2026-10-09).
+  tariffs:
+    url: https://opendata.motorfuelgroup.net/tariffs
+    status: documented
+    note: Linked as "Tariffs" from MFG's EV Power page, under its open data FAQ (read 2026-10-09).
+auth:
+  method: none
+  name: null
+  secret_name: null
+rate_limit:
+  min_seconds_between_requests: 2
+  limits: []
+  limits_checked: 2026-10-09
+  notes: >-
+    MFG's EV Power page states no rate limit. The 2 second gap is this project's own
+    choice. Each file holds every record, so a full run makes two requests (about 3.6 MB
+    on 2026-10-09).
+supports_single_location: needs_testing
+cors: not_supported # no access-control-allow-origin header on 2026-10-09
+attribution: >-
+  Contains data from MFG EV Power published under the Public Charge Point Regulations 2023,
+  used in line with the Open Government Licence v3.0.
+licence:
+  name: OGL-3.0
+  url: https://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/
+  basis: >-
+    MFG's EV Power page says "The regulations require that charge point operators make
+    available reference data and availability data for each electric vehicle supply
+    equipment (EVSE)" and links the two files. DfT's guidance (updated 21 October 2024)
+    says "Data must be open in line with the Open Government Licence". The page, read on
+    2026-10-09, states no licence, terms or rate limit for the data, and links no website
+    terms of use.
+  checked: 2026-10-09
+engagement:
+  status: open_anonymous
+  evidence:
+    - date: 2026-10-09
+      url: https://www.motorfuelgroup.com/ev-power/
+      note: >-
+        The section "Public Charge Point Regulations - Open Data" links the locations and
+        tariffs files and states no licence, terms or rate limit.
+access_requested: null
+access_granted: null
+sources:
+  - url: https://www.motorfuelgroup.com/ev-power/
+    note: >-
+      MFG's EV Power page, read 2026-10-09. Its open data FAQ gives the two download links.
+      States no licence, terms or rate limits.
+findings:
+  - date: 2026-10-09
+    kind: spec_conformance
+    summary: >-
+      Each file holds every record in one response (597 locations and 8 tariffs on
+      2026-10-09) and sends no X-Total-Count, X-Limit or Link header. OCPI 2.2.1 describes
+      these headers for paginated responses.
+    handling: >-
+      The adapter reads each file in one request. With no X-Total-Count the record count
+      cannot be checked against the server's own total.
+    evidence_url: https://opendata.motorfuelgroup.net/locations
+  - date: 2026-10-09
+    kind: access
+    summary: >-
+      The files send no Access-Control-Allow-Origin header, so web browsers cannot read
+      them directly.
+    handling: The map uses data fetched by the pipeline, not requests from visitors' browsers.
+    evidence_url: https://opendata.motorfuelgroup.net/locations
+notes: >-
+  The files are OCPI 2.2.1 responses in the same shape as GeniePoint's, read by the ocpi_221
+  adapter. Not yet fetched from a GitHub Actions runner; the first daily run will show
+  whether the host answers requests from there.
+enabled: true

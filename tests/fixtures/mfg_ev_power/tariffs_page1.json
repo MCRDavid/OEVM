@@ -1,0 +1,57 @@
+{
+  "request": {
+    "method": "GET",
+    "url": "https://opendata.motorfuelgroup.net/tariffs"
+  },
+  "response": {
+    "status_code": 200,
+    "headers": {
+      "content-type": "application/json"
+    },
+    "body": {
+      "timestamp": "2026-10-09T07:13:42.286Z",
+      "status_code": 1000,
+      "status_message": "Success",
+      "data": [
+        {
+          "id": "13",
+          "currency": "GBP",
+          "elements": [
+            {
+              "price_components": [
+                {
+                  "type": "ENERGY",
+                  "price": 0.4083,
+                  "step_size": 1,
+                  "vat": 20
+                }
+              ]
+            }
+          ],
+          "last_updated": "2026-10-08T07:39:28Z",
+          "country_code": "GB",
+          "party_id": "MFL"
+        },
+        {
+          "id": "21",
+          "currency": "GBP",
+          "elements": [
+            {
+              "price_components": [
+                {
+                  "type": "ENERGY",
+                  "price": 0.4917,
+                  "step_size": 1,
+                  "vat": 20
+                }
+              ]
+            }
+          ],
+          "last_updated": "2026-10-08T07:39:28Z",
+          "country_code": "GB",
+          "party_id": "MFL"
+        }
+      ]
+    }
+  }
+}

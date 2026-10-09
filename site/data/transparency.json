@@ -1,5 +1,5 @@
 {
-  "last_reviewed": "2026-10-08",
+  "last_reviewed": "2026-10-09",
   "disclaimer": "OEVM is a personal, experimental project for learning about AI tools. Much of its code and text was written with an AI assistant, and it will contain mistakes. Charger data comes from the operators and other sources credited on every record, and remains their work. Everything is provided \"as is\", with no warranty or guarantee of any kind. Always check prices and availability at the charger.",
   "regulation": {
     "summary": "The Public Charge Point Regulations 2023 set no limit on how often data users may request the data. Regulation 10(5) requires the data to be available free of charge without terms on its use. DfT's guidance allows terms covering the means of access, which is where operators' rate limits come from.",
@@ -427,6 +427,76 @@
           "summary": "Tariffs give tariff_alt_text as a list of plain strings, and min_price and max_price as plain numbers, where OCPI 2.2.1 uses DisplayText and Price objects.",
           "handling": "Alt text is read as text with no language. A min_price or max_price of 0 is read as no minimum or maximum. Any other plain number does not say whether it includes VAT, so that tariff would show as price unknown.",
           "evidence_url": "https://api.joltcharge.com/v1/uk/public/tariffs/4",
+          "status": "open",
+          "resolved_date": null
+        }
+      ]
+    },
+    {
+      "id": "mfg_ev_power",
+      "name": "MFG EV Power",
+      "enabled": true,
+      "adapter": "ocpi_221",
+      "engagement": {
+        "status": "open_anonymous",
+        "label": "Open, no registration",
+        "evidence": [
+          {
+            "date": "2026-10-09",
+            "url": "https://www.motorfuelgroup.com/ev-power/",
+            "file": null,
+            "note": "The section \"Public Charge Point Regulations - Open Data\" links the locations and tariffs files and states no licence, terms or rate limit."
+          }
+        ]
+      },
+      "feeds": [
+        {
+          "kind": "locations",
+          "url": "https://opendata.motorfuelgroup.net/locations",
+          "status": "documented"
+        },
+        {
+          "kind": "tariffs",
+          "url": "https://opendata.motorfuelgroup.net/tariffs",
+          "status": "documented"
+        }
+      ],
+      "licence": {
+        "name": "OGL-3.0",
+        "url": "https://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/",
+        "checked": "2026-10-09"
+      },
+      "attribution": "Contains data from MFG EV Power published under the Public Charge Point Regulations 2023, used in line with the Open Government Licence v3.0.",
+      "missing_publish_flag": null,
+      "relay": null,
+      "rate_limit": {
+        "our_gap_seconds": 2.0,
+        "our_max_per_hour": 1800,
+        "ours": "At least 2 s between requests to the operator's host, measured from the end of the previous request (at most 1800 in any hour), retries included.",
+        "published": [],
+        "limits_checked": "2026-10-09",
+        "comparison": "No limit published (checked 2026-10-09). The gap is our own choice.",
+        "difference_from_regulations": "Neither the operator nor the regulations set a limit.",
+        "notes": "MFG's EV Power page states no rate limit. The 2 second gap is this project's own choice. Each file holds every record, so a full run makes two requests (about 3.6 MB on 2026-10-09)."
+      },
+      "findings": [
+        {
+          "date": "2026-10-09",
+          "kind": "spec_conformance",
+          "kind_label": "Differs from OCPI 2.2.1",
+          "summary": "Each file holds every record in one response (597 locations and 8 tariffs on 2026-10-09) and sends no X-Total-Count, X-Limit or Link header. OCPI 2.2.1 describes these headers for paginated responses.",
+          "handling": "The adapter reads each file in one request. With no X-Total-Count the record count cannot be checked against the server's own total.",
+          "evidence_url": "https://opendata.motorfuelgroup.net/locations",
+          "status": "open",
+          "resolved_date": null
+        },
+        {
+          "date": "2026-10-09",
+          "kind": "access",
+          "kind_label": "Access",
+          "summary": "The files send no Access-Control-Allow-Origin header, so web browsers cannot read them directly.",
+          "handling": "The map uses data fetched by the pipeline, not requests from visitors' browsers.",
+          "evidence_url": "https://opendata.motorfuelgroup.net/locations",
           "status": "open",
           "resolved_date": null
         }
