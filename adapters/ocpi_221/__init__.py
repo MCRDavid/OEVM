@@ -21,6 +21,7 @@ from adapters.ocpi_221.client import ModuleFetch, fetch_module
 from adapters.ocpi_221.normalise import (
     IssueLog,
     location_from_ocpi,
+    location_record_id,
     publish_allowed,
     tariff_from_ocpi,
 )
@@ -40,6 +41,9 @@ class AdapterResult:
     tariffs: list[Tariff] = field(default_factory=list)
     issues: list[str] = field(default_factory=list)
     requests: int = 0
+    # Ids of location records the feed sent but this result leaves out: not to be
+    # published, or unreadable. A snapshot built from a fetch of changes removes them.
+    dropped_location_ids: list[str] = field(default_factory=list)
 
     @property
     def complete(self) -> bool:
@@ -113,6 +117,12 @@ def fetch(
     return result
 
 
+def _dropped(result: AdapterResult, raw: dict, config: OperatorConfig) -> None:
+    record_id = location_record_id(raw, config)
+    if record_id is not None:
+        result.dropped_location_ids.append(record_id)
+
+
 def convert_records(
     config: OperatorConfig,
     result: AdapterResult,
@@ -130,6 +140,7 @@ def convert_records(
     source = result.modules["locations"].endpoint
     for raw in _latest_by_id(locations, "location", issues):
         if not publish_allowed(raw, config, issues):
+            _dropped(result, raw, config)
             continue
         try:
             result.locations.append(
@@ -139,6 +150,7 @@ def convert_records(
             )
         except (AttributeError, KeyError, TypeError, ValueError) as exc:
             issues.add(f"location {raw.get('id')!r} skipped: {_describe(exc)}")
+            _dropped(result, raw, config)
 
     endpoint = result.modules["tariffs"].endpoint
     for raw in _latest_by_id(tariffs, "tariff", issues):

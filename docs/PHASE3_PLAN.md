@@ -56,9 +56,15 @@ fetch on every click.
 1. A scheduled GitHub Actions run fetches each switched-on operator's statuses with the
    same polite client, rate limits, relay and normalisers as the daily run.
 2. `pipeline/live_snapshot.py` turns them into one small snapshot per operator
-   (`schema/live.py`): every EVSE's status and its time, keyed like the map's detail files.
-   For char.gy, a run fetches only the locations that changed since the last one and lays
-   them over the previous snapshot, so a refresh needs a few requests, not 120.
+   (`schema/live.py`): every EVSE's status and its time, keyed like the map's detail
+   files, with the operator's attribution and licence. For char.gy, a run fetches only the
+   locations that changed since the last one and lays them over the previous snapshot. A
+   location that comes back with its publish flag false, unreadable or outside the UK is
+   removed at once. A fetch that does not finish never replaces the snapshot.
+   How many requests a refresh takes **needs measuring**: the 7 October fixture
+   (`locations_since_page1.json`) reports 551 locations changed in about 90 minutes, so an
+   hourly refresh may be about 7 to 12 pages of 50, or a minute or so at 6 seconds a page,
+   against about 120 pages for a full fetch.
 3. The run sends each snapshot to the live Worker (`proxy/worker.js`) with a shared token.
    The Worker keeps the latest one per operator in Workers KV.
 4. When a visitor opens a charger, the map asks the Worker
@@ -110,7 +116,15 @@ Following the owner's decision, each operator gets its own daily slot for its fu
   starting point, not a requirement.
 - **State, not the clock, decides.** A run gives an operator a full fetch when its slot
   has passed and no full fetch of it has finished today, so a slot missed through a
-  delayed or failed run is caught up by the next run.
+  delayed or failed run is caught up by the next run. The state is each snapshot's
+  `full_fetch_at`, read back from the Worker (`GET /snapshot/<operator>`), which a
+  refresh needs anyway; if the Worker cannot be read, the run does a full fetch.
+- **Only full fetches publish.** A status refresh uploads no `site-data` artifact and
+  writes no feed health run log. Otherwise the next run would pick up a partial artifact
+  as the newest (`.github/scripts/download-site-data.sh` takes the newest), and a
+  locations-only log would replace the day's full figures on the feed health page
+  (`pipeline/status.py` keeps the latest run each day). That script, its wording, which
+  names "Fetch daily", and ADR 0009 change with the workflow.
 - **One concurrency group.** GitHub keeps one waiting run per group, and a newer one
   **cancels** the waiting one. With a single hourly workflow that is harmless: the newer
   run does the same work, and the state rule above catches up any missed full fetch.
@@ -118,8 +132,10 @@ Following the owner's decision, each operator gets its own daily slot for its fu
   map files from that operator's new data and the other operators' files from the last
   deploy (the daily run already downloads them for the feed health history). This needs
   a change to `pipeline/publish.py` and is part of step 3 below.
-- **Limits.** Each run is small: a char.gy refresh is a few pages; GeniePoint and Jolt
-  are one request each for locations. GitHub-hosted runners are free on public
+- **Limits.** Each run is small: a char.gy refresh is probably 7 to 12 pages (see Stage A,
+  needs measuring); GeniePoint and Jolt are one request each for locations. That is
+  roughly 200 to 300 extra char.gy requests a day, about twice a full fetch, at the same
+  6 second gap. GitHub-hosted runners are free on public
   repositories (blueprint, section 9). The site deploys up to three times a day instead
   of once. Cloudflare sees one KV write per operator per hour (72 a day for three) and
   one or two relay requests an hour for GeniePoint.
@@ -144,10 +160,14 @@ Worker shows no prices.
 At the top of the details screen, above the connectors, the map will show:
 
 - **A summary line:** "2 of 4 charge points available". A charge point is an OCPI EVSE,
-  which charges one vehicle at a time. If every status is unknown: "Status unknown for 4
-  charge points".
+  which charges one vehicle at a time. Only when every status is unknown: "Status
+  unknown for 4 charge points". Blocked charge points count as not available.
 - **Coloured chips** for each group that has any charge points, each with a symbol and a
   written count, such as "● 2 available", "◐ 1 in use", "✕ 1 reported out of service".
+  The symbol is hidden from screen readers (`aria-hidden`), like the dots in the map's
+  key, so they read only the words.
+- **The operator's attribution and licence**, which every live answer carries, as the
+  map's detail files do.
 - **When the feed was read:** "Status from the operator's feed, read 9 Oct 2026, 14:05
   BST". Never "live" or "now", because the feed itself may lag.
 - **Each connector** keeps its own status line, coloured to match its group.
@@ -198,6 +218,8 @@ which Cloudflare runs. Before that ships:
   9 Oct 2026, 14:05 BST". Never imply an operator is late or at fault.
 - **Content Security Policy** (`site/index.html`): add the Worker's address to
   `connect-src`, or the browser will refuse the request.
+- **Data licences:** the Worker passes on operator data, so `DATA_LICENCES.md` says so,
+  and every answer carries the operator's attribution and licence.
 
 ## What the repository owner sets up by hand (when Stage A is approved)
 
@@ -235,7 +257,14 @@ Nothing in GitHub Pages or the relay changes.
 6. **Thirty days** within the free plan, measured from Cloudflare's dashboard, completes
    Phase 3. Then decide whether Stage B is worth building.
 
-## Unknowns
+## Unknowns and risks
+
+- **Refusals from GitHub's servers.** char.gy and GeniePoint both refused requests from
+  GitHub Actions runners in the first daily run (findings of 8 October 2026 in their
+  operator files). Hourly refreshes mean many more runs from the same address ranges.
+  Start char.gy at a slower refresh (every 2 or 3 hours) and raise it only if the feed
+  health page shows no refusals. If a feed refuses, refresh less often; never shorten the
+  gap or disguise the requests.
 
 - Single-location fetching for char.gy, GeniePoint and Jolt: **needs testing**.
 - Durable Objects on the free plan, and Cloudflare headers on `workers.dev`: **need checking**.

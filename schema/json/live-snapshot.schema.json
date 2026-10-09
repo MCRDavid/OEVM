@@ -74,6 +74,30 @@
       "title": "Full Fetch At",
       "type": "string"
     },
+    "attribution": {
+      "description": "The operator's attribution statement.",
+      "minLength": 1,
+      "title": "Attribution",
+      "type": "string"
+    },
+    "licence": {
+      "description": "The licence the operator's data is used under.",
+      "minLength": 1,
+      "title": "Licence",
+      "type": "string"
+    },
+    "licence_url": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Licence Url"
+    },
     "locations": {
       "description": "EVSE statuses by location key, as in data/loc/<shard>/<key>.json.",
       "patternProperties": {
@@ -93,6 +117,9 @@
     "operator",
     "fetched_at",
     "full_fetch_at",
+    "attribution",
+    "licence",
+    "licence_url",
     "locations"
   ],
   "title": "LiveSnapshot",

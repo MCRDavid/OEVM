@@ -32,6 +32,9 @@ function snapshot(fetchedAt = "2026-10-09T07:00:00Z", status = "available") {
     operator: "chargy",
     fetched_at: fetchedAt,
     full_fetch_at: "2026-10-09T04:17:00Z",
+    attribution: "Contains data from char.gy (test).",
+    licence: "OGL-3.0",
+    licence_url: "https://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/",
     locations: { [KEY]: [{ uid: "evse-1", status, status_at: "2026-10-09T06:58:00Z" }] },
   };
 }
@@ -75,6 +78,9 @@ test("a stored snapshot answers for one location, with when it was fetched", asy
     location_key: KEY,
     fetched_at: "2026-10-09T07:00:00Z",
     source: "snapshot",
+    attribution: "Contains data from char.gy (test).",
+    licence: "OGL-3.0",
+    licence_url: "https://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/",
     evses: [{ uid: "evse-1", status: "available", status_at: "2026-10-09T06:58:00Z" }],
   });
 });
@@ -93,6 +99,19 @@ test("other pages' addresses get no CORS header", async () => {
   const response = await ask(`/live/chargy/${KEY}`, { origin: "https://example.org" });
   assert.equal(response.status, 200);
   assert.equal(response.headers.get("access-control-allow-origin"), null);
+  assert.equal(response.headers.get("vary"), "origin");
+  assert.equal((await ask("/live/chargy/0000000000000000")).headers.get("vary"), "origin");
+});
+
+test("a snapshot stored by another Worker instance replaces the one kept in memory", async () => {
+  // Another instance's PUT cannot clear this instance's memory; only the version does.
+  await put({ ...snapshot("2026-10-09T09:00:00Z"), operator: "chargy" });
+  await ask(`/live/chargy/${KEY}`);
+  const newer = snapshot("2026-10-09T10:00:00Z", "out_of_order");
+  await env.SNAPSHOTS.put("snapshot:chargy", JSON.stringify(newer), { metadata: { fetched_at: newer.fetched_at } });
+  const body = await (await ask(`/live/chargy/${KEY}`)).json();
+  assert.equal(body.fetched_at, "2026-10-09T10:00:00Z");
+  assert.equal(body.evses[0].status, "out_of_order");
 });
 
 test("unknown operators, keys and locations are not found", async () => {
@@ -147,5 +166,8 @@ test("checkSnapshot names what is wrong", () => {
   assert.equal(checkSnapshot(snapshot(), "chargy"), null);
   assert.equal(checkSnapshot(null, "chargy"), "not a JSON object");
   assert.equal(checkSnapshot({ ...snapshot(), fetched_at: "soon" }, "chargy"), "fetched_at is not a date");
+  assert.equal(checkSnapshot({ ...snapshot(), fetched_at: 0 }, "chargy"), "fetched_at is not a date");
+  assert.equal(checkSnapshot({ ...snapshot(), attribution: "" }, "chargy"), "no attribution");
+  assert.equal(checkSnapshot({ ...snapshot(), licence: undefined }, "chargy"), "no licence");
   assert.equal(checkSnapshot({ ...snapshot(), locations: null }, "chargy"), "no locations");
 });

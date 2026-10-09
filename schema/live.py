@@ -40,6 +40,9 @@ class LiveSnapshot(_Model):
     full_fetch_at: AwareDatetime = Field(
         description="When every location was last fetched, rather than only changes."
     )
+    attribution: str = Field(min_length=1, description="The operator's attribution statement.")
+    licence: str = Field(min_length=1, description="The licence the operator's data is used under.")
+    licence_url: str | None = None
     locations: dict[Key, list[LiveEvse]] = Field(
         description="EVSE statuses by location key, as in data/loc/<shard>/<key>.json."
     )

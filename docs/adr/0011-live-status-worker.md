@@ -15,7 +15,11 @@ Date: 2026-10-09. Status: proposed. The full plan is `docs/PHASE3_PLAN.md`.
   integration, so neither can change the other.
 - **Changes only, where offered.** Where an operator supports OCPI `date_from` (char.gy),
   a refresh fetches only changed locations and lays them over the previous snapshot. A
+  changed location that is no longer to be published, cannot be read or is outside the
+  UK is removed at once, and a fetch that did not finish never replaces a snapshot. A
   full fetch still runs daily and replaces the snapshot.
+- **Attribution travels with the data.** Every snapshot and every `/live/` answer
+  carries the operator's attribution and licence, as the map's detail files do.
 - **Staggered and never in parallel.** One hourly workflow in one concurrency group gives
   each operator its full daily fetch in its own slot (owner's decision, 9 October 2026)
   and a status refresh in the other hours, one operator at a time. The run's state, not
@@ -45,6 +49,9 @@ Date: 2026-10-09. Status: proposed. The full plan is `docs/PHASE3_PLAN.md`.
 - How char.gy's `WORKING` and `FAULTED`, which are not OCPI statuses, are shown.
 
 ## Needs testing
+
+- Whether hourly refreshes from GitHub's servers are refused, as char.gy and GeniePoint
+  refused the first daily run on 8 October 2026. char.gy starts at a slower refresh.
 
 - Whether char.gy, GeniePoint and Jolt answer a request for one location by id.
 - Snapshot sizes and the CPU time of the first click after a new snapshot.

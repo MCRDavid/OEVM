@@ -29,10 +29,13 @@ export function groupOf(status) {
 }
 
 // How many charge points (OCPI EVSEs, each charging one vehicle at a time) are in each group.
+// "unknown" also counts statuses the map does not know, which groupOf puts in "other".
 export function countByGroup(evses) {
-  const counts = { available: 0, in_use: 0, out: 0, other: 0, total: 0 };
+  const counts = { available: 0, in_use: 0, out: 0, other: 0, unknown: 0, total: 0 };
   for (const evse of evses ?? []) {
-    counts[groupOf(evse?.status)] += 1;
+    const group = groupOf(evse?.status);
+    counts[group] += 1;
+    if (group === "other" && evse?.status !== "blocked") counts.unknown += 1;
     counts.total += 1;
   }
   return counts;
@@ -45,7 +48,7 @@ function chargePoints(n) {
 // One line for the top of the details screen, such as "2 of 4 charge points available".
 export function summaryText(counts) {
   if (!counts.total) return "No charge points listed by the operator";
-  if (counts.other === counts.total) return `Status unknown for ${chargePoints(counts.total)}`;
+  if (counts.unknown === counts.total) return `Status unknown for ${chargePoints(counts.total)}`;
   return `${counts.available} of ${chargePoints(counts.total)} available`;
 }
 

@@ -49,7 +49,11 @@ export function checkSnapshot(snapshot, operator) {
   if (snapshot === null || typeof snapshot !== "object") return "not a JSON object";
   if (snapshot.schema_version !== 1) return "unknown schema_version";
   if (snapshot.operator !== operator) return "operator does not match the address";
-  if (Number.isNaN(Date.parse(snapshot.fetched_at))) return "fetched_at is not a date";
+  if (typeof snapshot.fetched_at !== "string" || Number.isNaN(Date.parse(snapshot.fetched_at))) {
+    return "fetched_at is not a date";
+  }
+  if (typeof snapshot.attribution !== "string" || !snapshot.attribution) return "no attribution";
+  if (typeof snapshot.licence !== "string" || !snapshot.licence) return "no licence";
   if (snapshot.locations === null || typeof snapshot.locations !== "object") return "no locations";
   return null;
 }
@@ -72,9 +76,11 @@ async function snapshotFor(env, operator) {
   return snapshot;
 }
 
+// Every /live/ answer varies by Origin, so a cache never hands an answer made for another
+// page (without the CORS header) to the map.
 function corsHeaders(env, request) {
   const origin = request.headers.get("origin");
-  if (!origin || origin !== env.SITE_ORIGIN) return {};
+  if (!origin || origin !== env.SITE_ORIGIN) return { vary: "origin" };
   return { "access-control-allow-origin": origin, vary: "origin" };
 }
 
@@ -87,7 +93,16 @@ async function live(request, env, operator, key) {
   if (!evses) return plain(404, "This location is not in the snapshot.", cors);
   return json(
     200,
-    { operator, location_key: key, fetched_at: snapshot.fetched_at, source: "snapshot", evses },
+    {
+      operator,
+      location_key: key,
+      fetched_at: snapshot.fetched_at,
+      source: "snapshot",
+      attribution: snapshot.attribution,
+      licence: snapshot.licence,
+      licence_url: snapshot.licence_url ?? null,
+      evses,
+    },
     { ...cors, "cache-control": `public, max-age=${CACHE_SECONDS}` },
   );
 }
@@ -119,7 +134,7 @@ export default {
     const operator = parts[1];
 
     if (parts[0] === "live" && parts.length === 3 && OPERATORS.includes(operator)) {
-      if (request.method !== "GET") return plain(405, "Only GET is allowed.");
+      if (request.method !== "GET") return plain(405, "Only GET is allowed.", { vary: "origin" });
       return live(request, env, operator, parts[2]);
     }
 

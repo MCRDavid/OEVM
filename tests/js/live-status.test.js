@@ -37,15 +37,26 @@ test("charge points are counted by group", () => {
     in_use: 1,
     out: 1,
     other: 1,
+    unknown: 1,
     total: 5,
   });
-  assert.deepEqual(countByGroup(undefined), { available: 0, in_use: 0, out: 0, other: 0, total: 0 });
+  assert.deepEqual(countByGroup(evses("blocked", "WORKING")), {
+    available: 0,
+    in_use: 0,
+    out: 0,
+    other: 2,
+    unknown: 1, // a status the map does not know counts as unknown; blocked does not
+    total: 2,
+  });
+  assert.deepEqual(countByGroup(undefined), { available: 0, in_use: 0, out: 0, other: 0, unknown: 0, total: 0 });
 });
 
 test("the summary line counts available charge points", () => {
   assert.equal(summaryText(countByGroup(evses("available", "charging", "charging", "removed"))), "1 of 4 charge points available");
   assert.equal(summaryText(countByGroup(evses("available"))), "1 of 1 charge point available");
-  assert.equal(summaryText(countByGroup(evses("unknown", "blocked"))), "Status unknown for 2 charge points");
+  assert.equal(summaryText(countByGroup(evses("unknown", "unknown"))), "Status unknown for 2 charge points");
+  assert.equal(summaryText(countByGroup(evses("unknown", "blocked"))), "0 of 2 charge points available");
+  assert.equal(summaryText(countByGroup(evses("blocked"))), "0 of 1 charge point available");
   assert.equal(summaryText(countByGroup([])), "No charge points listed by the operator");
 });
 

@@ -127,6 +127,14 @@ def _party(raw: dict, config: OperatorConfig) -> tuple[str, str]:
     )
 
 
+def location_record_id(raw: dict, config: OperatorConfig) -> str | None:
+    """The id location_from_ocpi gives this record, or None if it has no OCPI id."""
+    if raw.get("id") in (None, ""):
+        return None
+    country, party = _party(raw, config)
+    return f"{config.id}:{country}:{party}:{raw['id']}"
+
+
 def _provenance(config: OperatorConfig, source_url: str, fetched_at: datetime) -> Provenance:
     return Provenance(
         source_id=config.id,
