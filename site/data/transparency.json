@@ -682,8 +682,8 @@
         }
       ],
       "licence": {
-        "name": "unknown",
-        "url": null,
+        "name": "OGL-3.0",
+        "url": "https://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/",
         "checked": "2026-10-08"
       },
       "attribution": null,
@@ -743,7 +743,7 @@
           "kind": "access",
           "kind_label": "Access",
           "summary": "Keys are requested through a form that asks the requester to agree to the API Fair Use Policy. The policy says intellectual property in the API Data remains Gridserve's and describes the data as confidential and proprietary.",
-          "handling": "Licence recorded as unknown. The operator stays switched off, and no key has been requested, until the terms for the data are clarified with Gridserve.",
+          "handling": "On 2026-10-09 the repository owner decided that regulation 10(5) takes priority over the policy's terms for the data, and that the project goes ahead without first writing to Gridserve. The policy's rate limit is still followed. The operator stays switched off until a key is granted and the adapter is built.",
           "evidence_url": "https://www.gridserve.com/legal-area/open-data-api-terms-and-conditions/",
           "status": "open",
           "resolved_date": null
