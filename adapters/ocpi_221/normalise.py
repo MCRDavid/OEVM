@@ -1,7 +1,9 @@
 """Convert OCPI 2.2.1 Location and Tariff objects into the project's own models.
 
 Field meanings follow OCPI 2.2.1 sections 8 (Locations) and 11 (Tariffs). A value that
-is not valid OCPI is recorded as "unknown" and logged as an issue, never guessed.
+is not valid OCPI is recorded as "unknown" and logged as an issue, never guessed. The one
+exception is an EVSE status the operator file maps in nonstandard_statuses, the owner's
+recorded decision, which may read such a value only as working or out_of_order.
 """
 
 from collections import Counter
@@ -127,6 +129,14 @@ def _party(raw: dict, config: OperatorConfig) -> tuple[str, str]:
     )
 
 
+def location_record_id(raw: dict, config: OperatorConfig) -> str | None:
+    """The id location_from_ocpi gives this record, or None if it has no OCPI id."""
+    if raw.get("id") in (None, ""):
+        return None
+    country, party = _party(raw, config)
+    return f"{config.id}:{country}:{party}:{raw['id']}"
+
+
 def _provenance(config: OperatorConfig, source_url: str, fetched_at: datetime) -> Provenance:
     return Provenance(
         source_id=config.id,
@@ -169,9 +179,22 @@ def _connector(raw: dict, tariff_prefix: str, issues: IssueLog) -> Connector:
     )
 
 
-def _evse(raw: dict, fallback_time: datetime | None, prefix: str, issues: IssueLog) -> EVSE:
+def _evse(
+    raw: dict,
+    fallback_time: datetime | None,
+    prefix: str,
+    issues: IssueLog,
+    config: OperatorConfig,
+) -> EVSE:
     status = EVSE_STATUSES.get(raw.get("status"))
-    if status is None:
+    decision = config.nonstandard_statuses
+    if status is None and decision is not None and raw.get("status") in decision.statuses:
+        status = decision.statuses[raw["status"]]
+        issues.add(
+            f"EVSE status {raw['status']!r} is not an OCPI 2.2.1 value; shown as {status} "
+            "under the decision recorded in the operator file"
+        )
+    elif status is None:
         issues.add(
             f"EVSE status {raw.get('status')!r} is not an OCPI 2.2.1 value; recorded as unknown"
         )
@@ -248,7 +271,7 @@ def location_from_ocpi(
             name=(raw.get("operator") or {}).get("name") or config.display_name,
         ),
         opening_hours=_opening_hours(raw.get("opening_times"), issues),
-        evses=[_evse(e, last_updated, prefix, issues) for e in raw.get("evses") or []],
+        evses=[_evse(e, last_updated, prefix, issues, config) for e in raw.get("evses") or []],
         last_updated=last_updated,
         provenance=_provenance(config, source_url, fetched_at),
     )

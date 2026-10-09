@@ -63,6 +63,15 @@
       "attribution": "Contains data from char.gy published under the Public Charge Point Regulations 2023, used in line with the Open Government Licence v3.0.",
       "missing_publish_flag": null,
       "swapped_coordinates": null,
+      "nonstandard_statuses": {
+        "decided": "2026-10-09",
+        "basis": "char.gy publishes EVSE statuses as WORKING and FAULTED, which are not OCPI 2.2.1 values. Regulation 10(6)(a) uses \"working\" to mean an OCPI status of available, charging or reserved, so WORKING is shown as working, free or in use not stated, and never as available. FAULTED is shown as reported out of service. The repository owner chose this reading.",
+        "evidence_url": "https://char.gy/open-ocpi/locations",
+        "statuses": {
+          "WORKING": "working",
+          "FAULTED": "out_of_order"
+        }
+      },
       "relay": null,
       "rate_limit": {
         "our_gap_seconds": 6.0,
@@ -80,7 +89,7 @@
           "kind": "spec_conformance",
           "kind_label": "Differs from OCPI 2.2.1",
           "summary": "EVSE statuses are published as WORKING, and in a live run on 2026-10-07 also as FAULTED. Neither is a value in the OCPI 2.2.1 Status list.",
-          "handling": "Shown as status unknown rather than guessed. Regulation 10(6)(a) uses \"working\" to mean an OCPI status of available, charging or reserved.",
+          "handling": "Shown as status unknown rather than guessed until 2026-10-09. Since then, by the repository owner's decision recorded in nonstandard_statuses, WORKING is shown as \"Working (free or in use, not stated)\", never as available, because regulation 10(6)(a) uses \"working\" to mean an OCPI status of available, charging or reserved. FAULTED is shown as reported out of service.",
           "evidence_url": "https://char.gy/open-ocpi/locations",
           "status": "open",
           "resolved_date": null
@@ -175,6 +184,7 @@
         "decided": "2026-10-09",
         "basis": "Where a location's latitude and longitude are obviously the wrong way round, the repository owner decided to show it in the right place rather than leave it off the map, with the operator's own figures kept and the correction shown on the map and recorded in the findings below."
       },
+      "nonstandard_statuses": null,
       "relay": null,
       "rate_limit": {
         "our_gap_seconds": 11.0,
@@ -314,6 +324,7 @@
       "attribution": "Contains data from GeniePoint published under the Public Charge Point Regulations 2023, used in line with the Open Government Licence v3.0.",
       "missing_publish_flag": null,
       "swapped_coordinates": null,
+      "nonstandard_statuses": null,
       "relay": {
         "decided": "2026-10-08",
         "reason": "The files answered HTTP 403 to the first request from a GitHub Actions runner in the first daily run, while answering normally from another network. The repository owner decided to fetch them through the project's relay on Cloudflare Workers, with the project's User-Agent and the same rate limits.",
@@ -467,6 +478,7 @@
         "evidence_url": "https://support.joltcharge.com/hc/en-gb/articles/27955558493207-UK-Public-Charge-Point-Regulations-Open-Data-Request"
       },
       "swapped_coordinates": null,
+      "nonstandard_statuses": null,
       "relay": null,
       "rate_limit": {
         "our_gap_seconds": 2.0,
@@ -647,6 +659,7 @@
       "attribution": null,
       "missing_publish_flag": null,
       "swapped_coordinates": null,
+      "nonstandard_statuses": null,
       "relay": null,
       "rate_limit": {
         "our_gap_seconds": 125.0,
@@ -749,6 +762,7 @@
       "attribution": null,
       "missing_publish_flag": null,
       "swapped_coordinates": null,
+      "nonstandard_statuses": null,
       "relay": null,
       "rate_limit": {
         "our_gap_seconds": 125.0,
@@ -847,6 +861,7 @@
       "attribution": null,
       "missing_publish_flag": null,
       "swapped_coordinates": null,
+      "nonstandard_statuses": null,
       "relay": null,
       "rate_limit": {
         "our_gap_seconds": 2,
@@ -905,6 +920,7 @@
       "attribution": null,
       "missing_publish_flag": null,
       "swapped_coordinates": null,
+      "nonstandard_statuses": null,
       "relay": null,
       "rate_limit": {
         "our_gap_seconds": 31.0,
@@ -1009,6 +1025,7 @@
       "attribution": null,
       "missing_publish_flag": null,
       "swapped_coordinates": null,
+      "nonstandard_statuses": null,
       "relay": null,
       "rate_limit": {
         "our_gap_seconds": 2,
@@ -1063,6 +1080,7 @@
       "attribution": null,
       "missing_publish_flag": null,
       "swapped_coordinates": null,
+      "nonstandard_statuses": null,
       "relay": null,
       "rate_limit": {
         "our_gap_seconds": 2.0,
@@ -1115,6 +1133,7 @@
       "attribution": null,
       "missing_publish_flag": null,
       "swapped_coordinates": null,
+      "nonstandard_statuses": null,
       "relay": null,
       "rate_limit": {
         "our_gap_seconds": 125.0,
@@ -1236,6 +1255,7 @@
       "attribution": null,
       "missing_publish_flag": null,
       "swapped_coordinates": null,
+      "nonstandard_statuses": null,
       "relay": null,
       "rate_limit": {
         "our_gap_seconds": 125.0,

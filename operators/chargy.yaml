@@ -38,6 +38,18 @@ licence:
     Government Licence". char.gy's open data page states no other licence or terms for
     the data.
   checked: 2026-10-07
+nonstandard_statuses:
+  decided: 2026-10-09
+  basis: >-
+    char.gy publishes EVSE statuses as WORKING and FAULTED, which are not OCPI 2.2.1
+    values. Regulation 10(6)(a) uses "working" to mean an OCPI status of available,
+    charging or reserved, so WORKING is shown as working, free or in use not stated, and
+    never as available. FAULTED is shown as reported out of service. The repository owner
+    chose this reading.
+  evidence_url: https://char.gy/open-ocpi/locations
+  statuses:
+    WORKING: working
+    FAULTED: out_of_order
 engagement:
   status: open_anonymous
   evidence:
@@ -61,8 +73,11 @@ findings:
       EVSE statuses are published as WORKING, and in a live run on 2026-10-07 also as
       FAULTED. Neither is a value in the OCPI 2.2.1 Status list.
     handling: >-
-      Shown as status unknown rather than guessed. Regulation 10(6)(a) uses "working" to
-      mean an OCPI status of available, charging or reserved.
+      Shown as status unknown rather than guessed until 2026-10-09. Since then, by the
+      repository owner's decision recorded in nonstandard_statuses, WORKING is shown as
+      "Working (free or in use, not stated)", never as available, because regulation
+      10(6)(a) uses "working" to mean an OCPI status of available, charging or reserved.
+      FAULTED is shown as reported out of service.
     evidence_url: https://char.gy/open-ocpi/locations
   - date: 2026-10-07
     kind: data_quality

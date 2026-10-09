@@ -34,6 +34,7 @@ decisions are in docs/adr/.
 - pipeline/status.py: feed health page. schema/runlog.py: run log format. pipeline/health.py: figures.
 - pipeline/project.py: repository URL (also in site/index.html, site/.well-known/security.txt and .github/ISSUE_TEMPLATE).
 - site/index.html, site/assets/: the map page. pipeline/build_site.py: build folder with MapLibre.
+- proxy/: Phase 3 live status Worker, not deployed (docs/PHASE3_PLAN.md). pipeline/live_snapshot.py, schema/live.py: its snapshots.
 - .github/workflows/: ci, fetch-daily (cron, calls deploy), deploy (Pages from main), keepalive.
 
 ## Hard rules
@@ -62,6 +63,8 @@ decisions are in docs/adr/.
 - Apache-2.0 covers our code only. Never apply it, or any other licence, to data. Data keeps its source's licence.
 - Every record keeps its provenance. Every source gets attribution and a row in DATA_LICENCES.md.
 - Never use operator logos or suggest any operator or public body endorses the project.
+- Show an EVSE status that is not an OCPI 2.2.1 value as anything but unknown only when the
+  operator file records the owner's decision in nonstandard_statuses; never add one yourself.
 - Never keep locations whose OCPI publish flag is false. Keep ones with no flag only when the
   operator file records the owner's decision in missing_publish_flag; never add one yourself.
 - Correct coordinates only where the operator file records the owner's decision in

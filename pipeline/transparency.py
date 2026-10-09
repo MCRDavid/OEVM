@@ -245,6 +245,16 @@ def operator_view(config: OperatorConfig) -> dict:
             if config.swapped_coordinates
             else None
         ),
+        "nonstandard_statuses": (
+            {
+                "decided": str(config.nonstandard_statuses.decided),
+                "basis": config.nonstandard_statuses.basis,
+                "evidence_url": config.nonstandard_statuses.evidence_url,
+                "statuses": dict(config.nonstandard_statuses.statuses),
+            }
+            if config.nonstandard_statuses
+            else None
+        ),
         "relay": (
             {
                 "decided": str(config.relay.decided),
@@ -288,6 +298,7 @@ def last_reviewed(operators: dict[str, OperatorConfig]) -> str:
             config.missing_publish_flag.decided if config.missing_publish_flag else None,
             config.relay.decided if config.relay else None,
             config.swapped_coordinates.decided if config.swapped_coordinates else None,
+            config.nonstandard_statuses.decided if config.nonstandard_statuses else None,
         ]
         dates += [d for d in candidates if isinstance(d, date)]
     return max(dates).isoformat() if dates else "unknown"
@@ -364,6 +375,13 @@ def _sources_table(data: dict) -> str:
                 f". Coordinates that are obviously the wrong way round are swapped back and "
                 f"marked on the map, by the owner's decision of {_e(swapped['decided'])}: "
                 f"{_e(swapped['basis'])}"
+            )
+        statuses = op["nonstandard_statuses"]
+        if op["enabled"] and statuses:
+            fetched += (
+                f". Statuses that are not OCPI values are shown by the owner's decision of "
+                f"{_e(statuses['decided'])}: {_e(statuses['basis'])} "
+                f"({_link(statuses['evidence_url'], 'evidence')})"
             )
         rows.append(
             "<tr>"

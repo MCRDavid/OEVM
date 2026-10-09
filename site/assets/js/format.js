@@ -30,6 +30,8 @@ export const STATUS_LABELS = {
   removed: "Removed",
   reserved: "Reserved",
   unknown: "Status unknown",
+  // Not an OCPI status: shown only by the owner's decision in an operator file.
+  working: "Working (free or in use, not stated)",
 };
 
 export function plugName(standard) {

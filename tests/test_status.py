@@ -86,7 +86,9 @@ def test_health_figures_are_counted_from_what_was_received(logs):
     assert (health.connectors, health.connectors_with_tariff) == (6, 5)
     assert health.median_last_updated_days is None  # Jolt gives no last_updated
     chargy = RunLog.model_validate_json((logs / "chargy.json").read_text()).health
-    assert chargy.evses_with_status == 0  # WORKING is not an OCPI 2.2.1 status
+    # WORKING is not an OCPI 2.2.1 status, but the owner decided how it is shown
+    # (nonstandard_statuses in operators/chargy.yaml), so it counts as a status.
+    assert chargy.evses_with_status == chargy.evses == 4
 
 
 def test_history_keeps_one_run_a_day_for_30_days(logs, tmp_path):

@@ -24,6 +24,12 @@
   --speed-fast: #0d6b62;
   --speed-slow: #2f5d9e;
   --speed-unknown: #5c5c5c;
+  /* Live status groups on the details screen (Phase 3, site/assets/js/live.js). Not used
+     until the live Worker runs. Each meets 4.5:1 on --page and --panel. */
+  --status-available: #17733a;
+  --status-in-use: #8a5300;
+  --status-out: #8a2a12;
+  --status-other: #4d5559;
   --header: 3.5rem;
   --header-measured: var(--header); /* set by main.js to the header's real height */
 }
@@ -44,6 +50,10 @@
     --priced: #9cc2ff;
     --unknown: #b4bcc2;
     --out: #ffab91;
+    --status-available: #6fd08f;
+    --status-in-use: #ffc46b;
+    --status-out: #ffab91;
+    --status-other: #b4bcc2;
     --map-bg: #1f2428;
     --overlay: rgb(21 24 27 / 94%);
   }
@@ -62,6 +72,10 @@
   --priced: #9cc2ff;
   --unknown: #b4bcc2;
   --out: #ffab91;
+  --status-available: #6fd08f;
+  --status-in-use: #ffc46b;
+  --status-out: #ffab91;
+  --status-other: #b4bcc2;
   --map-bg: #1f2428;
   --overlay: rgb(21 24 27 / 94%);
 }
@@ -152,6 +166,34 @@ button[aria-expanded="true"] {
 .hint {
   color: var(--muted);
   font-size: 0.95rem;
+}
+
+/* Live status chips (site/assets/js/live.js): coloured text and border with a symbol and a
+   written count, so colour is never the only cue. */
+.status-chip {
+  display: inline-block;
+  margin: 0 0.4rem 0.4rem 0;
+  padding: 0.15rem 0.6rem;
+  border: 2px solid currentcolor;
+  border-radius: 1rem;
+  background: var(--panel);
+  font-weight: 600;
+}
+
+.status-available {
+  color: var(--status-available);
+}
+
+.status-in-use {
+  color: var(--status-in-use);
+}
+
+.status-out {
+  color: var(--status-out);
+}
+
+.status-other {
+  color: var(--status-other);
 }
 
 .notice {
