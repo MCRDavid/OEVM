@@ -452,6 +452,10 @@ class Engagement(_Model):
         """The latest request or follow-up, if any."""
         return next((e for e in reversed(self.log) if e.action in SENT), None)
 
+    def last_response(self) -> EngagementEvent | None:
+        """The operator's latest reply, agreement, key or refusal, if any."""
+        return next((e for e in reversed(self.log) if e.action in RESPONSES), None)
+
     def awaiting_reply(self) -> bool:
         """True if the latest request or follow-up has had no response since."""
         sent = self.last_sent()

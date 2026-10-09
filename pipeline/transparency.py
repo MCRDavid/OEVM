@@ -152,35 +152,35 @@ def rate_limit_view(config: OperatorConfig) -> dict:
     }
 
 
-def _plural(count: int, word: str) -> str:
-    return f"{count} {word}" if count == 1 else f"{count} {word}s"
-
-
 def engagement_headline(engagement: Engagement) -> str:
-    """The status label with its date, for example "Requested, no reply after 14 days"."""
+    """The status label with the date it was last confirmed. Only dates, never day counts."""
     label = ENGAGEMENT_LABELS[engagement.status]
-    as_of = engagement.as_of
-    sent = engagement.last_sent()
-    if engagement.status == "requested_no_reply" and sent is not None and as_of is not None:
-        waited = (as_of - sent.date).days
-        if waited > 0:
-            return f"{label} after {_plural(waited, 'day')} (as of {as_of})"
-        return f"{label} yet (sent {sent.date})"
-    if as_of is None:
+    if engagement.as_of is None:
         return f"{label} (no dated check yet)"
-    return f"{label} (as of {as_of})"
+    return f"{label} (as of {engagement.as_of})"
+
+
+def last_response_text(engagement: Engagement) -> str:
+    """For example "2026-10-05 (Reply received)", or what to show when there is none."""
+    response = engagement.last_response()
+    if response is not None:
+        return f"{response.date} ({ENGAGEMENT_ACTIONS[response.action]})"
+    return "None recorded" if engagement.last_sent() is not None else "No request sent"
 
 
 def engagement_view(engagement: Engagement) -> dict:
     sent = engagement.last_sent()
+    response = engagement.last_response()
     return {
         "status": engagement.status,
         "label": ENGAGEMENT_LABELS[engagement.status],
         "headline": engagement_headline(engagement),
         "as_of": str(engagement.as_of) if engagement.as_of else None,
-        "awaiting_reply_since": (
-            str(sent.date) if sent is not None and engagement.awaiting_reply() else None
+        "last_request": str(sent.date) if sent else None,
+        "last_response": (
+            {"date": str(response.date), "action": response.action} if response else None
         ),
+        "last_response_text": last_response_text(engagement),
         "evidence": [
             {"date": str(e.date), "url": e.url, "file": e.file, "note": e.note}
             for e in engagement.evidence
@@ -393,14 +393,17 @@ def _engagement_table(data: dict) -> str:
             f'<th scope="row">{_e(op["name"])}</th>'
             f"<td>{_e(engagement['headline'])}</td>"
             f"<td>{_e(op['access_requested'] or 'Not requested')}</td>"
-            f"<td>{_e(op['access_granted'] or 'No')}</td>"
+            f"<td>{_e(engagement['last_request'] or 'None')}</td>"
+            f"<td>{_e(engagement['last_response_text'])}</td>"
+            f"<td>{_e(op['access_granted'] or 'None')}</td>"
             f"<td>{step}</td>"
             "</tr>"
         )
     return (
         "<table><caption>Access status for every known operator</caption>"
         '<thead><tr><th scope="col">Operator</th><th scope="col">Status</th>'
-        '<th scope="col">Access requested</th><th scope="col">Key issued</th>'
+        '<th scope="col">First requested</th><th scope="col">Last request or follow-up</th>'
+        '<th scope="col">Last response from the operator</th><th scope="col">Key issued</th>'
         '<th scope="col">Latest step</th></tr></thead>'
         f"<tbody>{''.join(rows)}</tbody></table>"
     )
@@ -543,8 +546,10 @@ below. A flag set to false is always respected.</p>
 <div class="table-wrap">{_sources_table(data)}</div>
 <h2>Access and engagement</h2>
 <p>How this project has tried to reach each operator&rsquo;s data, with the date of every
-step. Each status is dated by the latest check or step recorded for that operator.
-&ldquo;No reply&rdquo; means none has been recorded here; it says nothing about why.
+step. Each status is dated by the latest check or step recorded for that operator, and
+requests and responses are shown by the dates they were sent and received.
+&ldquo;None recorded&rdquo; means no response has been recorded here; it says nothing about
+why.
 No personal names or contact details are published. Any operator can correct or reply to
 an entry by <a href="{_e(REPOSITORY_URL)}/issues/new/choose">opening an issue</a>, and
 replies are added to its log.</p>

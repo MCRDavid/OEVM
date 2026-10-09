@@ -22,7 +22,9 @@
         "label": "Open, no registration",
         "headline": "Open, no registration (as of 2026-10-07)",
         "as_of": "2026-10-07",
-        "awaiting_reply_since": null,
+        "last_request": null,
+        "last_response": null,
+        "last_response_text": "No request sent",
         "evidence": [
           {
             "date": "2026-10-06",
@@ -134,7 +136,9 @@
         "label": "Open, no registration",
         "headline": "Open, no registration (as of 2026-10-08)",
         "as_of": "2026-10-08",
-        "awaiting_reply_since": null,
+        "last_request": null,
+        "last_response": null,
+        "last_response_text": "No request sent",
         "evidence": [
           {
             "date": "2026-10-08",
@@ -274,7 +278,9 @@
         "label": "Open, published shared key",
         "headline": "Open, published shared key (as of 2026-10-08)",
         "as_of": "2026-10-08",
-        "awaiting_reply_since": null,
+        "last_request": null,
+        "last_response": null,
+        "last_response_text": "No request sent",
         "evidence": [
           {
             "date": "2026-10-07",
@@ -460,7 +466,9 @@
         "label": "Key issued on request",
         "headline": "Key issued on request (no dated check yet)",
         "as_of": null,
-        "awaiting_reply_since": null,
+        "last_request": null,
+        "last_response": null,
+        "last_response_text": "No request sent",
         "evidence": [
           {
             "date": "unknown",
@@ -566,7 +574,9 @@
         "label": "Not yet established",
         "headline": "Not yet established (no dated check yet)",
         "as_of": null,
-        "awaiting_reply_since": null,
+        "last_request": null,
+        "last_response": null,
+        "last_response_text": "No request sent",
         "evidence": [],
         "log": []
       },
@@ -665,7 +675,9 @@
         "label": "Not yet established",
         "headline": "Not yet established (as of 2026-10-09)",
         "as_of": "2026-10-09",
-        "awaiting_reply_since": null,
+        "last_request": null,
+        "last_response": null,
+        "last_response_text": "No request sent",
         "evidence": [],
         "log": [
           {
@@ -710,7 +722,9 @@
         "label": "Key issued on request",
         "headline": "Key issued on request (as of 2026-10-08)",
         "as_of": "2026-10-08",
-        "awaiting_reply_since": null,
+        "last_request": null,
+        "last_response": null,
+        "last_response_text": "No request sent",
         "evidence": [
           {
             "date": "2026-10-08",
@@ -814,7 +828,9 @@
         "label": "Signed agreement required",
         "headline": "Signed agreement required (as of 2026-10-09)",
         "as_of": "2026-10-09",
-        "awaiting_reply_since": null,
+        "last_request": null,
+        "last_response": null,
+        "last_response_text": "No request sent",
         "evidence": [
           {
             "date": "unknown",
@@ -866,7 +882,9 @@
         "label": "Not yet established",
         "headline": "Not yet established (as of 2026-10-09)",
         "as_of": "2026-10-09",
-        "awaiting_reply_since": null,
+        "last_request": null,
+        "last_response": null,
+        "last_response_text": "No request sent",
         "evidence": [],
         "log": [
           {
@@ -917,7 +935,9 @@
         "label": "Not yet established",
         "headline": "Not yet established (no dated check yet)",
         "as_of": null,
-        "awaiting_reply_since": null,
+        "last_request": null,
+        "last_response": null,
+        "last_response_text": "No request sent",
         "evidence": [],
         "log": []
       },
@@ -1016,7 +1036,9 @@
         "label": "Key issued on request",
         "headline": "Key issued on request (as of 2026-10-09)",
         "as_of": "2026-10-09",
-        "awaiting_reply_since": null,
+        "last_request": null,
+        "last_response": null,
+        "last_response_text": "No request sent",
         "evidence": [
           {
             "date": "2026-10-09",

@@ -1,6 +1,6 @@
-# 0011: Engagement log for access requests
+# 0012: Engagement log for access requests
 
-Date: 2026-10-09. Status: proposed.
+Date: 2026-10-09. Status: accepted.
 
 Blueprint Phase 2: access requests and an engagement log, done when every known operator
 has a dated status. Until now each operator file held one engagement status with
@@ -18,8 +18,10 @@ filled in.
 - **A status is dated by its latest evidence or log entry.** The transparency page shows
   it "as of" that date, or says there is no dated check yet. Builds stay reproducible:
   nothing depends on the day the page is built.
-- **"Requested, no reply after N days"** counts from the latest request or follow-up to
-  the latest entry in the log, so N only grows when the owner records a check. A new status,
+- **Dates, never day counts.** The page shows when access was first requested, the
+  latest request or follow-up, and the operator's latest response with its date (or
+  "None recorded"), rather than "no reply after N days". The owner chose plain dates on
+  9 October 2026, so the page states only what happened and when. A new status,
   `requested_awaiting_decision`, covers a reply that does not yet grant or refuse access.
 - **The registry enforces consistency:** the status must match the log (no "no reply"
   after a recorded reply; a decline needs a recorded decline with the operator's words);

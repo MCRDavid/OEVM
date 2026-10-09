@@ -2,6 +2,7 @@
 
 import html
 import json
+import re
 from html.parser import HTMLParser
 from pathlib import Path
 
@@ -230,28 +231,51 @@ def test_status_is_dated_by_the_latest_log_entry():
     assert transparency.last_reviewed({config.id: config}) == "2026-10-09"
 
 
-def test_no_reply_counts_days_up_to_the_latest_entry():
+def test_requests_and_responses_are_shown_as_dates_not_day_counts():
     chase = {**REQUEST, "date": "2026-10-15", "action": "follow_up_sent"}
-    check = {"date": "2026-10-29", "action": "page_checked", "summary": "No reply yet."}
+    check = {"date": "2026-10-29", "action": "page_checked", "summary": "Checked for a reply."}
     config = operator_with(
         {"status": "requested_no_reply", "log": [REQUEST, chase, check]},
         access_requested="2026-10-01",
     )
     assert transparency.engagement_headline(config.engagement) == (
-        "Requested, no reply after 14 days (as of 2026-10-29)"
+        "Requested, no reply (as of 2026-10-29)"
     )
     view = transparency.operator_view(config)
-    assert view["engagement"]["awaiting_reply_since"] == "2026-10-15"
     assert view["access_requested"] == "2026-10-01"
+    assert view["engagement"]["last_request"] == "2026-10-15"
+    assert view["engagement"]["last_response"] is None
+    assert view["engagement"]["last_response_text"] == "None recorded"
+    page = transparency.render_html(transparency.build({config.id: config}))
+    section = page[
+        page.index("<h2>Access and engagement</h2>") : page.index("<h2>Rate limits</h2>")
+    ]
+    assert not re.search(r"\bdays?\b", " ".join(parse(section).text))
 
 
-def test_a_request_on_the_day_reads_as_no_reply_yet():
+def test_the_last_response_is_shown_with_its_date():
+    reply = {
+        "date": "2026-10-05",
+        "action": "reply_received",
+        "channel": "email",
+        "summary": "The operator replied that the request is being reviewed.",
+        "evidence_url": "https://example.invalid/reply",
+    }
     config = operator_with(
-        {"status": "requested_no_reply", "log": [REQUEST]}, access_requested="2026-10-01"
+        {"status": "requested_awaiting_decision", "log": [REQUEST, reply]},
+        access_requested="2026-10-01",
     )
-    assert transparency.engagement_headline(config.engagement) == (
-        "Requested, no reply yet (sent 2026-10-01)"
-    )
+    view = transparency.operator_view(config)
+    assert view["engagement"]["last_response"] == {
+        "date": "2026-10-05",
+        "action": "reply_received",
+    }
+    assert view["engagement"]["last_response_text"] == "2026-10-05 (Reply received)"
+
+
+def test_an_operator_never_asked_shows_no_request_sent():
+    config = operator_with({"status": "unknown"})
+    assert transparency.last_response_text(config.engagement) == "No request sent"
 
 
 def test_an_undated_status_says_so():
