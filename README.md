@@ -16,7 +16,7 @@ The full plan is in [docs/BLUEPRINT.md](docs/BLUEPRINT.md).
 ## Status
 
 Early days. The map is live at https://mcrdavid.github.io/OEVM/ (since 8 October 2026,
-with char.gy's and Jolt's data so far; see the feed health page). Blueprint tasks 1 to 10 are in place:
+with char.gy's, GeniePoint's and Jolt's data so far; see the feed health page). Blueprint tasks 1 to 10 are in place:
 
 1. **Scaffold:** uv, ruff, pytest, pre-commit secret scanning and a CI workflow.
 2. **Schema:** Pydantic models for Location, EVSE, Connector, Tariff and Provenance,

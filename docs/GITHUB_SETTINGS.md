@@ -180,17 +180,28 @@ so each change to `relay/` merged into `main` is deployed without copying code b
    then **Get started** next to **Import a repository**.
 3. Connect your GitHub account when asked. On GitHub's page for the **Cloudflare Workers
    and Pages** app, choose **Only select repositories** and pick only this repository.
-4. Back in Cloudflare, choose this repository and set:
-   - **Project name**: `oevm-relay` (it must match `name` in `relay/wrangler.toml`);
-   - **Git branch** (production branch): `main`;
-   - **Root directory**: `relay`;
+4. Back in Cloudflare, choose this repository. On **Set up your application**, check that
+   it shows this repository, then fill in:
+   - **Project name**: `oevm-relay` (it must match `name` in `relay/wrangler.toml`, or the
+     build fails);
    - **Build command**: leave empty;
-   - **Deploy command**: `npx wrangler deploy` (the default).
-   Then select **Save and Deploy**. Note the address it shows, something like
-   `https://oevm-relay.<your-subdomain>.workers.dev`.
-5. Open the Worker's **Settings > Build**. Under **Branch control**, untick **Enable
-   Preview Builds**, so only `main` is ever deployed. Under **Build watch paths**, set the
-   include paths to `relay/*`, so other changes to the repository do not start a build.
+   - **Deploy command**: `npx wrangler deploy` (the default);
+   - **Preview command**: leave as it is (it only runs for preview builds);
+   - **Enable Preview builds**: switch off, so only `main` is ever deployed;
+   - **Protect with Cloudflare Access**: leave off (it would put a sign-in page in front of
+     the Worker, and the daily run could not get through);
+   - under **Advanced settings**, **Path**: `/relay` (the folder the Worker is in);
+   - **API token**: leave as **Create new token**. Cloudflare makes this token itself so
+     its builds can deploy; it is not the relay token. Leave **API token name** empty
+     unless Cloudflare asks for one, then use `oevm-relay-build`;
+   - **Variable name** and **Variable value**: leave empty. These are build variables,
+     which Cloudflare says "will not be accessible at runtime", so the relay token does
+     not go here (it goes in step 7).
+   If it asks for a branch, choose `main`. Then select **Deploy**. Note the Worker's
+   address, something like `https://oevm-relay.<your-subdomain>.workers.dev`.
+5. Open the Worker's **Settings > Build**. Under **Build watch paths**, set the include
+   paths to `relay/*`, so other changes to the repository do not start a build. Under
+   **Branch control**, check that preview builds are still off.
 6. Still in **Settings**, open **Variables and Secrets**.
 7. Select **Add**, set **Type** to **Secret** and **Variable name** to `RELAY_TOKEN`.
 8. Paste the token as the **Value** and select **Deploy**. Until this is set, the Worker
@@ -214,7 +225,8 @@ repository, use **Disconnect** in the Worker's build settings.
 
 Sources: https://developers.cloudflare.com/workers/ci-cd/builds/ (with its configuration,
 build branches, build watch paths and GitHub integration pages) and
-https://developers.cloudflare.com/workers/configuration/secrets/, read 8 October 2026.
+https://developers.cloudflare.com/workers/configuration/secrets/, read 8 October 2026,
+and the **Set up your application** form as it appeared on the same day.
 
 ## Later: security.txt on the website
 
