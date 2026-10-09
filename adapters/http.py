@@ -20,11 +20,14 @@
   still refer to the operator's own host and URLs. Only feeds with no key are relayed.
 
 Timers live in memory, so they cover one run of the program. Runs that use the same host
-must not be started in parallel.
+must not be started in parallel. Within one run, pipeline.run fetches operators on
+different hosts at the same time, but never two operators that share a host
+(`operator_hosts`).
 """
 
 import os
 import re
+import threading
 import time
 from collections.abc import Callable, Iterable
 from dataclasses import dataclass
@@ -174,15 +177,38 @@ class HostTimer:
 
 
 _HOST_TIMERS: dict[str, HostTimer] = {}
+_HOST_TIMERS_LOCK = threading.Lock()
 
 
 def host_timer(url: str) -> HostTimer:
-    return _HOST_TIMERS.setdefault(urlsplit(url).netloc.lower(), HostTimer())
+    with _HOST_TIMERS_LOCK:
+        return _HOST_TIMERS.setdefault(urlsplit(url).netloc.lower(), HostTimer())
 
 
 def reset_host_timers() -> None:
     """Forget every timer. Tests call this because each test has its own fake clock."""
-    _HOST_TIMERS.clear()
+    with _HOST_TIMERS_LOCK:
+        _HOST_TIMERS.clear()
+
+
+# Stands for the project's relay in operator_hosts: relayed operators all go through the
+# one relay Worker, so they are treated as sharing a host and fetched one at a time.
+RELAY_HOST = "relay"
+
+
+def operator_hosts(config: OperatorConfig) -> frozenset[str]:
+    """Every host this operator's requests can reach: its endpoints, base URL and relay.
+
+    Paging never leaves an endpoint's host (adapters.ocpi_221.client). An operator with no
+    known host gets the empty name, so all such operators count as sharing one host.
+    """
+    urls = [endpoint.url for endpoint in config.endpoints.values()]
+    if config.base_url != "unknown":
+        urls.append(config.base_url)
+    hosts = {urlsplit(url).netloc.lower() for url in urls if url != "unknown"}
+    if config.relay is not None:
+        hosts.add(RELAY_HOST)
+    return frozenset(hosts or {""})
 
 
 RELAY_TOKEN_HEADER = "X-Relay-Token"

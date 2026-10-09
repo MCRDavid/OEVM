@@ -14,7 +14,7 @@ import pytest
 from adapters.http import FeedError
 from adapters.replay import ReplayTransport
 from pipeline import run
-from pipeline.progress import RunProgress, duration, estimate
+from pipeline.progress import OperatorProgress, RunProgress, duration, estimate
 from pipeline.registry import load_registry
 
 RELAY = "https://oevm-relay.example.workers.dev"
@@ -88,11 +88,11 @@ def test_a_paged_feed_shows_page_of_total_percentage_and_time_left(registry, no_
     The first request to a host has no gap before it, so page 1 arrives after about 1 s.
     """
     reporter, out, clock = progress()
-    reporter.operator_started(registry["chargy"], number=1, count=3)
+    op = reporter.operator_started(registry["chargy"], number=1, count=3)
     for page in range(1, 120):
         clock.now += 1 if page == 1 else 7
-        reporter.page("locations", pages=page, records=min(page * 50, 5949), total_records=5949)
-    reporter.module_done("locations", pages=119, records=5949, complete=True)
+        op.page("locations", pages=page, records=min(page * 50, 5949), total_records=5949)
+    op.module_done("locations", pages=119, records=5949, complete=True)
 
     shown = lines(out)
     assert shown[0] == "chargy (1 of 3): starting, 6 s between requests"
@@ -115,20 +115,20 @@ def test_a_paged_feed_shows_page_of_total_percentage_and_time_left(registry, no_
 
 def test_the_next_module_is_timed_from_the_end_of_the_last(registry, no_relay):
     reporter, out, clock = progress()
-    reporter.operator_started(registry["chargy"], number=1, count=1)
+    op = reporter.operator_started(registry["chargy"], number=1, count=1)
     clock.now += 100
-    reporter.module_done("locations", pages=2, records=100, complete=True)
+    op.module_done("locations", pages=2, records=100, complete=True)
     clock.now += 8
-    reporter.page("tariffs", pages=1, records=3, total_records=3)
-    reporter.module_done("tariffs", pages=1, records=3, complete=True)
+    op.page("tariffs", pages=1, records=3, total_records=3)
+    op.module_done("tariffs", pages=1, records=3, complete=True)
     assert lines(out)[-1] == "chargy tariffs: done, 1 page, 3 records in 8 s"
 
 
 def test_a_feed_that_does_not_give_its_total_says_so(registry):
     reporter, out, clock = progress()
-    reporter.operator_started(registry["jolt"], number=3, count=3)
+    op = reporter.operator_started(registry["jolt"], number=3, count=3)
     clock.now += 2
-    reporter.page("locations", pages=1, records=72)
+    op.page("locations", pages=1, records=72)
     assert lines(out)[-1] == (
         "jolt locations: page 1, 72 records (the feed does not say how many there are)"
     )
@@ -137,19 +137,19 @@ def test_a_feed_that_does_not_give_its_total_says_so(registry):
 def test_a_known_number_of_requests_gives_a_percentage_without_a_record_total(registry):
     """Like Jolt's tariffs: one request per tariff id, so the number of pages is known."""
     reporter, out, clock = progress()
-    reporter.operator_started(registry["jolt"], number=3, count=3)
-    reporter.module_done("locations", pages=1, records=72, complete=True)
+    op = reporter.operator_started(registry["jolt"], number=3, count=3)
+    op.module_done("locations", pages=1, records=72, complete=True)
     clock.now += 2
-    reporter.page("tariffs", pages=1, records=1, total_pages=5)
+    op.page("tariffs", pages=1, records=1, total_pages=5)
     assert lines(out)[-1] == "jolt tariffs: page 1 of 5 (20%), 1 record, about 8 s left (estimate)"
 
 
 def test_max_pages_caps_the_expected_number_of_pages(registry, no_relay):
     reporter, out, clock = progress(max_pages=3)
-    reporter.operator_started(registry["chargy"], number=1, count=1)
+    op = reporter.operator_started(registry["chargy"], number=1, count=1)
     clock.now += 7
-    reporter.page("locations", pages=1, records=50, total_records=5949)
-    reporter.module_done("locations", pages=3, records=150, complete=False)
+    op.page("locations", pages=1, records=50, total_records=5949)
+    op.module_done("locations", pages=3, records=150, complete=False)
     assert lines(out)[1] == (
         "chargy locations: page 1 of 3 (33%), 50 of 5,949 records, about 14 s left (estimate)"
     )
@@ -160,10 +160,10 @@ def test_max_pages_caps_the_expected_number_of_pages(registry, no_relay):
 
 def test_a_total_lower_than_the_records_received_does_not_hide_later_pages(registry, no_relay):
     reporter, out, clock = progress()
-    reporter.operator_started(registry["chargy"], number=1, count=1)
+    op = reporter.operator_started(registry["chargy"], number=1, count=1)
     for page in range(1, 21):
         clock.now += 7
-        reporter.page("locations", pages=page, records=page * 50, total_records=50)
+        op.page("locations", pages=page, records=page * 50, total_records=50)
     # Page 1 matches the total, so it looks like the last page and gets no line of its
     # own; once more records arrive than the total, the pages still show.
     assert lines(out)[1:] == [
@@ -185,13 +185,13 @@ def test_a_total_too_large_to_work_with_never_stops_the_fetch(registry, no_relay
 
     config = registry["chargy"]
     reporter, out, _ = progress()  # no page cap, so the estimate is worked out
-    reporter.operator_started(config, number=1, count=1)
+    op = reporter.operator_started(config, number=1, count=1)
     result = run.run_operator(
         config,
         transport=httpx.MockTransport(handler),
         sleep=lambda _seconds: None,
         max_pages=1,
-        progress=reporter,
+        progress=op,
     )
     assert result.modules["locations"].total_reported == int(huge)
     assert "chargy locations: page 1, 1 record" in lines(out)
@@ -199,8 +199,8 @@ def test_a_total_too_large_to_work_with_never_stops_the_fetch(registry, no_relay
 
 def test_an_empty_first_page_gives_no_estimate(registry, no_relay):
     reporter, out, _ = progress()
-    reporter.operator_started(registry["chargy"], number=1, count=1)
-    reporter.page("locations", pages=1, records=0, total_records=10)
+    op = reporter.operator_started(registry["chargy"], number=1, count=1)
+    op.page("locations", pages=1, records=0, total_records=10)
     assert lines(out)[-1] == "chargy locations: page 1, 0 of 10 records"
 
 
@@ -230,7 +230,7 @@ def test_a_half_set_relay_stops_the_operator_before_anything_is_fetched(registry
 
 def test_operator_and_run_lines(registry, no_relay):
     reporter, out, clock = progress()
-    reporter.run_started(["chargy", "geniepoint", "jolt"])
+    reporter.run_started([["chargy", "geniepoint", "jolt"]])
     reporter.operator_started(registry["chargy"], number=1, count=3)
     clock.now += 829
     reporter.operator_done("chargy", requests=120)
@@ -256,9 +256,9 @@ def test_operator_and_run_lines(registry, no_relay):
 def test_every_line_is_flushed_at_once(registry, no_relay):
     out = Flushes()
     reporter = RunProgress(out=out, clock=FakeClock())
-    reporter.run_started(["chargy"])
-    reporter.operator_started(registry["chargy"], number=1, count=1)
-    reporter.page("locations", pages=1, records=50, total_records=100)
+    reporter.run_started([["chargy"]])
+    op = reporter.operator_started(registry["chargy"], number=1, count=1)
+    op.page("locations", pages=1, records=50, total_records=100)
     assert out.flushes == len(lines(out)) == 3
 
 
@@ -283,7 +283,7 @@ def test_the_adapters_report_their_pages(registry, operator):
     manifest = json.loads((run.FIXTURES_DIR / operator / "manifest.json").read_text("utf-8"))
     config = registry[operator].model_copy(update={"relay": None})
     reporter, out, _ = progress(max_pages=manifest["max_pages"])
-    reporter.operator_started(config, number=1, count=1)
+    op = reporter.operator_started(config, number=1, count=1)
     result = run.run_operator(
         config,
         transport=ReplayTransport(run.FIXTURES_DIR / operator),
@@ -291,7 +291,7 @@ def test_the_adapters_report_their_pages(registry, operator):
         page_size=manifest["page_size"],
         max_pages=manifest["max_pages"],
         key=run.FIXTURE_KEY,
-        progress=reporter,
+        progress=op,
     )
     shown = lines(out)
     assert [line for line in shown if ": page " in line] == PAGE_LINES[operator]
@@ -313,7 +313,7 @@ def test_live_runs_print_progress(monkeypatch, capsys, no_relay):
     capsys.readouterr()
 
     def fake(config, **kwargs):
-        assert isinstance(kwargs["progress"], RunProgress)
+        assert isinstance(kwargs["progress"], OperatorProgress)
         if config.id == "jolt":
             raise FeedError("gave up on the Jolt feed: HTTP 503")
         return replayed[config.id]
@@ -322,7 +322,8 @@ def test_live_runs_print_progress(monkeypatch, capsys, no_relay):
     assert run.main(["--live", "all"]) == run.EXIT_SOME_FAILED
     shown = capsys.readouterr()
     enabled = sorted(i for i, c in load_registry().items() if c.enabled)
-    assert f"one at a time: {', '.join(enabled)}" in shown.out
+    # Every enabled operator today is on a host of its own, so each is its own group.
+    assert f"no two groups share a host: {'; '.join(enabled)}" in shown.out
     assert "jolt: failed after 0 s (the error follows)" in shown.out
     assert "Error: gave up on the Jolt feed: HTTP 503" in shown.err
     assert f"{len(enabled) - 1} fetched, 1 failed (jolt)" in shown.out
