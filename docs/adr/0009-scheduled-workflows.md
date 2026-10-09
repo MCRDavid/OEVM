@@ -11,6 +11,14 @@ from main, and a keepalive. Accept: three green scheduled runs in a row; site li
   another, never in parallel. If one fails, its failure log is written, the others are
   still fetched and published, and the exit code is 2. If every operator fails, nothing
   is published and the exit code is 1.
+- **Progress** (added 9 October 2026): live runs print a line as each operator starts and
+  finishes, as each module finishes, and for the first and every tenth page before a
+  module's last, with the page reached, the percentage done and an estimated time left,
+  worked out from the feed's X-Total-Count and the pace so far, never faster than the
+  operator's gap (`pipeline/progress.py`). Lines carry operator ids, module names and numbers only, never
+  a URL, a key or feed text, and are flushed at once so the Actions log shows them live.
+  A full run took about 14 minutes on 8 October 2026, almost all of it char.gy at 6
+  seconds a page, and printed nothing until the end.
 - **`fetch-daily.yml`** runs at 04:17 UTC each day and from the Actions tab. It validates
   the registry, downloads the last `site-data` artifact to carry the feed health history
   forward (`pipeline.status --previous`), fetches, publishes the map files, builds the

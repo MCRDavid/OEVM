@@ -14,6 +14,7 @@ from urllib.parse import urlencode, urljoin, urlsplit
 import httpx
 
 from adapters.http import FeedError, PoliteClient, redact_url, with_params
+from adapters.progress import NO_PROGRESS, PageProgress
 
 KEPT_HEADERS = (
     "content-type",
@@ -92,6 +93,7 @@ def fetch_module(
     date_from: datetime | None = None,
     page_size: int | None = None,
     max_pages: int | None = None,
+    progress: PageProgress = NO_PROGRESS,
 ) -> ModuleFetch:
     """Fetch all pages of one module, or the first `max_pages` pages.
 
@@ -100,7 +102,13 @@ def fetch_module(
     """
     try:
         return _fetch_pages(
-            client, module, endpoint, date_from=date_from, page_size=page_size, max_pages=max_pages
+            client,
+            module,
+            endpoint,
+            date_from=date_from,
+            page_size=page_size,
+            max_pages=max_pages,
+            progress=progress,
         )
     except FeedError as exc:
         raise FeedError(client.redact(str(exc))) from None
@@ -114,6 +122,7 @@ def _fetch_pages(
     date_from: datetime | None,
     page_size: int | None,
     max_pages: int | None,
+    progress: PageProgress,
 ) -> ModuleFetch:
     params = {}
     if date_from is not None:
@@ -127,6 +136,9 @@ def _fetch_pages(
     received = 0
     while url is not None:
         if max_pages is not None and len(result.pages) >= max_pages:
+            progress.module_done(
+                module, pages=len(result.pages), records=len(result.records), complete=False
+            )
             return result
         if url in seen_urls or len(result.pages) >= PAGE_SAFETY_LIMIT:
             raise FeedError(f"paging did not finish at {redact_url(url)}")
@@ -154,6 +166,12 @@ def _fetch_pages(
         )
         result.total_reported = _int_header(response, "X-Total-Count")
         received += len(data)
+        progress.page(
+            module,
+            pages=len(result.pages),
+            records=len(result.records),
+            total_records=result.total_reported,
+        )
 
         next_link = response.links.get("next", {}).get("url")
         if next_link:
@@ -166,4 +184,7 @@ def _fetch_pages(
             url = None
 
     result.complete = True
+    progress.module_done(
+        module, pages=len(result.pages), records=len(result.records), complete=True
+    )
     return result

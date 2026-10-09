@@ -24,6 +24,7 @@ from adapters.ocpi_221.normalise import (
     publish_allowed,
     tariff_from_ocpi,
 )
+from adapters.progress import NO_PROGRESS, PageProgress
 from schema.models import Location, Tariff
 from schema.operator import OperatorConfig
 
@@ -82,6 +83,7 @@ def fetch(
     page_size: int | None = None,
     max_pages: int | None = None,
     now: datetime | None = None,
+    progress: PageProgress = NO_PROGRESS,
 ) -> AdapterResult:
     if config.adapter != "ocpi_221":
         raise FeedError(f"{config.id} uses the {config.adapter} adapter, not ocpi_221")
@@ -94,6 +96,7 @@ def fetch(
             date_from=date_from,
             page_size=page_size,
             max_pages=max_pages,
+            progress=progress,
         )
         for module in MODULES
     }
