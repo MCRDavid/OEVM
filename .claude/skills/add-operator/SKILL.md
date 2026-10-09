@@ -69,7 +69,7 @@ Fill in, from step 1 only:
 
 | Adapter | State | Used for |
 |---|---|---|
-| `ocpi_221` | built | Standard OCPI 2.2.1 feeds: paged, or one file holding every record |
+| `ocpi_221` | built | Standard OCPI 2.2.1 feeds: paged, or one file holding every record. If the records are OCPI but the wrapper has no `status_code`, set `response_envelope: data_list` and record a finding |
 | `custom` | built | Non-standard feeds, one module per operator id in `pipeline/run.py` `CUSTOM_ADAPTERS` |
 | `eco_movement_pcpr` | not built yet | bp pulse, Shell Recharge, ubitricity and others hosted by Eco-Movement |
 | `gridserve` | not built yet | Gridserve's API |

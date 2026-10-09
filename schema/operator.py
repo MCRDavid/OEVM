@@ -24,6 +24,7 @@ AdapterName = Literal[
 AuthMethod = Literal["none", "header", "query_param", "unknown"]
 EndpointKind = Literal["versions", "locations", "tariffs", "statuses", "download"]
 EndpointStatus = Literal["documented", "needs_testing"]
+ResponseEnvelope = Literal["ocpi", "data_list"]
 FindingKind = Literal["spec_conformance", "data_quality", "access", "documentation"]
 FindingStatus = Literal["open", "resolved"]
 EngagementStatus = Literal[
@@ -314,6 +315,20 @@ class MissingPublishFlag(_Model):
     evidence_url: SafeUrl = Field(description="Where the operator says the data is public.")
 
 
+class SwappedCoordinates(_Model):
+    """The repository owner's recorded decision to correct obviously swapped coordinates.
+
+    A location is corrected only when its published point is outside the UK, the same
+    numbers the other way round fall inside the UK, its country is GBR and its postcode is
+    a UK postcode. The published point is kept with the location, the map says it was
+    corrected, and the operator's findings record it. Without this decision such locations
+    are left off the map.
+    """
+
+    decided: dt.date = Field(description="Date the owner made the decision (YYYY-MM-DD).")
+    basis: NeutralText = Field(description="Why swapped coordinates may be corrected.")
+
+
 class Relay(_Model):
     """The repository owner's recorded decision to fetch this operator through a relay the
     project runs, because the operator's server refused requests from the daily run.
@@ -364,6 +379,13 @@ class OperatorConfig(_Model):
         default_factory=dict,
         description="Specific URLs, recorded only where the source of the URL is known.",
     )
+    response_envelope: ResponseEnvelope = Field(
+        default="ocpi",
+        description="'ocpi' (the default) requires each response to be an OCPI 2.2.1 "
+        "response object with a status_code. 'data_list' also accepts an object with a "
+        "list of OCPI records in 'data' and no status_code, for feeds whose records are OCPI "
+        "but whose wrapper is not. Record the reason as a finding. ocpi_221 only.",
+    )
     auth: Auth
     rate_limit: RateLimit = Field(default_factory=RateLimit)
     supports_single_location: Support
@@ -378,6 +400,11 @@ class OperatorConfig(_Model):
         default=None,
         description="Only by the repository owner's decision: show locations that have no "
         "publish flag. Null means such locations are never kept.",
+    )
+    swapped_coordinates: SwappedCoordinates | None = Field(
+        default=None,
+        description="Only by the repository owner's decision: correct coordinates that are "
+        "obviously the wrong way round. Null means such locations are left off the map.",
     )
     relay: Relay | None = Field(
         default=None,
@@ -426,6 +453,8 @@ class OperatorConfig(_Model):
                 or self.licence.checked == "unknown"
             ):
                 problems.append("an enabled operator needs licence terms that have been checked")
+        if self.response_envelope != "ocpi" and self.adapter != "ocpi_221":
+            problems.append("response_envelope only applies to the ocpi_221 adapter")
         if self.relay is not None:
             if self.auth.method != "none":
                 problems.append("only a feed that needs no key may be relayed")

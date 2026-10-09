@@ -14,7 +14,7 @@ from typing import Annotated, Literal
 
 from pydantic import AwareDatetime, Field
 
-from schema.models import Location, PriceState, RecordId, SourceId, Tariff, _Model
+from schema.models import Coordinates, Location, PriceState, RecordId, SourceId, Tariff, _Model
 from schema.runlog import RunLog
 
 Key = Annotated[str, Field(pattern=r"^[0-9a-f]{16}$")]
@@ -90,8 +90,18 @@ class ConnectorPriceOut(_Model):
     unresolved_ids: list[RecordId]
 
 
+class CoordinatesCorrection(_Model):
+    published: Coordinates = Field(description="The coordinates exactly as the operator sent them.")
+    note: str = Field(description="What was corrected and why, shown with the location.")
+
+
 class LocationDetail(_Model):
     location: Location
+    coordinates_corrected: CoordinatesCorrection | None = Field(
+        default=None,
+        description="Set when this project swapped the operator's latitude and longitude, "
+        "by the owner's decision recorded in the operator file. Null otherwise.",
+    )
     tariffs: list[Tariff] = Field(description="The tariffs this location's connectors list.")
     prices: list[ConnectorPriceOut]
     attribution: str
@@ -108,6 +118,15 @@ class OperatorEntry(_Model):
     mapped: int = Field(ge=0, description="Locations on the map.")
     not_mapped: int = Field(ge=0, description="Locations left off: coordinates outside the UK.")
     not_mapped_ids: list[RecordId] = Field(description="Ids of the locations left off.")
+    corrected: int = Field(
+        default=0,
+        ge=0,
+        description="Locations shown after swapping latitude and longitude the operator sent "
+        "the wrong way round.",
+    )
+    corrected_ids: list[RecordId] = Field(
+        default_factory=list, description="Ids of the corrected locations."
+    )
     tariffs: int = Field(ge=0)
     attribution: str
     licence: str

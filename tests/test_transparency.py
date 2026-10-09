@@ -173,3 +173,11 @@ def test_last_reviewed_counts_resolved_dates():
         }
     )
     assert transparency.last_reviewed({config.id: config}) == "2026-11-20"
+
+
+def test_a_decision_to_swap_back_coordinates_is_shown(page):
+    data = json.loads(transparency.outputs()[transparency.JSON_PATH])
+    decisions = {op["id"]: op["swapped_coordinates"] for op in data["operators"]}
+    assert decisions["clenergy_ev"]["decided"] == "2026-10-09"
+    assert all(v is None for k, v in decisions.items() if k != "clenergy_ev")
+    assert "obviously the wrong way round are swapped back" in " ".join(page.split())
