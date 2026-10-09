@@ -47,13 +47,19 @@
           "default": null,
           "description": "Pence per kWh including VAT: the highest energy price that can apply. Null when the tariff states no VAT or gives no energy price.",
           "title": "Ppk"
+        },
+        "out": {
+          "description": "True when the operator reported this connector's charge point as out of service (out_of_order, inoperative, planned or removed) in the fetch the file was built from. False for any other status, including unknown.",
+          "title": "Out",
+          "type": "boolean"
         }
       },
       "required": [
         "std",
         "kw",
         "price",
-        "ppk"
+        "ppk",
+        "out"
       ],
       "title": "ConnectorSummary",
       "type": "object"

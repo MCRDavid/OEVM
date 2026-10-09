@@ -1,7 +1,15 @@
 import assert from "node:assert/strict";
 import { test } from "node:test";
 
-import { formatDateTime, formatKw, plugGroup, plugName, plugsSummary } from "../../site/assets/js/format.js";
+import {
+  allOut,
+  formatDateTime,
+  formatKw,
+  plugGroup,
+  plugName,
+  plugsSummary,
+  speedBand,
+} from "../../site/assets/js/format.js";
 
 test("power is never guessed", () => {
   assert.equal(formatKw(null), "Power unknown");
@@ -25,4 +33,22 @@ test("connector names and groups", () => {
   assert.equal(plugGroup("DOMESTIC_G"), "other");
   assert.equal(plugsSummary(["CHADEMO", "IEC_62196_T2", "IEC_62196_T2_COMBO"]), "CHAdeMO, Type 2, CCS");
   assert.equal(plugsSummary([]), "Connector unknown");
+});
+
+test("speed bands follow the fastest connector", () => {
+  assert.equal(speedBand(null), "unknown");
+  assert.equal(speedBand(5.06), "slow");
+  assert.equal(speedBand(7.99), "slow");
+  assert.equal(speedBand(8), "fast");
+  assert.equal(speedBand(49.9), "fast");
+  assert.equal(speedBand(50), "rapid");
+  assert.equal(speedBand(150), "ultra");
+  assert.equal(speedBand(400), "ultra");
+});
+
+test("a location is shown as out of service only when every connector was reported so", () => {
+  assert.equal(allOut({ cons: [] }), false);
+  assert.equal(allOut({ cons: [{ out: true }, { out: false }] }), false);
+  assert.equal(allOut({ cons: [{ out: true }, { out: true }] }), true);
+  assert.equal(allOut({}), false);
 });

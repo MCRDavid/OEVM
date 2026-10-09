@@ -5,7 +5,9 @@
 writes, under build/data/:
 
 - locations.geojson: one slim point per location, for the map and its filters. It holds
-  no live status, because a daily snapshot would look current when it is not.
+  no live status, because a daily snapshot would look current when it is not. Each kind
+  of connector only says whether it was reported out of service in this fetch, so the
+  map can offer to hide those; the map says the report is from the last daily fetch.
 - loc/<shard>/<key>.json: everything about one location, its tariffs and the price of
   each connector as worded by pipeline/pricing.py. EVSE statuses carry their dates.
 - manifest.json: when each operator was fetched, attribution, counts and file sizes.
@@ -83,13 +85,21 @@ def _sortable(value: float | None) -> float:
     return -1.0 if value is None else value
 
 
-def _connector_summary(connector: Connector, price: ConnectorPrice) -> ConnectorSummary:
+# OCPI 2.2.1 EVSE statuses under which a charge point cannot be used. "blocked" (a parked
+# car, for example) and "unknown" are not counted.
+OUT_OF_SERVICE = frozenset({"out_of_order", "inoperative", "planned", "removed"})
+
+
+def _connector_summary(
+    connector: Connector, price: ConnectorPrice, status: str
+) -> ConnectorSummary:
     with_vat = price.state == "priced" and price.includes_vat and price.energy_high is not None
     return ConnectorSummary(
         std=connector.standard,
         kw=connector.max_kw,
         price=MAP_PRICE[price.state],
         ppk=_pence(price.energy_high) if with_vat else None,
+        out=status in OUT_OF_SERVICE,
     )
 
 
@@ -97,13 +107,17 @@ def map_properties(location: Location, prices: list[ConnectorPrice], key: str) -
     """The slim properties of one location. prices holds one entry per connector, in the
     order price_locations gives them."""
     connectors = [c for evse in location.evses for c in evse.connectors]
+    statuses = [evse.status for evse in location.evses for _ in evse.connectors]
     if len(prices) != len(connectors):
         raise PublishError(f"{location.id}: expected a price for each connector")
     powers = [c.max_kw for c in connectors if c.max_kw is not None]
     states = {p.state for p in prices}
     summaries = {
-        (s.std, _sortable(s.kw), s.price, _sortable(s.ppk)): s
-        for s in (_connector_summary(c, p) for c, p in zip(connectors, prices, strict=True))
+        (s.std, _sortable(s.kw), s.price, _sortable(s.ppk), s.out): s
+        for s in (
+            _connector_summary(c, p, st)
+            for c, p, st in zip(connectors, prices, statuses, strict=True)
+        )
     }
     return MapProperties(
         id=location.id,

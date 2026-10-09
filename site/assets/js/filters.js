@@ -7,7 +7,7 @@ export const POWER_STEPS = [0, 7, 22, 50, 150];
 export const MAX_PRICE_PENCE = 500;
 
 export function defaults() {
-  return { minkw: 0, plugs: [], free: false, maxp: null, unknown: true, ops: [], view: "map" };
+  return { minkw: 0, plugs: [], free: false, maxp: null, unknown: true, working: false, ops: [], view: "map" };
 }
 
 function list(value, allowed) {
@@ -30,6 +30,7 @@ export function parse(search) {
     if (Number.isFinite(value) && value >= 0 && value <= MAX_PRICE_PENCE) state.maxp = value;
   }
   state.unknown = params.get("unknown") !== "0";
+  state.working = params.get("ok") === "1";
   state.ops = list(params.get("op"), (op) => /^[a-z0-9_]{1,40}$/.test(op));
   state.view = params.get("view") === "list" ? "list" : "map";
   return state;
@@ -43,6 +44,7 @@ export function serialise(state) {
   if (state.free) params.set("free", "1");
   if (state.maxp !== null) params.set("maxp", String(state.maxp));
   if (!state.unknown) params.set("unknown", "0");
+  if (state.working) params.set("ok", "1");
   if (state.ops.length) params.set("op", [...state.ops].sort().join(","));
   if (state.view === "list") params.set("view", "list");
   return params.toString();
@@ -57,6 +59,7 @@ function priceKnown(connector) {
 }
 
 function connectorMatches(connector, state) {
+  if (state.working && connector.out === true) return false;
   if (state.minkw && !(Number.isFinite(connector.kw) && connector.kw >= state.minkw)) return false;
   if (state.plugs.length && !(connector.std && state.plugs.includes(plugGroup(connector.std)))) return false;
   if (state.free && connector.price !== "free") return false;
@@ -69,12 +72,20 @@ function connectorMatches(connector, state) {
 }
 
 function connectorFilters(state) {
-  return Boolean(state.minkw || state.plugs.length || state.free || state.maxp !== null || !state.unknown);
+  return Boolean(
+    state.minkw || state.plugs.length || state.free || state.maxp !== null || !state.unknown || state.working,
+  );
+}
+
+// How many filters differ from the defaults, for the count on the Filters button.
+export function activeCount(state) {
+  return [state.minkw, state.plugs.length, state.free, state.maxp !== null, !state.unknown, state.working, state.ops.length]
+    .filter(Boolean).length;
 }
 
 // A location with no connectors listed is treated as one connector about which nothing is
 // known, so "include unknown prices" keeps it while any other connector condition drops it.
-const NOTHING_KNOWN = [{ std: null, kw: null, price: "unknown", ppk: null }];
+const NOTHING_KNOWN = [{ std: null, kw: null, price: "unknown", ppk: null, out: false }];
 
 export function matches(props, state) {
   if (state.ops.length && !state.ops.includes(props.op)) return false;

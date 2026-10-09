@@ -42,6 +42,11 @@ class ConnectorSummary(_Model):
         description="Pence per kWh including VAT: the highest energy price that can apply. "
         "Null when the tariff states no VAT or gives no energy price.",
     )
+    out: bool = Field(
+        description="True when the operator reported this connector's charge point as out of "
+        "service (out_of_order, inoperative, planned or removed) in the fetch the file was "
+        "built from. False for any other status, including unknown."
+    )
 
 
 class MapProperties(_Model):

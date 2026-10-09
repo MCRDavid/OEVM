@@ -3,16 +3,21 @@
 // visitor turns on "Remember my settings" (see settings.js).
 
 import { renderDetail, detailUrl } from "./detail.js";
-import { defaults, matches, parse, serialise } from "./filters.js";
+import { activeCount, defaults, matches, parse, serialise } from "./filters.js";
 import { h } from "./dom.js";
-import { formatKw, plugsSummary } from "./format.js";
+import { allOut, formatKw, plugsSummary, speedBand } from "./format.js";
 import { createSettings } from "./settings.js";
 
 const LIST_LIMIT = 200;
-const COLOURS = { free: "#17733a", priced: "#1d4f9e", unknown: "#5c5c5c" };
+// Point colours by fastest connector (format.js, SPEED_BANDS), matching app.css. Each has
+// at least 4.5:1 contrast with the white letter drawn on it.
+const SPEED_COLOURS = { ultra: "#9b2c74", rapid: "#b3460c", fast: "#0d6b62", slow: "#2f5d9e", unknown: "#5c5c5c" };
+const SPEED_RADIUS = { ultra: 13, rapid: 12, fast: 11, slow: 10, unknown: 10 };
+const CHARGER_LAYERS = ["clusters", "points", "cluster-count", "point-labels"];
 const FONT = ["Noto Sans Regular"];
 const $ = (id) => document.getElementById(id);
 const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+const PREFERS_DARK = window.matchMedia("(prefers-color-scheme: dark)");
 const WIDE = window.matchMedia("(min-width: 60em)"); // map and list side by side; matches app.css
 const MAP_FAILED = "The map could not start in this browser, so chargers are shown as a list.";
 const STYLE_FAILED = "The background map could not be loaded, so chargers are shown as a list.";
@@ -38,6 +43,7 @@ const app = {
   lastKey: null,
   detailRequest: 0,
   savedOnly: false,
+  theme: null, // "light" or "dark" once the visitor picks one; until then the device decides
 };
 
 async function loadJson(url) {
@@ -55,7 +61,7 @@ function notice(text) {
 // Filters and the page address
 
 function hasFilterParams() {
-  const keys = ["minkw", "plug", "free", "maxp", "unknown", "op", "view"];
+  const keys = ["minkw", "plug", "free", "maxp", "unknown", "ok", "op", "view"];
   const params = new URLSearchParams(window.location.search);
   return keys.some((key) => params.has(key));
 }
@@ -69,7 +75,7 @@ function writeAddress() {
 }
 
 function saveIfRemembered() {
-  if ($("remember").checked && !settings.save(app.state)) {
+  if ($("remember").checked && !settings.save(app.state, app.theme)) {
     $("settings-message").textContent = "Your browser did not allow saving settings.";
   }
 }
@@ -82,6 +88,17 @@ function stateToForm() {
   $("free").checked = app.state.free;
   $("maxp").value = app.state.maxp === null ? "" : String(app.state.maxp);
   $("unknown").checked = app.state.unknown;
+  $("working").checked = app.state.working;
+  showActiveFilters();
+}
+
+// The quick filters in the header and the count on the Filters button follow the form.
+function showActiveFilters() {
+  const count = activeCount(app.state);
+  $("filter-count").textContent = count ? ` (${count})` : "";
+  $("quick-rapid").setAttribute("aria-pressed", String(app.state.minkw >= 50));
+  $("quick-free").setAttribute("aria-pressed", String(app.state.free));
+  $("quick-working").setAttribute("aria-pressed", String(app.state.working));
 }
 
 // Networks without a box yet (the data is still loading) keep their place in the filters.
@@ -100,12 +117,14 @@ function formToState() {
   if ($("free").checked) query.set("free", "1");
   if ($("maxp").value.trim() !== "") query.set("maxp", $("maxp").value.trim());
   if (!$("unknown").checked) query.set("unknown", "0");
+  if ($("working").checked) query.set("ok", "1");
   if (app.state.view === "list") query.set("view", "list");
   return parse(query.toString());
 }
 
 function stateChanged() {
   app.savedOnly = false;
+  showActiveFilters();
   writeAddress();
   saveIfRemembered();
   applyFilters();
@@ -200,9 +219,15 @@ function renderList() {
       h(
         "button",
         { type: "button", className: "item", "data-key": p.key, onclick: () => openDetail(p.key) },
-        h("span", { className: "name", text: p.name || "Charger location" }),
+        h(
+          "span",
+          { className: "name" },
+          h("i", { className: `dot ${p.band}${p.down ? " out" : ""}`, "aria-hidden": "true" }),
+          p.name || "Charger location",
+        ),
         h("span", { className: "meta", text: `${app.operators.get(p.op) ?? p.op} · up to ${formatKw(p.kw)} · ${plugsSummary(p.plugs)}` }),
         h("span", { className: `meta price-${p.price}`, text: p.pt || "Price unknown" }),
+        p.down ? h("span", { className: "meta out-note", text: "Reported out of service at the last daily fetch" }) : null,
       ),
     );
   });
@@ -322,7 +347,7 @@ async function startMap() {
   try {
     app.map = new maplibre.Map({
       container: "map",
-      style: app.config.style,
+      style: mapStyle(),
       bounds: [
         [-8.2, 49.9],
         [1.8, 58.7],
@@ -334,15 +359,21 @@ async function startMap() {
         compact: false,
         customAttribution: "Charger data: the operators credited under Data sources and credits",
       },
-      locale: { "Map.Title": "Map of public EV chargers. Use the list for keyboard access." },
+      locale: {
+        "Map.Title": "Map of public EV chargers. Use the list for keyboard access.",
+        "GeolocateControl.FindMyLocation": "Find my location",
+        "GeolocateControl.LocationNotAvailable": "Your location is not available",
+      },
       fadeDuration: reducedMotion ? 0 : 300,
     });
   } catch {
     return mapUnavailable(MAP_FAILED);
   }
   app.map.addControl(new maplibre.NavigationControl({ showCompass: false }), "top-right");
+  addLocateControl(maplibre);
   app.map.on("style.load", () => {
     styleLoaded = true;
+    addChargerLayers();
   });
   // Errors are logged. Before the style has loaded (the basemap host is down or blocked)
   // the chargers could never be drawn, so the list takes over; later errors, such as one
@@ -353,72 +384,110 @@ async function startMap() {
       mapUnavailable(styleLoaded ? MAP_FAILED : STYLE_FAILED);
     }
   });
-  app.map.on("load", () => {
-    app.map.addSource("chargers", {
-      type: "geojson",
-      data: { type: "FeatureCollection", features: app.filtered },
-      cluster: true,
-      clusterRadius: 50,
-      clusterMaxZoom: 13,
-    });
-    app.map.addLayer({
-      id: "clusters",
-      type: "circle",
-      source: "chargers",
-      filter: ["has", "point_count"],
-      paint: {
-        "circle-color": "#24323f",
-        "circle-radius": ["step", ["get", "point_count"], 16, 25, 20, 100, 26],
-        "circle-stroke-width": 2,
-        "circle-stroke-color": "#ffffff",
-      },
-    });
-    app.map.addLayer({
-      id: "points",
-      type: "circle",
-      source: "chargers",
-      filter: ["!", ["has", "point_count"]],
-      paint: {
-        "circle-color": ["match", ["get", "price"], "free", COLOURS.free, "priced", COLOURS.priced, COLOURS.unknown],
-        "circle-radius": 11,
-        "circle-stroke-width": 2,
-        "circle-stroke-color": "#ffffff",
-      },
-    });
-    app.map.addLayer({
-      id: "cluster-count",
-      type: "symbol",
-      source: "chargers",
-      filter: ["has", "point_count"],
-      layout: { "text-field": ["get", "point_count_abbreviated"], "text-font": FONT, "text-size": 13, "text-allow-overlap": true },
-      paint: { "text-color": "#ffffff" },
-    });
-    app.map.addLayer({
-      id: "point-labels",
-      type: "symbol",
-      source: "chargers",
-      filter: ["!", ["has", "point_count"]],
-      layout: {
-        "text-field": ["match", ["get", "price"], "free", "F", "priced", "£", "?"],
-        "text-font": FONT,
-        "text-size": 12,
-        "text-allow-overlap": true,
-      },
-      paint: { "text-color": "#ffffff" },
-    });
-    app.map.on("click", "clusters", async (event) => {
-      const cluster = event.features[0];
-      const zoom = await app.map.getSource("chargers").getClusterExpansionZoom(cluster.properties.cluster_id);
-      app.map.easeTo({ center: cluster.geometry.coordinates, zoom, duration: reducedMotion ? 0 : 500 });
-    });
-    app.map.on("click", "points", (event) => openDetail(event.features[0].properties.key, app.map.getCanvas()));
-    for (const layer of ["clusters", "points"]) {
-      app.map.on("mouseenter", layer, () => (app.map.getCanvas().style.cursor = "pointer"));
-      app.map.on("mouseleave", layer, () => (app.map.getCanvas().style.cursor = ""));
-    }
-    renderList();
+  // Handlers named by layer stay in place when a new style (light or dark) replaces the
+  // layers, so they are added once.
+  app.map.on("click", "clusters", async (event) => {
+    const cluster = event.features[0];
+    const zoom = await app.map.getSource("chargers").getClusterExpansionZoom(cluster.properties.cluster_id);
+    app.map.easeTo({ center: cluster.geometry.coordinates, zoom, duration: reducedMotion ? 0 : 500 });
   });
+  app.map.on("click", "points", (event) => openDetail(event.features[0].properties.key, app.map.getCanvas()));
+  for (const layer of ["clusters", "points"]) {
+    app.map.on("mouseenter", layer, () => (app.map.getCanvas().style.cursor = "pointer"));
+    app.map.on("mouseleave", layer, () => (app.map.getCanvas().style.cursor = ""));
+  }
+  app.map.on("load", renderList);
   app.map.on("moveend", renderList);
+}
+
+function mapStyle() {
+  return effectiveTheme() === "dark" ? (app.config.darkStyle ?? app.config.style) : app.config.style;
+}
+
+// Points are coloured by their fastest connector and sized a little larger the faster
+// it is, so the colour is not the only cue. The letter shows the price. A location whose
+// every connector was reported out of service is faded.
+function addChargerLayers() {
+  if (app.map.getSource("chargers")) return;
+  app.map.addSource("chargers", {
+    type: "geojson",
+    data: { type: "FeatureCollection", features: app.filtered },
+    cluster: true,
+    clusterRadius: 50,
+    clusterMaxZoom: 13,
+  });
+  const band = (values) => ["match", ["get", "band"], ...Object.entries(values).flat(), values.unknown];
+  const faded = (normal) => ["case", ["get", "down"], 0.45, normal];
+  app.map.addLayer({
+    id: "clusters",
+    type: "circle",
+    source: "chargers",
+    filter: ["has", "point_count"],
+    paint: {
+      "circle-color": "#24323f",
+      "circle-radius": ["step", ["get", "point_count"], 16, 25, 20, 100, 26],
+      "circle-stroke-width": 2,
+      "circle-stroke-color": "#ffffff",
+    },
+  });
+  app.map.addLayer({
+    id: "points",
+    type: "circle",
+    source: "chargers",
+    filter: ["!", ["has", "point_count"]],
+    paint: {
+      "circle-color": band(SPEED_COLOURS),
+      "circle-radius": band(SPEED_RADIUS),
+      "circle-opacity": faded(1),
+      "circle-stroke-width": 2,
+      "circle-stroke-color": "#ffffff",
+      "circle-stroke-opacity": faded(1),
+    },
+  });
+  app.map.addLayer({
+    id: "cluster-count",
+    type: "symbol",
+    source: "chargers",
+    filter: ["has", "point_count"],
+    layout: { "text-field": ["get", "point_count_abbreviated"], "text-font": FONT, "text-size": 13, "text-allow-overlap": true },
+    paint: { "text-color": "#ffffff" },
+  });
+  app.map.addLayer({
+    id: "point-labels",
+    type: "symbol",
+    source: "chargers",
+    filter: ["!", ["has", "point_count"]],
+    layout: {
+      "text-field": ["match", ["get", "price"], "free", "F", "priced", "£", "?"],
+      "text-font": FONT,
+      "text-size": 12,
+      "text-allow-overlap": true,
+    },
+    paint: { "text-color": "#ffffff", "text-opacity": faded(1) },
+  });
+  renderList();
+}
+
+// "Find my location" uses MapLibre's own control, which asks the browser for one
+// position and moves the map there. The position stays in the browser: only the map
+// files for that area are fetched, as for any other area.
+function addLocateControl(maplibre) {
+  if (!("geolocation" in navigator) || !window.isSecureContext) return;
+  const locate = new maplibre.GeolocateControl({
+    positionOptions: { enableHighAccuracy: false, timeout: 15000, maximumAge: 60000 },
+    fitBoundsOptions: { maxZoom: 12, ...(reducedMotion ? { animate: false } : {}) },
+    trackUserLocation: false,
+    showAccuracyCircle: true,
+  });
+  locate.on("error", (error) => {
+    notice(
+      error?.code === 1
+        ? "Your browser did not allow the map to use your location. You can change this in your browser's settings."
+        : "Your location could not be found just now. You can move the map by hand instead.",
+    );
+  });
+  locate.on("geolocate", () => notice(""));
+  app.map.addControl(locate, "top-right");
 }
 
 function mapUnavailable(message) {
@@ -439,6 +508,20 @@ function mapUnavailable(message) {
   renderList();
 }
 
+// Light and dark
+
+function effectiveTheme() {
+  return app.theme ?? (PREFERS_DARK.matches ? "dark" : "light");
+}
+
+// The page follows the device's setting (app.css) until the visitor presses the button.
+function applyTheme() {
+  const theme = effectiveTheme();
+  document.documentElement.dataset.theme = theme;
+  $("toggle-theme").setAttribute("aria-pressed", String(theme === "dark"));
+  if (app.map && app.config.darkStyle) app.map.setStyle(mapStyle(), { diff: false });
+}
+
 // Settings
 
 function setUpSettings() {
@@ -451,7 +534,7 @@ function setUpSettings() {
   }
   remember.addEventListener("change", () => {
     if (remember.checked) {
-      if (settings.save(app.state)) {
+      if (settings.save(app.state, app.theme)) {
         message.textContent = "Your filters are saved on this device.";
       } else {
         remember.checked = false;
@@ -492,6 +575,31 @@ function wireUp() {
     stateChanged();
   });
   $("filters").addEventListener("submit", (event) => event.preventDefault());
+  $("toggle-theme").addEventListener("click", () => {
+    app.theme = effectiveTheme() === "dark" ? "light" : "dark";
+    applyTheme();
+    saveIfRemembered();
+  });
+  PREFERS_DARK.addEventListener("change", () => {
+    if (!app.theme) applyTheme();
+  });
+  const quick = {
+    "quick-rapid": (state) => ({ ...state, minkw: state.minkw >= 50 ? 0 : 50 }),
+    "quick-free": (state) => ({ ...state, free: !state.free }),
+    "quick-working": (state) => ({ ...state, working: !state.working }),
+  };
+  for (const [id, change] of Object.entries(quick)) {
+    $(id).addEventListener("click", () => {
+      app.state = change(app.state);
+      stateToForm();
+      stateChanged();
+    });
+  }
+  $("done").addEventListener("click", () => {
+    $("toggle-filters").setAttribute("aria-expanded", "false");
+    $("filters").hidden = true;
+    $("toggle-filters").focus();
+  });
   $("reset").addEventListener("click", () => {
     app.state = { ...defaults(), view: app.state.view };
     stateToForm();
@@ -539,6 +647,9 @@ async function start() {
     app.state = settings.load() ?? defaults();
     app.savedOnly = true;
   }
+  if (settings.isRemembered()) app.theme = settings.theme();
+  applyTheme();
+  $("legend").open = WIDE.matches;
   trackHeaderHeight();
   wireUp();
   setUpSettings();
@@ -548,6 +659,10 @@ async function start() {
     app.config = await loadJson("assets/config.json");
     const layer = await loadJson("data/locations.geojson");
     app.features = layer.features ?? [];
+    for (const { properties } of app.features) {
+      properties.band = speedBand(properties.kw);
+      properties.down = allOut(properties);
+    }
     try {
       const manifest = await loadJson("data/manifest.json");
       for (const [id, entry] of Object.entries(manifest.operators ?? {})) app.operators.set(id, entry.name);
