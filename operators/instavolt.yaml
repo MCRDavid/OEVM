@@ -19,6 +19,13 @@ engagement:
     - date: unknown
       url: https://instavolt.co.uk/public-charge-point-regulation-data/
       note: InstaVolt's page refers to an "Open Data Agreement".
+  log:
+    - date: 2026-10-09
+      action: page_checked
+      summary: >-
+        InstaVolt's open data page was re-read. It asks for requests by email, says it will
+        send its Open Data Agreement to sign and return, and then issue access credentials.
+      evidence_url: https://instavolt.co.uk/public-charge-point-regulation-data/
 access_requested: null
 access_granted: null
 sources: []

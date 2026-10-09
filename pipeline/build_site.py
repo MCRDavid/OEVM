@@ -35,6 +35,8 @@ MAPLIBRE_FILES = (
     "maplibre-gl.css",
 )
 STYLE_URL = "https://tiles.openfreemap.org/styles/liberty"
+# Dark mode: OpenFreeMap's dark style, from the same host, fonts and sprites as Liberty.
+DARK_STYLE_URL = "https://tiles.openfreemap.org/styles/dark"
 # Latitude and longitude limits the map can be panned within: the UK with a margin.
 MAX_BOUNDS = [[-11.5, 48.5], [4.5, 61.5]]
 OFFLINE_STYLE = {
@@ -43,6 +45,14 @@ OFFLINE_STYLE = {
     "sources": {},
     "layers": [
         {"id": "background", "type": "background", "paint": {"background-color": "#e4ebef"}}
+    ],
+}
+OFFLINE_DARK_STYLE = {
+    "version": 8,
+    "name": "Offline dark style for tests",
+    "sources": {},
+    "layers": [
+        {"id": "background", "type": "background", "paint": {"background-color": "#1f2428"}}
     ],
 }
 LICENCE_NAMES = ("LICENSE", "LICENSE.txt", "LICENSE.md", "LICENCE", "LICENCE.txt", "COPYING")
@@ -120,6 +130,7 @@ def build(out: Path, *, offline_style: bool = False) -> list[str]:
     # origins: the only hosts besides this site the map may request (main.js enforces it).
     config = {
         "style": STYLE_URL,
+        "darkStyle": DARK_STYLE_URL,
         "origins": [_origin(STYLE_URL)],
         "repository": REPOSITORY_URL,
         "maxBounds": MAX_BOUNDS,
@@ -129,7 +140,11 @@ def build(out: Path, *, offline_style: bool = False) -> list[str]:
         (out / "assets" / "offline-style.json").write_text(
             json.dumps(OFFLINE_STYLE, indent=2) + "\n", encoding="utf-8"
         )
+        (out / "assets" / "offline-style-dark.json").write_text(
+            json.dumps(OFFLINE_DARK_STYLE, indent=2) + "\n", encoding="utf-8"
+        )
         config["style"] = "assets/offline-style.json"
+        config["darkStyle"] = "assets/offline-style-dark.json"
         config["origins"] = []
     (out / "assets" / "config.json").write_text(
         json.dumps(config, indent=2) + "\n", encoding="utf-8"

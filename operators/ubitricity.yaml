@@ -66,7 +66,20 @@ cors: needs_testing
 attribution: null
 engagement:
   status: unknown
-  evidence: []
+  evidence:
+    - date: 2026-10-09
+      url: https://ubitricity.com/en/pcpr-data-request/
+      note: >-
+        ubitricity's PCPR data request page asks for contact details and the data needed
+        through a request form. It names no licence, terms, key or agreement.
+  log:
+    - date: 2026-10-09
+      action: page_checked
+      summary: >-
+        ubitricity's PCPR data request page was read. It offers a request form and says
+        the data will be provided in a suitable format, with questions going to an
+        Eco-Movement address.
+      evidence_url: https://ubitricity.com/en/pcpr-data-request/
 access_requested: null
 access_granted: null
 sources:

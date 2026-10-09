@@ -1,0 +1,162 @@
+{
+  "request": {
+    "method": "GET",
+    "url": "https://api.clenergy.online/development/pcpr/tariffs"
+  },
+  "response": {
+    "status_code": 200,
+    "headers": {
+      "content-type": "application/json; charset=utf-8",
+      "access-control-allow-origin": "*"
+    },
+    "body": {
+      "name": "OK",
+      "message": "ok",
+      "data": [
+        {
+          "id": "5f40193ae03939062adc7420",
+          "currency": "GBP",
+          "tariff_alt_text": [],
+          "elements": [
+            {
+              "price_components": [
+                {
+                  "type": "ENERGY",
+                  "price": 0,
+                  "step_size": 1
+                }
+              ]
+            }
+          ],
+          "last_updated": "2026-10-09T07:37:01.062Z"
+        },
+        {
+          "id": "5f40193fe03939062adc7cf1",
+          "currency": "USD",
+          "tariff_alt_text": [],
+          "elements": [
+            {
+              "price_components": [
+                {
+                  "type": "ENERGY",
+                  "price": 0,
+                  "step_size": 1
+                }
+              ]
+            }
+          ],
+          "last_updated": "2026-10-09T07:37:01.062Z"
+        },
+        {
+          "id": "648c5537e6e20e41f53403a8",
+          "currency": "GBP",
+          "tariff_alt_text": [],
+          "elements": [
+            {
+              "price_components": [
+                {
+                  "type": "ENERGY",
+                  "price": 0.475,
+                  "step_size": 1
+                },
+                {
+                  "type": "FLAT",
+                  "price": 0.1584,
+                  "step_size": 1
+                }
+              ]
+            }
+          ],
+          "last_updated": "2025-07-01T09:37:27.828Z"
+        },
+        {
+          "id": "663102f7ca975d82fb950e30",
+          "currency": "GBP",
+          "tariff_alt_text": [],
+          "elements": [
+            {
+              "price_components": [
+                {
+                  "type": "ENERGY",
+                  "price": 0.4667,
+                  "step_size": 1
+                }
+              ]
+            }
+          ],
+          "last_updated": "2026-05-26T22:02:44.173Z"
+        },
+        {
+          "id": "672a096388670dcc1cd98e0b",
+          "currency": "GBP",
+          "tariff_alt_text": [],
+          "elements": [
+            {
+              "price_components": [
+                {
+                  "type": "ENERGY",
+                  "price": 0.4917,
+                  "step_size": 1
+                }
+              ]
+            }
+          ],
+          "last_updated": "2025-12-18T13:33:45.479Z"
+        },
+        {
+          "id": "68c96ce5396659387c21563c",
+          "currency": "GBP",
+          "tariff_alt_text": [],
+          "elements": [
+            {
+              "price_components": [
+                {
+                  "type": "ENERGY",
+                  "price": 0.6584,
+                  "step_size": 1
+                }
+              ]
+            }
+          ],
+          "last_updated": "2025-09-29T09:46:50.628Z"
+        },
+        {
+          "id": "69272c5919de370a0b0af3bc",
+          "currency": "GBP",
+          "tariff_alt_text": [],
+          "elements": [
+            {
+              "price_components": [
+                {
+                  "type": "ENERGY",
+                  "price": 0.4584,
+                  "step_size": 1
+                }
+              ]
+            }
+          ],
+          "last_updated": "2025-11-26T16:35:37.857Z"
+        },
+        {
+          "id": "6a5de32937103f1d29fc3dfc",
+          "currency": "GBP",
+          "tariff_alt_text": [],
+          "elements": [
+            {
+              "price_components": [
+                {
+                  "type": "ENERGY",
+                  "price": 0.5,
+                  "step_size": 1
+                }
+              ]
+            }
+          ],
+          "last_updated": "2026-07-20T08:58:25.715Z"
+        }
+      ],
+      "error": null,
+      "forcelogout": false
+    }
+  }
+}

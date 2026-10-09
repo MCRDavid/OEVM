@@ -20,7 +20,13 @@
     <button type="button" id="show-map" aria-pressed="true">Map</button>
     <button type="button" id="show-list" aria-pressed="false">List</button>
   </div>
-  <button type="button" id="toggle-filters" aria-expanded="false" aria-controls="filters">Filters</button>
+  <button type="button" id="toggle-filters" aria-expanded="false" aria-controls="filters">Filters<span id="filter-count"></span></button>
+  <button type="button" id="toggle-theme" aria-pressed="false">Dark mode</button>
+  <div class="quick" role="group" aria-label="Quick filters">
+    <button type="button" id="quick-rapid" aria-pressed="false">Rapid 50 kW+</button>
+    <button type="button" id="quick-free" aria-pressed="false">Free</button>
+    <button type="button" id="quick-working" aria-pressed="false">Hide out of service</button>
+  </div>
 </header>
 
 <form id="filters" class="filters" hidden aria-labelledby="filters-heading">
@@ -35,6 +41,11 @@
       <option value="50">50 kW or more (rapid)</option>
       <option value="150">150 kW or more (ultra-rapid)</option>
     </select>
+  </fieldset>
+  <fieldset>
+    <legend>Status</legend>
+    <label><input type="checkbox" id="working" name="working" aria-describedby="working-hint"> Hide chargers reported out of service</label>
+    <p class="hint" id="working-hint">Hides a charger when every connector&rsquo;s charge point was reported out of order, inoperative, planned or removed in the operator&rsquo;s feed at the last daily fetch. Status changes often, so a charger shown here may still be out of use. The details give each status with its date.</p>
   </fieldset>
   <fieldset>
     <legend>Connector</legend>
@@ -57,12 +68,13 @@
     <p class="hint">Leave all unticked to show every network.</p>
   </fieldset>
   <div class="actions">
+    <button type="button" id="done">Show chargers</button>
     <button type="button" id="reset">Clear filters</button>
   </div>
   <fieldset class="remember">
     <legend>Your settings</legend>
     <label><input type="checkbox" id="remember"> Remember my settings on this device</label>
-    <p class="hint">Off unless you turn it on. When on, your filters are saved in this browser&rsquo;s local storage so the map opens the same way next time. They are not sent anywhere. Turn this off, or press &ldquo;Forget my settings&rdquo;, to delete them.</p>
+    <p class="hint">Off unless you turn it on. When on, your filters, and light or dark mode if you picked one, are saved in this browser&rsquo;s local storage so the map opens the same way next time. They are not sent anywhere. Turn this off, or press &ldquo;Forget my settings&rdquo;, to delete them.</p>
     <button type="button" id="forget">Forget my settings</button>
     <p class="hint" id="settings-message" role="status"></p>
   </fieldset>
@@ -72,11 +84,24 @@
   <p id="notice" class="notice" role="status"></p>
   <section id="map-view" class="map-view" aria-label="Map of chargers">
     <div id="map" class="map"></div>
-    <div class="legend" aria-hidden="true">
-      <span><i class="dot free">F</i> Free (confirmed)</span>
-      <span><i class="dot priced">£</i> Priced</span>
-      <span><i class="dot unknown">?</i> Price unknown</span>
-    </div>
+    <details class="legend" id="legend">
+      <summary>Key</summary>
+      <p class="key-heading">Colour: fastest connector</p>
+      <ul>
+        <li><i class="dot ultra" aria-hidden="true"></i> 150 kW or more (ultra-rapid)</li>
+        <li><i class="dot rapid" aria-hidden="true"></i> 50 to 149 kW (rapid)</li>
+        <li><i class="dot fast" aria-hidden="true"></i> 8 to 49 kW</li>
+        <li><i class="dot slow" aria-hidden="true"></i> Under 8 kW</li>
+        <li><i class="dot unknown" aria-hidden="true"></i> Power unknown</li>
+      </ul>
+      <p class="key-heading">Letter: price</p>
+      <ul>
+        <li><i class="dot plain" aria-hidden="true">F</i> Free (confirmed)</li>
+        <li><i class="dot plain" aria-hidden="true">£</i> Priced</li>
+        <li><i class="dot plain" aria-hidden="true">?</i> Price unknown</li>
+      </ul>
+      <p class="key-heading"><i class="dot plain out" aria-hidden="true"></i> Faded: every connector reported out of service at the last daily fetch</p>
+    </details>
   </section>
   <section id="list" class="list-view" aria-labelledby="list-heading" tabindex="-1">
     <h2 id="list-heading">Chargers</h2>
