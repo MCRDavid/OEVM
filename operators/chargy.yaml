@@ -122,6 +122,19 @@ findings:
     evidence_url: https://github.com/MCRDavid/OEVM/actions/runs/37853739264
     status: resolved
     resolved_date: 2026-10-08
+  - date: 2026-10-09
+    kind: access
+    summary: >-
+      A one-off full fetch made on 2026-10-09 to check coordinates, from a network other
+      than GitHub's and with the 4 second gap, was answered HTTP 403 for offset 2700, after
+      54 pages. The daily run of the same day fetched every page.
+    handling: >-
+      The check stopped there and was not retried. All of char.gy's mapped locations were
+      checked from the published map instead. The one location left off the map in that
+      day's run (listed in that run's manifest) could not be looked at and needs
+      checking in a later run. The daily run's gap is unchanged, since the owner's rule is
+      about refusals in the daily run.
+    evidence_url: https://char.gy/open-ocpi/locations
 notes: >-
   Paging uses the OCPI 2.2.1 Link, X-Total-Count and X-Limit headers. Fetching a single
   location by id needs testing.

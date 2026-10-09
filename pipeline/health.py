@@ -8,19 +8,19 @@ its legal duties.
 from statistics import median
 
 from adapters.ocpi_221 import AdapterResult
+from pipeline.geography import place_in_uk
 from pipeline.tariffs import price_locations
 from schema.models import Location
 from schema.runlog import Health
 
-# Latitude and longitude limits that include the Isles of Scilly, Shetland, Northern
-# Ireland and the east coast. A point outside them is not plotted.
-UK_LATITUDE = (49.8, 60.95)
-UK_LONGITUDE = (-8.7, 1.8)
-
 
 def in_uk(location: Location) -> bool:
-    lat, lon = location.coordinates.latitude, location.coordinates.longitude
-    return UK_LATITUDE[0] <= lat <= UK_LATITUDE[1] and UK_LONGITUDE[0] <= lon <= UK_LONGITUDE[1]
+    """True if the location is genuinely in the UK (see pipeline/geography.py)."""
+    return place_in_uk(
+        location.coordinates.latitude,
+        location.coordinates.longitude,
+        location.address.postal_code,
+    )
 
 
 def health(result: AdapterResult) -> Health:

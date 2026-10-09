@@ -105,6 +105,12 @@ a plain local style (`--offline-style`) and never contact it. The operator data 
 map keeps its own licence and attribution, listed in the page's "Data sources and
 credits" and in every detail file.
 
+## Country outlines used to decide what is in the UK
+
+| Item | Source | Licence | Credit |
+|---|---|---|---|
+| Land outlines of the UK and its neighbours (`pipeline/data/uk_and_neighbours.json`) | Natural Earth 1:10m Cultural Vectors, Admin 0 Countries, version 5.1.2, from https://github.com/nvkelso/natural-earth-vector, trimmed to the UK, Ireland, the Isle of Man, the Channel Islands, France, Belgium and the Netherlands near the UK | Public domain. Its licence file says "All versions of Natural Earth raster + vector map data found on this website are in the public domain" and "No permission is needed to use Natural Earth. Crediting the authors is unnecessary." (read 9 October 2026) | Made with Natural Earth. Used only to decide which charger locations are in the UK; nothing from it is shown on the map or added to charger records |
+
 ## Other material this repository quotes
 
 - **Legislation and government guidance:** short extracts from legislation.gov.uk and

@@ -119,7 +119,7 @@ def test_obviously_swapped_coordinates_are_swapped_back_and_marked(results, tmp_
     swapped_id = "clenergy_ev:GB:CEV:67dd63746bcfca846582fe3e"  # UBI 98 Southwell Road, SE5
     assert entry.corrected_ids == [swapped_id] and entry.corrected == 1
     assert swapped_id not in entry.not_mapped_ids
-    assert entry.not_mapped == 1  # the St Lucia location stays off the map
+    assert entry.not_mapped == 2  # the St Lucia and Dublin locations stay off the map
     key = publish.location_key(swapped_id)
     detail = json.loads((tmp_path / "data" / "loc" / key[:2] / f"{key}.json").read_text())
     assert detail["location"]["coordinates"] == {"latitude": 51.467819, "longitude": -0.09703}

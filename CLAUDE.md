@@ -35,6 +35,7 @@ decisions are in docs/adr/.
   ADR 0016, providers/README.md). Plans only where the provider's terms allow reuse; never
   estimate a price. Permission requests to the others are tracked in providers/README.md.
 - pipeline/transparency.py: site/transparency/. pipeline/publish.py: map files; schema/published.py.
+- pipeline/geography.py and pipeline/data/: whether a point is in the UK (Natural Earth outlines).
 - pipeline/status.py: feed health page. schema/runlog.py: run log format. pipeline/health.py: figures.
 - pipeline/project.py: repository URL (also in site/index.html, site/.well-known/security.txt and .github/ISSUE_TEMPLATE).
 - site/index.html, site/assets/: the map page. pipeline/build_site.py: build folder with MapLibre.
@@ -71,6 +72,7 @@ decisions are in docs/adr/.
   operator file records the owner's decision in nonstandard_statuses; never add one yourself.
 - Never keep locations whose OCPI publish flag is false. Keep ones with no flag only when the
   operator file records the owner's decision in missing_publish_flag; never add one yourself.
+- Map only locations whose coordinates are genuinely in the UK (pipeline/geography.py, ADR 0016).
 - Correct coordinates only where the operator file records the owner's decision in
   swapped_coordinates, and only obvious latitude/longitude swaps (ADR 0013); show and record each one.
 - Switch an operator on only after reading its own terms and filling in its licence section.

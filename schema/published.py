@@ -200,7 +200,9 @@ class OperatorEntry(_Model):
     mode: Literal["fixtures", "live"]
     complete: bool
     mapped: int = Field(ge=0, description="Locations on the map.")
-    not_mapped: int = Field(ge=0, description="Locations left off: coordinates outside the UK.")
+    not_mapped: int = Field(
+        ge=0, description="Locations left off: coordinates not in the UK (pipeline/geography.py)."
+    )
     not_mapped_ids: list[RecordId] = Field(description="Ids of the locations left off.")
     corrected: int = Field(
         default=0,

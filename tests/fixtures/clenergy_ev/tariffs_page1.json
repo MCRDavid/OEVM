@@ -153,6 +153,23 @@
             }
           ],
           "last_updated": "2026-07-20T08:58:25.715Z"
+        },
+        {
+          "id": "6865343f292dd22918511256",
+          "currency": "EUR",
+          "tariff_alt_text": [],
+          "elements": [
+            {
+              "price_components": [
+                {
+                  "type": "ENERGY",
+                  "price": 0.4084,
+                  "step_size": 1
+                }
+              ]
+            }
+          ],
+          "last_updated": "2025-07-02T13:29:35.793Z"
         }
       ],
       "error": null,

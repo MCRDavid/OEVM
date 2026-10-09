@@ -65,7 +65,7 @@
           "type": "integer"
         },
         "not_mapped": {
-          "description": "Locations left off: coordinates outside the UK.",
+          "description": "Locations left off: coordinates not in the UK (pipeline/geography.py).",
           "minimum": 0,
           "title": "Not Mapped",
           "type": "integer"
