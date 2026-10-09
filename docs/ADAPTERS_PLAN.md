@@ -17,7 +17,7 @@ section filled in.
 | A2 | `gridserve` | Gridserve | A key | 3 |
 | A3 | `static_file` | No current operator; later council CSVs and FOI spreadsheets | A source that needs it | Deferred |
 | A4 | None yet | MFG on `ocpi_221`; Fastned, Believ and others once their format is known | Nothing for MFG; access for the rest | 1 |
-| A6 | Plain wrapper option for `ocpi_221` | Clenergy EV | Nothing | 1, after MFG |
+| A6 | Plain wrapper option for `ocpi_221` | Clenergy EV | Nothing | Built: `response_envelope: data_list` |
 | A5 | Basic auth for `ocpi_221` | Osprey | Osprey confirming the method and granting credentials | When credentials arrive |
 
 Operators that need no new adapter, so are not tasks here: Pod (`ocpi_221` once a token

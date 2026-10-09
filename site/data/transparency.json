@@ -62,6 +62,7 @@
       },
       "attribution": "Contains data from char.gy published under the Public Charge Point Regulations 2023, used in line with the Open Government Licence v3.0.",
       "missing_publish_flag": null,
+      "swapped_coordinates": null,
       "relay": null,
       "rate_limit": {
         "our_gap_seconds": 6.0,
@@ -127,6 +128,148 @@
       ]
     },
     {
+      "id": "clenergy_ev",
+      "name": "Clenergy EV",
+      "enabled": true,
+      "adapter": "ocpi_221",
+      "engagement": {
+        "status": "open_anonymous",
+        "label": "Open, no registration",
+        "headline": "Open, no registration (as of 2026-10-09)",
+        "as_of": "2026-10-09",
+        "last_request": null,
+        "last_response": null,
+        "last_response_text": "No request sent",
+        "evidence": [
+          {
+            "date": "2026-10-09",
+            "url": "https://www.clenergy-ev.com/open-data/",
+            "file": null,
+            "note": "Links \"locations\" and \"tariffs\" on api.clenergy.online in \"a machine-readable OCPI format\" and states no licence, terms or rate limit."
+          }
+        ],
+        "log": []
+      },
+      "access_requested": null,
+      "access_granted": null,
+      "feeds": [
+        {
+          "kind": "locations",
+          "url": "https://api.clenergy.online/development/pcpr/locations",
+          "status": "documented"
+        },
+        {
+          "kind": "tariffs",
+          "url": "https://api.clenergy.online/development/pcpr/tariffs",
+          "status": "documented"
+        }
+      ],
+      "licence": {
+        "name": "OGL-3.0",
+        "url": "https://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/",
+        "checked": "2026-10-09"
+      },
+      "attribution": "Contains data from Clenergy EV published under the Public Charge Point Regulations 2023, used in line with the Open Government Licence v3.0.",
+      "missing_publish_flag": null,
+      "swapped_coordinates": {
+        "decided": "2026-10-09",
+        "basis": "Where a location's latitude and longitude are obviously the wrong way round, the repository owner decided to show it in the right place rather than leave it off the map, with the operator's own figures kept and the correction shown on the map and recorded in the findings below."
+      },
+      "relay": null,
+      "rate_limit": {
+        "our_gap_seconds": 11.0,
+        "our_max_per_hour": 328,
+        "ours": "At least 11 s between requests to the operator's host, measured from the end of the previous request (at most 328 in any hour), retries included.",
+        "published": [],
+        "limits_checked": "2026-10-09",
+        "comparison": "No limit published (checked 2026-10-09). The gap is our own choice.",
+        "difference_from_regulations": "Neither the operator nor the regulations set a limit.",
+        "notes": "Clenergy EV's open data page states no rate limit. Responses carry X-RateLimit-Limit 6 with no window stated (see findings). The 11 second gap is this project's own choice: it would stay within 6 requests a minute, plus a 1 second margin, if that is what the header means. Each file holds every record, so a full run makes two requests (about 2.2 MB on 2026-10-09)."
+      },
+      "findings": [
+        {
+          "date": "2026-10-09",
+          "kind": "spec_conformance",
+          "kind_label": "Differs from OCPI 2.2.1",
+          "summary": "Responses wrap the records as {\"name\": \"OK\", \"message\": \"ok\", \"data\": [...], \"error\": null, \"forcelogout\": false}, with no status_code or timestamp. OCPI 2.2.1 section 4.1.7 describes a response object with status_code and timestamp. The records themselves follow OCPI 2.2.1.",
+          "handling": "The operator file sets response_envelope to data_list, so the adapter accepts a list in data with no status_code and stops if error is set. Every other feed is still checked strictly.",
+          "evidence_url": "https://api.clenergy.online/development/pcpr/locations",
+          "status": "open",
+          "resolved_date": null
+        },
+        {
+          "date": "2026-10-09",
+          "kind": "documentation",
+          "kind_label": "Documentation",
+          "summary": "Responses carry X-RateLimit-Limit 6, X-RateLimit-Remaining and X-RateLimit-Reset headers. No page states the window or whether the limit is per path.",
+          "handling": "Treated as unknown. The project leaves 11 seconds between requests and makes two requests a run.",
+          "evidence_url": "https://api.clenergy.online/development/pcpr/tariffs",
+          "status": "open",
+          "resolved_date": null
+        },
+        {
+          "date": "2026-10-09",
+          "kind": "documentation",
+          "kind_label": "Documentation",
+          "summary": "The feed address contains the word \"development\".",
+          "handling": "Used as published, since the operator's open data page links it. The feed health page will show any change.",
+          "evidence_url": "https://www.clenergy-ev.com/open-data/",
+          "status": "open",
+          "resolved_date": null
+        },
+        {
+          "date": "2026-10-09",
+          "kind": "data_quality",
+          "kind_label": "Data quirk",
+          "summary": "The operator field is null on every location (1,400 on 2026-10-09), and tariffs have no country_code or party_id.",
+          "handling": "Locations show Clenergy EV, the name of the operator publishing the feed. Tariff ids use the party GB CEV from the operator file.",
+          "evidence_url": "https://api.clenergy.online/development/pcpr/locations",
+          "status": "open",
+          "resolved_date": null
+        },
+        {
+          "date": "2026-10-09",
+          "kind": "data_quality",
+          "kind_label": "Data quirk",
+          "summary": "Every location's last_updated is the time of the request, so it does not show when a location last changed. Each EVSE's last_updated varies.",
+          "handling": "Kept as published.",
+          "evidence_url": "https://api.clenergy.online/development/pcpr/locations",
+          "status": "open",
+          "resolved_date": null
+        },
+        {
+          "date": "2026-10-09",
+          "kind": "data_quality",
+          "kind_label": "Data quirk",
+          "summary": "Every location has country GBR, but some coordinates are outside the UK (for example in the Caribbean, Canada and Ireland).",
+          "handling": "Locations whose coordinates fall outside the map's UK limits are left off the map and listed in the manifest as not mapped. Those limits also take in the Republic of Ireland, so points there are shown as published.",
+          "evidence_url": "https://api.clenergy.online/development/pcpr/locations",
+          "status": "open",
+          "resolved_date": null
+        },
+        {
+          "date": "2026-10-09",
+          "kind": "data_quality",
+          "kind_label": "Data quirk",
+          "summary": "Two locations with UK postcodes are published with latitude and longitude the wrong way round, which puts them outside the UK: \"UBI 98 Southwell Road (98)\" (SE5 9PG) as latitude -0.09703, longitude 51.467819, and \"Liberty Building\" (LS3 1HF) as latitude -1.56237, longitude 53.80797. A third, \"St Angela's Lakeside Aparthotel\", has the same pattern but an Irish postcode.",
+          "handling": "By the repository owner's decision (swapped_coordinates above), the two with UK postcodes are shown with the figures swapped back, and their details on the map say so and give the operator's own figures. The manifest lists them as corrected. The one with an Irish postcode is left off the map.",
+          "evidence_url": "https://api.clenergy.online/development/pcpr/locations",
+          "status": "open",
+          "resolved_date": null
+        },
+        {
+          "date": "2026-10-09",
+          "kind": "data_quality",
+          "kind_label": "Data quirk",
+          "summary": "5 of 129 tariffs are in a currency other than GBP (3 EUR, 1 USD, 1 CAD on 2026-10-09).",
+          "handling": "Their connectors show \"Price unknown\". Currencies are never converted.",
+          "evidence_url": "https://api.clenergy.online/development/pcpr/tariffs",
+          "status": "open",
+          "resolved_date": null
+        }
+      ]
+    },
+    {
       "id": "geniepoint",
       "name": "GeniePoint",
       "enabled": true,
@@ -170,6 +313,7 @@
       },
       "attribution": "Contains data from GeniePoint published under the Public Charge Point Regulations 2023, used in line with the Open Government Licence v3.0.",
       "missing_publish_flag": null,
+      "swapped_coordinates": null,
       "relay": {
         "decided": "2026-10-08",
         "reason": "The files answered HTTP 403 to the first request from a GitHub Actions runner in the first daily run, while answering normally from another network. The repository owner decided to fetch them through the project's relay on Cloudflare Workers, with the project's User-Agent and the same rate limits.",
@@ -322,6 +466,7 @@
         "basis": "Jolt publishes this feed itself \"In accordance with the UK Public Charge Point Regulations (PCPR) Open Data requirement\", and none of its locations has a publish flag. The repository owner decided that locations with no flag may be shown. A flag set to false would still be respected.",
         "evidence_url": "https://support.joltcharge.com/hc/en-gb/articles/27955558493207-UK-Public-Charge-Point-Regulations-Open-Data-Request"
       },
+      "swapped_coordinates": null,
       "relay": null,
       "rate_limit": {
         "our_gap_seconds": 2.0,
@@ -501,6 +646,7 @@
       "licence": null,
       "attribution": null,
       "missing_publish_flag": null,
+      "swapped_coordinates": null,
       "relay": null,
       "rate_limit": {
         "our_gap_seconds": 125.0,
@@ -602,6 +748,7 @@
       "licence": null,
       "attribution": null,
       "missing_publish_flag": null,
+      "swapped_coordinates": null,
       "relay": null,
       "rate_limit": {
         "our_gap_seconds": 125.0,
@@ -699,6 +846,7 @@
       "licence": null,
       "attribution": null,
       "missing_publish_flag": null,
+      "swapped_coordinates": null,
       "relay": null,
       "rate_limit": {
         "our_gap_seconds": 2,
@@ -756,6 +904,7 @@
       },
       "attribution": null,
       "missing_publish_flag": null,
+      "swapped_coordinates": null,
       "relay": null,
       "rate_limit": {
         "our_gap_seconds": 31.0,
@@ -859,6 +1008,7 @@
       "licence": null,
       "attribution": null,
       "missing_publish_flag": null,
+      "swapped_coordinates": null,
       "relay": null,
       "rate_limit": {
         "our_gap_seconds": 2,
@@ -912,6 +1062,7 @@
       "licence": null,
       "attribution": null,
       "missing_publish_flag": null,
+      "swapped_coordinates": null,
       "relay": null,
       "rate_limit": {
         "our_gap_seconds": 2.0,
@@ -963,6 +1114,7 @@
       "licence": null,
       "attribution": null,
       "missing_publish_flag": null,
+      "swapped_coordinates": null,
       "relay": null,
       "rate_limit": {
         "our_gap_seconds": 125.0,
@@ -1083,6 +1235,7 @@
       "licence": null,
       "attribution": null,
       "missing_publish_flag": null,
+      "swapped_coordinates": null,
       "relay": null,
       "rate_limit": {
         "our_gap_seconds": 125.0,

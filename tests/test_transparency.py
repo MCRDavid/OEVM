@@ -302,3 +302,11 @@ def test_a_declined_request_shows_the_operators_words_and_saved_copy():
     assert "&ldquo;We are &lt;not&gt; able to offer access.&rdquo;" in page
     assert f"{REPOSITORY_URL}/blob/main/evidence/example_operator/2026-10-20-reply.md" in page
     neutral_text(" ".join(parse(page).text))
+
+
+def test_a_decision_to_swap_back_coordinates_is_shown(page):
+    data = json.loads(transparency.outputs()[transparency.JSON_PATH])
+    decisions = {op["id"]: op["swapped_coordinates"] for op in data["operators"]}
+    assert decisions["clenergy_ev"]["decided"] == "2026-10-09"
+    assert all(v is None for k, v in decisions.items() if k != "clenergy_ev")
+    assert "obviously the wrong way round are swapped back" in " ".join(page.split())

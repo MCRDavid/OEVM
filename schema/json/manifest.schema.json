@@ -80,6 +80,23 @@
           "title": "Not Mapped Ids",
           "type": "array"
         },
+        "corrected": {
+          "default": 0,
+          "description": "Locations shown after swapping latitude and longitude the operator sent the wrong way round.",
+          "minimum": 0,
+          "title": "Corrected",
+          "type": "integer"
+        },
+        "corrected_ids": {
+          "description": "Ids of the corrected locations.",
+          "items": {
+            "description": "'{source}:{country}:{party}:{id}', for example 'chargy:GB:CGY:1234'. Use 'unknown' for a country or party that is not known.",
+            "pattern": "^[a-z0-9_]+:[^:]+:[^:]+:.+$",
+            "type": "string"
+          },
+          "title": "Corrected Ids",
+          "type": "array"
+        },
         "tariffs": {
           "minimum": 0,
           "title": "Tariffs",
@@ -114,6 +131,8 @@
         "mapped",
         "not_mapped",
         "not_mapped_ids",
+        "corrected",
+        "corrected_ids",
         "tariffs",
         "attribution",
         "licence",
