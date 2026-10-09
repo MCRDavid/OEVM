@@ -16,7 +16,8 @@ section filled in.
 | A1 | `eco_movement_pcpr` | bp pulse, Shell Recharge, ubitricity, Community by Shell Recharge | A token from at least one operator | 1 |
 | A2 | `gridserve` | Gridserve | Gridserve's data terms clarified, then a key | 2 |
 | A3 | `static_file` | No current operator; later council CSVs and FOI spreadsheets | A source that needs it | Deferred |
-| A4 | To be decided | MFG, Clenergy, Be.EV and others from operator research | Findings from the "More operators from source feeds" thread | After that thread reports |
+| A4 | None yet | MFG and Clenergy on `ocpi_221`; Fastned, Believ and others once their format is known | Access for most | 2 |
+| A5 | Basic auth for `ocpi_221` | Osprey | Osprey confirming the method and granting credentials | When credentials arrive |
 
 Operators that need no new adapter, so are not tasks here: Pod (`ocpi_221` once a token
 is granted; how tokens are sent is unknown), GeniePoint (already on `ocpi_221`). InstaVolt
@@ -122,21 +123,52 @@ file. That needs a new section in `schema/operator.py` and a schema export.
 **Suggestion:** defer until a real source needs it, as ADR 0004 already decided. Building
 it against no real file would mean guessing the format.
 
-## A4: adapters for newly found operators
+## A4: newly found operators
 
-The "More operators from source feeds" thread is researching new operators, including
-MFG, Clenergy and Be.EV. Its early status notes say MFG and Clenergy have open feeds and
-no Be.EV feed was found; the details are not in yet. Operators whose feeds are standard
-OCPI 2.2.1 go on `ocpi_221` in that thread with no task here. Each operator that needs
-something else gets its own task in this file with the same headings as A1 and A2.
+The "More operators from source feeds" thread checked each operator's own pages on
+2026-10-09. Its results, as reported to this plan:
+
+**No new adapter needed:**
+
+- MFG EV Power: `ocpi_221` (added in its own PR from that thread).
+- Clenergy EV: full-file OCPI on `https://api.clenergy.online/development/pcpr/`, no key.
+  The response wrapper uses `name` and `message` rather than `status_code` and
+  `status_message`, and responses carry `X-RateLimit-Limit: 6` with no window stated. Both
+  are recorded as findings when it is added; if `ocpi_221` rejects the wrapper, that is a
+  small change to `ocpi_221`, not a new adapter.
+
+**Format unknown until access is granted:** Fastned (API keys; its Fair Use Policy claims
+all rights in the data and says it "may throttle"), Believ (free self-serve registration;
+documentation only visible after login), Giga Power, EV Smart (says OCPI, no terms),
+Blink and Ionity (all by request). Each gets an A-numbered task in this file once a real
+response shows it is not standard OCPI.
+
+**No feed found:** Be.EV, Go Zero (the documented address now returns 404), Tesla,
+Connected Kerb and Sainsbury's Smart Charge.
+
+No operator found publishes a CSV or other non-OCPI file, which supports deferring A3.
+
+## A5: HTTP Basic authentication
+
+**Unlocks:** Osprey, which reportedly sends credentials by email for HTTP Basic
+authentication. That comes from the OSM wiki only and is not verified on Osprey's own site.
+
+**Change:** not a new adapter. Add a `basic` auth method to `schema/operator.py` and
+`adapters/http.py`, with the user name and password read from secrets named in the operator
+file and never logged, then run the schema export. `ocpi_221` then reads the feed as normal.
+
+**Depends on:** Osprey confirming the method and granting credentials. Building it before
+then would be guessing.
 
 ## Suggested order
 
 1. Request access for the Eco-Movement operators and write to Gridserve about its terms
-   (engagement log work, not adapter work). Nothing else can start without this.
-2. A4 tasks for any open feed found by operator research, since they need no key and can
-   be built straight away.
+   (engagement log work, not adapter work). No keyed adapter can start without this.
+2. MFG and Clenergy on `ocpi_221`, since they need no key. Believ's free registration is
+   the quickest way to learn another feed's format.
 3. A1 `eco_movement_pcpr`, when the first token arrives and after the faster fetching work
    lands.
-4. A2 `gridserve`, when the terms are clarified and a key is granted.
-5. A3 `static_file`, only when a real source needs it.
+4. A2 `gridserve`, when the terms are clarified and a key is granted. Its documentation
+   suggests `ocpi_221` with a header key may be enough; untested.
+5. A5 Basic auth, when Osprey grants credentials.
+6. A3 `static_file`, only when a real source needs it.
