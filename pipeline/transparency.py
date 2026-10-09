@@ -185,6 +185,14 @@ def operator_view(config: OperatorConfig) -> dict:
             if config.missing_publish_flag
             else None
         ),
+        "swapped_coordinates": (
+            {
+                "decided": str(config.swapped_coordinates.decided),
+                "basis": config.swapped_coordinates.basis,
+            }
+            if config.swapped_coordinates
+            else None
+        ),
         "relay": (
             {
                 "decided": str(config.relay.decided),
@@ -225,6 +233,7 @@ def last_reviewed(operators: dict[str, OperatorConfig]) -> str:
             config.access_requested,
             config.access_granted,
             config.missing_publish_flag.decided if config.missing_publish_flag else None,
+            config.swapped_coordinates.decided if config.swapped_coordinates else None,
         ]
         dates += [d for d in candidates if isinstance(d, date)]
     return max(dates).isoformat() if dates else "unknown"
@@ -294,6 +303,13 @@ def _sources_table(data: dict) -> str:
             fetched += (
                 f", through the project's relay since {_e(relay['decided'])}: "
                 f"{_e(relay['reason'])} ({_link(relay['evidence_url'], 'evidence')})"
+            )
+        swapped = op["swapped_coordinates"]
+        if op["enabled"] and swapped:
+            fetched += (
+                f". Coordinates that are obviously the wrong way round are swapped back and "
+                f"marked on the map, by the owner's decision of {_e(swapped['decided'])}: "
+                f"{_e(swapped['basis'])}"
             )
         rows.append(
             "<tr>"

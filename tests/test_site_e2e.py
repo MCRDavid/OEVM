@@ -39,7 +39,7 @@ BROWSER_ARGS = [
     "--no-proxy-server",
     "--host-resolver-rules=MAP * ~NOTFOUND, EXCLUDE 127.0.0.1",
 ]
-LOCATIONS = 19  # in the recorded fixtures
+LOCATIONS = 20  # in the recorded fixtures
 OUT_OF_SERVICE = 1  # fixture locations with every charger reported out of service
 SERVED: list[str] = []  # every path the test server was asked for
 # MapLibre writes the map position after the # a moment after the map settles, starting
@@ -224,6 +224,15 @@ def test_details_show_provenance_and_return_focus(visit):
     page.keyboard.press("Escape")
     assert page.is_hidden("#detail")
     assert page.evaluate("document.activeElement.classList.contains('item')")
+
+
+def test_details_say_when_coordinates_were_swapped_back(visit):
+    page = visit().open("?view=list", map_ready=False)
+    expect(page.locator("#list-items li")).to_have_count(LOCATIONS)
+    page.locator("#list-items button", has_text="UBI 98 Southwell Road").click()
+    note = page.locator("#detail-body .corrected")
+    expect(note).to_contain_text("latitude and longitude the wrong way round")
+    expect(note).to_contain_text("latitude -0.09703 and longitude 51.467819")
 
 
 def test_a_phone_opening_in_the_list_starts_the_map_when_first_shown(visit):

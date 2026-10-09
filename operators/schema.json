@@ -583,6 +583,30 @@
       ],
       "title": "Source",
       "type": "object"
+    },
+    "SwappedCoordinates": {
+      "additionalProperties": false,
+      "description": "The repository owner's recorded decision to correct obviously swapped coordinates.\n\nA location is corrected only when its published point is outside the UK, the same\nnumbers the other way round fall inside the UK, its country is GBR and its postcode is\na UK postcode. The published point is kept with the location, the map says it was\ncorrected, and the operator's findings record it. Without this decision such locations\nare left off the map.",
+      "properties": {
+        "decided": {
+          "description": "Date the owner made the decision (YYYY-MM-DD).",
+          "format": "date",
+          "title": "Decided",
+          "type": "string"
+        },
+        "basis": {
+          "description": "Why swapped coordinates may be corrected.",
+          "minLength": 1,
+          "title": "Basis",
+          "type": "string"
+        }
+      },
+      "required": [
+        "decided",
+        "basis"
+      ],
+      "title": "SwappedCoordinates",
+      "type": "object"
     }
   },
   "additionalProperties": false,
@@ -722,6 +746,18 @@
       ],
       "default": null,
       "description": "Only by the repository owner's decision: show locations that have no publish flag. Null means such locations are never kept."
+    },
+    "swapped_coordinates": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/SwappedCoordinates"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "description": "Only by the repository owner's decision: correct coordinates that are obviously the wrong way round. Null means such locations are left off the map."
     },
     "relay": {
       "anyOf": [

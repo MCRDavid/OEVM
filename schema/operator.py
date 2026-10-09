@@ -315,6 +315,20 @@ class MissingPublishFlag(_Model):
     evidence_url: SafeUrl = Field(description="Where the operator says the data is public.")
 
 
+class SwappedCoordinates(_Model):
+    """The repository owner's recorded decision to correct obviously swapped coordinates.
+
+    A location is corrected only when its published point is outside the UK, the same
+    numbers the other way round fall inside the UK, its country is GBR and its postcode is
+    a UK postcode. The published point is kept with the location, the map says it was
+    corrected, and the operator's findings record it. Without this decision such locations
+    are left off the map.
+    """
+
+    decided: dt.date = Field(description="Date the owner made the decision (YYYY-MM-DD).")
+    basis: NeutralText = Field(description="Why swapped coordinates may be corrected.")
+
+
 class Relay(_Model):
     """The repository owner's recorded decision to fetch this operator through a relay the
     project runs, because the operator's server refused requests from the daily run.
@@ -386,6 +400,11 @@ class OperatorConfig(_Model):
         default=None,
         description="Only by the repository owner's decision: show locations that have no "
         "publish flag. Null means such locations are never kept.",
+    )
+    swapped_coordinates: SwappedCoordinates | None = Field(
+        default=None,
+        description="Only by the repository owner's decision: correct coordinates that are "
+        "obviously the wrong way round. Null means such locations are left off the map.",
     )
     relay: Relay | None = Field(
         default=None,

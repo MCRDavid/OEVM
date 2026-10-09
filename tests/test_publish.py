@@ -39,7 +39,7 @@ def test_every_output_validates_against_its_exported_schema(results, tmp_path):
     jsonschema.validate(layer, schema("map-layer"))
     jsonschema.validate(json.loads((data / "manifest.json").read_text()), schema("manifest"))
     details = sorted((data / "loc").glob("*/*.json"))
-    assert len(details) == len(layer["features"]) == 19
+    assert len(details) == len(layer["features"]) == 20
     for path in details:
         jsonschema.validate(json.loads(path.read_text()), schema("location-detail"))
 
@@ -68,7 +68,7 @@ def test_the_manifest_records_operators_attribution_and_sizes(results, tmp_path)
         assert entry.licence == "OGL-3.0"
     sizes = {f.path: f for f in manifest.files}
     assert sizes["data/locations.geojson"].bytes > sizes["data/locations.geojson"].gzip_bytes > 0
-    assert sizes["data/loc/"].files == 19
+    assert sizes["data/loc/"].files == 20
     assert any("gzipped" in line for line in out.report)
 
 
@@ -105,6 +105,52 @@ def test_coordinates_outside_the_uk_are_left_off_not_moved(results, tmp_path):
         for f in json.loads((tmp_path / "data" / "locations.geojson").read_text())["features"]
     ]
     assert moved.id not in ids
+
+
+def test_obviously_swapped_coordinates_are_swapped_back_and_marked(results, tmp_path):
+    out = published(results, tmp_path)
+    entry = out.manifest.operators["clenergy_ev"]
+    swapped_id = "clenergy_ev:GB:CEV:67dd63746bcfca846582fe3e"  # UBI 98 Southwell Road, SE5
+    assert entry.corrected_ids == [swapped_id] and entry.corrected == 1
+    assert swapped_id not in entry.not_mapped_ids
+    assert entry.not_mapped == 1  # the St Lucia location stays off the map
+    key = publish.location_key(swapped_id)
+    detail = json.loads((tmp_path / "data" / "loc" / key[:2] / f"{key}.json").read_text())
+    assert detail["location"]["coordinates"] == {"latitude": 51.467819, "longitude": -0.09703}
+    assert detail["coordinates_corrected"]["published"] == {
+        "latitude": -0.09703,
+        "longitude": 51.467819,
+    }
+    assert "wrong way round" in detail["coordinates_corrected"]["note"]
+    others = [p for p in (tmp_path / "data" / "loc").glob("*/*.json") if p.stem != key]
+    assert all(json.loads(p.read_text())["coordinates_corrected"] is None for p in others)
+    assert any("1 with latitude and longitude swapped back" in line for line in out.report)
+
+
+def _swapped_location(results, **address):
+    clenergy = next(r for r in results if r.operator_id == "clenergy_ev")
+    location = next(loc for loc in clenergy.locations if loc.name.startswith("UBI 98"))
+    return location.model_copy(update={"address": location.address.model_copy(update=address)})
+
+
+def test_swaps_need_the_owners_decision_a_uk_postcode_and_gbr(results):
+    config = load_registry()["clenergy_ev"]
+    assert publish.swapped_back(_swapped_location(results), config) is not None
+    undecided = config.model_copy(update={"swapped_coordinates": None})
+    assert publish.swapped_back(_swapped_location(results), undecided) is None
+    irish = _swapped_location(results, postal_code="F91 TCN3")
+    assert publish.swapped_back(irish, config) is None
+    abroad = _swapped_location(results, country="IRL")
+    assert publish.swapped_back(abroad, config) is None
+
+
+def test_a_point_that_is_not_in_the_uk_either_way_is_not_moved(results):
+    config = load_registry()["clenergy_ev"]
+    location = _swapped_location(results)
+    elsewhere = location.model_copy(
+        update={"coordinates": Coordinates(latitude=14.0144, longitude=-61.0045)}
+    )
+    assert publish.swapped_back(elsewhere, config) is None
 
 
 def test_operators_that_are_switched_off_are_never_published(results, tmp_path):
