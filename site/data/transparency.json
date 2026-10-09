@@ -133,6 +133,16 @@
           "evidence_url": "https://github.com/MCRDavid/OEVM/actions/runs/37853739264",
           "status": "resolved",
           "resolved_date": "2026-10-08"
+        },
+        {
+          "date": "2026-10-09",
+          "kind": "access",
+          "kind_label": "Access",
+          "summary": "A one-off full fetch made on 2026-10-09 to check coordinates, from a network other than GitHub's and with the 4 second gap, was answered HTTP 403 for offset 2700, after 54 pages. The daily run of the same day fetched every page.",
+          "handling": "The check stopped there and was not retried. All of char.gy's mapped locations were checked from the published map instead. The one location left off the map in that day's run (listed in that run's manifest) could not be looked at and needs checking in a later run. The daily run's gap is unchanged, since the owner's rule is about refusals in the daily run.",
+          "evidence_url": "https://char.gy/open-ocpi/locations",
+          "status": "open",
+          "resolved_date": null
         }
       ]
     },
@@ -252,7 +262,7 @@
           "kind": "data_quality",
           "kind_label": "Data quirk",
           "summary": "Every location has country GBR, but some coordinates are outside the UK (for example in the Caribbean, Canada and Ireland).",
-          "handling": "Only locations whose coordinates are in the UK are shown, so these are left off the map and listed in the manifest as not mapped. Until 2026-10-09 the map used latitude and longitude limits that also took in the Republic of Ireland, so 6 locations in Dublin and Maynooth were shown; since then the UK's own outline is used (ADR 0014).",
+          "handling": "Only locations whose coordinates are in the UK are shown, so these are left off the map and listed in the manifest as not mapped. Until 2026-10-09 the map used latitude and longitude limits that also took in the Republic of Ireland, so 6 locations in Dublin and Maynooth were shown; since then the UK's own outline is used (ADR 0016).",
           "evidence_url": "https://api.clenergy.online/development/pcpr/locations",
           "status": "open",
           "resolved_date": null

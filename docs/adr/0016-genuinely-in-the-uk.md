@@ -1,4 +1,4 @@
-# 0014: Mapping only locations that are genuinely in the UK
+# 0016: Mapping only locations that are genuinely in the UK
 
 Date: 2026-10-09. Status: accepted.
 
@@ -23,6 +23,11 @@ still be checked for coordinates the wrong way round.
   or harbour can sit just off them. A point off every outline counts as in the UK if it is
   within 2 km of the UK's outline and no nearer to any other country's. Anything further
   out is left off.
+- **Small islands.** Natural Earth leaves out some inhabited islands, such as Great
+  Cumbrae, Gigha, Eigg, several Orkney and Shetland isles, St Agnes on Scilly and Holy
+  Island. A point off every outline with a UK postcode (not Isle of Man or Channel
+  Islands) counts as in the UK if it is within 25 km of the UK's outline and no nearer to
+  any other country's. Without a UK postcode the 2 km coast rule applies.
 - **The land border with Ireland.** Within 2 km of it the outlines cannot be trusted to
   pick a side, so the postcode decides: a Northern Ireland postcode (BT) means the UK, and
   anything else, or none, means the location is left off and counted. Strabane and Lifford,
@@ -48,7 +53,8 @@ sign, would put it in the UK. Results are recorded as findings in the operator f
 - MFG EV Power and Jolt: none.
 - char.gy: its mapped points are all in the UK. The one location left off in that run
   could not be looked at, because char.gy refused the check's full fetch part way (HTTP
-  403 at offset 2700). It needs checking in a later run.
+  403 at offset 2700, recorded as a finding in `operators/chargy.yaml`). It needs
+  checking in a later run.
 
 ## Consequences
 

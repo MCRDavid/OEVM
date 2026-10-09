@@ -6,7 +6,10 @@ the UK when it is inside the map's UK limits and either:
 - on the UK's land, using Natural Earth's 1:10m country outlines (pipeline/data/, public
   domain), or
 - off every outline but within COAST_METRES of the UK's and nearer to it than to any
-  other country, for piers, harbours and stretches of coast the outlines cut short.
+  other country, for piers, harbours and stretches of coast the outlines cut short, or
+- off every outline, within ISLAND_METRES of the UK's and nearer to it than to any other
+  country, with a UK postcode, for small islands the outlines leave out (Great Cumbrae,
+  Gigha, Eigg, several Orkney and Shetland isles, St Agnes on Scilly, Holy Island).
 
 The outlines are accurate to a few hundred metres, so a point within BORDER_METRES of the
 land border with Ireland is decided by its postcode instead: a Northern Ireland postcode
@@ -32,8 +35,11 @@ UK_LATITUDE = (49.8, 60.95)
 UK_LONGITUDE = (-8.7, 1.8)
 
 COAST_METRES = 2_000
+ISLAND_METRES = 25_000
 BORDER_METRES = 2_000
 _NI_POSTCODE = re.compile(r"^BT[0-9]{1,2} ?[0-9][A-Z]{2}$", re.IGNORECASE)
+# A UK postcode, leaving out the Isle of Man and Channel Islands, which share the format.
+_UK_POSTCODE = re.compile(r"^(?!IM|JE|GY)[A-Z]{1,2}[0-9][A-Z0-9]? ?[0-9][A-Z]{2}$", re.IGNORECASE)
 _BAND = 0.05  # degrees of latitude per bucket of edges
 _EARTH_METRES = 6_371_000
 
@@ -150,7 +156,8 @@ def place_in_uk(latitude: float, longitude: float, postcode: str | None = None) 
         return True
     if any(_inside(c, longitude, latitude) for code, c in countries.items() if code != "GBR"):
         return False
-    to_uk = _metres_to(uk, longitude, latitude, COAST_METRES)
+    reach = ISLAND_METRES if _UK_POSTCODE.match((postcode or "").strip()) else COAST_METRES
+    to_uk = _metres_to(uk, longitude, latitude, reach)
     if to_uk == math.inf:
         return False
     return all(

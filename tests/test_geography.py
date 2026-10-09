@@ -21,6 +21,10 @@ from pipeline.geography import place_in_uk
         ("Holyhead harbour", 53.3110, -4.6280, "LL65 1DQ"),
         ("Newry, near the border", 54.1751, -6.3402, "BT35 6HP"),
         ("Strabane, near the border", 54.8270, -7.4630, "BT82 8DY"),
+        ("Millport, Great Cumbrae (not in the outlines)", 55.754, -4.928, "KA28 0AA"),
+        ("St Agnes, Isles of Scilly (not in the outlines)", 49.893, -6.342, "TR22 0PL"),
+        ("Holy Island, Lindisfarne (not in the outlines)", 55.669, -1.80, "TD15 2SD"),
+        ("Eigg (not in the outlines)", 56.879, -6.129, "PH42 4RL"),
     ],
 )
 def test_places_in_the_uk_are_kept(name, latitude, longitude, postcode):
@@ -61,3 +65,17 @@ def test_the_outlines_are_natural_earth_and_cover_the_neighbours():
     data = json.loads(geography.DATA.read_text(encoding="utf-8"))
     assert "Natural Earth" in data["source"] and "Public domain" in data["licence"]
     assert {"GBR", "IRL", "IMN", "FRA", "BEL", "NLD", "JEY", "GGY"} <= set(data["countries"])
+
+
+def test_islands_the_outlines_leave_out_need_a_uk_postcode():
+    millport = (55.754, -4.928)
+    assert place_in_uk(*millport, "KA28 0AA")
+    assert not place_in_uk(*millport, None)
+    assert not place_in_uk(*millport, "IM1 2AA")
+    assert not place_in_uk(*millport, "N/A")
+
+
+def test_a_uk_postcode_does_not_pull_in_points_far_out_at_sea():
+    assert not place_in_uk(53.097591, 2.444352, "CW1 2JZ")  # GeniePoint's Crewe Civic
+    assert not place_in_uk(50.9513, 1.8587, "CT16 1JA")  # Calais, with a Dover postcode
+    assert not place_in_uk(53.309903, -6.403055, "SW1A 1AA")  # Dublin, with a London one
