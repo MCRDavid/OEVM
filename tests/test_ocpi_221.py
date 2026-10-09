@@ -10,6 +10,7 @@ from pathlib import Path
 
 import httpx
 import pytest
+from pydantic import ValidationError
 
 from adapters.http import FeedError, PoliteClient
 from adapters.ocpi_221 import fetch
@@ -178,14 +179,61 @@ def test_recorded_chargy_data_converts_faithfully(chargy):
     assert location.provenance.licence == "OGL-3.0"
     assert location.provenance.fetched_at == NOW
 
-    # char.gy uses "WORKING", which is not an OCPI status, so it must not be guessed.
+    # char.gy uses "WORKING", which is not an OCPI status. It is shown as working (free or
+    # in use not stated) only by the owner's decision in operators/chargy.yaml.
     assert raw_location_0["evses"][0]["status"] == "WORKING"
-    assert location.evses[0].status == "unknown"
+    assert location.evses[0].status == "working"
     assert any("'WORKING' is not an OCPI 2.2.1 value" in issue for issue in result.issues)
 
     # Every tariff a connector refers to is one of the fetched tariffs, with the same id form.
     tariff_ids = {t.id for t in result.tariffs}
     assert set(connector.tariff_ids) <= tariff_ids
+
+
+NONSTANDARD = {
+    "decided": "2026-10-09",
+    "basis": "The feed uses WORKING and FAULTED; the owner chose how they are shown.",
+    "evidence_url": "https://example.invalid/ocpi/locations",
+    "statuses": {"WORKING": "working", "FAULTED": "out_of_order"},
+}
+
+
+def evse_status(config: OperatorConfig, status: str) -> str:
+    raw = raw_location()
+    raw["evses"][0]["status"] = status
+    location = location_from_ocpi(
+        raw, config, source_url=EXAMPLE, fetched_at=NOW, issues=IssueLog()
+    )
+    return location.evses[0].status
+
+
+def test_statuses_outside_ocpi_are_unknown_without_the_owners_decision():
+    config = make_config()
+    assert evse_status(config, "WORKING") == "unknown"
+    assert evse_status(config, "FAULTED") == "unknown"
+
+
+def test_statuses_outside_ocpi_are_read_as_the_owner_decided():
+    config = make_config(nonstandard_statuses=NONSTANDARD)
+    assert evse_status(config, "WORKING") == "working"
+    assert evse_status(config, "FAULTED") == "out_of_order"
+    assert evse_status(config, "PREPARING") == "unknown"  # not in the decision
+    assert evse_status(config, "AVAILABLE") == "available"
+
+
+@pytest.mark.parametrize(
+    ("statuses", "message"),
+    [
+        ({"AVAILABLE": "out_of_order"}, "is an OCPI 2.2.1 status"),
+        ({"outoforder": "working"}, "is an OCPI 2.2.1 status"),
+        ({"FREE": "available"}, "statuses.FREE"),  # never read as available
+        ({"BUSY": "charging"}, "statuses.BUSY"),  # nor as in use
+        ({}, "statuses"),
+    ],
+)
+def test_a_nonstandard_reading_can_never_claim_more_than_the_feed_says(statuses, message):
+    with pytest.raises(ValidationError, match=message):
+        make_config(nonstandard_statuses={**NONSTANDARD, "statuses": statuses})
 
 
 def test_recorded_chargy_tariffs_keep_what_was_published(chargy):
@@ -257,6 +305,58 @@ def test_bad_responses_raise_feed_errors(response, message):
         pytest.raises(FeedError, match=message),
     ):
         fetch_module(client, "locations", url)
+
+
+# Feeds whose records are OCPI but whose wrapper is not (response_envelope: data_list)
+
+
+def plain_body(data, **extra) -> dict:
+    return {"name": "OK", "message": "ok", "data": data, "error": None, **extra}
+
+
+def test_a_wrapper_without_status_code_is_refused_by_default():
+    config = make_config()
+    url = f"{EXAMPLE}/locations"
+    pages = {url: httpx.Response(200, json=plain_body([{}]))}
+    with (
+        client_for(config, serve_pages(pages)) as client,
+        pytest.raises(FeedError, match="OCPI response object"),
+    ):
+        fetch_module(client, "locations", url)
+
+
+def test_data_list_accepts_a_wrapper_without_status_code():
+    config = make_config()
+    url = f"{EXAMPLE}/locations"
+    pages = {url: httpx.Response(200, json=plain_body([{}, {}]))}
+    with client_for(config, serve_pages(pages)) as client:
+        result = fetch_module(client, "locations", url, envelope="data_list")
+    assert len(result.records) == 2 and result.complete
+
+
+@pytest.mark.parametrize(
+    ("body", "message"),
+    [
+        (plain_body([], error="Server error", message="failed"), "returned an error: failed"),
+        ({"name": "OK", "data": {}}, "no list of records"),
+        ({"status_code": 2001, "status_message": "Invalid", "data": []}, "OCPI status 2001"),
+        ([1, 2], "OCPI response object"),
+    ],
+    ids=["error-set", "data-not-a-list", "status-code-still-checked", "not-an-object"],
+)
+def test_data_list_still_rejects_bad_responses(body, message):
+    config = make_config()
+    url = f"{EXAMPLE}/locations"
+    with (
+        client_for(config, serve_pages({url: httpx.Response(200, json=body)})) as client,
+        pytest.raises(FeedError, match=message),
+    ):
+        fetch_module(client, "locations", url, envelope="data_list")
+
+
+def test_response_envelope_only_applies_to_ocpi_221():
+    with pytest.raises(ValidationError, match="response_envelope"):
+        make_config(adapter="custom", response_envelope="data_list")
 
 
 # Politeness and retries

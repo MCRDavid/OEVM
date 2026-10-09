@@ -20,7 +20,10 @@ Date: 2026-10-07. Status: accepted.
 - A value that is not valid OCPI becomes "unknown" with a logged issue. On 7 October 2026
   char.gy used the EVSE statuses `WORKING` and `FAULTED`. Regulation 10(6)(a) defines
   "working" as an OCPI status of available, charging or reserved, so `WORKING` cannot be
-  mapped to one status without guessing.
+  mapped to one status without guessing. Amended on 9 October 2026 (ADR 0015): the owner
+  can record in `nonstandard_statuses` how such a status is shown, only as `working` (in
+  service, free or in use not stated) or `out_of_order`. char.gy's `WORKING` and
+  `FAULTED` are shown that way by the owner's decision.
 - Power is `max_electric_power` if given, otherwise voltage times amperage times phases
   (three for AC_3_PHASE, where OCPI gives voltage line to neutral). Two-phase supplies get
   no figure, because OCPI does not say how to read their voltage.

@@ -1,0 +1,128 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$defs": {
+    "LiveEvse": {
+      "additionalProperties": false,
+      "properties": {
+        "uid": {
+          "description": "OCPI EVSE uid, unique within its location.",
+          "minLength": 1,
+          "title": "Uid",
+          "type": "string"
+        },
+        "status": {
+          "enum": [
+            "available",
+            "blocked",
+            "charging",
+            "inoperative",
+            "out_of_order",
+            "planned",
+            "removed",
+            "reserved",
+            "unknown",
+            "working"
+          ],
+          "title": "Status",
+          "type": "string"
+        },
+        "status_at": {
+          "anyOf": [
+            {
+              "format": "date-time",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "description": "When the operator last reported the status. Null only when unknown.",
+          "title": "Status At"
+        }
+      },
+      "required": [
+        "uid",
+        "status",
+        "status_at"
+      ],
+      "title": "LiveEvse",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "schema_version": {
+      "const": 1,
+      "default": 1,
+      "title": "Schema Version",
+      "type": "integer"
+    },
+    "operator": {
+      "description": "Operator id in the registry.",
+      "pattern": "^[a-z0-9_]+$",
+      "title": "Operator",
+      "type": "string"
+    },
+    "fetched_at": {
+      "description": "When the newest data in this snapshot was fetched from the operator.",
+      "format": "date-time",
+      "title": "Fetched At",
+      "type": "string"
+    },
+    "full_fetch_at": {
+      "description": "When every location was last fetched, rather than only changes.",
+      "format": "date-time",
+      "title": "Full Fetch At",
+      "type": "string"
+    },
+    "attribution": {
+      "description": "The operator's attribution statement.",
+      "minLength": 1,
+      "title": "Attribution",
+      "type": "string"
+    },
+    "licence": {
+      "description": "The licence the operator's data is used under.",
+      "minLength": 1,
+      "title": "Licence",
+      "type": "string"
+    },
+    "licence_url": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Licence Url"
+    },
+    "locations": {
+      "description": "EVSE statuses by location key, as in data/loc/<shard>/<key>.json.",
+      "patternProperties": {
+        "^[0-9a-f]{16}$": {
+          "items": {
+            "$ref": "#/$defs/LiveEvse"
+          },
+          "type": "array"
+        }
+      },
+      "title": "Locations",
+      "type": "object"
+    }
+  },
+  "required": [
+    "schema_version",
+    "operator",
+    "fetched_at",
+    "full_fetch_at",
+    "attribution",
+    "licence",
+    "licence_url",
+    "locations"
+  ],
+  "title": "LiveSnapshot",
+  "type": "object"
+}

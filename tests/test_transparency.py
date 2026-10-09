@@ -2,6 +2,7 @@
 
 import html
 import json
+import re
 from html.parser import HTMLParser
 from pathlib import Path
 
@@ -173,3 +174,139 @@ def test_last_reviewed_counts_resolved_dates():
         }
     )
     assert transparency.last_reviewed({config.id: config}) == "2026-11-20"
+
+
+# The engagement log
+
+REQUEST = {
+    "date": "2026-10-01",
+    "action": "request_sent",
+    "channel": "web_form",
+    "summary": "Requested access through the operator's form.",
+}
+
+
+def operator_with(engagement: dict, **overrides) -> OperatorConfig:
+    data = {
+        "id": "example_operator",
+        "display_name": "Example Operator",
+        "ocpi_country_code": "unknown",
+        "ocpi_party_id": "unknown",
+        "adapter": "unknown",
+        "base_url": "unknown",
+        "auth": {"method": "unknown"},
+        "supports_single_location": "unknown",
+        "cors": "unknown",
+        "engagement": engagement,
+        "enabled": False,
+    }
+    data.update(overrides)
+    return OperatorConfig.model_validate(data)
+
+
+def test_every_operator_appears_in_the_engagement_table(page):
+    table = page[page.index("Access status for every known operator") :]
+    table = table[: table.index("</table>")]
+    for config in load_registry().values():
+        assert html.escape(config.display_name) in table
+
+
+def test_status_is_dated_by_the_latest_log_entry():
+    check = {
+        "date": "2026-10-09",
+        "action": "page_checked",
+        "summary": "Read the page.",
+        "evidence_url": "https://example.invalid/open-data",
+    }
+    config = operator_with(
+        {
+            "status": "key_on_request",
+            "evidence": [{"date": "2026-10-02", "url": "https://example.invalid/open-data"}],
+            "log": [check],
+        }
+    )
+    assert transparency.engagement_headline(config.engagement) == (
+        "Key issued on request (as of 2026-10-09)"
+    )
+    assert transparency.last_reviewed({config.id: config}) == "2026-10-09"
+
+
+def test_requests_and_responses_are_shown_as_dates_not_day_counts():
+    chase = {**REQUEST, "date": "2026-10-15", "action": "follow_up_sent"}
+    check = {"date": "2026-10-29", "action": "page_checked", "summary": "Checked for a reply."}
+    config = operator_with(
+        {"status": "requested_no_reply", "log": [REQUEST, chase, check]},
+        access_requested="2026-10-01",
+    )
+    assert transparency.engagement_headline(config.engagement) == (
+        "Requested, no reply (as of 2026-10-29)"
+    )
+    view = transparency.operator_view(config)
+    assert view["access_requested"] == "2026-10-01"
+    assert view["engagement"]["last_request"] == "2026-10-15"
+    assert view["engagement"]["last_response"] is None
+    assert view["engagement"]["last_response_text"] == "None recorded"
+    page = transparency.render_html(transparency.build({config.id: config}))
+    section = page[
+        page.index("<h2>Access and engagement</h2>") : page.index("<h2>Rate limits</h2>")
+    ]
+    assert not re.search(r"\bdays?\b", " ".join(parse(section).text))
+
+
+def test_the_last_response_is_shown_with_its_date():
+    reply = {
+        "date": "2026-10-05",
+        "action": "reply_received",
+        "channel": "email",
+        "summary": "The operator replied that the request is being reviewed.",
+        "evidence_url": "https://example.invalid/reply",
+    }
+    config = operator_with(
+        {"status": "requested_awaiting_decision", "log": [REQUEST, reply]},
+        access_requested="2026-10-01",
+    )
+    view = transparency.operator_view(config)
+    assert view["engagement"]["last_response"] == {
+        "date": "2026-10-05",
+        "action": "reply_received",
+    }
+    assert view["engagement"]["last_response_text"] == "2026-10-05 (Reply received)"
+
+
+def test_an_operator_never_asked_shows_no_request_sent():
+    config = operator_with({"status": "unknown"})
+    assert transparency.last_response_text(config.engagement) == "No request sent"
+
+
+def test_an_undated_status_says_so():
+    config = operator_with({"status": "unknown"})
+    assert transparency.engagement_headline(config.engagement) == (
+        "Not yet established (no dated check yet)"
+    )
+
+
+def test_a_declined_request_shows_the_operators_words_and_saved_copy():
+    decline = {
+        "date": "2026-10-20",
+        "action": "request_declined",
+        "channel": "email",
+        "summary": "The operator replied that it does not offer a feed to individuals.",
+        "quote": "We are <not> able to offer access.",
+        "evidence_file": "evidence/example_operator/2026-10-20-reply.md",
+    }
+    config = operator_with(
+        {"status": "request_declined", "log": [REQUEST, decline]},
+        access_requested="2026-10-01",
+    )
+    page = transparency.render_html(transparency.build({config.id: config}))
+    assert "&ldquo;We are &lt;not&gt; able to offer access.&rdquo;" in page
+    assert f"{REPOSITORY_URL}/blob/main/evidence/example_operator/2026-10-20-reply.md" in page
+    neutral_text(" ".join(parse(page).text))
+
+
+def test_a_decision_to_swap_back_coordinates_is_shown(page):
+    data = json.loads(transparency.outputs()[transparency.JSON_PATH])
+    decisions = {op["id"]: op["swapped_coordinates"] for op in data["operators"]}
+    assert decisions["clenergy_ev"]["decided"] == "2026-10-09"
+    assert all(v is None for k, v in decisions.items() if k != "clenergy_ev")
+    assert "obviously the wrong way round are swapped back" in " ".join(page.split())

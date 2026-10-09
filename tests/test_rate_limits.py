@@ -14,17 +14,18 @@ is "on the wire". Gaps are checked at the server's end, using the time each requ
 arrives, with uneven network delays, and windows are counted inclusively at both ends.
 """
 
+import threading
 import time
 from datetime import UTC, datetime, timedelta
 from email.utils import format_datetime
-from itertools import cycle, pairwise
+from itertools import combinations, cycle, pairwise
 from pathlib import Path
 
 import httpx
 import pytest
 from pydantic import ValidationError
 
-from adapters.http import FeedError, PoliteClient, required_gap
+from adapters.http import FeedError, PoliteClient, operator_hosts, required_gap
 from adapters.ocpi_221.client import fetch_module
 from adapters.replay import ReplayTransport
 from pipeline import run
@@ -383,3 +384,70 @@ def test_live_mode_uses_the_real_clock(monkeypatch):
     assert run.main(["--live", "chargy"]) == 1
     assert captured["sleep"] is time.sleep
     assert captured["clock"] is time.monotonic
+
+
+# Fetching operators on different hosts at the same time (pipeline.run.host_groups)
+
+
+def test_operators_that_share_a_host_are_in_one_group():
+    groups = run.host_groups([OPERATORS[i] for i in sorted(OPERATORS)])
+    ids = [[config.id for config in group] for group in groups]
+    shared = sorted(i for i, c in OPERATORS.items() if c.adapter == "eco_movement_pcpr")
+    assert shared in ids
+    assert ["chargy"] in ids and ["jolt"] in ids
+    # Every host is in exactly one group.
+    hosts = [set().union(*(operator_hosts(c) for c in group)) for group in groups]
+    assert all(not (a & b) for a, b in combinations(hosts, 2))
+
+
+def test_relayed_operators_share_the_relay_and_are_grouped():
+    relay = OPERATORS["geniepoint"].relay
+    one = make_config(2, []).model_copy(update={"id": "one", "relay": relay})
+    other = OPERATORS["chargy"].model_copy(update={"relay": relay})
+    groups = run.host_groups([one, OPERATORS["jolt"], other])
+    assert [[c.id for c in group] for group in groups] == [["one", "chargy"], ["jolt"]]
+
+
+def test_a_host_shared_through_a_third_operator_joins_the_groups():
+    def on(operator_id, *hosts):
+        data = make_config(2, []).model_dump()
+        data.update(id=operator_id, base_url="unknown")
+        data["endpoints"] = {
+            module: {"url": f"https://{host}/ocpi", "status": "documented"}
+            for module, host in zip(("locations", "tariffs"), hosts, strict=False)
+        }
+        return OperatorConfig.model_validate(data)
+
+    a, b, c = on("a", "one.example"), on("b", "two.example"), on("c", "two.example", "one.example")
+    assert [[x.id for x in g] for g in run.host_groups([a, b, c])] == [["a", "b", "c"]]
+    assert len(run.host_groups([a, b])) == 2
+
+
+def test_the_live_run_never_fetches_one_host_twice_at_once(monkeypatch, capsys):
+    """Every operator in the registry switched on, with each fetch taking a little while."""
+    everyone = {i: c.model_copy(update={"enabled": True}) for i, c in OPERATORS.items()}
+    monkeypatch.setattr(run, "load_registry", lambda: everyone)
+    lock, busy, most = threading.Lock(), set(), [0]
+    replayed = {r.operator_id: r for r in run.run_fixtures(OPERATORS)}
+
+    def fake(config, **kwargs):
+        hosts = operator_hosts(config)
+        with lock:
+            assert not busy & hosts, f"{config.id} started while its host was in use"
+            busy.update(hosts)
+            most[0] = max(most[0], len(busy))
+        time.sleep(0.02)
+        with lock:
+            busy.difference_update(hosts)
+        if config.id in replayed:
+            return replayed[config.id]
+        raise FeedError(f"{config.id}: not recorded")
+
+    monkeypatch.setattr(run, "run_operator", fake)
+    assert run.main(["--live", "all"]) == run.EXIT_SOME_FAILED
+    # Groups really did run at the same time.
+    assert most[0] > len(operator_hosts(OPERATORS["chargy"]))
+    shown = capsys.readouterr()
+    # Results are reported in registry order, whatever order the groups finish in.
+    reported = [line.split(":")[0] for line in shown.out.splitlines() if ": fetched " in line]
+    assert reported == sorted(replayed)

@@ -242,6 +242,26 @@
       "title": "Coordinates",
       "type": "object"
     },
+    "CoordinatesCorrection": {
+      "additionalProperties": false,
+      "properties": {
+        "published": {
+          "$ref": "#/$defs/Coordinates",
+          "description": "The coordinates exactly as the operator sent them."
+        },
+        "note": {
+          "description": "What was corrected and why, shown with the location.",
+          "title": "Note",
+          "type": "string"
+        }
+      },
+      "required": [
+        "published",
+        "note"
+      ],
+      "title": "CoordinatesCorrection",
+      "type": "object"
+    },
     "EVSE": {
       "additionalProperties": false,
       "properties": {
@@ -275,7 +295,8 @@
             "planned",
             "removed",
             "reserved",
-            "unknown"
+            "unknown",
+            "working"
           ],
           "title": "Status",
           "type": "string"
@@ -1072,6 +1093,18 @@
     "location": {
       "$ref": "#/$defs/Location"
     },
+    "coordinates_corrected": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/CoordinatesCorrection"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "description": "Set when this project swapped the operator's latitude and longitude, by the owner's decision recorded in the operator file. Null otherwise."
+    },
     "tariffs": {
       "description": "The tariffs this location's connectors list.",
       "items": {
@@ -1115,6 +1148,7 @@
   },
   "required": [
     "location",
+    "coordinates_corrected",
     "tariffs",
     "prices",
     "attribution",

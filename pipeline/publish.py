@@ -5,15 +5,20 @@
 writes, under build/data/:
 
 - locations.geojson: one slim point per location, for the map and its filters. It holds
-  no live status, because a daily snapshot would look current when it is not.
+  no live status, because a daily snapshot would look current when it is not. Each kind
+  of connector only says whether it was reported out of service in this fetch, so the
+  map can offer to hide those; the map says the report is from the last daily fetch.
 - loc/<shard>/<key>.json: everything about one location, its tariffs and the price of
   each connector as worded by pipeline/pricing.py. EVSE statuses carry their dates.
 - manifest.json: when each operator was fetched, attribution, counts and file sizes.
 
 Rules:
 - Only operators switched on in the registry are published (their terms have been read).
-- Locations whose coordinates fall outside the UK are left off the map and counted, never
-  moved: operator data is not corrected.
+- Locations whose coordinates fall outside the UK are left off the map and counted.
+  Operator data is not corrected, with one exception the owner decides per operator
+  (swapped_coordinates in the operator file, ADR 0013): a point whose latitude and
+  longitude are obviously the wrong way round is swapped back, the published point is
+  kept in the detail file, and the map says so.
 - Every file is validated against schema/published.py before it is written.
 - The committed site/ folder is never written to; the deploy step copies site/ and adds
   this output.
@@ -22,6 +27,7 @@ Rules:
 import gzip
 import hashlib
 import json
+import re
 import shutil
 from collections import defaultdict
 from dataclasses import dataclass
@@ -34,11 +40,12 @@ from pipeline.health import in_uk
 from pipeline.pricing import location_summary
 from pipeline.registry import ROOT
 from pipeline.tariffs import ConnectorPrice, price_locations
-from schema.models import Connector, Location
+from schema.models import Connector, Coordinates, Location
 from schema.operator import OperatorConfig
 from schema.published import (
     ConnectorPriceOut,
     ConnectorSummary,
+    CoordinatesCorrection,
     FileEntry,
     LocationDetail,
     Manifest,
@@ -47,6 +54,16 @@ from schema.published import (
     MapProperties,
     OperatorEntry,
     PointGeometry,
+)
+
+# A UK postcode, with or without its space (the BFPO and overseas territory forms are not
+# needed here). Used only to decide whether swapped coordinates are obviously a UK place.
+UK_POSTCODE = re.compile(r"^[A-Z]{1,2}[0-9][A-Z0-9]? ?[0-9][A-Z]{2}$", re.IGNORECASE)
+
+SWAP_NOTE = (
+    "The operator published this location's latitude and longitude the wrong way round, "
+    "which put it outside the UK. This map shows it with the two swapped back; the "
+    "operator's own figures are latitude {lat} and longitude {lon}."
 )
 
 LICENCE_NOTE = (
@@ -83,13 +100,21 @@ def _sortable(value: float | None) -> float:
     return -1.0 if value is None else value
 
 
-def _connector_summary(connector: Connector, price: ConnectorPrice) -> ConnectorSummary:
+# OCPI 2.2.1 EVSE statuses under which a charge point cannot be used. "blocked" (a parked
+# car, for example) and "unknown" are not counted.
+OUT_OF_SERVICE = frozenset({"out_of_order", "inoperative", "planned", "removed"})
+
+
+def _connector_summary(
+    connector: Connector, price: ConnectorPrice, status: str
+) -> ConnectorSummary:
     with_vat = price.state == "priced" and price.includes_vat and price.energy_high is not None
     return ConnectorSummary(
         std=connector.standard,
         kw=connector.max_kw,
         price=MAP_PRICE[price.state],
         ppk=_pence(price.energy_high) if with_vat else None,
+        out=status in OUT_OF_SERVICE,
     )
 
 
@@ -97,13 +122,17 @@ def map_properties(location: Location, prices: list[ConnectorPrice], key: str) -
     """The slim properties of one location. prices holds one entry per connector, in the
     order price_locations gives them."""
     connectors = [c for evse in location.evses for c in evse.connectors]
+    statuses = [evse.status for evse in location.evses for _ in evse.connectors]
     if len(prices) != len(connectors):
         raise PublishError(f"{location.id}: expected a price for each connector")
     powers = [c.max_kw for c in connectors if c.max_kw is not None]
     states = {p.state for p in prices}
     summaries = {
-        (s.std, _sortable(s.kw), s.price, _sortable(s.ppk)): s
-        for s in (_connector_summary(c, p) for c, p in zip(connectors, prices, strict=True))
+        (s.std, _sortable(s.kw), s.price, _sortable(s.ppk), s.out): s
+        for s in (
+            _connector_summary(c, p, st)
+            for c, p, st in zip(connectors, prices, statuses, strict=True)
+        )
     }
     return MapProperties(
         id=location.id,
@@ -158,6 +187,24 @@ def _size(path: str, blobs: list[bytes]) -> FileEntry:
     )
 
 
+def swapped_back(location: Location, config: OperatorConfig) -> Location | None:
+    """The location with latitude and longitude swapped, if the owner allows it for this
+    operator and the swap is obvious: the published point is outside the UK, the swapped
+    point is inside it, the country is GBR and the postcode is a UK postcode."""
+    if config.swapped_coordinates is None or in_uk(location):
+        return None
+    postcode = (location.address.postal_code or "").strip()
+    if location.address.country != "GBR" or not UK_POSTCODE.match(postcode):
+        return None
+    published = location.coordinates
+    try:
+        swapped = Coordinates(latitude=published.longitude, longitude=published.latitude)
+    except ValueError:
+        return None
+    moved = location.model_copy(update={"coordinates": swapped})
+    return moved if in_uk(moved) else None
+
+
 def publish(
     results: list[AdapterResult],
     operators: dict[str, OperatorConfig],
@@ -182,11 +229,21 @@ def publish(
         for price in price_locations(result.locations, result.tariffs):
             by_location[price.location_id].append(price)
         tariffs = {t.id: t for t in result.tariffs}
-        mapped, not_mapped = 0, []
+        mapped, not_mapped, corrected = 0, [], []
         for location in sorted(result.locations, key=lambda loc: loc.id):
+            correction = None
             if not in_uk(location):
-                not_mapped.append(location.id)
-                continue
+                moved = swapped_back(location, config)
+                if moved is None:
+                    not_mapped.append(location.id)
+                    continue
+                published = location.coordinates
+                correction = CoordinatesCorrection(
+                    published=published,
+                    note=SWAP_NOTE.format(lat=published.latitude, lon=published.longitude),
+                )
+                corrected.append(location.id)
+                location = moved
             key = location_key(location.id)
             if key in details:
                 raise PublishError(f"two locations share the detail file name {key}")
@@ -194,6 +251,7 @@ def publish(
             listed = sorted({i for p in prices for i in p.tariff_ids})
             detail = LocationDetail(
                 location=location,
+                coordinates_corrected=correction,
                 tariffs=[tariffs[i] for i in listed],
                 prices=[_price_out(p) for p in prices],
                 attribution=attribution[-1],
@@ -221,6 +279,8 @@ def publish(
             mapped=mapped,
             not_mapped=len(not_mapped),
             not_mapped_ids=not_mapped,
+            corrected=len(corrected),
+            corrected_ids=corrected,
             tariffs=len(result.tariffs),
             attribution=attribution[-1],
             licence=config.licence.name,
@@ -257,5 +317,10 @@ def publish(
         )
     for operator_id, entry in entries.items():
         left_off = f", {entry.not_mapped} left off (outside the UK)" if entry.not_mapped else ""
-        report.append(f"  {operator_id}: {entry.mapped} locations mapped{left_off}")
+        swapped = (
+            f", {entry.corrected} with latitude and longitude swapped back"
+            if entry.corrected
+            else ""
+        )
+        report.append(f"  {operator_id}: {entry.mapped} locations mapped{left_off}{swapped}")
     return Published(manifest=manifest, report=report)

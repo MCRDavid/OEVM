@@ -20,6 +20,11 @@
       "engagement": {
         "status": "open_anonymous",
         "label": "Open, no registration",
+        "headline": "Open, no registration (as of 2026-10-07)",
+        "as_of": "2026-10-07",
+        "last_request": null,
+        "last_response": null,
+        "last_response_text": "No request sent",
         "evidence": [
           {
             "date": "2026-10-06",
@@ -33,8 +38,11 @@
             "file": null,
             "note": "Re-checked. The page still lists the open locations and tariffs endpoints."
           }
-        ]
+        ],
+        "log": []
       },
+      "access_requested": null,
+      "access_granted": null,
       "feeds": [
         {
           "kind": "locations",
@@ -54,16 +62,26 @@
       },
       "attribution": "Contains data from char.gy published under the Public Charge Point Regulations 2023, used in line with the Open Government Licence v3.0.",
       "missing_publish_flag": null,
+      "swapped_coordinates": null,
+      "nonstandard_statuses": {
+        "decided": "2026-10-09",
+        "basis": "char.gy publishes EVSE statuses as WORKING and FAULTED, which are not OCPI 2.2.1 values. Regulation 10(6)(a) uses \"working\" to mean an OCPI status of available, charging or reserved, so WORKING is shown as working, free or in use not stated, and never as available. FAULTED is shown as reported out of service. The repository owner chose this reading.",
+        "evidence_url": "https://char.gy/open-ocpi/locations",
+        "statuses": {
+          "WORKING": "working",
+          "FAULTED": "out_of_order"
+        }
+      },
       "relay": null,
       "rate_limit": {
-        "our_gap_seconds": 6.0,
-        "our_max_per_hour": 600,
-        "ours": "At least 6 s between requests to the operator's host, measured from the end of the previous request (at most 600 in any hour), retries included.",
+        "our_gap_seconds": 4.0,
+        "our_max_per_hour": 900,
+        "ours": "At least 4 s between requests to the operator's host, measured from the end of the previous request (at most 900 in any hour), retries included.",
         "published": [],
         "limits_checked": "2026-10-07",
         "comparison": "No limit published (checked 2026-10-07). The gap is our own choice.",
         "difference_from_regulations": "Neither the operator nor the regulations set a limit.",
-        "notes": "char.gy's open data page states no rate limit. The gap is this project's own choice: 2 seconds until 8 October 2026, then 6 seconds after the feed refused requests from GitHub's servers part-way through the first daily run (see findings)."
+        "notes": "char.gy's open data page states no rate limit. The gap is this project's own choice: 2 seconds until 8 October 2026, then 6 seconds after the feed refused requests from GitHub's servers part-way through the first daily run (see findings). Lowered to 4 seconds on 9 October 2026 by the repository owner's decision, to shorten the daily run; if the feed refuses requests again, the gap goes back to 6 seconds."
       },
       "findings": [
         {
@@ -71,7 +89,7 @@
           "kind": "spec_conformance",
           "kind_label": "Differs from OCPI 2.2.1",
           "summary": "EVSE statuses are published as WORKING, and in a live run on 2026-10-07 also as FAULTED. Neither is a value in the OCPI 2.2.1 Status list.",
-          "handling": "Shown as status unknown rather than guessed. Regulation 10(6)(a) uses \"working\" to mean an OCPI status of available, charging or reserved.",
+          "handling": "Shown as status unknown rather than guessed until 2026-10-09. Since then, by the repository owner's decision recorded in nonstandard_statuses, WORKING is shown as \"Working (free or in use, not stated)\", never as available, because regulation 10(6)(a) uses \"working\" to mean an OCPI status of available, charging or reserved. FAULTED is shown as reported out of service.",
           "evidence_url": "https://char.gy/open-ocpi/locations",
           "status": "open",
           "resolved_date": null
@@ -119,6 +137,149 @@
       ]
     },
     {
+      "id": "clenergy_ev",
+      "name": "Clenergy EV",
+      "enabled": true,
+      "adapter": "ocpi_221",
+      "engagement": {
+        "status": "open_anonymous",
+        "label": "Open, no registration",
+        "headline": "Open, no registration (as of 2026-10-09)",
+        "as_of": "2026-10-09",
+        "last_request": null,
+        "last_response": null,
+        "last_response_text": "No request sent",
+        "evidence": [
+          {
+            "date": "2026-10-09",
+            "url": "https://www.clenergy-ev.com/open-data/",
+            "file": null,
+            "note": "Links \"locations\" and \"tariffs\" on api.clenergy.online in \"a machine-readable OCPI format\" and states no licence, terms or rate limit."
+          }
+        ],
+        "log": []
+      },
+      "access_requested": null,
+      "access_granted": null,
+      "feeds": [
+        {
+          "kind": "locations",
+          "url": "https://api.clenergy.online/development/pcpr/locations",
+          "status": "documented"
+        },
+        {
+          "kind": "tariffs",
+          "url": "https://api.clenergy.online/development/pcpr/tariffs",
+          "status": "documented"
+        }
+      ],
+      "licence": {
+        "name": "OGL-3.0",
+        "url": "https://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/",
+        "checked": "2026-10-09"
+      },
+      "attribution": "Contains data from Clenergy EV published under the Public Charge Point Regulations 2023, used in line with the Open Government Licence v3.0.",
+      "missing_publish_flag": null,
+      "swapped_coordinates": {
+        "decided": "2026-10-09",
+        "basis": "Where a location's latitude and longitude are obviously the wrong way round, the repository owner decided to show it in the right place rather than leave it off the map, with the operator's own figures kept and the correction shown on the map and recorded in the findings below."
+      },
+      "nonstandard_statuses": null,
+      "relay": null,
+      "rate_limit": {
+        "our_gap_seconds": 11.0,
+        "our_max_per_hour": 328,
+        "ours": "At least 11 s between requests to the operator's host, measured from the end of the previous request (at most 328 in any hour), retries included.",
+        "published": [],
+        "limits_checked": "2026-10-09",
+        "comparison": "No limit published (checked 2026-10-09). The gap is our own choice.",
+        "difference_from_regulations": "Neither the operator nor the regulations set a limit.",
+        "notes": "Clenergy EV's open data page states no rate limit. Responses carry X-RateLimit-Limit 6 with no window stated (see findings). The 11 second gap is this project's own choice: it would stay within 6 requests a minute, plus a 1 second margin, if that is what the header means. Each file holds every record, so a full run makes two requests (about 2.2 MB on 2026-10-09)."
+      },
+      "findings": [
+        {
+          "date": "2026-10-09",
+          "kind": "spec_conformance",
+          "kind_label": "Differs from OCPI 2.2.1",
+          "summary": "Responses wrap the records as {\"name\": \"OK\", \"message\": \"ok\", \"data\": [...], \"error\": null, \"forcelogout\": false}, with no status_code or timestamp. OCPI 2.2.1 section 4.1.7 describes a response object with status_code and timestamp. The records themselves follow OCPI 2.2.1.",
+          "handling": "The operator file sets response_envelope to data_list, so the adapter accepts a list in data with no status_code and stops if error is set. Every other feed is still checked strictly.",
+          "evidence_url": "https://api.clenergy.online/development/pcpr/locations",
+          "status": "open",
+          "resolved_date": null
+        },
+        {
+          "date": "2026-10-09",
+          "kind": "documentation",
+          "kind_label": "Documentation",
+          "summary": "Responses carry X-RateLimit-Limit 6, X-RateLimit-Remaining and X-RateLimit-Reset headers. No page states the window or whether the limit is per path.",
+          "handling": "Treated as unknown. The project leaves 11 seconds between requests and makes two requests a run.",
+          "evidence_url": "https://api.clenergy.online/development/pcpr/tariffs",
+          "status": "open",
+          "resolved_date": null
+        },
+        {
+          "date": "2026-10-09",
+          "kind": "documentation",
+          "kind_label": "Documentation",
+          "summary": "The feed address contains the word \"development\".",
+          "handling": "Used as published, since the operator's open data page links it. The feed health page will show any change.",
+          "evidence_url": "https://www.clenergy-ev.com/open-data/",
+          "status": "open",
+          "resolved_date": null
+        },
+        {
+          "date": "2026-10-09",
+          "kind": "data_quality",
+          "kind_label": "Data quirk",
+          "summary": "The operator field is null on every location (1,400 on 2026-10-09), and tariffs have no country_code or party_id.",
+          "handling": "Locations show Clenergy EV, the name of the operator publishing the feed. Tariff ids use the party GB CEV from the operator file.",
+          "evidence_url": "https://api.clenergy.online/development/pcpr/locations",
+          "status": "open",
+          "resolved_date": null
+        },
+        {
+          "date": "2026-10-09",
+          "kind": "data_quality",
+          "kind_label": "Data quirk",
+          "summary": "Every location's last_updated is the time of the request, so it does not show when a location last changed. Each EVSE's last_updated varies.",
+          "handling": "Kept as published.",
+          "evidence_url": "https://api.clenergy.online/development/pcpr/locations",
+          "status": "open",
+          "resolved_date": null
+        },
+        {
+          "date": "2026-10-09",
+          "kind": "data_quality",
+          "kind_label": "Data quirk",
+          "summary": "Every location has country GBR, but some coordinates are outside the UK (for example in the Caribbean, Canada and Ireland).",
+          "handling": "Locations whose coordinates fall outside the map's UK limits are left off the map and listed in the manifest as not mapped. Those limits also take in the Republic of Ireland, so points there are shown as published.",
+          "evidence_url": "https://api.clenergy.online/development/pcpr/locations",
+          "status": "open",
+          "resolved_date": null
+        },
+        {
+          "date": "2026-10-09",
+          "kind": "data_quality",
+          "kind_label": "Data quirk",
+          "summary": "Two locations with UK postcodes are published with latitude and longitude the wrong way round, which puts them outside the UK: \"UBI 98 Southwell Road (98)\" (SE5 9PG) as latitude -0.09703, longitude 51.467819, and \"Liberty Building\" (LS3 1HF) as latitude -1.56237, longitude 53.80797. A third, \"St Angela's Lakeside Aparthotel\", has the same pattern but an Irish postcode.",
+          "handling": "By the repository owner's decision (swapped_coordinates above), the two with UK postcodes are shown with the figures swapped back, and their details on the map say so and give the operator's own figures. The manifest lists them as corrected. The one with an Irish postcode is left off the map.",
+          "evidence_url": "https://api.clenergy.online/development/pcpr/locations",
+          "status": "open",
+          "resolved_date": null
+        },
+        {
+          "date": "2026-10-09",
+          "kind": "data_quality",
+          "kind_label": "Data quirk",
+          "summary": "5 of 129 tariffs are in a currency other than GBP (3 EUR, 1 USD, 1 CAD on 2026-10-09).",
+          "handling": "Their connectors show \"Price unknown\". Currencies are never converted.",
+          "evidence_url": "https://api.clenergy.online/development/pcpr/tariffs",
+          "status": "open",
+          "resolved_date": null
+        }
+      ]
+    },
+    {
       "id": "geniepoint",
       "name": "GeniePoint",
       "enabled": true,
@@ -126,6 +287,11 @@
       "engagement": {
         "status": "open_anonymous",
         "label": "Open, no registration",
+        "headline": "Open, no registration (as of 2026-10-08)",
+        "as_of": "2026-10-08",
+        "last_request": null,
+        "last_response": null,
+        "last_response_text": "No request sent",
         "evidence": [
           {
             "date": "2026-10-08",
@@ -133,8 +299,11 @@
             "file": null,
             "note": "Read in a browser by the repository owner. Links \"Locations data\" and \"Tariffs data\" as .json files and states no licence, terms or rate limit."
           }
-        ]
+        ],
+        "log": []
       },
+      "access_requested": null,
+      "access_granted": null,
       "feeds": [
         {
           "kind": "locations",
@@ -154,6 +323,8 @@
       },
       "attribution": "Contains data from GeniePoint published under the Public Charge Point Regulations 2023, used in line with the Open Government Licence v3.0.",
       "missing_publish_flag": null,
+      "swapped_coordinates": null,
+      "nonstandard_statuses": null,
       "relay": {
         "decided": "2026-10-08",
         "reason": "The files answered HTTP 403 to the first request from a GitHub Actions runner in the first daily run, while answering normally from another network. The repository owner decided to fetch them through the project's relay on Cloudflare Workers, with the project's User-Agent and the same rate limits.",
@@ -260,6 +431,11 @@
       "engagement": {
         "status": "open_shared_key",
         "label": "Open, published shared key",
+        "headline": "Open, published shared key (as of 2026-10-08)",
+        "as_of": "2026-10-08",
+        "last_request": null,
+        "last_response": null,
+        "last_response_text": "No request sent",
         "evidence": [
           {
             "date": "2026-10-07",
@@ -273,8 +449,11 @@
             "file": null,
             "note": "Re-read through the help centre's article data. Unchanged; last updated 2025-01-30."
           }
-        ]
+        ],
+        "log": []
       },
+      "access_requested": null,
+      "access_granted": null,
       "feeds": [
         {
           "kind": "locations",
@@ -298,6 +477,8 @@
         "basis": "Jolt publishes this feed itself \"In accordance with the UK Public Charge Point Regulations (PCPR) Open Data requirement\", and none of its locations has a publish flag. The repository owner decided that locations with no flag may be shown. A flag set to false would still be respected.",
         "evidence_url": "https://support.joltcharge.com/hc/en-gb/articles/27955558493207-UK-Public-Charge-Point-Regulations-Open-Data-Request"
       },
+      "swapped_coordinates": null,
+      "nonstandard_statuses": null,
       "relay": null,
       "rate_limit": {
         "our_gap_seconds": 2.0,
@@ -440,6 +621,11 @@
       "engagement": {
         "status": "open_anonymous",
         "label": "Open, no registration",
+        "headline": "Open, no registration (as of 2026-10-09)",
+        "as_of": "2026-10-09",
+        "last_request": null,
+        "last_response": null,
+        "last_response_text": "No request sent",
         "evidence": [
           {
             "date": "2026-10-09",
@@ -447,8 +633,11 @@
             "file": null,
             "note": "The section \"Public Charge Point Regulations - Open Data\" links the locations and tariffs files and states no licence, terms or rate limit."
           }
-        ]
+        ],
+        "log": []
       },
+      "access_requested": null,
+      "access_granted": null,
       "feeds": [
         {
           "kind": "locations",
@@ -468,6 +657,8 @@
       },
       "attribution": "Contains data from MFG EV Power published under the Public Charge Point Regulations 2023, used in line with the Open Government Licence v3.0.",
       "missing_publish_flag": null,
+      "swapped_coordinates": null,
+      "nonstandard_statuses": null,
       "relay": null,
       "rate_limit": {
         "our_gap_seconds": 2.0,
@@ -510,6 +701,11 @@
       "engagement": {
         "status": "key_on_request",
         "label": "Key issued on request",
+        "headline": "Key issued on request (no dated check yet)",
+        "as_of": null,
+        "last_request": null,
+        "last_response": null,
+        "last_response_text": "No request sent",
         "evidence": [
           {
             "date": "unknown",
@@ -517,8 +713,11 @@
             "file": null,
             "note": "bp pulse's FAQ uses a request form. Whether a contract is also required is not known."
           }
-        ]
+        ],
+        "log": []
       },
+      "access_requested": null,
+      "access_granted": null,
       "feeds": [
         {
           "kind": "locations",
@@ -539,6 +738,8 @@
       "licence": null,
       "attribution": null,
       "missing_publish_flag": null,
+      "swapped_coordinates": null,
+      "nonstandard_statuses": null,
       "relay": null,
       "rate_limit": {
         "our_gap_seconds": 125.0,
@@ -610,8 +811,16 @@
       "engagement": {
         "status": "unknown",
         "label": "Not yet established",
-        "evidence": []
+        "headline": "Not yet established (no dated check yet)",
+        "as_of": null,
+        "last_request": null,
+        "last_response": null,
+        "last_response_text": "No request sent",
+        "evidence": [],
+        "log": []
       },
+      "access_requested": null,
+      "access_granted": null,
       "feeds": [
         {
           "kind": "locations",
@@ -632,6 +841,8 @@
       "licence": null,
       "attribution": null,
       "missing_publish_flag": null,
+      "swapped_coordinates": null,
+      "nonstandard_statuses": null,
       "relay": null,
       "rate_limit": {
         "our_gap_seconds": 125.0,
@@ -703,12 +914,34 @@
       "engagement": {
         "status": "unknown",
         "label": "Not yet established",
-        "evidence": []
+        "headline": "Not yet established (as of 2026-10-09)",
+        "as_of": "2026-10-09",
+        "last_request": null,
+        "last_response": null,
+        "last_response_text": "No request sent",
+        "evidence": [],
+        "log": [
+          {
+            "date": "2026-10-09",
+            "action": "feed_searched",
+            "action_label": "Searched for a feed",
+            "channel": null,
+            "channel_label": null,
+            "summary": "A web search for a Go Zero open data or Public Charge Point Regulations page found none. Go Zero's own website was not searched directly; this needs checking.",
+            "quote": null,
+            "evidence_url": null,
+            "evidence_file": null
+          }
+        ]
       },
+      "access_requested": null,
+      "access_granted": null,
       "feeds": [],
       "licence": null,
       "attribution": null,
       "missing_publish_flag": null,
+      "swapped_coordinates": null,
+      "nonstandard_statuses": null,
       "relay": null,
       "rate_limit": {
         "our_gap_seconds": 2,
@@ -730,6 +963,11 @@
       "engagement": {
         "status": "key_on_request",
         "label": "Key issued on request",
+        "headline": "Key issued on request (as of 2026-10-08)",
+        "as_of": "2026-10-08",
+        "last_request": null,
+        "last_response": null,
+        "last_response_text": "No request sent",
         "evidence": [
           {
             "date": "2026-10-08",
@@ -737,8 +975,11 @@
             "file": null,
             "note": "The page offers a form to request an API key. The form asks the requester to confirm they have read and agree to Gridserve's API access and fair use terms."
           }
-        ]
+        ],
+        "log": []
       },
+      "access_requested": null,
+      "access_granted": null,
       "feeds": [
         {
           "kind": "locations",
@@ -752,12 +993,14 @@
         }
       ],
       "licence": {
-        "name": "unknown",
-        "url": null,
+        "name": "OGL-3.0",
+        "url": "https://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/",
         "checked": "2026-10-08"
       },
       "attribution": null,
       "missing_publish_flag": null,
+      "swapped_coordinates": null,
+      "nonstandard_statuses": null,
       "relay": null,
       "rate_limit": {
         "our_gap_seconds": 31.0,
@@ -813,7 +1056,7 @@
           "kind": "access",
           "kind_label": "Access",
           "summary": "Keys are requested through a form that asks the requester to agree to the API Fair Use Policy. The policy says intellectual property in the API Data remains Gridserve's and describes the data as confidential and proprietary.",
-          "handling": "Licence recorded as unknown. The operator stays switched off, and no key has been requested, until the terms for the data are clarified with Gridserve.",
+          "handling": "On 2026-10-09 the repository owner decided that regulation 10(5) takes priority over the policy's terms for the data, and that the project goes ahead without first writing to Gridserve. The policy's rate limit is still followed. The operator stays switched off until a key is granted and the adapter is built.",
           "evidence_url": "https://www.gridserve.com/legal-area/open-data-api-terms-and-conditions/",
           "status": "open",
           "resolved_date": null
@@ -828,6 +1071,11 @@
       "engagement": {
         "status": "signed_agreement_required",
         "label": "Signed agreement required",
+        "headline": "Signed agreement required (as of 2026-10-09)",
+        "as_of": "2026-10-09",
+        "last_request": null,
+        "last_response": null,
+        "last_response_text": "No request sent",
         "evidence": [
           {
             "date": "unknown",
@@ -835,12 +1083,29 @@
             "file": null,
             "note": "InstaVolt's page refers to an \"Open Data Agreement\"."
           }
+        ],
+        "log": [
+          {
+            "date": "2026-10-09",
+            "action": "page_checked",
+            "action_label": "Operator's page checked",
+            "channel": null,
+            "channel_label": null,
+            "summary": "InstaVolt's open data page was re-read. It asks for requests by email, says it will send its Open Data Agreement to sign and return, and then issue access credentials.",
+            "quote": null,
+            "evidence_url": "https://instavolt.co.uk/public-charge-point-regulation-data/",
+            "evidence_file": null
+          }
         ]
       },
+      "access_requested": null,
+      "access_granted": null,
       "feeds": [],
       "licence": null,
       "attribution": null,
       "missing_publish_flag": null,
+      "swapped_coordinates": null,
+      "nonstandard_statuses": null,
       "relay": null,
       "rate_limit": {
         "our_gap_seconds": 2,
@@ -862,8 +1127,28 @@
       "engagement": {
         "status": "unknown",
         "label": "Not yet established",
-        "evidence": []
+        "headline": "Not yet established (as of 2026-10-09)",
+        "as_of": "2026-10-09",
+        "last_request": null,
+        "last_response": null,
+        "last_response_text": "No request sent",
+        "evidence": [],
+        "log": [
+          {
+            "date": "2026-10-09",
+            "action": "feed_searched",
+            "action_label": "Searched for a feed",
+            "channel": null,
+            "channel_label": null,
+            "summary": "Two web searches for a Pod open data or Public Charge Point Regulations page found none. Pod's own website was not searched directly; this needs checking.",
+            "quote": null,
+            "evidence_url": null,
+            "evidence_file": null
+          }
+        ]
       },
+      "access_requested": null,
+      "access_granted": null,
       "feeds": [
         {
           "kind": "versions",
@@ -874,6 +1159,8 @@
       "licence": null,
       "attribution": null,
       "missing_publish_flag": null,
+      "swapped_coordinates": null,
+      "nonstandard_statuses": null,
       "relay": null,
       "rate_limit": {
         "our_gap_seconds": 2.0,
@@ -895,8 +1182,16 @@
       "engagement": {
         "status": "unknown",
         "label": "Not yet established",
-        "evidence": []
+        "headline": "Not yet established (no dated check yet)",
+        "as_of": null,
+        "last_request": null,
+        "last_response": null,
+        "last_response_text": "No request sent",
+        "evidence": [],
+        "log": []
       },
+      "access_requested": null,
+      "access_granted": null,
       "feeds": [
         {
           "kind": "locations",
@@ -917,6 +1212,8 @@
       "licence": null,
       "attribution": null,
       "missing_publish_flag": null,
+      "swapped_coordinates": null,
+      "nonstandard_statuses": null,
       "relay": null,
       "rate_limit": {
         "our_gap_seconds": 125.0,
@@ -988,8 +1285,35 @@
       "engagement": {
         "status": "unknown",
         "label": "Not yet established",
-        "evidence": []
+        "headline": "Not yet established (as of 2026-10-09)",
+        "as_of": "2026-10-09",
+        "last_request": null,
+        "last_response": null,
+        "last_response_text": "No request sent",
+        "evidence": [
+          {
+            "date": "2026-10-09",
+            "url": "https://ubitricity.com/en/pcpr-data-request/",
+            "file": null,
+            "note": "ubitricity's PCPR data request page asks for contact details and the data needed through a request form. It names no licence, terms, key or agreement."
+          }
+        ],
+        "log": [
+          {
+            "date": "2026-10-09",
+            "action": "page_checked",
+            "action_label": "Operator's page checked",
+            "channel": null,
+            "channel_label": null,
+            "summary": "ubitricity's PCPR data request page was read. It offers a request form and says the data will be provided in a suitable format, with questions going to an Eco-Movement address.",
+            "quote": null,
+            "evidence_url": "https://ubitricity.com/en/pcpr-data-request/",
+            "evidence_file": null
+          }
+        ]
       },
+      "access_requested": null,
+      "access_granted": null,
       "feeds": [
         {
           "kind": "locations",
@@ -1010,6 +1334,8 @@
       "licence": null,
       "attribution": null,
       "missing_publish_flag": null,
+      "swapped_coordinates": null,
+      "nonstandard_statuses": null,
       "relay": null,
       "rate_limit": {
         "our_gap_seconds": 125.0,

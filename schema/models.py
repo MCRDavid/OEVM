@@ -67,6 +67,9 @@ EvseStatus = Literal[
     "removed",
     "reserved",
     "unknown",
+    # Not an OCPI 2.2.1 status: in service, but free or in use is not stated. Used only
+    # under the owner's decision recorded in an operator file (nonstandard_statuses).
+    "working",
 ]
 ConnectorFormat = Literal["socket", "cable", "unknown"]
 PowerType = Literal["ac_1_phase", "ac_2_phase", "ac_2_phase_split", "ac_3_phase", "dc", "unknown"]
