@@ -46,9 +46,13 @@ Date: 2026-10-09. Status: proposed. The full plan is `docs/PHASE3_PLAN.md`.
 - KV's free plan allows 1,000 writes a day: one per operator per refresh fits easily.
 - Keeping OCPI handling in Python means one set of tested rules.
 
-## Needs the owner's decision
+## Decided by the owner (9 October 2026)
 
-- How char.gy's `WORKING` and `FAULTED`, which are not OCPI statuses, are shown.
+- char.gy's `WORKING` is shown as "Working (free or in use, not stated)" and never
+  counted as available; `FAULTED` is shown as reported out of service. An operator file
+  can record such a reading only by the owner's decision (`nonstandard_statuses`), and
+  only as "working" or "out_of_order", so a non-standard value is never shown as
+  available or in use.
 
 ## Needs testing
 

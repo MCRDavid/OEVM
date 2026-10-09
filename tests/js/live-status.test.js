@@ -27,6 +27,7 @@ test("statuses fall in the agreed groups", () => {
   for (const s of ["out_of_order", "inoperative", "planned", "removed"]) assert.equal(groupOf(s), "out");
   assert.equal(groupOf("blocked"), "other");
   assert.equal(groupOf("unknown"), "other");
+  assert.equal(groupOf("working"), "other"); // free or in use not stated: never available
   assert.equal(groupOf("WORKING"), "other"); // anything unexpected is never shown as available
   assert.equal(groupOf(undefined), "other");
 });
@@ -38,6 +39,7 @@ test("charge points are counted by group", () => {
     out: 1,
     other: 1,
     unknown: 1,
+    working: 0,
     total: 5,
   });
   assert.deepEqual(countByGroup(evses("blocked", "WORKING")), {
@@ -46,9 +48,10 @@ test("charge points are counted by group", () => {
     out: 0,
     other: 2,
     unknown: 1, // a status the map does not know counts as unknown; blocked does not
+    working: 0,
     total: 2,
   });
-  assert.deepEqual(countByGroup(undefined), { available: 0, in_use: 0, out: 0, other: 0, unknown: 0, total: 0 });
+  assert.deepEqual(countByGroup(undefined), { available: 0, in_use: 0, out: 0, other: 0, unknown: 0, working: 0, total: 0 });
 });
 
 test("the summary line counts available charge points", () => {
@@ -79,4 +82,19 @@ test("Worker addresses are built only from an operator id and a location key", (
   assert.equal(liveUrl("https://live.example.workers.dev/", "chargy", "1111111111111111"), "https://live.example.workers.dev/live/chargy/1111111111111111");
   assert.equal(liveUrl("https://x.example", "../admin", "1111111111111111"), null);
   assert.equal(liveUrl("https://x.example", "chargy", "not-a-key"), null);
+});
+
+test("charge points a feed reports only as working are never counted as available", () => {
+  const counts = countByGroup(evses("working", "working", "working"));
+  assert.equal(counts.available, 0);
+  assert.equal(counts.working, 3);
+  assert.equal(summaryText(counts), "3 of 3 charge points working (free or in use, not stated)");
+  assert.equal(summaryText(countByGroup(evses("working", "unknown"))), "1 of 2 charge points working (free or in use, not stated)");
+  assert.equal(summaryText(countByGroup(evses("working", "out_of_order"))), "1 of 2 charge points working (free or in use, not stated)");
+  assert.equal(summaryText(countByGroup(evses("working", "available"))), "1 of 2 charge points available");
+  assert.deepEqual(chips(countByGroup(evses("working", "working", "out_of_order", "unknown"))), [
+    { group: "out", className: "status-chip status-out", symbol: "✕", text: "1 reported out of service" },
+    { group: "other", className: "status-chip status-other", symbol: "?", text: "2 working (free or in use, not stated)" },
+    { group: "other", className: "status-chip status-other", symbol: "?", text: "1 blocked or status unknown" },
+  ]);
 });

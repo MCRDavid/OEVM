@@ -193,7 +193,8 @@
             "planned",
             "removed",
             "reserved",
-            "unknown"
+            "unknown",
+            "working"
           ],
           "title": "Status",
           "type": "string"

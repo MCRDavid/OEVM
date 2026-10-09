@@ -63,6 +63,8 @@ decisions are in docs/adr/.
 - Apache-2.0 covers our code only. Never apply it, or any other licence, to data. Data keeps its source's licence.
 - Every record keeps its provenance. Every source gets attribution and a row in DATA_LICENCES.md.
 - Never use operator logos or suggest any operator or public body endorses the project.
+- Show an EVSE status that is not an OCPI 2.2.1 value as anything but unknown only when the
+  operator file records the owner's decision in nonstandard_statuses; never add one yourself.
 - Never keep locations whose OCPI publish flag is false. Keep ones with no flag only when the
   operator file records the owner's decision in missing_publish_flag; never add one yourself.
 - Correct coordinates only where the operator file records the owner's decision in

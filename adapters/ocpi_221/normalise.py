@@ -177,9 +177,22 @@ def _connector(raw: dict, tariff_prefix: str, issues: IssueLog) -> Connector:
     )
 
 
-def _evse(raw: dict, fallback_time: datetime | None, prefix: str, issues: IssueLog) -> EVSE:
+def _evse(
+    raw: dict,
+    fallback_time: datetime | None,
+    prefix: str,
+    issues: IssueLog,
+    config: OperatorConfig,
+) -> EVSE:
     status = EVSE_STATUSES.get(raw.get("status"))
-    if status is None:
+    decision = config.nonstandard_statuses
+    if status is None and decision is not None and raw.get("status") in decision.statuses:
+        status = decision.statuses[raw["status"]]
+        issues.add(
+            f"EVSE status {raw['status']!r} is not an OCPI 2.2.1 value; shown as {status} "
+            "under the decision recorded in the operator file"
+        )
+    elif status is None:
         issues.add(
             f"EVSE status {raw.get('status')!r} is not an OCPI 2.2.1 value; recorded as unknown"
         )
@@ -256,7 +269,7 @@ def location_from_ocpi(
             name=(raw.get("operator") or {}).get("name") or config.display_name,
         ),
         opening_hours=_opening_hours(raw.get("opening_times"), issues),
-        evses=[_evse(e, last_updated, prefix, issues) for e in raw.get("evses") or []],
+        evses=[_evse(e, last_updated, prefix, issues, config) for e in raw.get("evses") or []],
         last_updated=last_updated,
         provenance=_provenance(config, source_url, fetched_at),
     )

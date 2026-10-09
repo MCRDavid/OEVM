@@ -15,7 +15,7 @@
 // Nothing about a request is stored or logged, and visitors' requests never reach an
 // operator.
 
-export const OPERATORS = ["chargy", "geniepoint", "jolt"];
+export const OPERATORS = ["chargy", "clenergy_ev", "geniepoint", "jolt"];
 export const MAX_SNAPSHOT_BYTES = 5 * 1024 * 1024;
 export const CACHE_SECONDS = 60;
 const KEY = /^[0-9a-f]{16}$/;

@@ -384,6 +384,37 @@ class SwappedCoordinates(_Model):
     basis: NeutralText = Field(description="Why swapped coordinates may be corrected.")
 
 
+# OCPI 2.2.1 EVSE statuses, which a non-standard reading can never replace.
+OCPI_EVSE_STATUSES = frozenset(
+    {"AVAILABLE", "BLOCKED", "CHARGING", "INOPERATIVE", "OUTOFORDER", "PLANNED", "REMOVED"}
+    | {"RESERVED", "UNKNOWN"}
+)
+
+
+class NonstandardStatuses(_Model):
+    """The repository owner's recorded decision on how EVSE statuses that are not OCPI
+    2.2.1 values are shown.
+
+    Without this decision such statuses are recorded as unknown. A value may only be read
+    as "working" (in service, free or in use not stated) or "out_of_order", so a
+    non-standard value is never shown as available or in use.
+    """
+
+    decided: dt.date = Field(description="Date the owner made the decision (YYYY-MM-DD).")
+    basis: NeutralText = Field(description="Why the values may be read this way.")
+    evidence_url: SafeUrl = Field(description="Where the values can be seen in the feed.")
+    statuses: dict[str, Literal["working", "out_of_order"]] = Field(
+        min_length=1, description="Each value as the feed sends it, and how it is shown."
+    )
+
+    @model_validator(mode="after")
+    def _not_ocpi(self) -> "NonstandardStatuses":
+        for value in self.statuses:
+            if value.upper() in OCPI_EVSE_STATUSES:
+                raise ValueError(f"{value!r} is an OCPI 2.2.1 status and is read as such")
+        return self
+
+
 class Relay(_Model):
     """The repository owner's recorded decision to fetch this operator through a relay the
     project runs, because the operator's server refused requests from the daily run.
@@ -545,6 +576,11 @@ class OperatorConfig(_Model):
         default=None,
         description="Only by the repository owner's decision: correct coordinates that are "
         "obviously the wrong way round. Null means such locations are left off the map.",
+    )
+    nonstandard_statuses: NonstandardStatuses | None = Field(
+        default=None,
+        description="Only by the repository owner's decision: how EVSE statuses that are not "
+        "OCPI 2.2.1 values are shown. Null means they are recorded as unknown.",
     )
     relay: Relay | None = Field(
         default=None,

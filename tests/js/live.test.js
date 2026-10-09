@@ -64,7 +64,7 @@ function put(body, operator = "chargy") {
 }
 
 test("only operators switched on for the daily run are listed", () => {
-  assert.deepEqual(OPERATORS, ["chargy", "geniepoint", "jolt"]);
+  assert.deepEqual(OPERATORS, ["chargy", "clenergy_ev", "geniepoint", "jolt"]);
 });
 
 test("a stored snapshot answers for one location, with when it was fetched", async () => {

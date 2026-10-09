@@ -1,8 +1,9 @@
 # Phase 3 plan: live status and prices
 
 Status: proposed, 9 October 2026, and updated the same day with the repository owner's
-answers below. Nothing in this plan is switched on. The map, the daily run and the relay
-are unchanged. ADR 0015 records the main decision.
+answers below. Nothing in this plan is switched on, and the daily run and the relay are
+unchanged. The one change visible on the map is the owner's reading of char.gy's
+statuses (see "char.gy's statuses"). ADR 0015 records the main decision.
 
 ## Decided by the repository owner (9 October 2026)
 
@@ -189,7 +190,7 @@ At the top of the details screen, above the connectors, the map will show:
 | Available | Green `#17733a` / `#6fd08f` | available |
 | In use | Orange `#8a5300` / `#ffc46b` | charging, reserved |
 | Reported out of service | Red `#8a2a12` / `#ffab91` | out_of_order, inoperative, planned, removed |
-| Blocked or status unknown | Grey `#4d5559` / `#b4bcc2` | blocked, unknown |
+| Blocked, working or status unknown | Grey `#4d5559` / `#b4bcc2` | blocked, unknown, and "working" (not an OCPI status; see below) |
 
 - "Reported out of service" uses exactly the statuses of the map's "Hide out of service"
   filter (ADR 0012, `OUT_OF_SERVICE` in `pipeline/publish.py`); a test keeps them the same.
@@ -200,19 +201,21 @@ At the top of the details screen, above the connectors, the map will show:
 - The wording, groups and colours are in `site/assets/js/live.js` and `site/assets/app.css`,
   tested, but not used by the map until the Worker runs.
 
-### char.gy's statuses need a decision
+### char.gy's statuses (decided 9 October 2026)
 
-char.gy publishes `WORKING` and `FAULTED`, which are not OCPI 2.2.1 statuses, so today
-they show as status unknown (finding of 7 October 2026 in `operators/chargy.yaml`). Every
-char.gy charge point would therefore show grey. Regulation 10(6)(a) uses "working" to mean
-an OCPI status of available, charging or reserved, so `WORKING` cannot say whether a charge
-point is free or in use. The project rule is to record such values as unknown, so any
-change needs the owner's decision, recorded in the operator file:
+char.gy publishes `WORKING` and `FAULTED`, which are not OCPI 2.2.1 statuses (finding of
+7 October 2026 in `operators/chargy.yaml`). Regulation 10(6)(a) uses "working" to mean an
+OCPI status of available, charging or reserved, so `WORKING` cannot say whether a charge
+point is free or in use. The repository owner chose to show `WORKING` as "Working (free or
+in use, not stated)", in grey, never counted as available, and `FAULTED` as reported out
+of service. The decision is recorded in `nonstandard_statuses` in the operator file and on
+the transparency page, and the pipeline applies it from the next run. A summary line for
+such a location reads "4 of 4 charge points working (free or in use, not stated)".
 
-- **Keep as unknown** (the rule today): char.gy shows grey.
-- **Read `FAULTED` as reported out of service, keep `WORKING` as unknown.**
-- **Show `WORKING` as its own label**, such as "Working (free or in use, not stated)", in
-  grey, and `FAULTED` as reported out of service.
+Because `FAULTED` is now out of order, the map's "Hide out of service" filter (ADR 0012)
+also hides char.gy charge points the feed reports as faulted, and the details panel shows
+the new wording, once this pull request is merged. The feed health page still counts
+`WORKING` as no OCPI status, so its figures do not change.
 
 ## Notices to change before the map calls the Worker
 
@@ -245,8 +248,7 @@ which Cloudflare runs. Before that ships:
    `OEVM_LIVE_TOKEN` (the same random value as the Worker secret).
 5. Decide how often statuses refresh. Recommendation: hourly to start, which the
    staggered workflow above assumes.
-6. Decide how char.gy's `WORKING` and `FAULTED` are shown (see "The details screen").
-7. Confirm visitors' browsers may contact Cloudflare's `workers.dev` address on click,
+6. Confirm visitors' browsers may contact Cloudflare's `workers.dev` address on click,
    with the notice changes above.
 
 Nothing in GitHub Pages or the relay changes.
@@ -254,8 +256,9 @@ Nothing in GitHub Pages or the relay changes.
 ## Steps, one issue and pull request each
 
 1. **This pull request:** this plan, ADR 0015 (proposed), the snapshot format and builder,
-   the Worker, and the details screen's groups, wording and colours, with tests. Nothing
-   deploys and the map does not use any of it yet.
+   the Worker, the details screen's groups, wording and colours, and the owner's reading
+   of char.gy's statuses, with tests. Nothing deploys. Only the char.gy wording and the
+   "Hide out of service" filter's handling of its faulted charge points change on the map.
 2. **Single-location tests:** one request per switched-on operator, sparingly, to see
    whether `{locations}/{id}` works. Record the results as dated findings in each operator
    file and regenerate the transparency page.

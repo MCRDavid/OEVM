@@ -17,7 +17,9 @@ export const STATUS_GROUPS = {
   available: { label: "Available", symbol: "●", statuses: ["available"] },
   in_use: { label: "In use", symbol: "◐", statuses: ["charging", "reserved"] },
   out: { label: "Reported out of service", symbol: "✕", statuses: ["out_of_order", "inoperative", "planned", "removed"] },
-  other: { label: "Blocked or status unknown", symbol: "?", statuses: ["blocked", "unknown"] },
+  // "working" is not an OCPI status: in service, but free or in use is not stated. Some
+  // operators publish only that, and it is never counted as available.
+  other: { label: "Blocked or status unknown", symbol: "?", statuses: ["blocked", "unknown", "working"] },
 };
 export const GROUP_ORDER = ["available", "in_use", "out", "other"];
 
@@ -31,11 +33,12 @@ export function groupOf(status) {
 // How many charge points (OCPI EVSEs, each charging one vehicle at a time) are in each group.
 // "unknown" also counts statuses the map does not know, which groupOf puts in "other".
 export function countByGroup(evses) {
-  const counts = { available: 0, in_use: 0, out: 0, other: 0, unknown: 0, total: 0 };
+  const counts = { available: 0, in_use: 0, out: 0, other: 0, unknown: 0, working: 0, total: 0 };
   for (const evse of evses ?? []) {
     const group = groupOf(evse?.status);
     counts[group] += 1;
-    if (group === "other" && evse?.status !== "blocked") counts.unknown += 1;
+    if (evse?.status === "working") counts.working += 1;
+    else if (group === "other" && evse?.status !== "blocked") counts.unknown += 1;
     counts.total += 1;
   }
   return counts;
@@ -49,17 +52,28 @@ function chargePoints(n) {
 export function summaryText(counts) {
   if (!counts.total) return "No charge points listed by the operator";
   if (counts.unknown === counts.total) return `Status unknown for ${chargePoints(counts.total)}`;
+  // A feed that says only "working" cannot say how many are free, so do not count them.
+  if (counts.working && !counts.available) {
+    return `${counts.working} of ${chargePoints(counts.total)} working (free or in use, not stated)`;
+  }
   return `${counts.available} of ${chargePoints(counts.total)} available`;
 }
 
-// The groups to show as coloured chips, in order, leaving out empty ones.
+// The groups to show as coloured chips, in order, leaving out empty ones. Working charge
+// points get their own grey chip, so the words say what the feed said.
 export function chips(counts) {
-  return GROUP_ORDER.filter((group) => counts[group] > 0).map((group) => ({
-    group,
-    className: `status-chip status-${group.replace("_", "-")}`,
-    symbol: STATUS_GROUPS[group].symbol,
-    text: `${counts[group]} ${STATUS_GROUPS[group].label.toLowerCase()}`,
-  }));
+  const out = [];
+  for (const group of GROUP_ORDER) {
+    const className = `status-chip status-${group.replace("_", "-")}`;
+    const { symbol, label } = STATUS_GROUPS[group];
+    let n = counts[group];
+    if (group === "other" && counts.working) {
+      out.push({ group, className, symbol, text: `${counts.working} working (free or in use, not stated)` });
+      n -= counts.working;
+    }
+    if (n > 0) out.push({ group, className, symbol, text: `${n} ${label.toLowerCase()}` });
+  }
+  return out;
 }
 
 // Neutral, dated wording: when the operator's public feed was read, never "live" or "now".
