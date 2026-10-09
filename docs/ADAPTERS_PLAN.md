@@ -16,7 +16,8 @@ section filled in.
 | A1 | `eco_movement_pcpr` | bp pulse, Shell Recharge, ubitricity, Community by Shell Recharge | A token from at least one operator | 2 |
 | A2 | `gridserve` | Gridserve | A key | 3 |
 | A3 | `static_file` | No current operator; later council CSVs and FOI spreadsheets | A source that needs it | Deferred |
-| A4 | None yet | MFG and Clenergy on `ocpi_221`; Fastned, Believ and others once their format is known | Nothing for MFG and Clenergy; access for the rest | 1 |
+| A4 | None yet | MFG on `ocpi_221`; Fastned, Believ and others once their format is known | Nothing for MFG; access for the rest | 1 |
+| A6 | Plain wrapper option for `ocpi_221` | Clenergy EV | Nothing | 1, after MFG |
 | A5 | Basic auth for `ocpi_221` | Osprey | Osprey confirming the method and granting credentials | When credentials arrive |
 
 Operators that need no new adapter, so are not tasks here: Pod (`ocpi_221` once a token
@@ -139,11 +140,7 @@ The "More operators from source feeds" thread checked each operator's own pages 
 **No new adapter needed:**
 
 - MFG EV Power: `ocpi_221` (added in its own PR from that thread).
-- Clenergy EV: full-file OCPI on `https://api.clenergy.online/development/pcpr/`, no key.
-  The response wrapper uses `name` and `message` rather than `status_code` and
-  `status_message`, and responses carry `X-RateLimit-Limit: 6` with no window stated. Both
-  are recorded as findings when it is added; if `ocpi_221` rejects the wrapper, that is a
-  small change to `ocpi_221`, not a new adapter.
+- Clenergy EV: needs task A6 below.
 
 **Format unknown until access is granted:** Fastned (API keys; its Fair Use Policy claims
 all rights in the data and says it "may throttle"), Believ (free self-serve registration;
@@ -168,13 +165,40 @@ file and never logged, then run the schema export. `ocpi_221` then reads the fee
 **Depends on:** Osprey confirming the method and granting credentials. Building it before
 then would be guessing.
 
+## A6: plain OCPI wrapper for `ocpi_221` (Clenergy EV)
+
+**Unlocks:** Clenergy EV (party GB*CEV, about 1,400 locations), the next keyless feed
+after MFG.
+
+**Feed format:** `https://api.clenergy.online/development/pcpr/locations` and `/tariffs`,
+linked from https://www.clenergy-ev.com/open-data/. One file each, no paging headers. The
+records are OCPI 2.2.1, but the response wrapper is
+`{"name": "OK", "message": "ok", "data": [...], "error": ..., "forcelogout": ...}` with no
+`status_code`, which `adapters/ocpi_221/client.py` rejects. `operator` is null on every
+record.
+
+**Change:** an opt-in operator file setting that lets `ocpi_221` accept a wrapper with a
+`data` list and no `status_code`, recorded as a dated finding. Preferred over a custom
+adapter because the records themselves are standard. Off by default, so every other feed
+is still checked strictly.
+
+**Access:** none needed. CORS is open to all origins.
+
+**Rate limits:** none published. Responses carry `X-RateLimit-Limit: 6` with no window
+stated, so the project's default gap applies and the header is recorded as a finding.
+
+**Licence:** no terms on the open data page; the regulation 10(5) basis applies once the
+page is read and recorded in the licence section.
+
+**Depends on:** nothing. Can start now.
+
 ## Suggested order
 
 Decided by the owner on 2026-10-09: sources that need no key come first.
 
-1. MFG and Clenergy on `ocpi_221`, owned by the "More operators from source feeds" thread
-   (MFG is in its own PR). Believ's free registration is the quickest way to learn another
-   feed's format.
+1. MFG on `ocpi_221` (in its own PR from the "More operators from source feeds" thread),
+   then A6 for Clenergy EV. Believ's free registration is the quickest way to learn
+   another feed's format.
 2. Request keys for the Eco-Movement operators and Gridserve, and ask Eco-Movement whether
    its limits apply per key (engagement log work, not adapter work).
 3. A1 `eco_movement_pcpr`, when the first token arrives and after the faster fetching work
