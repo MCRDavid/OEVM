@@ -70,6 +70,18 @@ engagement:
     - date: unknown
       url: https://www.bppulse.com/en-gb/help-and-support/public-ev-charging/public-charge-point-regulations
       note: bp pulse's FAQ uses a request form. Whether a contract is also required is not known.
+  log:
+    - date: 2026-10-09
+      action: page_checked
+      summary: >-
+        bp pulse's Public Charge Point Regulations FAQ was read in a browser by the
+        repository owner. It links to a request form asking for a name, email address and,
+        optionally, organisation and purpose. The form mentions no key, licence, terms,
+        agreement or rate limit.
+      quote: >-
+        Once received we will process your request and will contact you to provide
+        instruction on how you can gain access to this data in a machine readable format
+      evidence_url: https://www.bppulse.com/en-gb/help-and-support/public-ev-charging/public-charge-point-regulations
 access_requested: null
 access_granted: null
 sources:
