@@ -46,6 +46,13 @@ class Health(_LogModel):
     )
 
 
+class KeptCopy(_LogModel):
+    """The last good copy the map showed because this run's fetch failed (ADR 0018)."""
+
+    fetched_at: str = Field(pattern=r"^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}Z$")
+    locations: int = Field(ge=0, description="Locations on the map from that copy.")
+
+
 class RunLog(_LogModel):
     """The only fields a run log may have."""
 
@@ -60,3 +67,8 @@ class RunLog(_LogModel):
     kept: KeptCounts
     health: Health | None = Field(description="Null when the run failed.")
     issues: list[Annotated[str, Field(max_length=MAX_ISSUE_LENGTH)]]
+    kept_copy: KeptCopy | None = Field(
+        default=None,
+        description="Set when the run failed and the map kept showing the operator's last "
+        "good copy. Null otherwise.",
+    )

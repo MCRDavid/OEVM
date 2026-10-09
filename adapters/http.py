@@ -10,6 +10,13 @@
 - Honours every Retry-After header, in seconds or as an HTTP date, on any attempt. One
   that cannot be read is treated as a long wait. If the wait is longer than this project
   waits, nothing more is sent to that host until it has passed.
+- Reads rate limit headers (RateLimit, RateLimit-*, X-RateLimit-*). When a server says no
+  requests are left, nothing more is sent to that host until its reset time; a refusal
+  with a reset time but no Retry-After waits for the reset (ADR 0018).
+- Treats HTTP 403 part-way through a run, from a host that has already answered, as the
+  server's limit rather than a block: it waits a cool-down (the server's own wait if it
+  gives one), widens the gap to that host for the rest of the run and tries again, at
+  most twice per request (ADR 0018). A 403 to the first request to a host is not retried.
 - Adds the operator's key from the environment variable named by `auth.secret_name`,
   and only ever sends it over https. Keys never appear in URLs this module returns, logs
   or raises, and `PoliteClient.redact` removes the key from anything a server sends back.
@@ -49,11 +56,26 @@ USER_AGENT = f"{NAME}/{VERSION} (+{REPOSITORY_URL})"
 RETRY_STATUSES = frozenset({429, 500, 502, 503, 504})
 MAX_RETRY_WAIT_SECONDS = 600
 UNREADABLE_RETRY_AFTER_SECONDS = 3600
+# A refusal (HTTP 403) part-way through a run: wait this long when the server does not say,
+# then go on with the gap to that host this many times wider (ADR 0018).
+REFUSAL_STATUS = 403
+REFUSAL_COOL_DOWN_SECONDS = 300
+REFUSAL_SLOW_DOWN = 1.5
+MAX_REFUSAL_RETRIES = 2
+# A reset time this large is a Unix time, not a number of seconds.
+EPOCH_THRESHOLD = 1_000_000_000
 REDACTED = "REDACTED"
 
 
 class FeedError(Exception):
-    """A feed could not be fetched, or did not return valid data."""
+    """A feed could not be fetched, or did not return valid data.
+
+    partial, when set, holds what one module fetched before the error
+    (adapters.ocpi_221.client.ModuleFetch); modules, when set, every module so far.
+    """
+
+    partial = None
+    modules: dict | None = None
 
 
 def redact_url(url: str) -> str:
@@ -165,12 +187,68 @@ def retry_after_seconds(response: httpx.Response, now: datetime) -> float | None
     return max(0.0, (when - now).total_seconds())
 
 
+def _header_number(value: str | None) -> float | None:
+    if value is None:
+        return None
+    value = value.strip()
+    return float(value) if re.fullmatch(r"[0-9]+(\.[0-9]+)?", value) else None
+
+
+def _structured_param(value: str, names: tuple[str, ...]) -> float | None:
+    for name in names:
+        match = re.search(rf"(?:^|[,;\s]){name}=([0-9]+)", value)
+        if match:
+            return float(match.group(1))
+    return None
+
+
+def rate_limit_state(response: httpx.Response, now: datetime) -> tuple[float | None, float | None]:
+    """(requests remaining, seconds until the allowance resets), each None if not stated.
+
+    Reads the IETF RateLimit header in both draft forms ("remaining=0, reset=30" and
+    '"default";r=0;t=30') and the common RateLimit-*, X-RateLimit-* and X-Rate-Limit-*
+    headers. A reset given as a Unix time is turned into seconds from now.
+    """
+    headers = response.headers
+    remaining = reset = None
+    structured = headers.get("RateLimit")
+    if structured:
+        remaining = _structured_param(structured, ("remaining", "r"))
+        reset = _structured_param(structured, ("reset", "t"))
+    for prefix in ("RateLimit-", "X-RateLimit-", "X-Rate-Limit-"):
+        if remaining is None:
+            remaining = _header_number(headers.get(prefix + "Remaining"))
+        if reset is None:
+            reset = _header_number(headers.get(prefix + "Reset"))
+    if reset is not None and reset >= EPOCH_THRESHOLD:
+        reset = max(0.0, reset - now.timestamp())
+    return remaining, reset
+
+
+def server_hint(response: httpx.Response) -> str:
+    """A short note on who answered, for error messages: the Server header and any limits."""
+    parts = []
+    server = re.sub(r"[^A-Za-z0-9 ./_()-]", "", response.headers.get("Server", ""))[:40]
+    if server.strip():
+        parts.append(f"server {server.strip()}")
+    names = sorted(name for name in response.headers if "ratelimit" in name.replace("-", ""))
+    if names:
+        parts.append("rate limit headers " + ", ".join(names))
+    return f" ({'; '.join(parts)})" if parts else ""
+
+
 @dataclass
 class HostTimer:
-    """When the last request to one host finished, and the earliest the next may start."""
+    """When the last request to one host finished, and the earliest the next may start.
+
+    slow_down widens the gap after the host refused a request part-way through a run;
+    answered says the host has answered at least once in this run.
+    """
 
     last_finished_at: float | None = None
     not_before: float | None = None
+    slow_down: float = 1.0
+    answered: bool = False
 
     def hold_until(self, moment: float) -> None:
         self.not_before = moment if self.not_before is None else max(self.not_before, moment)
@@ -287,6 +365,7 @@ class PoliteClient:
         backoff_seconds: float = 5.0,
         timeout_seconds: float = 60.0,
         key: str | None = None,
+        notice: Callable[[str], None] = lambda _text: None,
     ):
         headers, self._auth_params = credentials_for(config, key)
         secret = secret_value(config, key)
@@ -307,6 +386,9 @@ class PoliteClient:
         self._clock = clock
         self._wall_clock = wall_clock
         self.requests_made = 0
+        self._notice = notice
+        # What the client did about refusals and limits, for the run's logged problems.
+        self.events: list[str] = []
 
     def __enter__(self) -> "PoliteClient":
         return self
@@ -338,7 +420,7 @@ class PoliteClient:
         now = self._clock()
         ready = now
         if timer.last_finished_at is not None:
-            ready = max(ready, timer.last_finished_at + self.min_interval)
+            ready = max(ready, timer.last_finished_at + self.min_interval * timer.slow_down)
         if timer.not_before is not None:
             ready = max(ready, timer.not_before)
         if ready > now:
@@ -356,7 +438,8 @@ class PoliteClient:
             request_url = self._relay.url(request_url)
             headers = {RELAY_TOKEN_HEADER: self._relay.token}
         via = " (through the relay)" if relayed else ""
-        for attempt in range(self.max_retries + 1):
+        attempt = refusals = 0
+        while True:
             self._refuse_if_held(timer, url)
             self._wait_turn(timer)
             self.requests_made += 1
@@ -367,13 +450,35 @@ class PoliteClient:
                 problem, retry_after = type(exc).__name__, None
             finally:
                 timer.last_finished_at = self._clock()
+            now = timer.last_finished_at
             if response is not None:
-                if response.status_code not in RETRY_STATUSES:
+                wall = self._wall_clock()
+                remaining, reset = rate_limit_state(response, wall)
+                if remaining == 0 and reset is not None:
+                    timer.hold_until(now + reset + LIMIT_MARGIN_SECONDS)
+                retry_after = retry_after_seconds(response, wall)
+                if retry_after is None and response.status_code >= 400 and reset is not None:
+                    retry_after = reset + LIMIT_MARGIN_SECONDS
+                status = response.status_code
+                if status == REFUSAL_STATUS and timer.answered and refusals < MAX_REFUSAL_RETRIES:
+                    refusals += 1
+                    wait = REFUSAL_COOL_DOWN_SECONDS if retry_after is None else retry_after
+                    timer.hold_until(now + wait)
+                    timer.slow_down *= REFUSAL_SLOW_DOWN
+                    gap = self.min_interval * timer.slow_down
+                    event = (
+                        f"refused {redact_url(url)}{via} with HTTP 403 part-way through; "
+                        f"waited {wait:g} s and went on with {gap:g} s between requests"
+                    )
+                    self.events.append(event)
+                    self._notice(event)
+                    continue
+                if status not in RETRY_STATUSES:
+                    if status < 400:
+                        timer.answered = True
                     return response
-                problem = f"HTTP {response.status_code}"
-                retry_after = retry_after_seconds(response, self._wall_clock())
+                problem = f"HTTP {status}"
 
-            now = self._clock()
             if retry_after is not None:
                 timer.hold_until(now + retry_after)
             if attempt == self.max_retries:
@@ -388,4 +493,4 @@ class PoliteClient:
                 )
             if retry_after is None:
                 timer.hold_until(now + self.backoff_seconds * 2**attempt)
-        raise AssertionError("unreachable")
+            attempt += 1

@@ -121,6 +121,12 @@
           ],
           "default": null,
           "title": "Licence Url"
+        },
+        "kept_from_previous": {
+          "default": false,
+          "description": "True when this run's fetch failed and the map shows the operator's last good copy, fetched at fetched_at (ADR 0018).",
+          "title": "Kept From Previous",
+          "type": "boolean"
         }
       },
       "required": [
@@ -136,7 +142,8 @@
         "tariffs",
         "attribution",
         "licence",
-        "licence_url"
+        "licence_url",
+        "kept_from_previous"
       ],
       "title": "OperatorEntry",
       "type": "object"

@@ -132,6 +132,29 @@
       "title": "HistoryPoint",
       "type": "object"
     },
+    "KeptCopy": {
+      "additionalProperties": false,
+      "description": "The last good copy the map showed because this run's fetch failed (ADR 0018).",
+      "properties": {
+        "fetched_at": {
+          "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}Z$",
+          "title": "Fetched At",
+          "type": "string"
+        },
+        "locations": {
+          "description": "Locations on the map from that copy.",
+          "minimum": 0,
+          "title": "Locations",
+          "type": "integer"
+        }
+      },
+      "required": [
+        "fetched_at",
+        "locations"
+      ],
+      "title": "KeptCopy",
+      "type": "object"
+    },
     "KeptCounts": {
       "additionalProperties": false,
       "properties": {
@@ -344,6 +367,18 @@
           },
           "title": "Issues",
           "type": "array"
+        },
+        "kept_copy": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/KeptCopy"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Set when the run failed and the map kept showing the operator's last good copy. Null otherwise."
         }
       },
       "required": [

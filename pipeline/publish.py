@@ -20,6 +20,11 @@ Rules:
   (swapped_coordinates in the operator file, ADR 0013): a point whose latitude and
   longitude are obviously the wrong way round is swapped back, the published point is
   kept in the detail file, and the map says so.
+- When an operator's fetch fails, the map keeps showing its last good copy from the
+  previous published files (`previous`), if that copy is at most MAX_KEPT_DAYS old and
+  still valid. Its manifest entry says so and keeps the original fetch time; each
+  location's detail file keeps its own fetched_at, so nothing looks newer than it is
+  (ADR 0018).
 - Every file is validated against schema/published.py before it is written.
 - The committed site/ folder is never written to; the deploy step copies site/ and adds
   this output.
@@ -31,8 +36,8 @@ import json
 import re
 import shutil
 from collections import defaultdict
-from dataclasses import dataclass
-from datetime import datetime
+from dataclasses import dataclass, field
+from datetime import datetime, timedelta
 from decimal import ROUND_HALF_UP, Decimal
 from pathlib import Path
 
@@ -78,6 +83,10 @@ LICENCE_NOTE = (
 )
 
 
+# The oldest last good copy shown for an operator whose fetch failed (ADR 0018).
+MAX_KEPT_DAYS = 7
+
+
 class PublishError(Exception):
     """The results cannot be published as they are."""
 
@@ -86,6 +95,54 @@ class PublishError(Exception):
 class Published:
     manifest: Manifest
     report: list[str]
+    # Operators whose fetch failed and whose last good copy is shown, with its fetch time.
+    kept: dict[str, datetime] = field(default_factory=dict)
+
+
+@dataclass
+class KeptCopy:
+    """An operator's last good copy from the previous published files."""
+
+    operator_id: str
+    entry: OperatorEntry
+    features: list[MapFeature]
+    details: dict[str, bytes]
+
+
+def last_good_copy(
+    previous: Path, operator_id: str, config: OperatorConfig, now: datetime
+) -> tuple[KeptCopy | None, str]:
+    """The operator's copy in the previous published files under previous/data, and why
+    not when there is none to keep. The copy is checked against today's models."""
+    data = previous / "data"
+    try:
+        manifest = Manifest.model_validate_json((data / "manifest.json").read_bytes())
+        entry = manifest.operators.get(operator_id)
+        if entry is None:
+            return None, "the previous files have no copy"
+        if entry.mode != "live":
+            return None, "the previous copy is not from a live fetch"
+        if now - entry.fetched_at > timedelta(days=MAX_KEPT_DAYS):
+            return None, f"the previous copy is more than {MAX_KEPT_DAYS} days old"
+        layer = MapLayer.model_validate_json((data / "locations.geojson").read_bytes())
+        features = [f for f in layer.features if f.properties.op == operator_id]
+        details = {}
+        for feature in features:
+            key = feature.properties.key
+            blob = (data / "loc" / key[:2] / f"{key}.json").read_bytes()
+            detail = LocationDetail.model_validate_json(blob)
+            if detail.location.provenance.source_id != operator_id:
+                return None, f"the previous detail file {key} is not this operator's"
+            details[key] = blob
+    except FileNotFoundError as exc:
+        return None, f"the previous files are missing {Path(exc.filename).name}"
+    except ValueError as exc:  # pydantic's ValidationError is a ValueError
+        return None, f"the previous files are not valid today: {str(exc).splitlines()[0]}"
+    if len(features) != entry.mapped:
+        return None, "the previous files do not match their manifest"
+    attribution = " ".join(str(config.attribution).split())
+    entry = entry.model_copy(update={"kept_from_previous": True, "attribution": attribution})
+    return KeptCopy(operator_id, entry, features, details), ""
 
 
 def location_key(location_id: str) -> str:
@@ -281,14 +338,29 @@ def publish(
     *,
     mode: str,
     generated_at: datetime,
+    kept: list[KeptCopy] = (),
 ) -> Published:
-    """Merge the results, validate every file and write them under out_dir/data."""
+    """Merge the results, and any last good copies kept for operators whose fetch failed,
+    validate every file and write them under out_dir/data."""
     if out_dir.resolve() == (ROOT / "site").resolve():
         raise PublishError("publish to a build folder, not the committed site/ folder")
     features: list[MapFeature] = []
     details: dict[str, bytes] = {}
     entries: dict[str, OperatorEntry] = {}
     attribution: list[str] = []
+    fresh = {r.operator_id for r in results}
+    for copy in sorted(kept, key=lambda c: c.operator_id):
+        config = operators.get(copy.operator_id)
+        if config is None or not config.enabled or config.licence is None:
+            raise PublishError(f"{copy.operator_id} is not switched on in the registry")
+        if copy.operator_id in fresh:
+            raise PublishError(f"{copy.operator_id} has both a fresh fetch and a kept copy")
+        for key, blob in copy.details.items():
+            if key in details:
+                raise PublishError(f"two locations share the detail file name {key}")
+            details[key] = blob
+        features.extend(copy.features)
+        entries[copy.operator_id] = copy.entry
     for result in sorted(results, key=lambda r: r.operator_id):
         config = operators.get(result.operator_id)
         if config is None or not config.enabled or config.licence is None:
@@ -359,9 +431,10 @@ def publish(
             licence_url=config.licence.url,
         )
 
+    features.sort(key=lambda f: (f.properties.op, f.properties.id))
     layer = MapLayer(
         generated_at=generated_at,
-        attribution=attribution,
+        attribution=[entries[i].attribution for i in sorted(entries)],
         licence_note=LICENCE_NOTE,
         features=features,
     )
@@ -371,6 +444,7 @@ def publish(
         files.append(_size("data/loc/", list(details.values())))
     plans_bytes = _validated(PlansFile, _dump(plans_file(operators, generated_at)))
     files.append(_size("data/plans.json", [plans_bytes]))
+    entries = dict(sorted(entries.items()))
     manifest = Manifest(generated_at=generated_at, operators=entries, files=files)
 
     data = out_dir / "data"
@@ -397,5 +471,13 @@ def publish(
             if entry.corrected
             else ""
         )
-        report.append(f"  {operator_id}: {entry.mapped} locations mapped{left_off}{swapped}")
-    return Published(manifest=manifest, report=report)
+        last_good = (
+            f", from its last good copy fetched {entry.fetched_at:%Y-%m-%d %H:%M} UTC"
+            if entry.kept_from_previous
+            else ""
+        )
+        report.append(
+            f"  {operator_id}: {entry.mapped} locations mapped{left_off}{swapped}{last_good}"
+        )
+    kept_at = {c.operator_id: c.entry.fetched_at for c in kept}
+    return Published(manifest=manifest, report=report, kept=kept_at)

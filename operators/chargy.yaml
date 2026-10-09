@@ -17,7 +17,7 @@ auth:
   name: null
   secret_name: null
 rate_limit:
-  min_seconds_between_requests: 4
+  min_seconds_between_requests: 6
   limits: []
   limits_checked: 2026-10-07
   notes: >-
@@ -25,7 +25,9 @@ rate_limit:
     2 seconds until 8 October 2026, then 6 seconds after the feed refused requests from
     GitHub's servers part-way through the first daily run (see findings). Lowered to 4
     seconds on 9 October 2026 by the repository owner's decision, to shorten the daily
-    run; if the feed refuses requests again, the gap goes back to 6 seconds.
+    run, on the condition that it goes back to 6 seconds if the feed refused requests
+    again. It did, in the run of 9 October 2026 at 17:51 UTC, so the gap is 6 seconds
+    again from that date.
 supports_single_location: needs_testing
 cors: not_supported
 attribution: >-
@@ -135,6 +137,23 @@ findings:
       checking in a later run. The daily run's gap is unchanged, since the owner's rule is
       about refusals in the daily run.
     evidence_url: https://char.gy/open-ocpi/locations
+  - date: 2026-10-09
+    kind: access
+    summary: >-
+      In a daily run started by hand on 2026-10-09 at 17:51 UTC from a GitHub Actions
+      runner, with the 4 second gap, the locations feed answered HTTP 403 for offset 2800,
+      after 56 pages. Across the three refusals so far (offsets 2900, 2700 and 2800, with
+      gaps of about 2.8 and 4 seconds, from two networks) the feed refused after 54 to 58
+      requests each time, while the run with a 6 second gap fetched all of about 120
+      pages. This suggests a limit on the number of requests in a period of some minutes
+      rather than a block on GitHub's network. That is inferred from these runs; char.gy
+      states no limit.
+    handling: >-
+      char.gy was left out of that run's map. The gap went back to 6 seconds, as recorded
+      under rate_limit. Since ADR 0018, a refusal part-way through a run is followed by a
+      wait of 5 minutes and a wider gap before the page is asked for again, at most twice,
+      and if the fetch still fails the map keeps showing the last good copy with its date.
+    evidence_url: https://github.com/MCRDavid/OEVM/actions/runs/37969231568
 notes: >-
   Paging uses the OCPI 2.2.1 Link, X-Total-Count and X-Limit headers. Fetching a single
   location by id needs testing.
