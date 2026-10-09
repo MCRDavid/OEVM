@@ -13,10 +13,10 @@ section filled in.
 
 | Task | Adapter | Unlocks | Blocked on | Suggested order |
 |---|---|---|---|---|
-| A1 | `eco_movement_pcpr` | bp pulse, Shell Recharge, ubitricity, Community by Shell Recharge | A token from at least one operator | 1 |
-| A2 | `gridserve` | Gridserve | Gridserve's data terms clarified, then a key | 2 |
+| A1 | `eco_movement_pcpr` | bp pulse, Shell Recharge, ubitricity, Community by Shell Recharge | A token from at least one operator | 2 |
+| A2 | `gridserve` | Gridserve | A key | 3 |
 | A3 | `static_file` | No current operator; later council CSVs and FOI spreadsheets | A source that needs it | Deferred |
-| A4 | None yet | MFG and Clenergy on `ocpi_221`; Fastned, Believ and others once their format is known | Access for most | 2 |
+| A4 | None yet | MFG and Clenergy on `ocpi_221`; Fastned, Believ and others once their format is known | Nothing for MFG and Clenergy; access for the rest | 1 |
 | A5 | Basic auth for `ocpi_221` | Osprey | Osprey confirming the method and granting credentials | When credentials arrive |
 
 Operators that need no new adapter, so are not tasks here: Pod (`ocpi_221` once a token
@@ -67,9 +67,14 @@ any two requests to it. Requests are never sent in parallel.
 
 **Main risk:** at 125 seconds a request, the daily job's 60 minute limit fits about 28
 requests to this host across all four operators. The page size and record counts are
-unknown, so whether a full daily fetch fits needs testing. Options if it does not, for the
-owner to choose then: fetch one or two operators a day in turn, use `date_from` for
-locations, or ask Eco-Movement whether the limit is per key.
+unknown, so whether a full daily fetch fits needs testing. The owner expects the limit
+applies per operator key rather than to the whole platform. If Eco-Movement confirms
+that in writing, the gap can apply per key: requests still go one at a time from one
+address, but turns between the four operators' keys, so a full fetch takes about a
+quarter of the time. Until then the strictest reading stays. Sending requests from
+several addresses to get round a limit is not an option: the project's rules forbid
+rotating addresses (CLAUDE.md, ADR 0010). Other options if the fetch does not fit: fetch
+one or two operators a day in turn, or use `date_from` for locations.
 
 **Licence:** unknown for all four. Each operator's terms must be read when its token is
 granted.
@@ -99,13 +104,16 @@ through a form that asks the requester to agree to Gridserve's API Fair Use Poli
 **Rate limits:** Gridserve's policy sets 1 request per 30 seconds per key; the operator file
 waits 31 seconds.
 
-**Licence:** unknown. The policy says intellectual property in the API Data stays with
-Gridserve and calls it confidential and proprietary, while DfT's guidance says the data
-must be open in line with the Open Government Licence. The operator file says to clarify
-this with Gridserve before requesting a key.
+**Licence:** OGL v3.0. The policy says intellectual property in the API Data stays with
+Gridserve and calls it confidential and proprietary. On 2026-10-09 the repository owner
+decided that regulation 10(5), which requires the data to be available without terms on
+its use, takes priority, and that the project goes ahead without first writing to
+Gridserve. This is recorded in its operator file, `DATA_LICENCES.md` and the transparency
+page. The published rate limit is still followed.
 
-**Depends on:** the owner deciding to write to Gridserve about the terms, a reply that
-allows republishing, then a key. Only after that can a real fixture be recorded.
+**Depends on:** a key, requested through Gridserve's form. Only after that can a real
+fixture be recorded. Its documentation suggests `ocpi_221` with a header key may be
+enough; untested.
 
 ## A3: `static_file`
 
@@ -162,13 +170,15 @@ then would be guessing.
 
 ## Suggested order
 
-1. Request access for the Eco-Movement operators and write to Gridserve about its terms
-   (engagement log work, not adapter work). No keyed adapter can start without this.
-2. MFG and Clenergy on `ocpi_221`, since they need no key. Believ's free registration is
-   the quickest way to learn another feed's format.
+Decided by the owner on 2026-10-09: sources that need no key come first.
+
+1. MFG and Clenergy on `ocpi_221`, owned by the "More operators from source feeds" thread
+   (MFG is in its own PR). Believ's free registration is the quickest way to learn another
+   feed's format.
+2. Request keys for the Eco-Movement operators and Gridserve, and ask Eco-Movement whether
+   its limits apply per key (engagement log work, not adapter work).
 3. A1 `eco_movement_pcpr`, when the first token arrives and after the faster fetching work
    lands.
-4. A2 `gridserve`, when the terms are clarified and a key is granted. Its documentation
-   suggests `ocpi_221` with a header key may be enough; untested.
+4. A2 `gridserve`, when a key is granted.
 5. A5 Basic auth, when Osprey grants credentials.
 6. A3 `static_file`, only when a real source needs it.
