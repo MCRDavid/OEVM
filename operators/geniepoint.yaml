@@ -57,6 +57,13 @@ relay:
   url_variable: OEVM_RELAY_URL
   secret_name: OEVM_RELAY_TOKEN
   path_prefix: /geniepoint
+swapped_coordinates:
+  decided: 2026-10-09
+  basis: >-
+    Where a location's longitude is obviously missing its minus sign, or its latitude and
+    longitude are obviously the wrong way round, the repository owner decided to show it
+    in the right place rather than leave it off the map, with the operator's own figures
+    kept and the correction shown on the map and recorded in the findings below.
 engagement:
   status: open_anonymous
   evidence:
@@ -133,8 +140,10 @@ findings:
       2.444352, which is east of the UK. Its postcode is in Crewe, west of the Greenwich
       meridian.
     handling: >-
-      Left off the map and listed in the manifest as not mapped. Coordinates are never
-      corrected by this project.
+      Until 2026-10-09 it was left off the map. By the repository owner's decision
+      (swapped_coordinates above), it is now shown with the minus sign added, and its
+      details on the map say so and give the operator's own figures. The manifest lists
+      it as corrected.
     evidence_url: https://opendata.geniepoint.co.uk/locations
   - date: 2026-10-08
     kind: access
