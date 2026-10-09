@@ -539,13 +539,15 @@ body[data-view="list"] .map-view {
   font-weight: 600;
 }
 
-.connectors {
+.connectors,
+.tariffs {
   margin: 0;
   padding: 0;
   list-style: none;
 }
 
-.connectors > li {
+.connectors > li,
+.tariffs > li {
   margin-bottom: 0.5rem;
   padding: 0.5rem 0.75rem;
   border: 1px solid var(--line);

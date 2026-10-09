@@ -16,6 +16,10 @@ regulations describe the price in reference data as "the price in pence per kilo
   conditions, read as OCPI 2.2.1 section 11 describes them: for each kind of charge, the
   first tariff element whose restrictions match applies, and an element with no
   restrictions after the others is the price "otherwise".
+- When a site lists several tariffs, each is shown with how it is paid for (its OCPI
+  type), what its price depends on, and, when energy prices can be compared on the same
+  VAT basis, which listed tariff has the lowest energy price. Other charges are never
+  folded into that comparison, so it says so.
 """
 
 from collections.abc import Sequence
@@ -31,6 +35,15 @@ NON_ENERGY_UNITS = (
     ("time", "per hour charging"),
     ("parking_time", "per hour parked"),
 )
+# OCPI 2.2.1 section 11.4.7 (TariffType), in plain words.
+TARIFF_KINDS = {
+    "ad_hoc_payment": "Pay at the charger, for example by card",
+    "regular": "With an account, app or card from a charging provider",
+    "profile_cheap": "When the session is set to the cheapest charging",
+    "profile_fast": "When the session is set to the fastest charging",
+    "profile_green": "When the session is set to the greenest charging",
+}
+UNSTATED_KIND = "How to pay is not stated"
 WEEK = ("monday", "tuesday", "wednesday", "thursday", "friday", "saturday", "sunday")
 
 
@@ -258,3 +271,75 @@ def location_summary(prices: Sequence[ConnectorPriceLike]) -> str:
         parts.append("some prices unknown" if parts else "Price unknown")
     text = "; ".join(parts)
     return text[0].upper() + text[1:]
+
+
+def tariff_kind(tariff: Tariff) -> str:
+    """How a tariff is paid for, from its OCPI type."""
+    return TARIFF_KINDS.get(tariff.type or "", UNSTATED_KIND)
+
+
+def varies_with(tariff: Tariff) -> list[str]:
+    """What a tariff's charging price depends on, in plain words, in a fixed order. Empty
+    when the same price applies all the time."""
+    found: set[str] = set()
+    for element in _charging_elements(tariff):
+        r = element.restrictions
+        if r is None:
+            continue
+        if (r.start_time or r.end_time) and not (r.start_time == r.end_time == "00:00"):
+            found.add("time of day")
+        if r.day_of_week and len(set(r.day_of_week)) < 7:
+            found.add("day of the week")
+        if r.start_date or r.end_date:
+            found.add("date")
+        if r.min_duration or r.max_duration:
+            found.add("how long the session lasts")
+        if r.min_kwh or r.max_kwh:
+            found.add("how much energy you use")
+        if r.min_power or r.max_power or r.min_current or r.max_current:
+            found.add("charging speed")
+    order = (
+        "time of day",
+        "day of the week",
+        "date",
+        "how long the session lasts",
+        "how much energy you use",
+        "charging speed",
+    )
+    return [item for item in order if item in found]
+
+
+def varies_text(items: list[str]) -> str | None:
+    """ "Price depends on time of day and day of the week." or None."""
+    if not items:
+        return None
+    joined = items[0] if len(items) == 1 else f"{', '.join(items[:-1])} and {items[-1]}"
+    return f"Price depends on {joined}."
+
+
+class TariffOptionLike(Protocol):
+    kind: str
+    state: str
+    energy_low: Decimal | None
+    energy_high: Decimal | None
+    includes_vat: bool | None
+
+
+def comparison(options: Sequence[TariffOptionLike]) -> str | None:
+    """A line about which listed tariff has the lowest energy price, or None when that
+    cannot be said fairly: fewer than two priced tariffs with an energy price, or prices
+    on different VAT bases. Other charges are not compared, and the line says so."""
+    priced = [o for o in options if o.state == "priced" and o.energy_low is not None]
+    if len(priced) < 2 or len({bool(o.includes_vat) for o in priced}) != 1:
+        return None
+    vat = "including VAT" if priced[0].includes_vat else "excluding VAT, VAT not stated"
+    rest = "Other charges, such as fees per session or per hour, are not compared."
+    low = min(o.energy_low for o in priced)
+    if all(o.energy_low == o.energy_high == low for o in priced):
+        return f"Every priced tariff here charges {pence(low)} per kWh {vat}. {rest}"
+    cheapest = [o for o in priced if o.energy_low == low]
+    kinds = {o.kind for o in cheapest}
+    kind = kinds.pop() if len(kinds) == 1 else UNSTATED_KIND
+    which = "" if kind == UNSTATED_KIND else f" ({kind[0].lower()}{kind[1:]})"
+    when = " at some times" if all(o.energy_high != low for o in cheapest) else ""
+    return f"Lowest energy price listed here: {pence(low)} per kWh {vat}{when}{which}. {rest}"

@@ -14,6 +14,11 @@ Blueprint task 6. For each connector:
   including VAT when the operator states it. It is a guide for filters and map labels;
   the text from pipeline.pricing is what explains the price.
 
+For a site's details, site_tariffs lists every tariff its connectors refer to, not only
+the preferred ones, so people can compare them: each with how it is paid for, its price,
+what the price depends on (time of day, day of the week and so on) and how many of the
+site's connectors list it. Tariffs that could not be found are listed as unknown.
+
 Prices are only ever worded by pipeline.pricing.
 """
 
@@ -21,7 +26,16 @@ from dataclasses import dataclass, field
 from decimal import Decimal
 from typing import Literal
 
-from pipeline.pricing import describe_tariff, energy_range, pence
+from pipeline.pricing import (
+    UNSTATED_KIND,
+    comparison,
+    describe_tariff,
+    energy_range,
+    pence,
+    tariff_kind,
+    varies_text,
+    varies_with,
+)
 from schema.models import Connector, Location, PriceState, Tariff
 
 
@@ -125,6 +139,72 @@ def price_connector(
         unresolved_ids=unresolved,
         **energy,
     )
+
+
+@dataclass(frozen=True)
+class TariffOption:
+    """One tariff listed at a site, for its details."""
+
+    tariff_id: str
+    name: str | None
+    kind: str
+    state: Literal["priced", "free", "unknown"]
+    text: str
+    reason: str | None = None
+    varies: str | None = None
+    connectors: int = 0
+    energy_low: Decimal | None = None
+    energy_high: Decimal | None = None
+    includes_vat: bool | None = None
+
+
+@dataclass(frozen=True)
+class SiteTariffs:
+    options: list[TariffOption]
+    comparison: str | None
+    connectors: int
+
+
+def _option(tariff: Tariff, count: int) -> TariffOption:
+    shown = describe_tariff(tariff)
+    energy = energy_range(tariff)
+    return TariffOption(
+        tariff_id=tariff.id,
+        name=tariff.alt_text,
+        kind=tariff_kind(tariff),
+        state=shown.state,
+        text=shown.text,
+        reason=shown.reason,
+        varies=varies_text(varies_with(tariff)) if shown.state == "priced" else None,
+        connectors=count,
+        energy_low=energy[0] if energy else None,
+        energy_high=energy[1] if energy else None,
+        includes_vat=energy[2] if energy else None,
+    )
+
+
+def site_tariffs(location: Location, tariffs: dict[str, Tariff]) -> SiteTariffs:
+    """Every tariff the location's connectors list, in the order they are first listed."""
+    connectors = [c for evse in location.evses for c in evse.connectors]
+    counts: dict[str, int] = {}
+    for connector in connectors:
+        for tariff_id in dict.fromkeys(connector.tariff_ids):
+            counts[tariff_id] = counts.get(tariff_id, 0) + 1
+    options = [
+        _option(tariffs[i], n)
+        if i in tariffs
+        else TariffOption(
+            tariff_id=i,
+            name=None,
+            kind=UNSTATED_KIND,
+            state=UNKNOWN,
+            text="Price unknown",
+            reason="This tariff is listed but could not be read from the operator's tariff data.",
+            connectors=n,
+        )
+        for i, n in counts.items()
+    ]
+    return SiteTariffs(options, comparison(options), len(connectors))
 
 
 def price_locations(locations: list[Location], tariffs: list[Tariff]) -> list[ConnectorPrice]:

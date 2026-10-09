@@ -226,6 +226,25 @@ def test_details_show_provenance_and_return_focus(visit):
     assert page.evaluate("document.activeElement.classList.contains('item')")
 
 
+def test_details_list_every_tariff_with_the_lowest_energy_price(visit):
+    page = visit().open("?view=list", map_ready=False)
+    expect(page.locator("#list-items li")).to_have_count(LOCATIONS)
+    buttons = page.locator("#list-items button")
+    for n in range(buttons.count()):
+        buttons.nth(n).click()
+        expect(page.locator("#detail-heading")).to_be_focused()
+        if "Lowest energy price listed here" in page.text_content("#detail-body"):
+            break
+        page.keyboard.press("Escape")
+    else:
+        raise AssertionError("no location compares its tariffs")
+    tariffs = page.locator("ul.tariffs > li")
+    assert tariffs.count() >= 2
+    body = page.text_content("ul.tariffs")
+    assert "Pay at the charger, for example by card" in body
+    assert "With an account, app or card from a charging provider" in body
+
+
 def test_details_say_when_coordinates_were_swapped_back(visit):
     page = visit().open("?view=list", map_ready=False)
     expect(page.locator("#list-items li")).to_have_count(LOCATIONS)

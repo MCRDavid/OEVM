@@ -56,6 +56,34 @@ function connectorItem(evse, connector, price) {
   );
 }
 
+// Every tariff the site's connectors list, so people can compare them. Shown only when
+// there is more than one: with a single tariff the connector prices already say it all.
+// Every price and comparison is worded by the pipeline (pipeline/pricing.py).
+export function tariffSection(detail) {
+  const options = detail.tariff_options ?? [];
+  if (options.length < 2) return [];
+  const total = (detail.location?.evses ?? []).reduce((n, e) => n + (e.connectors?.length ?? 0), 0);
+  const items = options.map((option) =>
+    h(
+      "li",
+      {},
+      h("p", {}, h("strong", { text: option.name || "Tariff with no description" })),
+      h("p", { className: "hint", text: option.kind }),
+      h("p", { className: "price", text: option.text }),
+      option.varies ? h("p", { text: option.varies }) : null,
+      option.reason ? h("p", { className: "hint", text: option.reason }) : null,
+      option.connectors < total
+        ? h("p", { className: "hint", text: `Listed for ${option.connectors} of ${total} connectors.` })
+        : null,
+    ),
+  );
+  return [
+    h("h3", { text: `Tariffs listed here (${options.length})` }),
+    detail.tariff_comparison ? h("p", { text: detail.tariff_comparison }) : null,
+    h("ul", { className: "tariffs", "aria-label": "Tariffs listed here" }, items),
+  ].filter(Boolean);
+}
+
 export function renderDetail(detail, { repository }) {
   const location = detail.location;
   const items = [];
@@ -82,6 +110,7 @@ export function renderDetail(detail, { repository }) {
     openingHours(location.opening_hours),
     h("h3", { text: "Connectors" }),
     items.length ? h("ul", { className: "connectors" }, items) : h("p", { text: "No charge points listed." }),
+    ...tariffSection(detail),
     h(
       "p",
       { className: "hint" },
