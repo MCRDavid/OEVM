@@ -245,6 +245,112 @@ def test_details_list_every_tariff_with_the_lowest_energy_price(visit):
     assert "With an account, app or card from a charging provider" in body
 
 
+def _open_details_containing(page, text):
+    buttons = page.locator("#list-items button")
+    for n in range(buttons.count()):
+        buttons.nth(n).click()
+        expect(page.locator("#detail-heading")).to_be_focused()
+        if text in page.text_content("#detail-body"):
+            return
+        page.keyboard.press("Escape")
+    raise AssertionError(f"no location's details contain {text!r}")
+
+
+def test_details_show_plans_from_providers_pages_and_the_visitors_own(visit):
+    v = visit()
+    page = v.open("?view=list", map_ready=False)
+    expect(page.locator("#list-items li")).to_have_count(LOCATIONS)
+    _open_details_containing(page, "Other ways to pay here")
+    plans = page.text_content("ul.plans")
+    assert "per kWh" in plans and "checked 9 Oct 2026" in plans
+    assert "You have this plan" not in plans
+    page.keyboard.press("Escape")
+    open_filters(page)
+    page.locator("#my-plans input[name=plan]").first.check()
+    page.click("#remember")
+    stored = json.loads(v.stored()["oevm.settings.v1"])
+    assert stored["plans"] == [
+        page.locator("#my-plans input[name=plan]").first.get_attribute("value")
+    ]
+    page.click("#forget")
+    assert v.stored() == {}
+
+
+def test_the_calculator_works_out_when_a_plan_pays_for_itself(visit):
+    plans = {
+        "schema_version": 1,
+        "generated_at": "2026-10-09T04:17:00Z",
+        "note": "test",
+        "plans": [
+            {
+                "id": "test.fixed",
+                "provider": "Test",
+                "provider_kind": "roaming",
+                "name": "Fixed plan",
+                "pay_by": "Test app",
+                "fee_text": "£5.00 a month",
+                "price_text": "50p per kWh including VAT",
+                "monthly_fee": 5,
+                "ppk": 50,
+                "discount_percent": None,
+                "networks": ["GeniePoint"],
+                "operator_ids": ["geniepoint"],
+                "conditions": None,
+                "needs_testing": None,
+                "fee_note": None,
+                "attribution": None,
+                "source_url": "https://example.com/plan",
+                "checked": "2026-10-09",
+            },
+            {
+                "id": "test.discount",
+                "provider": "Test",
+                "provider_kind": "roaming",
+                "name": "Discount plan",
+                "pay_by": "Test app",
+                "fee_text": "£4.00 a month",
+                "price_text": "20% off the app price",
+                "monthly_fee": 4,
+                "ppk": None,
+                "discount_percent": 20,
+                "networks": ["GeniePoint"],
+                "operator_ids": ["geniepoint"],
+                "conditions": None,
+                "needs_testing": None,
+                "fee_note": None,
+                "attribution": None,
+                "source_url": "https://example.com/plan",
+                "checked": "2026-10-09",
+            },
+        ],
+    }
+    v = visit()
+    v.page.route(
+        "**/data/plans.json",
+        lambda route: route.fulfill(content_type="application/json", body=json.dumps(plans)),
+    )
+    page = v.open("?view=list", map_ready=False)
+    expect(page.locator("#list-items li")).to_have_count(LOCATIONS)
+    _open_details_containing(page, "Is a subscription worth it here?")
+    page.click(".calculator summary")
+    assert page.input_value("#calc-fee") == "5"
+    assert page.input_value("#calc-with") == "50"
+    page.fill("#calc-now", "82.8")
+    answer = page.locator("#calc-answer")
+    expect(answer).to_contain_text("pays for itself once you charge 16 kWh a month")
+    page.fill("#calc-kwh", "100")
+    expect(answer).to_contain_text("save about £27.80 a month after the fee")
+    page.select_option("#calc-plan", "test.discount")
+    expect(page.locator("#calc-note")).to_contain_text("enter it from the provider's app")
+    page.fill("#calc-base", "60")
+    assert page.input_value("#calc-with") == "48"
+    expect(answer).to_contain_text("pays for itself once you charge 12 kWh a month")
+    assert (
+        "Lowest published energy price here with any listed plan: 50p per kWh including "
+        "VAT, with Fixed plan from Test" in page.text_content("#detail-body")
+    )
+
+
 def test_details_say_when_coordinates_were_swapped_back(visit):
     page = visit().open("?view=list", map_ready=False)
     expect(page.locator("#list-items li")).to_have_count(LOCATIONS)

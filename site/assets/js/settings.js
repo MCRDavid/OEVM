@@ -41,11 +41,22 @@ export function createSettings(storage) {
         return null;
       }
     },
+    // The ids of the charging plans the visitor said they have, if saved.
+    plans() {
+      try {
+        const saved = JSON.parse(read());
+        return Array.isArray(saved?.plans) ? saved.plans.filter((id) => typeof id === "string") : [];
+      } catch {
+        return [];
+      }
+    },
     // Only called after the visitor has opted in. Returns false if saving failed. theme is
-    // saved only when the visitor picked one; otherwise the page follows the device.
-    save(state, theme = null) {
+    // saved only when the visitor picked one; otherwise the page follows the device. plans
+    // is saved only when the visitor ticked at least one.
+    save(state, theme = null, plans = []) {
       const saved = { version: 1, filters: serialise(state) };
       if (THEMES.includes(theme)) saved.theme = theme;
+      if (plans.length) saved.plans = [...plans];
       try {
         storage.setItem(STORAGE_KEY, JSON.stringify(saved));
         return true;

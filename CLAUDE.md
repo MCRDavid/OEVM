@@ -10,6 +10,7 @@ decisions are in docs/adr/.
 - Lint: uv run ruff check . && uv run ruff format --check .
 - Test: uv run pytest -q
 - Validate registry: uv run python -m pipeline.registry --validate
+- Validate plan providers: uv run python -m pipeline.plans --validate
 - Offline pipeline: uv run python -m pipeline.run --fixtures
 - Map files from fixtures: uv run python -m pipeline.run --fixtures --publish build (never site/)
 - Feed health page: uv run python -m pipeline.run --fixtures --log-dir logs, then
@@ -30,6 +31,8 @@ decisions are in docs/adr/.
 - adapters/http.py: polite client. adapters/ocpi_221/: paging and OCPI conversion. adapters/replay.py: fixtures.
 - pipeline/registry.py, pipeline/run.py. operators/*.yaml: one file per operator.
 - pipeline/pricing.py: the only way prices are shown. pipeline/tariffs.py: price per connector.
+- providers/*.yaml: charging plans from providers' own pages (schema/provider.py, pipeline/plans.py,
+  ADR 0016). Plans only where the provider's terms allow reuse; never estimate a price.
 - pipeline/transparency.py: site/transparency/. pipeline/publish.py: map files; schema/published.py.
 - pipeline/status.py: feed health page. schema/runlog.py: run log format. pipeline/health.py: figures.
 - pipeline/project.py: repository URL (also in site/index.html, site/.well-known/security.txt and .github/ISSUE_TEMPLATE).

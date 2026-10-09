@@ -1,0 +1,33 @@
+# yaml-language-server: $schema=schema.json
+# One charging plan provider: a roaming app or an operator's own app and subscriptions.
+# Copy to providers/<id>.yaml. Rules are in schema/provider.py. Check with:
+#   uv run python -m pipeline.plans --validate
+id: example
+name: Example Charging
+kind: roaming # or operator
+website: https://example.com
+terms:
+  url: https://example.com/terms
+  reuse: no_restriction_found # attribution, personal_use_only or forbidden
+  quote: null # the reuse clause word for word, required for a restriction
+  attribution: null # wording to show, required when reuse is attribution
+  checked: 2026-10-09
+plans:
+  - id: example_plus
+    name: Example Plus
+    pay_by: Example app or card
+    monthly_fee: 4.99 # pounds a month including VAT; 0 for none; null if not published
+    fee_note: null
+    price_per_kwh: null # pounds per kWh, a fixed price
+    discount_percent: 20 # or a discount, never both
+    discount_of: Example's own price on each network
+    includes_vat: true # null when the provider does not say
+    networks: [Example Network]
+    operator_ids: [] # ids from operators/ for those networks
+    conditions: null
+    needs_testing: null # when the provider's own pages disagree
+    source:
+      url: https://example.com/plus
+      quote: Copied word for word from the page.
+      checked: 2026-10-09
+notes: null

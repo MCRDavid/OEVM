@@ -1,0 +1,15 @@
+# yaml-language-server: $schema=schema.json
+# Tesla: Supercharger network, open to some non-Tesla EVs through the Tesla app.
+# Rules are in schema/provider.py.
+id: tesla
+name: Tesla Supercharger
+kind: operator
+website: https://www.tesla.com/en_gb
+terms:
+  url: https://www.tesla.com/legal/terms
+  reuse: no_restriction_found
+  quote: null
+  attribution: null
+  checked: 2026-10-09
+plans: []
+notes: "Checked 2026-10-09. No plans are listed: the terms page and the Supercharging for non-Tesla EVs, fees and live pricing pages on tesla.com returned HTTP 403, so no reuse clause could be read and no price or fee could be confirmed on Tesla's own site. reuse is recorded as no_restriction_found only because the terms could not be read; this needs testing. A Supercharging Membership for non-Tesla EVs was not listed: the only figure on a Tesla-run domain is an engage.tesla.com article dated 18 May 2022, which is not a current tariff page, and other figures come from press reports only. Tesla shows live per-site prices in its app; no per-kWh prices were found on readable pages."

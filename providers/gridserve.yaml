@@ -1,0 +1,15 @@
+# yaml-language-server: $schema=schema.json
+# GRIDSERVE Electric Highway: operator network with its own app and a membership plan.
+# Rules are in schema/provider.py.
+id: gridserve
+name: GRIDSERVE Electric Highway
+kind: operator
+website: https://www.gridserve.com/electric-highway/
+terms:
+  url: https://www.gridserve.com/legal-area/website-customer-self-service-portal/
+  reuse: forbidden
+  quote: "You shall not conduct, facilitate, authorise or permit any text or data mining or web scraping in relation to our site or any services provided via, or in relation to, our site."
+  attribution: null
+  checked: 2026-10-09
+plans: []
+notes: "Plans are not listed because the provider's website terms do not allow text or data mining or web scraping of its site, and allow its pages to be copied only for personal use (checked 2026-10-09)."

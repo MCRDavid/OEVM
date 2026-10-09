@@ -1,0 +1,14 @@
+# yaml-language-server: $schema=schema.json
+# Paua: charging plans checked on the provider's own pages. Rules are in schema/provider.py.
+id: paua
+name: Paua
+kind: roaming
+website: https://www.paua.com
+terms:
+  url: https://www.paua.com/downloads/paua-driver-terms
+  reuse: forbidden
+  quote: "(n) not to use any robot, spider, other automatic device or manual process to monitor, download, copy or keep a database copy of the content made available through the Services and the App; (p) cause or launch any programs or scripts for the purpose of scraping, indexing, surveying, or otherwise data mine any portion of the Services"
+  attribution: null
+  checked: 2026-10-09
+plans: []
+notes: "Plans are not listed because Paua's driver terms (last updated 11 March 2025) do not allow copying or keeping a database copy of content made available through its Services and App. Checked 2026-10-09. The pricing page lists business and fleet plans (Paua Access, Paua Reimburse, Paua PRO); the driver terms say charge point tariff prices are shown in Paua's apps."

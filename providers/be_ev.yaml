@@ -1,0 +1,168 @@
+# yaml-language-server: $schema=schema.json
+# Be.EV: operator network with its own app and RFID card, plus Charging Pass subscriptions.
+# Rules are in schema/provider.py.
+id: be_ev
+name: Be.EV
+kind: operator
+website: https://be-ev.co.uk/
+terms:
+  url: https://be-ev.co.uk/terms-conditions/
+  reuse: no_restriction_found
+  quote: null
+  attribution: null
+  checked: 2026-10-09
+plans:
+  - id: be_ev_members_off_peak
+    name: Be.EV Members (Be.EV app & Be.EV RFID card) Off-Peak
+    pay_by: Be.EV app or Be.EV RFID card
+    monthly_fee: 0
+    fee_note: null
+    price_per_kwh: 0.49
+    discount_percent: null
+    discount_of: null
+    includes_vat: true
+    networks: [Be.EV]
+    operator_ids: []
+    conditions: "Off-Peak 7pm to 7am only. The same 49p/kWh is listed for ultra-rapid (75kW+), rapid (26 - 74kW) and fast (0 - 25kW) chargers. The page says pricing can vary between locations, so check the app or charger. VAT inclusion is from terms clause 9.2.2 (website prices inclusive of VAT unless stated otherwise)."
+    needs_testing: null
+    source:
+      url: https://be-ev.co.uk/pricing
+      quote: "Ultra-rapid chargers (75kW+) Be.EV Members (Be.EV app & Be.EV RFID card) Off-Peak (7pm–7am): 49p/kWh"
+      checked: 2026-10-09
+  - id: be_ev_standard_ultra_rapid
+    name: Standard Pricing (ultra-rapid)
+    pay_by: Be.EV app, Be.EV RFID card or contactless
+    monthly_fee: 0
+    fee_note: null
+    price_per_kwh: null
+    discount_percent: null
+    discount_of: null
+    includes_vat: true
+    networks: [Be.EV]
+    operator_ids: []
+    conditions: "Ultra-rapid chargers (75kW+), anytime. Published as a range of 59p to 89p per kWh, varying by location, so no single price is given. Terms clause 9.2.2 says banking charges for contactless or webpay may be added."
+    needs_testing: "The pricing page does not say which price contactless payment pays at rapid and ultra-rapid chargers."
+    source:
+      url: https://be-ev.co.uk/pricing
+      quote: "Standard Pricing Anytime: 59p/kWh - 89p/kWh"
+      checked: 2026-10-09
+  - id: be_ev_standard_rapid
+    name: Standard Pricing (rapid)
+    pay_by: Be.EV app, Be.EV RFID card or contactless
+    monthly_fee: 0
+    fee_note: null
+    price_per_kwh: null
+    discount_percent: null
+    discount_of: null
+    includes_vat: true
+    networks: [Be.EV]
+    operator_ids: []
+    conditions: "Rapid chargers (26 - 74kW), anytime. Published as a range of 59p to 79p per kWh, so no single price is given. Terms clause 9.2.2 says banking charges for contactless or webpay may be added."
+    needs_testing: "The pricing page does not say which price contactless payment pays at rapid and ultra-rapid chargers."
+    source:
+      url: https://be-ev.co.uk/pricing
+      quote: "Rapid chargers (26 - 74kW) Be.EV Members (Be.EV app & Be.EV RFID card) Off-Peak (7pm–7am): 49p/kWh Standard Pricing Anytime: 59p/kWh - 79p/kWh"
+      checked: 2026-10-09
+  - id: be_ev_standard_fast
+    name: Standard Pricing (fast)
+    pay_by: Be.EV app, Be.EV RFID card, WebPay or roaming apps
+    monthly_fee: 0
+    fee_note: null
+    price_per_kwh: null
+    discount_percent: null
+    discount_of: null
+    includes_vat: true
+    networks: [Be.EV]
+    operator_ids: []
+    conditions: "Fast chargers (0 - 25kW), anytime. Published as a range of 25p to 65p per kWh, so no single price is given. Fast chargers do not take contactless."
+    needs_testing: null
+    source:
+      url: https://be-ev.co.uk/pricing
+      quote: "Fast chargers (0 - 25kW) Be.EV Members (Be.EV app & Be.EV RFID card) Off-Peak (7pm–7am): 49p/kWh Standard Pricing Anytime: 25p/kWh - 65p/kWh"
+      checked: 2026-10-09
+  - id: be_ev_flexi
+    name: Flexi (Charging Pass)
+    pay_by: Be.EV app or Be.EV RFID card
+    monthly_fee: 13.99
+    fee_note: Monthly, cancel anytime; renews automatically each month.
+    price_per_kwh: 0.39
+    discount_percent: null
+    discount_of: null
+    includes_vat: true
+    networks: [Be.EV]
+    operator_ids: []
+    conditions: "All day, every day. Fair-usage cap of 2,000 discounted kWh per month; one EV only; a small number of locations are not eligible. The Subscribe & Save page says the lowest applicable price is always taken if the regular app price is cheaper."
+    needs_testing: null
+    source:
+      url: https://be-ev.co.uk/pricing
+      quote: "Flexi – £13.99/month Unlocks 39p/kWh charging all day, every day across the Be.EV network."
+      checked: 2026-10-09
+  - id: be_ev_go
+    name: Go (Charging Pass)
+    pay_by: Be.EV app or Be.EV RFID card
+    monthly_fee: 49
+    fee_note: Monthly, cancel anytime; no pre-auth holds.
+    price_per_kwh: null
+    discount_percent: null
+    discount_of: null
+    includes_vat: true
+    networks: [Be.EV]
+    operator_ids: []
+    conditions: "120kWh of charging included each month; beyond the allowance charging is 49p/kWh until the allowance resets; unused kWh do not roll over. A small number of locations are not eligible."
+    needs_testing: null
+    source:
+      url: https://be-ev.co.uk/pricing
+      quote: "Go – £49/month Includes 120kWh of charging every month – around 4 charges or 400 miles."
+      checked: 2026-10-09
+  - id: be_ev_go_further
+    name: Go Further (Charging Pass)
+    pay_by: Be.EV app or Be.EV RFID card
+    monthly_fee: 89
+    fee_note: Monthly, cancel anytime; no pre-auth holds.
+    price_per_kwh: null
+    discount_percent: null
+    discount_of: null
+    includes_vat: true
+    networks: [Be.EV]
+    operator_ids: []
+    conditions: "250kWh of charging included each month; beyond the allowance charging is 49p/kWh until the allowance resets; unused kWh do not roll over. A small number of locations are not eligible."
+    needs_testing: null
+    source:
+      url: https://be-ev.co.uk/pricing
+      quote: "Go Further – £89/month Includes 250kWh of charging every month – around 8 charges or 800 miles."
+      checked: 2026-10-09
+  - id: be_ev_taxi_gm_licensed
+    name: Taxi Drivers (licenced inside of Greater Manchester)
+    pay_by: Be.EV app or Be.EV RFID card
+    monthly_fee: 0
+    fee_note: null
+    price_per_kwh: 0.50
+    discount_percent: null
+    discount_of: null
+    includes_vat: true
+    networks: [Be.EV]
+    operator_ids: []
+    conditions: "Dedicated taxi-only charge points. For registered taxi drivers licensed inside Greater Manchester; registration via TfGM Travelshop per terms clause 4.6."
+    needs_testing: null
+    source:
+      url: https://be-ev.co.uk/pricing
+      quote: "50p/kWh – Taxi Drivers ( licenced inside of Greater Manchester ) with the Be.EV app or Be.EV RFID card."
+      checked: 2026-10-09
+  - id: be_ev_taxi_outside_gm
+    name: Taxi Drivers (licenced outside of Greater Manchester)
+    pay_by: Be.EV app or Be.EV RFID card
+    monthly_fee: 0
+    fee_note: null
+    price_per_kwh: 0.60
+    discount_percent: null
+    discount_of: null
+    includes_vat: true
+    networks: [Be.EV]
+    operator_ids: []
+    conditions: "Dedicated taxi-only charge points. For taxi drivers licensed outside Greater Manchester."
+    needs_testing: null
+    source:
+      url: https://be-ev.co.uk/pricing
+      quote: "60p/kWh - Taxi Drivers (licenced outside of Greater Manchester) with the Be.EV app or Be.EV RFID card."
+      checked: 2026-10-09
+notes: "No clause on reusing website content or prices was found in the Driver Terms and Conditions (updated 21/07/2025), and the site footer links no separate website terms of use (checked 2026-10-09). The pricing page carries no date. VAT inclusion for all plans is from terms clause 9.2.2: amounts shown on the website are final and inclusive of VAT unless explicitly stated otherwise. Be.EV has no registry file in operators/, so no operator_ids are set."

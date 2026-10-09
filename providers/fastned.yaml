@@ -1,0 +1,65 @@
+# yaml-language-server: $schema=schema.json
+# Fastned: operator network with its own app and subscription. Rules are in schema/provider.py.
+id: fastned
+name: Fastned
+kind: operator
+website: https://fastnedcharging.com/en-gb
+terms:
+  url: https://www.fastnedcharging.com/en/terms-conditions
+  reuse: no_restriction_found
+  quote: null
+  attribution: null
+  checked: 2026-10-09
+plans:
+  - id: fastned_standard
+    name: Standard
+    pay_by: Debit or credit card, or charge card
+    monthly_fee: 0
+    fee_note: null
+    price_per_kwh: 0.79
+    discount_percent: null
+    discount_of: null
+    includes_vat: true
+    networks: [Fastned UK]
+    operator_ids: []
+    conditions: "The page says all prices include taxes (VAT is not named) and that charge card fees can be avoided by paying with a debit or credit card. No separate contactless or off-peak price is shown."
+    needs_testing: null
+    source:
+      url: https://fastnedcharging.com/en-gb/charging/tariffs
+      quote: "Standard price £ 0.79 in the United Kingdom"
+      checked: 2026-10-09
+  - id: fastned_app_discount
+    name: App discount
+    pay_by: Fastned app with any payment method other than a third-party charge card
+    monthly_fee: 0
+    fee_note: No extra cost.
+    price_per_kwh: null
+    discount_percent: 10
+    discount_of: "Fastned's standard price (£0.79 per kWh in the United Kingdom)"
+    includes_vat: true
+    networks: [Fastned UK]
+    operator_ids: []
+    conditions: "In the app, go to Profile > Wallet and select any payment method other than a third-party charge card. No price per kWh is published for the app price. The page says all prices include taxes (VAT is not named)."
+    needs_testing: null
+    source:
+      url: https://fastnedcharging.com/en-gb/charging/tariffs
+      quote: "Get 10% off the standard price at no extra cost through the Fastned app – valid in the Netherlands, Belgium, France, Switzerland, Great Britain, Spain, Italy, and Denmark. This offer is not valid in Germany."
+      checked: 2026-10-09
+  - id: fastned_gold_member
+    name: Gold Member
+    pay_by: Fastned app subscription
+    monthly_fee: 4.99
+    fee_note: "Promotional fee of £4.99 per month until 31 October 2026 (the page offers half the monthly price until then); the normal fee after that date is not stated on this page. Cancel anytime after 30 days. Subscriptions renew on the 1st of each month, pro rata if started or cancelled mid-month."
+    price_per_kwh: 0.55
+    discount_percent: null
+    discount_of: null
+    includes_vat: true
+    networks: [Fastned UK]
+    operator_ids: []
+    conditions: "Published as 30% off the standard price. Valid at all 400+ Fastned locations for 3 vehicles per household. The page says all prices include taxes (VAT is not named)."
+    needs_testing: null
+    source:
+      url: https://fastnedcharging.com/en-gb/charging/tariffs
+      quote: "Subscription price £ 0.55 (£ 0.55 per kWh in the United Kingdom) Save 30% on the standard price with a Gold Member subscription. Valid at all 400+ Fastned locations for 3 vehicles per household. £4.99 per month until 31 October 2026; cancel anytime after 30 days."
+      checked: 2026-10-09
+notes: "The Terms of Use (Version 3 March 2026) have no clause on copying content or prices (checked 2026-10-09). The separate UK Open Data page asks that any use of Fastned's open data acknowledges Fastned as the source and says when the data has been adapted. The Gold Member fee is a promotion until 31 October 2026 and needs rechecking after that date. No Fastned registry file exists yet, so operator_ids is empty."

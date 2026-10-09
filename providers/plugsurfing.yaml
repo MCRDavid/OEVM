@@ -1,0 +1,48 @@
+# yaml-language-server: $schema=schema.json
+# Plugsurfing: roaming app. Rules are in schema/provider.py.
+id: plugsurfing
+name: Plugsurfing
+kind: roaming
+website: https://plugsurfing.com
+terms:
+  url: https://plugsurfing.com/legal/terms-of-use/
+  reuse: no_restriction_found
+  quote: null
+  attribution: null
+  checked: 2026-10-09
+plans:
+- id: plugsurfing_plus
+  name: Plugsurfing+
+  pay_by: Plugsurfing app
+  monthly_fee: 6.9
+  fee_note: £6.90 a month. The page gives no minimum term, no annual option and no trial. It links
+    to a cancellation policy, which was not checked. The page does not say whether the fee includes
+    VAT.
+  price_per_kwh: null
+  discount_percent: 15
+  discount_of: the standard in-app price at participating networks
+  includes_vat: null
+  networks:
+  - InstaVolt
+  - Osprey Charging Network
+  - Fuuse
+  - MFG EV Power
+  - Sainsbury's Smart Charge
+  - TotalEnergies
+  operator_ids:
+  - instavolt
+  conditions: UK only. Participating networks may change. The page says the discount moved from
+    20 percent to 15 percent on 5 August 2026, with the price unchanged. Since then Mer UK, Connected
+    Kerb and IONITY are no longer discounted.
+  needs_testing: null
+  source:
+    url: https://plugsurfing.com/plugsurfing-uk-subscription/
+    quote: 'Plugsurfing+ is a subscription that offers a 15 percent discount at some of the UK’s
+      top networks: InstaVolt, Osprey Charging Network, Fuuse, MFG EV Power, Sainsbury’s Smart
+      Charge, and TotalEnergies. Subscribe for £6.90/month and start saving on your charging sessions.'
+    checked: 2026-10-09
+notes: 'Checked 2026-10-09. The terms page has no effective date and no clause on reusing content
+  was found. The website publishes no general UK price per kWh. An MFG offer of 59p per kWh (blog
+  post dated 14 July 2026, valid until 30 September) has expired and is not listed. The support
+  article on Plugsurfing+ and https://plugsurfing.com/en-gb/ could not be read. Not listed as
+  plans because the provider publishes no fee or price for them: Pay as you go (app).'

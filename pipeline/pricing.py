@@ -374,3 +374,29 @@ def readable_name(text: str | None) -> str | None:
         return None
     label = ", ".join(words)
     return label[0].upper() + label[1:]
+
+
+def plan_fee_text(monthly_fee: Decimal | None) -> str:
+    """ "£9.99 a month", "No monthly fee" or "Monthly fee not published"."""
+    if monthly_fee is None:
+        return "Monthly fee not published"
+    if monthly_fee == 0:
+        return "No monthly fee"
+    return f"{pounds(monthly_fee)} a month"
+
+
+def plan_price_text(
+    price_per_kwh: Decimal | None,
+    discount_percent: Decimal | None,
+    discount_of: str | None,
+    includes_vat: bool | None,
+) -> str:
+    """The price a charging plan gives, as its provider publishes it: a fixed price per kWh
+    or a discount off another price. Discounts are never turned into a price here, because
+    the price they are taken off is often only shown in the provider's app."""
+    if price_per_kwh is not None:
+        vat = {True: "including VAT", False: "excluding VAT"}.get(includes_vat, "(VAT not stated)")
+        return f"{pence(price_per_kwh)} per kWh {vat}"
+    if discount_percent is not None:
+        return f"{discount_percent:g}% off {discount_of}"
+    return "Price per kWh not published"

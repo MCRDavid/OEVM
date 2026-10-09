@@ -1,0 +1,15 @@
+# yaml-language-server: $schema=schema.json
+# Shell Recharge: operator network with the Shell App, Shell Recharge card, contactless
+# payment and a monthly subscription. Rules are in schema/provider.py.
+id: shell_recharge
+name: Shell Recharge
+kind: operator
+website: https://www.shell.co.uk/electric-vehicle-charging.html
+terms:
+  url: https://www.shell.co.uk/terms-of-use.html
+  reuse: forbidden
+  quote: 'You may access any part of the web site; print off one copy of any or all of the pages for your own personal reference. You may not copy (whether by printing off onto paper, storing on disk, downloading or in any other way), distribute (including distributing copies), broadcast, alter or tamper with in any way or otherwise use any material contained in the web site except as set out under "You may". These restrictions apply in relation to all or part of the material on the web site; remove any copyright, trade mark or other intellectual property notices contained in the original material from any material copied or printed off from the web site; without our express written consent.'
+  attribution: null
+  checked: 2026-10-09
+plans: []
+notes: "Plans are not listed because the provider's terms of use allow one printed copy for personal reference only and do not allow material on the site to be copied or otherwise used without express written consent (checked 2026-10-09). The same clause appears on https://www.shell.co.uk/terms-and-conditions/shell-uk-terms-and-conditions.html, and shell.co.uk/terms-of-use.html names https://www.shell.com/terms-of-use.html as its canonical page."

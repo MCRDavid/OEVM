@@ -2,6 +2,7 @@
 
 import { h, safeLink } from "./dom.js";
 import { STATUS_LABELS, formatDateTime, formatKw, plugName } from "./format.js";
+import { breakEven, breakEvenText, cheapest, discounted, plansFor } from "./plans.js";
 
 const WEEKDAYS = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"];
 
@@ -87,7 +88,153 @@ export function tariffSection(detail) {
   ].filter(Boolean);
 }
 
-export function renderDetail(detail, { repository }) {
+const CHECKED = new Intl.DateTimeFormat("en-GB", { day: "numeric", month: "short", year: "numeric", timeZone: "UTC" });
+
+function checkedDate(iso) {
+  const when = new Date(`${iso}T00:00:00Z`);
+  return Number.isNaN(when.getTime()) ? "date not given" : CHECKED.format(when);
+}
+
+function planItem(plan, mine) {
+  return h(
+    "li",
+    {},
+    h("p", {}, h("strong", { text: plan.name }), ` · ${plan.provider}`),
+    mine.has(plan.id) ? h("p", { className: "mine", text: "You have this plan" }) : null,
+    h("p", { className: "hint", text: plan.pay_by }),
+    h("p", { className: "price", text: plan.price_text }),
+    h("p", { text: plan.fee_text }),
+    plan.fee_note ? h("p", { className: "hint", text: plan.fee_note }) : null,
+    plan.conditions ? h("p", { className: "hint", text: plan.conditions }) : null,
+    plan.needs_testing ? h("p", { className: "hint", text: `Needs testing: ${plan.needs_testing}` }) : null,
+    h("p", { className: "hint" }, safeLink(plan.source_url, "Provider's page"), `, checked ${checkedDate(plan.checked)}.`),
+    plan.attribution ? h("p", { className: "hint", text: plan.attribution }) : null,
+  );
+}
+
+function cheapestLine(detail, plans, label) {
+  const best = cheapest(detail.tariff_options, plans);
+  if (!best) return null;
+  const what =
+    best.kind === "plan"
+      ? `${best.item.price_text}, with ${best.item.name} from ${best.item.provider} (${best.item.fee_text.toLowerCase()})`
+      : `the operator's ${best.item.name ? `"${best.item.name}" ` : ""}tariff, ${best.item.text}`;
+  return h("p", { className: "cheapest", text: `${label}: ${what}.` });
+}
+
+function number(input) {
+  const value = input.value.trim() === "" ? Number.NaN : Number(input.value);
+  return Number.isFinite(value) ? value : Number.NaN;
+}
+
+// The subscription calculator. It starts from published figures where there are some
+// (the plan's fee and fixed price, and the lowest pay-at-the-charger price here that
+// includes VAT); the visitor can change any of them.
+function calculator(detail, plans) {
+  const paid = plans.filter((plan) => Number.isFinite(plan.monthly_fee) && plan.monthly_fee > 0);
+  if (!paid.length) return null;
+  const now = (detail.tariff_options ?? [])
+    .filter((o) => o.state === "priced" && o.includes_vat && Number.isFinite(o.ppk_low))
+    .map((o) => o.ppk_low);
+  const field = (id, label, attrs = {}) => {
+    const input = h("input", { id, type: "number", inputmode: "decimal", min: "0", step: "0.01", ...attrs });
+    return [h("label", { for: id, text: label }), input];
+  };
+  const select = h(
+    "select",
+    { id: "calc-plan" },
+    paid.map((plan) => h("option", { value: plan.id, text: `${plan.name} (${plan.provider})` })),
+  );
+  const [feeLabel, fee] = field("calc-fee", "Monthly fee (pounds)");
+  const [nowLabel, payNow] = field("calc-now", "What you pay now (pence per kWh)", { step: "0.1" });
+  const [baseLabel, base] = field("calc-base", "Price the discount is taken off (pence per kWh)", { step: "0.1" });
+  const [withLabel, withPlan] = field("calc-with", "Price with the plan (pence per kWh)", { step: "0.1" });
+  const [kwhLabel, kwh] = field("calc-kwh", "kWh you charge a month (optional)", { step: "1" });
+  const note = h("p", { className: "hint", id: "calc-note" });
+  const answer = h("p", { id: "calc-answer", role: "status" });
+  const baseRow = h("div", { className: "calc-base" }, baseLabel, base);
+  if (now.length) payNow.value = String(Math.min(...now));
+  const update = () => {
+    const plan = paid.find((p) => p.id === select.value);
+    const isDiscount = Number.isFinite(plan.discount_percent);
+    baseRow.hidden = !isDiscount;
+    if (isDiscount) {
+      const price = discounted(number(base), plan.discount_percent);
+      withPlan.value = price === null ? "" : String(Math.round(price * 10) / 10);
+    }
+    answer.textContent = breakEvenText(
+      breakEven({
+        fee: number(fee),
+        payNow: number(payNow),
+        withPlan: number(withPlan),
+        kwh: kwh.value.trim() === "" ? null : number(kwh),
+      }),
+    );
+  };
+  const choose = () => {
+    const plan = paid.find((p) => p.id === select.value);
+    fee.value = String(plan.monthly_fee);
+    withPlan.value = Number.isFinite(plan.ppk) ? String(plan.ppk) : "";
+    base.value = "";
+    note.textContent = Number.isFinite(plan.discount_percent)
+      ? `${plan.price_text}. That price is not published openly, so enter it from the provider's app.`
+      : Number.isFinite(plan.ppk)
+        ? ""
+        : "This plan's price per kWh is not published. Enter it if you know it.";
+    update();
+  };
+  select.addEventListener("change", choose);
+  for (const input of [fee, payNow, base, withPlan, kwh]) input.addEventListener("input", update);
+  const body = h(
+    "div",
+    { className: "calc" },
+    h("label", { for: "calc-plan", text: "Plan" }),
+    select,
+    note,
+    feeLabel,
+    fee,
+    nowLabel,
+    payNow,
+    h(
+      "p",
+      { className: "hint", text: now.length ? "Starts from the lowest published price here that includes VAT." : "No price including VAT is published here. Enter what you pay." },
+    ),
+    baseRow,
+    withLabel,
+    withPlan,
+    kwhLabel,
+    kwh,
+    answer,
+  );
+  choose();
+  return h("details", { className: "calculator" }, h("summary", { text: "Is a subscription worth it here?" }), body);
+}
+
+// Plans from providers' own pages that cover this location's network, the cheapest
+// published energy price here, and the calculator.
+export function plansSection(detail, allPlans, mine = new Set()) {
+  const operatorId = detail.location?.provenance?.source_id;
+  const plans = plansFor(operatorId, allPlans, mine);
+  const yours = plans.filter((plan) => mine.has(plan.id));
+  const parts = [
+    mine.size ? cheapestLine(detail, yours, "Lowest published energy price here with your plans") : null,
+    cheapestLine(detail, plans, "Lowest published energy price here with any listed plan"),
+  ];
+  if (plans.length) {
+    parts.unshift(
+      h("h3", { text: `Other ways to pay here (${plans.length})` }),
+      h("p", {
+        className: "hint",
+        text: "Plans copied by hand from each provider's own page, on the date shown. Discounts are not turned into prices, because the price they come off is often shown only in the provider's app. Check with the provider before signing up.",
+      }),
+    );
+    parts.push(h("ul", { className: "tariffs plans", "aria-label": "Other ways to pay here" }, plans.map((p) => planItem(p, mine))));
+    parts.push(calculator(detail, plans));
+  }
+  return plans.length ? parts.filter(Boolean) : [];
+}
+
+export function renderDetail(detail, { repository, plans = [], mine = new Set() }) {
   const location = detail.location;
   const items = [];
   for (const evse of location.evses ?? []) {
@@ -114,6 +261,7 @@ export function renderDetail(detail, { repository }) {
     h("h3", { text: "Connectors" }),
     items.length ? h("ul", { className: "connectors" }, items) : h("p", { text: "No charge points listed." }),
     ...tariffSection(detail),
+    ...plansSection(detail, plans, mine),
     h(
       "p",
       { className: "hint" },
