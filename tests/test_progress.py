@@ -95,11 +95,11 @@ def test_a_paged_feed_shows_page_of_total_percentage_and_time_left(registry, no_
     op.module_done("locations", pages=119, records=5949, complete=True)
 
     shown = lines(out)
-    assert shown[0] == "chargy (1 of 3): starting, 6 s between requests"
-    # Never faster than the 6 s gap: 118 pages to go at 6 s, not at the first page's 1 s.
+    assert shown[0] == "chargy (1 of 3): starting, 4 s between requests"
+    # Never faster than the 4 s gap: 118 pages to go at 4 s, not at the first page's 1 s.
     assert shown[1] == (
         "chargy locations: page 1 of 119 (0%), 50 of 5,949 records, "
-        "about 11 min 50 s left (estimate)"
+        "about 7 min 50 s left (estimate)"
     )
     assert shown[2] == (
         "chargy locations: page 10 of 119 (8%), 500 of 5,949 records, "
@@ -243,7 +243,7 @@ def test_operator_and_run_lines(registry, no_relay):
     reporter.run_done(fetched=2, failed=["geniepoint"])
     assert lines(out) == [
         "Fetching 3 operators, one at a time: chargy, geniepoint, jolt",
-        "chargy (1 of 3): starting, 6 s between requests",
+        "chargy (1 of 3): starting, 4 s between requests",
         "chargy: finished in 13 min 49 s, 120 requests",
         "geniepoint (2 of 3): starting, 2 s between requests",
         "geniepoint: failed after 3 s (the error follows)",
@@ -266,8 +266,8 @@ def test_every_line_is_flushed_at_once(registry, no_relay):
 # estimate is the operator's gap times the pages to come.
 PAGE_LINES = {
     "chargy": [
-        "chargy locations: page 1 of 2 (50%), 2 of 5,946 records, about 6 s left (estimate)",
-        "chargy tariffs: page 1 of 2 (50%), 2 of 3 records, about 6 s left (estimate)",
+        "chargy locations: page 1 of 2 (50%), 2 of 5,946 records, about 4 s left (estimate)",
+        "chargy tariffs: page 1 of 2 (50%), 2 of 3 records, about 4 s left (estimate)",
     ],
     "geniepoint": [],  # each file is one page, so only its done line
     "jolt": [

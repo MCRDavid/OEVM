@@ -33,7 +33,9 @@ raised from 2 to 6 seconds after it answered HTTP 403 part-way through the first
   now.
 - **Bigger pages.** char.gy caps pages at 50. Not possible.
 - **A shorter gap for char.gy.** Possible, as no limit is published, but the 6 s gap
-  follows a refusal. Left for the owner to decide; not changed here.
+  follows a refusal. The owner decided on 9 October 2026 to try 4 s (operators/chargy.yaml):
+  about 4 minutes shorter a run. If char.gy refuses requests again, the gap goes back to
+  6 s.
 - **Fetch operators on different hosts at the same time.** Allowed by CLAUDE.md ("Never
   run two fetches that use the same host in parallel"). Chosen.
 

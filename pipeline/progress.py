@@ -7,7 +7,7 @@ once, because Python otherwise holds output back when it is not going to a termi
 Lines give operator ids, module names and numbers only: never a URL, a key or text from a
 feed. Times left are worked out from the pace so far and are labelled as estimates.
 
-    chargy (1 of 3): starting, 6 s between requests
+    chargy (1 of 3): starting, 4 s between requests
     chargy locations: page 10 of 119 (8%), 500 of 5,949 records, about 12 min 40 s left (estimate)
     chargy locations: done, 119 pages, 5,949 records in 13 min 40 s
 """
