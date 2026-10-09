@@ -16,9 +16,16 @@ Date: 2026-10-09. Status: proposed. The full plan is `docs/PHASE3_PLAN.md`.
 - **Changes only, where offered.** Where an operator supports OCPI `date_from` (char.gy),
   a refresh fetches only changed locations and lays them over the previous snapshot. A
   full fetch still runs daily and replaces the snapshot.
-- **Never in parallel with the daily run.** One scheduled workflow does both kinds of run
-  in one concurrency group and picks the kind from the state it finds.
-- **Prices stay daily**, shown only through `pipeline/pricing.py`. The Worker shows none.
+- **Staggered and never in parallel.** One hourly workflow in one concurrency group gives
+  each operator its full daily fetch in its own slot (owner's decision, 9 October 2026)
+  and a status refresh in the other hours, one operator at a time. The run's state, not
+  the clock, decides when a full fetch is due, so a missed slot is caught up.
+- **Prices once a day** (owner's decision, 9 October 2026), in each operator's full
+  fetch, shown only through `pipeline/pricing.py`. The Worker shows none.
+- **Counts and colours on the details screen** (owner's request, 9 October 2026): how
+  many charge points are available, with green, orange, red and grey groups, each with a
+  symbol and words (`site/assets/js/live.js`). The red group uses the same statuses as
+  the "Hide out of service" filter (ADR 0012).
 - **Open to the map only.** Browsers get a CORS header only for the map's own address.
   Answers are cached for 60 seconds. Nothing about a request is stored or logged.
 - **Notices first.** The privacy notice and page footer say that clicking a charger
@@ -32,6 +39,10 @@ Date: 2026-10-09. Status: proposed. The full plan is `docs/PHASE3_PLAN.md`.
   10 ms CPU limit. Cloudflare's limits pages, read 9 October 2026.
 - KV's free plan allows 1,000 writes a day: one per operator per refresh fits easily.
 - Keeping OCPI handling in Python means one set of tested rules.
+
+## Needs the owner's decision
+
+- How char.gy's `WORKING` and `FAULTED`, which are not OCPI statuses, are shown.
 
 ## Needs testing
 

@@ -1,7 +1,17 @@
 # Phase 3 plan: live status and prices
 
-Status: proposed, 9 October 2026. Nothing in this plan is switched on. The map, the daily
-run and the relay are unchanged. ADR 0011 records the main decision.
+Status: proposed, 9 October 2026, and updated the same day with the repository owner's
+answers below. Nothing in this plan is switched on. The map, the daily run and the relay
+are unchanged. ADR 0011 records the main decision.
+
+## Decided by the repository owner (9 October 2026)
+
+- **Prices once a day.** Prices change rarely; one fetch a day is enough.
+- **Live availability is the point.** The details screen shows how many charge points at
+  the location are available, colour coded: green for available, orange for in use, red
+  for out of service, and another colour for other statuses (see "The details screen").
+- **Stagger the operators.** Each operator's daily fetch runs at its own time of day, so
+  no single run is large and no GitHub or Cloudflare limit is approached.
 
 The blueprint's Phase 3 is done when "clicking shows live status with a timestamp" and
 the service stays "within the free tier for 30 days" (docs/BLUEPRINT.md, section 10). Its
@@ -52,8 +62,9 @@ fetch on every click.
 3. The run sends each snapshot to the live Worker (`proxy/worker.js`) with a shared token.
    The Worker keeps the latest one per operator in Workers KV.
 4. When a visitor opens a charger, the map asks the Worker
-   `GET /live/<operator>/<location key>` and shows "Status as of HH:MM" from the
-   snapshot's time. If the Worker does not answer, the map keeps today's behaviour.
+   `GET /live/<operator>/<location key>` and shows the counts and coloured groups below,
+   with the time the feed was read. If the Worker does not answer, the map keeps today's
+   behaviour.
 
 The Worker never contacts an operator. Visitors' requests never reach one either.
 
@@ -85,16 +96,33 @@ The Worker never contacts an operator. Visitors' requests never reach one either
   dashboard shows CPU time). The fallback is to split each snapshot into 16 parts by the
   first character of the key, at 16 writes per operator per refresh, with fewer refreshes.
 
-### Never in parallel with the daily run
+### Staggered daily fetches, never in parallel
 
-Both runs use the same operator hosts, so they must never overlap. GitHub's concurrency
-groups are not enough on their own: a group keeps one waiting run, and a newer one
-**cancels** the waiting one, so an hourly snapshot could cancel a waiting daily run.
+Following the owner's decision, each operator gets its own daily slot for its full fetch
+(locations and tariffs, so prices once a day), and status refreshes fill the hours between.
 
-Recommendation: one scheduled workflow replaces both. Every run fetches in the same
-concurrency group, and each run decides what to do from the state it finds: a full fetch
-and site deploy if none has finished today, otherwise a status refresh. A daily run that
-is cancelled or fails is then done by the next run.
+- **One scheduled workflow** replaces `fetch-daily`. It runs once an hour. In each run,
+  operators whose slot it is get a full fetch; every other switched-on operator gets a
+  status refresh (locations only, no tariffs). Operators are fetched one after another,
+  so two requests never go to the same host at once.
+- **Example slots:** char.gy 02:17, GeniePoint 03:17, Jolt 04:17 (UTC), at quiet times
+  and away from the top of the hour. New operators get the next free slot. These are a
+  starting point, not a requirement.
+- **State, not the clock, decides.** A run gives an operator a full fetch when its slot
+  has passed and no full fetch of it has finished today, so a slot missed through a
+  delayed or failed run is caught up by the next run.
+- **One concurrency group.** GitHub keeps one waiting run per group, and a newer one
+  **cancels** the waiting one. With a single hourly workflow that is harmless: the newer
+  run does the same work, and the state rule above catches up any missed full fetch.
+- **Publishing carries the others forward.** A full fetch of one operator rebuilds the
+  map files from that operator's new data and the other operators' files from the last
+  deploy (the daily run already downloads them for the feed health history). This needs
+  a change to `pipeline/publish.py` and is part of step 3 below.
+- **Limits.** Each run is small: a char.gy refresh is a few pages; GeniePoint and Jolt
+  are one request each for locations. GitHub-hosted runners are free on public
+  repositories (blueprint, section 9). The site deploys up to three times a day instead
+  of once. Cloudflare sees one KV write per operator per hour (72 a day for three) and
+  one or two relay requests an hour for GeniePoint.
 
 ### Stage B: fetching one location on click (later, only if worth it)
 
@@ -106,11 +134,53 @@ free plan, and only after the single-location tests below.
 
 ### Prices
 
-DfT's guidance says the price "must be opened on the same basis as other reference data",
-which the daily run already fetches. Recommendation: prices stay in the pipeline, shown
-only through `pipeline/pricing.py`. A status refresh can also fetch char.gy's tariffs that
-changed (`date_from` worked on tariffs on 7 October 2026, with no results); a changed price
-then reaches the map at the next deploy. The Worker shows no prices.
+Decided: once a day, in each operator's full fetch, shown only through
+`pipeline/pricing.py`. DfT's guidance says the price "must be opened on the same basis as
+other reference data", which this keeps to. Status refreshes do not fetch tariffs, and the
+Worker shows no prices.
+
+## The details screen
+
+At the top of the details screen, above the connectors, the map will show:
+
+- **A summary line:** "2 of 4 charge points available". A charge point is an OCPI EVSE,
+  which charges one vehicle at a time. If every status is unknown: "Status unknown for 4
+  charge points".
+- **Coloured chips** for each group that has any charge points, each with a symbol and a
+  written count, such as "● 2 available", "◐ 1 in use", "✕ 1 reported out of service".
+- **When the feed was read:** "Status from the operator's feed, read 9 Oct 2026, 14:05
+  BST". Never "live" or "now", because the feed itself may lag.
+- **Each connector** keeps its own status line, coloured to match its group.
+
+| Group | Colour (light / dark mode) | OCPI 2.2.1 statuses |
+|---|---|---|
+| Available | Green `#17733a` / `#6fd08f` | available |
+| In use | Orange `#8a5300` / `#ffc46b` | charging, reserved |
+| Reported out of service | Red `#8a2a12` / `#ffab91` | out_of_order, inoperative, planned, removed |
+| Blocked or status unknown | Grey `#4d5559` / `#b4bcc2` | blocked, unknown |
+
+- "Reported out of service" uses exactly the statuses of the map's "Hide out of service"
+  filter (ADR 0012, `OUT_OF_SERVICE` in `pipeline/publish.py`); a test keeps them the same.
+  "Blocked" usually means a parked vehicle, so it is not counted as out of service.
+- Every colour has at least 4.5:1 contrast on the page and panel backgrounds in both
+  modes (checked 9 October 2026 with the WCAG formula). Colour is never the only cue:
+  every chip has a symbol and words, as ADR 0008 requires.
+- The wording, groups and colours are in `site/assets/js/live.js` and `site/assets/app.css`,
+  tested, but not used by the map until the Worker runs.
+
+### char.gy's statuses need a decision
+
+char.gy publishes `WORKING` and `FAULTED`, which are not OCPI 2.2.1 statuses, so today
+they show as status unknown (finding of 7 October 2026 in `operators/chargy.yaml`). Every
+char.gy charge point would therefore show grey. Regulation 10(6)(a) uses "working" to mean
+an OCPI status of available, charging or reserved, so `WORKING` cannot say whether a charge
+point is free or in use. The project rule is to record such values as unknown, so any
+change needs the owner's decision, recorded in the operator file:
+
+- **Keep as unknown** (the rule today): char.gy shows grey.
+- **Read `FAULTED` as reported out of service, keep `WORKING` as unknown.**
+- **Show `WORKING` as its own label**, such as "Working (free or in use, not stated)", in
+  grey, and `FAULTED` as reported out of service.
 
 ## Notices to change before the map calls the Worker
 
@@ -124,8 +194,10 @@ which Cloudflare runs. Before that ships:
   owner's earlier decision, a Cloudflare header is acceptable only if the notice says so.
 - **Page footer** (`site/index.html`): the same short statement.
 - **Transparency page:** say which operators have live status and how old it can be.
-- **Wording on the map:** neutral and dated: "Status as of 14:05, from the operator's
-  feed". Never imply an operator is late or at fault.
+- **Wording on the map:** neutral and dated: "Status from the operator's feed, read
+  9 Oct 2026, 14:05 BST". Never imply an operator is late or at fault.
+- **Content Security Policy** (`site/index.html`): add the Worker's address to
+  `connect-src`, or the browser will refuse the request.
 
 ## What the repository owner sets up by hand (when Stage A is approved)
 
@@ -137,8 +209,10 @@ which Cloudflare runs. Before that ships:
 3. Add a Worker secret `LIVE_TOKEN` (a new random value, not the relay's token).
 4. Add two GitHub Actions secrets, named `OEVM_LIVE_URL` (the Worker's address) and
    `OEVM_LIVE_TOKEN` (the same random value as the Worker secret).
-5. Decide the refresh interval. Recommendation: hourly to start.
-6. Confirm visitors' browsers may contact Cloudflare's `workers.dev` address on click,
+5. Decide how often statuses refresh. Recommendation: hourly to start, which the
+   staggered workflow above assumes.
+6. Decide how char.gy's `WORKING` and `FAULTED` are shown (see "The details screen").
+7. Confirm visitors' browsers may contact Cloudflare's `workers.dev` address on click,
    with the notice changes above.
 
 Nothing in GitHub Pages or the relay changes.
@@ -146,16 +220,18 @@ Nothing in GitHub Pages or the relay changes.
 ## Steps, one issue and pull request each
 
 1. **This pull request:** this plan, ADR 0011 (proposed), the snapshot format and builder,
-   and the Worker, with tests. Nothing deploys and the site is unchanged.
+   the Worker, and the details screen's groups, wording and colours, with tests. Nothing
+   deploys and the map does not use any of it yet.
 2. **Single-location tests:** one request per switched-on operator, sparingly, to see
    whether `{locations}/{id}` works. Record the results as dated findings in each operator
    file and regenerate the transparency page.
-3. **Status refresh run:** a locations-only option for the adapters, the merged workflow
-   described above, and sending snapshots to the Worker. Measure snapshot sizes.
+3. **Staggered workflow:** a locations-only option for the adapters, publishing that
+   carries other operators forward, the hourly workflow with daily slots described above,
+   and sending snapshots to the Worker. Measure snapshot sizes.
 4. **Measure the Worker:** real snapshots, CPU time in Cloudflare's dashboard, and the
    headers on its answers. Split snapshots if CPU is too high.
-5. **Notices, then the map:** the notice changes above, then the "Status as of" line in
-   the detail panel (text only, nothing stored on the device).
+5. **Notices, then the map:** the notice changes above, then the summary line, chips and
+   coloured statuses on the details screen (text only, nothing stored on the device).
 6. **Thirty days** within the free plan, measured from Cloudflare's dashboard, completes
    Phase 3. Then decide whether Stage B is worth building.
 

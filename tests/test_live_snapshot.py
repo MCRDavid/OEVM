@@ -11,7 +11,7 @@ import pytest
 from pipeline import live_snapshot
 from pipeline.health import in_uk
 from pipeline.live_snapshot import SnapshotError, build, merge
-from pipeline.publish import location_key
+from pipeline.publish import OUT_OF_SERVICE, location_key
 from pipeline.registry import ROOT, load_registry
 from pipeline.run import run_fixtures
 from schema.live import LiveSnapshot
@@ -93,3 +93,11 @@ def test_the_worker_serves_only_operators_switched_on_in_the_registry():
 def test_the_worker_never_fetches_from_operators():
     source = (ROOT / "proxy" / "worker.js").read_text(encoding="utf-8")
     assert "fetch(" not in source.replace("async fetch(request, env)", "")
+
+
+def test_the_details_screen_groups_out_of_service_like_the_map_filter():
+    """live.js's "out" group must match the statuses the "Hide out of service" filter uses."""
+    source = (ROOT / "site" / "assets" / "js" / "live.js").read_text(encoding="utf-8")
+    out = re.search(r"out: \{[^}]*statuses: \[([^\]]*)\]", source)
+    assert out, "site/assets/js/live.js must list the out group's statuses"
+    assert set(re.findall(r'"([a-z_]+)"', out.group(1))) == OUT_OF_SERVICE
