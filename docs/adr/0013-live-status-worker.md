@@ -1,4 +1,4 @@
-# 0011: Live status through snapshots served by a Worker
+# 0013: Live status through snapshots served by a Worker
 
 Date: 2026-10-09. Status: proposed. The full plan is `docs/PHASE3_PLAN.md`.
 
@@ -22,8 +22,10 @@ Date: 2026-10-09. Status: proposed. The full plan is `docs/PHASE3_PLAN.md`.
   carries the operator's attribution and licence, as the map's detail files do.
 - **Staggered and never in parallel.** One hourly workflow in one concurrency group gives
   each operator its full daily fetch in its own slot (owner's decision, 9 October 2026)
-  and a status refresh in the other hours, one operator at a time. The run's state, not
-  the clock, decides when a full fetch is due, so a missed slot is caught up.
+  and status refreshes in between. Runs use the host groups from ADR 0011 (fetching
+  hosts at the same time, PR #21), so operators on one host share a slot and a budget and
+  never overlap. The run's state, not the clock, decides when a full fetch is due, so a
+  missed slot is caught up.
 - **Prices once a day** (owner's decision, 9 October 2026), in each operator's full
   fetch, shown only through `pipeline/pricing.py`. The Worker shows none.
 - **Counts and colours on the details screen** (owner's request, 9 October 2026): how

@@ -1,4 +1,4 @@
-"""Live status snapshots for the Phase 3 Worker (pipeline/live_snapshot.py, ADR 0011)."""
+"""Live status snapshots for the Phase 3 Worker (pipeline/live_snapshot.py, ADR 0013)."""
 
 import json
 import re

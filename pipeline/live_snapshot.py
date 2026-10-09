@@ -1,4 +1,4 @@
-"""Build live status snapshots for the Phase 3 Worker (docs/PHASE3_PLAN.md, ADR 0011).
+"""Build live status snapshots for the Phase 3 Worker (docs/PHASE3_PLAN.md, ADR 0013).
 
     uv run python -m pipeline.live_snapshot --fixtures --out build
 

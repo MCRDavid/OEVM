@@ -2,7 +2,7 @@
 
 Status: proposed, 9 October 2026, and updated the same day with the repository owner's
 answers below. Nothing in this plan is switched on. The map, the daily run and the relay
-are unchanged. ADR 0011 records the main decision.
+are unchanged. ADR 0013 records the main decision.
 
 ## Decided by the repository owner (9 October 2026)
 
@@ -41,7 +41,7 @@ the steps that depend on them.
 
 | Operator | Gap between requests | Changes only (`date_from`) | One location by id | Whole network in |
 |---|---|---|---|---|
-| char.gy | 6 s, our choice (no published limit) | Works: recorded 7 October 2026 (`tests/fixtures/chargy/locations_since_page1.json`) | Needs testing | About 120 pages of 50 |
+| char.gy | 6 s, our choice (no published limit); 4 s in PR #21 | Works: recorded 7 October 2026 (`tests/fixtures/chargy/locations_since_page1.json`) | Needs testing | About 120 pages of 50 |
 | GeniePoint | 2 s, through the relay | Not offered: one file | Needs testing | One file |
 | Jolt | 2 s | Not offered (`adapters/jolt.py`) | Needs testing (only `tariffs/{id}` is documented) | One request for locations |
 
@@ -63,7 +63,7 @@ fetch on every click.
    removed at once. A fetch that does not finish never replaces the snapshot.
    How many requests a refresh takes **needs measuring**: the 7 October fixture
    (`locations_since_page1.json`) reports 551 locations changed in about 90 minutes, so an
-   hourly refresh may be about 7 to 12 pages of 50, or a minute or so at 6 seconds a page,
+   hourly refresh may be about 7 to 12 pages of 50, or under a minute at 4 seconds a page,
    against about 120 pages for a full fetch.
 3. The run sends each snapshot to the live Worker (`proxy/worker.js`) with a shared token.
    The Worker keeps the latest one per operator in Workers KV.
@@ -108,12 +108,24 @@ Following the owner's decision, each operator gets its own daily slot for its fu
 (locations and tariffs, so prices once a day), and status refreshes fill the hours between.
 
 - **One scheduled workflow** replaces `fetch-daily`. It runs once an hour. In each run,
-  operators whose slot it is get a full fetch; every other switched-on operator gets a
-  status refresh (locations only, no tariffs). Operators are fetched one after another,
-  so two requests never go to the same host at once.
-- **Example slots:** char.gy 02:17, GeniePoint 03:17, Jolt 04:17 (UTC), at quiet times
-  and away from the top of the hour. New operators get the next free slot. These are a
-  starting point, not a requirement.
+  operators whose slot it is get a full fetch; every other switched-on operator that is
+  due gets a status refresh (locations only, no tariffs).
+- **Builds on PR #21 (fetching hosts at the same time).** Each hourly run uses that
+  pull request's host groups: operators that share no host run at the same time, and
+  operators that share a host (or the relay) run one after another in one group, so two
+  requests never go to the same host at once. Gaps come from each operator file, so
+  char.gy's 4 second gap from PR #21, the owner's choice, applies here too.
+- **Slots belong to host groups, not single operators.** Operators that share a host
+  share one daily slot and one request budget, worked out from `rate_limit.limits` plus
+  the 1 second margin. A refresh for a host is skipped when it would not fit that budget.
+- **Refresh interval per operator.** Feeds that are one whole file (GeniePoint, Jolt, and
+  MFG EV Power and Clenergy EV in PRs #25 and #28) re-download the whole locations file on
+  every refresh; MFG's two files are about 3.6 MB. They start at every 2 or 3 hours, as
+  does char.gy (see "Unknowns and risks"), and the interval goes in each operator file
+  when the workflow is built.
+- **Example slots (UTC):** char.gy 02:17, GeniePoint 03:17, Jolt 04:17, MFG EV Power
+  05:17, Clenergy EV 06:17: quiet times, away from the top of the hour. New host groups
+  get the next free slot. These are a starting point, not a requirement.
 - **State, not the clock, decides.** A run gives an operator a full fetch when its slot
   has passed and no full fetch of it has finished today, so a slot missed through a
   delayed or failed run is caught up by the next run. The state is each snapshot's
@@ -133,9 +145,9 @@ Following the owner's decision, each operator gets its own daily slot for its fu
   deploy (the daily run already downloads them for the feed health history). This needs
   a change to `pipeline/publish.py` and is part of step 3 below.
 - **Limits.** Each run is small: a char.gy refresh is probably 7 to 12 pages (see Stage A,
-  needs measuring); GeniePoint and Jolt are one request each for locations. That is
-  roughly 200 to 300 extra char.gy requests a day, about twice a full fetch, at the same
-  6 second gap. GitHub-hosted runners are free on public
+  needs measuring); GeniePoint, Jolt, MFG EV Power and Clenergy EV are one request each
+  for locations. At a refresh every 2 or 3 hours, char.gy gets roughly 60 to 140 extra
+  requests a day, at its usual gap. GitHub-hosted runners are free on public
   repositories (blueprint, section 9). The site deploys up to three times a day instead
   of once. Cloudflare sees one KV write per operator per hour (72 a day for three) and
   one or two relay requests an hour for GeniePoint.
@@ -241,15 +253,16 @@ Nothing in GitHub Pages or the relay changes.
 
 ## Steps, one issue and pull request each
 
-1. **This pull request:** this plan, ADR 0011 (proposed), the snapshot format and builder,
+1. **This pull request:** this plan, ADR 0013 (proposed), the snapshot format and builder,
    the Worker, and the details screen's groups, wording and colours, with tests. Nothing
    deploys and the map does not use any of it yet.
 2. **Single-location tests:** one request per switched-on operator, sparingly, to see
    whether `{locations}/{id}` works. Record the results as dated findings in each operator
    file and regenerate the transparency page.
-3. **Staggered workflow:** a locations-only option for the adapters, publishing that
-   carries other operators forward, the hourly workflow with daily slots described above,
-   and sending snapshots to the Worker. Measure snapshot sizes.
+3. **Staggered workflow, after PR #21 merges:** a locations-only option for the adapters,
+   publishing that carries other operators forward, the hourly workflow with daily slots
+   per host group described above, a refresh interval in each operator file, and sending
+   snapshots to the Worker. Measure snapshot sizes.
 4. **Measure the Worker:** real snapshots, CPU time in Cloudflare's dashboard, and the
    headers on its answers. Split snapshots if CPU is too high.
 5. **Notices, then the map:** the notice changes above, then the summary line, chips and

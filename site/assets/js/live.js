@@ -1,4 +1,4 @@
-// Live status on the details screen (Phase 3, docs/PHASE3_PLAN.md and ADR 0011).
+// Live status on the details screen (Phase 3, docs/PHASE3_PLAN.md and ADR 0013).
 //
 // Groundwork only: nothing imports this file yet, so the map is unchanged. When the live
 // Worker (proxy/worker.js) is running, the details screen will ask it for the location's

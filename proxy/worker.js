@@ -1,4 +1,4 @@
-// OEVM live status, a Cloudflare Worker for Phase 3 (docs/PHASE3_PLAN.md, ADR 0011).
+// OEVM live status, a Cloudflare Worker for Phase 3 (docs/PHASE3_PLAN.md, ADR 0013).
 //
 // Groundwork only: not deployed, and the map does not call it yet.
 //
