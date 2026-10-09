@@ -64,7 +64,10 @@ Fill in, from step 1 only:
 - `sources`: each page used in step 1, with a note of what it says and the date read.
 - `engagement.status` and at least one dated `evidence` entry (url, or a file under
   `evidence/<id>/` with no personal names or email addresses).
-- `access_requested`, `access_granted`: dates, or null.
+- `engagement.log`: a dated `page_checked` step for the pages read in step 1, and a
+  `request_sent` step (with its `channel`) when access is requested.
+- `access_requested`, `access_granted`: the dates of the first `request_sent` and
+  `key_granted` steps in the log, or null. The validator checks they match.
 - `enabled: false` for now.
 
 | Adapter | State | Used for |
@@ -120,8 +123,9 @@ writes it to any file.
 2. Add it to the env of the `fetch` step in `.github/workflows/fetch-daily.yml`, in the
    same form as `JOLT_API_KEY`: `NAME: ${{ secrets.NAME }}`. Secrets go in that step
    only; `tests/test_workflows.py` checks both directions.
-3. Update `engagement.status` (for example `key_on_request`), add a dated evidence entry
-   for the grant with no personal details, and set `access_granted`. Keep any signed
+3. Update `engagement.status` (for example `key_on_request`), add a dated `key_granted`
+   step to `engagement.log` with evidence and no personal details, and set
+   `access_granted` to the same date. Keep any signed
    agreement or correspondence in `private/`, which is never committed.
 
 ## 6. Record a trimmed fixture

@@ -55,6 +55,8 @@ decisions are in docs/adr/.
   exact quote, source URL and date; tests enforce these rules. Never run two fetches that use the same host in parallel.
 - Record spec differences, data quirks and access issues as dated findings in the operator file,
   in neutral words, then regenerate the transparency page.
+- Record every access request, follow-up, reply and check as a dated step in engagement.log
+  (see operators/_template.yaml); saved replies go in evidence/<id>/ with names and addresses removed.
 
 ## Data licences (DATA_LICENCES.md)
 - Apache-2.0 covers our code only. Never apply it, or any other licence, to data. Data keeps its source's licence.

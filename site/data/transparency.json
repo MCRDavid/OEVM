@@ -20,6 +20,11 @@
       "engagement": {
         "status": "open_anonymous",
         "label": "Open, no registration",
+        "headline": "Open, no registration (as of 2026-10-07)",
+        "as_of": "2026-10-07",
+        "last_request": null,
+        "last_response": null,
+        "last_response_text": "No request sent",
         "evidence": [
           {
             "date": "2026-10-06",
@@ -33,8 +38,11 @@
             "file": null,
             "note": "Re-checked. The page still lists the open locations and tariffs endpoints."
           }
-        ]
+        ],
+        "log": []
       },
+      "access_requested": null,
+      "access_granted": null,
       "feeds": [
         {
           "kind": "locations",
@@ -127,6 +135,11 @@
       "engagement": {
         "status": "open_anonymous",
         "label": "Open, no registration",
+        "headline": "Open, no registration (as of 2026-10-09)",
+        "as_of": "2026-10-09",
+        "last_request": null,
+        "last_response": null,
+        "last_response_text": "No request sent",
         "evidence": [
           {
             "date": "2026-10-09",
@@ -134,8 +147,11 @@
             "file": null,
             "note": "Links \"locations\" and \"tariffs\" on api.clenergy.online in \"a machine-readable OCPI format\" and states no licence, terms or rate limit."
           }
-        ]
+        ],
+        "log": []
       },
+      "access_requested": null,
+      "access_granted": null,
       "feeds": [
         {
           "kind": "locations",
@@ -261,6 +277,11 @@
       "engagement": {
         "status": "open_anonymous",
         "label": "Open, no registration",
+        "headline": "Open, no registration (as of 2026-10-08)",
+        "as_of": "2026-10-08",
+        "last_request": null,
+        "last_response": null,
+        "last_response_text": "No request sent",
         "evidence": [
           {
             "date": "2026-10-08",
@@ -268,8 +289,11 @@
             "file": null,
             "note": "Read in a browser by the repository owner. Links \"Locations data\" and \"Tariffs data\" as .json files and states no licence, terms or rate limit."
           }
-        ]
+        ],
+        "log": []
       },
+      "access_requested": null,
+      "access_granted": null,
       "feeds": [
         {
           "kind": "locations",
@@ -396,6 +420,11 @@
       "engagement": {
         "status": "open_shared_key",
         "label": "Open, published shared key",
+        "headline": "Open, published shared key (as of 2026-10-08)",
+        "as_of": "2026-10-08",
+        "last_request": null,
+        "last_response": null,
+        "last_response_text": "No request sent",
         "evidence": [
           {
             "date": "2026-10-07",
@@ -409,8 +438,11 @@
             "file": null,
             "note": "Re-read through the help centre's article data. Unchanged; last updated 2025-01-30."
           }
-        ]
+        ],
+        "log": []
       },
+      "access_requested": null,
+      "access_granted": null,
       "feeds": [
         {
           "kind": "locations",
@@ -577,6 +609,11 @@
       "engagement": {
         "status": "key_on_request",
         "label": "Key issued on request",
+        "headline": "Key issued on request (no dated check yet)",
+        "as_of": null,
+        "last_request": null,
+        "last_response": null,
+        "last_response_text": "No request sent",
         "evidence": [
           {
             "date": "unknown",
@@ -584,8 +621,11 @@
             "file": null,
             "note": "bp pulse's FAQ uses a request form. Whether a contract is also required is not known."
           }
-        ]
+        ],
+        "log": []
       },
+      "access_requested": null,
+      "access_granted": null,
       "feeds": [
         {
           "kind": "locations",
@@ -678,8 +718,16 @@
       "engagement": {
         "status": "unknown",
         "label": "Not yet established",
-        "evidence": []
+        "headline": "Not yet established (no dated check yet)",
+        "as_of": null,
+        "last_request": null,
+        "last_response": null,
+        "last_response_text": "No request sent",
+        "evidence": [],
+        "log": []
       },
+      "access_requested": null,
+      "access_granted": null,
       "feeds": [
         {
           "kind": "locations",
@@ -772,8 +820,28 @@
       "engagement": {
         "status": "unknown",
         "label": "Not yet established",
-        "evidence": []
+        "headline": "Not yet established (as of 2026-10-09)",
+        "as_of": "2026-10-09",
+        "last_request": null,
+        "last_response": null,
+        "last_response_text": "No request sent",
+        "evidence": [],
+        "log": [
+          {
+            "date": "2026-10-09",
+            "action": "feed_searched",
+            "action_label": "Searched for a feed",
+            "channel": null,
+            "channel_label": null,
+            "summary": "A web search for a Go Zero open data or Public Charge Point Regulations page found none. Go Zero's own website was not searched directly; this needs checking.",
+            "quote": null,
+            "evidence_url": null,
+            "evidence_file": null
+          }
+        ]
       },
+      "access_requested": null,
+      "access_granted": null,
       "feeds": [],
       "licence": null,
       "attribution": null,
@@ -800,6 +868,11 @@
       "engagement": {
         "status": "key_on_request",
         "label": "Key issued on request",
+        "headline": "Key issued on request (as of 2026-10-08)",
+        "as_of": "2026-10-08",
+        "last_request": null,
+        "last_response": null,
+        "last_response_text": "No request sent",
         "evidence": [
           {
             "date": "2026-10-08",
@@ -807,8 +880,11 @@
             "file": null,
             "note": "The page offers a form to request an API key. The form asks the requester to confirm they have read and agree to Gridserve's API access and fair use terms."
           }
-        ]
+        ],
+        "log": []
       },
+      "access_requested": null,
+      "access_granted": null,
       "feeds": [
         {
           "kind": "locations",
@@ -899,6 +975,11 @@
       "engagement": {
         "status": "signed_agreement_required",
         "label": "Signed agreement required",
+        "headline": "Signed agreement required (as of 2026-10-09)",
+        "as_of": "2026-10-09",
+        "last_request": null,
+        "last_response": null,
+        "last_response_text": "No request sent",
         "evidence": [
           {
             "date": "unknown",
@@ -906,8 +987,23 @@
             "file": null,
             "note": "InstaVolt's page refers to an \"Open Data Agreement\"."
           }
+        ],
+        "log": [
+          {
+            "date": "2026-10-09",
+            "action": "page_checked",
+            "action_label": "Operator's page checked",
+            "channel": null,
+            "channel_label": null,
+            "summary": "InstaVolt's open data page was re-read. It asks for requests by email, says it will send its Open Data Agreement to sign and return, and then issue access credentials.",
+            "quote": null,
+            "evidence_url": "https://instavolt.co.uk/public-charge-point-regulation-data/",
+            "evidence_file": null
+          }
         ]
       },
+      "access_requested": null,
+      "access_granted": null,
       "feeds": [],
       "licence": null,
       "attribution": null,
@@ -934,8 +1030,28 @@
       "engagement": {
         "status": "unknown",
         "label": "Not yet established",
-        "evidence": []
+        "headline": "Not yet established (as of 2026-10-09)",
+        "as_of": "2026-10-09",
+        "last_request": null,
+        "last_response": null,
+        "last_response_text": "No request sent",
+        "evidence": [],
+        "log": [
+          {
+            "date": "2026-10-09",
+            "action": "feed_searched",
+            "action_label": "Searched for a feed",
+            "channel": null,
+            "channel_label": null,
+            "summary": "Two web searches for a Pod open data or Public Charge Point Regulations page found none. Pod's own website was not searched directly; this needs checking.",
+            "quote": null,
+            "evidence_url": null,
+            "evidence_file": null
+          }
+        ]
       },
+      "access_requested": null,
+      "access_granted": null,
       "feeds": [
         {
           "kind": "versions",
@@ -968,8 +1084,16 @@
       "engagement": {
         "status": "unknown",
         "label": "Not yet established",
-        "evidence": []
+        "headline": "Not yet established (no dated check yet)",
+        "as_of": null,
+        "last_request": null,
+        "last_response": null,
+        "last_response_text": "No request sent",
+        "evidence": [],
+        "log": []
       },
+      "access_requested": null,
+      "access_granted": null,
       "feeds": [
         {
           "kind": "locations",
@@ -1062,8 +1186,35 @@
       "engagement": {
         "status": "unknown",
         "label": "Not yet established",
-        "evidence": []
+        "headline": "Not yet established (as of 2026-10-09)",
+        "as_of": "2026-10-09",
+        "last_request": null,
+        "last_response": null,
+        "last_response_text": "No request sent",
+        "evidence": [
+          {
+            "date": "2026-10-09",
+            "url": "https://ubitricity.com/en/pcpr-data-request/",
+            "file": null,
+            "note": "ubitricity's PCPR data request page asks for contact details and the data needed through a request form. It names no licence, terms, key or agreement."
+          }
+        ],
+        "log": [
+          {
+            "date": "2026-10-09",
+            "action": "page_checked",
+            "action_label": "Operator's page checked",
+            "channel": null,
+            "channel_label": null,
+            "summary": "ubitricity's PCPR data request page was read. It offers a request form and says the data will be provided in a suitable format, with questions going to an Eco-Movement address.",
+            "quote": null,
+            "evidence_url": "https://ubitricity.com/en/pcpr-data-request/",
+            "evidence_file": null
+          }
+        ]
       },
+      "access_requested": null,
+      "access_granted": null,
       "feeds": [
         {
           "kind": "locations",

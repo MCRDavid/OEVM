@@ -202,6 +202,7 @@
             "key_on_request",
             "signed_agreement_required",
             "requested_no_reply",
+            "requested_awaiting_decision",
             "request_declined",
             "no_public_feed_found",
             "possibly_out_of_scope",
@@ -216,12 +217,120 @@
           },
           "title": "Evidence",
           "type": "array"
+        },
+        "log": {
+          "description": "Dated steps taken to reach the data, oldest first. Shown on the transparency page.",
+          "items": {
+            "$ref": "#/$defs/EngagementEvent"
+          },
+          "title": "Log",
+          "type": "array"
         }
       },
       "required": [
         "status"
       ],
       "title": "Engagement",
+      "type": "object"
+    },
+    "EngagementEvent": {
+      "additionalProperties": false,
+      "description": "One dated step in getting access to an operator's data: a check, a request, a reply.",
+      "properties": {
+        "date": {
+          "description": "Date of the step (YYYY-MM-DD).",
+          "format": "date",
+          "title": "Date",
+          "type": "string"
+        },
+        "action": {
+          "enum": [
+            "page_checked",
+            "feed_searched",
+            "request_sent",
+            "follow_up_sent",
+            "reply_received",
+            "agreement_offered",
+            "key_granted",
+            "request_declined"
+          ],
+          "title": "Action",
+          "type": "string"
+        },
+        "channel": {
+          "anyOf": [
+            {
+              "enum": [
+                "web_form",
+                "email",
+                "support_ticket",
+                "post",
+                "other"
+              ],
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "How a request or follow-up was sent, or how a reply came. Required for request_sent and follow_up_sent.",
+          "title": "Channel"
+        },
+        "summary": {
+          "description": "One neutral, factual sentence. No personal names or email addresses.",
+          "minLength": 1,
+          "title": "Summary",
+          "type": "string"
+        },
+        "quote": {
+          "anyOf": [
+            {
+              "minLength": 1,
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "The operator's own words, quoted exactly, with any personal names and contact details left out. Required for request_declined.",
+          "title": "Quote"
+        },
+        "evidence_url": {
+          "anyOf": [
+            {
+              "pattern": "^https?://\\S+$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Evidence Url"
+        },
+        "evidence_file": {
+          "anyOf": [
+            {
+              "description": "Path of a saved copy under evidence/<operator id>/. No personal names or email addresses.",
+              "pattern": "^evidence/[a-z0-9_]+/[^/].*$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Evidence File"
+        }
+      },
+      "required": [
+        "date",
+        "action",
+        "summary"
+      ],
+      "title": "EngagementEvent",
       "type": "object"
     },
     "Evidence": {
@@ -257,6 +366,7 @@
         "file": {
           "anyOf": [
             {
+              "description": "Path of a saved copy under evidence/<operator id>/. No personal names or email addresses.",
               "pattern": "^evidence/[a-z0-9_]+/[^/].*$",
               "type": "string"
             },
@@ -265,7 +375,6 @@
             }
           ],
           "default": null,
-          "description": "Path of a saved copy under evidence/<operator id>/. No personal names or email addresses.",
           "title": "File"
         },
         "note": {

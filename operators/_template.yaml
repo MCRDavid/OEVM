@@ -82,14 +82,35 @@ licence: null
 
 engagement:
   # One of: open_anonymous, open_shared_key, key_on_request, signed_agreement_required,
-  # requested_no_reply, request_declined, no_public_feed_found, possibly_out_of_scope,
-  # unknown. Anything other than unknown needs at least one evidence entry.
+  # requested_no_reply, requested_awaiting_decision, request_declined,
+  # no_public_feed_found, possibly_out_of_scope, unknown. Anything other than unknown
+  # needs at least one evidence or log entry.
   status: unknown
   # Each entry: date (YYYY-MM-DD or "unknown"), plus a url and/or a file saved under
   # evidence/<id>/. No personal names or email addresses.
   evidence: []
+  # The engagement log: every dated step, oldest first, shown on the transparency page.
+  # The latest date here or in evidence is the date the status is shown "as of".
+  #   date: YYYY-MM-DD
+  #   action: page_checked | feed_searched | request_sent | follow_up_sent |
+  #           reply_received | agreement_offered | key_granted | request_declined
+  #   channel: web_form | email | support_ticket | post | other
+  #            (required for request_sent and follow_up_sent)
+  #   summary: one neutral sentence. No personal names or email addresses.
+  #   quote: the operator's own words, exactly (required for request_declined)
+  #   evidence_url or evidence_file: required for replies, agreements, keys and declines.
+  #            Save a copy of an emailed reply under evidence/<id>/ with names and
+  #            addresses removed.
+  # Example:
+  #   - date: 2026-10-09
+  #     action: request_sent
+  #     channel: web_form
+  #     summary: Requested access to the PCPR feed through the operator's form.
+  #     evidence_url: https://example.invalid/open-data
+  log: []
 
-# Dates (YYYY-MM-DD) access was requested and granted, or null.
+# Dates (YYYY-MM-DD) access was requested and granted, or null. They must match the first
+# request_sent and key_granted entries in engagement.log.
 access_requested: null
 access_granted: null
 
