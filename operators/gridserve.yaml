@@ -37,15 +37,19 @@ supports_single_location: supported
 cors: needs_testing
 attribution: null
 licence:
-  name: unknown
+  name: OGL-3.0
+  url: https://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/
   basis: >-
     Gridserve's API Fair Use Policy (read 2026-10-08) says that by using the API you agree
     to be bound by it, that intellectual property in the API and the API Data remains
     Gridserve's, and that the API Data contains confidential and proprietary information.
     It also says users must not copy the API or observe, study or test how it works, except
     as far as the law allows. DfT's guidance says "Data must be open in line with the Open
-    Government Licence". How these fit together needs clarifying with Gridserve before any
-    data is used.
+    Government Licence", and regulation 10(5) requires the data to be available without
+    any requirement to agree to terms on its use. On 2026-10-09 the repository owner
+    decided that the regulations take priority over the policy's terms for the data, so
+    the data is used in line with the Open Government Licence, without first writing to
+    Gridserve.
   checked: 2026-10-08
 engagement:
   status: key_on_request
@@ -101,11 +105,13 @@ findings:
       Use Policy. The policy says intellectual property in the API Data remains Gridserve's
       and describes the data as confidential and proprietary.
     handling: >-
-      Licence recorded as unknown. The operator stays switched off, and no key has been
-      requested, until the terms for the data are clarified with Gridserve.
+      On 2026-10-09 the repository owner decided that regulation 10(5) takes priority
+      over the policy's terms for the data, and that the project goes ahead without first
+      writing to Gridserve. The policy's rate limit is still followed. The operator stays
+      switched off until a key is granted and the adapter is built.
     evidence_url: https://www.gridserve.com/legal-area/open-data-api-terms-and-conditions/
 notes: >-
   Keys are requested through the form on Gridserve's open data page, which needs
-  agreement to the API Fair Use Policy. Clarify the terms for the data with Gridserve,
-  and record the outcome in the licence section, before requesting a key or enabling.
+  agreement to the API Fair Use Policy. The repository owner's decision on the terms for
+  the data is in the licence section.
 enabled: false

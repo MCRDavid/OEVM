@@ -1,7 +1,7 @@
 import assert from "node:assert/strict";
 import { test } from "node:test";
 
-import { defaults, matches, parse, serialise } from "../../site/assets/js/filters.js";
+import { activeCount, defaults, matches, parse, serialise } from "../../site/assets/js/filters.js";
 
 const CCS = "IEC_62196_T2_COMBO";
 const TYPE2 = "IEC_62196_T2";
@@ -94,4 +94,28 @@ test("one connector must meet every condition: a slow cheap one never lends its 
   const mixed = point([connector({ std: TYPE2, kw: 7, price: "free", ppk: null }), connector({ kw: 150 })]);
   assert.equal(matches(mixed, { ...defaults(), free: true, minkw: 50 }), false);
   assert.equal(matches(mixed, { ...defaults(), free: true, minkw: 7 }), true);
+});
+
+test("hiding out-of-service chargers keeps those with a working or unreported connector", () => {
+  const state = { ...defaults(), working: true };
+  assert.equal(serialise(state), "ok=1");
+  assert.equal(parse("ok=1").working, true);
+  assert.equal(parse("ok=yes").working, false);
+  assert.equal(matches(point([connector({ out: true })]), state), false);
+  assert.equal(matches(point([connector({ out: false })]), state), true);
+  assert.equal(matches(point([connector({ out: true }), connector({ kw: 7, out: false })]), state), true);
+  assert.equal(matches(point([]), state), true, "no status reported is not the same as out of service");
+  assert.equal(matches(point([connector({ out: true })]), defaults()), true, "off by default");
+});
+
+test("power and working apply to the same connector", () => {
+  const state = { ...defaults(), working: true, minkw: 50 };
+  const cons = [connector({ kw: 150, out: true }), connector({ kw: 7, out: false })];
+  assert.equal(matches(point(cons), state), false);
+});
+
+test("the Filters button counts each filter that differs from the defaults", () => {
+  assert.equal(activeCount(defaults()), 0);
+  assert.equal(activeCount(parse("minkw=50&plug=ccs,type2&ok=1&op=jolt")), 4);
+  assert.equal(activeCount(parse("free=1&maxp=0&unknown=0")), 3);
 });

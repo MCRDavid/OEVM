@@ -167,10 +167,25 @@ def test_a_location_with_one_free_connector_is_not_called_free(results):
 def test_each_kind_of_connector_is_listed_once_with_its_power_and_price(results, tmp_path):
     for properties, detail in _layer_and_details(results, tmp_path):
         connectors = [c for e in detail["location"]["evses"] for c in e["connectors"]]
-        kinds = {(c["std"], c["kw"], c["price"], c["ppk"]) for c in properties["cons"]}
+        kinds = {(c["std"], c["kw"], c["price"], c["ppk"], c["out"]) for c in properties["cons"]}
         assert len(kinds) == len(properties["cons"]), "no repeats"
         assert {c["standard"] for c in connectors} == {c["std"] for c in properties["cons"]}
         assert {c["max_kw"] for c in connectors} == {c["kw"] for c in properties["cons"]}
+
+
+def test_connectors_reported_out_of_service_are_marked(results, tmp_path):
+    seen = set()
+    for properties, detail in _layer_and_details(results, tmp_path):
+        for evse in detail["location"]["evses"]:
+            for c in evse["connectors"]:
+                out = evse["status"] in publish.OUT_OF_SERVICE
+                assert any(
+                    s["std"] == c["standard"] and s["kw"] == c["max_kw"] and s["out"] == out
+                    for s in properties["cons"]
+                )
+                seen.add(out)
+    assert seen == {True, False}  # the fixtures hold both
+    assert "blocked" not in publish.OUT_OF_SERVICE and "unknown" not in publish.OUT_OF_SERVICE
 
 
 def test_price_per_kwh_is_only_given_with_vat(results, tmp_path):

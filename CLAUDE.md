@@ -84,5 +84,5 @@ decisions are in docs/adr/.
 ## Adding an operator
 Copy operators/_template.yaml to operators/<id>.yaml, pick an adapter, set secret_name, read the
 operator's terms and fill in licence, then run the registry validator. Record a trimmed fixture with
---save-raw, add tests, add a row to DATA_LICENCES.md and an evidence entry. A /add-operator skill is
-planned but not written yet.
+--save-raw, add tests, add a row to DATA_LICENCES.md and an evidence entry. The /add-operator skill
+(.claude/skills/add-operator/SKILL.md) walks through each step, including when a key arrives.

@@ -69,8 +69,11 @@ when its terms have been checked and it is switched on.
 
 Gridserve's API Fair Use Policy was read on 8 October 2026. It says intellectual property
 in the API Data remains Gridserve's and describes the data as confidential and
-proprietary, so its licence is recorded as unknown and it stays switched off until the
-terms for the data are clarified with Gridserve (see `operators/gridserve.yaml`).
+proprietary. On 9 October 2026 the repository owner decided that regulation 10(5), which
+requires the data to be available without terms on its use, takes priority over those
+terms, so the data will be used in line with the Open Government Licence. It stays
+switched off, with no row above, until a key is granted and its adapter is built (see
+`operators/gridserve.yaml`).
 
 ## Planned layers, kept separate
 
