@@ -46,8 +46,10 @@ the site goes live.
    - **MapLibre GL JS** (the version pinned in `package.json`): served from the site
      itself, not from a script host. No telemetry was found in 6.11.2's source, nor in
      6.12.0's bundles (searched 8 October 2026). Search again after major updates.
-   - **OpenFreeMap** (`tiles.openfreemap.org`, Liberty style): the only outside host the
-     page contacts. Header checks on 8 October 2026 saw no cookies and no storage. The
+   - **OpenFreeMap** (`tiles.openfreemap.org`, Liberty style, and its Dark style for dark
+     mode): the only outside host the page contacts. Header checks on 8 October 2026 saw
+     no cookies and no storage; the Dark style's headers, checked on 9 October 2026, set
+     no cookie and carry the same 7-day NEL policy. The
      responses carry Cloudflare's Network Error Logging (NEL) headers, which ask some
      browsers to keep a reporting policy and to report failed connections to
      `a.nel.cloudflare.com`. This site does not control that. **Decided by the
@@ -59,22 +61,29 @@ the site goes live.
 4. **Saving settings is opt-in.** Settings are saved to the device only after the visitor
    turns on "Remember my settings on this device", which is off by default. A short
    explanation sits beside the switch, and "Forget my settings" deletes everything saved.
-   This gives consent under paragraph 2 and also meets paragraph 6. Today only the
-   filters are saved, under one `localStorage` key (`oevm.settings.v1`). Favourites and a
-   home location are not built yet; they must follow this rule when they are.
+   This gives consent under paragraph 2 and also meets paragraph 6. Today the filters
+   are saved, and the choice of light or dark mode if the visitor pressed the button,
+   under one `localStorage` key (`oevm.settings.v1`). Without that switch, light or dark
+   mode lasts only for the visit. Favourites and a home location are not built yet; they
+   must follow this rule when they are.
 5. **Saved settings stay on the device.** The site never sends them anywhere. The map
    still fetches map files for the area on screen (see the notice below), so a saved home
    location, if one is added, would be visible to the map host as an area on every visit.
    Do not open the map at a saved location without saying so in the notice.
-6. **No cookie banner is needed while rules 1 to 5 hold**, because nothing optional is
+6. **"Find my location" stays in the browser.** The button asks the browser for one
+   position, only when pressed, and the browser asks the visitor first. The position is
+   used to move the map and is never saved or sent anywhere by the site. Moving the map
+   there makes the browser fetch map files for that area, as for any area, and the map
+   position then appears in the page address after the #. The notice says both.
+7. **No cookie banner is needed while rules 1 to 6 hold**, because nothing optional is
    stored until the visitor asks for it. Check what the hosting service itself stores when
    the site is deployed, and update this page if it stores anything.
-7. **Any new storage needs review first.** Check it against Schedule A1 and update this
+8. **Any new storage needs review first.** Check it against Schedule A1 and update this
    page before it ships. Paragraph 4 must not be stretched to cover storage the visitor
    did not ask for.
-8. **Every page links to the privacy and cookies notice**, the disclaimer, the data
+9. **Every page links to the privacy and cookies notice**, the disclaimer, the data
    sources and the security policy.
-9. **Privacy questions go through GitHub.** The "Privacy question" issue form warns that
+10. **Privacy questions go through GitHub.** The "Privacy question" issue form warns that
    issues are public. Anything involving personal data that should not be public goes
    through GitHub's private vulnerability reporting instead (see `SECURITY.md`).
 
@@ -91,14 +100,20 @@ anything changes, and update the date.
 > personal data.
 >
 > **What is saved on your device.** Nothing, unless you turn on "Remember my settings on
-> this device". If you do, your filters are saved in your browser's local storage so the
-> map opens the same way next time. They are not sent anywhere. Turn the switch off or
+> this device". If you do, your filters, and light or dark mode if you picked one, are
+> saved in your browser's local storage so the map opens the same way next time. They are not sent anywhere. Turn the switch off or
 > press "Forget my settings" at any time to delete them. Your browser may also keep copies
 > of the site's files and map files in its normal cache, as it does for any website. When
 > the map loads, Cloudflare, which delivers OpenFreeMap's map files, may also ask your
 > browser to keep a small instruction to report failed connections to it (Network Error
 > Logging). The headers checked on 8 October 2026 asked browsers to keep it for up to 7
 > days. This site does not set or control it.
+>
+> **Your location.** If you press "Find my location", your browser asks whether to share
+> your location with the page. If you allow it, the map moves to where you are. Your
+> location is not saved and this site does not send it anywhere, but your browser then
+> fetches map files for the area around you from OpenFreeMap, and the map's position
+> appears in the page address. Check the address before you share a link.
 >
 > **Links you share.** When you change a filter, your filters appear in the page address,
 > and the map's position appears after the # sign, so you can bookmark or share them.
@@ -127,7 +142,7 @@ anything changes, and update the date.
 > vulnerability" button on the repository's Security and quality tab (called Security on
 > older pages). Both routes need a GitHub account.
 >
-> Last updated: 8 October 2026.
+> Last updated: 9 October 2026.
 
 The OpenFreeMap statements come from its privacy page and response headers as read on
 8 October 2026 (ADR 0008). Re-check them before publishing and from time to time, because

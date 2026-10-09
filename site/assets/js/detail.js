@@ -76,6 +76,9 @@ export function renderDetail(detail, { repository }) {
     h("h2", { id: "detail-heading", tabindex: "-1", text: location.name || "Charger location" }),
     h("p", { className: "operator", text: location.operator?.name ?? "Operator not given" }),
     h("p", { text: address(location) }),
+    ...(detail.coordinates_corrected?.note
+      ? [h("p", { className: "hint corrected", text: detail.coordinates_corrected.note })]
+      : []),
     openingHours(location.opening_hours),
     h("h3", { text: "Connectors" }),
     items.length ? h("ul", { className: "connectors" }, items) : h("p", { text: "No charge points listed." }),
