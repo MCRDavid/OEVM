@@ -1,4 +1,4 @@
-# Wrangler settings for the OEVM live status Worker (proxy/worker.js, ADR 0013).
+# Wrangler settings for the OEVM live status Worker (proxy/worker.js, ADR 0015).
 #
 # Not deployed yet. docs/PHASE3_PLAN.md lists what the repository owner sets up by hand
 # first: the Worker, its KV namespace, its LIVE_TOKEN secret and a Git integration whose

@@ -2,7 +2,7 @@
 
 Status: proposed, 9 October 2026, and updated the same day with the repository owner's
 answers below. Nothing in this plan is switched on. The map, the daily run and the relay
-are unchanged. ADR 0013 records the main decision.
+are unchanged. ADR 0015 records the main decision.
 
 ## Decided by the repository owner (9 October 2026)
 
@@ -253,7 +253,7 @@ Nothing in GitHub Pages or the relay changes.
 
 ## Steps, one issue and pull request each
 
-1. **This pull request:** this plan, ADR 0013 (proposed), the snapshot format and builder,
+1. **This pull request:** this plan, ADR 0015 (proposed), the snapshot format and builder,
    the Worker, and the details screen's groups, wording and colours, with tests. Nothing
    deploys and the map does not use any of it yet.
 2. **Single-location tests:** one request per switched-on operator, sparingly, to see

@@ -1,4 +1,4 @@
-"""The live status snapshot (Phase 3, docs/PHASE3_PLAN.md and ADR 0013).
+"""The live status snapshot (Phase 3, docs/PHASE3_PLAN.md and ADR 0015).
 
 One file per operator: the status of every EVSE at every location the map shows, keyed
 by the same location key as the map's detail files (pipeline.publish.location_key). The
