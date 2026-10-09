@@ -34,6 +34,7 @@ decisions are in docs/adr/.
 - pipeline/status.py: feed health page. schema/runlog.py: run log format. pipeline/health.py: figures.
 - pipeline/project.py: repository URL (also in site/index.html, site/.well-known/security.txt and .github/ISSUE_TEMPLATE).
 - site/index.html, site/assets/: the map page. pipeline/build_site.py: build folder with MapLibre.
+- proxy/: Phase 3 live status Worker, not deployed (docs/PHASE3_PLAN.md). pipeline/live_snapshot.py, schema/live.py: its snapshots.
 - .github/workflows/: ci, fetch-daily (cron, calls deploy), deploy (Pages from main), keepalive.
 
 ## Hard rules

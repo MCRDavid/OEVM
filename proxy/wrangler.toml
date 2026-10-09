@@ -1,0 +1,24 @@
+# Wrangler settings for the OEVM live status Worker (proxy/worker.js, ADR 0011).
+#
+# Not deployed yet. docs/PHASE3_PLAN.md lists what the repository owner sets up by hand
+# first: the Worker, its KV namespace, its LIVE_TOKEN secret and a Git integration whose
+# root directory is this folder. The relay's Git integration builds relay/ only, so this
+# folder does not deploy with it.
+name = "oevm-live"
+main = "worker.js"
+compatibility_date = "2026-10-01"
+workers_dev = true
+preview_urls = false
+
+[vars]
+# The only page allowed to read /live/ answers from a browser.
+SITE_ORIGIN = "https://mcrdavid.github.io"
+
+# The id is filled in when the owner creates the namespace (see docs/PHASE3_PLAN.md).
+# A KV namespace id is not a secret.
+# [[kv_namespaces]]
+# binding = "SNAPSHOTS"
+# id = "<namespace id>"
+
+[observability]
+enabled = false

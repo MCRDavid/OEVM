@@ -12,6 +12,7 @@ import json
 import sys
 from pathlib import Path
 
+from schema.live import LiveSnapshot
 from schema.models import Location, Tariff
 from schema.operator import OperatorConfig
 from schema.published import LocationDetail, Manifest, MapLayer, StatusFile
@@ -43,6 +44,9 @@ def build_schemas() -> dict[Path, dict]:
             mode="serialization"
         ),
         ROOT / "schema" / "json" / "status.schema.json": StatusFile.model_json_schema(
+            mode="serialization"
+        ),
+        ROOT / "schema" / "json" / "live-snapshot.schema.json": LiveSnapshot.model_json_schema(
             mode="serialization"
         ),
         ROOT / "operators" / "schema.json": OperatorConfig.model_json_schema(mode="validation"),
