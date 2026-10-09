@@ -25,7 +25,9 @@ they already have, and for a calculator showing when a paid plan pays for itself
   `forbidden`, or `not_read` when the terms could not be read) with the clause word for word.
   Plans are listed only for the first two;
   the model refuses plans otherwise. Providers whose terms forbid reuse keep a file so
-  the check is recorded. Asking those providers for permission is an owner decision.
+  the check is recorded. The owner chose on 9 October 2026 to ask them in writing; the
+  request, its status per provider and the steps to add a provider that agrees are in
+  `providers/README.md`.
 - **Discounts are never turned into prices.** "25% off Electroverse's own price" is shown
   as that, because the price it comes off is not published openly. The calculator asks
   the visitor for it.

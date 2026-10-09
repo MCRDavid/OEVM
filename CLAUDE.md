@@ -32,7 +32,8 @@ decisions are in docs/adr/.
 - pipeline/registry.py, pipeline/run.py. operators/*.yaml: one file per operator.
 - pipeline/pricing.py: the only way prices are shown. pipeline/tariffs.py: price per connector.
 - providers/*.yaml: charging plans from providers' own pages (schema/provider.py, pipeline/plans.py,
-  ADR 0016). Plans only where the provider's terms allow reuse; never estimate a price.
+  ADR 0016, providers/README.md). Plans only where the provider's terms allow reuse; never
+  estimate a price. Permission requests to the others are tracked in providers/README.md.
 - pipeline/transparency.py: site/transparency/. pipeline/publish.py: map files; schema/published.py.
 - pipeline/status.py: feed health page. schema/runlog.py: run log format. pipeline/health.py: figures.
 - pipeline/project.py: repository URL (also in site/index.html, site/.well-known/security.txt and .github/ISSUE_TEMPLATE).

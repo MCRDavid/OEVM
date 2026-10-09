@@ -143,3 +143,14 @@ def test_plans_are_refused_when_the_terms_could_not_be_read():
     data["terms"]["reuse"] = "not_read"
     with pytest.raises(ValidationError, match="only be listed when the provider's terms"):
         ProviderFile.model_validate(data)
+
+
+def test_the_readme_tracks_every_provider_and_each_permission_request():
+    readme = (PROVIDERS_DIR / "README.md").read_text(encoding="utf-8")
+    listed, requests = readme.split("## Permission requests")
+    for item in load_providers().values():
+        row = f"| {item.name} (`{item.id}`) |"
+        if item.terms.reuse in ("no_restriction_found", "attribution"):
+            assert row in listed, f"{item.id} is missing from Listed providers"
+        else:
+            assert row in requests, f"{item.id} is missing from Permission requests"
