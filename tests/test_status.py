@@ -134,7 +134,8 @@ def test_a_failed_run_is_shown_and_keeps_the_last_success(logs, tmp_path):
     render(logs, tmp_path / "a")
     failed = tmp_path / "failed"
     failed.mkdir()
-    when = NOW + timedelta(days=1)
+    # The fixture run is stamped with the real clock, so the failure must come after it.
+    when = datetime.now(UTC) + timedelta(days=1)
     log = run.failure_log("jolt", "live", "gave up on https://example.invalid: HTTP 503", when)
     (failed / "jolt.json").write_text(json.dumps(log))
     page, data = render(failed, tmp_path / "b", tmp_path / "a" / "data" / "status.json", when)
