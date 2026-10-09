@@ -46,6 +46,7 @@ const app = {
   theme: null, // "light" or "dark" once the visitor picks one; until then the device decides
   plans: [], // data/plans.json; empty if it could not be loaded
   mine: new Set(), // ids of the plans the visitor says they have
+  detail: null, // the open location's detail file, so the panel can be redrawn
 };
 
 async function loadJson(url) {
@@ -167,12 +168,13 @@ function dropUnknownNetworks() {
 // the cheapest way to pay with them. Saved only with "Remember my settings".
 function buildPlanPicker() {
   const fieldset = $("my-plans");
-  const known = new Set(app.plans.map((plan) => plan.id));
-  app.mine = new Set([...app.mine].filter((id) => known.has(id)));
   if (!app.plans.length) {
+    // Saved choices are kept: a list that failed to load once must not delete them.
     fieldset.append(h("p", { className: "hint", text: "The list of plans could not be loaded." }));
     return;
   }
+  const known = new Set(app.plans.map((plan) => plan.id));
+  app.mine = new Set([...app.mine].filter((id) => known.has(id)));
   const providers = [...new Set(app.plans.map((plan) => plan.provider))].sort((a, b) => a.localeCompare(b));
   for (const provider of providers) {
     const group = h("fieldset", { className: "plan-group" }, h("legend", { text: provider }));
@@ -182,6 +184,7 @@ function buildPlanPicker() {
         if (box.checked) app.mine.add(plan.id);
         else app.mine.delete(plan.id);
         saveIfRemembered();
+        redrawDetail();
       });
       group.append(h("label", {}, box, ` ${plan.name}: ${plan.fee_text}; ${plan.price_text}`));
     }
@@ -289,6 +292,17 @@ function coverPage(open) {
   }
 }
 
+function detailOptions() {
+  return { ...app.config, plans: app.plans, mine: app.mine };
+}
+
+// Ticking a plan while a charger's details are open (possible on a wide screen) redraws
+// them, so "You have this plan" and the cheapest line stay right. Focus stays put.
+function redrawDetail() {
+  if ($("detail").hidden || !app.detail) return;
+  $("detail-body").replaceChildren(...renderDetail(app.detail, detailOptions()));
+}
+
 async function openDetail(key, trigger) {
   const request = ++app.detailRequest;
   app.lastTrigger = trigger ?? listButton(key) ?? document.activeElement;
@@ -299,14 +313,19 @@ async function openDetail(key, trigger) {
   panel.hidden = false;
   coverPage(true);
   $("close-detail").focus();
+  app.detail = null;
   let content;
+  let loaded = null;
   try {
-    content = renderDetail(await loadJson(detailUrl(key)), { ...app.config, plans: app.plans, mine: app.mine });
+    loaded = await loadJson(detailUrl(key));
+    content = renderDetail(loaded, detailOptions());
   } catch {
+    loaded = null;
     content = [h("h2", { id: "detail-heading", tabindex: "-1", text: "Details could not be loaded" })];
   }
   // A slower answer for a charger opened earlier, or for a closed panel, is dropped.
   if (request !== app.detailRequest || panel.hidden) return;
+  app.detail = loaded;
   body.replaceChildren(...content);
   $("detail-heading")?.focus();
 }
@@ -563,7 +582,7 @@ function setUpSettings() {
   remember.addEventListener("change", () => {
     if (remember.checked) {
       if (settings.save(app.state, app.theme, [...app.mine])) {
-        message.textContent = "Your filters are saved on this device.";
+        message.textContent = "Your settings are saved on this device: filters, ticked charging plans and light or dark mode if you picked one.";
       } else {
         remember.checked = false;
         message.textContent = "Your browser did not allow saving settings.";

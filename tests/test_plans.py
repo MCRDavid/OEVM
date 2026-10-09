@@ -136,3 +136,10 @@ def test_a_plan_with_nothing_published_is_not_listed():
     empty = {"monthly_fee": None, "discount_percent": None, "discount_of": None}
     with pytest.raises(ValidationError, match="published fee, price or discount"):
         ProviderFile.model_validate(provider(plan=empty))
+
+
+def test_plans_are_refused_when_the_terms_could_not_be_read():
+    data = provider()
+    data["terms"]["reuse"] = "not_read"
+    with pytest.raises(ValidationError, match="only be listed when the provider's terms"):
+        ProviderFile.model_validate(data)

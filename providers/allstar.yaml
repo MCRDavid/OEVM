@@ -7,9 +7,9 @@ kind: roaming
 website: https://allstarcard.co.uk
 terms:
   url: null
-  reuse: no_restriction_found
+  reuse: not_read
   quote: null
   attribution: null
   checked: 2026-10-09
 plans: []
-notes: "Checked 9 October 2026: the Allstar Chargepass page (https://allstarcard.co.uk/solutions/ev/allstar-chargepass) publishes no prices or fees; it is a business fuel and EV card, quoted on application. The terms of use page was not located, so reuse is recorded as no restriction found and needs testing."
+notes: "Checked 9 October 2026: the Allstar Chargepass page (https://allstarcard.co.uk/solutions/ev/allstar-chargepass) publishes no prices or fees; it is a business fuel and EV card, quoted on application. The terms of use page was not located, so reuse is recorded as not_read."

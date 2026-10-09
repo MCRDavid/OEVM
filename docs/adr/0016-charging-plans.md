@@ -22,7 +22,8 @@ they already have, and for a calculator showing when a paid plan pays for itself
   carries a `needs_testing` note, which the map shows.
 - **Provider terms come first,** as for operators. A file records what the terms say about
   reusing content (`no_restriction_found`, `attribution`, `personal_use_only`,
-  `forbidden`) with the clause word for word. Plans are listed only for the first two;
+  `forbidden`, or `not_read` when the terms could not be read) with the clause word for word.
+  Plans are listed only for the first two;
   the model refuses plans otherwise. Providers whose terms forbid reuse keep a file so
   the check is recorded. Asking those providers for permission is an owner decision.
 - **Discounts are never turned into prices.** "25% off Electroverse's own price" is shown

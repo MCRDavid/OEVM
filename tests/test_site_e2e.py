@@ -345,10 +345,41 @@ def test_the_calculator_works_out_when_a_plan_pays_for_itself(visit):
     page.fill("#calc-base", "60")
     assert page.input_value("#calc-with") == "48"
     expect(answer).to_contain_text("pays for itself once you charge 12 kWh a month")
+    page.fill("#calc-with", "45")
+    expect(answer).to_contain_text("pays for itself once you charge 11 kWh a month")
+    assert page.input_value("#calc-with") == "45", "a price the visitor types is kept"
     assert (
         "Lowest published energy price here with any listed plan: 50p per kWh including "
         "VAT, with Fixed plan from Test" in page.text_content("#detail-body")
     )
+
+
+def test_ticking_a_plan_redraws_open_details_and_a_failed_list_keeps_saved_plans(visit):
+    v = visit(viewport=WIDE)
+    page = v.open("?view=list", map_ready=False)
+    expect(page.locator("#list-items li")).to_have_count(LOCATIONS)
+    _open_details_containing(page, "Other ways to pay here")
+    open_filters(page)
+    first = page.locator("#my-plans input[name=plan]").first
+    plan_name = first.evaluate("box => box.parentElement.textContent")
+    shown = page.locator("ul.plans").text_content()
+    covering = [box for box in page.locator("#my-plans input[name=plan]").all()]
+    for box in covering:
+        label = box.evaluate("box => box.parentElement.textContent").split(":")[0].strip()
+        if label and label in shown:
+            box.check()
+            break
+    else:
+        raise AssertionError(f"no ticked plan covers this location ({plan_name})")
+    expect(page.locator("#detail-body .mine")).to_have_count(1)
+    page.click("#remember")
+    saved = json.loads(v.stored()["oevm.settings.v1"])["plans"]
+    v.page.route("**/data/plans.json", lambda route: route.fulfill(status=503, body=""))
+    page.reload()
+    expect(page.locator("#my-plans")).to_contain_text("could not be loaded")
+    open_filters(page)
+    page.check("#free")
+    assert json.loads(v.stored()["oevm.settings.v1"])["plans"] == saved
 
 
 def test_details_say_when_coordinates_were_swapped_back(visit):

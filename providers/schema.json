@@ -227,7 +227,8 @@
             "no_restriction_found",
             "attribution",
             "personal_use_only",
-            "forbidden"
+            "forbidden",
+            "not_read"
           ],
           "title": "Reuse",
           "type": "string"

@@ -30,7 +30,7 @@ from schema.operator import NeutralText, SafeUrl, _Model
 ProviderId = Annotated[str, Field(pattern=r"^[a-z0-9][a-z0-9_]*$")]
 PlanId = Annotated[str, Field(pattern=r"^[a-z0-9][a-z0-9_]*$")]
 ProviderKind = Literal["roaming", "operator"]
-Reuse = Literal["no_restriction_found", "attribution", "personal_use_only", "forbidden"]
+Reuse = Literal["no_restriction_found", "attribution", "personal_use_only", "forbidden", "not_read"]
 REUSABLE: tuple[str, ...] = ("no_restriction_found", "attribution")
 Money = Annotated[Decimal, Field(ge=0, max_digits=8, decimal_places=4)]
 

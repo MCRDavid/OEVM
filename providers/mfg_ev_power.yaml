@@ -22,7 +22,7 @@ plans:
     discount_of: null
     includes_vat: null
     networks: [MFG EV Power]
-    operator_ids: []
+    operator_ids: [mfg_ev_power]
     conditions: "Session started through the MFG EV app. The page also calls the app \"MFG Connect App\"."
     needs_testing: "The same page also says \"Our current tariffs range from 69p to 79p per kWh\", which does not match this 59p app rate, so the rate may be out of date. The operator's open tariffs feed lists prices that differ from charger to charger."
     source:
@@ -39,7 +39,7 @@ plans:
     discount_of: null
     includes_vat: null
     networks: [MFG EV Power]
-    operator_ids: []
+    operator_ids: [mfg_ev_power]
     conditions: "Applies to contactless and card payments at the charger. Customers charging through a third-party provider or roaming network pay the rate set by that provider."
     needs_testing: null
     source:

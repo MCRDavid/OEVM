@@ -353,7 +353,7 @@ _CAMEL = re.compile(r"(?<=[a-z])(?=[A-Z][a-z])")
 def readable_name(text: str | None) -> str | None:
     """A tariff description that is easier to read, when the operator's own text looks like
     a system name such as "Tariff_Contactless_Rapid7ab83c27-57b5-...": the trailing id and
-    a leading "Tariff" are dropped and the words are split, giving "Contactless, rapid".
+    a leading "Tariff" are dropped and the words are split, giving "Contactless rapid".
     Text that already reads as words is kept exactly. None when nothing readable is left.
     The original is always published next to it, so nothing the operator said is lost."""
     if not text:
@@ -372,7 +372,7 @@ def readable_name(text: str | None) -> str | None:
     ]
     if not words:
         return None
-    label = ", ".join(words)
+    label = " ".join(words)
     return label[0].upper() + label[1:]
 
 

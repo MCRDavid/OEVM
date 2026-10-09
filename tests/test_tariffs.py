@@ -321,9 +321,11 @@ SYSTEM_ID = "-".join(("1a2b3c4d", "5e6f", "4a1b", "8c2d", "9e0f1a2b3c4d"))
 @pytest.mark.parametrize(
     ("text", "expected"),
     [
-        (f"Tariff_Contactless_Rapid{SYSTEM_ID}", "Contactless, rapid"),
+        (f"Tariff_Contactless_Rapid{SYSTEM_ID}", "Contactless rapid"),
         (f"Tariff________OffPeakRapid{SYSTEM_ID}", "Off peak rapid"),
-        ("AC_22kW_Tariff", "AC, 22kW, tariff"),
+        ("AC_22kW_Tariff", "AC 22kW tariff"),
+        ("Pay_As_You_Go", "Pay as you go"),
+        ("Standard_Tariff", "Standard tariff"),
         ("UK Tariff Group: Base tariff", "UK Tariff Group: Base tariff"),
         ("[Electroverse as EMSP] Roaming Tariff", "[Electroverse as EMSP] Roaming Tariff"),
         (f"Tariff_{SYSTEM_ID}", None),
@@ -337,6 +339,6 @@ def test_system_names_are_made_readable_and_plain_text_is_kept(text, expected):
 def test_the_operators_own_name_is_kept_when_it_is_made_readable():
     raw = f"Tariff_Contactless_Rapid{SYSTEM_ID}"
     shown = site_tariffs(site(connector("A")), index(tariff("A", alt_text=raw)))
-    assert (shown.options[0].name, shown.options[0].original_name) == ("Contactless, rapid", raw)
+    assert (shown.options[0].name, shown.options[0].original_name) == ("Contactless rapid", raw)
     plain = site_tariffs(site(connector("B")), index(tariff("B", alt_text="Members")))
     assert (plain.options[0].name, plain.options[0].original_name) == ("Members", None)

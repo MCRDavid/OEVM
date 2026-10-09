@@ -7,9 +7,9 @@ kind: operator
 website: https://www.geniepoint.co.uk
 terms:
   url: null
-  reuse: no_restriction_found
+  reuse: not_read
   quote: null
   attribution: null
   checked: 2026-10-09
 plans: []
-notes: "Checked 9 October 2026: no plans are listed because no published prices could be read. The rates and tariffs page (https://www.equans.co.uk/drivers-geniepoint/rates-tariffs) returned HTTP 403, as did the same path on jobs.equans.co.uk, and the driver web app (https://www.geniepoint.co.uk/ds) shows no prices. The terms of use page was not located, so reuse is recorded as no restriction found and needs testing."
+notes: "Checked 9 October 2026: no plans are listed because no published prices could be read. The rates and tariffs page (https://www.equans.co.uk/drivers-geniepoint/rates-tariffs) returned HTTP 403, as did the same path on jobs.equans.co.uk, and the driver web app (https://www.geniepoint.co.uk/ds) shows no prices. The terms of use page was not located, so reuse is recorded as not_read."

@@ -8,7 +8,7 @@ kind: roaming # or operator
 website: https://example.com
 terms:
   url: https://example.com/terms
-  reuse: no_restriction_found # attribution, personal_use_only or forbidden
+  reuse: no_restriction_found # attribution, personal_use_only, forbidden or not_read
   quote: null # the reuse clause word for word, required for a restriction
   attribution: null # wording to show, required when reuse is attribution
   checked: 2026-10-09

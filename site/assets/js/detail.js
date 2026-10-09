@@ -142,23 +142,31 @@ function calculator(detail, plans) {
   };
   const select = h(
     "select",
-    { id: "calc-plan" },
+    { id: "calc-plan", "aria-describedby": "calc-note" },
     paid.map((plan) => h("option", { value: plan.id, text: `${plan.name} (${plan.provider})` })),
   );
   const [feeLabel, fee] = field("calc-fee", "Monthly fee (pounds)");
-  const [nowLabel, payNow] = field("calc-now", "What you pay now (pence per kWh)", { step: "0.1" });
-  const [baseLabel, base] = field("calc-base", "Price the discount is taken off (pence per kWh)", { step: "0.1" });
+  const [nowLabel, payNow] = field("calc-now", "What you pay now (pence per kWh)", {
+    step: "0.1",
+    "aria-describedby": "calc-now-hint",
+  });
+  const [baseLabel, base] = field("calc-base", "Price the discount is taken off (pence per kWh)", {
+    step: "0.1",
+    "aria-describedby": "calc-note",
+  });
   const [withLabel, withPlan] = field("calc-with", "Price with the plan (pence per kWh)", { step: "0.1" });
   const [kwhLabel, kwh] = field("calc-kwh", "kWh you charge a month (optional)", { step: "1" });
   const note = h("p", { className: "hint", id: "calc-note" });
   const answer = h("p", { id: "calc-answer", role: "status" });
   const baseRow = h("div", { className: "calc-base" }, baseLabel, base);
   if (now.length) payNow.value = String(Math.min(...now));
-  const update = () => {
+  // For a discount plan the price with the plan is worked out from the base price, but
+  // only when the base price changes, so a price the visitor types in is kept.
+  const update = (event) => {
     const plan = paid.find((p) => p.id === select.value);
     const isDiscount = Number.isFinite(plan.discount_percent);
     baseRow.hidden = !isDiscount;
-    if (isDiscount) {
+    if (isDiscount && (!event || event.target === base)) {
       const price = discounted(number(base), plan.discount_percent);
       withPlan.value = price === null ? "" : String(Math.round(price * 10) / 10);
     }
@@ -197,7 +205,7 @@ function calculator(detail, plans) {
     payNow,
     h(
       "p",
-      { className: "hint", text: now.length ? "Starts from the lowest published price here that includes VAT." : "No price including VAT is published here. Enter what you pay." },
+      { className: "hint", id: "calc-now-hint", text: now.length ? "Starts from the lowest published price here that includes VAT." : "No price including VAT is published here. Enter what you pay." },
     ),
     baseRow,
     withLabel,
@@ -217,7 +225,7 @@ export function plansSection(detail, allPlans, mine = new Set()) {
   const plans = plansFor(operatorId, allPlans, mine);
   const yours = plans.filter((plan) => mine.has(plan.id));
   const parts = [
-    mine.size ? cheapestLine(detail, yours, "Lowest published energy price here with your plans") : null,
+    yours.length ? cheapestLine(detail, yours, "Lowest published energy price here with your plans") : null,
     cheapestLine(detail, plans, "Lowest published energy price here with any listed plan"),
   ];
   if (plans.length) {

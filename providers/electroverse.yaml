@@ -126,7 +126,7 @@ plans:
         £8.99 a month! Once you sign up, you'll have instant access to cheaper charging!
       checked: 2026-10-09
   - id: octopus_go_discount
-    name: Octopus Go / Intelligent Octopus Go customer discount
+    name: Octopus Go customer discount
     pay_by: Electroverse app with a linked Octopus Energy account
     monthly_fee: 0
     fee_note: No separate fee is stated for the discount.
@@ -137,8 +137,28 @@ plans:
     networks: [All networks on Electroverse]
     operator_ids: []
     conditions: >-
-      Only for Octopus Go customers (5%) or Intelligent Octopus Go customers (8%), who must
-      link their Octopus Energy account in the app. The terms say multiple discounts are
+      Only for Octopus Go customers, who must link their Octopus Energy account in the app. The terms say multiple discounts are
+      applied one after another on a compounding basis.
+    needs_testing: null
+    source:
+      url: https://electroverse.com/community/ev-blogs-and-guides/which-charging-discounts-can-ev-drivers-get-with-octopus-electroverse
+      quote: >-
+        If you are an Octopus Go customer or an Intelligent Octopus Go customer, you can get
+        a 5% or 8% discount across the whole of the Electroverse.
+      checked: 2026-10-09
+  - id: intelligent_octopus_go_discount
+    name: Intelligent Octopus Go customer discount
+    pay_by: Electroverse app with a linked Octopus Energy account
+    monthly_fee: 0
+    fee_note: No separate fee is stated for the discount.
+    price_per_kwh: null
+    discount_percent: 8
+    discount_of: the price of charging on any network through Electroverse
+    includes_vat: null
+    networks: [All networks on Electroverse]
+    operator_ids: []
+    conditions: >-
+      Only for Intelligent Octopus Go customers, who must link their Octopus Energy account in the app. The terms say multiple discounts are
       applied one after another on a compounding basis.
     needs_testing: null
     source:

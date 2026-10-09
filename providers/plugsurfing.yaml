@@ -31,6 +31,7 @@ plans:
   - TotalEnergies
   operator_ids:
   - instavolt
+  - mfg_ev_power
   conditions: UK only. Participating networks may change. The page says the discount moved from
     20 percent to 15 percent on 5 August 2026, with the price unchanged. Since then Mer UK, Connected
     Kerb and IONITY are no longer discounted.
