@@ -39,7 +39,7 @@ def test_the_plain_wrapper_is_an_opt_in_setting():
 
 def test_recorded_locations_convert_faithfully():
     result, _ = replay()
-    assert len(result.locations) == 8
+    assert len(result.locations) == 9
     assert all(loc.id.startswith("clenergy_ev:GB:CEV:") for loc in result.locations)
     statuses = Counter(e.status for loc in result.locations for e in loc.evses)
     assert {"available", "charging", "out_of_order", "unknown"} <= set(statuses)
@@ -67,9 +67,10 @@ def test_tariffs_without_a_party_use_the_operator_files_party():
 
 
 def test_coordinates_outside_the_uk_are_kept_as_published_and_left_off_the_map():
+    # Green Isle 1 is in Dublin: inside the old latitude and longitude limits, not in the UK.
     result, _ = replay()
     outside = {loc.name for loc in result.locations if not in_uk(loc)}
-    assert outside == {"MedCare0001", "UBI 98 Southwell Road (98)"}
+    assert outside == {"MedCare0001", "UBI 98 Southwell Road (98)", "Green Isle 1"}
     swapped = next(loc for loc in result.locations if loc.name == "UBI 98 Southwell Road (98)")
     assert (swapped.coordinates.latitude, swapped.coordinates.longitude) == (-0.09703, 51.467819)
 

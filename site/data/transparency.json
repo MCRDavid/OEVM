@@ -252,7 +252,7 @@
           "kind": "data_quality",
           "kind_label": "Data quirk",
           "summary": "Every location has country GBR, but some coordinates are outside the UK (for example in the Caribbean, Canada and Ireland).",
-          "handling": "Locations whose coordinates fall outside the map's UK limits are left off the map and listed in the manifest as not mapped. Those limits also take in the Republic of Ireland, so points there are shown as published.",
+          "handling": "Only locations whose coordinates are in the UK are shown, so these are left off the map and listed in the manifest as not mapped. Until 2026-10-09 the map used latitude and longitude limits that also took in the Republic of Ireland, so 6 locations in Dublin and Maynooth were shown; since then the UK's own outline is used (ADR 0014).",
           "evidence_url": "https://api.clenergy.online/development/pcpr/locations",
           "status": "open",
           "resolved_date": null
@@ -261,8 +261,18 @@
           "date": "2026-10-09",
           "kind": "data_quality",
           "kind_label": "Data quirk",
-          "summary": "Two locations with UK postcodes are published with latitude and longitude the wrong way round, which puts them outside the UK: \"UBI 98 Southwell Road (98)\" (SE5 9PG) as latitude -0.09703, longitude 51.467819, and \"Liberty Building\" (LS3 1HF) as latitude -1.56237, longitude 53.80797. A third, \"St Angela's Lakeside Aparthotel\", has the same pattern but an Irish postcode.",
-          "handling": "By the repository owner's decision (swapped_coordinates above), the two with UK postcodes are shown with the figures swapped back, and their details on the map say so and give the operator's own figures. The manifest lists them as corrected. The one with an Irish postcode is left off the map.",
+          "summary": "One location, \"UoL MSCP 1\" in Leeds (postcode given as \"N/A\"), has longitude 1.551283, which is in the North Sea. Leeds is at about longitude -1.55, west of the Greenwich meridian, so the minus sign appears to be missing.",
+          "handling": "Left off the map and listed in the manifest as not mapped. Until 2026-10-09 it was shown in the sea, because it fell inside the map's old latitude and longitude limits. Only latitude and longitude the wrong way round are corrected, not a missing sign.",
+          "evidence_url": "https://api.clenergy.online/development/pcpr/locations",
+          "status": "open",
+          "resolved_date": null
+        },
+        {
+          "date": "2026-10-09",
+          "kind": "data_quality",
+          "kind_label": "Data quirk",
+          "summary": "Two locations with UK postcodes are published with latitude and longitude the wrong way round, which puts them outside the UK: \"UBI 98 Southwell Road (98)\" (SE5 9PG) as latitude -0.09703, longitude 51.467819, and \"Liberty Building\" (LS3 1HF) as latitude -1.56237, longitude 53.80797. A third, \"St Angela's Lakeside Aparthotel\", has the same pattern but an Irish postcode, and swapped back it is in County Sligo, Ireland.",
+          "handling": "By the repository owner's decision (swapped_coordinates above), the two with UK postcodes are shown with the figures swapped back, and their details on the map say so and give the operator's own figures. The manifest lists them as corrected. The one in Ireland is left off the map.",
           "evidence_url": "https://api.clenergy.online/development/pcpr/locations",
           "status": "open",
           "resolved_date": null

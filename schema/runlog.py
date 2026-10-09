@@ -32,7 +32,7 @@ class Health(_LogModel):
     """Figures counted from what was received, for the feed health page."""
 
     locations: int = Field(ge=0)
-    locations_in_uk: int = Field(ge=0, description="Coordinates inside the UK limits.")
+    locations_in_uk: int = Field(ge=0, description="Coordinates in the UK (pipeline/geography.py).")
     evses: int = Field(ge=0)
     evses_with_status: int = Field(ge=0, description="Status other than unknown.")
     connectors: int = Field(ge=0)

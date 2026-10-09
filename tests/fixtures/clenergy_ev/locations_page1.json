@@ -819,6 +819,85 @@
               -0.09703
             ]
           }
+        },
+        {
+          "country_code": "GB",
+          "party_id": "CEV",
+          "id": "6863af57df739943b3466c1e",
+          "publish": true,
+          "name": "Green Isle 1",
+          "address": "T/A The Green Isle Hotel",
+          "city": "Dublin 22",
+          "postal_code": "D22 F9F4",
+          "state": null,
+          "country": "GBR",
+          "coordinates": {
+            "latitude": "53.309903",
+            "longitude": "-6.403055"
+          },
+          "related_locations": [],
+          "parking_type": "UNKNOWN",
+          "evses": [
+            {
+              "uid": "GB*CEV*E6863e67ea06c886607aad3c1-23007618",
+              "evse_id": "GB*CEV*E6863e67ea06c886607aad3c1",
+              "status": "AVAILABLE",
+              "status_schedule": [],
+              "capabilities": [
+                "REMOTE_START_STOP_CAPABLE",
+                "RFID_READER",
+                "UNLOCK_CAPABLE"
+              ],
+              "connectors": [
+                {
+                  "id": "23007618",
+                  "standard": "IEC_62196_T2",
+                  "format": "SOCKET",
+                  "power_type": "AC_3_PHASE",
+                  "max_voltage": 230,
+                  "max_amperage": 32,
+                  "max_electric_power": null,
+                  "tariff_ids": [
+                    "6865343f292dd22918511256"
+                  ],
+                  "terms_and_conditions": null,
+                  "last_updated": "2026-10-08T05:38:46.697Z",
+                  "voltage": 230,
+                  "amperage": 32
+                }
+              ],
+              "floor_level": null,
+              "coordinates": null,
+              "physical_reference": "015108",
+              "directions": [],
+              "parking_restrictions": [],
+              "images": [],
+              "last_updated": "2026-10-08T05:38:46.697Z"
+            }
+          ],
+          "directions": [],
+          "operator": null,
+          "suboperator": null,
+          "owner": null,
+          "facilities": [],
+          "time_zone": "Europe/Dublin",
+          "opening_times": {
+            "twentyfourseven": true,
+            "regular_hours": [],
+            "exceptional_openings": [],
+            "exceptional_closings": []
+          },
+          "charging_when_closed": null,
+          "images": [],
+          "energy_mix": null,
+          "last_updated": "2026-10-09T07:36:30.020Z",
+          "publish_allowed_to": [],
+          "location_point": {
+            "coordinates": [
+              -6.403055,
+              53.309903
+            ]
+          }
         }
       ],
       "error": null,

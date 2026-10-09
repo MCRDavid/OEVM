@@ -18,7 +18,8 @@ the site and recorded against the operator as inaccurate data.
   published point is outside the map's UK limits, the same two numbers the other way round
   fall inside them, its country is GBR, and its postcode is a UK postcode. The postcode
   test matters because the UK limits also take in the Republic of Ireland: a Clenergy EV
-  site with an Irish postcode has the same pattern and is not moved.
+  site with an Irish postcode has the same pattern and is not moved. (Since ADR 0014 "in
+  the UK" uses the UK's outline, so a swap that lands in Ireland is not taken either.)
 - **Nothing else is changed or taken from another source.** The two numbers are the
   operator's own; no position is looked up from a postcode, OpenStreetMap or anywhere
   else. The location record otherwise stays as published.

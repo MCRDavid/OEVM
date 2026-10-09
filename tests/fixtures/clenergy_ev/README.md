@@ -10,10 +10,11 @@ Each file is one response holding every record, in the wrapper
 `{"name": "OK", "message": "ok", "data": [...], "error": null, "forcelogout": false}`
 rather than an OCPI response object. To keep the fixtures short:
 
-- `locations_page1.json` keeps 8 of the 1,400 locations, chosen to cover AC single-phase,
+- `locations_page1.json` keeps 9 of the 1,400 locations, chosen to cover AC single-phase,
   AC three-phase and DC (CCS and CHAdeMO) connectors, the statuses AVAILABLE, CHARGING,
   OUTOFORDER and UNKNOWN, opening times that are 24/7, regular hours or not given, a
-  tariff priced at zero, a location outside the UK with a USD tariff, and a location whose
+  tariff priced at zero, a location outside the UK with a USD tariff, a location in Dublin with a EUR tariff
+  (inside the map's old latitude and longitude limits, but not in the UK), and a location whose
   latitude and longitude appear to be the other way round.
 - `tariffs_page1.json` keeps every tariff those locations refer to.
 - Every record is exactly as Clenergy EV sent it. The files send no paging headers.

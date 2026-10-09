@@ -11,7 +11,7 @@
           "type": "integer"
         },
         "locations_in_uk": {
-          "description": "Coordinates inside the UK limits.",
+          "description": "Coordinates in the UK (pipeline/geography.py).",
           "minimum": 0,
           "title": "Locations In Uk",
           "type": "integer"
