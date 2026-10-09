@@ -372,8 +372,9 @@ def _sources_table(data: dict) -> str:
         swapped = op["swapped_coordinates"]
         if op["enabled"] and swapped:
             fetched += (
-                f". Coordinates that are obviously the wrong way round are swapped back and "
-                f"marked on the map, by the owner's decision of {_e(swapped['decided'])}: "
+                f". Coordinates that are obviously the wrong way round, or obviously missing "
+                f"a minus sign, are corrected and marked on the map, by the owner's decision "
+                f"of {_e(swapped['decided'])}: "
                 f"{_e(swapped['basis'])}"
             )
         statuses = op["nonstandard_statuses"]

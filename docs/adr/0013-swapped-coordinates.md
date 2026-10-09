@@ -36,3 +36,21 @@ the site and recorded against the operator as inaccurate data.
 - Two Clenergy EV locations appear on the map that would otherwise be missing.
 - The finding names the locations as of 9 October 2026. The manifest is the daily record;
   the finding is updated when a run shows new or fixed cases.
+
+## Amendment, 9 October 2026: missing minus signs
+
+The live feeds also had two UK locations whose longitude is missing its minus sign, which
+puts them in the North Sea: GeniePoint's "Cheshire East Council - Crewe Civic" (CW1 2JZ)
+and Clenergy EV's "UoL MSCP 1" in Leeds (postcode given as "N/A"). The owner decided these
+are corrected the same way as swaps, shown on the map and recorded against the operator.
+
+- The same `swapped_coordinates` decision covers both corrections, and GeniePoint now
+  records it too.
+- A longitude gets its minus sign back only when all of these hold: the published
+  longitude is positive and the point is outside the UK, the same point west of the
+  Greenwich meridian is on the UK's land or within 2 km of its coast (the 25 km reach for
+  small islands in ADR 0017 is not used), its country is GBR, and its postcode is a UK
+  postcode or none is given. A location with a postcode from another country is never
+  moved. A swap is tried first.
+- The map's note says the minus sign was added and gives the operator's own figures; the
+  manifest counts the location as corrected.

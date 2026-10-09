@@ -740,7 +740,7 @@
     },
     "SwappedCoordinates": {
       "additionalProperties": false,
-      "description": "The repository owner's recorded decision to correct obviously swapped coordinates.\n\nA location is corrected only when its published point is outside the UK, the same\nnumbers the other way round fall inside the UK, its country is GBR and its postcode is\na UK postcode. The published point is kept with the location, the map says it was\ncorrected, and the operator's findings record it. Without this decision such locations\nare left off the map.",
+      "description": "The repository owner's recorded decision to correct obviously wrong coordinates.\n\nTwo mistakes are corrected (ADR 0013). A swap: the published point is outside the UK,\nthe same numbers the other way round fall inside the UK, the country is GBR and the\npostcode is a UK postcode. A missing minus sign: the published longitude is positive\nand outside the UK, the same point west of the Greenwich meridian is on the UK's land\nor within 2 km of its coast, the country is GBR and the postcode is a UK postcode or\nnone is given. The published point is kept with the location, the map says it was\ncorrected, and the operator's findings record it. Without this decision such locations\nare left off the map.",
       "properties": {
         "decided": {
           "description": "Date the owner made the decision (YYYY-MM-DD).",
@@ -749,7 +749,7 @@
           "type": "string"
         },
         "basis": {
-          "description": "Why swapped coordinates may be corrected.",
+          "description": "Why obviously wrong coordinates may be corrected.",
           "minLength": 1,
           "title": "Basis",
           "type": "string"

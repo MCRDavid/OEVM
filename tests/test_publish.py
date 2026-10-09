@@ -130,7 +130,7 @@ def test_obviously_swapped_coordinates_are_swapped_back_and_marked(results, tmp_
     assert "wrong way round" in detail["coordinates_corrected"]["note"]
     others = [p for p in (tmp_path / "data" / "loc").glob("*/*.json") if p.stem != key]
     assert all(json.loads(p.read_text())["coordinates_corrected"] is None for p in others)
-    assert any("1 with latitude and longitude swapped back" in line for line in out.report)
+    assert any("1 with coordinates corrected" in line for line in out.report)
 
 
 def _swapped_location(results, **address):
@@ -157,6 +157,44 @@ def test_a_point_that_is_not_in_the_uk_either_way_is_not_moved(results):
         update={"coordinates": Coordinates(latitude=14.0144, longitude=-61.0045)}
     )
     assert publish.swapped_back(elsewhere, config) is None
+
+
+def _unsigned(results, latitude, longitude, **address):
+    location = _swapped_location(results, **address)
+    return location.model_copy(
+        update={"coordinates": Coordinates(latitude=latitude, longitude=longitude)}
+    )
+
+
+def test_an_obviously_missing_minus_sign_is_restored_and_marked(results):
+    config = load_registry()["clenergy_ev"]
+    # GeniePoint's Crewe Civic and Clenergy EV's UoL MSCP 1 as published on 9 Oct 2026.
+    for latitude, longitude, postcode in (
+        (53.097591, 2.444352, "CW1 2JZ"),
+        (53.804825, 1.551283, "N/A"),
+    ):
+        location = _unsigned(results, latitude, longitude, postal_code=postcode)
+        assert publish.swapped_back(location, config) is None
+        moved, correction = publish.corrected_coordinates(location, config)
+        assert moved.coordinates.longitude == -longitude
+        assert moved.coordinates.latitude == latitude
+        assert correction.published == location.coordinates
+        assert "without its minus sign" in correction.note
+        assert str(longitude) in correction.note
+
+
+def test_minus_signs_need_the_owners_decision_gbr_and_no_foreign_postcode(results):
+    config = load_registry()["clenergy_ev"]
+    crewe = (53.097591, 2.444352)
+    undecided = config.model_copy(update={"swapped_coordinates": None})
+    assert (
+        publish.sign_restored(_unsigned(results, *crewe, postal_code="CW1 2JZ"), undecided) is None
+    )
+    assert publish.sign_restored(_unsigned(results, *crewe, country="IRL"), config) is None
+    assert publish.sign_restored(_unsigned(results, *crewe, postal_code="F91 TCN3"), config) is None
+    # Far out at sea either way, and a point already west of the meridian, stay as they are.
+    assert publish.sign_restored(_unsigned(results, 54.5, 4.0), config) is None
+    assert publish.sign_restored(_unsigned(results, 14.0144, -61.0045), config) is None
 
 
 def test_operators_that_are_switched_off_are_never_published(results, tmp_path):

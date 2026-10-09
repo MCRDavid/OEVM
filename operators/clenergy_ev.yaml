@@ -52,7 +52,8 @@ swapped_coordinates:
     Where a location's latitude and longitude are obviously the wrong way round, the
     repository owner decided to show it in the right place rather than leave it off the
     map, with the operator's own figures kept and the correction shown on the map and
-    recorded in the findings below.
+    recorded in the findings below. On the same day the owner decided a longitude
+    obviously missing its minus sign is corrected the same way.
 engagement:
   status: open_anonymous
   evidence:
@@ -131,9 +132,10 @@ findings:
       1.551283, which is in the North Sea. Leeds is at about longitude -1.55, west of the
       Greenwich meridian, so the minus sign appears to be missing.
     handling: >-
-      Left off the map and listed in the manifest as not mapped. Until 2026-10-09 it was
-      shown in the sea, because it fell inside the map's old latitude and longitude limits.
-      Only latitude and longitude the wrong way round are corrected, not a missing sign.
+      Until 2026-10-09 it was shown in the sea, because it fell inside the map's old
+      latitude and longitude limits. By the repository owner's decision (swapped_coordinates
+      above), it is now shown with the minus sign added, and its details on the map say so
+      and give the operator's own figures. The manifest lists it as corrected.
     evidence_url: https://api.clenergy.online/development/pcpr/locations
   - date: 2026-10-09
     kind: data_quality
