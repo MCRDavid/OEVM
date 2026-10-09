@@ -371,17 +371,20 @@ class MissingPublishFlag(_Model):
 
 
 class SwappedCoordinates(_Model):
-    """The repository owner's recorded decision to correct obviously swapped coordinates.
+    """The repository owner's recorded decision to correct obviously wrong coordinates.
 
-    A location is corrected only when its published point is outside the UK, the same
-    numbers the other way round fall inside the UK, its country is GBR and its postcode is
-    a UK postcode. The published point is kept with the location, the map says it was
+    Two mistakes are corrected (ADR 0013). A swap: the published point is outside the UK,
+    the same numbers the other way round fall inside the UK, the country is GBR and the
+    postcode is a UK postcode. A missing minus sign: the published longitude is positive
+    and outside the UK, the same point west of the Greenwich meridian is on the UK's land
+    or within 2 km of its coast, the country is GBR and the postcode is a UK postcode or
+    none is given. The published point is kept with the location, the map says it was
     corrected, and the operator's findings record it. Without this decision such locations
     are left off the map.
     """
 
     decided: dt.date = Field(description="Date the owner made the decision (YYYY-MM-DD).")
-    basis: NeutralText = Field(description="Why swapped coordinates may be corrected.")
+    basis: NeutralText = Field(description="Why obviously wrong coordinates may be corrected.")
 
 
 # OCPI 2.2.1 EVSE statuses, which a non-standard reading can never replace.

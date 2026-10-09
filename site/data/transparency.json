@@ -192,7 +192,7 @@
       "missing_publish_flag": null,
       "swapped_coordinates": {
         "decided": "2026-10-09",
-        "basis": "Where a location's latitude and longitude are obviously the wrong way round, the repository owner decided to show it in the right place rather than leave it off the map, with the operator's own figures kept and the correction shown on the map and recorded in the findings below."
+        "basis": "Where a location's latitude and longitude are obviously the wrong way round, the repository owner decided to show it in the right place rather than leave it off the map, with the operator's own figures kept and the correction shown on the map and recorded in the findings below. On the same day the owner decided a longitude obviously missing its minus sign is corrected the same way."
       },
       "nonstandard_statuses": null,
       "relay": null,
@@ -272,7 +272,7 @@
           "kind": "data_quality",
           "kind_label": "Data quirk",
           "summary": "One location, \"UoL MSCP 1\" in Leeds (postcode given as \"N/A\"), has longitude 1.551283, which is in the North Sea. Leeds is at about longitude -1.55, west of the Greenwich meridian, so the minus sign appears to be missing.",
-          "handling": "Left off the map and listed in the manifest as not mapped. Until 2026-10-09 it was shown in the sea, because it fell inside the map's old latitude and longitude limits. Only latitude and longitude the wrong way round are corrected, not a missing sign.",
+          "handling": "Until 2026-10-09 it was shown in the sea, because it fell inside the map's old latitude and longitude limits. By the repository owner's decision (swapped_coordinates above), it is now shown with the minus sign added, and its details on the map say so and give the operator's own figures. The manifest lists it as corrected.",
           "evidence_url": "https://api.clenergy.online/development/pcpr/locations",
           "status": "open",
           "resolved_date": null
@@ -343,7 +343,10 @@
       },
       "attribution": "Contains data from GeniePoint published under the Public Charge Point Regulations 2023, used in line with the Open Government Licence v3.0.",
       "missing_publish_flag": null,
-      "swapped_coordinates": null,
+      "swapped_coordinates": {
+        "decided": "2026-10-09",
+        "basis": "Where a location's longitude is obviously missing its minus sign, or its latitude and longitude are obviously the wrong way round, the repository owner decided to show it in the right place rather than leave it off the map, with the operator's own figures kept and the correction shown on the map and recorded in the findings below."
+      },
       "nonstandard_statuses": null,
       "relay": {
         "decided": "2026-10-08",
@@ -426,7 +429,7 @@
           "kind": "data_quality",
           "kind_label": "Data quirk",
           "summary": "One location, \"Cheshire East Council - Crewe Civic\" (postcode CW1 2JZ), has longitude 2.444352, which is east of the UK. Its postcode is in Crewe, west of the Greenwich meridian.",
-          "handling": "Left off the map and listed in the manifest as not mapped. Coordinates are never corrected by this project.",
+          "handling": "Until 2026-10-09 it was left off the map. By the repository owner's decision (swapped_coordinates above), it is now shown with the minus sign added, and its details on the map say so and give the operator's own figures. The manifest lists it as corrected.",
           "evidence_url": "https://opendata.geniepoint.co.uk/locations",
           "status": "open",
           "resolved_date": null

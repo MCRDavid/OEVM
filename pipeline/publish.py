@@ -18,8 +18,9 @@ Rules:
   left off the map and counted.
   Operator data is not corrected, with one exception the owner decides per operator
   (swapped_coordinates in the operator file, ADR 0013): a point whose latitude and
-  longitude are obviously the wrong way round is swapped back, the published point is
-  kept in the detail file, and the map says so.
+  longitude are obviously the wrong way round is swapped back, and a longitude obviously
+  missing its minus sign gets it back. The published point is kept in the detail file,
+  and the map says so.
 - Every file is validated against schema/published.py before it is written.
 - The committed site/ folder is never written to; the deploy step copies site/ and adds
   this output.
@@ -37,6 +38,7 @@ from decimal import ROUND_HALF_UP, Decimal
 from pathlib import Path
 
 from adapters.ocpi_221 import AdapterResult
+from pipeline.geography import place_in_uk
 from pipeline.health import in_uk
 from pipeline.plans import load_providers
 from pipeline.pricing import location_summary, plan_fee_text, plan_price_text
@@ -69,6 +71,12 @@ SWAP_NOTE = (
     "The operator published this location's latitude and longitude the wrong way round, "
     "which put it outside the UK. This map shows it with the two swapped back; the "
     "operator's own figures are latitude {lat} and longitude {lon}."
+)
+
+SIGN_NOTE = (
+    "The operator published this location's longitude without its minus sign, which put it "
+    "outside the UK. This map shows it with the minus sign added; the operator's own "
+    "figures are latitude {lat} and longitude {lon}."
 )
 
 LICENCE_NOTE = (
@@ -274,6 +282,42 @@ def swapped_back(location: Location, config: OperatorConfig) -> Location | None:
     return moved if in_uk(moved) else None
 
 
+def sign_restored(location: Location, config: OperatorConfig) -> Location | None:
+    """The location with a minus sign added to its longitude, if the owner allows it for
+    this operator and the missing sign is obvious: the published longitude is positive and
+    the point is outside the UK, the same point west of the Greenwich meridian is on the
+    UK's land or within 2 km of its coast (the wider reach for small islands is not used
+    here), the country is GBR, and the postcode is a UK postcode or none is given (such
+    as "N/A"). A location with a postcode from another country is never moved."""
+    if config.swapped_coordinates is None or in_uk(location):
+        return None
+    postcode = (location.address.postal_code or "").strip()
+    has_postcode = any(c.isdigit() for c in postcode)
+    if location.address.country != "GBR" or (has_postcode and not UK_POSTCODE.match(postcode)):
+        return None
+    published = location.coordinates
+    if published.longitude <= 0:
+        return None
+    if not place_in_uk(published.latitude, -published.longitude):
+        return None
+    flipped = Coordinates(latitude=published.latitude, longitude=-published.longitude)
+    return location.model_copy(update={"coordinates": flipped})
+
+
+def corrected_coordinates(
+    location: Location, config: OperatorConfig
+) -> tuple[Location, CoordinatesCorrection] | None:
+    """The location moved back into the UK and a note saying how, or None if neither an
+    obvious swap nor an obviously missing minus sign explains why it is outside."""
+    published = location.coordinates
+    figures = {"lat": published.latitude, "lon": published.longitude}
+    for correct, note in ((swapped_back, SWAP_NOTE), (sign_restored, SIGN_NOTE)):
+        moved = correct(location, config)
+        if moved is not None:
+            return moved, CoordinatesCorrection(published=published, note=note.format(**figures))
+    return None
+
+
 def publish(
     results: list[AdapterResult],
     operators: dict[str, OperatorConfig],
@@ -302,17 +346,12 @@ def publish(
         for location in sorted(result.locations, key=lambda loc: loc.id):
             correction = None
             if not in_uk(location):
-                moved = swapped_back(location, config)
-                if moved is None:
+                fixed = corrected_coordinates(location, config)
+                if fixed is None:
                     not_mapped.append(location.id)
                     continue
-                published = location.coordinates
-                correction = CoordinatesCorrection(
-                    published=published,
-                    note=SWAP_NOTE.format(lat=published.latitude, lon=published.longitude),
-                )
+                location, correction = fixed
                 corrected.append(location.id)
-                location = moved
             key = location_key(location.id)
             if key in details:
                 raise PublishError(f"two locations share the detail file name {key}")
@@ -392,10 +431,6 @@ def publish(
         )
     for operator_id, entry in entries.items():
         left_off = f", {entry.not_mapped} left off (outside the UK)" if entry.not_mapped else ""
-        swapped = (
-            f", {entry.corrected} with latitude and longitude swapped back"
-            if entry.corrected
-            else ""
-        )
+        swapped = f", {entry.corrected} with coordinates corrected" if entry.corrected else ""
         report.append(f"  {operator_id}: {entry.mapped} locations mapped{left_off}{swapped}")
     return Published(manifest=manifest, report=report)
