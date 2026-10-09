@@ -67,6 +67,14 @@ attribution: null
 engagement:
   status: unknown
   evidence: []
+  log:
+    - date: 2026-10-09
+      action: page_checked
+      summary: >-
+        Shell's open data request form was checked in a browser by the repository owner.
+        Its network choices are All Networks, Shell Recharge and ubitricity; Community by
+        Shell Recharge is not named. No page of its own about open data was found.
+      evidence_url: https://www.shell.co.uk/electric-vehicle-charging/shell-recharge-open-data-request.html
 access_requested: null
 access_granted: null
 sources:
