@@ -130,6 +130,7 @@ export function tariffSection(detail) {
       option.original_name
         ? h("p", { className: "hint", text: `Operator's name for it: ${option.original_name}` })
         : null,
+      option.published_by ? h("p", { className: "hint", text: `Published in ${option.published_by}'s tariff data.` }) : null,
       option.connectors < total
         ? h("p", { className: "hint", text: `Listed for ${option.connectors} of ${total} connectors.` })
         : null,
@@ -176,7 +177,7 @@ function cheapestLine(detail, plans, label) {
   const what =
     best.kind === "plan"
       ? `${best.item.price_text}, with ${best.item.name} from ${best.item.provider} (${best.item.fee_text.toLowerCase()})`
-      : `the operator's ${best.item.name ? `"${best.item.name}" ` : ""}tariff, ${best.item.text}`;
+      : `${best.item.published_by ? `${best.item.published_by}'s` : "the operator's"} ${best.item.name ? `"${best.item.name}" ` : ""}tariff, ${best.item.text}`;
   return h("p", { className: "cheapest", text: `${label}: ${what}.` });
 }
 
@@ -325,6 +326,7 @@ export function renderDetail(detail, { repository, plans = [], mine = new Set(),
   report.searchParams.set("template", "correction.yml");
   report.searchParams.set("where", location.id);
   const provenance = location.provenance ?? {};
+  const sources = detail.tariff_sources ?? [];
   return [
     h("h2", { id: "detail-heading", tabindex: "-1", text: location.name || "Charger location" }),
     h("p", { className: "operator", text: location.operator?.name ?? "Operator not given" }),
@@ -336,12 +338,15 @@ export function renderDetail(detail, { repository, plans = [], mine = new Set(),
     ...statusSection(detail, { hideOut, onHideOut }),
     h("h3", { text: "Connectors" }),
     items.length ? h("ul", { className: "connectors" }, items) : h("p", { text: "No charge points listed." }),
+    ...sources.map((source) => h("p", { className: "hint related", text: source.note })),
     ...tariffSection(detail),
     ...plansSection(detail, plans, mine),
     h(
       "p",
       { className: "hint" },
-      "Status and prices are as the operator published them when last fetched, and may have changed. Always check at the charger.",
+      sources.length
+        ? "Status and prices are as published in the feeds named below when last fetched, and may have changed. Always check at the charger."
+        : "Status and prices are as the operator published them when last fetched, and may have changed. Always check at the charger.",
     ),
     h("h3", { text: "Where this comes from" }),
     h("p", { text: detail.attribution }),
@@ -354,6 +359,18 @@ export function renderDetail(detail, { repository, plans = [], mine = new Set(),
       detail.licence_url ? safeLink(detail.licence_url, detail.licence) : detail.licence,
       ".",
     ),
+    ...sources.flatMap((source) => [
+      h("p", { text: source.attribution }),
+      h(
+        "p",
+        {},
+        `Tariffs marked as published in ${source.name}'s tariff data were fetched ${formatDateTime(source.fetched_at)} from `,
+        safeLink(source.source_url, `${source.name}'s tariff feed`),
+        ". Licence: ",
+        source.licence_url ? safeLink(source.licence_url, source.licence) : source.licence,
+        ".",
+      ),
+    ]),
     h(
       "ul",
       { className: "detail-links" },

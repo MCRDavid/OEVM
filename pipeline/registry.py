@@ -3,7 +3,8 @@
     uv run python -m pipeline.registry --validate
 
 Checks every operator file against schema.operator.OperatorConfig, checks that
-each id matches its file name and that any evidence files exist, then prints a
+each id matches its file name, that any evidence files exist and that any
+tariffs_from decision names operators on the same feed host, then prints a
 summary. Exits with status 1 if anything is wrong.
 
 Files whose names start with "_" (such as _template.yaml) are not operators.
@@ -13,6 +14,7 @@ import argparse
 import datetime as dt
 import sys
 from pathlib import Path
+from urllib.parse import urlsplit
 
 import yaml
 from pydantic import ValidationError
@@ -92,9 +94,35 @@ def load_registry(directory: Path = OPERATORS_DIR) -> dict[str, OperatorConfig]:
                 problems.append(f"{path.name}: evidence file {file} does not exist")
         operators[config.id] = config
 
+    problems += _related_problems(operators)
     if problems:
         raise RegistryError(problems)
     return operators
+
+
+def feed_hosts(config: OperatorConfig) -> set[str]:
+    """The hosts this operator's feeds are published on, from its own URLs."""
+    urls = [endpoint.url for endpoint in config.endpoints.values()]
+    if config.base_url != "unknown":
+        urls.append(config.base_url)
+    return {urlsplit(url).hostname for url in urls} - {None}
+
+
+def _related_problems(operators: dict[str, OperatorConfig]) -> list[str]:
+    """Check each tariffs_from decision names known operators on the same feed host."""
+    problems = []
+    for config in operators.values():
+        if config.tariffs_from is None:
+            continue
+        for other in config.tariffs_from.operators:
+            if other not in operators:
+                problems.append(f"{config.id}.yaml: tariffs_from names unknown operator {other!r}")
+            elif not feed_hosts(config) & feed_hosts(operators[other]):
+                problems.append(
+                    f"{config.id}.yaml: tariffs_from names {other!r}, whose feeds are not on "
+                    "the same host as this operator's"
+                )
+    return problems
 
 
 def warnings_for(config: OperatorConfig, today: dt.date | None = None) -> list[str]:
@@ -154,6 +182,13 @@ def summary(operators: dict[str, OperatorConfig], today: dt.date | None = None) 
     ]
     if relayed:
         lines += ["Enabled operators fetched through the relay: " + ", ".join(relayed)]
+    related = [
+        f"{c.id} (from {', '.join(c.tariffs_from.operators)})"
+        for c in operators.values()
+        if c.enabled and c.tariffs_from
+    ]
+    if related:
+        lines += ["Enabled operators priced from related operators' tariffs: " + ", ".join(related)]
 
     warnings = [w for c in operators.values() for w in warnings_for(c, today)]
     if warnings:

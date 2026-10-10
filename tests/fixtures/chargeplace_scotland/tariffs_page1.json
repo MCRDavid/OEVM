@@ -1,0 +1,204 @@
+{
+  "request": {
+    "method": "GET",
+    "url": "https://info.smartcharging.uk/public_feed/locations/2463/tariffs"
+  },
+  "response": {
+    "status_code": 200,
+    "headers": {
+      "content-type": "application/json",
+      "x-total-count": "6",
+      "x-limit": "6"
+    },
+    "body": {
+      "status_code": 1000,
+      "data": [
+        {
+          "country_code": "GB",
+          "party_id": "CPS",
+          "id": "0533b535-f431-4efc-990e-5118d55b0e8d",
+          "currency": "GBP",
+          "elements": [
+            {
+              "price_components": [
+                {
+                  "type": "ENERGY",
+                  "price": 0.35,
+                  "vat": 20,
+                  "step_size": 1
+                }
+              ],
+              "restrictions": null
+            }
+          ],
+          "last_updated": "2024-11-25T10:07:10",
+          "min_price": {
+            "excl_vat": 0.83,
+            "incl_vat": 1
+          }
+        },
+        {
+          "country_code": "GB",
+          "party_id": "CPS",
+          "id": "1445cb62-35cc-439f-afde-898178e8e093",
+          "currency": "GBP",
+          "elements": [
+            {
+              "price_components": [
+                {
+                  "type": "TIME",
+                  "price": 4,
+                  "vat": 20,
+                  "step_size": 15000
+                }
+              ],
+              "restrictions": {
+                "min_duration": 15000
+              }
+            },
+            {
+              "price_components": [
+                {
+                  "type": "ENERGY",
+                  "price": 0.625,
+                  "vat": 20,
+                  "step_size": 1
+                }
+              ],
+              "restrictions": null
+            }
+          ],
+          "last_updated": "2025-08-02T00:01:15",
+          "min_price": {
+            "excl_vat": 4.17,
+            "incl_vat": 5
+          }
+        },
+        {
+          "country_code": "GB",
+          "party_id": "CPS",
+          "id": "9fc8cd96-9710-419d-9c28-61c173a37240",
+          "currency": "GBP",
+          "elements": [
+            {
+              "price_components": [
+                {
+                  "type": "FLAT",
+                  "price": 0,
+                  "vat": 20,
+                  "step_size": 1
+                }
+              ],
+              "restrictions": null
+            }
+          ],
+          "last_updated": "2024-11-25T10:06:22"
+        },
+        {
+          "country_code": "GB",
+          "party_id": "CPS",
+          "id": "bc7334e2-0c50-4f8b-9377-fcf55ccb4f37",
+          "currency": "GBP",
+          "elements": [
+            {
+              "price_components": [
+                {
+                  "type": "FLAT",
+                  "price": 25,
+                  "vat": 20,
+                  "step_size": 1
+                }
+              ],
+              "restrictions": {
+                "min_duration": 29700
+              }
+            },
+            {
+              "price_components": [
+                {
+                  "type": "ENERGY",
+                  "price": 0.467,
+                  "vat": 20,
+                  "step_size": 1
+                }
+              ],
+              "restrictions": null
+            }
+          ],
+          "last_updated": "2026-07-15T00:01:15",
+          "min_price": {
+            "excl_vat": 0.83,
+            "incl_vat": 1
+          }
+        },
+        {
+          "country_code": "GB",
+          "party_id": "CPS",
+          "id": "c1fa5d96-4609-44e5-a2a8-73af60aeb6fa",
+          "currency": "GBP",
+          "elements": [
+            {
+              "price_components": [
+                {
+                  "type": "TIME",
+                  "price": 16.667,
+                  "vat": 20,
+                  "step_size": 3600
+                }
+              ],
+              "restrictions": {
+                "min_duration": 4200
+              }
+            },
+            {
+              "price_components": [
+                {
+                  "type": "ENERGY",
+                  "price": 0.625,
+                  "vat": 20,
+                  "step_size": 1
+                }
+              ],
+              "restrictions": null
+            }
+          ],
+          "last_updated": "2024-11-25T10:07:13",
+          "min_price": {
+            "excl_vat": 4.17,
+            "incl_vat": 5
+          }
+        },
+        {
+          "country_code": "GB",
+          "party_id": "CPS",
+          "id": "d8ac3eeb-5507-4175-8819-d4a977c36e43",
+          "currency": "GBP",
+          "elements": [
+            {
+              "price_components": [
+                {
+                  "type": "ENERGY",
+                  "price": 0.175,
+                  "vat": 20,
+                  "step_size": 1
+                }
+              ],
+              "restrictions": null
+            }
+          ],
+          "last_updated": "2025-01-22T00:00:46",
+          "min_price": {
+            "excl_vat": 1.25,
+            "incl_vat": 1.5
+          }
+        }
+      ],
+      "status_message": "Success",
+      "timestamp": "2026-10-10T08:16:47",
+      "meta": {
+        "total": 6,
+        "limit": null
+      }
+    }
+  }
+}

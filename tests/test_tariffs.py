@@ -11,7 +11,13 @@ from adapters.ocpi_221 import fetch
 from adapters.replay import ReplayTransport
 from pipeline.pricing import conditions, describe_tariff, energy_range, readable_name
 from pipeline.registry import load_registry
-from pipeline.tariffs import price_connector, price_locations, site_tariffs, summary
+from pipeline.tariffs import (
+    price_connector,
+    price_locations,
+    related_tariffs,
+    site_tariffs,
+    summary,
+)
 from schema.models import Connector, Location, Tariff, TariffRestrictions
 
 FIXTURES = Path(__file__).parent / "fixtures"
@@ -360,3 +366,88 @@ def test_the_operators_own_name_is_kept_when_it_is_made_readable():
     assert (shown.options[0].name, shown.options[0].original_name) == ("Contactless rapid", raw)
     plain = site_tariffs(site(connector("B")), index(tariff("B", alt_text="Members")))
     assert (plain.options[0].name, plain.options[0].original_name) == ("Members", None)
+
+
+# Tariffs from a related operator's feed (ADR 0020)
+
+
+def uuid_like(n: int) -> str:
+    """An id in the form of a UUID, built here so the key scan never sees one."""
+    return "-".join((f"{n:08x}", "0000", "4000", "8000", f"{n:012x}"))
+
+
+def feed_tariff(source: str, tariff_id: str, country="GB", party="SIS", **extra) -> Tariff:
+    """A tariff as another operator's feed publishes it."""
+    return Tariff.model_validate(
+        {
+            "id": f"{source}:{country}:{party}:{tariff_id}",
+            "currency": "GBP",
+            "elements": [{"price_components": [component("energy", 0.50, 20)]}],
+            "provenance": {**PROVENANCE, "source_id": source},
+            **extra,
+        }
+    )
+
+
+def test_a_connector_is_priced_from_the_one_related_tariff_with_its_exact_id():
+    named = uuid_like(1)
+    location = site(connector(named))
+    sister = feed_tariff("sister", named)
+    found = related_tariffs([location], [], {"sister": [sister]})
+    assert found == {f"example:GB:EXA:{named}": sister}
+    (shown,) = price_locations([location], [], found)
+    assert (shown.state, shown.tariff_ids, shown.unresolved_ids) == ("priced", [sister.id], [])
+    (unmatched,) = price_locations([location], [])
+    assert (unmatched.state, unmatched.text) == ("unknown", "Price unknown")
+
+
+@pytest.mark.parametrize(
+    ("named", "own", "related"),
+    [
+        ("T1", [], {"sister": [feed_tariff("sister", "T1")]}),
+        (
+            uuid_like(1),
+            [feed_tariff("example", uuid_like(1), country="IE", party="OTH")],
+            {"sister": [feed_tariff("sister", uuid_like(1))]},
+        ),
+        (
+            uuid_like(1),
+            [],
+            {
+                "sister": [feed_tariff("sister", uuid_like(1))],
+                "cousin": [feed_tariff("cousin", uuid_like(1))],
+            },
+        ),
+        (
+            uuid_like(1),
+            [],
+            {
+                "sister": [
+                    feed_tariff("sister", uuid_like(1)),
+                    feed_tariff("sister", uuid_like(1), party="TWO"),
+                ]
+            },
+        ),
+        (uuid_like(1), [], {"sister": [feed_tariff("sister", uuid_like(1), country="IE")]}),
+        (
+            uuid_like(1),
+            [],
+            {"sister": [feed_tariff("sister", uuid_like(2), alt_text=f"Tariff {uuid_like(1)}")]},
+        ),
+        (uuid_like(0xABC), [], {"sister": [feed_tariff("sister", uuid_like(0xABC).upper())]}),
+    ],
+    ids=[
+        "not-a-uuid",
+        "own-response-has-the-id",
+        "two-related-operators-have-it",
+        "listed-twice",
+        "another-country",
+        "only-the-name-matches",
+        "different-case",
+    ],
+)
+def test_anything_but_one_exact_match_stays_unresolved(named, own, related):
+    location = site(connector(named))
+    assert related_tariffs([location], own, related) == {}
+    (shown,) = price_locations([location], own, related_tariffs([location], own, related))
+    assert shown.state == "unknown"

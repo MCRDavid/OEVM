@@ -28,8 +28,9 @@ export function needsSubscription(plan) {
   return !finite(plan.monthly_fee) || plan.monthly_fee > 0;
 }
 
-// The cheapest energy price at a site among the operator's own tariffs (from its feed,
-// including VAT) and the fixed-price plans given. Discounts are skipped: the price they
+// The cheapest energy price at a site among the tariffs listed there (from the operator's
+// feed or, by the owner's decision, a related operator's (ADR 0020), including VAT) and
+// the fixed-price plans given. Discounts are skipped: the price they
 // are taken off is not published. Returns { kind: "tariff" | "plan", item } or null.
 export function cheapest(tariffOptions, plans) {
   const candidates = [];

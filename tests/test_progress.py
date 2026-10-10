@@ -321,9 +321,14 @@ def test_live_runs_print_progress(monkeypatch, capsys, no_relay):
     monkeypatch.setattr(run, "run_operator", fake)
     assert run.main(["--live", "all"]) == run.EXIT_SOME_FAILED
     shown = capsys.readouterr()
-    enabled = sorted(i for i, c in load_registry().items() if c.enabled)
-    # Every enabled operator today is on a host of its own, so each is its own group.
-    assert f"no two groups share a host: {'; '.join(enabled)}" in shown.out
+    registry = load_registry()
+    enabled = sorted(i for i, c in registry.items() if c.enabled)
+    # PoGo Charge, Evolt Network and ChargePlace Scotland share a host, so they are one
+    # group; every other enabled operator today is on a host of its own.
+    groups = run.host_groups([registry[i] for i in enabled])
+    assert ["chargeplace_scotland", "evolt", "pogo_charge"] in [[c.id for c in g] for g in groups]
+    listed = "; ".join(", ".join(c.id for c in group) for group in groups)
+    assert f"no two groups share a host: {listed}" in shown.out
     assert "jolt: failed after 0 s (the error follows)" in shown.out
     assert "Error: gave up on the Jolt feed: HTTP 503" in shown.err
     assert f"{len(enabled) - 1} fetched, 1 failed (jolt)" in shown.out

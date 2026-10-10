@@ -28,3 +28,10 @@ indicative price per kWh including VAT.
   for filters and map labels; the full text explains the price.
 - Run reports now include a price summary and the share of connectors with a tariff that
   was found, a feed health measure the blueprint lists for task 8.
+
+## Amendment, 10 October 2026: tariffs in a related operator's feed
+
+Where the owner records `tariffs_from` in an operator file, a tariff id that only a related
+operator's feed holds can be resolved from that feed, by exact id only and only when that
+operator was fetched in the same run. The tariff keeps its own provenance and the map says
+which feed it came from. See ADR 0020.
