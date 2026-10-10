@@ -40,6 +40,14 @@ they already have, and for a calculator showing when a paid plan pays for itself
   (docs/PRIVACY_AND_COOKIES.md, rule 4). They are never sent anywhere.
 - **The cheapest line compares like with like:** energy prices that include VAT, from the
   operator's tariffs and from fixed-price plans. Other charges are not compared.
+- **Cheapest first (amended 10 October 2026, at the owner's request).** A site's tariffs
+  are listed by price per kWh: confirmed free, then prices including VAT, then prices
+  excluding VAT or with VAT not stated, then tariffs with no energy price, then unknown
+  prices (`pipeline/tariffs.py`). Plans are split into "No subscription needed" and "With
+  a paid subscription" (a monthly fee, or a fee not published), each listed with fixed
+  prices cheapest first, then discounts largest first, then plans with no price
+  (`site/assets/js/plans.js`). Operator feeds cannot say whether a tariff needs a paid
+  subscription (OCPI 2.2.1 has no field for it), so the split applies to plans only.
 
 ## Needs testing
 

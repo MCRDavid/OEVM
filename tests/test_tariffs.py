@@ -248,12 +248,12 @@ def test_every_listed_tariff_is_shown_not_only_the_preferred_one():
     member = tariff("M", [energy(0.30)], type_="regular", alt_text="Members")
     shown = site_tariffs(site(connector("A", "M", "GONE")), index(ad_hoc, member))
     assert [(o.name, o.kind, o.text) for o in shown.options] == [
-        ("Contactless", "Pay at the charger, for example by card", "48p per kWh including VAT"),
         (
             "Members",
             "With an account, app or card from a charging provider",
             "36p per kWh including VAT",
         ),
+        ("Contactless", "Pay at the charger, for example by card", "48p per kWh including VAT"),
         (None, "How to pay is not stated", "Price unknown"),
     ]
     assert shown.options[2].state == "unknown" and "could not be read" in shown.options[2].reason
@@ -276,10 +276,28 @@ def test_time_and_day_differences_are_named():
     )
     assert option.varies == "Price depends on time of day and day of the week."
     assert shown.options[1].varies is None
+    assert shown.options[1].text == "48p per kWh including VAT"
     assert [o.connectors for o in shown.options] == [1, 1] and shown.connectors == 2
     assert shown.comparison.startswith("Lowest energy price listed here: 30p per kWh")
     assert "including VAT at some times (how to pay" not in shown.comparison
     assert "including VAT at some times." in shown.comparison
+
+
+def test_tariffs_are_listed_cheapest_first():
+    dear = tariff("D", [energy(0.60)])
+    cheap = tariff("C", [energy(0.30)])
+    no_vat = tariff("N", [energy(0.10, vat=None)])
+    unreadable = "GONE"
+    euro = tariff("E", currency="EUR")
+    flat = tariff("F", [{"price_components": [component("flat", 1.00, 20)]}])
+    shown = site_tariffs(
+        site(connector("D", unreadable, "E", "F", "N", "C")),
+        index(dear, cheap, no_vat, euro, flat),
+    )
+    order = [o.tariff_id.rsplit(":", 1)[1] for o in shown.options]
+    # Including VAT by price, then the price whose VAT is not stated (never mixed in with
+    # them), then priced with no energy price, then unknown in the order first listed.
+    assert order == ["C", "D", "N", "F", "GONE", "E"]
 
 
 def test_prices_on_different_vat_bases_are_never_compared():

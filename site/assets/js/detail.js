@@ -3,7 +3,7 @@
 import { h, safeLink } from "./dom.js";
 import { STATUS_LABELS, formatDateTime, formatKw, plugName } from "./format.js";
 import { STATUS_GROUPS, asOfText, chips, countByGroup, groupOf, summaryText } from "./live.js";
-import { breakEven, breakEvenText, cheapest, discounted, plansFor } from "./plans.js";
+import { breakEven, breakEvenText, cheapest, discounted, needsSubscription, plansFor } from "./plans.js";
 
 const WEEKDAYS = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"];
 
@@ -137,6 +137,10 @@ export function tariffSection(detail) {
   );
   return [
     h("h3", { text: `Tariffs listed here (${options.length})` }),
+    h("p", {
+      className: "hint",
+      text: "Cheapest first, by price per kWh. Prices excluding VAT, or with VAT not stated, come after those including VAT.",
+    }),
     detail.tariff_comparison ? h("p", { text: detail.tariff_comparison }) : null,
     h("ul", { className: "tariffs", "aria-label": "Tariffs listed here" }, items),
   ].filter(Boolean);
@@ -276,24 +280,33 @@ function calculator(detail, plans) {
 // published energy price here, and the calculator.
 export function plansSection(detail, allPlans, mine = new Set()) {
   const operatorId = detail.location?.provenance?.source_id;
-  const plans = plansFor(operatorId, allPlans, mine);
+  const plans = plansFor(operatorId, allPlans);
+  if (!plans.length) return [];
   const yours = plans.filter((plan) => mine.has(plan.id));
-  const parts = [
+  const free = plans.filter((plan) => !needsSubscription(plan));
+  const paid = plans.filter(needsSubscription);
+  const list = (label, items) =>
+    h("ul", { className: "tariffs plans", "aria-label": label }, items.map((p) => planItem(p, mine)));
+  return [
+    h("h3", { text: `Other ways to pay here (${plans.length})` }),
+    h("p", {
+      className: "hint",
+      text: "Plans copied by hand from each provider's own page, on the date shown, cheapest first. Fixed prices per kWh come first, then discounts from largest to smallest: discounts are not turned into prices, because the price they come off is often shown only in the provider's app. Check with the provider before signing up.",
+    }),
     yours.length ? cheapestLine(detail, yours, "Lowest published energy price here with your plans") : null,
     cheapestLine(detail, plans, "Lowest published energy price here with any listed plan"),
-  ];
-  if (plans.length) {
-    parts.unshift(
-      h("h3", { text: `Other ways to pay here (${plans.length})` }),
-      h("p", {
-        className: "hint",
-        text: "Plans copied by hand from each provider's own page, on the date shown. Discounts are not turned into prices, because the price they come off is often shown only in the provider's app. Check with the provider before signing up.",
-      }),
-    );
-    parts.push(h("ul", { className: "tariffs plans", "aria-label": "Other ways to pay here" }, plans.map((p) => planItem(p, mine))));
-    parts.push(calculator(detail, plans));
-  }
-  return plans.length ? parts.filter(Boolean) : [];
+    ...(free.length
+      ? [h("h4", { text: `No subscription needed (${free.length})` }), list("No subscription needed", free)]
+      : []),
+    ...(paid.length
+      ? [
+          h("h4", { text: `With a paid subscription (${paid.length})` }),
+          h("p", { className: "hint", text: "These prices need a monthly subscription. Its cost is shown with each plan." }),
+          list("With a paid subscription", paid),
+        ]
+      : []),
+    calculator(detail, plans),
+  ].filter(Boolean);
 }
 
 export function renderDetail(detail, { repository, plans = [], mine = new Set(), hideOut = false, onHideOut = null }) {

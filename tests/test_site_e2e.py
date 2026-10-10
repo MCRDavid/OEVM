@@ -282,8 +282,12 @@ def test_details_show_plans_from_providers_pages_and_the_visitors_own(visit):
     page = v.open("?view=list", map_ready=False)
     expect(page.locator("#list-items li")).to_have_count(LOCATIONS)
     _open_details_containing(page, "Other ways to pay here")
-    plans = page.text_content("ul.plans")
+    plans = " ".join(page.locator("ul.plans").all_text_contents())
     assert "per kWh" in plans and "checked 9 Oct 2026" in plans
+    headings = page.locator("#detail-body h4").all_text_contents()
+    assert headings and all(
+        t.startswith(("No subscription needed", "With a paid subscription")) for t in headings
+    )
     assert "You have this plan" not in plans
     page.keyboard.press("Escape")
     open_filters(page)
@@ -383,7 +387,7 @@ def test_ticking_a_plan_redraws_open_details_and_a_failed_list_keeps_saved_plans
     open_filters(page)
     first = page.locator("#my-plans input[name=plan]").first
     plan_name = first.evaluate("box => box.parentElement.textContent")
-    shown = page.locator("ul.plans").text_content()
+    shown = " ".join(page.locator("ul.plans").all_text_contents())
     covering = [box for box in page.locator("#my-plans input[name=plan]").all()]
     for box in covering:
         label = box.evaluate("box => box.parentElement.textContent").split(":")[0].strip()
