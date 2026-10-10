@@ -531,6 +531,11 @@ body[data-view="list"] .map-view {
   font-size: 1.05rem;
 }
 
+.detail h4 {
+  margin: 0.8rem 0 0.3rem;
+  font-size: 0.95rem;
+}
+
 .detail p {
   margin: 0.3rem 0;
 }
