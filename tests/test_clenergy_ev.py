@@ -33,7 +33,7 @@ def test_the_plain_wrapper_is_an_opt_in_setting():
     config = load_registry()["clenergy_ev"]
     assert config.response_envelope == "data_list"
     others = [c for c in load_registry().values() if c.id != "clenergy_ev"]
-    assert all(c.response_envelope == "ocpi" for c in others)
+    assert all(c.response_envelope != "data_list" for c in others)
     assert any("status_code" in finding.summary for finding in config.findings)
 
 

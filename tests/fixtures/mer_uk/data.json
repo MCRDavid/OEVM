@@ -1,0 +1,1686 @@
+{
+  "request": {
+    "method": "GET",
+    "url": "https://uk.mer.eco/wp-json/ozev/v1/data"
+  },
+  "response": {
+    "status_code": 200,
+    "headers": {
+      "content-type": "application/json; charset=UTF-8",
+      "link": "<https://uk.mer.eco/wp-json/>; rel=\"https://api.w.org/\""
+    },
+    "body": {
+      "data": {
+        "locations": {
+          "timestamp": "2026-10-10T02:22:02Z",
+          "data": [
+            {
+              "id": "2564",
+              "publish": true,
+              "name": "Sunderland Royal Hospital - Health and Fitness Centre Car Park",
+              "address": "Sunderland Royal Hospital, Kayll Road",
+              "city": "Sunderland",
+              "country": "GBR",
+              "coordinates": {
+                "latitude": "54.9013115",
+                "longitude": "-1.4086500"
+              },
+              "evses": [
+                {
+                  "uid": "10070",
+                  "status": "AVAILABLE",
+                  "capabilities": [
+                    "REMOTE_START_STOP_CAPABLE",
+                    "RFID_READER",
+                    "TOKEN_GROUP_CAPABLE",
+                    "CHARGING_PROFILE_CAPABLE"
+                  ],
+                  "connectors": [
+                    {
+                      "id": "10070",
+                      "standard": "IEC_62196_T2_COMBO",
+                      "format": "CABLE",
+                      "power_type": "DC",
+                      "max_voltage": 400,
+                      "max_amperage": 50,
+                      "max_electric_power": 24000,
+                      "tariff_ids": [
+                        "9e092ef59846e08d5cf85c0d3cead747"
+                      ],
+                      "terms_and_conditions": "https://uk.mer.eco/termsandconditions/",
+                      "last_updated": "2026-10-09T15:24:30Z"
+                    }
+                  ],
+                  "evse_id": "GB*MER*E005451*01",
+                  "status_schedule": [],
+                  "physical_reference": "…*MER*E005451*01",
+                  "last_updated": "2026-10-09T15:24:30Z"
+                },
+                {
+                  "uid": "10071",
+                  "status": "AVAILABLE",
+                  "capabilities": [
+                    "REMOTE_START_STOP_CAPABLE",
+                    "RFID_READER",
+                    "TOKEN_GROUP_CAPABLE",
+                    "CHARGING_PROFILE_CAPABLE"
+                  ],
+                  "connectors": [
+                    {
+                      "id": "10071",
+                      "standard": "IEC_62196_T2_COMBO",
+                      "format": "CABLE",
+                      "power_type": "DC",
+                      "max_voltage": 400,
+                      "max_amperage": 50,
+                      "max_electric_power": 24000,
+                      "tariff_ids": [
+                        "9e092ef59846e08d5cf85c0d3cead747"
+                      ],
+                      "terms_and_conditions": "https://uk.mer.eco/termsandconditions/",
+                      "last_updated": "2026-10-09T17:04:53Z"
+                    }
+                  ],
+                  "evse_id": "GB*MER*E005452*01",
+                  "status_schedule": [],
+                  "physical_reference": "…*MER*E005452*01",
+                  "last_updated": "2026-10-09T17:04:53Z"
+                },
+                {
+                  "uid": "10075",
+                  "status": "AVAILABLE",
+                  "capabilities": [
+                    "REMOTE_START_STOP_CAPABLE",
+                    "RFID_READER",
+                    "TOKEN_GROUP_CAPABLE",
+                    "CHARGING_PROFILE_CAPABLE"
+                  ],
+                  "connectors": [
+                    {
+                      "id": "10075",
+                      "standard": "IEC_62196_T2_COMBO",
+                      "format": "CABLE",
+                      "power_type": "DC",
+                      "max_voltage": 400,
+                      "max_amperage": 50,
+                      "max_electric_power": 24000,
+                      "tariff_ids": [
+                        "9e092ef59846e08d5cf85c0d3cead747"
+                      ],
+                      "terms_and_conditions": "https://uk.mer.eco/termsandconditions/",
+                      "last_updated": "2026-10-09T08:23:46Z"
+                    }
+                  ],
+                  "evse_id": "GB*MER*E005454*01",
+                  "status_schedule": [],
+                  "physical_reference": "…*MER*E005454*01",
+                  "last_updated": "2026-10-09T08:23:46Z"
+                },
+                {
+                  "uid": "10076",
+                  "status": "CHARGING",
+                  "capabilities": [
+                    "REMOTE_START_STOP_CAPABLE",
+                    "RFID_READER",
+                    "TOKEN_GROUP_CAPABLE",
+                    "CHARGING_PROFILE_CAPABLE"
+                  ],
+                  "connectors": [
+                    {
+                      "id": "10076",
+                      "standard": "IEC_62196_T2_COMBO",
+                      "format": "CABLE",
+                      "power_type": "DC",
+                      "max_voltage": 400,
+                      "max_amperage": 50,
+                      "max_electric_power": 24000,
+                      "tariff_ids": [
+                        "9e092ef59846e08d5cf85c0d3cead747"
+                      ],
+                      "terms_and_conditions": "https://uk.mer.eco/termsandconditions/",
+                      "last_updated": "2026-10-09T17:47:41Z"
+                    }
+                  ],
+                  "evse_id": "GB*MER*E005455*01",
+                  "status_schedule": [],
+                  "physical_reference": "…*MER*E005455*01",
+                  "last_updated": "2026-10-09T17:47:41Z"
+                },
+                {
+                  "uid": "10600",
+                  "status": "AVAILABLE",
+                  "capabilities": [
+                    "REMOTE_START_STOP_CAPABLE",
+                    "RFID_READER",
+                    "TOKEN_GROUP_CAPABLE",
+                    "RESERVABLE"
+                  ],
+                  "connectors": [
+                    {
+                      "id": "10600",
+                      "standard": "CHADEMO",
+                      "format": "SOCKET",
+                      "power_type": "DC",
+                      "max_voltage": 400,
+                      "max_amperage": 50,
+                      "max_electric_power": 24000,
+                      "tariff_ids": [
+                        "9e092ef59846e08d5cf85c0d3cead747"
+                      ],
+                      "terms_and_conditions": "https://uk.mer.eco/termsandconditions/",
+                      "last_updated": "2026-10-09T17:47:45Z"
+                    }
+                  ],
+                  "evse_id": "GB*MER*E005455*02",
+                  "status_schedule": [],
+                  "physical_reference": "…*MER*E005455*02",
+                  "last_updated": "2026-10-09T17:47:45Z"
+                }
+              ],
+              "directions": [
+                {
+                  "language": "en",
+                  "text": ""
+                }
+              ],
+              "operator": {
+                "name": "Mer"
+              },
+              "suboperator": {
+                "name": "Mer Fleet Services Ltd"
+              },
+              "owner": {
+                "name": "CHOICE Ltd"
+              },
+              "facilities": [],
+              "images": [],
+              "country_code": "GB",
+              "party_id": "MER",
+              "publish_allowed_to": null,
+              "postal_code": "SR4 7TP",
+              "related_locations": [],
+              "time_zone": "Europe/London",
+              "opening_times": {
+                "twentyfourseven": true
+              },
+              "charging_when_closed": true,
+              "energy_mix": {
+                "is_green_energy": false
+              },
+              "last_updated": "2026-10-09T17:47:45Z"
+            },
+            {
+              "id": "2061",
+              "publish": true,
+              "name": "East Riding of Yorkshire Council - Stamford Bridge",
+              "address": "Viking Road Car Park, Viking Road, Stamford B",
+              "city": "Stamford Bridge",
+              "country": "GBR",
+              "coordinates": {
+                "latitude": "53.9905054",
+                "longitude": "-0.9160366"
+              },
+              "evses": [
+                {
+                  "uid": "8267",
+                  "status": "AVAILABLE",
+                  "capabilities": [
+                    "DEBIT_CARD_PAYABLE",
+                    "REMOTE_START_STOP_CAPABLE",
+                    "RFID_READER",
+                    "TOKEN_GROUP_CAPABLE",
+                    "CREDIT_CARD_PAYABLE",
+                    "CHARGING_PROFILE_CAPABLE"
+                  ],
+                  "connectors": [
+                    {
+                      "id": "8267",
+                      "standard": "IEC_62196_T2",
+                      "format": "SOCKET",
+                      "power_type": "AC_1_PHASE",
+                      "max_voltage": 230,
+                      "max_amperage": 32,
+                      "max_electric_power": 7400,
+                      "tariff_ids": [
+                        "5bcaf2d6e51f2760c85e23d42801094c"
+                      ],
+                      "terms_and_conditions": "https://uk.mer.eco/termsandconditions/",
+                      "last_updated": "2026-10-09T16:54:06Z"
+                    }
+                  ],
+                  "evse_id": "GB*MER*E004465*01",
+                  "status_schedule": [],
+                  "physical_reference": "…*MER*E004465*01",
+                  "last_updated": "2026-10-09T16:54:06Z"
+                },
+                {
+                  "uid": "8268",
+                  "status": "BLOCKED",
+                  "capabilities": [
+                    "DEBIT_CARD_PAYABLE",
+                    "REMOTE_START_STOP_CAPABLE",
+                    "RFID_READER",
+                    "TOKEN_GROUP_CAPABLE",
+                    "CREDIT_CARD_PAYABLE",
+                    "CHARGING_PROFILE_CAPABLE"
+                  ],
+                  "connectors": [
+                    {
+                      "id": "8268",
+                      "standard": "IEC_62196_T2",
+                      "format": "SOCKET",
+                      "power_type": "AC_1_PHASE",
+                      "max_voltage": 230,
+                      "max_amperage": 32,
+                      "max_electric_power": 7400,
+                      "tariff_ids": [
+                        "5bcaf2d6e51f2760c85e23d42801094c"
+                      ],
+                      "terms_and_conditions": "https://uk.mer.eco/termsandconditions/",
+                      "last_updated": "2026-10-08T20:12:48Z"
+                    }
+                  ],
+                  "evse_id": "GB*MER*E004465*02",
+                  "status_schedule": [],
+                  "physical_reference": "…*MER*E004465*02",
+                  "last_updated": "2026-10-08T20:12:48Z"
+                }
+              ],
+              "directions": [
+                {
+                  "language": "en",
+                  "text": ""
+                }
+              ],
+              "operator": {
+                "name": "Mer"
+              },
+              "suboperator": {
+                "name": "Mer Fleet Services Ltd"
+              },
+              "owner": {
+                "name": "East Riding of Yorkshire Council"
+              },
+              "facilities": [],
+              "images": [],
+              "country_code": "GB",
+              "party_id": "MER",
+              "publish_allowed_to": null,
+              "postal_code": "YO41 1BS",
+              "related_locations": [],
+              "time_zone": "Europe/London",
+              "opening_times": {
+                "twentyfourseven": true
+              },
+              "charging_when_closed": true,
+              "energy_mix": {
+                "is_green_energy": false
+              },
+              "last_updated": "2026-10-09T16:54:06Z"
+            },
+            {
+              "id": "3931",
+              "publish": true,
+              "name": "The Story at Mount Oswald - Durham History Centre",
+              "address": "The Story at Mount Oswald, South Road",
+              "city": "Durham",
+              "country": "GBR",
+              "coordinates": {
+                "latitude": "54.7601816",
+                "longitude": "-1.5860039"
+              },
+              "evses": [
+                {
+                  "uid": "12735",
+                  "status": "AVAILABLE",
+                  "capabilities": [
+                    "DEBIT_CARD_PAYABLE",
+                    "REMOTE_START_STOP_CAPABLE",
+                    "RFID_READER",
+                    "TOKEN_GROUP_CAPABLE",
+                    "CREDIT_CARD_PAYABLE",
+                    "CHARGING_PROFILE_CAPABLE"
+                  ],
+                  "connectors": [
+                    {
+                      "id": "12735",
+                      "standard": "IEC_62196_T2",
+                      "format": "SOCKET",
+                      "power_type": "AC_1_PHASE",
+                      "max_voltage": 230,
+                      "max_amperage": 32,
+                      "max_electric_power": 7400,
+                      "tariff_ids": [
+                        "4aaf34b26ab42c5e864c7b3200fbf318"
+                      ],
+                      "terms_and_conditions": "https://uk.mer.eco/termsandconditions/",
+                      "last_updated": "2026-10-09T14:12:35Z"
+                    }
+                  ],
+                  "evse_id": "GB*MER*E006816*01",
+                  "status_schedule": [],
+                  "physical_reference": "…*MER*E006816*01",
+                  "last_updated": "2026-10-09T14:12:35Z"
+                },
+                {
+                  "uid": "12736",
+                  "status": "AVAILABLE",
+                  "capabilities": [
+                    "DEBIT_CARD_PAYABLE",
+                    "REMOTE_START_STOP_CAPABLE",
+                    "RFID_READER",
+                    "TOKEN_GROUP_CAPABLE",
+                    "CREDIT_CARD_PAYABLE",
+                    "CHARGING_PROFILE_CAPABLE"
+                  ],
+                  "connectors": [
+                    {
+                      "id": "12736",
+                      "standard": "IEC_62196_T2",
+                      "format": "SOCKET",
+                      "power_type": "AC_1_PHASE",
+                      "max_voltage": 230,
+                      "max_amperage": 32,
+                      "max_electric_power": 7400,
+                      "tariff_ids": [
+                        "4aaf34b26ab42c5e864c7b3200fbf318"
+                      ],
+                      "terms_and_conditions": "https://uk.mer.eco/termsandconditions/",
+                      "last_updated": "2026-10-06T06:40:21Z"
+                    }
+                  ],
+                  "evse_id": "GB*MER*E006817*01",
+                  "status_schedule": [],
+                  "physical_reference": "…*MER*E006817*01",
+                  "last_updated": "2026-10-06T06:40:21Z"
+                },
+                {
+                  "uid": "12737",
+                  "status": "AVAILABLE",
+                  "capabilities": [
+                    "DEBIT_CARD_PAYABLE",
+                    "REMOTE_START_STOP_CAPABLE",
+                    "RFID_READER",
+                    "TOKEN_GROUP_CAPABLE",
+                    "CREDIT_CARD_PAYABLE",
+                    "CHARGING_PROFILE_CAPABLE"
+                  ],
+                  "connectors": [
+                    {
+                      "id": "12737",
+                      "standard": "IEC_62196_T2",
+                      "format": "SOCKET",
+                      "power_type": "AC_1_PHASE",
+                      "max_voltage": 230,
+                      "max_amperage": 32,
+                      "max_electric_power": 7400,
+                      "tariff_ids": [
+                        "4aaf34b26ab42c5e864c7b3200fbf318"
+                      ],
+                      "terms_and_conditions": "https://uk.mer.eco/termsandconditions/",
+                      "last_updated": "2026-10-06T06:40:21Z"
+                    }
+                  ],
+                  "evse_id": "GB*MER*E006817*02",
+                  "status_schedule": [],
+                  "physical_reference": "…*MER*E006817*02",
+                  "last_updated": "2026-10-06T06:40:21Z"
+                },
+                {
+                  "uid": "12738",
+                  "status": "AVAILABLE",
+                  "capabilities": [
+                    "DEBIT_CARD_PAYABLE",
+                    "REMOTE_START_STOP_CAPABLE",
+                    "RFID_READER",
+                    "TOKEN_GROUP_CAPABLE",
+                    "CREDIT_CARD_PAYABLE",
+                    "CHARGING_PROFILE_CAPABLE"
+                  ],
+                  "connectors": [
+                    {
+                      "id": "12738",
+                      "standard": "IEC_62196_T2",
+                      "format": "SOCKET",
+                      "power_type": "AC_1_PHASE",
+                      "max_voltage": 230,
+                      "max_amperage": 32,
+                      "max_electric_power": 7400,
+                      "tariff_ids": [
+                        "4aaf34b26ab42c5e864c7b3200fbf318"
+                      ],
+                      "terms_and_conditions": "https://uk.mer.eco/termsandconditions/",
+                      "last_updated": "2026-10-06T06:40:21Z"
+                    }
+                  ],
+                  "evse_id": "GB*MER*E006818*01",
+                  "status_schedule": [],
+                  "physical_reference": "…*MER*E006818*01",
+                  "last_updated": "2026-10-06T06:40:21Z"
+                },
+                {
+                  "uid": "12739",
+                  "status": "AVAILABLE",
+                  "capabilities": [
+                    "DEBIT_CARD_PAYABLE",
+                    "REMOTE_START_STOP_CAPABLE",
+                    "RFID_READER",
+                    "TOKEN_GROUP_CAPABLE",
+                    "CREDIT_CARD_PAYABLE",
+                    "CHARGING_PROFILE_CAPABLE"
+                  ],
+                  "connectors": [
+                    {
+                      "id": "12739",
+                      "standard": "IEC_62196_T2",
+                      "format": "SOCKET",
+                      "power_type": "AC_1_PHASE",
+                      "max_voltage": 230,
+                      "max_amperage": 32,
+                      "max_electric_power": 7400,
+                      "tariff_ids": [
+                        "4aaf34b26ab42c5e864c7b3200fbf318"
+                      ],
+                      "terms_and_conditions": "https://uk.mer.eco/termsandconditions/",
+                      "last_updated": "2026-10-06T06:40:21Z"
+                    }
+                  ],
+                  "evse_id": "GB*MER*E006818*02",
+                  "status_schedule": [],
+                  "physical_reference": "…*MER*E006818*02",
+                  "last_updated": "2026-10-06T06:40:21Z"
+                },
+                {
+                  "uid": "12742",
+                  "status": "AVAILABLE",
+                  "capabilities": [
+                    "DEBIT_CARD_PAYABLE",
+                    "REMOTE_START_STOP_CAPABLE",
+                    "RFID_READER",
+                    "TOKEN_GROUP_CAPABLE",
+                    "CREDIT_CARD_PAYABLE",
+                    "CHARGING_PROFILE_CAPABLE"
+                  ],
+                  "connectors": [
+                    {
+                      "id": "12742",
+                      "standard": "IEC_62196_T2",
+                      "format": "SOCKET",
+                      "power_type": "AC_1_PHASE",
+                      "max_voltage": 230,
+                      "max_amperage": 32,
+                      "max_electric_power": 7400,
+                      "tariff_ids": [
+                        "4aaf34b26ab42c5e864c7b3200fbf318"
+                      ],
+                      "terms_and_conditions": "https://uk.mer.eco/termsandconditions/",
+                      "last_updated": "2026-10-09T12:00:29Z"
+                    }
+                  ],
+                  "evse_id": "GB*MER*E006821*01",
+                  "status_schedule": [],
+                  "physical_reference": "…*MER*E006821*01",
+                  "last_updated": "2026-10-09T12:00:29Z"
+                },
+                {
+                  "uid": "12743",
+                  "status": "AVAILABLE",
+                  "capabilities": [
+                    "DEBIT_CARD_PAYABLE",
+                    "REMOTE_START_STOP_CAPABLE",
+                    "RFID_READER",
+                    "TOKEN_GROUP_CAPABLE",
+                    "CREDIT_CARD_PAYABLE",
+                    "CHARGING_PROFILE_CAPABLE"
+                  ],
+                  "connectors": [
+                    {
+                      "id": "12743",
+                      "standard": "IEC_62196_T2",
+                      "format": "SOCKET",
+                      "power_type": "AC_1_PHASE",
+                      "max_voltage": 230,
+                      "max_amperage": 32,
+                      "max_electric_power": 7400,
+                      "tariff_ids": [
+                        "4aaf34b26ab42c5e864c7b3200fbf318"
+                      ],
+                      "terms_and_conditions": "https://uk.mer.eco/termsandconditions/",
+                      "last_updated": "2026-10-07T09:35:49Z"
+                    }
+                  ],
+                  "evse_id": "GB*MER*E006821*02",
+                  "status_schedule": [],
+                  "physical_reference": "…*MER*E006821*02",
+                  "last_updated": "2026-10-07T09:35:49Z"
+                },
+                {
+                  "uid": "12744",
+                  "status": "AVAILABLE",
+                  "capabilities": [
+                    "DEBIT_CARD_PAYABLE",
+                    "REMOTE_START_STOP_CAPABLE",
+                    "RFID_READER",
+                    "TOKEN_GROUP_CAPABLE",
+                    "CREDIT_CARD_PAYABLE",
+                    "CHARGING_PROFILE_CAPABLE"
+                  ],
+                  "connectors": [
+                    {
+                      "id": "12744",
+                      "standard": "IEC_62196_T2",
+                      "format": "SOCKET",
+                      "power_type": "AC_1_PHASE",
+                      "max_voltage": 230,
+                      "max_amperage": 32,
+                      "max_electric_power": 7400,
+                      "tariff_ids": [
+                        "4aaf34b26ab42c5e864c7b3200fbf318"
+                      ],
+                      "terms_and_conditions": "https://uk.mer.eco/termsandconditions/",
+                      "last_updated": "2026-10-06T06:40:21Z"
+                    }
+                  ],
+                  "evse_id": "GB*MER*E006822*01",
+                  "status_schedule": [],
+                  "physical_reference": "…*MER*E006822*01",
+                  "last_updated": "2026-10-06T06:40:21Z"
+                },
+                {
+                  "uid": "12745",
+                  "status": "AVAILABLE",
+                  "capabilities": [
+                    "DEBIT_CARD_PAYABLE",
+                    "REMOTE_START_STOP_CAPABLE",
+                    "RFID_READER",
+                    "TOKEN_GROUP_CAPABLE",
+                    "CREDIT_CARD_PAYABLE",
+                    "CHARGING_PROFILE_CAPABLE"
+                  ],
+                  "connectors": [
+                    {
+                      "id": "12745",
+                      "standard": "IEC_62196_T2",
+                      "format": "SOCKET",
+                      "power_type": "AC_1_PHASE",
+                      "max_voltage": 230,
+                      "max_amperage": 32,
+                      "max_electric_power": 7400,
+                      "tariff_ids": [
+                        "4aaf34b26ab42c5e864c7b3200fbf318"
+                      ],
+                      "terms_and_conditions": "https://uk.mer.eco/termsandconditions/",
+                      "last_updated": "2026-10-06T06:40:21Z"
+                    }
+                  ],
+                  "evse_id": "GB*MER*E006822*02",
+                  "status_schedule": [],
+                  "physical_reference": "…*MER*E006822*02",
+                  "last_updated": "2026-10-06T06:40:21Z"
+                },
+                {
+                  "uid": "12746",
+                  "status": "AVAILABLE",
+                  "capabilities": [
+                    "DEBIT_CARD_PAYABLE",
+                    "REMOTE_START_STOP_CAPABLE",
+                    "RFID_READER",
+                    "TOKEN_GROUP_CAPABLE",
+                    "CREDIT_CARD_PAYABLE",
+                    "CHARGING_PROFILE_CAPABLE"
+                  ],
+                  "connectors": [
+                    {
+                      "id": "12746",
+                      "standard": "IEC_62196_T2",
+                      "format": "SOCKET",
+                      "power_type": "AC_1_PHASE",
+                      "max_voltage": 230,
+                      "max_amperage": 32,
+                      "max_electric_power": 7400,
+                      "tariff_ids": [
+                        "4aaf34b26ab42c5e864c7b3200fbf318"
+                      ],
+                      "terms_and_conditions": "https://uk.mer.eco/termsandconditions/",
+                      "last_updated": "2026-10-08T12:20:27Z"
+                    }
+                  ],
+                  "evse_id": "GB*MER*E006823*01",
+                  "status_schedule": [],
+                  "physical_reference": "…*MER*E006823*01",
+                  "last_updated": "2026-10-08T12:20:27Z"
+                },
+                {
+                  "uid": "12747",
+                  "status": "AVAILABLE",
+                  "capabilities": [
+                    "DEBIT_CARD_PAYABLE",
+                    "REMOTE_START_STOP_CAPABLE",
+                    "RFID_READER",
+                    "TOKEN_GROUP_CAPABLE",
+                    "CREDIT_CARD_PAYABLE",
+                    "CHARGING_PROFILE_CAPABLE"
+                  ],
+                  "connectors": [
+                    {
+                      "id": "12747",
+                      "standard": "IEC_62196_T2",
+                      "format": "SOCKET",
+                      "power_type": "AC_1_PHASE",
+                      "max_voltage": 230,
+                      "max_amperage": 32,
+                      "max_electric_power": 7400,
+                      "tariff_ids": [
+                        "4aaf34b26ab42c5e864c7b3200fbf318"
+                      ],
+                      "terms_and_conditions": "https://uk.mer.eco/termsandconditions/",
+                      "last_updated": "2026-10-08T13:44:21Z"
+                    }
+                  ],
+                  "evse_id": "GB*MER*E006823*02",
+                  "status_schedule": [],
+                  "physical_reference": "…*MER*E006823*02",
+                  "last_updated": "2026-10-08T13:44:21Z"
+                }
+              ],
+              "directions": [
+                {
+                  "language": "en",
+                  "text": ""
+                }
+              ],
+              "operator": {
+                "name": "Mer"
+              },
+              "suboperator": {
+                "name": "Mer Fleet Services Ltd"
+              },
+              "owner": {
+                "name": "Durham County Council"
+              },
+              "facilities": [],
+              "images": [],
+              "country_code": "GB",
+              "party_id": "MER",
+              "publish_allowed_to": null,
+              "parking_type": "ON_STREET",
+              "parkingType": "ON_STREET",
+              "postal_code": "DH1 3TQ",
+              "related_locations": [],
+              "time_zone": "Europe/London",
+              "opening_times": {
+                "twentyfourseven": false,
+                "regular_hours": [
+                  {
+                    "weekday": 1,
+                    "period_begin": "09:00",
+                    "period_end": "17:00"
+                  },
+                  {
+                    "weekday": 2,
+                    "period_begin": "09:00",
+                    "period_end": "17:00"
+                  },
+                  {
+                    "weekday": 3,
+                    "period_begin": "09:00",
+                    "period_end": "17:00"
+                  },
+                  {
+                    "weekday": 4,
+                    "period_begin": "09:00",
+                    "period_end": "19:00"
+                  },
+                  {
+                    "weekday": 5,
+                    "period_begin": "09:00",
+                    "period_end": "17:00"
+                  },
+                  {
+                    "weekday": 6,
+                    "period_begin": "10:00",
+                    "period_end": "17:00"
+                  },
+                  {
+                    "weekday": 7,
+                    "period_begin": "10:00",
+                    "period_end": "17:00"
+                  }
+                ]
+              },
+              "charging_when_closed": true,
+              "energy_mix": {
+                "is_green_energy": false
+              },
+              "last_updated": "2026-10-09T14:12:35Z"
+            },
+            {
+              "id": "2992",
+              "publish": true,
+              "name": "Durham County Council -Derwent Valley- Hamsterley Community Centre",
+              "address": "Hamsterley Mill Community Centre",
+              "city": "Durham",
+              "country": "GBR",
+              "coordinates": {
+                "latitude": "54.9026204",
+                "longitude": "-1.8192515"
+              },
+              "evses": [
+                {
+                  "uid": "12120",
+                  "status": "OUTOFORDER",
+                  "capabilities": [
+                    "DEBIT_CARD_PAYABLE",
+                    "REMOTE_START_STOP_CAPABLE",
+                    "RFID_READER",
+                    "TOKEN_GROUP_CAPABLE",
+                    "CREDIT_CARD_PAYABLE",
+                    "CHARGING_PROFILE_CAPABLE"
+                  ],
+                  "connectors": [
+                    {
+                      "id": "12120",
+                      "standard": "IEC_62196_T2",
+                      "format": "SOCKET",
+                      "power_type": "AC_3_PHASE",
+                      "max_voltage": 400,
+                      "max_amperage": 32,
+                      "max_electric_power": 22000,
+                      "tariff_ids": [
+                        "4aaf34b26ab42c5e864c7b3200fbf318"
+                      ],
+                      "terms_and_conditions": "https://uk.mer.eco/termsandconditions/",
+                      "last_updated": "2026-10-06T06:40:21Z"
+                    }
+                  ],
+                  "evse_id": "GB*MER*E006496*01",
+                  "status_schedule": [],
+                  "physical_reference": "…*MER*E006496*01",
+                  "last_updated": "2026-10-06T06:40:21Z"
+                },
+                {
+                  "uid": "12121",
+                  "status": "OUTOFORDER",
+                  "capabilities": [
+                    "DEBIT_CARD_PAYABLE",
+                    "REMOTE_START_STOP_CAPABLE",
+                    "RFID_READER",
+                    "TOKEN_GROUP_CAPABLE",
+                    "CREDIT_CARD_PAYABLE",
+                    "CHARGING_PROFILE_CAPABLE"
+                  ],
+                  "connectors": [
+                    {
+                      "id": "12121",
+                      "standard": "IEC_62196_T2",
+                      "format": "SOCKET",
+                      "power_type": "AC_3_PHASE",
+                      "max_voltage": 400,
+                      "max_amperage": 32,
+                      "max_electric_power": 22000,
+                      "tariff_ids": [
+                        "4aaf34b26ab42c5e864c7b3200fbf318"
+                      ],
+                      "terms_and_conditions": "https://uk.mer.eco/termsandconditions/",
+                      "last_updated": "2026-10-06T06:40:21Z"
+                    }
+                  ],
+                  "evse_id": "GB*MER*E006496*02",
+                  "status_schedule": [],
+                  "physical_reference": "…*MER*E006496*02",
+                  "last_updated": "2026-10-06T06:40:21Z"
+                }
+              ],
+              "directions": [
+                {
+                  "language": "en",
+                  "text": ""
+                }
+              ],
+              "operator": {
+                "name": "Mer"
+              },
+              "suboperator": {
+                "name": "Mer Fleet Services Ltd"
+              },
+              "owner": {
+                "name": "Durham County Council"
+              },
+              "facilities": [],
+              "images": [],
+              "country_code": "GB",
+              "party_id": "MER",
+              "publish_allowed_to": null,
+              "postal_code": "NE17 7SP",
+              "related_locations": [],
+              "time_zone": "Europe/London",
+              "opening_times": {
+                "twentyfourseven": true
+              },
+              "charging_when_closed": true,
+              "energy_mix": {
+                "is_green_energy": false
+              },
+              "last_updated": "2026-10-06T06:40:21Z"
+            },
+            {
+              "id": "3861",
+              "publish": true,
+              "name": "Durham County Council - Frosterley",
+              "address": "Frosterly",
+              "city": "Bishop Auckland",
+              "country": "GBR",
+              "coordinates": {
+                "latitude": "54.7275527",
+                "longitude": "-1.9616837"
+              },
+              "evses": [
+                {
+                  "uid": "18873",
+                  "status": "UNKNOWN",
+                  "capabilities": [
+                    "REMOTE_START_STOP_CAPABLE",
+                    "RFID_READER",
+                    "TOKEN_GROUP_CAPABLE",
+                    "CHARGING_PROFILE_CAPABLE"
+                  ],
+                  "connectors": [
+                    {
+                      "id": "18873",
+                      "standard": "IEC_62196_T2",
+                      "format": "SOCKET",
+                      "power_type": "AC_3_PHASE",
+                      "max_voltage": 230,
+                      "max_amperage": 32,
+                      "max_electric_power": 22000,
+                      "tariff_ids": [
+                        "4aaf34b26ab42c5e864c7b3200fbf318"
+                      ],
+                      "terms_and_conditions": "https://uk.mer.eco/termsandconditions/",
+                      "last_updated": "2026-10-09T04:08:07Z"
+                    }
+                  ],
+                  "evse_id": "GB*MER*E021005*01",
+                  "status_schedule": [],
+                  "physical_reference": "…*MER*E021005*01",
+                  "last_updated": "2026-10-09T04:08:07Z"
+                },
+                {
+                  "uid": "18874",
+                  "status": "UNKNOWN",
+                  "capabilities": [
+                    "REMOTE_START_STOP_CAPABLE",
+                    "RFID_READER",
+                    "TOKEN_GROUP_CAPABLE",
+                    "CHARGING_PROFILE_CAPABLE"
+                  ],
+                  "connectors": [
+                    {
+                      "id": "18874",
+                      "standard": "IEC_62196_T2",
+                      "format": "SOCKET",
+                      "power_type": "AC_3_PHASE",
+                      "max_voltage": 230,
+                      "max_amperage": 32,
+                      "max_electric_power": 22000,
+                      "tariff_ids": [
+                        "4aaf34b26ab42c5e864c7b3200fbf318"
+                      ],
+                      "terms_and_conditions": "https://uk.mer.eco/termsandconditions/",
+                      "last_updated": "2026-10-09T04:08:07Z"
+                    }
+                  ],
+                  "evse_id": "GB*MER*E021005*02",
+                  "status_schedule": [],
+                  "physical_reference": "…*MER*E021005*02",
+                  "last_updated": "2026-10-09T04:08:07Z"
+                }
+              ],
+              "directions": [
+                {
+                  "language": "en",
+                  "text": ""
+                }
+              ],
+              "operator": {
+                "name": "Mer"
+              },
+              "suboperator": {
+                "name": "Mer Fleet Services Ltd"
+              },
+              "owner": {
+                "name": "Durham County Council"
+              },
+              "facilities": [],
+              "images": [],
+              "country_code": "GB",
+              "party_id": "MER",
+              "publish_allowed_to": null,
+              "parking_type": "ON_STREET",
+              "parkingType": "ON_STREET",
+              "postal_code": "DL13 2QW",
+              "related_locations": [],
+              "time_zone": "Europe/London",
+              "opening_times": {
+                "twentyfourseven": true
+              },
+              "charging_when_closed": true,
+              "energy_mix": {
+                "is_green_energy": false
+              },
+              "last_updated": "2026-10-09T04:08:07Z"
+            },
+            {
+              "id": "1077",
+              "publish": true,
+              "name": "South Causey Inn",
+              "address": "South Causey Inn",
+              "city": "Stanley",
+              "country": "GBR",
+              "coordinates": {
+                "latitude": "54.8833010",
+                "longitude": "-1.6873800"
+              },
+              "evses": [
+                {
+                  "uid": "3708",
+                  "status": "AVAILABLE",
+                  "capabilities": [
+                    "DEBIT_CARD_PAYABLE",
+                    "REMOTE_START_STOP_CAPABLE",
+                    "RFID_READER",
+                    "TOKEN_GROUP_CAPABLE",
+                    "CREDIT_CARD_PAYABLE",
+                    "CHARGING_PROFILE_CAPABLE"
+                  ],
+                  "connectors": [
+                    {
+                      "id": "3708",
+                      "standard": "IEC_62196_T2",
+                      "format": "SOCKET",
+                      "power_type": "AC_3_PHASE",
+                      "max_voltage": 400,
+                      "max_amperage": 32,
+                      "max_electric_power": 22000,
+                      "tariff_ids": [
+                        "3a73b768b803add9e6c18e19c532282a"
+                      ],
+                      "terms_and_conditions": "https://uk.mer.eco/termsandconditions/",
+                      "last_updated": "2026-10-06T06:40:21Z"
+                    }
+                  ],
+                  "evse_id": "GB*MER*E001787*01",
+                  "status_schedule": [],
+                  "physical_reference": "…*MER*E001787*01",
+                  "last_updated": "2026-10-06T06:40:21Z"
+                },
+                {
+                  "uid": "3709",
+                  "status": "AVAILABLE",
+                  "capabilities": [
+                    "DEBIT_CARD_PAYABLE",
+                    "REMOTE_START_STOP_CAPABLE",
+                    "RFID_READER",
+                    "TOKEN_GROUP_CAPABLE",
+                    "CREDIT_CARD_PAYABLE",
+                    "CHARGING_PROFILE_CAPABLE"
+                  ],
+                  "connectors": [
+                    {
+                      "id": "3709",
+                      "standard": "IEC_62196_T2",
+                      "format": "SOCKET",
+                      "power_type": "AC_3_PHASE",
+                      "max_voltage": 400,
+                      "max_amperage": 32,
+                      "max_electric_power": 22000,
+                      "tariff_ids": [
+                        "3a73b768b803add9e6c18e19c532282a"
+                      ],
+                      "terms_and_conditions": "https://uk.mer.eco/termsandconditions/",
+                      "last_updated": "2026-10-09T16:14:04Z"
+                    }
+                  ],
+                  "evse_id": "GB*MER*E001787*02",
+                  "status_schedule": [],
+                  "physical_reference": "…*MER*E001787*02",
+                  "last_updated": "2026-10-09T16:14:04Z"
+                }
+              ],
+              "directions": [
+                {
+                  "language": "en",
+                  "text": ""
+                }
+              ],
+              "operator": {
+                "name": "Mer"
+              },
+              "suboperator": {
+                "name": "Mer Fleet Services Ltd"
+              },
+              "owner": {
+                "name": "South Causey Inn"
+              },
+              "facilities": [],
+              "images": [],
+              "country_code": "GB",
+              "party_id": "MER",
+              "publish_allowed_to": null,
+              "postal_code": "DH9 0LS",
+              "related_locations": [],
+              "time_zone": "Europe/London",
+              "opening_times": {
+                "twentyfourseven": true
+              },
+              "charging_when_closed": true,
+              "energy_mix": {
+                "is_green_energy": false
+              },
+              "last_updated": "2026-10-09T16:14:04Z"
+            }
+          ],
+          "status_code": 1000,
+          "status_message": "Success"
+        },
+        "tariffs": {
+          "timestamp": "2026-10-10T02:22:04Z",
+          "data": [
+            {
+              "id": "9e092ef59846e08d5cf85c0d3cead747",
+              "currency": "GBP",
+              "type": "REGULAR",
+              "elements": [
+                {
+                  "restrictions": {
+                    "start_time": "00:00",
+                    "end_time": "23:59",
+                    "min_duration": 0,
+                    "max_duration": 86400,
+                    "day_of_week": [
+                      "MONDAY"
+                    ]
+                  },
+                  "price_components": [
+                    {
+                      "type": "ENERGY",
+                      "price": 0.325,
+                      "vat": 20,
+                      "step_size": 1000
+                    }
+                  ]
+                },
+                {
+                  "restrictions": {
+                    "start_time": "00:00",
+                    "end_time": "23:59",
+                    "min_duration": 0,
+                    "max_duration": 86400,
+                    "day_of_week": [
+                      "TUESDAY"
+                    ]
+                  },
+                  "price_components": [
+                    {
+                      "type": "ENERGY",
+                      "price": 0.325,
+                      "vat": 20,
+                      "step_size": 1000
+                    }
+                  ]
+                },
+                {
+                  "restrictions": {
+                    "start_time": "00:00",
+                    "end_time": "23:59",
+                    "min_duration": 0,
+                    "max_duration": 86400,
+                    "day_of_week": [
+                      "WEDNESDAY"
+                    ]
+                  },
+                  "price_components": [
+                    {
+                      "type": "ENERGY",
+                      "price": 0.325,
+                      "vat": 20,
+                      "step_size": 1000
+                    }
+                  ]
+                },
+                {
+                  "restrictions": {
+                    "start_time": "00:00",
+                    "end_time": "23:59",
+                    "min_duration": 0,
+                    "max_duration": 86400,
+                    "day_of_week": [
+                      "THURSDAY"
+                    ]
+                  },
+                  "price_components": [
+                    {
+                      "type": "ENERGY",
+                      "price": 0.325,
+                      "vat": 20,
+                      "step_size": 1000
+                    }
+                  ]
+                },
+                {
+                  "restrictions": {
+                    "start_time": "00:00",
+                    "end_time": "23:59",
+                    "min_duration": 0,
+                    "max_duration": 86400,
+                    "day_of_week": [
+                      "FRIDAY"
+                    ]
+                  },
+                  "price_components": [
+                    {
+                      "type": "ENERGY",
+                      "price": 0.325,
+                      "vat": 20,
+                      "step_size": 1000
+                    }
+                  ]
+                },
+                {
+                  "restrictions": {
+                    "start_time": "00:00",
+                    "end_time": "23:59",
+                    "min_duration": 0,
+                    "max_duration": 86400,
+                    "day_of_week": [
+                      "SATURDAY"
+                    ]
+                  },
+                  "price_components": [
+                    {
+                      "type": "ENERGY",
+                      "price": 0.325,
+                      "vat": 20,
+                      "step_size": 1000
+                    }
+                  ]
+                },
+                {
+                  "restrictions": {
+                    "start_time": "00:00",
+                    "end_time": "23:59",
+                    "min_duration": 0,
+                    "max_duration": 86400,
+                    "day_of_week": [
+                      "SUNDAY"
+                    ]
+                  },
+                  "price_components": [
+                    {
+                      "type": "ENERGY",
+                      "price": 0.325,
+                      "vat": 20,
+                      "step_size": 1000
+                    }
+                  ]
+                }
+              ],
+              "country_code": "GB",
+              "party_id": "MER",
+              "tariff_alt_text": [
+                {
+                  "language": "en",
+                  "text": "South Tyneside NHS Tariff"
+                }
+              ],
+              "last_updated": "2026-10-06T06:40:21Z"
+            },
+            {
+              "id": "3a73b768b803add9e6c18e19c532282a",
+              "currency": "GBP",
+              "type": "REGULAR",
+              "elements": [
+                {
+                  "restrictions": {
+                    "start_time": "00:00",
+                    "end_time": "23:59",
+                    "min_duration": 0,
+                    "max_duration": 86400,
+                    "day_of_week": [
+                      "MONDAY"
+                    ]
+                  },
+                  "price_components": [
+                    {
+                      "type": "ENERGY",
+                      "price": 0.5,
+                      "vat": 20,
+                      "step_size": 1000
+                    }
+                  ]
+                },
+                {
+                  "restrictions": {
+                    "start_time": "00:00",
+                    "end_time": "23:59",
+                    "min_duration": 0,
+                    "max_duration": 86400,
+                    "day_of_week": [
+                      "TUESDAY"
+                    ]
+                  },
+                  "price_components": [
+                    {
+                      "type": "ENERGY",
+                      "price": 0.5,
+                      "vat": 20,
+                      "step_size": 1000
+                    }
+                  ]
+                },
+                {
+                  "restrictions": {
+                    "start_time": "00:00",
+                    "end_time": "23:59",
+                    "min_duration": 0,
+                    "max_duration": 86400,
+                    "day_of_week": [
+                      "WEDNESDAY"
+                    ]
+                  },
+                  "price_components": [
+                    {
+                      "type": "ENERGY",
+                      "price": 0.5,
+                      "vat": 20,
+                      "step_size": 1000
+                    }
+                  ]
+                },
+                {
+                  "restrictions": {
+                    "start_time": "00:00",
+                    "end_time": "23:59",
+                    "min_duration": 0,
+                    "max_duration": 86400,
+                    "day_of_week": [
+                      "THURSDAY"
+                    ]
+                  },
+                  "price_components": [
+                    {
+                      "type": "ENERGY",
+                      "price": 0.5,
+                      "vat": 20,
+                      "step_size": 1000
+                    }
+                  ]
+                },
+                {
+                  "restrictions": {
+                    "start_time": "00:00",
+                    "end_time": "23:59",
+                    "min_duration": 0,
+                    "max_duration": 86400,
+                    "day_of_week": [
+                      "FRIDAY"
+                    ]
+                  },
+                  "price_components": [
+                    {
+                      "type": "ENERGY",
+                      "price": 0.5,
+                      "vat": 20,
+                      "step_size": 1000
+                    }
+                  ]
+                },
+                {
+                  "restrictions": {
+                    "start_time": "00:00",
+                    "end_time": "23:59",
+                    "min_duration": 0,
+                    "max_duration": 86400,
+                    "day_of_week": [
+                      "SATURDAY"
+                    ]
+                  },
+                  "price_components": [
+                    {
+                      "type": "ENERGY",
+                      "price": 0.5,
+                      "vat": 20,
+                      "step_size": 1000
+                    }
+                  ]
+                },
+                {
+                  "restrictions": {
+                    "start_time": "00:00",
+                    "end_time": "23:59",
+                    "min_duration": 0,
+                    "max_duration": 86400,
+                    "day_of_week": [
+                      "SUNDAY"
+                    ]
+                  },
+                  "price_components": [
+                    {
+                      "type": "ENERGY",
+                      "price": 0.5,
+                      "vat": 20,
+                      "step_size": 1000
+                    }
+                  ]
+                }
+              ],
+              "country_code": "GB",
+              "party_id": "MER",
+              "last_updated": "2026-10-06T06:40:21Z"
+            },
+            {
+              "id": "4aaf34b26ab42c5e864c7b3200fbf318",
+              "currency": "GBP",
+              "type": "REGULAR",
+              "elements": [
+                {
+                  "restrictions": {
+                    "start_time": "00:00",
+                    "end_time": "23:59",
+                    "min_duration": 0,
+                    "max_duration": 86400,
+                    "day_of_week": [
+                      "MONDAY"
+                    ]
+                  },
+                  "price_components": [
+                    {
+                      "type": "ENERGY",
+                      "price": 0.4667,
+                      "vat": 20,
+                      "step_size": 1000
+                    }
+                  ]
+                },
+                {
+                  "restrictions": {
+                    "start_time": "00:00",
+                    "end_time": "23:59",
+                    "min_duration": 0,
+                    "max_duration": 86400,
+                    "day_of_week": [
+                      "TUESDAY"
+                    ]
+                  },
+                  "price_components": [
+                    {
+                      "type": "ENERGY",
+                      "price": 0.4667,
+                      "vat": 20,
+                      "step_size": 1000
+                    }
+                  ]
+                },
+                {
+                  "restrictions": {
+                    "start_time": "00:00",
+                    "end_time": "23:59",
+                    "min_duration": 0,
+                    "max_duration": 86400,
+                    "day_of_week": [
+                      "WEDNESDAY"
+                    ]
+                  },
+                  "price_components": [
+                    {
+                      "type": "ENERGY",
+                      "price": 0.4667,
+                      "vat": 20,
+                      "step_size": 1000
+                    }
+                  ]
+                },
+                {
+                  "restrictions": {
+                    "start_time": "00:00",
+                    "end_time": "23:59",
+                    "min_duration": 0,
+                    "max_duration": 86400,
+                    "day_of_week": [
+                      "THURSDAY"
+                    ]
+                  },
+                  "price_components": [
+                    {
+                      "type": "ENERGY",
+                      "price": 0.4667,
+                      "vat": 20,
+                      "step_size": 1000
+                    }
+                  ]
+                },
+                {
+                  "restrictions": {
+                    "start_time": "00:00",
+                    "end_time": "23:59",
+                    "min_duration": 0,
+                    "max_duration": 86400,
+                    "day_of_week": [
+                      "FRIDAY"
+                    ]
+                  },
+                  "price_components": [
+                    {
+                      "type": "ENERGY",
+                      "price": 0.4667,
+                      "vat": 20,
+                      "step_size": 1000
+                    }
+                  ]
+                },
+                {
+                  "restrictions": {
+                    "start_time": "00:00",
+                    "end_time": "23:59",
+                    "min_duration": 0,
+                    "max_duration": 86400,
+                    "day_of_week": [
+                      "SATURDAY"
+                    ]
+                  },
+                  "price_components": [
+                    {
+                      "type": "ENERGY",
+                      "price": 0.4667,
+                      "vat": 20,
+                      "step_size": 1000
+                    }
+                  ]
+                },
+                {
+                  "restrictions": {
+                    "start_time": "00:00",
+                    "end_time": "23:59",
+                    "min_duration": 0,
+                    "max_duration": 86400,
+                    "day_of_week": [
+                      "SUNDAY"
+                    ]
+                  },
+                  "price_components": [
+                    {
+                      "type": "ENERGY",
+                      "price": 0.4667,
+                      "vat": 20,
+                      "step_size": 1000
+                    }
+                  ]
+                }
+              ],
+              "country_code": "GB",
+              "party_id": "MER",
+              "tariff_alt_text": [
+                {
+                  "language": "en",
+                  "text": "Public Stations <=25kW-GST"
+                }
+              ],
+              "last_updated": "2026-10-06T06:40:21Z"
+            },
+            {
+              "id": "5bcaf2d6e51f2760c85e23d42801094c",
+              "currency": "GBP",
+              "type": "REGULAR",
+              "elements": [
+                {
+                  "restrictions": {
+                    "start_time": "00:00",
+                    "end_time": "23:59",
+                    "min_duration": 0,
+                    "max_duration": 86400,
+                    "day_of_week": [
+                      "MONDAY"
+                    ]
+                  },
+                  "price_components": [
+                    {
+                      "type": "ENERGY",
+                      "price": 0.4,
+                      "vat": 20,
+                      "step_size": 1000
+                    }
+                  ]
+                },
+                {
+                  "restrictions": {
+                    "start_time": "00:00",
+                    "end_time": "23:59",
+                    "min_duration": 0,
+                    "max_duration": 86400,
+                    "day_of_week": [
+                      "TUESDAY"
+                    ]
+                  },
+                  "price_components": [
+                    {
+                      "type": "ENERGY",
+                      "price": 0.4,
+                      "vat": 20,
+                      "step_size": 1000
+                    }
+                  ]
+                },
+                {
+                  "restrictions": {
+                    "start_time": "00:00",
+                    "end_time": "23:59",
+                    "min_duration": 0,
+                    "max_duration": 86400,
+                    "day_of_week": [
+                      "WEDNESDAY"
+                    ]
+                  },
+                  "price_components": [
+                    {
+                      "type": "ENERGY",
+                      "price": 0.4,
+                      "vat": 20,
+                      "step_size": 1000
+                    }
+                  ]
+                },
+                {
+                  "restrictions": {
+                    "start_time": "00:00",
+                    "end_time": "23:59",
+                    "min_duration": 0,
+                    "max_duration": 86400,
+                    "day_of_week": [
+                      "THURSDAY"
+                    ]
+                  },
+                  "price_components": [
+                    {
+                      "type": "ENERGY",
+                      "price": 0.4,
+                      "vat": 20,
+                      "step_size": 1000
+                    }
+                  ]
+                },
+                {
+                  "restrictions": {
+                    "start_time": "00:00",
+                    "end_time": "23:59",
+                    "min_duration": 0,
+                    "max_duration": 86400,
+                    "day_of_week": [
+                      "FRIDAY"
+                    ]
+                  },
+                  "price_components": [
+                    {
+                      "type": "ENERGY",
+                      "price": 0.4,
+                      "vat": 20,
+                      "step_size": 1000
+                    }
+                  ]
+                },
+                {
+                  "restrictions": {
+                    "start_time": "00:00",
+                    "end_time": "23:59",
+                    "min_duration": 0,
+                    "max_duration": 86400,
+                    "day_of_week": [
+                      "SATURDAY"
+                    ]
+                  },
+                  "price_components": [
+                    {
+                      "type": "ENERGY",
+                      "price": 0.4,
+                      "vat": 20,
+                      "step_size": 1000
+                    }
+                  ]
+                },
+                {
+                  "restrictions": {
+                    "start_time": "00:00",
+                    "end_time": "23:59",
+                    "min_duration": 0,
+                    "max_duration": 86400,
+                    "day_of_week": [
+                      "SUNDAY"
+                    ]
+                  },
+                  "price_components": [
+                    {
+                      "type": "ENERGY",
+                      "price": 0.4,
+                      "vat": 20,
+                      "step_size": 1000
+                    }
+                  ]
+                }
+              ],
+              "country_code": "GB",
+              "party_id": "MER",
+              "tariff_alt_text": [
+                {
+                  "language": "en",
+                  "text": "East Riding Of Yorkshire Council Tariff - £0.48"
+                }
+              ],
+              "last_updated": "2026-10-06T06:40:21Z"
+            }
+          ],
+          "status_code": 1000,
+          "status_message": "Success"
+        }
+      }
+    }
+  }
+}

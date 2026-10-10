@@ -359,6 +359,70 @@ def test_response_envelope_only_applies_to_ocpi_221():
         make_config(adapter="custom", response_envelope="data_list")
 
 
+# One URL answering every module (response_envelope: by_module)
+
+
+def by_module_config(**overrides) -> OperatorConfig:
+    url = f"{EXAMPLE}/data"
+    endpoint = {"url": url, "status": "needs_testing"}
+    endpoints = {"locations": endpoint, "tariffs": endpoint}
+    return make_config(response_envelope="by_module", endpoints=endpoints, **overrides)
+
+
+def test_by_module_requests_the_shared_url_once_and_reads_each_module():
+    config = by_module_config()
+    url = f"{EXAMPLE}/data"
+    body = {"data": {"locations": ocpi_body([raw_location()]), "tariffs": ocpi_body([])}}
+    requested = []
+
+    def handler(request: httpx.Request) -> httpx.Response:
+        requested.append(str(request.url))
+        return httpx.Response(200, json=body)
+
+    with client_for(config, handler) as client:
+        result = fetch(config, client)
+    assert requested == [url]
+    assert result.complete
+    assert [loc.id for loc in result.locations] == ["example_operator:GB:EXA:LOC1"]
+    assert result.tariffs == []
+
+
+@pytest.mark.parametrize(
+    ("body", "message"),
+    [
+        ({"data": {"locations": ocpi_body([])}}, "no 'tariffs' object"),
+        ({"data": [{}]}, "no 'tariffs' object"),
+        (
+            {"data": {"tariffs": {"status_code": 2001, "status_message": "Invalid", "data": []}}},
+            "OCPI status 2001",
+        ),
+        ({"data": {"tariffs": {"data": []}}}, "OCPI response object"),
+    ],
+    ids=["module-missing", "data-not-an-object", "status-code-checked", "no-status-code"],
+)
+def test_by_module_still_checks_each_modules_response(body, message):
+    config = by_module_config()
+    url = f"{EXAMPLE}/data"
+    with (
+        client_for(config, serve_pages({url: httpx.Response(200, json=body)})) as client,
+        pytest.raises(FeedError, match=message),
+    ):
+        fetch_module(client, "tariffs", url, envelope="by_module")
+
+
+def test_by_module_needs_one_url_for_locations_and_tariffs():
+    with pytest.raises(ValidationError, match="by_module needs one URL"):
+        make_config(response_envelope="by_module")
+    with pytest.raises(ValidationError, match="by_module needs one URL"):
+        make_config(
+            response_envelope="by_module",
+            endpoints={
+                "locations": {"url": f"{EXAMPLE}/locations", "status": "needs_testing"},
+                "tariffs": {"url": f"{EXAMPLE}/tariffs", "status": "needs_testing"},
+            },
+        )
+
+
 # Politeness and retries
 
 

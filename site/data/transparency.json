@@ -1,5 +1,5 @@
 {
-  "last_reviewed": "2026-10-09",
+  "last_reviewed": "2026-10-10",
   "disclaimer": "OEVM is a personal, experimental project for learning about AI tools. Much of its code and text was written with an AI assistant, and it will contain mistakes. Charger data comes from the operators and other sources credited on every record, and remains their work. Everything is provided \"as is\", with no warranty or guarantee of any kind. Always check prices and availability at the charger.",
   "regulation": {
     "summary": "The Public Charge Point Regulations 2023 set no limit on how often data users may request the data. Regulation 10(5) requires the data to be available free of charge without terms on its use. DfT's guidance allows terms covering the means of access, which is where operators' rate limits come from.",
@@ -641,6 +641,118 @@
           "summary": "Tariffs give tariff_alt_text as a list of plain strings, and min_price and max_price as plain numbers, where OCPI 2.2.1 uses DisplayText and Price objects.",
           "handling": "Alt text is read as text with no language. A min_price or max_price of 0 is read as no minimum or maximum. Any other plain number does not say whether it includes VAT, so that tariff would show as price unknown.",
           "evidence_url": "https://api.joltcharge.com/v1/uk/public/tariffs/4",
+          "status": "open",
+          "resolved_date": null
+        }
+      ]
+    },
+    {
+      "id": "mer_uk",
+      "name": "Mer UK",
+      "enabled": true,
+      "adapter": "ocpi_221",
+      "engagement": {
+        "status": "open_anonymous",
+        "label": "Open, no registration",
+        "headline": "Open, no registration (as of 2026-10-10)",
+        "as_of": "2026-10-10",
+        "last_request": null,
+        "last_response": null,
+        "last_response_text": "No request sent",
+        "evidence": [
+          {
+            "date": "2026-10-10",
+            "url": "https://uk.mer.eco/live-charge-point-data/",
+            "file": null,
+            "note": "Links \"Mer Live Charge Point Data\" (one JSON file with locations and tariffs) and states no licence, terms or rate limit."
+          }
+        ],
+        "log": [
+          {
+            "date": "2026-10-10",
+            "action": "page_checked",
+            "action_label": "Operator's page checked",
+            "channel": null,
+            "channel_label": null,
+            "summary": "Read Mer's \"Live Charge Point Data\" page, which links one machine-readable file of locations and tariffs that needs no key.",
+            "quote": null,
+            "evidence_url": "https://uk.mer.eco/live-charge-point-data/",
+            "evidence_file": null
+          }
+        ]
+      },
+      "access_requested": null,
+      "access_granted": null,
+      "feeds": [
+        {
+          "kind": "locations",
+          "url": "https://uk.mer.eco/wp-json/ozev/v1/data",
+          "status": "documented"
+        },
+        {
+          "kind": "tariffs",
+          "url": "https://uk.mer.eco/wp-json/ozev/v1/data",
+          "status": "documented"
+        }
+      ],
+      "licence": {
+        "name": "OGL-3.0",
+        "url": "https://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/",
+        "checked": "2026-10-10"
+      },
+      "attribution": "Contains data from Mer UK published under the Public Charge Point Regulations 2023, used in line with the Open Government Licence v3.0.",
+      "missing_publish_flag": null,
+      "swapped_coordinates": null,
+      "nonstandard_statuses": null,
+      "relay": null,
+      "rate_limit": {
+        "our_gap_seconds": 2.0,
+        "our_max_per_hour": 1800,
+        "ours": "At least 2 s between requests to the operator's host, measured from the end of the previous request (at most 1800 in any hour), retries included.",
+        "published": [],
+        "limits_checked": "2026-10-10",
+        "comparison": "No limit published (checked 2026-10-10). The gap is our own choice.",
+        "difference_from_regulations": "Neither the operator nor the regulations set a limit.",
+        "notes": "Mer's pages state no rate limit. The 2 second gap is this project's own choice. One response holds every location and tariff, so a full run makes one request (about 0.7 MB on 2026-10-10)."
+      },
+      "findings": [
+        {
+          "date": "2026-10-10",
+          "kind": "spec_conformance",
+          "kind_label": "Differs from OCPI 2.2.1",
+          "summary": "One URL answers with both modules: {\"data\": {\"locations\": {...}, \"tariffs\": {...}}}, where each inner object is an OCPI 2.2.1 response object with status_code, timestamp and a list of records. OCPI 2.2.1 serves each module from its own endpoint.",
+          "handling": "The operator file sets response_envelope to by_module, so the adapter requests the URL once and reads each module's own response object, checking its status_code.",
+          "evidence_url": "https://uk.mer.eco/wp-json/ozev/v1/data",
+          "status": "open",
+          "resolved_date": null
+        },
+        {
+          "date": "2026-10-10",
+          "kind": "spec_conformance",
+          "kind_label": "Differs from OCPI 2.2.1",
+          "summary": "The response holds every record (176 locations and 61 tariffs on 2026-10-10) and sends no X-Total-Count, X-Limit or Link header. OCPI 2.2.1 describes these headers for paginated responses.",
+          "handling": "The adapter reads the response in one request. With no X-Total-Count the record count cannot be checked against the server's own total.",
+          "evidence_url": "https://uk.mer.eco/wp-json/ozev/v1/data",
+          "status": "open",
+          "resolved_date": null
+        },
+        {
+          "date": "2026-10-10",
+          "kind": "data_quality",
+          "kind_label": "Data quirk",
+          "summary": "30 of 176 locations carry a \"parkingType\" field next to \"parking_type\", with the same value. \"parkingType\" is not an OCPI 2.2.1 field.",
+          "handling": "Ignored; parking_type is the field read.",
+          "evidence_url": "https://uk.mer.eco/wp-json/ozev/v1/data",
+          "status": "open",
+          "resolved_date": null
+        },
+        {
+          "date": "2026-10-10",
+          "kind": "data_quality",
+          "kind_label": "Data quirk",
+          "summary": "Each tariff gives one price per kWh as seven elements, one for each day of the week, each restricted to 00:00 to 23:59 and a max_duration of 86,400 seconds.",
+          "handling": "Prices are shown as published, so a tariff's description names each day separately with the same price.",
+          "evidence_url": "https://uk.mer.eco/wp-json/ozev/v1/data",
           "status": "open",
           "resolved_date": null
         }
