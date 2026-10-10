@@ -69,6 +69,11 @@ test("chips leave out empty groups and carry text and a symbol as well as colour
     { group: "out", className: "status-chip status-out", symbol: "✕", text: "2 reported out of service" },
   ]);
   assert.equal(chips(countByGroup(evses("charging")))[0].className, "status-chip status-in-use");
+  const other = (...statuses) => chips(countByGroup(evses(...statuses))).map((c) => c.text);
+  assert.deepEqual(other("unknown"), ["1 status unknown"]);
+  assert.deepEqual(other("blocked", "blocked"), ["2 blocked"]);
+  assert.deepEqual(other("blocked", "unknown"), ["2 blocked or status unknown"]);
+  assert.deepEqual(other("working", "unknown"), ["1 working (free or in use, not stated)", "1 status unknown"]);
 });
 
 test("the time is worded as when the feed was read, never as live", () => {
@@ -95,6 +100,6 @@ test("charge points a feed reports only as working are never counted as availabl
   assert.deepEqual(chips(countByGroup(evses("working", "working", "out_of_order", "unknown"))), [
     { group: "out", className: "status-chip status-out", symbol: "✕", text: "1 reported out of service" },
     { group: "other", className: "status-chip status-other", symbol: "?", text: "2 working (free or in use, not stated)" },
-    { group: "other", className: "status-chip status-other", symbol: "?", text: "1 blocked or status unknown" },
+    { group: "other", className: "status-chip status-other", symbol: "?", text: "1 status unknown" },
   ]);
 });

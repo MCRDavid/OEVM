@@ -200,8 +200,10 @@ At the top of the details screen, above the connectors, the map will show:
 - Every colour has at least 4.5:1 contrast on the page and panel backgrounds in both
   modes (checked 9 October 2026 with the WCAG formula). Colour is never the only cue:
   every chip has a symbol and words, as ADR 0008 requires.
-- The wording, groups and colours are in `site/assets/js/live.js` and `site/assets/app.css`,
-  tested, but not used by the map until the Worker runs.
+- The wording, groups and colours are in `site/assets/js/live.js` and `site/assets/app.css`.
+  Since 10 October 2026 (the owner's request) the details screen shows them with the
+  statuses from the daily fetch, with the time the feed was read; each connector's status
+  is coloured the same way. When the Worker runs, the same screen shows its statuses.
 
 ### char.gy's statuses (decided 9 October 2026)
 

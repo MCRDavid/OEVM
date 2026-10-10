@@ -196,6 +196,22 @@ button[aria-expanded="true"] {
   color: var(--status-other);
 }
 
+.detail .status {
+  font-weight: 600;
+}
+
+/* The red count is a button for "Hide out of service": a full-size touch target, filled
+   in the same red when pressed (the same contrast pair, swapped). */
+button.status-chip {
+  min-height: 44px;
+  border-width: 2px;
+}
+
+.status-chip.status-out[aria-pressed="true"] {
+  background: var(--status-out);
+  color: var(--panel);
+}
+
 .notice {
   margin: 0;
   padding: 0.75rem 1rem;

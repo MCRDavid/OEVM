@@ -102,6 +102,10 @@ function showActiveFilters() {
   $("quick-rapid").setAttribute("aria-pressed", String(app.state.minkw >= 50));
   $("quick-free").setAttribute("aria-pressed", String(app.state.free));
   $("quick-working").setAttribute("aria-pressed", String(app.state.working));
+  // The out of service count on an open charger's details switches the same filter.
+  for (const button of document.querySelectorAll('#detail-body [data-filter="working"]')) {
+    button.setAttribute("aria-pressed", String(app.state.working));
+  }
 }
 
 // Networks without a box yet (the data is still loading) keep their place in the filters.
@@ -292,8 +296,14 @@ function coverPage(open) {
   }
 }
 
+function toggleHideOut() {
+  app.state = { ...app.state, working: !app.state.working };
+  stateToForm();
+  stateChanged();
+}
+
 function detailOptions() {
-  return { ...app.config, plans: app.plans, mine: app.mine };
+  return { ...app.config, plans: app.plans, mine: app.mine, hideOut: app.state.working, onHideOut: toggleHideOut };
 }
 
 // Ticking a plan while a charger's details are open (possible on a wide screen) redraws
