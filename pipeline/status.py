@@ -136,6 +136,12 @@ def result_label(status: OperatorStatus) -> str:
     run = status.latest
     if run is None:
         return "Not fetched yet"
+    if run.failed and run.kept_copy is not None:
+        kept_at = datetime.fromisoformat(run.kept_copy.fetched_at.replace("Z", "+00:00"))
+        return (
+            f"Fetch failed; the map still shows its last good copy, fetched {_time(kept_at)} "
+            f"({run.kept_copy.locations} locations)"
+        )
     if run.failed:
         return "Fetch failed"
     return "Fetched" if run.complete else "Fetched, incomplete"

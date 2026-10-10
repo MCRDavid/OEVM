@@ -149,8 +149,11 @@ Needed before the first run of the **Fetch daily** workflow (`.github/workflows/
    `main`. When it finishes, the site's address is shown on the run's summary page.
    From then on it runs every day at 04:17 UTC.
 
-A run shows red if any operator failed, even though the site was still updated with the
-others; the feed health page on the site says which one.
+If an operator fails, the site is still updated with the others, and the map keeps
+showing the failed operator's last good copy (up to 7 days old) with its own fetch date
+(ADR 0018). The run then stays green with a warning. It shows red only when an operator
+failed and had no last good copy to show, so it is missing from the map. Either way, the
+feed health page on the site says which one.
 
 To watch a run while it fetches, open it, then the **Fetch operator feeds** job, then the
 **Fetch every enabled operator, never two on one host at once** step. Operators on

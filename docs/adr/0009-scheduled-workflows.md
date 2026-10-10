@@ -30,7 +30,9 @@ from main, and a keepalive. Accept: three green scheduled runs in a row; site li
 - **When one operator fails,** the site is still deployed with the others, so the map
   keeps the rest current and the feed health page shows the failure. That operator's
   chargers are missing from the map until its next good run. A last job then fails, so
-  the run shows red and GitHub sends its usual failure email.
+  the run shows red and GitHub sends its usual failure email. (Changed by ADR 0018: the
+  map now keeps the operator's last good copy, and the run shows red only when an
+  operator is missing from the map.)
 - **Keys** are passed by secret name to the fetch step only (today just
   `JOLT_API_KEY`). A test checks every enabled operator's `secret_name` is passed there
   and no other secret is used in any workflow.

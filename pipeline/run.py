@@ -12,9 +12,11 @@ have been checked.
 --live all fetches every enabled operator (the daily workflow). Operators that share a
 host are fetched one after another; groups that share no host are fetched at the same
 time, so a slow feed no longer holds up the others. If one operator fails, its failure
-is logged, the others are still fetched and published, and the exit code is 2, so the
-failure is visible without holding back the rest. Live runs print how far each operator
-has got as they go (pipeline.progress).
+is logged, the others are still fetched and published, and the map keeps showing the
+failed operator's last good copy from --previous (the files last published) when there is
+one (ADR 0018). The exit code is 3 when every failed operator kept its last good copy,
+and 2 when one was left off the map, so a failure is visible without holding back the
+rest. Live runs print how far each operator has got as they go (pipeline.progress).
 """
 
 import argparse
@@ -48,8 +50,12 @@ CUSTOM_ADAPTERS = {"jolt": adapters.jolt.fetch}
 FIXTURE_KEY = "fixture-replay-not-a-real-key"
 # --live ALL_ENABLED fetches every operator that is enabled in the registry.
 ALL_ENABLED = "all"
-# Exit code when --live all published some operators but at least one failed.
+# Exit code when --live all published some operators but at least one failed and is not
+# on the map.
 EXIT_SOME_FAILED = 2
+# Exit code when at least one operator failed and every one that failed kept its last
+# good copy on the map.
+EXIT_KEPT_LAST_GOOD = 3
 
 
 def host_groups(configs: list[OperatorConfig]) -> list[list[OperatorConfig]]:
@@ -83,7 +89,9 @@ def run_operator(
     max_pages: int | None = None,
     key: str | None = None,
     progress: PageProgress = NO_PROGRESS,
+    notice: Callable[[str], None] = lambda _text: None,
 ) -> AdapterResult:
+    """Fetch one operator. A FeedError raised here carries `requests`, the number made."""
     if config.adapter == "custom":
         fetch = CUSTOM_ADAPTERS.get(config.id)
         if fetch is None:
@@ -92,16 +100,23 @@ def run_operator(
         fetch = ADAPTERS.get(config.adapter)
         if fetch is None:
             raise FeedError(f"{config.id}: the {config.adapter} adapter is not built yet")
-    with PoliteClient(config, transport=transport, sleep=sleep, clock=clock, key=key) as client:
-        result = fetch(
-            config,
-            client,
-            date_from=date_from,
-            page_size=page_size,
-            max_pages=max_pages,
-            progress=progress,
-        )
+    with PoliteClient(
+        config, transport=transport, sleep=sleep, clock=clock, key=key, notice=notice
+    ) as client:
+        try:
+            result = fetch(
+                config,
+                client,
+                date_from=date_from,
+                page_size=page_size,
+                max_pages=max_pages,
+                progress=progress,
+            )
+        except FeedError as exc:
+            exc.requests = client.requests_made
+            raise
         result.requests = client.requests_made
+        result.issues = [*client.events, *result.issues]
         return result
 
 
@@ -135,6 +150,18 @@ def _shorten(text: str) -> str:
     return text if len(text) <= MAX_ISSUE_LENGTH else text[: MAX_ISSUE_LENGTH - 3] + "..."
 
 
+def _module_summaries(modules: dict) -> dict:
+    return {
+        name: {
+            "pages": len(module.pages),
+            "records": len(module.records),
+            "reported": module.total_reported,
+            "complete": module.complete,
+        }
+        for name, module in modules.items()
+    }
+
+
 def run_log(result: AdapterResult, mode: str) -> dict:
     """A summary of one run for the transparency page: counts and issues, never records."""
     log = {
@@ -145,15 +172,7 @@ def run_log(result: AdapterResult, mode: str) -> dict:
         "complete": result.complete,
         "failed": False,
         "error": None,
-        "modules": {
-            name: {
-                "pages": len(module.pages),
-                "records": len(module.records),
-                "reported": module.total_reported,
-                "complete": module.complete,
-            }
-            for name, module in result.modules.items()
-        },
+        "modules": _module_summaries(result.modules),
         "kept": {"locations": len(result.locations), "tariffs": len(result.tariffs)},
         "health": health.health(result).model_dump(),
         "issues": [_shorten(issue) for issue in result.issues],
@@ -161,25 +180,62 @@ def run_log(result: AdapterResult, mode: str) -> dict:
     return RunLog.model_validate(log).model_dump(mode="json")
 
 
-def failure_log(operator_id: str, mode: str, error: str, when: datetime) -> dict:
-    """A summary of a run that stopped with an error, so the failure is visible."""
+def failure_log(
+    operator_id: str,
+    mode: str,
+    error: str,
+    when: datetime,
+    *,
+    modules: dict | None = None,
+    requests: int | None = None,
+    kept_copy: tuple[datetime, int] | None = None,
+) -> dict:
+    """A summary of a run that stopped with an error, so the failure is visible.
+
+    modules is what each module fetched before the error, requests how many were made,
+    and kept_copy the fetch time and location count of the last good copy the map kept
+    showing, if any.
+    """
     log = {
         "operator": operator_id,
         "mode": mode,
-        "fetched_at": when.astimezone(UTC)
-        .replace(microsecond=0)
-        .isoformat()
-        .replace("+00:00", "Z"),
-        "requests": None,
+        "fetched_at": _stamp(when),
+        "requests": requests,
         "complete": False,
         "failed": True,
         "error": _shorten(error),
-        "modules": {},
+        "modules": _module_summaries(modules or {}),
         "kept": {"locations": 0, "tariffs": 0},
         "health": None,
         "issues": [_shorten(f"Run failed: {error}")],
     }
+    if kept_copy is not None:
+        kept_at, locations = kept_copy
+        log["kept_copy"] = {"fetched_at": _stamp(kept_at), "locations": locations}
+        log["issues"].append(f"The map kept showing the last good copy, fetched {_stamp(kept_at)}.")
     return RunLog.model_validate(log).model_dump(mode="json")
+
+
+def _stamp(when: datetime) -> str:
+    return when.astimezone(UTC).replace(microsecond=0).isoformat().replace("+00:00", "Z")
+
+
+def _failure_log(
+    operator_id: str,
+    mode: str,
+    failures: dict[str, tuple[str, datetime, dict, int | None]],
+    kept_copy: tuple[datetime, int] | None = None,
+) -> dict:
+    error, when, modules, requests = failures[operator_id]
+    return failure_log(
+        operator_id,
+        mode,
+        error,
+        when,
+        modules=modules,
+        requests=requests,
+        kept_copy=kept_copy,
+    )
 
 
 def write_log(directory: Path, log: dict) -> None:
@@ -243,6 +299,12 @@ def main(argv: list[str] | None = None) -> int:
         help="merge the results and write the map files under DIR/data (not site/)",
     )
     parser.add_argument(
+        "--previous",
+        type=Path,
+        metavar="DIR",
+        help="the files last published (DIR/data); an operator that fails keeps its copy there",
+    )
+    parser.add_argument(
         "--log-dir",
         type=Path,
         help="save a run summary per operator here, for the transparency page",
@@ -251,6 +313,8 @@ def main(argv: list[str] | None = None) -> int:
 
     mode = "fixtures" if args.fixtures else "live"
     failed: list[str] = []
+    # Why each failed operator failed, for its run log: (error, time, modules, requests).
+    failures: dict[str, tuple[str, datetime, dict, int | None]] = {}
     try:
         operators = load_registry()
         if args.fixtures:
@@ -288,12 +352,19 @@ def main(argv: list[str] | None = None) -> int:
                             page_size=args.page_size,
                             max_pages=args.max_pages,
                             progress=reporter,
+                            notice=lambda text, i=config.id: print(f"{i}: {text}", flush=True),
                         )
                     except FeedError as exc:
                         progress.operator_failed(config.id)
+                        when = datetime.now(UTC)
+                        failures[config.id] = (
+                            str(exc),
+                            when,
+                            exc.modules or {},
+                            getattr(exc, "requests", None),
+                        )
                         if args.log_dir:
-                            when = datetime.now(UTC)
-                            write_log(args.log_dir, failure_log(config.id, mode, str(exc), when))
+                            write_log(args.log_dir, _failure_log(config.id, mode, failures))
                         if len(configs) == 1:
                             raise
                         print(f"Error: {exc}", file=sys.stderr, flush=True)
@@ -325,25 +396,55 @@ def main(argv: list[str] | None = None) -> int:
             save_output(result, args.out / result.operator_id)
         if args.log_dir:
             write_log(args.log_dir, run_log(result, mode))
+    kept: dict[str, datetime] = {}
     if not results:
         print("No fixture sets found.")
     elif args.publish:
+        generated_at = max(r.fetched_at for r in results)
+        copies = []
+        for operator_id in failed:
+            copy, why = (None, "no --previous files were given")
+            if args.previous is not None:
+                copy, why = publish.last_good_copy(
+                    args.previous, operator_id, operators[operator_id], generated_at
+                )
+            if copy is None:
+                print(f"{operator_id}: no last good copy to show: {why}", file=sys.stderr)
+            else:
+                copies.append(copy)
         try:
             published = publish.publish(
                 results,
                 operators,
                 args.publish,
                 mode=mode,
-                generated_at=max(r.fetched_at for r in results),
+                generated_at=generated_at,
+                kept=copies,
             )
         except publish.PublishError as exc:
             print(f"Error: {exc}", file=sys.stderr)
             return 1
         print("\n".join(published.report))
-    if failed:
-        print(f"Failed, so left out: {', '.join(failed)}", file=sys.stderr)
+        kept = published.kept
+        if args.log_dir:
+            for copy in copies:
+                write_log(
+                    args.log_dir,
+                    _failure_log(
+                        copy.operator_id,
+                        mode,
+                        failures,
+                        kept_copy=(copy.entry.fetched_at, copy.entry.mapped),
+                    ),
+                )
+    left_out = [operator_id for operator_id in failed if operator_id not in kept]
+    if kept:
+        shown = ", ".join(f"{i} (fetched {kept[i]:%Y-%m-%d %H:%M} UTC)" for i in sorted(kept))
+        print(f"Failed, so the map shows the last good copy: {shown}", file=sys.stderr)
+    if left_out:
+        print(f"Failed, so left out: {', '.join(left_out)}", file=sys.stderr)
         return EXIT_SOME_FAILED
-    return 0
+    return EXIT_KEPT_LAST_GOOD if kept else 0
 
 
 if __name__ == "__main__":

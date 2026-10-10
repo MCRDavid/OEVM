@@ -92,19 +92,23 @@ def fetch(
     if config.adapter != "ocpi_221":
         raise FeedError(f"{config.id} uses the {config.adapter} adapter, not ocpi_221")
     fetched_at = now or datetime.now(UTC).replace(microsecond=0)
-    modules = {
-        module: fetch_module(
-            client,
-            module,
-            endpoint_for(config, module),
-            date_from=date_from,
-            page_size=page_size,
-            max_pages=max_pages,
-            progress=progress,
-            envelope=config.response_envelope,
-        )
-        for module in MODULES
-    }
+    modules: dict[str, ModuleFetch] = {}
+    for module in MODULES:
+        try:
+            modules[module] = fetch_module(
+                client,
+                module,
+                endpoint_for(config, module),
+                date_from=date_from,
+                page_size=page_size,
+                max_pages=max_pages,
+                progress=progress,
+                envelope=config.response_envelope,
+            )
+        except FeedError as exc:
+            # Say how far the fetch got, for the run log (pipeline.run.failure_log).
+            exc.modules = {**modules, **({module: exc.partial} if exc.partial else {})}
+            raise
     result = AdapterResult(operator_id=config.id, fetched_at=fetched_at, modules=modules)
     issues = IssueLog()
     convert_records(

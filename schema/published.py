@@ -217,6 +217,11 @@ class OperatorEntry(_Model):
     attribution: str
     licence: str
     licence_url: str | None = None
+    kept_from_previous: bool = Field(
+        default=False,
+        description="True when this run's fetch failed and the map shows the operator's last "
+        "good copy, fetched at fetched_at (ADR 0018).",
+    )
 
 
 class FileEntry(_Model):

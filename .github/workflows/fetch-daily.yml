@@ -58,11 +58,17 @@ jobs:
           OEVM_RELAY_TOKEN: ${{ secrets.OEVM_RELAY_TOKEN }}
         run: |
           set +e
-          uv run python -m pipeline.run --live all --log-dir logs --publish build
+          uv run python -m pipeline.run --live all --log-dir logs --publish build \
+            --previous previous
           code=$?
           set -e
-          if [ "$code" -eq 2 ]; then
-            echo "::warning::At least one operator failed and was left out. See the log above."
+          # 3: an operator failed, but the map still shows its last good copy (ADR 0018).
+          # The run stays green; the feed health page and this warning say which.
+          # 2: an operator failed and is not on the map at all, so the run ends red.
+          if [ "$code" -eq 3 ]; then
+            echo "::warning::At least one operator failed; the map shows its last good copy. See the log above and the feed health page."
+          elif [ "$code" -eq 2 ]; then
+            echo "::warning::At least one operator failed and was left off the map. See the log above."
             echo "some-failed=true" >> "$GITHUB_OUTPUT"
           elif [ "$code" -ne 0 ]; then
             exit "$code"
@@ -74,7 +80,7 @@ jobs:
             --previous previous/data/status.json
 
       - name: Keep the map files and feed health page for the deploy
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: site-data
           path: build
@@ -100,8 +106,9 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 5
     steps:
-      # The site was still deployed with the operators that worked. Failing here makes
-      # the run show red, so the failure is noticed; the feed health page says which.
+      # The site was still deployed with the operators that worked. An operator is missing
+      # from the map (it failed with no last good copy to show), so the run shows red to
+      # be noticed; the feed health page says which.
       - run: |
-          echo "::error::At least one operator failed today. The feed health page and the Fetch operator feeds log say which."
+          echo "::error::At least one operator failed today and is not on the map. The feed health page and the Fetch operator feeds log say which."
           exit 1

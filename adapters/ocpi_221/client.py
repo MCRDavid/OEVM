@@ -13,7 +13,7 @@ from urllib.parse import urlencode, urljoin, urlsplit
 
 import httpx
 
-from adapters.http import FeedError, PoliteClient, redact_url, with_params
+from adapters.http import FeedError, PoliteClient, redact_url, server_hint, with_params
 from adapters.progress import NO_PROGRESS, PageProgress
 
 KEPT_HEADERS = (
@@ -23,6 +23,13 @@ KEPT_HEADERS = (
     "x-limit",
     "retry-after",
     "access-control-allow-origin",
+    "ratelimit",
+    "ratelimit-limit",
+    "ratelimit-remaining",
+    "ratelimit-reset",
+    "x-ratelimit-limit",
+    "x-ratelimit-remaining",
+    "x-ratelimit-reset",
 )
 PAGE_SAFETY_LIMIT = 10_000
 
@@ -112,13 +119,15 @@ def fetch_module(
     envelope is the operator file's response_envelope setting (see _ocpi_data).
 
     Saved pages and error messages have the operator's key removed, in case a server
-    echoes it back in a header, a link or the body.
+    echoes it back in a header, a link or the body. If a page fails, the FeedError carries
+    what was fetched before it as `partial`, marked incomplete, so the run log can say how
+    far the fetch got.
     """
+    result = ModuleFetch(module=module, endpoint=endpoint)
     try:
         return _fetch_pages(
             client,
-            module,
-            endpoint,
+            result,
             date_from=date_from,
             page_size=page_size,
             max_pages=max_pages,
@@ -126,13 +135,14 @@ def fetch_module(
             envelope=envelope,
         )
     except FeedError as exc:
-        raise FeedError(client.redact(str(exc))) from None
+        error = FeedError(client.redact(str(exc)))
+        error.partial = result
+        raise error from None
 
 
 def _fetch_pages(
     client: PoliteClient,
-    module: str,
-    endpoint: str,
+    result: ModuleFetch,
     *,
     date_from: datetime | None,
     page_size: int | None,
@@ -140,6 +150,7 @@ def _fetch_pages(
     progress: PageProgress,
     envelope: str,
 ) -> ModuleFetch:
+    module, endpoint = result.module, result.endpoint
     params = {}
     if date_from is not None:
         params["date_from"] = format_ocpi_datetime(date_from)
@@ -147,7 +158,6 @@ def _fetch_pages(
         params["limit"] = str(page_size)
     url: str | None = f"{endpoint}?{urlencode(params, safe=':')}" if params else endpoint
 
-    result = ModuleFetch(module=module, endpoint=endpoint)
     seen_urls: set[str] = set()
     received = 0
     while url is not None:
@@ -162,7 +172,10 @@ def _fetch_pages(
 
         response = client.get(url)
         if response.status_code != 200:
-            raise FeedError(f"{client.describe(url)} returned HTTP {response.status_code}")
+            raise FeedError(
+                f"{client.describe(url)} returned HTTP {response.status_code}"
+                f"{server_hint(response)}"
+            )
         try:
             body = client.redact(response.json())
         except ValueError as exc:
