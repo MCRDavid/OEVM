@@ -64,3 +64,10 @@ def test_the_site_is_packaged_with_its_well_known_folder():
     steps = _load("deploy.yml")["jobs"]["deploy"]["steps"]
     package = next(s for s in steps if s.get("uses", "").startswith("actions/upload-pages"))
     assert package["with"]["include-hidden-files"] is True
+
+
+def test_the_site_is_built_from_the_newest_main():
+    # A change merged while Fetch daily runs must not be replaced by the older copy.
+    steps = _load("deploy.yml")["jobs"]["deploy"]["steps"]
+    checkout = next(s for s in steps if s.get("uses", "").startswith("actions/checkout"))
+    assert checkout["with"]["ref"] == "main"

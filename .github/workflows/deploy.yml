@@ -36,8 +36,12 @@ jobs:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
     steps:
+      # The newest main, not the commit the run started on: Fetch daily takes about 15
+      # minutes, and a change merged meanwhile (such as a new transparency page) would
+      # otherwise be replaced on the site by the older copy until the next deploy.
       - uses: actions/checkout@v7
         with:
+          ref: main
           persist-credentials: false
 
       - uses: actions/setup-node@v6
