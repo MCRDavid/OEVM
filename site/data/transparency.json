@@ -13,6 +13,118 @@
   },
   "operators": [
     {
+      "id": "arnold_clark_charge",
+      "name": "Arnold Clark Charge",
+      "enabled": true,
+      "adapter": "ocpi_221",
+      "engagement": {
+        "status": "open_anonymous",
+        "label": "Open, no registration",
+        "headline": "Open, no registration (as of 2026-10-10)",
+        "as_of": "2026-10-10",
+        "last_request": null,
+        "last_response": null,
+        "last_response_text": "No request sent",
+        "evidence": [
+          {
+            "date": "2026-10-10",
+            "url": "https://www.arnoldclark.com/charge",
+            "file": null,
+            "note": "The footer links \"Open Access Location Data\" and \"Open Access Tariff Data\" and states no licence, terms or rate limit."
+          }
+        ],
+        "log": [
+          {
+            "date": "2026-10-10",
+            "action": "page_checked",
+            "action_label": "Operator's page checked",
+            "channel": null,
+            "channel_label": null,
+            "summary": "Read Arnold Clark Charge's page, whose footer links location and tariff files that need no key.",
+            "quote": null,
+            "evidence_url": "https://www.arnoldclark.com/charge",
+            "evidence_file": null
+          }
+        ]
+      },
+      "access_requested": null,
+      "access_granted": null,
+      "feeds": [
+        {
+          "kind": "locations",
+          "url": "https://api.fuuse.io/opendata/e6397b95-1624-49cd-824d-ab2f9dfe7294/location",
+          "status": "documented"
+        },
+        {
+          "kind": "tariffs",
+          "url": "https://api.fuuse.io/opendata/e6397b95-1624-49cd-824d-ab2f9dfe7294/tariff",
+          "status": "documented"
+        }
+      ],
+      "licence": {
+        "name": "OGL-3.0",
+        "url": "https://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/",
+        "checked": "2026-10-10"
+      },
+      "attribution": "Contains data from Arnold Clark Charge published under the Public Charge Point Regulations 2023, used in line with the Open Government Licence v3.0.",
+      "missing_publish_flag": null,
+      "swapped_coordinates": null,
+      "nonstandard_statuses": null,
+      "relay": null,
+      "rate_limit": {
+        "our_gap_seconds": 2.0,
+        "our_max_per_hour": 1800,
+        "ours": "At least 2 s between requests to the operator's host, measured from the end of the previous request (at most 1800 in any hour), retries included.",
+        "published": [],
+        "limits_checked": "2026-10-10",
+        "comparison": "No limit published (checked 2026-10-10). The gap is our own choice.",
+        "difference_from_regulations": "Neither the operator nor the regulations set a limit.",
+        "notes": "Neither Arnold Clark's pages nor the responses state a rate limit. The 2 second gap is this project's own choice. Each response holds every record, so a full run makes two requests (about 0.3 MB on 2026-10-10)."
+      },
+      "findings": [
+        {
+          "date": "2026-10-10",
+          "kind": "spec_conformance",
+          "kind_label": "Differs from OCPI 2.2.1",
+          "summary": "Locations and tariffs carry no country_code or party_id, which OCPI 2.2.1 requires.",
+          "handling": "Record ids use \"unknown\" for the country and party, from this file, until the operator's own data gives them.",
+          "evidence_url": "https://api.fuuse.io/opendata/e6397b95-1624-49cd-824d-ab2f9dfe7294/location",
+          "status": "open",
+          "resolved_date": null
+        },
+        {
+          "date": "2026-10-10",
+          "kind": "data_quality",
+          "kind_label": "Data quirk",
+          "summary": "2 of 429 connectors name a tariff in tariff_ids (on 2026-10-10). The other 427 name none.",
+          "handling": "Connectors with no tariff show \"Price unknown\".",
+          "evidence_url": "https://api.fuuse.io/opendata/e6397b95-1624-49cd-824d-ab2f9dfe7294/location",
+          "status": "open",
+          "resolved_date": null
+        },
+        {
+          "date": "2026-10-10",
+          "kind": "spec_conformance",
+          "kind_label": "Differs from OCPI 2.2.1",
+          "summary": "Tariff prices and VAT rates are sent as strings (for example \"0.4583\" and \"20.0000\") rather than numbers.",
+          "handling": "Read as the numbers they spell. Values that are not numbers would be unknown.",
+          "evidence_url": "https://api.fuuse.io/opendata/e6397b95-1624-49cd-824d-ab2f9dfe7294/tariff",
+          "status": "open",
+          "resolved_date": null
+        },
+        {
+          "date": "2026-10-10",
+          "kind": "data_quality",
+          "kind_label": "Data quirk",
+          "summary": "Several sites appear twice, once with \"(App Bookings)\" added to the name, with different location ids and chargers.",
+          "handling": "Kept as published; each record is shown as its own location.",
+          "evidence_url": "https://api.fuuse.io/opendata/e6397b95-1624-49cd-824d-ab2f9dfe7294/location",
+          "status": "open",
+          "resolved_date": null
+        }
+      ]
+    },
+    {
       "id": "chargy",
       "name": "char.gy",
       "enabled": true,

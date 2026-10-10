@@ -1,0 +1,100 @@
+{
+  "request": {
+    "method": "GET",
+    "url": "https://api.fuuse.io/opendata/e6397b95-1624-49cd-824d-ab2f9dfe7294/tariff"
+  },
+  "response": {
+    "status_code": 200,
+    "headers": {
+      "content-type": "application/json; charset=utf-8",
+      "x-total-count": "2",
+      "x-limit": "1000"
+    },
+    "body": {
+      "status_code": 1000,
+      "data": [
+        {
+          "id": "5effcf94-85c8-447b-bd2e-404af540af23",
+          "currency": "GBP",
+          "type": "AD_HOC_PAYMENT",
+          "tariff_alt_text": [
+            {
+              "language": "en",
+              "text": "TARIFF 3 - CONTACTLESS"
+            }
+          ],
+          "elements": [
+            {
+              "price_components": [
+                {
+                  "type": "ENERGY",
+                  "price": "0.4583",
+                  "vat": "20.0000",
+                  "step_size": 1
+                },
+                {
+                  "type": "FLAT",
+                  "price": "0.0000",
+                  "vat": "20.0000",
+                  "step_size": 1
+                },
+                {
+                  "type": "TIME",
+                  "price": "0.0000",
+                  "vat": "20.0000",
+                  "step_size": 1
+                }
+              ],
+              "restrictions": {
+                "min_kwh": "0.1000",
+                "min_duration": 60
+              }
+            }
+          ],
+          "last_updated": "2025-08-15T11:45:37.819Z"
+        },
+        {
+          "id": "74035a47-8172-44c7-90f5-87b1f38167c1",
+          "currency": "GBP",
+          "type": "AD_HOC_PAYMENT",
+          "tariff_alt_text": [
+            {
+              "language": "en",
+              "text": "TARIFF 4 - ROAMING CUSTOMERS"
+            }
+          ],
+          "elements": [
+            {
+              "price_components": [
+                {
+                  "type": "ENERGY",
+                  "price": "0.4583",
+                  "vat": "20.0000",
+                  "step_size": 1
+                },
+                {
+                  "type": "FLAT",
+                  "price": "0.0000",
+                  "vat": "20.0000",
+                  "step_size": 1
+                },
+                {
+                  "type": "TIME",
+                  "price": "0.0000",
+                  "vat": "20.0000",
+                  "step_size": 1
+                }
+              ],
+              "restrictions": {
+                "min_kwh": "0.1000",
+                "min_duration": 60
+              }
+            }
+          ],
+          "last_updated": "2026-05-13T12:55:50.551Z"
+        }
+      ],
+      "timestamp": "2026-10-10T02:47:04.134Z"
+    }
+  }
+}
