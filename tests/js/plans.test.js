@@ -6,26 +6,34 @@ import {
   breakEvenText,
   cheapest,
   discounted,
+  needsSubscription,
   penceText,
   plansFor,
   poundsText,
 } from "../../site/assets/js/plans.js";
 
 const PLANS = [
-  { id: "a.discount", operator_ids: ["jolt"], ppk: null, discount_percent: 20 },
-  { id: "b.cheap", operator_ids: ["jolt"], ppk: 39 },
-  { id: "c.dear", operator_ids: ["jolt", "chargy"], ppk: 55 },
-  { id: "d.elsewhere", operator_ids: ["chargy"], ppk: 10 },
+  { id: "a.discount", operator_ids: ["jolt"], ppk: null, discount_percent: 20, monthly_fee: 0 },
+  { id: "b.cheap", operator_ids: ["jolt"], ppk: 39, monthly_fee: 4.99 },
+  { id: "c.dear", operator_ids: ["jolt", "chargy"], ppk: 55, monthly_fee: 0 },
+  { id: "d.elsewhere", operator_ids: ["chargy"], ppk: 10, monthly_fee: 0 },
+  { id: "e.bigger", operator_ids: ["jolt"], ppk: null, discount_percent: 40, monthly_fee: 9.99 },
+  { id: "f.unpriced", operator_ids: ["jolt"], ppk: null, discount_percent: null, monthly_fee: null },
+  { id: "g.cheap_free", operator_ids: ["jolt"], ppk: 39, monthly_fee: 0 },
 ];
 
-test("plans for an operator: the visitor's own first, then cheapest fixed prices", () => {
-  assert.deepEqual(plansFor("jolt", PLANS).map((p) => p.id), ["b.cheap", "c.dear", "a.discount"]);
+test("plans for an operator: fixed prices cheapest first, then discounts largest first", () => {
   assert.deepEqual(
-    plansFor("jolt", PLANS, new Set(["c.dear"])).map((p) => p.id),
-    ["c.dear", "b.cheap", "a.discount"],
+    plansFor("jolt", PLANS).map((p) => p.id),
+    ["g.cheap_free", "b.cheap", "c.dear", "e.bigger", "a.discount", "f.unpriced"],
   );
   assert.deepEqual(plansFor("nobody", PLANS), []);
   assert.deepEqual(plansFor("jolt", undefined), []);
+});
+
+test("a plan with a monthly fee, or an unpublished one, needs a paid subscription", () => {
+  const paid = PLANS.filter(needsSubscription).map((p) => p.id);
+  assert.deepEqual(paid, ["b.cheap", "e.bigger", "f.unpriced"]);
 });
 
 test("the cheapest way to pay compares only prices that include VAT", () => {

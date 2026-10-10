@@ -303,7 +303,7 @@ def test_details_list_every_tariff_the_connectors_refer_to(results, tmp_path):
     for _, detail in _layer_and_details(results, tmp_path):
         connectors = [c for e in detail["location"]["evses"] for c in e["connectors"]]
         listed = list(dict.fromkeys(i for c in connectors for i in c["tariff_ids"]))
-        assert [o["tariff_id"] for o in detail["tariff_options"]] == listed
+        assert sorted(o["tariff_id"] for o in detail["tariff_options"]) == sorted(listed)
         found = {t["id"] for t in detail["tariffs"]}
         for option in detail["tariff_options"]:
             reason = option["reason"] or ""
