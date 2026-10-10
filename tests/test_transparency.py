@@ -307,7 +307,7 @@ def test_a_declined_request_shows_the_operators_words_and_saved_copy():
 def test_a_decision_to_swap_back_coordinates_is_shown(page):
     data = json.loads(transparency.outputs()[transparency.JSON_PATH])
     decisions = {op["id"]: op["swapped_coordinates"] for op in data["operators"]}
-    decided = {"clenergy_ev", "geniepoint"}
-    assert all(decisions[k]["decided"] == "2026-10-09" for k in decided)
+    decided = {"clenergy_ev": "2026-10-09", "evolt": "2026-10-10", "geniepoint": "2026-10-09"}
+    assert all(decisions[k]["decided"] == date for k, date in decided.items())
     assert all(v is None for k, v in decisions.items() if k not in decided)
     assert "obviously missing a minus sign, are corrected and marked" in " ".join(page.split())

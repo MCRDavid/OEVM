@@ -20,9 +20,11 @@ and connector ids are JSON numbers rather than strings. To keep the fixtures sho
     (it is in ChargePlace Scotland's);
   - a location with 18 EVSEs, three of whose connectors give 0 for max_amperage and
     max_electric_power;
-  - three locations that are not shown on the map: one on the Isle of Man, one with
-    country AUS in Western Australia, and "Cadworks Castle Building Services", whose
-    postcode (G2 7LP) is in Glasgow but whose longitude is 4.26275, in the North Sea.
+  - two locations that are not shown on the map, one on the Isle of Man and one with
+    country AUS in Western Australia;
+  - "Cadworks Castle Building Services", whose postcode (G2 7LP) is in Glasgow but whose
+    longitude is 4.26275, in the North Sea; the map shows it with the minus sign added,
+    by the repository owner's decision recorded in `operators/evolt.yaml`.
   X-Total-Count, X-Limit and `meta.total` were changed to 8 to match.
 - `tariffs_page1.json` keeps the 8 tariffs those locations name that are in the response.
   Its X-Total-Count, X-Limit and `meta.total` were changed to 8 to match.

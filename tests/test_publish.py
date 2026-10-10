@@ -39,7 +39,7 @@ def test_every_output_validates_against_its_exported_schema(results, tmp_path):
     jsonschema.validate(layer, schema("map-layer"))
     jsonschema.validate(json.loads((data / "manifest.json").read_text()), schema("manifest"))
     details = sorted((data / "loc").glob("*/*.json"))
-    assert len(details) == len(layer["features"]) == 51
+    assert len(details) == len(layer["features"]) == 52
     for path in details:
         jsonschema.validate(json.loads(path.read_text()), schema("location-detail"))
 
@@ -79,7 +79,7 @@ def test_the_manifest_records_operators_attribution_and_sizes(results, tmp_path)
         assert entry.licence == "OGL-3.0"
     sizes = {f.path: f for f in manifest.files}
     assert sizes["data/locations.geojson"].bytes > sizes["data/locations.geojson"].gzip_bytes > 0
-    assert sizes["data/loc/"].files == 51
+    assert sizes["data/loc/"].files == 52
     assert any("gzipped" in line for line in out.report)
 
 
@@ -118,13 +118,21 @@ def test_coordinates_outside_the_uk_are_left_off_not_moved(results, tmp_path):
     assert moved.id not in ids
 
 
-def test_a_missing_minus_sign_is_not_corrected_without_the_owners_decision(results, tmp_path):
-    # Evolt Network's Glasgow location has longitude 4.26275, but its file has no
-    # swapped_coordinates, so it stays off the map with the Isle of Man and Australia ones.
+def test_a_missing_minus_sign_is_restored_by_the_owners_decision_for_evolt(results, tmp_path):
+    # Evolt Network's Glasgow location has longitude 4.26275; the Isle of Man and Australia
+    # ones stay off the map.
     out = published(results, tmp_path)
     entry = out.manifest.operators["evolt"]
-    assert (entry.mapped, entry.not_mapped, entry.corrected) == (5, 3, 0)
-    assert "evolt:GB:SSM:1261778" in entry.not_mapped_ids
+    assert (entry.mapped, entry.not_mapped, entry.corrected) == (6, 2, 1)
+    assert entry.corrected_ids == ["evolt:GB:SSM:1261778"]
+    assert "evolt:GB:SSM:1261778" not in entry.not_mapped_ids
+    key = publish.location_key("evolt:GB:SSM:1261778")
+    detail = json.loads((tmp_path / "data" / "loc" / key[:2] / f"{key}.json").read_text())
+    assert detail["location"]["coordinates"] == {"latitude": 55.86005, "longitude": -4.26275}
+    assert detail["coordinates_corrected"]["published"] == {
+        "latitude": 55.86005,
+        "longitude": 4.26275,
+    }
 
 
 def test_obviously_swapped_coordinates_are_swapped_back_and_marked(results, tmp_path):
@@ -142,7 +150,11 @@ def test_obviously_swapped_coordinates_are_swapped_back_and_marked(results, tmp_
         "longitude": 51.467819,
     }
     assert "wrong way round" in detail["coordinates_corrected"]["note"]
-    others = [p for p in (tmp_path / "data" / "loc").glob("*/*.json") if p.stem != key]
+    # Evolt Network's Glasgow location is the only other one corrected (a minus sign).
+    glasgow = publish.location_key("evolt:GB:SSM:1261778")
+    others = [
+        p for p in (tmp_path / "data" / "loc").glob("*/*.json") if p.stem not in (key, glasgow)
+    ]
     assert all(json.loads(p.read_text())["coordinates_corrected"] is None for p in others)
     assert any("1 with coordinates corrected" in line for line in out.report)
 

@@ -65,7 +65,7 @@ def test_recorded_locations_convert_faithfully():
     assert all(loc.opening_hours is None for loc in result.locations)
 
 
-def test_isle_of_man_australia_and_the_north_sea_are_left_off_the_map():
+def test_isle_of_man_and_australia_stay_off_and_the_missing_minus_sign_is_restored():
     result, _ = replay()
     outside = {loc.name for loc in result.locations if not in_uk(loc)}
     assert outside == {
@@ -73,12 +73,19 @@ def test_isle_of_man_australia_and_the_north_sea_are_left_off_the_map():
         "Gemtek",
         "Cadworks Castle Building Services",
     }
-    glasgow = by_name(result)["Cadworks Castle Building Services"]
-    assert (glasgow.coordinates.latitude, glasgow.coordinates.longitude) == (55.86005, 4.26275)
-    # The minus sign looks missing, but the owner has made no decision for this operator.
     config = load_registry()["evolt"]
-    assert config.swapped_coordinates is None
-    assert corrected_coordinates(glasgow, config) is None
+    assert config.swapped_coordinates is not None
+    assert config.swapped_coordinates.decided.isoformat() == "2026-10-10"
+    corrections = {
+        loc.name: corrected_coordinates(loc, config) for loc in result.locations if not in_uk(loc)
+    }
+    # Only the Glasgow location (G2 7LP, longitude 4.26275) is an obvious mistake.
+    assert corrections["Medical Centre Jurby"] is None
+    assert corrections["Gemtek"] is None
+    moved, note = corrections["Cadworks Castle Building Services"]
+    assert (moved.coordinates.latitude, moved.coordinates.longitude) == (55.86005, -4.26275)
+    assert (note.published.latitude, note.published.longitude) == (55.86005, 4.26275)
+    assert in_uk(moved)
 
 
 def test_prices_show_in_gbp_and_free_only_when_confirmed():

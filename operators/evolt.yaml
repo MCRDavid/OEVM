@@ -58,6 +58,13 @@ licence:
     requires to be available without terms on its use. The FAQ's words "for roaming
     partners" say who the access is for and set no terms.
   checked: 2026-10-10
+swapped_coordinates:
+  decided: 2026-10-10
+  basis: >-
+    Where a location's longitude is obviously missing its minus sign, or its latitude and
+    longitude are obviously the wrong way round, the repository owner decided to show it
+    in the right place rather than leave it off the map, with the operator's own figures
+    kept and the correction shown on the map and recorded in the findings below.
 engagement:
   status: open_anonymous
   evidence:
@@ -140,8 +147,9 @@ findings:
       longitude 4.26275, which is in the North Sea. Glasgow is at about longitude -4.26, west
       of the Greenwich meridian, so the minus sign appears to be missing.
     handling: >-
-      Left off the map as published. This file records no decision by the repository owner
-      to correct coordinates for this operator (swapped_coordinates), so it is not moved.
+      By the repository owner's decision of 2026-10-10 (swapped_coordinates above), it is
+      shown with the minus sign added, and its details on the map say so and give the
+      operator's own figures. The manifest lists it as corrected.
     evidence_url: https://info.smartcharging.uk/public_feed/locations/3666
   - date: 2026-10-10
     kind: data_quality
