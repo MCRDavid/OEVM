@@ -188,8 +188,21 @@ def _option(tariff: Tariff, count: int) -> TariffOption:
     )
 
 
+def _cheapest_first(option: TariffOption) -> tuple:
+    """Sort key: confirmed free first, then energy prices including VAT from lowest to
+    highest, then energy prices excluding VAT or with VAT not stated (not comparable with
+    the first group), then priced tariffs with no energy price, then unknown prices."""
+    if option.state == "free":
+        return (0, Decimal(0), Decimal(0))
+    if option.state == "priced" and option.energy_low is not None:
+        high = option.energy_high if option.energy_high is not None else option.energy_low
+        return (1 if option.includes_vat else 2, option.energy_low, high)
+    return (3 if option.state == "priced" else 4, Decimal(0), Decimal(0))
+
+
 def site_tariffs(location: Location, tariffs: dict[str, Tariff]) -> SiteTariffs:
-    """Every tariff the location's connectors list, in the order they are first listed."""
+    """Every tariff the location's connectors list, cheapest first (see _cheapest_first);
+    tariffs that sort the same keep the order they are first listed in."""
     connectors = [c for evse in location.evses for c in evse.connectors]
     counts: dict[str, int] = {}
     for connector in connectors:
@@ -209,6 +222,7 @@ def site_tariffs(location: Location, tariffs: dict[str, Tariff]) -> SiteTariffs:
         )
         for i, n in counts.items()
     ]
+    options.sort(key=_cheapest_first)
     return SiteTariffs(options, comparison(options), len(connectors))
 
 

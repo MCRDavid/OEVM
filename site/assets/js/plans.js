@@ -4,19 +4,28 @@
 // given. The calculator is the one place this site works out money: it uses the numbers
 // the visitor enters or confirms, shows its working, and says it is a guide only.
 
-// Plans that apply to an operator's locations, the visitor's own plans first, then fixed
-// prices from lowest to highest, then the rest in the file's order.
-export function plansFor(operatorId, plans, mine = new Set()) {
+// Plans that apply to an operator's locations, cheapest first: fixed prices per kWh from
+// lowest to highest (the lower monthly fee first on a tie), then discounts from largest to
+// smallest (the price they come off is not published, so they cannot be placed among the
+// fixed prices), then plans with no price published, each in the file's order otherwise.
+export function plansFor(operatorId, plans) {
   const matching = (plans ?? []).filter((plan) => (plan.operator_ids ?? []).includes(operatorId));
-  const rank = (plan) => [mine.has(plan.id) ? 0 : 1, plan.ppk ?? Number.POSITIVE_INFINITY];
+  const rank = (plan) => {
+    const fee = finite(plan.monthly_fee) ? plan.monthly_fee : Number.POSITIVE_INFINITY;
+    if (finite(plan.ppk)) return [0, plan.ppk, fee];
+    if (finite(plan.discount_percent)) return [1, -plan.discount_percent, fee];
+    return [2, 0, fee];
+  };
   return matching
-    .map((plan, index) => ({ plan, index }))
-    .sort((a, b) => {
-      const [ma, pa] = rank(a.plan);
-      const [mb, pb] = rank(b.plan);
-      return ma - mb || pa - pb || a.index - b.index;
-    })
+    .map((plan, index) => ({ plan, index, key: rank(plan) }))
+    .sort((a, b) => a.key[0] - b.key[0] || a.key[1] - b.key[1] || a.key[2] - b.key[2] || a.index - b.index)
     .map(({ plan }) => plan);
+}
+
+// A plan needs a paid subscription when it has a monthly fee, or when its fee is not
+// published (so it cannot be shown as free to join).
+export function needsSubscription(plan) {
+  return !finite(plan.monthly_fee) || plan.monthly_fee > 0;
 }
 
 // The cheapest energy price at a site among the operator's own tariffs (from its feed,

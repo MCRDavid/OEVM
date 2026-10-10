@@ -2,7 +2,8 @@
 
 import { h, safeLink } from "./dom.js";
 import { STATUS_LABELS, formatDateTime, formatKw, plugName } from "./format.js";
-import { breakEven, breakEvenText, cheapest, discounted, plansFor } from "./plans.js";
+import { STATUS_GROUPS, asOfText, chips, countByGroup, groupOf, summaryText } from "./live.js";
+import { breakEven, breakEvenText, cheapest, discounted, needsSubscription, plansFor } from "./plans.js";
 
 const WEEKDAYS = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"];
 
@@ -40,14 +41,67 @@ function priceFor(prices, evse, connector) {
   return prices.find((p) => p.evse_uid === evse.uid && p.connector_id === connector.id);
 }
 
+// A status in its group's colour, with the group's symbol, so colour is never the only cue.
+function statusLine(evse) {
+  const known = Object.hasOwn(STATUS_LABELS, evse.status) ? evse.status : "unknown";
+  const group = groupOf(known);
+  const when = known === "unknown" ? "" : `, reported ${formatDateTime(evse.status_at)}`;
+  return h(
+    "p",
+    { className: `status status-${group.replace("_", "-")}` },
+    h("span", { "aria-hidden": "true", text: `${STATUS_GROUPS[group].symbol} ` }),
+    `${STATUS_LABELS[known]}${when}`,
+  );
+}
+
+// How many charge points are free, in use, out of service or unknown, coloured, and when
+// the operator's feed was read. Statuses come from the daily fetch for now (ADR 0015).
+// Given onHideOut, the out of service count is a button that switches the map's "Hide out of service"
+// filter (ADR 0012) on or off, as the owner chose on 10 October 2026.
+export function statusSection(detail, { hideOut = false, onHideOut = null } = {}) {
+  const counts = countByGroup(detail.location?.evses);
+  if (!counts.total) return [];
+  const all = chips(counts);
+  const filterButton = onHideOut && all.some((chip) => chip.group === "out");
+  const chip = ({ group, className, symbol, text }) => {
+    const parts = [h("span", { "aria-hidden": "true", text: `${symbol} ` }), text];
+    if (!(filterButton && group === "out")) return h("span", { className }, ...parts);
+    return h(
+      "button",
+      {
+        type: "button",
+        className,
+        "data-filter": "working",
+        // The name says what pressing it does, and still contains the visible words.
+        "aria-label": `Hide out of service: ${text}`,
+        "aria-pressed": String(Boolean(hideOut)),
+        "aria-describedby": "status-filter-hint",
+        onClick: onHideOut,
+      },
+      ...parts,
+    );
+  };
+  return [
+    h("h3", { text: "Charge point status" }),
+    h("p", { className: "status-summary", text: summaryText(counts) }),
+    h("p", { className: "status-chips" }, all.map(chip)),
+    filterButton
+      ? h("p", {
+          className: "hint",
+          id: "status-filter-hint",
+          text: "Press the \"reported out of service\" count to hide or show chargers where every charge point was reported out of service, on the map and in the list. It is the same as the \"Hide out of service\" button.",
+        })
+      : null,
+    h("p", { className: "hint", text: `${asOfText(detail.fetched_at)}. It may have changed since.` }),
+  ].filter(Boolean);
+}
+
 function connectorItem(evse, connector, price) {
-  const status = STATUS_LABELS[evse.status] ?? STATUS_LABELS.unknown;
-  const when = evse.status === "unknown" ? "" : `, reported ${formatDateTime(evse.status_at)}`;
   return h(
     "li",
     {},
     h("p", { className: "plug" }, h("strong", { text: plugName(connector.standard) }), ` · ${formatKw(connector.max_kw)}`),
-    h("p", { text: `${status}${when}` }),
+    statusLine(evse),
     h(
       "p",
       { className: "price" },
@@ -83,6 +137,10 @@ export function tariffSection(detail) {
   );
   return [
     h("h3", { text: `Tariffs listed here (${options.length})` }),
+    h("p", {
+      className: "hint",
+      text: "Cheapest first, by price per kWh. Prices excluding VAT, or with VAT not stated, come after those including VAT.",
+    }),
     detail.tariff_comparison ? h("p", { text: detail.tariff_comparison }) : null,
     h("ul", { className: "tariffs", "aria-label": "Tariffs listed here" }, items),
   ].filter(Boolean);
@@ -222,27 +280,36 @@ function calculator(detail, plans) {
 // published energy price here, and the calculator.
 export function plansSection(detail, allPlans, mine = new Set()) {
   const operatorId = detail.location?.provenance?.source_id;
-  const plans = plansFor(operatorId, allPlans, mine);
+  const plans = plansFor(operatorId, allPlans);
+  if (!plans.length) return [];
   const yours = plans.filter((plan) => mine.has(plan.id));
-  const parts = [
+  const free = plans.filter((plan) => !needsSubscription(plan));
+  const paid = plans.filter(needsSubscription);
+  const list = (label, items) =>
+    h("ul", { className: "tariffs plans", "aria-label": label }, items.map((p) => planItem(p, mine)));
+  return [
+    h("h3", { text: `Other ways to pay here (${plans.length})` }),
+    h("p", {
+      className: "hint",
+      text: "Plans copied by hand from each provider's own page, on the date shown, cheapest first. Fixed prices per kWh come first, then discounts from largest to smallest: discounts are not turned into prices, because the price they come off is often shown only in the provider's app. Check with the provider before signing up.",
+    }),
     yours.length ? cheapestLine(detail, yours, "Lowest published energy price here with your plans") : null,
     cheapestLine(detail, plans, "Lowest published energy price here with any listed plan"),
-  ];
-  if (plans.length) {
-    parts.unshift(
-      h("h3", { text: `Other ways to pay here (${plans.length})` }),
-      h("p", {
-        className: "hint",
-        text: "Plans copied by hand from each provider's own page, on the date shown. Discounts are not turned into prices, because the price they come off is often shown only in the provider's app. Check with the provider before signing up.",
-      }),
-    );
-    parts.push(h("ul", { className: "tariffs plans", "aria-label": "Other ways to pay here" }, plans.map((p) => planItem(p, mine))));
-    parts.push(calculator(detail, plans));
-  }
-  return plans.length ? parts.filter(Boolean) : [];
+    ...(free.length
+      ? [h("h4", { text: `No subscription needed (${free.length})` }), list("No subscription needed", free)]
+      : []),
+    ...(paid.length
+      ? [
+          h("h4", { text: `With a paid subscription (${paid.length})` }),
+          h("p", { className: "hint", text: "These prices need a monthly subscription. Its cost is shown with each plan." }),
+          list("With a paid subscription", paid),
+        ]
+      : []),
+    calculator(detail, plans),
+  ].filter(Boolean);
 }
 
-export function renderDetail(detail, { repository, plans = [], mine = new Set() }) {
+export function renderDetail(detail, { repository, plans = [], mine = new Set(), hideOut = false, onHideOut = null }) {
   const location = detail.location;
   const items = [];
   for (const evse of location.evses ?? []) {
@@ -266,6 +333,7 @@ export function renderDetail(detail, { repository, plans = [], mine = new Set() 
       ? [h("p", { className: "hint corrected", text: detail.coordinates_corrected.note })]
       : []),
     openingHours(location.opening_hours),
+    ...statusSection(detail, { hideOut, onHideOut }),
     h("h3", { text: "Connectors" }),
     items.length ? h("ul", { className: "connectors" }, items) : h("p", { text: "No charge points listed." }),
     ...tariffSection(detail),
