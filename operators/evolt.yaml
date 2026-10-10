@@ -1,0 +1,186 @@
+# yaml-language-server: $schema=schema.json
+id: evolt
+display_name: Evolt Network
+ocpi_country_code: GB # From the feed's own records on 2026-10-10; one location has AU.
+ocpi_party_id: SSM # Confirmed from the feed's own party_id on 2026-10-10.
+adapter: ocpi_221
+base_url: unknown
+endpoints:
+  locations:
+    url: https://info.smartcharging.uk/public_feed/locations/3666
+    status: documented
+    note: Linked as "Locations" from Evolt Network's FAQ page (read 2026-10-10).
+  tariffs:
+    url: https://info.smartcharging.uk/public_feed/locations/3666/tariffs
+    status: documented
+    note: Linked as "Tariffs" from Evolt Network's FAQ page (read 2026-10-10).
+auth:
+  method: none
+  name: null
+  secret_name: null
+rate_limit:
+  min_seconds_between_requests: 2
+  limits: []
+  limits_checked: 2026-10-10
+  notes: >-
+    Neither Evolt Network's pages nor the responses state a rate limit. The 2 second gap is
+    this project's own choice, shared with PoGo Charge and ChargePlace Scotland, whose feeds
+    are on the same host and are fetched one after another. Each response holds every
+    record, so a full run makes two requests.
+supports_single_location: unknown
+cors: needs_testing
+attribution: >-
+  Contains data from Evolt Network published under the Public Charge Point Regulations 2023, used
+  in line with the Open Government Licence v3.0.
+licence:
+  name: OGL-3.0
+  url: https://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/
+  basis: >-
+    Evolt Network's FAQ page answers "Does Evolt Network offer open data API access?" with
+    "Yes, Evolt Network offers open data API access for roaming partners via the following
+    links:" and links the two feeds. The answer states no registration step, key, licence,
+    terms or rate limit (read 2026-10-10). DfT's guidance (updated 21 October 2024) says
+    "Data must be open in line with the Open Government Licence". Evolt's terms of use
+    ("Evolt Charging Terms and Conditions 02/2023", read 2026-10-10) say "The terms provided
+    in this document relate only to Your rights whilst Using Our Electric Vehicle Recharging
+    Network". Its other pages are a privacy notice, a cookie policy, business terms of sale
+    on evoltcharging.co.uk and the footer line "© 2026 Evolt Charging LTD All rights
+    reserved"; none of them sets terms for reusing the open data. Evolt Charging's Backend
+    Services Supplemental Terms, a contract with business customers that buy its back office
+    services (read 2026-10-10), say in clause 8.1 that information on public charge points
+    "may be collected, processed, reported, shared and made publicly available by EVOLT to
+    the extent necessary to comply with applicable legal and regulatory requirements,
+    industry standards and interoperability obligations, including the Public Charge Point
+    Regulations 2023"; they bind EVOLT and those customers and set nothing for others who
+    reuse the data. On 2026-10-10 the repository owner decided, as a standing rule for
+    operators whose data has no terms of its own, to read
+    general website or charging terms as not covering the open data, which regulation 10(5)
+    requires to be available without terms on its use. The FAQ's words "for roaming
+    partners" say who the access is for and set no terms.
+  checked: 2026-10-10
+engagement:
+  status: open_anonymous
+  evidence:
+    - date: 2026-10-10
+      url: https://evoltnetwork.co.uk/faqs/
+      note: >-
+        Evolt Network's FAQ page answers "Does Evolt Network offer open data API access?" with
+        two links, "Locations" and "Tariffs", on info.smartcharging.uk. The answer mentions no
+        registration step, key, licence or rate limit. Both feeds answered without a key on
+        2026-10-10.
+  log:
+    - date: 2026-10-10
+      action: feed_searched
+      summary: >-
+        Evolt Network's home page was read; it has no open data link and links its FAQ page.
+      evidence_url: https://evoltnetwork.co.uk/
+    - date: 2026-10-10
+      action: page_checked
+      summary: >-
+        Evolt Network's FAQ page was read; it links a locations feed and a tariffs feed for
+        open data API access, and the answer mentions no registration, key, licence or rate
+        limit.
+      quote: >-
+        Yes, Evolt Network offers open data API access for roaming partners via the following
+        links:
+      evidence_url: https://evoltnetwork.co.uk/faqs/
+    - date: 2026-10-10
+      action: page_checked
+      summary: >-
+        Evolt Network's terms of use, privacy notice and cookie policy were read; none
+        mentions the open data.
+      evidence_url: https://evoltnetwork.co.uk/terms-of-use/
+access_requested: null
+access_granted: null
+sources:
+  - url: https://evoltnetwork.co.uk/
+    note: >-
+      Evolt Network's home page (read 2026-10-10). Its title is "Evolt Network | The new home
+      of SWARCO E.Connect", and its sign-up and payment links go to swarcoeconnect.org.
+  - url: https://evoltnetwork.co.uk/faqs/
+    note: >-
+      Evolt Network's FAQ page (read 2026-10-10). Links the locations and tariffs feeds.
+  - url: https://evoltnetwork.co.uk/terms-of-use/
+    note: >-
+      Evolt Charging Terms and Conditions 02/2023 (read 2026-10-10). They say the network is
+      owned and operated by SWARCO Smart Charging and do not mention the data.
+  - url: https://evoltnetwork.co.uk/privacy-policy/
+    note: >-
+      Evolt Network's privacy notice, last updated 5 October 2026 (read 2026-10-10). It covers
+      personal data only and names EVOLT Charging Limited.
+  - url: https://evoltcharging.co.uk/terms-of-sale/supplemental-terms/backend-services/
+    note: >-
+      Evolt Charging's Backend Services Supplemental Terms for business customers (read
+      2026-10-10). Clause 8.1 lets EVOLT publish public charge point information, including
+      under the Public Charge Point Regulations 2023; the terms set nothing for reusers.
+findings:
+  - date: 2026-10-10
+    kind: spec_conformance
+    summary: >-
+      Location and connector ids are sent as JSON numbers (for example 95471 and 1) rather
+      than the strings OCPI 2.2.1 requires.
+    handling: >-
+      Each is read as the string of its digits, which names the same record, and the run
+      report notes it.
+    evidence_url: https://info.smartcharging.uk/public_feed/locations/3666
+  - date: 2026-10-10
+    kind: data_quality
+    summary: >-
+      45 locations have Isle of Man postcodes (IM) with country GBR and country_code GB, and
+      one location, "Gemtek", has country AUS and coordinates in Western Australia (on
+      2026-10-10).
+    handling: >-
+      The map shows only locations in the UK (ADR 0017), so these are left off it and the
+      manifest lists them as not mapped.
+    evidence_url: https://info.smartcharging.uk/public_feed/locations/3666
+  - date: 2026-10-10
+    kind: data_quality
+    summary: >-
+      One location, "Cadworks Castle Building Services" (postcode G2 7LP, in Glasgow), has
+      longitude 4.26275, which is in the North Sea. Glasgow is at about longitude -4.26, west
+      of the Greenwich meridian, so the minus sign appears to be missing.
+    handling: >-
+      Left off the map as published. This file records no decision by the repository owner
+      to correct coordinates for this operator (swapped_coordinates), so it is not moved.
+    evidence_url: https://info.smartcharging.uk/public_feed/locations/3666
+  - date: 2026-10-10
+    kind: data_quality
+    summary: >-
+      2 connectors at "Granton Western Village" name a tariff that is not in Evolt Network's
+      tariff response but is in ChargePlace Scotland's, and 2 connectors name no tariff (on
+      2026-10-10).
+    handling: >-
+      Tariffs are matched only within an operator's own response, so these connectors show
+      "Price unknown". Prices are never taken from another operator's feed.
+    evidence_url: https://info.smartcharging.uk/public_feed/locations/3666/tariffs
+  - date: 2026-10-10
+    kind: data_quality
+    summary: >-
+      3 connectors at "Daresbury Laboratory" give 0 for max_amperage, max_electric_power and
+      max_charge_rate.
+    handling: Their power is shown as unknown.
+    evidence_url: https://info.smartcharging.uk/public_feed/locations/3666
+  - date: 2026-10-10
+    kind: data_quality
+    summary: >-
+      645 of 3,421 EVSEs report status UNKNOWN (on 2026-10-10).
+    handling: They are shown with status unknown.
+    evidence_url: https://info.smartcharging.uk/public_feed/locations/3666
+  - date: 2026-10-10
+    kind: data_quality
+    summary: >-
+      No location gives opening_times, and records carry fields that are not in OCPI 2.2.1:
+      "facility" on locations (always null), "id" and "location_id" on EVSEs, and
+      "max_charge_rate" on connectors.
+    handling: >-
+      Opening hours are shown as unknown. The extra fields are not used.
+    evidence_url: https://info.smartcharging.uk/public_feed/locations/3666
+notes: >-
+  The feeds are standard OCPI 2.2.1 responses on info.smartcharging.uk, read by the ocpi_221
+  adapter. Each holds every record, with X-Total-Count (710 locations, 3,421 EVSEs and 289
+  GBP tariffs on 2026-10-10). The same host serves PoGo Charge (4009) and ChargePlace
+  Scotland (2463); the terms pages of all three name SWARCO Smart Charging Ltd as operator,
+  while Evolt's privacy notice names EVOLT Charging Limited. Evolt Network's site calls
+  itself the new home of SWARCO E.Connect. Not yet fetched from a GitHub Actions runner; the
+  first daily run will show whether the host answers requests from there.
+enabled: true

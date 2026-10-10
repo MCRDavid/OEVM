@@ -17,9 +17,11 @@ OPERATORS_DIR = Path(__file__).resolve().parent.parent / "operators"
 SEED_IDS = {
     "arnold_clark_charge",
     "bp_pulse",
+    "chargeplace_scotland",
     "chargy",
     "clenergy_ev",
     "community_by_shell_recharge",
+    "evolt",
     "geniepoint",
     "go_zero",
     "gridserve",
@@ -28,6 +30,7 @@ SEED_IDS = {
     "mer_uk",
     "mfg_ev_power",
     "pod",
+    "pogo_charge",
     "shell_recharge",
     "ubitricity",
 }
@@ -104,7 +107,7 @@ def test_operator_files_contain_no_key_like_values():
 
 def test_cli_validate_succeeds_on_seed_registry(capsys):
     assert registry.main(["--validate"]) == 0
-    assert "Operator registry is valid: 15 operators" in capsys.readouterr().out
+    assert "Operator registry is valid: 18 operators" in capsys.readouterr().out
 
 
 def test_cli_without_validate_prints_help(capsys):

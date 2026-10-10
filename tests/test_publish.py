@@ -39,7 +39,7 @@ def test_every_output_validates_against_its_exported_schema(results, tmp_path):
     jsonschema.validate(layer, schema("map-layer"))
     jsonschema.validate(json.loads((data / "manifest.json").read_text()), schema("manifest"))
     details = sorted((data / "loc").glob("*/*.json"))
-    assert len(details) == len(layer["features"]) == 35
+    assert len(details) == len(layer["features"]) == 51
     for path in details:
         jsonschema.validate(json.loads(path.read_text()), schema("location-detail"))
 
@@ -63,12 +63,15 @@ def test_the_manifest_records_operators_attribution_and_sizes(results, tmp_path)
     manifest = out.manifest
     assert set(manifest.operators) == {
         "arnold_clark_charge",
+        "chargeplace_scotland",
         "chargy",
         "clenergy_ev",
+        "evolt",
         "geniepoint",
         "jolt",
         "mer_uk",
         "mfg_ev_power",
+        "pogo_charge",
     }
     for operator_id, entry in manifest.operators.items():
         config = load_registry()[operator_id]
@@ -76,7 +79,7 @@ def test_the_manifest_records_operators_attribution_and_sizes(results, tmp_path)
         assert entry.licence == "OGL-3.0"
     sizes = {f.path: f for f in manifest.files}
     assert sizes["data/locations.geojson"].bytes > sizes["data/locations.geojson"].gzip_bytes > 0
-    assert sizes["data/loc/"].files == 35
+    assert sizes["data/loc/"].files == 51
     assert any("gzipped" in line for line in out.report)
 
 
@@ -113,6 +116,15 @@ def test_coordinates_outside_the_uk_are_left_off_not_moved(results, tmp_path):
         for f in json.loads((tmp_path / "data" / "locations.geojson").read_text())["features"]
     ]
     assert moved.id not in ids
+
+
+def test_a_missing_minus_sign_is_not_corrected_without_the_owners_decision(results, tmp_path):
+    # Evolt Network's Glasgow location has longitude 4.26275, but its file has no
+    # swapped_coordinates, so it stays off the map with the Isle of Man and Australia ones.
+    out = published(results, tmp_path)
+    entry = out.manifest.operators["evolt"]
+    assert (entry.mapped, entry.not_mapped, entry.corrected) == (5, 3, 0)
+    assert "evolt:GB:SSM:1261778" in entry.not_mapped_ids
 
 
 def test_obviously_swapped_coordinates_are_swapped_back_and_marked(results, tmp_path):

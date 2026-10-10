@@ -1,0 +1,545 @@
+{
+  "request": {
+    "method": "GET",
+    "url": "https://info.smartcharging.uk/public_feed/locations/2463"
+  },
+  "response": {
+    "status_code": 200,
+    "headers": {
+      "content-type": "application/json",
+      "x-total-count": "6",
+      "x-limit": "6"
+    },
+    "body": {
+      "status_code": 1000,
+      "data": [
+        {
+          "id": 426959,
+          "party_id": "CPS",
+          "publish": true,
+          "country_code": "GB",
+          "name": "Mar Place",
+          "address": "Mar Place",
+          "city": "Sauchie",
+          "postal_code": "FK10 3EA",
+          "country": "GBR",
+          "coordinates": {
+            "latitude": "56.12658",
+            "longitude": "-3.78299"
+          },
+          "evses": [
+            {
+              "id": "52917",
+              "uid": "52917_1",
+              "evse_id": "GB*CPS*E52917*1",
+              "physical_reference": "52917",
+              "location_id": 426959,
+              "status": "AVAILABLE",
+              "capabilities": [
+                "REMOTE_START_STOP_CAPABLE",
+                "RFID_READER"
+              ],
+              "connectors": [
+                {
+                  "id": 1,
+                  "standard": "IEC_62196_T2_COMBO",
+                  "format": "SOCKET",
+                  "max_charge_rate": 50,
+                  "power_type": "DC",
+                  "max_voltage": 220,
+                  "max_amperage": 227,
+                  "max_electric_power": 50000,
+                  "tariff_ids": [
+                    "c1fa5d96-4609-44e5-a2a8-73af60aeb6fa"
+                  ],
+                  "last_updated": "2026-10-10T00:03:46"
+                }
+              ],
+              "last_updated": "2026-10-10T00:03:46"
+            },
+            {
+              "id": "52917",
+              "uid": "52917_2",
+              "evse_id": "GB*CPS*E52917*2",
+              "physical_reference": "52917",
+              "location_id": 426959,
+              "status": "AVAILABLE",
+              "capabilities": [
+                "REMOTE_START_STOP_CAPABLE",
+                "RFID_READER"
+              ],
+              "connectors": [
+                {
+                  "id": 2,
+                  "standard": "CHADEMO",
+                  "format": "SOCKET",
+                  "max_charge_rate": 50,
+                  "power_type": "DC",
+                  "max_voltage": 220,
+                  "max_amperage": 227,
+                  "max_electric_power": 50000,
+                  "tariff_ids": [
+                    "c1fa5d96-4609-44e5-a2a8-73af60aeb6fa"
+                  ],
+                  "last_updated": "2026-10-10T00:03:46"
+                }
+              ],
+              "last_updated": "2026-10-10T00:03:46"
+            },
+            {
+              "id": "52917",
+              "uid": "52917_3",
+              "evse_id": "GB*CPS*E52917*3",
+              "physical_reference": "52917",
+              "location_id": 426959,
+              "status": "AVAILABLE",
+              "capabilities": [
+                "REMOTE_START_STOP_CAPABLE",
+                "RFID_READER"
+              ],
+              "connectors": [
+                {
+                  "id": 3,
+                  "standard": "IEC_62196_T2",
+                  "format": "SOCKET",
+                  "max_charge_rate": 22,
+                  "power_type": "AC_3_PHASE",
+                  "max_voltage": 415,
+                  "max_amperage": 31,
+                  "max_electric_power": 22000,
+                  "tariff_ids": [
+                    "1445cb62-35cc-439f-afde-898178e8e093"
+                  ],
+                  "last_updated": "2026-10-10T00:03:46"
+                }
+              ],
+              "last_updated": "2026-10-10T00:03:46"
+            }
+          ],
+          "time_zone": "Europe/London",
+          "facility": null,
+          "last_updated": "2026-10-10T00:03:46"
+        },
+        {
+          "id": 450779,
+          "party_id": "CPS",
+          "publish": true,
+          "country_code": "GB",
+          "name": "Herbertshire Castle Car Park, Dunipace",
+          "address": "Stirling Street",
+          "city": "Dunipace",
+          "postal_code": "FK6 6LW",
+          "country": "GBR",
+          "coordinates": {
+            "latitude": "56.026514",
+            "longitude": "-3.914824"
+          },
+          "evses": [
+            {
+              "id": "54191",
+              "uid": "54191_1",
+              "evse_id": "GB*CPS*E54191*1",
+              "physical_reference": "54191",
+              "location_id": 450779,
+              "status": "UNKNOWN",
+              "capabilities": [
+                "REMOTE_START_STOP_CAPABLE",
+                "RFID_READER"
+              ],
+              "connectors": [
+                {
+                  "id": 1,
+                  "standard": "IEC_62196_T2",
+                  "format": "SOCKET",
+                  "max_charge_rate": 7,
+                  "power_type": "AC_1_PHASE",
+                  "max_voltage": 220,
+                  "max_amperage": 32,
+                  "max_electric_power": 7000,
+                  "tariff_ids": [
+                    "47a52501-4154-403d-b87d-ac650a7d3bc9"
+                  ],
+                  "last_updated": "2026-10-10T00:03:20"
+                }
+              ],
+              "last_updated": "2026-10-10T00:03:20"
+            },
+            {
+              "id": "54191",
+              "uid": "54191_2",
+              "evse_id": "GB*CPS*E54191*2",
+              "physical_reference": "54191",
+              "location_id": 450779,
+              "status": "UNKNOWN",
+              "capabilities": [
+                "REMOTE_START_STOP_CAPABLE",
+                "RFID_READER"
+              ],
+              "connectors": [
+                {
+                  "id": 2,
+                  "standard": "IEC_62196_T2",
+                  "format": "SOCKET",
+                  "max_charge_rate": 7,
+                  "power_type": "AC_1_PHASE",
+                  "max_voltage": 220,
+                  "max_amperage": 32,
+                  "max_electric_power": 7000,
+                  "tariff_ids": [
+                    "47a52501-4154-403d-b87d-ac650a7d3bc9"
+                  ],
+                  "last_updated": "2026-10-10T00:03:20"
+                }
+              ],
+              "last_updated": "2026-10-10T00:03:20"
+            }
+          ],
+          "time_zone": "Europe/London",
+          "facility": null,
+          "last_updated": "2026-10-10T00:03:20"
+        },
+        {
+          "id": 524114,
+          "party_id": "CPS",
+          "publish": true,
+          "country_code": "GB",
+          "name": "Atlantic Quay",
+          "address": "110 York Street",
+          "city": "Glasgow",
+          "postal_code": "G2 8JX",
+          "country": "GBR",
+          "coordinates": {
+            "latitude": "55.85851",
+            "longitude": "-4.26237"
+          },
+          "evses": [
+            {
+              "id": "53785",
+              "uid": "53785_1",
+              "evse_id": "GB*CPS*E53785*1",
+              "physical_reference": "53785",
+              "location_id": 524114,
+              "status": "AVAILABLE",
+              "capabilities": [
+                "REMOTE_START_STOP_CAPABLE",
+                "RFID_READER"
+              ],
+              "connectors": [
+                {
+                  "id": 1,
+                  "standard": "IEC_62196_T2",
+                  "format": "SOCKET",
+                  "max_charge_rate": 22,
+                  "power_type": "AC_3_PHASE",
+                  "max_voltage": 415,
+                  "max_amperage": 31,
+                  "max_electric_power": 22000,
+                  "tariff_ids": [
+                    "9fc8cd96-9710-419d-9c28-61c173a37240"
+                  ],
+                  "last_updated": "2026-10-10T00:03:41"
+                }
+              ],
+              "last_updated": "2026-10-10T00:03:41"
+            },
+            {
+              "id": "53785",
+              "uid": "53785_2",
+              "evse_id": "GB*CPS*E53785*2",
+              "physical_reference": "53785",
+              "location_id": 524114,
+              "status": "AVAILABLE",
+              "capabilities": [
+                "REMOTE_START_STOP_CAPABLE",
+                "RFID_READER"
+              ],
+              "connectors": [
+                {
+                  "id": 2,
+                  "standard": "IEC_62196_T2",
+                  "format": "SOCKET",
+                  "max_charge_rate": 22,
+                  "power_type": "AC_3_PHASE",
+                  "max_voltage": 415,
+                  "max_amperage": 31,
+                  "max_electric_power": 22000,
+                  "tariff_ids": [
+                    "9fc8cd96-9710-419d-9c28-61c173a37240"
+                  ],
+                  "last_updated": "2026-10-10T00:03:41"
+                }
+              ],
+              "last_updated": "2026-10-10T00:03:41"
+            }
+          ],
+          "time_zone": "Europe/London",
+          "facility": null,
+          "last_updated": "2026-10-10T00:03:41"
+        },
+        {
+          "id": 600145,
+          "party_id": "CPS",
+          "publish": true,
+          "country_code": "GB",
+          "name": "Rosslyn Chapel",
+          "address": "Roslin",
+          "city": "Chapel Loan",
+          "postal_code": "EH25 9PU",
+          "country": "GBR",
+          "coordinates": {
+            "latitude": "55.85610",
+            "longitude": "-3.16250"
+          },
+          "evses": [
+            {
+              "id": "WBECYC_0009",
+              "uid": "WBECYC_0009_1",
+              "evse_id": "GB*CPS*EWBECYC_0009*1",
+              "physical_reference": "WBECYC_0009",
+              "location_id": 600145,
+              "status": "INOPERATIVE",
+              "capabilities": [
+                "REMOTE_START_STOP_CAPABLE",
+                "RFID_READER"
+              ],
+              "connectors": [
+                {
+                  "id": 1,
+                  "standard": "IEC_62196_T2",
+                  "format": "SOCKET",
+                  "max_charge_rate": 22,
+                  "power_type": "AC_3_PHASE",
+                  "max_voltage": 415,
+                  "max_amperage": 31,
+                  "max_electric_power": 22000,
+                  "tariff_ids": [
+                    "0533b535-f431-4efc-990e-5118d55b0e8d"
+                  ],
+                  "last_updated": "2026-10-10T00:03:29"
+                }
+              ],
+              "last_updated": "2026-10-10T00:03:29"
+            },
+            {
+              "id": "WBECYC_0009",
+              "uid": "WBECYC_0009_2",
+              "evse_id": "GB*CPS*EWBECYC_0009*2",
+              "physical_reference": "WBECYC_0009",
+              "location_id": 600145,
+              "status": "CHARGING",
+              "capabilities": [
+                "REMOTE_START_STOP_CAPABLE",
+                "RFID_READER"
+              ],
+              "connectors": [
+                {
+                  "id": 2,
+                  "standard": "IEC_62196_T2",
+                  "format": "SOCKET",
+                  "max_charge_rate": 22,
+                  "power_type": "AC_3_PHASE",
+                  "max_voltage": 415,
+                  "max_amperage": 31,
+                  "max_electric_power": 22000,
+                  "tariff_ids": [
+                    "0533b535-f431-4efc-990e-5118d55b0e8d"
+                  ],
+                  "last_updated": "2026-10-10T00:03:29"
+                }
+              ],
+              "last_updated": "2026-10-10T00:03:29"
+            }
+          ],
+          "time_zone": "Europe/London",
+          "facility": null,
+          "last_updated": "2026-10-10T00:03:29"
+        },
+        {
+          "id": 600177,
+          "party_id": "CPS",
+          "publish": true,
+          "country_code": "GB",
+          "name": "Dornoch Castle Hotel",
+          "address": "Sutherland",
+          "city": "Castle Street",
+          "postal_code": "IV25 3SD",
+          "country": "GBR",
+          "coordinates": {
+            "latitude": "57.88000",
+            "longitude": "-4.03036"
+          },
+          "evses": [
+            {
+              "id": "13386",
+              "uid": "13386_1",
+              "evse_id": "GB*CPS*E13386*1",
+              "physical_reference": "13386",
+              "location_id": 600177,
+              "status": "UNKNOWN",
+              "capabilities": [
+                "REMOTE_START_STOP_CAPABLE",
+                "RFID_READER"
+              ],
+              "connectors": [
+                {
+                  "id": 1,
+                  "standard": "IEC_62196_T2",
+                  "format": "SOCKET",
+                  "max_charge_rate": 7,
+                  "power_type": "AC_1_PHASE",
+                  "max_voltage": 220,
+                  "max_amperage": 32,
+                  "max_electric_power": 7000,
+                  "tariff_ids": [
+                    "d8ac3eeb-5507-4175-8819-d4a977c36e43"
+                  ],
+                  "last_updated": "2026-04-17T00:03:11"
+                }
+              ],
+              "last_updated": "2026-04-17T00:03:11"
+            },
+            {
+              "id": "13386",
+              "uid": "13386_2",
+              "evse_id": "GB*CPS*E13386*2",
+              "physical_reference": "13386",
+              "location_id": 600177,
+              "status": "UNKNOWN",
+              "capabilities": [
+                "REMOTE_START_STOP_CAPABLE",
+                "RFID_READER"
+              ],
+              "connectors": [
+                {
+                  "id": 2,
+                  "standard": "IEC_62196_T2",
+                  "format": "SOCKET",
+                  "max_charge_rate": 0,
+                  "power_type": "AC_3_PHASE",
+                  "max_voltage": 415,
+                  "max_amperage": 0,
+                  "max_electric_power": 0,
+                  "tariff_ids": [
+                    "d8ac3eeb-5507-4175-8819-d4a977c36e43"
+                  ],
+                  "last_updated": "2026-04-17T00:03:11"
+                }
+              ],
+              "last_updated": "2026-04-17T00:03:11"
+            }
+          ],
+          "time_zone": "Europe/London",
+          "facility": null,
+          "last_updated": "2026-04-17T00:03:11"
+        },
+        {
+          "id": 612947,
+          "party_id": "CPS",
+          "publish": true,
+          "country_code": "GB",
+          "name": "Broomburn Shops Car Park, Renfrewshire",
+          "address": "Newton Mearns",
+          "city": "Broomburn Shops Car Park",
+          "postal_code": "G77 5JQ",
+          "country": "GBR",
+          "coordinates": {
+            "latitude": "55.77529",
+            "longitude": "-4.31375"
+          },
+          "evses": [
+            {
+              "id": "24575",
+              "uid": "24575_1",
+              "evse_id": "GB*CPS*E24575*1",
+              "physical_reference": "24575",
+              "location_id": 612947,
+              "status": "UNKNOWN",
+              "capabilities": [
+                "REMOTE_START_STOP_CAPABLE",
+                "RFID_READER"
+              ],
+              "connectors": [
+                {
+                  "id": 1,
+                  "standard": "IEC_62196_T2_COMBO",
+                  "format": "SOCKET",
+                  "max_charge_rate": 50,
+                  "power_type": "DC",
+                  "max_voltage": 220,
+                  "max_amperage": 227,
+                  "max_electric_power": 50000,
+                  "tariff_ids": [],
+                  "last_updated": "2026-10-10T00:03:44"
+                }
+              ],
+              "last_updated": "2026-10-10T00:03:44"
+            },
+            {
+              "id": "24575",
+              "uid": "24575_2",
+              "evse_id": "GB*CPS*E24575*2",
+              "physical_reference": "24575",
+              "location_id": 612947,
+              "status": "UNKNOWN",
+              "capabilities": [
+                "REMOTE_START_STOP_CAPABLE",
+                "RFID_READER"
+              ],
+              "connectors": [
+                {
+                  "id": 2,
+                  "standard": "CHADEMO",
+                  "format": "SOCKET",
+                  "max_charge_rate": 50,
+                  "power_type": "DC",
+                  "max_voltage": 220,
+                  "max_amperage": 227,
+                  "max_electric_power": 50000,
+                  "tariff_ids": [],
+                  "last_updated": "2026-10-10T00:03:44"
+                }
+              ],
+              "last_updated": "2026-10-10T00:03:44"
+            },
+            {
+              "id": "24575",
+              "uid": "24575_3",
+              "evse_id": "GB*CPS*E24575*3",
+              "physical_reference": "24575",
+              "location_id": 612947,
+              "status": "UNKNOWN",
+              "capabilities": [
+                "REMOTE_START_STOP_CAPABLE",
+                "RFID_READER"
+              ],
+              "connectors": [
+                {
+                  "id": 3,
+                  "standard": "IEC_62196_T2",
+                  "format": "SOCKET",
+                  "max_charge_rate": 43,
+                  "power_type": "AC_3_PHASE",
+                  "max_voltage": 415,
+                  "max_amperage": 60,
+                  "max_electric_power": 43000,
+                  "tariff_ids": [],
+                  "last_updated": "2026-10-10T00:03:44"
+                }
+              ],
+              "last_updated": "2026-10-10T00:03:44"
+            }
+          ],
+          "time_zone": "Europe/London",
+          "facility": null,
+          "last_updated": "2026-10-10T00:03:44"
+        }
+      ],
+      "status_message": "Success",
+      "timestamp": "2026-10-10T08:16:40",
+      "meta": {
+        "total": 6,
+        "limit": null
+      }
+    }
+  }
+}

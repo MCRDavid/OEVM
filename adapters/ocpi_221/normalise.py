@@ -161,6 +161,18 @@ def _max_kw(raw: dict, power_type: str, issues: IssueLog) -> float | None:
     return None
 
 
+def _ocpi_id(value: object, what: str, issues: IssueLog) -> object:
+    """An OCPI id sent as a JSON number, read as its digits; anything else unchanged.
+
+    OCPI 2.2.1 ids are strings. A whole number names the same record either way, so it is
+    read as the string of its digits and logged as an issue rather than dropping the record.
+    """
+    if isinstance(value, int) and not isinstance(value, bool):
+        issues.add(f"{what} id is a number, not a string; read as its digits")
+        return str(value)
+    return value
+
+
 def _connector(raw: dict, tariff_prefix: str, issues: IssueLog) -> Connector:
     standard = raw.get("standard")
     if not isinstance(standard, str) or not standard.replace("_", "").isalnum():
@@ -170,7 +182,7 @@ def _connector(raw: dict, tariff_prefix: str, issues: IssueLog) -> Connector:
     if power_type == "unknown":
         issues.add(f"connector power_type {raw.get('power_type')!r} is not an OCPI 2.2.1 value")
     return Connector(
-        id=raw["id"],
+        id=_ocpi_id(raw["id"], "connector", issues),
         standard=standard,
         format=FORMATS.get(raw.get("format"), "unknown"),
         power_type=power_type,
@@ -254,7 +266,7 @@ def location_from_ocpi(
     last_updated = parse_ocpi_datetime(raw.get("last_updated"))
     coordinates = raw["coordinates"]
     return Location(
-        id=f"{prefix}:{raw['id']}",
+        id=f"{prefix}:{_ocpi_id(raw['id'], 'location', issues)}",
         name=raw.get("name"),
         address=Address(
             street=raw.get("address"),

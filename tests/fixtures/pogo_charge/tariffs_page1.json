@@ -1,0 +1,285 @@
+{
+  "request": {
+    "method": "GET",
+    "url": "https://info.smartcharging.uk/public_feed/locations/4009/tariffs"
+  },
+  "response": {
+    "status_code": 200,
+    "headers": {
+      "content-type": "application/json",
+      "x-total-count": "13",
+      "x-limit": "13"
+    },
+    "body": {
+      "status_code": 1000,
+      "data": [
+        {
+          "country_code": "GB",
+          "party_id": "POG",
+          "id": "140d8dff-762c-45f1-867b-9e9c1f018278",
+          "currency": "GBP",
+          "elements": [
+            {
+              "price_components": [
+                {
+                  "type": "ENERGY",
+                  "price": 0.575,
+                  "vat": 20,
+                  "step_size": 1
+                }
+              ],
+              "restrictions": null
+            }
+          ],
+          "last_updated": "2024-11-25T10:07:20"
+        },
+        {
+          "country_code": "GB",
+          "party_id": "POG",
+          "id": "23e0d140-69ce-41e0-8364-dbe5ee80428f",
+          "currency": "GBP",
+          "elements": [
+            {
+              "price_components": [
+                {
+                  "type": "ENERGY",
+                  "price": 0.625,
+                  "vat": 20,
+                  "step_size": 1
+                }
+              ],
+              "restrictions": null
+            }
+          ],
+          "last_updated": "2024-11-25T10:07:20"
+        },
+        {
+          "country_code": "GB",
+          "party_id": "POG",
+          "id": "243ccc05-42fc-4a35-a63b-5ae4e4a702d1",
+          "currency": "GBP",
+          "elements": [
+            {
+              "price_components": [
+                {
+                  "type": "ENERGY",
+                  "price": 0.542,
+                  "vat": 20,
+                  "step_size": 1
+                }
+              ],
+              "restrictions": null
+            }
+          ],
+          "last_updated": "2025-12-20T00:01:26"
+        },
+        {
+          "country_code": "GB",
+          "party_id": "POG",
+          "id": "31cb2724-78ef-447f-b5e4-d1c4bccc2784",
+          "currency": "GBP",
+          "elements": [
+            {
+              "price_components": [
+                {
+                  "type": "ENERGY",
+                  "price": 0.575,
+                  "vat": 20,
+                  "step_size": 1
+                }
+              ],
+              "restrictions": null
+            }
+          ],
+          "last_updated": "2024-11-25T10:07:14"
+        },
+        {
+          "country_code": "GB",
+          "party_id": "POG",
+          "id": "35d05cd8-e4e8-4fac-8813-23a3f3a8c1ec",
+          "currency": "GBP",
+          "elements": [
+            {
+              "price_components": [
+                {
+                  "type": "ENERGY",
+                  "price": 0.625,
+                  "vat": 20,
+                  "step_size": 1
+                }
+              ],
+              "restrictions": null
+            }
+          ],
+          "last_updated": "2024-11-25T10:07:20"
+        },
+        {
+          "country_code": "GB",
+          "party_id": "POG",
+          "id": "44e8a9a1-dd8c-4af7-9d3e-1c62f2f31b35",
+          "currency": "GBP",
+          "elements": [
+            {
+              "price_components": [
+                {
+                  "type": "ENERGY",
+                  "price": 0.408,
+                  "vat": 20,
+                  "step_size": 1
+                }
+              ],
+              "restrictions": null
+            }
+          ],
+          "last_updated": "2025-06-26T00:02:27"
+        },
+        {
+          "country_code": "GB",
+          "party_id": "POG",
+          "id": "6dd3b29e-2524-4912-98b9-91511ba2099a",
+          "currency": "GBP",
+          "elements": [
+            {
+              "price_components": [
+                {
+                  "type": "ENERGY",
+                  "price": 0.658,
+                  "vat": 20,
+                  "step_size": 1
+                }
+              ],
+              "restrictions": null
+            }
+          ],
+          "last_updated": "2025-12-25T00:01:40"
+        },
+        {
+          "country_code": "GB",
+          "party_id": "POG",
+          "id": "72abb867-a963-4b9b-8bbb-d4f9efb16926",
+          "currency": "GBP",
+          "elements": [
+            {
+              "price_components": [
+                {
+                  "type": "ENERGY",
+                  "price": 0.467,
+                  "vat": 20,
+                  "step_size": 1
+                }
+              ],
+              "restrictions": null
+            }
+          ],
+          "last_updated": "2024-12-28T00:01:02"
+        },
+        {
+          "country_code": "GB",
+          "party_id": "POG",
+          "id": "ababd8df-9ef2-44a2-a3d2-bd2b5c7c8355",
+          "currency": "GBP",
+          "elements": [
+            {
+              "price_components": [
+                {
+                  "type": "ENERGY",
+                  "price": 0.567,
+                  "vat": 20,
+                  "step_size": 1
+                }
+              ],
+              "restrictions": null
+            }
+          ],
+          "last_updated": "2025-10-28T00:01:36"
+        },
+        {
+          "country_code": "GB",
+          "party_id": "POG",
+          "id": "c1d09a2c-5f97-4e7c-99c1-7cb7baf281f2",
+          "currency": "GBP",
+          "elements": [
+            {
+              "price_components": [
+                {
+                  "type": "ENERGY",
+                  "price": 0.658,
+                  "vat": 20,
+                  "step_size": 1
+                }
+              ],
+              "restrictions": null
+            }
+          ],
+          "last_updated": "2024-11-25T10:07:21"
+        },
+        {
+          "country_code": "GB",
+          "party_id": "POG",
+          "id": "cd609d04-0561-4c18-8959-3c9dc7b2dd36",
+          "currency": "GBP",
+          "elements": [
+            {
+              "price_components": [
+                {
+                  "type": "ENERGY",
+                  "price": 0.658,
+                  "vat": 20,
+                  "step_size": 1
+                }
+              ],
+              "restrictions": null
+            }
+          ],
+          "last_updated": "2024-11-25T10:07:14"
+        },
+        {
+          "country_code": "GB",
+          "party_id": "POG",
+          "id": "e02ff544-b585-4083-abcf-56c477a9b7f4",
+          "currency": "GBP",
+          "elements": [
+            {
+              "price_components": [
+                {
+                  "type": "FLAT",
+                  "price": 0,
+                  "vat": 20,
+                  "step_size": 1
+                }
+              ],
+              "restrictions": null
+            }
+          ],
+          "last_updated": "2025-09-25T00:01:36"
+        },
+        {
+          "country_code": "GB",
+          "party_id": "POG",
+          "id": "fa2434e0-8336-4336-ab9c-28a3ff9d1e5f",
+          "currency": "GBP",
+          "elements": [
+            {
+              "price_components": [
+                {
+                  "type": "ENERGY",
+                  "price": 0.658,
+                  "vat": 20,
+                  "step_size": 1
+                }
+              ],
+              "restrictions": null
+            }
+          ],
+          "last_updated": "2024-11-25T10:07:20"
+        }
+      ],
+      "status_message": "Success",
+      "timestamp": "2026-10-10T08:16:26",
+      "meta": {
+        "total": 13,
+        "limit": null
+      }
+    }
+  }
+}
