@@ -46,10 +46,12 @@ licence:
     accounts portal and app "are copyright of Arnold Clark Automobiles Limited and its
     licensors. No part of these platforms may be reproduced in any form without the express
     permission of Arnold Clark Automobiles Limited". The files are served from Fuuse's host,
-    not from those platforms. Whether those terms cover the open data, which regulation
-    10(5) requires to be available without terms on its use, is for the repository owner
-    to decide before this file is merged. The charging terms (last updated 1 December 2025)
-    say nothing about the data.
+    not from those platforms. The charging terms (last updated 1 December 2025) say nothing
+    about the data. On 2026-10-10 the repository owner decided, as a standing rule for
+    operators whose data has no terms of its own, to read general website or charging terms
+    as not covering the open data, which regulation 10(5) requires to be available without
+    terms on its use. Arnold Clark's terms still apply to its plan prices, which are not
+    listed (providers/arnold_clark_charge.yaml).
   checked: 2026-10-10
 engagement:
   status: open_anonymous
