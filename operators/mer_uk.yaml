@@ -46,9 +46,9 @@ licence:
     "users of the charging infrastructure in the Network and any associated services",
     including its app, driver portal and website, and grant "a revocable right to use the
     Content for your personal (non-commercial) use", where Content includes material and
-    data contained in the website. Whether those terms cover the open data, which
-    regulation 10(5) requires to be available without terms on its use, is for the
-    repository owner to decide before this file is merged.
+    data contained in the website. On 2026-10-10 the repository owner decided to read
+    those general terms as not covering the open data, which Mer publishes under the
+    regulations, and regulation 10(5) requires it to be available without terms on its use.
   checked: 2026-10-10
 engagement:
   status: open_anonymous

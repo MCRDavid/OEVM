@@ -12,7 +12,7 @@ from pipeline.pricing import describe_tariff
 from pipeline.registry import load_registry
 
 FIXTURES = Path(__file__).parent / "fixtures" / "arnold_clark_charge"
-FEED = "https://api.fuuse.io/opendata/e6397b95-1624-49cd-824d-ab2f9dfe7294"
+FEED = "https://api.fuuse.io/opendata/e6397b95-1624-49cd-824d-ab2f9dfe7294/"
 
 
 def replay():
@@ -24,7 +24,7 @@ def replay():
 
 def test_each_file_is_read_in_one_request():
     result, transport = replay()
-    assert transport.requested == [f"{FEED}/location", f"{FEED}/tariff"]
+    assert transport.requested == [f"{FEED}location", f"{FEED}tariff"]
     assert result.complete
     assert result.modules["locations"].total_reported == 5
     assert result.issues == []
