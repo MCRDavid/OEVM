@@ -1,0 +1,70 @@
+# yaml-language-server: $schema=schema.json
+id: esb_energy
+display_name: ESB Energy
+ocpi_country_code: unknown
+ocpi_party_id: unknown
+adapter: unknown
+base_url: unknown
+endpoints: {}
+auth:
+  method: unknown
+  name: null
+  secret_name: null
+rate_limit:
+  min_seconds_between_requests: 2
+  limits: []
+  limits_checked: unknown
+  notes: null
+supports_single_location: unknown
+cors: unknown
+attribution: null
+licence: null
+engagement:
+  status: key_on_request
+  evidence:
+    - date: 2026-10-10
+      url: https://www.esbenergy.co.uk/ev
+      note: >-
+        The menu of ESB Energy's electric vehicle pages links "PCPR Data Request", a Google
+        form asking for an email address, name, organisation and planned use of data. The
+        form says requests are shared with Eco-Movement and names no licence, terms, key or
+        rate limit.
+  log:
+    - date: 2026-10-10
+      action: feed_searched
+      summary: >-
+        ESB Energy's home page has no open data link, and the menu of its electric vehicle
+        pages links a "PCPR Data Request" form.
+      evidence_url: https://www.esbenergy.co.uk/ev
+    - date: 2026-10-10
+      action: page_checked
+      summary: >-
+        ESB Energy's "PCPR Data Request" Google form was read, not submitted; it says the
+        request will be shared with Eco-Movement and an answer will come within 5 working
+        days.
+      quote: >-
+        Request data on the location, status, and properties of the ESB network in the United
+        Kingdom which complies with the Public Charge Point Regulations. You will receive an
+        answer within 5 working days.
+      evidence_url: https://docs.google.com/forms/d/e/1FAIpQLSfAe5GBI7djZfhpr-yq1QBpb6oSs2dF1rG4SxIYK7rj9AVnHw/viewform
+access_requested: null
+access_granted: null
+sources:
+  - url: https://www.esbenergy.co.uk/
+    note: ESB Energy's home page (read 2026-10-10). No open data link.
+  - url: https://www.esbenergy.co.uk/ev
+    note: >-
+      ESB Energy's electric vehicle charging page (read 2026-10-10). Its menu links the "PCPR
+      Data Request" form.
+  - url: https://docs.google.com/forms/d/e/1FAIpQLSfAe5GBI7djZfhpr-yq1QBpb6oSs2dF1rG4SxIYK7rj9AVnHw/viewform
+    note: >-
+      The "PCPR Data Request - ESB" Google form (read 2026-10-10, not submitted). Its
+      disclaimer says "Your request will be shared with Eco-Movement" and gives
+      Eco-Movement's PCPR address for privacy questions.
+findings: []
+notes: >-
+  Access could be requested through the "PCPR Data Request" form linked from ESB Energy's
+  electric vehicle pages. Requests are shared with Eco-Movement, so the eco_movement_pcpr
+  adapter may apply once access is given, but the form does not say how the data is
+  delivered; this needs testing.
+enabled: false

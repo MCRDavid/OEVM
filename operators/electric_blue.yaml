@@ -1,0 +1,45 @@
+# yaml-language-server: $schema=schema.json
+id: electric_blue
+display_name: Electric Blue
+ocpi_country_code: unknown
+ocpi_party_id: unknown
+adapter: unknown
+base_url: unknown
+endpoints: {}
+auth:
+  method: unknown
+  name: null
+  secret_name: null
+rate_limit:
+  min_seconds_between_requests: 2
+  limits: []
+  limits_checked: unknown
+  notes: null
+supports_single_location: unknown
+cors: unknown
+attribution: null
+licence: null
+engagement:
+  status: unknown
+  evidence: []
+  log:
+    - date: 2026-10-10
+      action: feed_searched
+      summary: >-
+        Electric Blue's website could not be read by this project's automated checks on
+        2026-10-10 (no answer, then its address could not be found), so its open data route
+        is not yet known; it needs checking in a browser.
+      evidence_url: https://www.electricbluecharging.co.uk/
+access_requested: null
+access_granted: null
+sources:
+  - url: https://www.electricbluecharging.co.uk/
+    note: >-
+      Electric Blue's home page address as recorded in this project's survey. On 2026-10-10
+      the first automated check had no answer (HTTP 502 through the research proxy) and a
+      second could not find the address (DNS lookup failed), so it was not read.
+findings: []
+notes: >-
+  Electric Blue's website could not be reached on 2026-10-10. The next step is to confirm
+  its current website address in a browser and look for an open data or regulations link.
+enabled: false

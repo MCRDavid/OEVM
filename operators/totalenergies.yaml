@@ -1,0 +1,49 @@
+# yaml-language-server: $schema=schema.json
+id: totalenergies
+display_name: TotalEnergies
+ocpi_country_code: unknown
+ocpi_party_id: unknown
+adapter: unknown
+base_url: unknown
+endpoints: {}
+auth:
+  method: unknown
+  name: null
+  secret_name: null
+rate_limit:
+  min_seconds_between_requests: 2
+  limits: []
+  limits_checked: unknown
+  notes: null
+supports_single_location: unknown
+cors: unknown
+attribution: null
+licence: null
+engagement:
+  status: unknown
+  evidence: []
+  log:
+    - date: 2026-10-10
+      action: feed_searched
+      summary: >-
+        TotalEnergies' UK charging services page (HTTP 403) and the Source London website
+        (no answer, then HTTP 503) could not be read by this project's automated checks on
+        2026-10-10, so its open data route is not yet known; it needs checking in a browser.
+      evidence_url: https://chargingservices.totalenergies.com/en/home/united-kingdom
+access_requested: null
+access_granted: null
+sources:
+  - url: https://chargingservices.totalenergies.com/en/home/united-kingdom
+    note: >-
+      TotalEnergies' UK charging services page. Answered HTTP 403 to this project's automated
+      checks on 2026-10-10, so it was not read.
+  - url: https://www.sourcelondon.net
+    note: >-
+      The Source London website. Gave no answer to this project's first automated check on
+      2026-10-10 and HTTP 503 to a second, so it was not read.
+findings: []
+notes: >-
+  This project's 10 October survey checked TotalEnergies' UK charging services page and the
+  Source London website together. Neither could be read, so whether one open data route
+  covers both is unknown and needs checking in a browser.
+enabled: false

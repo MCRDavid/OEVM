@@ -1,0 +1,51 @@
+# yaml-language-server: $schema=schema.json
+id: giga_power
+display_name: Giga Power
+ocpi_country_code: unknown
+ocpi_party_id: unknown
+adapter: unknown
+base_url: unknown
+endpoints: {}
+auth:
+  method: unknown
+  name: null
+  secret_name: null
+rate_limit:
+  min_seconds_between_requests: 2
+  limits: []
+  limits_checked: unknown
+  notes: null
+supports_single_location: unknown
+cors: unknown
+attribution: null
+licence: null
+engagement:
+  status: key_on_request
+  evidence:
+    - date: 2026-10-10
+      url: https://gigapoweruk.com/opendata/
+      note: >-
+        Giga Power's Open Data Access page offers a form to request an API key, asking for
+        a name, organisation, a name for the purpose, an email address and the purpose of
+        the request. It states no licence, terms or rate limit for the data.
+  log:
+    - date: 2026-10-10
+      action: page_checked
+      summary: >-
+        Giga Power's Open Data Access page was read; it asks requesters to fill in a form to
+        request an API key.
+      quote: >-
+        To request an API key to the Giga Power Open Access Data, in line with Open Charge
+        Point Regulations (2023) of the PCPR, please fill in the form below.
+      evidence_url: https://gigapoweruk.com/opendata/
+access_requested: null
+access_granted: null
+sources:
+  - url: https://gigapoweruk.com/opendata/
+    note: >-
+      Giga Power's Open Data Access page, read 2026-10-10. API key request form; no
+      licence, terms, rate limit or data format stated.
+findings: []
+notes: >-
+  Access could be requested through the API key form on Giga Power's Open Data Access page.
+enabled: false

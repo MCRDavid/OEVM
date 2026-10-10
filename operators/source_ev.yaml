@@ -1,0 +1,78 @@
+# yaml-language-server: $schema=schema.json
+id: source_ev
+display_name: Source EV
+ocpi_country_code: unknown
+ocpi_party_id: unknown
+adapter: unknown
+base_url: unknown
+endpoints: {}
+auth:
+  method: unknown
+  name: null
+  secret_name: null
+rate_limit:
+  min_seconds_between_requests: 2
+  limits: []
+  limits_checked: unknown
+  notes: null
+supports_single_location: unknown
+cors: unknown
+attribution: null
+licence: null
+engagement:
+  status: signed_agreement_required
+  evidence:
+    - date: 2026-10-10
+      url: https://source-ev.com/legal/request-compliance-data
+      note: >-
+        Source EV's Request Compliance Data page links a Google request form, says the
+        request will be shared with Eco-Movement, asks requesters to "Sign the agreement as
+        required under the PCPR" and states that the data "is licensed on terms equivalent
+        to the UK Open Government Licence". It names no key or rate limit.
+  log:
+    - date: 2026-10-10
+      action: page_checked
+      summary: >-
+        Source EV's Request Compliance Data page and the Google form it links were read;
+        the page lists signing an agreement among the steps before a request, and its terms
+        and conditions state a licence for the data.
+      quote: >-
+        PCPR open data provided by Source EV is licensed on terms equivalent to the UK Open
+        Government Licence. You are free to copy, publish and distribute the data provided
+        you attribute Source EV Ltd as the data provider and do not misrepresent the data or
+        imply endorsement.
+      evidence_url: https://source-ev.com/legal/request-compliance-data
+access_requested: null
+access_granted: null
+sources:
+  - url: https://source-ev.com/legal/request-compliance-data
+    note: >-
+      Source EV's Request Compliance Data page (read 2026-10-10). It says "Requests are
+      typically processed within five working days" and "Your request will be shared with
+      Eco-Movement for the purpose of providing the data you have requested."
+  - url: https://docs.google.com/forms/d/e/1FAIpQLScHf0fgoLk_IWNoE7SODMZeqKFSFGorI41OUCChPawnA-jF9Q/viewform
+    note: >-
+      The "PCPR Data Request - Source EV" Google form linked from that page (read
+      2026-10-10, not submitted). It asks for an email address, name, organisation and
+      planned use of the data, and its disclaimer says the request will be shared with
+      Eco-Movement.
+findings:
+  - date: 2026-10-10
+    kind: documentation
+    summary: >-
+      Source EV's Request Compliance Data page asks requesters to "Sign the agreement as
+      required under the PCPR" and shows terms and conditions that a requester agrees to by
+      submitting, but does not say whether those terms are the agreement, and no separate
+      agreement or way to sign one was shown or linked on the page or in the linked request
+      form when both were read.
+    handling: >-
+      Which agreement is meant will be confirmed and the agreement read before any request
+      is sent, and the operator stays switched off until then.
+    evidence_url: https://source-ev.com/legal/request-compliance-data
+    status: open
+notes: >-
+  The owner could ask Source EV which agreement it means (the terms and conditions on its
+  Request Compliance Data page or a separate document) and read it, then request access
+  through the form linked from that page. Requests are passed to Eco-Movement, so the
+  eco_movement_pcpr adapter may apply once access is given; this needs testing.
+enabled: false

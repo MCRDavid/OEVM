@@ -1,0 +1,53 @@
+# yaml-language-server: $schema=schema.json
+id: wattif
+display_name: Wattif
+ocpi_country_code: unknown
+ocpi_party_id: unknown
+adapter: unknown
+base_url: unknown
+endpoints: {}
+auth:
+  method: unknown
+  name: null
+  secret_name: null
+rate_limit:
+  min_seconds_between_requests: 2
+  limits: []
+  limits_checked: unknown
+  notes: null
+supports_single_location: unknown
+cors: unknown
+attribution: null
+licence: null
+engagement:
+  status: unknown
+  evidence: []
+  log:
+    - date: 2026-10-10
+      action: feed_searched
+      summary: >-
+        On 2026-10-10 www.wattif.co.uk sent visitors on to a page at /lander whose code loads
+        from an address named "parking-lander", and its sitemap listed only that page, so
+        Wattif's current website and open data route were not found; they need checking in a
+        browser.
+      evidence_url: https://www.wattif.co.uk/
+access_requested: null
+access_granted: null
+sources:
+  - url: https://www.wattif.co.uk/
+    note: >-
+      Read 2026-10-10. The page holds only a script that sends visitors to /lander. A
+      second automated check the same day answered HTTP 503.
+  - url: https://www.wattif.co.uk/lander
+    note: >-
+      Read 2026-10-10. A page with no text of its own whose script and style sheet load from
+      img1.wsimg.com under a path named "parking-lander", which suggests a domain parking
+      page (inferred). Its code was not run, so what it shows in a browser is unknown.
+  - url: https://www.wattif.co.uk/sitemap.xml
+    note: Read 2026-10-10. Lists one page, /lander.
+findings: []
+notes: >-
+  The address www.wattif.co.uk appears on 2026-10-10 to show a domain parking page rather
+  than Wattif's own website (inferred from the page's code). Wattif's current website needs
+  finding in a browser before its open data route can be checked.
+enabled: false

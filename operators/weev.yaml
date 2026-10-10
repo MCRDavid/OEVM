@@ -1,0 +1,76 @@
+# yaml-language-server: $schema=schema.json
+id: weev
+display_name: Weev
+ocpi_country_code: unknown
+ocpi_party_id: unknown
+adapter: unknown
+base_url: unknown
+endpoints: {}
+auth:
+  method: unknown
+  name: null
+  secret_name: null
+rate_limit:
+  min_seconds_between_requests: 2
+  limits: []
+  limits_checked: unknown
+  notes: null
+supports_single_location: unknown
+cors: unknown
+attribution: null
+licence: null
+engagement:
+  status: key_on_request
+  evidence:
+    - date: 2026-10-10
+      url: https://weev.ie/open-data
+      note: >-
+        Weev's Open Data API page offers a form to request an API key, asking for a name,
+        email address and the purpose of the request. The form asks the requester to
+        confirm they agree to Weev's API access and fair use terms and conditions, and
+        links those words to Weev's general terms and conditions page.
+  log:
+    - date: 2026-10-10
+      action: page_checked
+      summary: >-
+        Weev's Open Data API page and the terms and conditions page its form links to were
+        read; the page offers a form to request an API key.
+      quote: Request an API key to access Weev Open Data
+      evidence_url: https://weev.ie/open-data
+access_requested: null
+access_granted: null
+sources:
+  - url: https://weev.ie/open-data
+    note: >-
+      Weev's Open Data API page, read 2026-10-10. API key request form. Its consent text
+      reads "By submitting this form you confirm you have read and agree to the Weev API
+      access and fair use terms & conditions." and links to /terms-and-conditions. States
+      no licence or rate limit for the data.
+  - url: https://weev.ie/terms-and-conditions
+    note: >-
+      Weev's terms and conditions, read 2026-10-10. They govern the use of its charging
+      stations, app and website, and home charger installation. A short "Open API Data"
+      section says only "To request access to our API please complete the following
+      form." The charging terms also say "Any usage data or other information which may
+      generated from the use of the Services, including the Charging Stations, shall at
+      all times be the property of Weev." No rate limit or terms specific to the open data
+      were found.
+findings:
+  - date: 2026-10-10
+    kind: access
+    summary: >-
+      Weev's API key request form asks requesters to agree to its "API access and fair use
+      terms & conditions", and links to its general terms and conditions for its charging
+      services, which hold no separate terms for the open data.
+    handling: >-
+      Under the repository owner's standing rule of 2026-10-10 for operators whose data has
+      no terms of its own, general website or charging terms are read as not covering the
+      open data. The operator stays switched off until a key is granted and its feed is
+      tested.
+    evidence_url: https://weev.ie/terms-and-conditions
+notes: >-
+  Weev's terms say its charging stations are operated by Weev.ie Ltd in the United Kingdom
+  and by Weev Charging Limited in the Republic of Ireland; only UK locations would be
+  mapped. Access could be requested through the API key form on its Open Data API page. The
+  address weev.uk did not answer when tried on 2026-10-10.
+enabled: false

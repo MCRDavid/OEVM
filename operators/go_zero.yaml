@@ -22,9 +22,21 @@ engagement:
       summary: >-
         A web search for a Go Zero open data or Public Charge Point Regulations page found
         none. Go Zero's own website was not searched directly; this needs checking.
+    - date: 2026-10-10
+      action: feed_searched
+      summary: >-
+        Go Zero's own website was checked directly; it answered "too many requests" (HTTP
+        429) to an earlier read that day, a single later read of its open data page address
+        answered HTTP 404, and its home page and site map have not yet been searched.
+      evidence_url: https://www.gozerocharge.com/public-charge-point-open-data
 access_requested: null
 access_granted: null
-sources: []
+sources:
+  - url: https://www.gozerocharge.com/public-charge-point-open-data
+    note: >-
+      Address on Go Zero's own website that this project's research recorded as its open
+      data page. A single read on 2026-10-10 answered HTTP 404 with the text "404 Error:
+      Page Not Found".
 notes: >-
   The blueprint lists CORS and single-location fetching for Go Zero as untested and unknown,
   but records no feed URL, adapter or access route.

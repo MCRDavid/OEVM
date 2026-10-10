@@ -1,0 +1,53 @@
+# yaml-language-server: $schema=schema.json
+id: connected_kerb
+display_name: Connected Kerb
+ocpi_country_code: unknown
+ocpi_party_id: unknown
+adapter: unknown
+base_url: unknown
+endpoints: {}
+auth:
+  method: unknown
+  name: null
+  secret_name: null
+rate_limit:
+  min_seconds_between_requests: 2
+  limits: []
+  limits_checked: unknown
+  notes: null
+supports_single_location: unknown
+cors: unknown
+attribution: null
+licence: null
+engagement:
+  status: unknown
+  evidence: []
+  log:
+    - date: 2026-10-10
+      action: feed_searched
+      summary: >-
+        Connected Kerb's home page and its "Data" page are built by JavaScript and showed only
+        their titles to this project's automated checks on 2026-10-10, and its sitemap lists
+        no page whose address mentions open data or the regulations, so its open data route
+        is not yet known; it needs checking in a browser.
+      evidence_url: https://connectedkerb.com/our-technology/data/
+access_requested: null
+access_granted: null
+sources:
+  - url: https://connectedkerb.com/
+    note: >-
+      Connected Kerb's home page (read 2026-10-10). Built by JavaScript; only its title,
+      "Electric Vehicle Charging Points | Connected Kerb", was readable.
+  - url: https://connectedkerb.com/sitemap.xml
+    note: >-
+      Connected Kerb's sitemap (read 2026-10-10). Lists 287 pages, none with open data,
+      OCPI or the regulations in its address. It lists a page at /our-technology/data/.
+  - url: https://connectedkerb.com/our-technology/data/
+    note: >-
+      Connected Kerb's "Data" page (read 2026-10-10). Built by JavaScript; only its title,
+      "Connected Kerb | Data", was readable, so whether it covers open data is unknown.
+findings: []
+notes: >-
+  Connected Kerb's pages need JavaScript to show their text. The next step is to read its
+  home page and its "Data" page in a browser and look for an open data or regulations link.
+enabled: false

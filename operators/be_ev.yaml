@@ -1,0 +1,62 @@
+# yaml-language-server: $schema=schema.json
+id: be_ev
+display_name: Be.EV
+ocpi_country_code: unknown
+ocpi_party_id: unknown
+adapter: unknown
+base_url: unknown
+endpoints: {}
+auth:
+  method: unknown
+  name: null
+  secret_name: null
+rate_limit:
+  min_seconds_between_requests: 2
+  limits: []
+  limits_checked: unknown
+  notes: null
+supports_single_location: unknown
+cors: unknown
+attribution: null
+licence: null
+engagement:
+  status: no_public_feed_found
+  evidence:
+    - date: 2026-10-10
+      url: https://be-ev.co.uk/public-charge-point-regulations/
+      note: >-
+        Be.EV's "Public Charge Point Regulations" page reports its 2025 reliability score. It
+        gives no open data feed and no route for requesting open data.
+  log:
+    - date: 2026-10-10
+      action: feed_searched
+      summary: >-
+        Be.EV's home page, its Public Charge Point Regulations page, its sitemap and its help
+        centre's front page were read, and no open data feed or route for requesting open data
+        was found.
+      quote: >-
+        In 2025, our rapid and ultra-rapid network achieved an average reliability score of
+        99% across more than 600 public DC charge points (50kW+).
+      evidence_url: https://be-ev.co.uk/public-charge-point-regulations/
+access_requested: null
+access_granted: null
+sources:
+  - url: https://be-ev.co.uk/
+    note: Be.EV's home page (read 2026-10-10). Links its regulations page; no open data link.
+  - url: https://be-ev.co.uk/public-charge-point-regulations/
+    note: >-
+      Be.EV's "Public Charge Point Regulations" page (read 2026-10-10). Covers its reliability
+      score only.
+  - url: https://be-ev.co.uk/sitemap.xml
+    note: >-
+      Be.EV's sitemap (read 2026-10-10). No open data, OCPI or data request page is listed.
+  - url: https://help.be-ev.co.uk/
+    note: Be.EV's help centre front page (read 2026-10-10). No open data article is listed.
+findings: []
+notes: >-
+  No open data feed or request route was found on Be.EV's own website on 2026-10-10. A
+  written request could ask Be.EV where its open data under regulation 10 is published. Its
+  home page links a news item whose address mentions its acquisition of Mer's UK public
+  charging network; that item was not read, and whether Mer UK's feed covers Be.EV charge
+  points is unknown.
+enabled: false

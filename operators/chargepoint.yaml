@@ -1,0 +1,94 @@
+# yaml-language-server: $schema=schema.json
+id: chargepoint
+display_name: ChargePoint
+ocpi_country_code: unknown
+ocpi_party_id: unknown
+adapter: unknown
+base_url: unknown
+endpoints: {}
+auth:
+  method: unknown
+  name: null
+  secret_name: null
+rate_limit:
+  min_seconds_between_requests: 2
+  limits: []
+  limits_checked: unknown
+  notes: null
+supports_single_location: unknown
+cors: unknown
+attribution: null
+licence: null
+engagement:
+  status: key_on_request
+  evidence:
+    - date: 2026-10-10
+      url: https://www.chargepoint.com/en-gb/blog/navigating-uk-public-charging-regulations-guide-charge-point-operators
+      note: >-
+        ChargePoint's UK guide to the regulations links a Google form for requesting data via
+        API on the charge point operators it serves, and says the API covers all public
+        charging stations on its station management software in the UK. Its UK home page and
+        UK legal page do not link the form.
+    - date: 2026-10-10
+      url: https://docs.google.com/forms/d/e/1FAIpQLSeJ9Z3dyMdsBjaQ3pj9F3aOAXE4jstoHFBxwVq3wxs5lU5JLg/viewform
+      note: >-
+        The "PCPR Data Request - ChargePoint station management software" form asks for an
+        email address, name, organisation, network and planned use of data, and says requests
+        are shared with Eco-Movement. It names no licence, terms, key or rate limit.
+  log:
+    - date: 2026-10-10
+      action: feed_searched
+      summary: >-
+        ChargePoint's UK home page, its sitemap and its UK legal page were read; none links an
+        open data page, and the sitemap lists a UK guide to the regulations.
+      evidence_url: https://www.chargepoint.com/en-gb
+    - date: 2026-10-10
+      action: page_checked
+      summary: >-
+        ChargePoint's UK guide to the regulations was read; it links a form for requesting
+        data via API on the charge point operators that use its software.
+      quote: If you would like to request data via API on any CPOs we serve, you can do so here.
+      evidence_url: https://www.chargepoint.com/en-gb/blog/navigating-uk-public-charging-regulations-guide-charge-point-operators
+    - date: 2026-10-10
+      action: page_checked
+      summary: >-
+        ChargePoint's "PCPR Data Request" Google form was read, not submitted; it says the
+        request will be shared with Eco-Movement and an answer will come within 5 working
+        days.
+      quote: >-
+        Request data on the location, status, and properties of stations and networks using
+        ChargePoint station management software in the United Kingdom, in accordance with the
+        UK Public Charge Point Regulations. You will receive an answer within 5 working days.
+      evidence_url: https://docs.google.com/forms/d/e/1FAIpQLSeJ9Z3dyMdsBjaQ3pj9F3aOAXE4jstoHFBxwVq3wxs5lU5JLg/viewform
+access_requested: null
+access_granted: null
+sources:
+  - url: https://www.chargepoint.com/en-gb
+    note: ChargePoint's UK home page (read 2026-10-10). No open data link.
+  - url: https://www.chargepoint.com/sitemap.xml
+    note: >-
+      ChargePoint's sitemap index and its two pages (read 2026-10-10). UK pages include blog
+      posts on charging regulations, such as a guide for charge point operators, but no open
+      data, OCPI or data request page.
+  - url: https://www.chargepoint.com/en-gb/legal
+    note: ChargePoint's UK legal information page (read 2026-10-10). No open data link.
+  - url: https://www.chargepoint.com/en-gb/blog/navigating-uk-public-charging-regulations-guide-charge-point-operators
+    note: >-
+      ChargePoint's UK guide to the regulations for charge point operators (read 2026-10-10).
+      Its open data section links the data request form and says the form leads to "an
+      external partner of ChargePoint".
+  - url: https://docs.google.com/forms/d/e/1FAIpQLSeJ9Z3dyMdsBjaQ3pj9F3aOAXE4jstoHFBxwVq3wxs5lU5JLg/viewform
+    note: >-
+      The "PCPR Data Request - ChargePoint station management software" Google form (read
+      2026-10-10, not submitted). Its disclaimer says ChargePoint is a technology provider
+      and "does not act as a Charge Point Operator beyond charging stations on its own
+      premises". Its network list offers "ChargePoint platform CPOs", Raw Charging, ev-point
+      and Lidl Great Britain Limited.
+findings: []
+notes: >-
+  Access could be requested through the "PCPR Data Request" form linked from ChargePoint's UK
+  guide to the regulations. The form says ChargePoint is a technology provider rather than a
+  charge point operator, so this file records the route for networks on its platform.
+  Requests are shared with Eco-Movement, so the eco_movement_pcpr adapter may apply once
+  access is given, but the form does not say how the data is delivered; this needs testing.
+enabled: false

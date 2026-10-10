@@ -1,0 +1,74 @@
+# yaml-language-server: $schema=schema.json
+id: osprey
+display_name: Osprey Charging
+ocpi_country_code: unknown
+ocpi_party_id: unknown
+adapter: unknown
+base_url: unknown
+endpoints: {}
+auth:
+  method: unknown
+  name: null
+  secret_name: null
+rate_limit:
+  min_seconds_between_requests: 2
+  limits: []
+  limits_checked: unknown
+  notes: null
+supports_single_location: unknown
+cors: unknown
+attribution: null
+licence: null
+engagement:
+  status: no_public_feed_found
+  evidence:
+    - date: 2026-10-10
+      url: https://www.ospreycharging.co.uk/post/consumer-charge-point-regulations
+      note: >-
+        Osprey's post "Consumer charge point regulations", dated 6 December 2023, says it
+        gives access to data through OCPI for three named groups. It gives no feed address
+        or request route.
+    - date: 2026-10-10
+      url: https://www.ospreycharging.co.uk/sitemap
+      note: Osprey's site map page lists no open data or regulations page.
+  log:
+    - date: 2026-10-10
+      action: page_checked
+      summary: >-
+        Osprey's post on the consumer charge point regulations was read; it describes access
+        to its OCPI data for three named groups and gives no feed address or request route.
+      quote: >-
+        Osprey adheres to the Open Charge Point Interface as a standard, allowing accurate
+        and open access to essential data for governmental bodies, Distribution Network
+        Operators, and Electricity System Operators.
+      evidence_url: https://www.ospreycharging.co.uk/post/consumer-charge-point-regulations
+    - date: 2026-10-10
+      action: feed_searched
+      summary: >-
+        Osprey's site map page was searched and lists no open data page, feed or request
+        route.
+      evidence_url: https://www.ospreycharging.co.uk/sitemap
+access_requested: null
+access_granted: null
+sources:
+  - url: https://www.ospreycharging.co.uk/post/consumer-charge-point-regulations
+    note: >-
+      Osprey's post "Consumer charge point regulations", dated 6 December 2023, with an
+      "Open Data." section (read 2026-10-10).
+  - url: https://www.ospreycharging.co.uk/sitemap
+    note: Osprey's site map page (read 2026-10-10).
+findings:
+  - date: 2026-10-10
+    kind: access
+    summary: >-
+      Osprey's post on the consumer charge point regulations describes access to its OCPI
+      data for governmental bodies, Distribution Network Operators and Electricity System
+      Operators, and does not say where the data is published or how anyone can ask for it.
+    handling: >-
+      Recorded only. Whether Osprey would give this project access is unknown until it is
+      asked.
+    evidence_url: https://www.ospreycharging.co.uk/post/consumer-charge-point-regulations
+notes: >-
+  A written request to Osprey's support team could ask where its regulation 10 data is
+  published and whether this project may use it.
+enabled: false

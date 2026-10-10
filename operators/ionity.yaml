@@ -1,0 +1,60 @@
+# yaml-language-server: $schema=schema.json
+id: ionity
+display_name: IONITY
+ocpi_country_code: unknown
+ocpi_party_id: unknown
+adapter: unknown
+base_url: unknown
+endpoints: {}
+auth:
+  method: unknown
+  name: null
+  secret_name: null
+rate_limit:
+  min_seconds_between_requests: 2
+  limits: []
+  limits_checked: unknown
+  notes: null
+supports_single_location: unknown
+cors: unknown
+attribution: null
+licence: null
+engagement:
+  status: key_on_request
+  evidence:
+    - date: 2026-10-10
+      url: https://www.ionity.eu/open-data-request
+      note: >-
+        IONITY's Open Data Request for the UK page embeds a request form and says requests
+        are shared with Eco-Movement, which acts on IONITY's behalf. The page and the form
+        name no licence, terms, agreement, key or rate limit.
+  log:
+    - date: 2026-10-10
+      action: page_checked
+      summary: >-
+        IONITY's Open Data Request for the UK page and its embedded Google form were read;
+        the form asks for an email address, name, organisation and planned use of the data,
+        and says an answer will come within 5 working days.
+      quote: >-
+        Your request will be shared with Eco-Movement, who will act on behalf of IONITY, to
+        fulfil your request.
+      evidence_url: https://www.ionity.eu/open-data-request
+access_requested: null
+access_granted: null
+sources:
+  - url: https://www.ionity.eu/open-data-request
+    note: >-
+      IONITY's Open Data Request for the UK page, also offered in other languages (read
+      2026-10-10). It says "Our team will review your request and provide the data in a
+      suitable format within the specified timeframe."
+  - url: https://docs.google.com/forms/d/e/1FAIpQLSe3X4JPKaXj6ei4-YH9dx3rlXG9e9Wzm_tfnYoiYYLXVgxXmQ/viewform
+    note: >-
+      The "PCPR Data Request - Ionity" Google form embedded in IONITY's page (read
+      2026-10-10, not submitted). Its disclaimer says the request will be shared with
+      Eco-Movement.
+findings: []
+notes: >-
+  Access could be requested through the form on IONITY's open data request page. Requests
+  are passed to Eco-Movement, so the eco_movement_pcpr adapter may apply once access is
+  given, but the page does not say how the data is delivered; this needs testing.
+enabled: false

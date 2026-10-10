@@ -15,24 +15,66 @@ from tests.test_security_files import PUBLISHED_FEED_ADDRESSES
 
 OPERATORS_DIR = Path(__file__).resolve().parent.parent / "operators"
 SEED_IDS = {
+    "allego",
+    "applegreen_electric",
     "arnold_clark_charge",
+    "asda_express_electric",
+    "be_ev",
+    "believ",
+    "blink_charging_uk",
     "bp_pulse",
+    "charge_my_street",
     "chargeplace_scotland",
+    "chargepoint",
     "chargy",
     "clenergy_ev",
     "community_by_shell_recharge",
+    "connected_kerb",
+    "connekt",
+    "electric_blue",
+    "elmtronics",
+    "esb_energy",
+    "ev_smart",
     "evolt",
+    "evyve",
+    "ez_charge",
+    "fastned",
+    "for_ev",
+    "forward_ev",
     "geniepoint",
+    "giga_power",
     "go_zero",
     "gridserve",
+    "hubsta",
     "instavolt",
+    "ionity",
+    "joju",
     "jolt",
+    "liberty_charge",
+    "lidl",
     "mer_uk",
     "mfg_ev_power",
+    "osprey",
+    "parkrecharge",
+    "plug_n_go",
     "pod",
     "pogo_charge",
+    "qwello",
+    "raw_charging",
+    "roam",
+    "scottishpower_recharge",
     "shell_recharge",
+    "smart_charge",
+    "source_ev",
+    "sprint",
+    "tesla",
+    "totalenergies",
+    "trojan_energy",
     "ubitricity",
+    "wattif",
+    "weev",
+    "wenea",
+    "zest",
 }
 UUID_LIKE = re.compile(r"[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}", re.I)
 # Fake values for tests that check credentials are rejected. None of them is a real secret.
@@ -107,7 +149,7 @@ def test_operator_files_contain_no_key_like_values():
 
 def test_cli_validate_succeeds_on_seed_registry(capsys):
     assert registry.main(["--validate"]) == 0
-    assert "Operator registry is valid: 18 operators" in capsys.readouterr().out
+    assert "Operator registry is valid: 60 operators" in capsys.readouterr().out
 
 
 def test_cli_without_validate_prints_help(capsys):
