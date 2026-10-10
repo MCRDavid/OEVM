@@ -538,3 +538,62 @@ def test_a_repeated_same_day_request_counts_from_its_own_position():
         )
     )
     assert config.engagement.awaiting_reply()
+
+
+# Tariffs from a related operator's feed (ADR 0020)
+
+RELATED = {
+    "decided": "2026-10-10",
+    "basis": "Both networks are run by one company and publish from one host.",
+    "evidence_url": "https://example.invalid/terms",
+}
+
+
+@pytest.mark.parametrize(
+    "operators",
+    [[], ["Other"], ["other", "other"], ["example_operator"]],
+    ids=["none", "not-an-id", "named-twice", "itself"],
+)
+def test_a_tariffs_from_decision_needs_other_operator_ids(operators):
+    with pytest.raises(ValidationError):
+        OperatorConfig.model_validate(
+            enabled_open(tariffs_from={**RELATED, "operators": operators})
+        )
+
+
+def test_tariffs_from_may_name_an_operator_on_the_same_host(tmp_path):
+    write_operator(tmp_path, enabled_open(tariffs_from={**RELATED, "operators": ["other"]}))
+    other = enabled_open(
+        id="other",
+        base_url="unknown",
+        endpoints={
+            "tariffs": {"url": "https://example.invalid/other/tariffs", "status": "documented"}
+        },
+    )
+    write_operator(tmp_path, other)
+    operators = registry.load_registry(tmp_path)
+    assert operators["example_operator"].tariffs_from.operators == ["other"]
+    assert "example_operator (from other)" in registry.summary(operators)
+
+
+def test_tariffs_from_cannot_name_an_unknown_operator(tmp_path):
+    write_operator(tmp_path, enabled_open(tariffs_from={**RELATED, "operators": ["other"]}))
+    with pytest.raises(registry.RegistryError, match="unknown operator 'other'"):
+        registry.load_registry(tmp_path)
+
+
+def test_tariffs_from_cannot_name_an_operator_on_another_host(tmp_path):
+    write_operator(tmp_path, enabled_open(tariffs_from={**RELATED, "operators": ["other"]}))
+    write_operator(tmp_path, enabled_open(id="other", base_url="https://other.invalid/ocpi"))
+    with pytest.raises(registry.RegistryError, match="not on the same host"):
+        registry.load_registry(tmp_path)
+
+
+def test_only_the_smartcharging_networks_carry_a_tariffs_from_decision():
+    operators = registry.load_registry(OPERATORS_DIR)
+    decisions = {i: c.tariffs_from.operators for i, c in operators.items() if c.tariffs_from}
+    assert decisions == {
+        "chargeplace_scotland": ["evolt"],
+        "evolt": ["chargeplace_scotland"],
+        "pogo_charge": ["evolt"],
+    }

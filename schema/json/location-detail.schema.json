@@ -993,6 +993,19 @@
           "default": null,
           "description": "Whether ppk_low and ppk_high include VAT.",
           "title": "Includes Vat"
+        },
+        "published_by": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Set when the tariff was found in a related operator's feed, by the owner's decision in the operator file (tariffs_from, ADR 0020): that operator's name. Null when it is the location's own operator's tariff.",
+          "title": "Published By"
         }
       },
       "required": [
@@ -1007,7 +1020,8 @@
         "connectors",
         "ppk_low",
         "ppk_high",
-        "includes_vat"
+        "includes_vat",
+        "published_by"
       ],
       "title": "TariffOptionOut",
       "type": "object"
@@ -1232,6 +1246,63 @@
       ],
       "title": "TariffRestrictions",
       "type": "object"
+    },
+    "TariffSource": {
+      "additionalProperties": false,
+      "description": "A related operator's feed that some of a location's tariffs were found in (ADR 0020).",
+      "properties": {
+        "name": {
+          "description": "The related operator's name.",
+          "title": "Name",
+          "type": "string"
+        },
+        "note": {
+          "description": "Why its tariffs are used here, shown with the location.",
+          "title": "Note",
+          "type": "string"
+        },
+        "attribution": {
+          "title": "Attribution",
+          "type": "string"
+        },
+        "source_url": {
+          "description": "The related operator's tariff feed.",
+          "title": "Source Url",
+          "type": "string"
+        },
+        "licence": {
+          "title": "Licence",
+          "type": "string"
+        },
+        "licence_url": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Licence Url"
+        },
+        "fetched_at": {
+          "format": "date-time",
+          "title": "Fetched At",
+          "type": "string"
+        }
+      },
+      "required": [
+        "name",
+        "note",
+        "attribution",
+        "source_url",
+        "licence",
+        "licence_url",
+        "fetched_at"
+      ],
+      "title": "TariffSource",
+      "type": "object"
     }
   },
   "additionalProperties": false,
@@ -1287,6 +1358,14 @@
       "description": "Which listed tariff has the lowest energy price, worded by pipeline/pricing.py; null when they cannot be compared fairly.",
       "title": "Tariff Comparison"
     },
+    "tariff_sources": {
+      "description": "Related operators' feeds that some listed tariffs were found in, by the owner's decision in the operator file (tariffs_from, ADR 0020). Empty otherwise.",
+      "items": {
+        "$ref": "#/$defs/TariffSource"
+      },
+      "title": "Tariff Sources",
+      "type": "array"
+    },
     "attribution": {
       "title": "Attribution",
       "type": "string"
@@ -1320,6 +1399,7 @@
     "prices",
     "tariff_options",
     "tariff_comparison",
+    "tariff_sources",
     "attribution",
     "licence",
     "licence_url",

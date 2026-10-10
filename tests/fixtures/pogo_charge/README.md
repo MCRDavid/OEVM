@@ -16,7 +16,10 @@ and connector ids are JSON numbers rather than strings. To keep the fixtures sho
   and CHAdeMO), EVSEs with parking restrictions, and one location whose connectors name no
   tariff. The connectors of the other four name tariffs that are not in PoGo's tariff
   response (on 10 October 2026 every tariff PoGo's connectors named was one published in
-  Evolt Network's tariff response instead). X-Total-Count, X-Limit and `meta.total` were
+  Evolt Network's tariff response instead). Those 5 Evolt Network tariffs are in
+  `tests/fixtures/evolt/tariffs_page1.json`, so the tests can check that the connectors are
+  priced from them by the repository owner's decision recorded in
+  `operators/pogo_charge.yaml` (ADR 0020). X-Total-Count, X-Limit and `meta.total` were
   changed to 5 to match.
 - `tariffs_page1.json` is the whole tariff response (13 tariffs, none of them named by a
   connector).

@@ -68,8 +68,9 @@ on the site at `privacy/` from the same file.
   gaps, in separate layers.
 - Every record carries its provenance: source, licence, when it was fetched and how far
   to trust it.
-- A charger is only ever shown as free when the operator's own tariff says every price
-  is zero. A missing tariff means "Price unknown"; missing VAT means "excluding VAT,
+- A charger is only ever shown as free when the tariff its connector names says every
+  price is zero: the operator's own, or a related operator's where the owner has recorded
+  that decision (ADR 0020). A missing tariff means "Price unknown"; missing VAT means "excluding VAT,
   VAT not stated".
 - No secrets in the repository and no personal data.
 - Status pages use neutral, dated, evidenced wording.

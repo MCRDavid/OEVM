@@ -65,6 +65,20 @@ swapped_coordinates:
     longitude are obviously the wrong way round, the repository owner decided to show it
     in the right place rather than leave it off the map, with the operator's own figures
     kept and the correction shown on the map and recorded in the findings below.
+tariffs_from:
+  decided: 2026-10-10
+  basis: >-
+    Two Evolt Network connectors name a tariff that only ChargePlace Scotland's feed holds.
+    The repository owner decided that a connector may be priced from ChargePlace Scotland's
+    tariff only when it is definitely the same tariff for that site and the two operators
+    are related, never because of a coincidental tariff name: the connector names that exact
+    tariff id, which is a UUID, Evolt Network's own response does not have it, and
+    ChargePlace Scotland's response has it once, with the same country code. Evolt Network's
+    terms say SWARCO Smart Charging owns and operates its network, ChargePlace Scotland's
+    Scheme Terms say SWARCO Smart Charging Ltd operates that network, and both feeds are
+    published on info.smartcharging.uk.
+  evidence_url: https://evoltnetwork.co.uk/terms-of-use/
+  operators: [chargeplace_scotland]
 engagement:
   status: open_anonymous
   evidence:
@@ -158,8 +172,12 @@ findings:
       tariff response but is in ChargePlace Scotland's, and 2 connectors name no tariff (on
       2026-10-10).
     handling: >-
-      Tariffs are matched only within an operator's own response, so these connectors show
-      "Price unknown". Prices are never taken from another operator's feed.
+      By the repository owner's decision of 2026-10-10 (tariffs_from above, ADR 0020), the 2
+      connectors are priced from the ChargePlace Scotland tariff with that exact id, fetched
+      in the same run, and the details on the map say so and credit ChargePlace Scotland's
+      feed. Tariff names are never matched. If ChargePlace Scotland's feed is not fetched in
+      the same run, the price shows as unknown. The 2 connectors that name no tariff show
+      "Price unknown".
     evidence_url: https://info.smartcharging.uk/public_feed/locations/3666/tariffs
   - date: 2026-10-10
     kind: data_quality

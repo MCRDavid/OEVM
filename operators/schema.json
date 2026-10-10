@@ -761,6 +761,47 @@
       ],
       "title": "SwappedCoordinates",
       "type": "object"
+    },
+    "TariffsFrom": {
+      "additionalProperties": false,
+      "description": "The repository owner's recorded decision that this operator's connectors may be priced\nfrom tariffs in a related operator's feed (ADR 0020).\n\nSome networks publish their charge points and their tariffs in separate feeds from one\nback office, so a connector can name a tariff that only a sister network's response\nholds. A connector is priced from a named operator only when the OCPI id it names is in\nthe form of a UUID, its own operator's tariffs do not have that OCPI id under any\ncountry or party code, exactly one tariff across the named operators' tariffs has that\nexact OCPI id with the same country code, and that operator was fetched in the same\nrun. Names and descriptions are never matched. The details on the map say which feed\nthe price came from. Without this decision such connectors show \"Price unknown\".",
+      "properties": {
+        "decided": {
+          "description": "Date the owner made the decision (YYYY-MM-DD).",
+          "format": "date",
+          "title": "Decided",
+          "type": "string"
+        },
+        "basis": {
+          "description": "Why the operators are related, for example that one company runs both networks and publishes both feeds from the same host.",
+          "minLength": 1,
+          "title": "Basis",
+          "type": "string"
+        },
+        "evidence_url": {
+          "description": "Where the relationship can be seen.",
+          "pattern": "^https?://\\S+$",
+          "title": "Evidence Url",
+          "type": "string"
+        },
+        "operators": {
+          "description": "Ids of the related operators whose tariffs may be used. Each must be in the registry and publish its feeds on the same host as this operator.",
+          "items": {
+            "type": "string"
+          },
+          "minItems": 1,
+          "title": "Operators",
+          "type": "array"
+        }
+      },
+      "required": [
+        "decided",
+        "basis",
+        "evidence_url",
+        "operators"
+      ],
+      "title": "TariffsFrom",
+      "type": "object"
     }
   },
   "additionalProperties": false,
@@ -937,6 +978,18 @@
       ],
       "default": null,
       "description": "Only by the repository owner's decision: fetch through the project's relay. Null means requests go direct."
+    },
+    "tariffs_from": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/TariffsFrom"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "description": "Only by the repository owner's decision: price connectors that name a tariff only a related operator's feed holds from that feed. Null means such connectors show 'Price unknown'."
     },
     "engagement": {
       "$ref": "#/$defs/Engagement"

@@ -70,6 +70,7 @@
       "missing_publish_flag": null,
       "swapped_coordinates": null,
       "nonstandard_statuses": null,
+      "tariffs_from": null,
       "relay": null,
       "rate_limit": {
         "our_gap_seconds": 2.0,
@@ -184,6 +185,7 @@
           "FAULTED": "out_of_order"
         }
       },
+      "tariffs_from": null,
       "relay": null,
       "rate_limit": {
         "our_gap_seconds": 6.0,
@@ -348,6 +350,14 @@
       "missing_publish_flag": null,
       "swapped_coordinates": null,
       "nonstandard_statuses": null,
+      "tariffs_from": {
+        "decided": "2026-10-10",
+        "basis": "Some ChargePlace Scotland connectors name tariffs that only Evolt Network's feed holds. The repository owner decided that a connector may be priced from Evolt Network's tariff only when it is definitely the same tariff for that site and the two operators are related, never because of a coincidental tariff name: the connector names that exact tariff id, which is a UUID, ChargePlace Scotland's own response does not have it, and Evolt Network's response has it once, with the same country code. ChargePlace Scotland's Scheme Terms say SWARCO Smart Charging Ltd operates the network, Evolt Network's terms say SWARCO Smart Charging owns and operates its network, and both feeds are published on info.smartcharging.uk.",
+        "evidence_url": "https://chargeplacescotland.org/scheme-terms/",
+        "operators": [
+          "evolt"
+        ]
+      },
       "relay": null,
       "rate_limit": {
         "our_gap_seconds": 2.0,
@@ -375,7 +385,7 @@
           "kind": "data_quality",
           "kind_label": "Data quirk",
           "summary": "462 connectors at 110 locations name one of 11 tariff ids that are not in ChargePlace Scotland's tariff response; all 11 are in Evolt Network's tariff response on the same host. Another 33 connectors name no tariff (on 2026-10-10).",
-          "handling": "Tariffs are matched only within an operator's own response, so these connectors show \"Price unknown\". Prices are never taken from another operator's feed.",
+          "handling": "By the repository owner's decision of 2026-10-10 (tariffs_from above, ADR 0020), the 462 connectors are priced from the Evolt Network tariff with that exact id, fetched in the same run, and the details on the map say so and credit Evolt Network's feed. Tariff names are never matched. If Evolt Network's feed is not fetched in the same run, the price shows as unknown. The 33 connectors that name no tariff show \"Price unknown\".",
           "evidence_url": "https://info.smartcharging.uk/public_feed/locations/2463/tariffs",
           "status": "open",
           "resolved_date": null
@@ -471,6 +481,7 @@
         "basis": "Where a location's latitude and longitude are obviously the wrong way round, the repository owner decided to show it in the right place rather than leave it off the map, with the operator's own figures kept and the correction shown on the map and recorded in the findings below. On the same day the owner decided a longitude obviously missing its minus sign is corrected the same way."
       },
       "nonstandard_statuses": null,
+      "tariffs_from": null,
       "relay": null,
       "rate_limit": {
         "our_gap_seconds": 11.0,
@@ -658,6 +669,14 @@
         "basis": "Where a location's longitude is obviously missing its minus sign, or its latitude and longitude are obviously the wrong way round, the repository owner decided to show it in the right place rather than leave it off the map, with the operator's own figures kept and the correction shown on the map and recorded in the findings below."
       },
       "nonstandard_statuses": null,
+      "tariffs_from": {
+        "decided": "2026-10-10",
+        "basis": "Two Evolt Network connectors name a tariff that only ChargePlace Scotland's feed holds. The repository owner decided that a connector may be priced from ChargePlace Scotland's tariff only when it is definitely the same tariff for that site and the two operators are related, never because of a coincidental tariff name: the connector names that exact tariff id, which is a UUID, Evolt Network's own response does not have it, and ChargePlace Scotland's response has it once, with the same country code. Evolt Network's terms say SWARCO Smart Charging owns and operates its network, ChargePlace Scotland's Scheme Terms say SWARCO Smart Charging Ltd operates that network, and both feeds are published on info.smartcharging.uk.",
+        "evidence_url": "https://evoltnetwork.co.uk/terms-of-use/",
+        "operators": [
+          "chargeplace_scotland"
+        ]
+      },
       "relay": null,
       "rate_limit": {
         "our_gap_seconds": 2.0,
@@ -705,7 +724,7 @@
           "kind": "data_quality",
           "kind_label": "Data quirk",
           "summary": "2 connectors at \"Granton Western Village\" name a tariff that is not in Evolt Network's tariff response but is in ChargePlace Scotland's, and 2 connectors name no tariff (on 2026-10-10).",
-          "handling": "Tariffs are matched only within an operator's own response, so these connectors show \"Price unknown\". Prices are never taken from another operator's feed.",
+          "handling": "By the repository owner's decision of 2026-10-10 (tariffs_from above, ADR 0020), the 2 connectors are priced from the ChargePlace Scotland tariff with that exact id, fetched in the same run, and the details on the map say so and credit ChargePlace Scotland's feed. Tariff names are never matched. If ChargePlace Scotland's feed is not fetched in the same run, the price shows as unknown. The 2 connectors that name no tariff show \"Price unknown\".",
           "evidence_url": "https://info.smartcharging.uk/public_feed/locations/3666/tariffs",
           "status": "open",
           "resolved_date": null
@@ -791,6 +810,7 @@
         "basis": "Where a location's longitude is obviously missing its minus sign, or its latitude and longitude are obviously the wrong way round, the repository owner decided to show it in the right place rather than leave it off the map, with the operator's own figures kept and the correction shown on the map and recorded in the findings below."
       },
       "nonstandard_statuses": null,
+      "tariffs_from": null,
       "relay": {
         "decided": "2026-10-08",
         "reason": "The files answered HTTP 403 to the first request from a GitHub Actions runner in the first daily run, while answering normally from another network. The repository owner decided to fetch them through the project's relay on Cloudflare Workers, with the project's User-Agent and the same rate limits.",
@@ -945,6 +965,7 @@
       },
       "swapped_coordinates": null,
       "nonstandard_statuses": null,
+      "tariffs_from": null,
       "relay": null,
       "rate_limit": {
         "our_gap_seconds": 2.0,
@@ -1137,6 +1158,7 @@
       "missing_publish_flag": null,
       "swapped_coordinates": null,
       "nonstandard_statuses": null,
+      "tariffs_from": null,
       "relay": null,
       "rate_limit": {
         "our_gap_seconds": 2.0,
@@ -1237,6 +1259,7 @@
       "missing_publish_flag": null,
       "swapped_coordinates": null,
       "nonstandard_statuses": null,
+      "tariffs_from": null,
       "relay": null,
       "rate_limit": {
         "our_gap_seconds": 2.0,
@@ -1351,6 +1374,14 @@
       "missing_publish_flag": null,
       "swapped_coordinates": null,
       "nonstandard_statuses": null,
+      "tariffs_from": {
+        "decided": "2026-10-10",
+        "basis": "PoGo Charge's connectors name tariffs that only Evolt Network's feed holds. The repository owner decided that a connector may be priced from Evolt Network's tariff only when it is definitely the same tariff for that site and the two operators are related, never because of a coincidental tariff name: the connector names that exact tariff id, which is a UUID, PoGo Charge's own response does not have it, and Evolt Network's response has it once, with the same country code. PoGo Charge's terms name SWARCO Smart Charging Ltd as the network's operator, Evolt Network's terms say SWARCO Smart Charging owns and operates its network, and both feeds are published on info.smartcharging.uk.",
+        "evidence_url": "https://pogocharge.com/terms/",
+        "operators": [
+          "evolt"
+        ]
+      },
       "relay": null,
       "rate_limit": {
         "our_gap_seconds": 2.0,
@@ -1378,7 +1409,7 @@
           "kind": "data_quality",
           "kind_label": "Data quirk",
           "summary": "806 of 809 connectors name one of 5 tariff ids that are not in PoGo Charge's tariff response; all 5 are in Evolt Network's tariff response on the same host (party SSM). None of the 13 tariffs in PoGo Charge's own response is named by a connector. The other 3 connectors name no tariff (on 2026-10-10).",
-          "handling": "Tariffs are matched only within an operator's own response, so every PoGo Charge connector shows \"Price unknown\". Prices are never taken from another operator's feed.",
+          "handling": "By the repository owner's decision of 2026-10-10 (tariffs_from above, ADR 0020), these connectors are priced from the Evolt Network tariff with that exact id, fetched in the same run, and the details on the map say so and credit Evolt Network's feed. Tariff names are never matched. If Evolt Network's feed is not fetched in the same run, the price shows as unknown. The 3 connectors that name no tariff show \"Price unknown\".",
           "evidence_url": "https://info.smartcharging.uk/public_feed/locations/4009/tariffs",
           "status": "open",
           "resolved_date": null
@@ -1454,6 +1485,7 @@
       "missing_publish_flag": null,
       "swapped_coordinates": null,
       "nonstandard_statuses": null,
+      "tariffs_from": null,
       "relay": null,
       "rate_limit": {
         "our_gap_seconds": 125.0,
@@ -1569,6 +1601,7 @@
       "missing_publish_flag": null,
       "swapped_coordinates": null,
       "nonstandard_statuses": null,
+      "tariffs_from": null,
       "relay": null,
       "rate_limit": {
         "our_gap_seconds": 125.0,
@@ -1668,6 +1701,7 @@
       "missing_publish_flag": null,
       "swapped_coordinates": null,
       "nonstandard_statuses": null,
+      "tariffs_from": null,
       "relay": null,
       "rate_limit": {
         "our_gap_seconds": 2,
@@ -1727,6 +1761,7 @@
       "missing_publish_flag": null,
       "swapped_coordinates": null,
       "nonstandard_statuses": null,
+      "tariffs_from": null,
       "relay": null,
       "rate_limit": {
         "our_gap_seconds": 31.0,
@@ -1832,6 +1867,7 @@
       "missing_publish_flag": null,
       "swapped_coordinates": null,
       "nonstandard_statuses": null,
+      "tariffs_from": null,
       "relay": null,
       "rate_limit": {
         "our_gap_seconds": 2,
@@ -1887,6 +1923,7 @@
       "missing_publish_flag": null,
       "swapped_coordinates": null,
       "nonstandard_statuses": null,
+      "tariffs_from": null,
       "relay": null,
       "rate_limit": {
         "our_gap_seconds": 2.0,
@@ -1959,6 +1996,7 @@
       "missing_publish_flag": null,
       "swapped_coordinates": null,
       "nonstandard_statuses": null,
+      "tariffs_from": null,
       "relay": null,
       "rate_limit": {
         "our_gap_seconds": 125.0,
@@ -2081,6 +2119,7 @@
       "missing_publish_flag": null,
       "swapped_coordinates": null,
       "nonstandard_statuses": null,
+      "tariffs_from": null,
       "relay": null,
       "rate_limit": {
         "our_gap_seconds": 125.0,

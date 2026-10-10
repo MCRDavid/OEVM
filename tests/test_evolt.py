@@ -12,16 +12,16 @@ from pipeline.health import in_uk
 from pipeline.pricing import describe_tariff
 from pipeline.publish import corrected_coordinates
 from pipeline.registry import load_registry
-from pipeline.tariffs import price_connector
+from pipeline.tariffs import price_connector, price_locations, related_tariffs
 
 FIXTURES = Path(__file__).parent / "fixtures" / "evolt"
 FEED = "https://info.smartcharging.uk/public_feed/locations/3666"
 SMARTCHARGING = ["pogo_charge", "evolt", "chargeplace_scotland"]
 
 
-def replay():
-    config = load_registry()["evolt"]
-    transport = ReplayTransport(FIXTURES)
+def replay(operator_id="evolt"):
+    config = load_registry()[operator_id]
+    transport = ReplayTransport(FIXTURES.parent / operator_id)
     with PoliteClient(config, transport=transport, sleep=lambda _s: None) as client:
         return fetch(config, client), transport
 
@@ -100,12 +100,21 @@ def test_prices_show_in_gbp_and_free_only_when_confirmed():
     assert session_fee.startswith("79p per kWh, plus £20.00 per session after 135 minutes")
 
 
-def test_a_tariff_only_in_another_operators_feed_shows_price_unknown():
+def test_a_tariff_only_chargeplace_scotlands_feed_holds_is_priced_from_it():
     result, _ = replay()
-    granton = prices(result, by_name(result)["Granton Western Village"])
+    location = by_name(result)["Granton Western Village"]
+    granton = prices(result, location)
     assert {p.text for p in granton} == {"Price unknown"}
     assert {p.state for p in granton} == {"unknown"}
     assert all(p.unresolved_ids for p in granton)
+    # By the owner's decision (tariffs_from), the one ChargePlace Scotland tariff with that
+    # exact id is used when both feeds are fetched.
+    cps, _ = replay("chargeplace_scotland")
+    found = related_tariffs(result.locations, result.tariffs, {"chargeplace_scotland": cps.tariffs})
+    assert set(found) == {i for p in granton for i in p.unresolved_ids}
+    priced = price_locations([location], result.tariffs, found)
+    assert {p.state for p in priced} == {"priced"}
+    assert {i.split(":")[0] for p in priced for i in p.tariff_ids} == {"chargeplace_scotland"}
 
 
 def test_connectors_with_zero_power_figures_have_unknown_power():

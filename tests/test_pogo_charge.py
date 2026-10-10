@@ -10,15 +10,15 @@ from adapters.replay import ReplayTransport
 from pipeline.health import in_uk
 from pipeline.pricing import describe_tariff
 from pipeline.registry import load_registry
-from pipeline.tariffs import price_connector
+from pipeline.tariffs import price_connector, price_locations, related_tariffs
 
 FIXTURES = Path(__file__).parent / "fixtures" / "pogo_charge"
 FEED = "https://info.smartcharging.uk/public_feed/locations/4009"
 
 
-def replay():
-    config = load_registry()["pogo_charge"]
-    transport = ReplayTransport(FIXTURES)
+def replay(operator_id="pogo_charge"):
+    config = load_registry()[operator_id]
+    transport = ReplayTransport(FIXTURES.parent / operator_id)
     with PoliteClient(config, transport=transport, sleep=lambda _s: None) as client:
         return fetch(config, client), transport
 
@@ -48,7 +48,7 @@ def test_recorded_locations_convert_faithfully():
     assert all(loc.opening_hours is None for loc in result.locations)
 
 
-def test_connectors_naming_another_operators_tariffs_show_price_unknown():
+def test_connectors_name_tariffs_only_evolt_networks_feed_holds():
     result, _ = replay()
     tariffs = {tariff.id: tariff for tariff in result.tariffs}
     assert len(tariffs) == 13
@@ -62,10 +62,18 @@ def test_connectors_naming_another_operators_tariffs_show_price_unknown():
     ]
     assert {p.text for p in prices} == {"Price unknown"}
     assert {p.state for p in prices} == {"unknown"}
-    # The tariffs named are not in PoGo Charge's own response, and none is borrowed.
+    # The tariffs named are not in PoGo Charge's own response.
     named = {t for p in prices for t in p.unresolved_ids}
     assert len(named) == 5 and not named & set(tariffs)
     assert sum(1 for p in prices if not p.unresolved_ids) == 3  # these name no tariff
+    # By the owner's decision (tariffs_from), each is the one Evolt Network tariff with
+    # that exact id, so the connectors are priced from it when both feeds are fetched.
+    evolt, _ = replay("evolt")
+    found = related_tariffs(result.locations, result.tariffs, {"evolt": evolt.tariffs})
+    assert set(found) == named
+    assert {t.provenance.source_id for t in found.values()} == {"evolt"}
+    priced = price_locations(result.locations, result.tariffs, found)
+    assert Counter(p.state for p in priced) == {"priced": 13, "unknown": 3}
 
 
 def test_pogo_charge_records_its_source_and_terms():

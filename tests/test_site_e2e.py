@@ -416,6 +416,21 @@ def test_details_say_when_coordinates_were_swapped_back(visit):
     expect(note).to_contain_text("latitude -0.09703 and longitude 51.467819")
 
 
+def test_details_say_when_tariffs_come_from_a_related_networks_feed(visit):
+    page = visit().open("?view=list", map_ready=False)
+    expect(page.locator("#list-items li")).to_have_count(LOCATIONS)
+    page.locator("#list-items button", has_text="Lancing Manor Leisure Centre").click()
+    body = page.locator("#detail-body")
+    expect(body.locator(".related")).to_contain_text("only Evolt Network's tariff data holds")
+    expect(body.locator(".connectors")).to_contain_text("56p per kWh including VAT")
+    options = body.locator(".tariffs li", has_text="Published in Evolt Network's tariff data.")
+    expect(options).to_have_count(2)
+    expect(body).to_contain_text("Contains data from Evolt Network")
+    link = body.get_by_role("link", name="Evolt Network's tariff feed")
+    href = "https://info.smartcharging.uk/public_feed/locations/3666/tariffs"
+    expect(link).to_have_attribute("href", href)
+
+
 def test_a_phone_opening_in_the_list_starts_the_map_when_first_shown(visit):
     page = visit().open("?view=list", map_ready=False)
     expect(page.locator("#list-items li")).to_have_count(LOCATIONS)
@@ -675,6 +690,22 @@ def test_text_from_feeds_is_never_treated_as_markup(visit, site):
         data["location"]["name"] = MARKUP
         data["location"]["provenance"]["source_url"] = "javascript:window.injected=2"
         data["attribution"] = MARKUP
+        option = {"kind": MARKUP, "state": "priced", "text": MARKUP, "connectors": 1}
+        data["tariff_options"] = [
+            {**option, "tariff_id": f"x:GB:XXX:{n}", "name": MARKUP, "published_by": MARKUP}
+            for n in (1, 2)
+        ]
+        data["tariff_sources"] = [
+            {
+                "name": MARKUP,
+                "note": MARKUP,
+                "attribution": MARKUP,
+                "source_url": "javascript:window.injected=3",
+                "licence": MARKUP,
+                "licence_url": "javascript:window.injected=4",
+                "fetched_at": data["fetched_at"],
+            }
+        ]
         route.fulfill(json=data)
 
     page.route("**/data/locations.geojson", layer)
@@ -686,6 +717,8 @@ def test_text_from_feeds_is_never_treated_as_markup(visit, site):
     item.click()
     expect(page.locator("#detail-heading")).to_be_focused()
     assert page.text_content("#detail-heading") == MARKUP
+    assert page.locator(".related", has_text=MARKUP).count() == 1
+    assert page.locator(".tariffs li", has_text=f"Published in {MARKUP}'s").count() == 2
     assert page.locator("main img").count() == 0
     assert page.locator('a[href^="javascript:"]').count() == 0
     assert page.evaluate("window.injected") is None

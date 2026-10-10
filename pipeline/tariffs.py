@@ -19,9 +19,17 @@ the preferred ones, so people can compare them: each with how it is paid for, it
 what the price depends on (time of day, day of the week and so on) and how many of the
 site's connectors list it. Tariffs that could not be found are listed as unknown.
 
+Only where the owner has recorded tariffs_from in the operator file (ADR 0020),
+related_tariffs finds tariffs a connector names that only a related operator's feed
+holds: the exact same OCPI id, which must be a UUID, with the same country code, in
+exactly one related operator's tariffs, and never in the operator's own. Names and
+descriptions are never compared.
+
 Prices are only ever worded by pipeline.pricing.
 """
 
+import re
+from collections import defaultdict
 from dataclasses import dataclass, field
 from decimal import Decimal
 from typing import Literal
@@ -226,9 +234,55 @@ def site_tariffs(location: Location, tariffs: dict[str, Tariff]) -> SiteTariffs:
     return SiteTariffs(options, comparison(options), len(connectors))
 
 
-def price_locations(locations: list[Location], tariffs: list[Tariff]) -> list[ConnectorPrice]:
-    """The price for every connector at every location, in order."""
-    index = {tariff.id: tariff for tariff in tariffs}
+# An OCPI id in the form of a UUID names one record, so a match cannot be a coincidence.
+UUID = re.compile(r"^[0-9a-fA-F]{8}(-[0-9a-fA-F]{4}){3}-[0-9a-fA-F]{12}$")
+
+
+def _parts(record_id: str) -> tuple[str, str, str] | None:
+    """(country code, party id, OCPI id) of an id made by the OCPI adapter, else None."""
+    parts = record_id.split(":", 3)
+    return (parts[1], parts[2], parts[3]) if len(parts) == 4 else None
+
+
+def related_tariffs(
+    locations: list[Location], own: list[Tariff], related: dict[str, list[Tariff]]
+) -> dict[str, Tariff]:
+    """Tariffs from related operators' feeds (`related`, by operator id) for the tariff ids
+    connectors name that the operator's own tariffs (`own`) do not have, keyed by the id
+    the connector names (ADR 0020). Use only where the owner has recorded tariffs_from.
+
+    A connector's tariff id is matched only when its OCPI id is a UUID, no tariff in the
+    operator's own response has that OCPI id under any country or party code, and exactly
+    one tariff among all the related operators' responses has it, with the same country
+    code. Anything else stays unresolved. Names and descriptions are never compared.
+    """
+    own_ids = {parts[2] for parts in map(_parts, (t.id for t in own)) if parts}
+    by_id: dict[str, list[Tariff]] = defaultdict(list)
+    for tariffs in related.values():
+        for tariff in tariffs:
+            parts = _parts(tariff.id)
+            if parts:
+                by_id[parts[2]].append(tariff)
+    found: dict[str, Tariff] = {}
+    for location in locations:
+        for evse in location.evses:
+            for connector in evse.connectors:
+                for tariff_id in connector.tariff_ids:
+                    parts = _parts(tariff_id)
+                    if parts is None or parts[2] in own_ids or not UUID.match(parts[2]):
+                        continue
+                    matches = by_id.get(parts[2], [])
+                    if len(matches) == 1 and _parts(matches[0].id)[0] == parts[0]:
+                        found[tariff_id] = matches[0]
+    return found
+
+
+def price_locations(
+    locations: list[Location], tariffs: list[Tariff], related: dict[str, Tariff] | None = None
+) -> list[ConnectorPrice]:
+    """The price for every connector at every location, in order. `related` adds tariffs
+    from related_tariffs, keyed by the id the connector names."""
+    index = {tariff.id: tariff for tariff in tariffs} | (related or {})
     return [
         price_connector(connector, index, location_id=location.id, evse_uid=evse.uid)
         for location in locations

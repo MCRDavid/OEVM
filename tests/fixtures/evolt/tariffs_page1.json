@@ -7,8 +7,8 @@
     "status_code": 200,
     "headers": {
       "content-type": "application/json",
-      "x-total-count": "8",
-      "x-limit": "8"
+      "x-total-count": "14",
+      "x-limit": "14"
     },
     "body": {
       "status_code": 1000,
@@ -79,6 +79,26 @@
         {
           "country_code": "GB",
           "party_id": "SSM",
+          "id": "1d20faaa-d024-4479-911c-5b6d66fee061",
+          "currency": "GBP",
+          "elements": [
+            {
+              "price_components": [
+                {
+                  "type": "ENERGY",
+                  "price": 0.467,
+                  "vat": 20,
+                  "step_size": 1
+                }
+              ],
+              "restrictions": null
+            }
+          ],
+          "last_updated": "2026-10-10T00:02:27"
+        },
+        {
+          "country_code": "GB",
+          "party_id": "SSM",
           "id": "287494db-5192-4043-a736-f2b6c4759812",
           "currency": "GBP",
           "elements": [
@@ -142,6 +162,50 @@
         {
           "country_code": "GB",
           "party_id": "SSM",
+          "id": "47a52501-4154-403d-b87d-ac650a7d3bc9",
+          "currency": "GBP",
+          "elements": [
+            {
+              "price_components": [
+                {
+                  "type": "ENERGY",
+                  "price": 0.4,
+                  "vat": 20,
+                  "step_size": 1
+                }
+              ],
+              "restrictions": null
+            }
+          ],
+          "last_updated": "2026-10-10T00:02:46",
+          "min_price": {
+            "excl_vat": 4.17,
+            "incl_vat": 5
+          }
+        },
+        {
+          "country_code": "GB",
+          "party_id": "SSM",
+          "id": "57053db1-3fb6-44fa-8134-955c76593c50",
+          "currency": "GBP",
+          "elements": [
+            {
+              "price_components": [
+                {
+                  "type": "ENERGY",
+                  "price": 0.567,
+                  "vat": 20,
+                  "step_size": 1
+                }
+              ],
+              "restrictions": null
+            }
+          ],
+          "last_updated": "2025-12-18T00:02:04"
+        },
+        {
+          "country_code": "GB",
+          "party_id": "SSM",
           "id": "5b116db7-66c7-428c-a6a4-9bafea533bb5",
           "currency": "GBP",
           "elements": [
@@ -191,6 +255,66 @@
             }
           ],
           "last_updated": "2024-11-25T10:07:40"
+        },
+        {
+          "country_code": "GB",
+          "party_id": "SSM",
+          "id": "821d458e-9ca1-4a90-ab8e-7e8373db5b4c",
+          "currency": "GBP",
+          "elements": [
+            {
+              "price_components": [
+                {
+                  "type": "ENERGY",
+                  "price": 0.467,
+                  "vat": 20,
+                  "step_size": 1
+                }
+              ],
+              "restrictions": null
+            }
+          ],
+          "last_updated": "2025-12-18T00:02:05"
+        },
+        {
+          "country_code": "GB",
+          "party_id": "SSM",
+          "id": "b08d697e-f42f-4b96-944b-4da53fbc2339",
+          "currency": "GBP",
+          "elements": [
+            {
+              "price_components": [
+                {
+                  "type": "ENERGY",
+                  "price": 0.542,
+                  "vat": 20,
+                  "step_size": 1
+                }
+              ],
+              "restrictions": null
+            }
+          ],
+          "last_updated": "2026-10-10T00:02:26"
+        },
+        {
+          "country_code": "GB",
+          "party_id": "SSM",
+          "id": "d43326d1-329d-4c1e-8e93-7ab63a087e57",
+          "currency": "GBP",
+          "elements": [
+            {
+              "price_components": [
+                {
+                  "type": "ENERGY",
+                  "price": 0.467,
+                  "vat": 20,
+                  "step_size": 1
+                }
+              ],
+              "restrictions": null
+            }
+          ],
+          "last_updated": "2026-10-10T00:02:43"
         },
         {
           "country_code": "GB",
@@ -249,7 +373,7 @@
       "status_message": "Success",
       "timestamp": "2026-10-10T08:16:36",
       "meta": {
-        "total": 8,
+        "total": 14,
         "limit": null
       }
     }

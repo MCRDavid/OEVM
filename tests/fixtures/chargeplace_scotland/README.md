@@ -17,11 +17,15 @@ and connector ids are JSON numbers rather than strings. To keep the fixtures sho
   - tariffs with a price per hour after a time and a minimum price, and a tariff whose
     only price is a flat fee of 0;
   - one location whose connectors name no tariff, and one whose connectors name a tariff
-    that is not in ChargePlace Scotland's tariff response (it is in Evolt Network's);
+    that is not in ChargePlace Scotland's tariff response (it is in Evolt Network's, and
+    in `tests/fixtures/evolt/tariffs_page1.json`);
   - a connector that gives 0 for max_amperage and max_electric_power.
   X-Total-Count, X-Limit and `meta.total` were changed to 6 to match.
-- `tariffs_page1.json` keeps the 5 tariffs those locations name that are in the response.
-  Its X-Total-Count, X-Limit and `meta.total` were changed to 5 to match.
+- `tariffs_page1.json` keeps the 5 tariffs those locations name that are in the response,
+  and the one tariff that Evolt Network's "Granton Western Village" names, which is only in
+  this response, so the tests can check it is used by the repository owner's decision
+  recorded in `operators/evolt.yaml` (ADR 0020). Its X-Total-Count, X-Limit and
+  `meta.total` were changed to 6 to match.
 - Every record is exactly as sent, in the order sent. The content-type, X-Total-Count and
   X-Limit headers were kept.
 

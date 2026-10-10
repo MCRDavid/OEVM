@@ -446,6 +446,42 @@ class Relay(_Model):
     )
 
 
+class TariffsFrom(_Model):
+    """The repository owner's recorded decision that this operator's connectors may be priced
+    from tariffs in a related operator's feed (ADR 0020).
+
+    Some networks publish their charge points and their tariffs in separate feeds from one
+    back office, so a connector can name a tariff that only a sister network's response
+    holds. A connector is priced from a named operator only when the OCPI id it names is in
+    the form of a UUID, its own operator's tariffs do not have that OCPI id under any
+    country or party code, exactly one tariff across the named operators' tariffs has that
+    exact OCPI id with the same country code, and that operator was fetched in the same
+    run. Names and descriptions are never matched. The details on the map say which feed
+    the price came from. Without this decision such connectors show "Price unknown".
+    """
+
+    decided: dt.date = Field(description="Date the owner made the decision (YYYY-MM-DD).")
+    basis: NeutralText = Field(
+        description="Why the operators are related, for example that one company runs both "
+        "networks and publishes both feeds from the same host."
+    )
+    evidence_url: SafeUrl = Field(description="Where the relationship can be seen.")
+    operators: list[str] = Field(
+        min_length=1,
+        description="Ids of the related operators whose tariffs may be used. Each must be in "
+        "the registry and publish its feeds on the same host as this operator.",
+    )
+
+    @model_validator(mode="after")
+    def _ids(self) -> "TariffsFrom":
+        for item in self.operators:
+            if not re.fullmatch(r"[a-z0-9_]+", item):
+                raise ValueError(f"{item!r} is not an operator id")
+        if len(set(self.operators)) != len(self.operators):
+            raise ValueError("each operator may be named once")
+        return self
+
+
 class EngagementEvent(_Model):
     """One dated step in getting access to an operator's data: a check, a request, a reply."""
 
@@ -593,6 +629,12 @@ class OperatorConfig(_Model):
         description="Only by the repository owner's decision: fetch through the project's "
         "relay. Null means requests go direct.",
     )
+    tariffs_from: TariffsFrom | None = Field(
+        default=None,
+        description="Only by the repository owner's decision: price connectors that name a "
+        "tariff only a related operator's feed holds from that feed. Null means such "
+        "connectors show 'Price unknown'.",
+    )
     engagement: Engagement
     access_requested: dt.date | None = None
     access_granted: dt.date | None = None
@@ -658,6 +700,8 @@ class OperatorConfig(_Model):
                 problems.append("only a feed that needs no key may be relayed")
             if self.relay.url_variable == self.relay.secret_name:
                 problems.append("relay url_variable and secret_name must differ")
+        if self.tariffs_from is not None and self.id in self.tariffs_from.operators:
+            problems.append("tariffs_from cannot name the operator itself")
         if self.auth.method in ("header", "query_param"):
             urls = [endpoint.url for endpoint in self.endpoints.values()]
             if self.base_url != "unknown":

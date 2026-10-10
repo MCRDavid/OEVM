@@ -311,3 +311,16 @@ def test_a_decision_to_swap_back_coordinates_is_shown(page):
     assert all(decisions[k]["decided"] == date for k, date in decided.items())
     assert all(v is None for k, v in decisions.items() if k not in decided)
     assert "obviously missing a minus sign, are corrected and marked" in " ".join(page.split())
+
+
+def test_a_decision_to_use_a_related_operators_tariffs_is_shown(page):
+    data = json.loads(transparency.outputs()[transparency.JSON_PATH])
+    decisions = {op["id"]: op["tariffs_from"] for op in data["operators"]}
+    related = {"chargeplace_scotland": ["evolt"], "evolt": ["chargeplace_scotland"]}
+    related["pogo_charge"] = ["evolt"]
+    assert {k: v["operators"] for k, v in decisions.items() if v} == related
+    assert all(decisions[k]["decided"] == "2026-10-10" for k in related)
+    text = " ".join(page.split())
+    assert "name a tariff only Evolt Network publishes are priced from that exact tariff" in text
+    assert "never by name, by the owner's decision of 2026-10-10" in text
+    assert ".. " not in " ".join(" ".join(parse(page).text).split())

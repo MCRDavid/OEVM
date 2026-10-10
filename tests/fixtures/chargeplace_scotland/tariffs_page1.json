@@ -7,8 +7,8 @@
     "status_code": 200,
     "headers": {
       "content-type": "application/json",
-      "x-total-count": "5",
-      "x-limit": "5"
+      "x-total-count": "6",
+      "x-limit": "6"
     },
     "body": {
       "status_code": 1000,
@@ -97,6 +97,43 @@
         {
           "country_code": "GB",
           "party_id": "CPS",
+          "id": "bc7334e2-0c50-4f8b-9377-fcf55ccb4f37",
+          "currency": "GBP",
+          "elements": [
+            {
+              "price_components": [
+                {
+                  "type": "FLAT",
+                  "price": 25,
+                  "vat": 20,
+                  "step_size": 1
+                }
+              ],
+              "restrictions": {
+                "min_duration": 29700
+              }
+            },
+            {
+              "price_components": [
+                {
+                  "type": "ENERGY",
+                  "price": 0.467,
+                  "vat": 20,
+                  "step_size": 1
+                }
+              ],
+              "restrictions": null
+            }
+          ],
+          "last_updated": "2026-07-15T00:01:15",
+          "min_price": {
+            "excl_vat": 0.83,
+            "incl_vat": 1
+          }
+        },
+        {
+          "country_code": "GB",
+          "party_id": "CPS",
           "id": "c1fa5d96-4609-44e5-a2a8-73af60aeb6fa",
           "currency": "GBP",
           "elements": [
@@ -159,7 +196,7 @@
       "status_message": "Success",
       "timestamp": "2026-10-10T08:16:47",
       "meta": {
-        "total": 5,
+        "total": 6,
         "limit": null
       }
     }

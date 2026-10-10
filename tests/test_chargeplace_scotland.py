@@ -10,15 +10,15 @@ from adapters.replay import ReplayTransport
 from pipeline.health import in_uk
 from pipeline.pricing import describe_tariff
 from pipeline.registry import load_registry
-from pipeline.tariffs import price_connector
+from pipeline.tariffs import price_connector, price_locations, related_tariffs
 
 FIXTURES = Path(__file__).parent / "fixtures" / "chargeplace_scotland"
 FEED = "https://info.smartcharging.uk/public_feed/locations/2463"
 
 
-def replay():
-    config = load_registry()["chargeplace_scotland"]
-    transport = ReplayTransport(FIXTURES)
+def replay(operator_id="chargeplace_scotland"):
+    config = load_registry()[operator_id]
+    transport = ReplayTransport(FIXTURES.parent / operator_id)
     with PoliteClient(config, transport=transport, sleep=lambda _s: None) as client:
         return fetch(config, client), transport
 
@@ -77,10 +77,27 @@ def test_prices_show_in_gbp_and_free_only_when_confirmed():
 def test_missing_and_other_operators_tariffs_show_price_unknown():
     result, _ = replay()
     shown = shown_prices(result)
-    # Names a tariff that is only in Evolt Network's response, which is never borrowed.
+    # Names a tariff that is only in Evolt Network's response.
     assert shown["Herbertshire Castle Car Park, Dunipace"] == {"Price unknown"}
     # Names no tariff at all.
     assert shown["Broomburn Shops Car Park, Renfrewshire"] == {"Price unknown"}
+
+
+def test_a_tariff_only_evolt_networks_feed_holds_is_priced_from_it():
+    # By the owner's decision (tariffs_from), the one Evolt Network tariff with that exact
+    # id is used when both feeds are fetched. A connector that names no tariff stays unknown.
+    result, _ = replay()
+    evolt, _ = replay("evolt")
+    found = related_tariffs(result.locations, result.tariffs, {"evolt": evolt.tariffs})
+    assert len(found) == 1
+    priced = price_locations(result.locations, result.tariffs, found)
+    by_location = {}
+    for price in priced:
+        by_location.setdefault(price.location_id, set()).add(price.state)
+    names = {loc.id: loc.name for loc in result.locations}
+    shown = {names[i]: states for i, states in by_location.items()}
+    assert shown["Herbertshire Castle Car Park, Dunipace"] == {"priced"}
+    assert shown["Broomburn Shops Car Park, Renfrewshire"] == {"unknown"}
 
 
 def test_chargeplace_scotland_records_its_source_and_terms():

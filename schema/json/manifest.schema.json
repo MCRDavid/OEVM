@@ -102,6 +102,13 @@
           "title": "Tariffs",
           "type": "integer"
         },
+        "priced_from_related": {
+          "default": 0,
+          "description": "Connectors priced from a tariff found in a related operator's feed, by the owner's decision in the operator file (tariffs_from, ADR 0020).",
+          "minimum": 0,
+          "title": "Priced From Related",
+          "type": "integer"
+        },
         "attribution": {
           "title": "Attribution",
           "type": "string"
@@ -140,6 +147,7 @@
         "corrected",
         "corrected_ids",
         "tariffs",
+        "priced_from_related",
         "attribution",
         "licence",
         "licence_url",

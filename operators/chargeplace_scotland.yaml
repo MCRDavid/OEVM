@@ -57,6 +57,20 @@ licence:
     open data, which regulation 10(5) requires to be available without terms on its use. The
     page's words "for data and roaming partners" say who the access is for and set no terms.
   checked: 2026-10-10
+tariffs_from:
+  decided: 2026-10-10
+  basis: >-
+    Some ChargePlace Scotland connectors name tariffs that only Evolt Network's feed holds.
+    The repository owner decided that a connector may be priced from Evolt Network's tariff
+    only when it is definitely the same tariff for that site and the two operators are
+    related, never because of a coincidental tariff name: the connector names that exact
+    tariff id, which is a UUID, ChargePlace Scotland's own response does not have it, and
+    Evolt Network's response has it once, with the same country code. ChargePlace Scotland's
+    Scheme Terms say SWARCO Smart Charging Ltd operates the network, Evolt Network's terms
+    say SWARCO Smart Charging owns and operates its network, and both feeds are published on
+    info.smartcharging.uk.
+  evidence_url: https://chargeplacescotland.org/scheme-terms/
+  operators: [evolt]
 engagement:
   status: open_anonymous
   evidence:
@@ -135,8 +149,11 @@ findings:
       Scotland's tariff response; all 11 are in Evolt Network's tariff response on the same
       host. Another 33 connectors name no tariff (on 2026-10-10).
     handling: >-
-      Tariffs are matched only within an operator's own response, so these connectors show
-      "Price unknown". Prices are never taken from another operator's feed.
+      By the repository owner's decision of 2026-10-10 (tariffs_from above, ADR 0020), the
+      462 connectors are priced from the Evolt Network tariff with that exact id, fetched in
+      the same run, and the details on the map say so and credit Evolt Network's feed.
+      Tariff names are never matched. If Evolt Network's feed is not fetched in the same run,
+      the price shows as unknown. The 33 connectors that name no tariff show "Price unknown".
     evidence_url: https://info.smartcharging.uk/public_feed/locations/2463/tariffs
   - date: 2026-10-10
     kind: data_quality

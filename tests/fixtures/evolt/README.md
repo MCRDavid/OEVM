@@ -17,7 +17,8 @@ and connector ids are JSON numbers rather than strings. To keep the fixtures sho
   - tariffs with a session fee after a minimum duration, a price per hour and a minimum
     price, and a tariff whose only price is a flat fee of 0;
   - one location whose connectors name a tariff that is not in Evolt's tariff response
-    (it is in ChargePlace Scotland's);
+    (it is in ChargePlace Scotland's, and in
+    `tests/fixtures/chargeplace_scotland/tariffs_page1.json`);
   - a location with 18 EVSEs, three of whose connectors give 0 for max_amperage and
     max_electric_power;
   - two locations that are not shown on the map, one on the Isle of Man and one with
@@ -26,8 +27,12 @@ and connector ids are JSON numbers rather than strings. To keep the fixtures sho
     longitude is 4.26275, in the North Sea; the map shows it with the minus sign added,
     by the repository owner's decision recorded in `operators/evolt.yaml`.
   X-Total-Count, X-Limit and `meta.total` were changed to 8 to match.
-- `tariffs_page1.json` keeps the 8 tariffs those locations name that are in the response.
-  Its X-Total-Count, X-Limit and `meta.total` were changed to 8 to match.
+- `tariffs_page1.json` keeps the 8 tariffs those locations name that are in the response,
+  and the 6 tariffs that the PoGo Charge and ChargePlace Scotland fixture locations name,
+  which are only in this response, so the tests can check they are used by the repository
+  owner's decisions recorded in `operators/pogo_charge.yaml` and
+  `operators/chargeplace_scotland.yaml` (ADR 0020). Its X-Total-Count, X-Limit and
+  `meta.total` were changed to 14 to match.
 - Every record is exactly as sent, in the order sent. The content-type, X-Total-Count and
   X-Limit headers were kept.
 
