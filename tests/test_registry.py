@@ -23,6 +23,7 @@ SEED_IDS = {
     "gridserve",
     "instavolt",
     "jolt",
+    "mer_uk",
     "mfg_ev_power",
     "pod",
     "shell_recharge",
@@ -98,7 +99,7 @@ def test_operator_files_contain_no_key_like_values():
 
 def test_cli_validate_succeeds_on_seed_registry(capsys):
     assert registry.main(["--validate"]) == 0
-    assert "Operator registry is valid: 13 operators" in capsys.readouterr().out
+    assert "Operator registry is valid: 14 operators" in capsys.readouterr().out
 
 
 def test_cli_without_validate_prints_help(capsys):

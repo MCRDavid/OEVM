@@ -18,6 +18,7 @@ section filled in.
 | A3 | `static_file` | No current operator; later council CSVs and FOI spreadsheets | A source that needs it | Deferred |
 | A4 | None yet | MFG on `ocpi_221`; Fastned, Believ and others once their format is known | Nothing for MFG; access for the rest | 1 |
 | A6 | Plain wrapper option for `ocpi_221` | Clenergy EV | Nothing | Built: `response_envelope: data_list` |
+| A7 | One-response option for `ocpi_221` | Mer UK | Nothing | Built: `response_envelope: by_module` |
 | A5 | Basic auth for `ocpi_221` | Osprey | Osprey confirming the method and granting credentials | When credentials arrive |
 
 Operators that need no new adapter, so are not tasks here: Pod (`ocpi_221` once a token
@@ -191,6 +192,28 @@ stated, so the project's default gap applies and the header is recorded as a fin
 page is read and recorded in the licence section.
 
 **Depends on:** nothing. Can start now.
+
+## A7: one response for every module in `ocpi_221` (Mer UK)
+
+Added 2026-10-10.
+
+**Unlocks:** Mer UK (party GB*MER, 176 locations and 61 tariffs on 2026-10-10).
+
+**Feed format:** `https://uk.mer.eco/wp-json/ozev/v1/data`, linked from
+https://uk.mer.eco/live-charge-point-data/. One response holds
+`{"data": {"locations": {...}, "tariffs": {...}}}`, where each inner object is a standard
+OCPI 2.2.1 response object with its own `status_code`. No paging headers.
+
+**Change:** an opt-in operator file setting, `response_envelope: by_module`, with both
+endpoints set to the shared URL. The adapter requests the URL once per run and checks
+each module's response object as strictly as any other OCPI response.
+
+**Access:** none needed. **Rate limits:** none published; the project's 2 second default
+applies, and a run makes one request.
+
+**Licence:** the data page states no terms. Mer's general terms and conditions grant
+personal, non-commercial use of website content, so the owner decides whether they cover
+the open data before the operator is switched on.
 
 ## Suggested order
 

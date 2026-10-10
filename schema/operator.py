@@ -24,7 +24,7 @@ AdapterName = Literal[
 AuthMethod = Literal["none", "header", "query_param", "unknown"]
 EndpointKind = Literal["versions", "locations", "tariffs", "statuses", "download"]
 EndpointStatus = Literal["documented", "needs_testing"]
-ResponseEnvelope = Literal["ocpi", "data_list"]
+ResponseEnvelope = Literal["ocpi", "data_list", "by_module"]
 FindingKind = Literal["spec_conformance", "data_quality", "access", "documentation"]
 FindingStatus = Literal["open", "resolved"]
 EngagementStatus = Literal[
@@ -558,7 +558,10 @@ class OperatorConfig(_Model):
         description="'ocpi' (the default) requires each response to be an OCPI 2.2.1 "
         "response object with a status_code. 'data_list' also accepts an object with a "
         "list of OCPI records in 'data' and no status_code, for feeds whose records are OCPI "
-        "but whose wrapper is not. Record the reason as a finding. ocpi_221 only.",
+        "but whose wrapper is not. 'by_module' is for one URL that answers every module: "
+        "'data' is an object keyed by module name, each value an OCPI response object; "
+        "give each module that same URL, and it is fetched once. Record the reason as a "
+        "finding. ocpi_221 only.",
     )
     auth: Auth
     rate_limit: RateLimit = Field(default_factory=RateLimit)
@@ -645,6 +648,11 @@ class OperatorConfig(_Model):
                 problems.append("an enabled operator needs licence terms that have been checked")
         if self.response_envelope != "ocpi" and self.adapter != "ocpi_221":
             problems.append("response_envelope only applies to the ocpi_221 adapter")
+        if self.response_envelope == "by_module" and (
+            not {"locations", "tariffs"} <= set(self.endpoints)
+            or self.endpoints["locations"].url != self.endpoints["tariffs"].url
+        ):
+            problems.append("response_envelope by_module needs one URL for locations and tariffs")
         if self.relay is not None:
             if self.auth.method != "none":
                 problems.append("only a feed that needs no key may be relayed")

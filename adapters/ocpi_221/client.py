@@ -78,13 +78,19 @@ def _same_site(url: str, other: str) -> bool:
     return (a.scheme, a.netloc) == (b.scheme, b.netloc)
 
 
-def _ocpi_data(body: object, url: str, envelope: str = "ocpi") -> list:
+def _ocpi_data(body: object, url: str, envelope: str = "ocpi", module: str = "") -> list:
     """Return the records in a response, checking its wrapper.
 
     With envelope "data_list" (an operator file setting), a body with no status_code is
     accepted if it holds a list in "data" and a null or empty "error". A status_code, when
-    present, is always checked.
+    present, is always checked. With envelope "by_module", "data" is an object holding an
+    OCPI response object for each module, and the one named `module` is checked and read.
     """
+    if envelope == "by_module":
+        modules = body.get("data") if isinstance(body, dict) else None
+        if not isinstance(modules, dict) or module not in modules:
+            raise FeedError(f"{redact_url(url)} returned no {module!r} object in 'data'")
+        body, envelope = modules[module], "ocpi"
     if not isinstance(body, dict):
         raise FeedError(f"{redact_url(url)} did not return an OCPI response object")
     if "status_code" not in body:
@@ -113,10 +119,13 @@ def fetch_module(
     max_pages: int | None = None,
     progress: PageProgress = NO_PROGRESS,
     envelope: str = "ocpi",
+    responses: dict[str, httpx.Response] | None = None,
 ) -> ModuleFetch:
     """Fetch all pages of one module, or the first `max_pages` pages.
 
-    envelope is the operator file's response_envelope setting (see _ocpi_data).
+    envelope is the operator file's response_envelope setting (see _ocpi_data). responses,
+    if given, keeps each response by URL and is reused for a URL already fetched, so a
+    feed that answers every module from one URL is requested once.
 
     Saved pages and error messages have the operator's key removed, in case a server
     echoes it back in a header, a link or the body. If a page fails, the FeedError carries
@@ -133,6 +142,7 @@ def fetch_module(
             max_pages=max_pages,
             progress=progress,
             envelope=envelope,
+            responses=responses,
         )
     except FeedError as exc:
         error = FeedError(client.redact(str(exc)))
@@ -149,6 +159,7 @@ def _fetch_pages(
     max_pages: int | None,
     progress: PageProgress,
     envelope: str,
+    responses: dict[str, httpx.Response] | None,
 ) -> ModuleFetch:
     module, endpoint = result.module, result.endpoint
     params = {}
@@ -170,7 +181,11 @@ def _fetch_pages(
             raise FeedError(f"paging did not finish at {redact_url(url)}")
         seen_urls.add(url)
 
-        response = client.get(url)
+        response = responses.get(url) if responses is not None else None
+        if response is None:
+            response = client.get(url)
+            if responses is not None:
+                responses[url] = response
         if response.status_code != 200:
             raise FeedError(
                 f"{client.describe(url)} returned HTTP {response.status_code}"
@@ -180,7 +195,7 @@ def _fetch_pages(
             body = client.redact(response.json())
         except ValueError as exc:
             raise FeedError(f"{redact_url(url)} did not return JSON") from exc
-        data = _ocpi_data(body, url, envelope)
+        data = _ocpi_data(body, url, envelope, module)
 
         result.records.extend(data)
         result.pages.append(

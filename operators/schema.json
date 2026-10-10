@@ -830,10 +830,11 @@
     },
     "response_envelope": {
       "default": "ocpi",
-      "description": "'ocpi' (the default) requires each response to be an OCPI 2.2.1 response object with a status_code. 'data_list' also accepts an object with a list of OCPI records in 'data' and no status_code, for feeds whose records are OCPI but whose wrapper is not. Record the reason as a finding. ocpi_221 only.",
+      "description": "'ocpi' (the default) requires each response to be an OCPI 2.2.1 response object with a status_code. 'data_list' also accepts an object with a list of OCPI records in 'data' and no status_code, for feeds whose records are OCPI but whose wrapper is not. 'by_module' is for one URL that answers every module: 'data' is an object keyed by module name, each value an OCPI response object; give each module that same URL, and it is fetched once. Record the reason as a finding. ocpi_221 only.",
       "enum": [
         "ocpi",
-        "data_list"
+        "data_list",
+        "by_module"
       ],
       "title": "Response Envelope",
       "type": "string"

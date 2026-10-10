@@ -93,6 +93,8 @@ def fetch(
         raise FeedError(f"{config.id} uses the {config.adapter} adapter, not ocpi_221")
     fetched_at = now or datetime.now(UTC).replace(microsecond=0)
     modules: dict[str, ModuleFetch] = {}
+    # One URL answers every module (response_envelope by_module): request it once.
+    responses = {} if config.response_envelope == "by_module" else None
     for module in MODULES:
         try:
             modules[module] = fetch_module(
@@ -104,6 +106,7 @@ def fetch(
                 max_pages=max_pages,
                 progress=progress,
                 envelope=config.response_envelope,
+                responses=responses,
             )
         except FeedError as exc:
             # Say how far the fetch got, for the run log (pipeline.run.failure_log).

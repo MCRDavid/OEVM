@@ -1,0 +1,126 @@
+# yaml-language-server: $schema=schema.json
+id: mer_uk
+display_name: Mer UK
+ocpi_country_code: GB
+ocpi_party_id: MER # Confirmed from the feed's own country_code and party_id on 2026-10-10.
+adapter: ocpi_221
+base_url: unknown
+endpoints:
+  locations:
+    url: https://uk.mer.eco/wp-json/ozev/v1/data
+    status: documented
+    note: >-
+      Linked as "Mer Live Charge Point Data" from Mer's "Live Charge Point Data" page
+      (read 2026-10-10). The same URL holds the locations and the tariffs.
+  tariffs:
+    url: https://uk.mer.eco/wp-json/ozev/v1/data
+    status: documented
+    note: The same response as locations; its "tariffs" object is read.
+response_envelope: by_module
+auth:
+  method: none
+  name: null
+  secret_name: null
+rate_limit:
+  min_seconds_between_requests: 2
+  limits: []
+  limits_checked: 2026-10-10
+  notes: >-
+    Mer's pages state no rate limit. The 2 second gap is this project's own choice. One
+    response holds every location and tariff, so a full run makes one request (about 0.7 MB
+    on 2026-10-10).
+supports_single_location: unknown
+cors: needs_testing
+attribution: >-
+  Contains data from Mer UK published under the Public Charge Point Regulations 2023, used
+  in line with the Open Government Licence v3.0.
+licence:
+  name: OGL-3.0
+  url: https://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/
+  basis: >-
+    Mer's "Live Charge Point Data" page says "As per OZEV regulations, we have hosted our
+    location and tariff data in a machine-readable format" and links the data. DfT's
+    guidance (updated 21 October 2024) says "Data must be open in line with the Open
+    Government Licence". The page, read on 2026-10-10, states no licence, terms or rate
+    limit for the data. Mer's terms and conditions (last updated November 2023) apply to
+    "users of the charging infrastructure in the Network and any associated services",
+    including its app, driver portal and website, and grant "a revocable right to use the
+    Content for your personal (non-commercial) use", where Content includes material and
+    data contained in the website. On 2026-10-10 the repository owner decided to read
+    those general terms as not covering the open data, which Mer publishes under the
+    regulations, and regulation 10(5) requires it to be available without terms on its use.
+  checked: 2026-10-10
+engagement:
+  status: open_anonymous
+  evidence:
+    - date: 2026-10-10
+      url: https://uk.mer.eco/live-charge-point-data/
+      note: >-
+        Links "Mer Live Charge Point Data" (one JSON file with locations and tariffs) and
+        states no licence, terms or rate limit.
+  log:
+    - date: 2026-10-10
+      action: page_checked
+      summary: >-
+        Read Mer's "Live Charge Point Data" page, which links one machine-readable file of
+        locations and tariffs that needs no key.
+      evidence_url: https://uk.mer.eco/live-charge-point-data/
+access_requested: null
+access_granted: null
+sources:
+  - url: https://uk.mer.eco/live-charge-point-data/
+    note: >-
+      Mer's "Live Charge Point Data" page, read 2026-10-10. Gives the data link. States no
+      licence, terms or rate limits.
+  - url: https://uk.mer.eco/mer/legal/terms-and-conditions/
+    note: >-
+      Mer's terms and conditions for its charging services, app, driver portal and website,
+      read 2026-10-10. The feed's connectors link the same terms.
+  - url: https://uk.mer.eco/news/mer-uk-fleet-services-under-new-ownership/
+    note: >-
+      Mer's news item of 10 June 2026, read 2026-10-10: Mer AS sold Mer Fleet Services Ltd,
+      its UK business, through a management buyout, with branding to change in phases.
+findings:
+  - date: 2026-10-10
+    kind: spec_conformance
+    summary: >-
+      One URL answers with both modules: {"data": {"locations": {...}, "tariffs": {...}}},
+      where each inner object is an OCPI 2.2.1 response object with status_code, timestamp
+      and a list of records. OCPI 2.2.1 serves each module from its own endpoint.
+    handling: >-
+      The operator file sets response_envelope to by_module, so the adapter requests the URL
+      once and reads each module's own response object, checking its status_code.
+    evidence_url: https://uk.mer.eco/wp-json/ozev/v1/data
+  - date: 2026-10-10
+    kind: spec_conformance
+    summary: >-
+      The response holds every record (176 locations and 61 tariffs on 2026-10-10) and sends
+      no X-Total-Count, X-Limit or Link header. OCPI 2.2.1 describes these headers for
+      paginated responses.
+    handling: >-
+      The adapter reads the response in one request. With no X-Total-Count the record count
+      cannot be checked against the server's own total.
+    evidence_url: https://uk.mer.eco/wp-json/ozev/v1/data
+  - date: 2026-10-10
+    kind: data_quality
+    summary: >-
+      30 of 176 locations carry a "parkingType" field next to "parking_type", with the same
+      value. "parkingType" is not an OCPI 2.2.1 field.
+    handling: Ignored; parking_type is the field read.
+    evidence_url: https://uk.mer.eco/wp-json/ozev/v1/data
+  - date: 2026-10-10
+    kind: data_quality
+    summary: >-
+      Each tariff gives one price per kWh as seven elements, one for each day of the week,
+      each restricted to 00:00 to 23:59 and a max_duration of 86,400 seconds.
+    handling: >-
+      Prices are shown as published, so a tariff's description names each day separately
+      with the same price.
+    evidence_url: https://uk.mer.eco/wp-json/ozev/v1/data
+notes: >-
+  The response is OCPI 2.2.1 records in a different wrapper, read by the ocpi_221 adapter
+  with response_envelope set to by_module. Since June 2026 the network has been run by Mer
+  Fleet Services Ltd after a management buyout; the feed still names the operator "Mer".
+  Not yet fetched from a GitHub Actions runner; the first daily run will show whether the
+  host answers requests from there.
+enabled: true
