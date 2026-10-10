@@ -26,6 +26,11 @@ Rules:
   still valid. Its manifest entry says so and keeps the original fetch time; each
   location's detail file keeps its own fetched_at, so nothing looks newer than it is
   (ADR 0018).
+- A connector's price comes from its own operator's tariffs, with one exception the
+  owner decides per operator (tariffs_from in the operator file, ADR 0020): a tariff id
+  that only a related operator's feed holds, matched exactly by pipeline.tariffs
+  related_tariffs, and only when that operator was fetched in the same run. The detail
+  file names the feed each such tariff came from, with its attribution.
 - Every file is validated against schema/published.py before it is written.
 - The committed site/ folder is never written to; the deploy step copies site/ and adds
   this output.
@@ -48,8 +53,14 @@ from pipeline.health import in_uk
 from pipeline.plans import load_providers
 from pipeline.pricing import location_summary, plan_fee_text, plan_price_text
 from pipeline.registry import ROOT
-from pipeline.tariffs import ConnectorPrice, TariffOption, price_locations, site_tariffs
-from schema.models import Connector, Coordinates, Location
+from pipeline.tariffs import (
+    ConnectorPrice,
+    TariffOption,
+    price_locations,
+    related_tariffs,
+    site_tariffs,
+)
+from schema.models import Connector, Coordinates, Location, Tariff
 from schema.operator import OperatorConfig
 from schema.published import (
     ConnectorPriceOut,
@@ -66,6 +77,7 @@ from schema.published import (
     PlansFile,
     PointGeometry,
     TariffOptionOut,
+    TariffSource,
 )
 
 # A UK postcode, with or without its space (the BFPO and overseas territory forms are not
@@ -82,6 +94,12 @@ SIGN_NOTE = (
     "The operator published this location's longitude without its minus sign, which put it "
     "outside the UK. This map shows it with the minus sign added; the operator's own "
     "figures are latitude {lat} and longitude {lon}."
+)
+
+RELATED_NOTE = (
+    "{own}'s feed names {count} for this location by {ids} that only {other}'s tariff data "
+    "holds. The two networks are related (see the transparency page), so {they} {are} "
+    "shown as {other} published {them}, matched by exact id and never by name."
 )
 
 LICENCE_NOTE = (
@@ -235,7 +253,7 @@ def _price_out(price: ConnectorPrice) -> ConnectorPriceOut:
     )
 
 
-def _option_out(option: TariffOption) -> TariffOptionOut:
+def _option_out(option: TariffOption, published_by: str | None = None) -> TariffOptionOut:
     low, high = option.energy_low, option.energy_high
     return TariffOptionOut(
         tariff_id=option.tariff_id,
@@ -250,7 +268,44 @@ def _option_out(option: TariffOption) -> TariffOptionOut:
         ppk_low=None if low is None else _pence(low),
         ppk_high=None if high is None else _pence(high),
         includes_vat=option.includes_vat if low is not None else None,
+        published_by=published_by,
     )
+
+
+def _tariff_sources(
+    operator_id: str,
+    found: list[Tariff],
+    operators: dict[str, OperatorConfig],
+    fetched: dict[str, datetime],
+) -> list[TariffSource]:
+    """One entry per related operator whose tariffs are listed at a location."""
+    by_source: dict[str, list[Tariff]] = defaultdict(list)
+    for tariff in found:
+        by_source[tariff.provenance.source_id].append(tariff)
+    sources = []
+    for source_id, tariffs in sorted(by_source.items()):
+        other = operators[source_id]
+        count = len(tariffs)
+        sources.append(
+            TariffSource(
+                name=other.display_name,
+                note=RELATED_NOTE.format(
+                    own=operators[operator_id].display_name,
+                    other=other.display_name,
+                    count="1 tariff" if count == 1 else f"{count} tariffs",
+                    ids="an id" if count == 1 else "ids",
+                    they="it" if count == 1 else "they",
+                    are="is" if count == 1 else "are",
+                    them="it" if count == 1 else "them",
+                ),
+                attribution=" ".join(str(other.attribution).split()),
+                source_url=str(tariffs[0].provenance.source_url),
+                licence=other.licence.name,
+                licence_url=other.licence.url,
+                fetched_at=fetched[source_id],
+            )
+        )
+    return sources
 
 
 PLANS_NOTE = (
@@ -393,6 +448,8 @@ def publish(
     entries: dict[str, OperatorEntry] = {}
     attribution: list[str] = []
     fresh = {r.operator_id for r in results}
+    fresh_tariffs = {r.operator_id: r.tariffs for r in results}
+    fetched = {r.operator_id: r.fetched_at for r in results}
     for copy in sorted(kept, key=lambda c: c.operator_id):
         config = operators.get(copy.operator_id)
         if config is None or not config.enabled or config.licence is None:
@@ -410,10 +467,19 @@ def publish(
         if config is None or not config.enabled or config.licence is None:
             raise PublishError(f"{result.operator_id} is not switched on in the registry")
         attribution.append(" ".join(str(config.attribution).split()))
+        related: dict[str, Tariff] = {}
+        if config.tariffs_from is not None:
+            # Only operators fetched in this run: a kept copy holds no tariffs (ADR 0020).
+            others = {i: fresh_tariffs[i] for i in config.tariffs_from.operators if i in fresh}
+            related = related_tariffs(result.locations, result.tariffs, others)
         by_location: dict[str, list[ConnectorPrice]] = defaultdict(list)
-        for price in price_locations(result.locations, result.tariffs):
+        priced_from_related = 0
+        for price in price_locations(result.locations, result.tariffs, related):
             by_location[price.location_id].append(price)
+            own = f"{result.operator_id}:"
+            priced_from_related += any(not i.startswith(own) for i in price.tariff_ids)
         tariffs = {t.id: t for t in result.tariffs}
+        tariffs |= related | {t.id: t for t in related.values()}
         mapped, not_mapped, corrected = 0, [], []
         for location in sorted(result.locations, key=lambda loc: loc.id):
             correction = None
@@ -430,13 +496,19 @@ def publish(
             prices = by_location[location.id]
             site = site_tariffs(location, tariffs)
             listed = sorted(o.tariff_id for o in site.options if o.tariff_id in tariffs)
+            found = [tariffs[i] for i in listed]
+            elsewhere = [t for t in found if t.provenance.source_id != result.operator_id]
+            published_by = {t.id: operators[t.provenance.source_id].display_name for t in elsewhere}
             detail = LocationDetail(
                 location=location,
                 coordinates_corrected=correction,
-                tariffs=[tariffs[i] for i in listed],
+                tariffs=found,
                 prices=[_price_out(p) for p in prices],
-                tariff_options=[_option_out(o) for o in site.options],
+                tariff_options=[
+                    _option_out(o, published_by.get(o.tariff_id)) for o in site.options
+                ],
                 tariff_comparison=site.comparison,
+                tariff_sources=_tariff_sources(result.operator_id, elsewhere, operators, fetched),
                 attribution=attribution[-1],
                 licence=config.licence.name,
                 licence_url=config.licence.url,
@@ -465,6 +537,7 @@ def publish(
             corrected=len(corrected),
             corrected_ids=corrected,
             tariffs=len(result.tariffs),
+            priced_from_related=priced_from_related,
             attribution=attribution[-1],
             licence=config.licence.name,
             licence_url=config.licence.url,
@@ -506,13 +579,19 @@ def publish(
     for operator_id, entry in entries.items():
         left_off = f", {entry.not_mapped} left off (outside the UK)" if entry.not_mapped else ""
         swapped = f", {entry.corrected} with coordinates corrected" if entry.corrected else ""
+        related = (
+            f", {entry.priced_from_related} connectors priced from a related operator's tariffs"
+            if entry.priced_from_related
+            else ""
+        )
         last_good = (
             f", from its last good copy fetched {entry.fetched_at:%Y-%m-%d %H:%M} UTC"
             if entry.kept_from_previous
             else ""
         )
         report.append(
-            f"  {operator_id}: {entry.mapped} locations mapped{left_off}{swapped}{last_good}"
+            f"  {operator_id}: {entry.mapped} locations mapped{left_off}{swapped}{related}"
+            f"{last_good}"
         )
     kept_at = {c.operator_id: c.entry.fetched_at for c in kept}
     return Published(manifest=manifest, report=report, kept=kept_at)

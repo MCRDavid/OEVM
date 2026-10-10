@@ -39,7 +39,7 @@ def test_every_output_validates_against_its_exported_schema(results, tmp_path):
     jsonschema.validate(layer, schema("map-layer"))
     jsonschema.validate(json.loads((data / "manifest.json").read_text()), schema("manifest"))
     details = sorted((data / "loc").glob("*/*.json"))
-    assert len(details) == len(layer["features"]) == 35
+    assert len(details) == len(layer["features"]) == 52
     for path in details:
         jsonschema.validate(json.loads(path.read_text()), schema("location-detail"))
 
@@ -63,12 +63,15 @@ def test_the_manifest_records_operators_attribution_and_sizes(results, tmp_path)
     manifest = out.manifest
     assert set(manifest.operators) == {
         "arnold_clark_charge",
+        "chargeplace_scotland",
         "chargy",
         "clenergy_ev",
+        "evolt",
         "geniepoint",
         "jolt",
         "mer_uk",
         "mfg_ev_power",
+        "pogo_charge",
     }
     for operator_id, entry in manifest.operators.items():
         config = load_registry()[operator_id]
@@ -76,7 +79,7 @@ def test_the_manifest_records_operators_attribution_and_sizes(results, tmp_path)
         assert entry.licence == "OGL-3.0"
     sizes = {f.path: f for f in manifest.files}
     assert sizes["data/locations.geojson"].bytes > sizes["data/locations.geojson"].gzip_bytes > 0
-    assert sizes["data/loc/"].files == 35
+    assert sizes["data/loc/"].files == 52
     assert any("gzipped" in line for line in out.report)
 
 
@@ -115,6 +118,116 @@ def test_coordinates_outside_the_uk_are_left_off_not_moved(results, tmp_path):
     assert moved.id not in ids
 
 
+def _detail(out_dir: Path, location_id: str) -> dict:
+    key = publish.location_key(location_id)
+    return json.loads((out_dir / "data" / "loc" / key[:2] / f"{key}.json").read_text())
+
+
+SMARTCHARGING = {"pogo_charge", "evolt", "chargeplace_scotland"}
+
+
+def test_related_networks_are_priced_from_each_others_tariffs_by_exact_id(results, tmp_path):
+    # PoGo Charge's connectors name tariffs only Evolt Network's feed holds, as do those at
+    # ChargePlace Scotland's Dunipace site; Evolt Network's Granton site names one only
+    # ChargePlace Scotland's holds. The owner decided each may be used (ADR 0020).
+    out = published(results, tmp_path)
+    related = {i: e.priced_from_related for i, e in out.manifest.operators.items()}
+    assert related == {i: 0 for i in related} | {
+        "pogo_charge": 13,
+        "evolt": 2,
+        "chargeplace_scotland": 2,
+    }
+    assert any("13 connectors priced from a related operator's tariffs" in x for x in out.report)
+    cases = {
+        "pogo_charge:GB:POG:156948": ("evolt", "Evolt Network", 2),
+        "chargeplace_scotland:GB:CPS:450779": ("evolt", "Evolt Network", 1),
+        "evolt:GB:SSM:11848487": ("chargeplace_scotland", "ChargePlace Scotland", 1),
+    }
+    for location_id, (source, name, count) in cases.items():
+        detail = _detail(tmp_path, location_id)
+        config = load_registry()[source]
+        assert {p["state"] for p in detail["prices"]} == {"priced"}
+        assert all(p["unresolved_ids"] == [] for p in detail["prices"])
+        assert all(i.startswith(f"{source}:") for p in detail["prices"] for i in p["tariff_ids"])
+        assert [o["published_by"] for o in detail["tariff_options"]] == [name] * count
+        assert [t["provenance"]["source_id"] for t in detail["tariffs"]] == [source] * count
+        (where,) = detail["tariff_sources"]
+        assert where["name"] == name and where["licence"] == "OGL-3.0"
+        assert where["attribution"] == " ".join(config.attribution.split())
+        assert where["source_url"] == config.endpoints["tariffs"].url
+        assert "never by name" in where["note"]
+        # The location keeps its own operator's attribution.
+        assert detail["attribution"] != where["attribution"]
+
+
+def test_other_locations_keep_their_own_operators_tariffs(results, tmp_path):
+    published(results, tmp_path)
+    for path in (tmp_path / "data" / "loc").glob("*/*.json"):
+        detail = json.loads(path.read_text())
+        own = detail["location"]["provenance"]["source_id"]
+        if detail["tariff_sources"]:
+            assert own in SMARTCHARGING
+            continue
+        assert all(o["published_by"] is None for o in detail["tariff_options"])
+        assert {t["provenance"]["source_id"] for t in detail["tariffs"]} <= {own}
+
+
+def test_without_the_owners_decision_the_related_tariffs_are_not_used(results, tmp_path):
+    operators = {
+        i: c.model_copy(update={"tariffs_from": None}) if i in SMARTCHARGING else c
+        for i, c in load_registry().items()
+    }
+    out = published(results, tmp_path, operators)
+    assert all(e.priced_from_related == 0 for e in out.manifest.operators.values())
+    detail = _detail(tmp_path, "pogo_charge:GB:POG:156948")
+    assert {p["text"] for p in detail["prices"]} == {"Price unknown"}
+    assert detail["tariff_sources"] == [] and detail["tariffs"] == []
+
+
+def test_only_the_operators_named_in_the_decision_are_searched(results, tmp_path):
+    # PoGo Charge's tariffs are all in Evolt Network's feed, which this decision does not
+    # name, so nothing is matched even though Evolt Network is in the same run.
+    operators = load_registry()
+    decision = operators["pogo_charge"].tariffs_from
+    named_other = decision.model_copy(update={"operators": ["chargeplace_scotland"]})
+    operators["pogo_charge"] = operators["pogo_charge"].model_copy(
+        update={"tariffs_from": named_other}
+    )
+    out = published(results, tmp_path, operators)
+    assert out.manifest.operators["pogo_charge"].priced_from_related == 0
+    detail = _detail(tmp_path, "pogo_charge:GB:POG:156948")
+    assert {p["text"] for p in detail["prices"]} == {"Price unknown"}
+    assert detail["tariff_sources"] == []
+
+
+def test_a_related_operator_missing_from_the_run_leaves_the_price_unknown(results, tmp_path):
+    # As when Evolt Network's fetch fails, or only PoGo Charge is fetched: a kept copy of
+    # Evolt Network's map files holds no tariffs, so nothing is matched.
+    out = published([r for r in results if r.operator_id != "evolt"], tmp_path)
+    assert out.manifest.operators["pogo_charge"].priced_from_related == 0
+    assert out.manifest.operators["chargeplace_scotland"].priced_from_related == 0
+    detail = _detail(tmp_path, "chargeplace_scotland:GB:CPS:450779")
+    assert {p["text"] for p in detail["prices"]} == {"Price unknown"}
+    assert detail["tariff_sources"] == []
+
+
+def test_a_missing_minus_sign_is_restored_by_the_owners_decision_for_evolt(results, tmp_path):
+    # Evolt Network's Glasgow location has longitude 4.26275; the Isle of Man and Australia
+    # ones stay off the map.
+    out = published(results, tmp_path)
+    entry = out.manifest.operators["evolt"]
+    assert (entry.mapped, entry.not_mapped, entry.corrected) == (6, 2, 1)
+    assert entry.corrected_ids == ["evolt:GB:SSM:1261778"]
+    assert "evolt:GB:SSM:1261778" not in entry.not_mapped_ids
+    key = publish.location_key("evolt:GB:SSM:1261778")
+    detail = json.loads((tmp_path / "data" / "loc" / key[:2] / f"{key}.json").read_text())
+    assert detail["location"]["coordinates"] == {"latitude": 55.86005, "longitude": -4.26275}
+    assert detail["coordinates_corrected"]["published"] == {
+        "latitude": 55.86005,
+        "longitude": 4.26275,
+    }
+
+
 def test_obviously_swapped_coordinates_are_swapped_back_and_marked(results, tmp_path):
     out = published(results, tmp_path)
     entry = out.manifest.operators["clenergy_ev"]
@@ -130,7 +243,11 @@ def test_obviously_swapped_coordinates_are_swapped_back_and_marked(results, tmp_
         "longitude": 51.467819,
     }
     assert "wrong way round" in detail["coordinates_corrected"]["note"]
-    others = [p for p in (tmp_path / "data" / "loc").glob("*/*.json") if p.stem != key]
+    # Evolt Network's Glasgow location is the only other one corrected (a minus sign).
+    glasgow = publish.location_key("evolt:GB:SSM:1261778")
+    others = [
+        p for p in (tmp_path / "data" / "loc").glob("*/*.json") if p.stem not in (key, glasgow)
+    ]
     assert all(json.loads(p.read_text())["coordinates_corrected"] is None for p in others)
     assert any("1 with coordinates corrected" in line for line in out.report)
 
@@ -301,11 +418,22 @@ def test_the_command_line_publishes_and_reports_sizes(tmp_path, capsys):
     assert run.FIXTURE_KEY not in (tmp_path / "data" / "locations.geojson").read_text()
 
 
+def _named_as(tariff_id: str, named: list[str]) -> str:
+    """The id a connector names for a tariff found in a related operator's feed: the one
+    with the same OCPI id (after "<operator>:<country>:<party>:")."""
+    (match,) = [i for i in named if i.split(":", 3)[3] == tariff_id.split(":", 3)[3]]
+    return match
+
+
 def test_details_list_every_tariff_the_connectors_refer_to(results, tmp_path):
     for _, detail in _layer_and_details(results, tmp_path):
         connectors = [c for e in detail["location"]["evses"] for c in e["connectors"]]
         listed = list(dict.fromkeys(i for c in connectors for i in c["tariff_ids"]))
-        assert sorted(o["tariff_id"] for o in detail["tariff_options"]) == sorted(listed)
+        shown = [
+            o["tariff_id"] if o["published_by"] is None else _named_as(o["tariff_id"], listed)
+            for o in detail["tariff_options"]
+        ]
+        assert sorted(shown) == sorted(listed)
         found = {t["id"] for t in detail["tariffs"]}
         for option in detail["tariff_options"]:
             reason = option["reason"] or ""

@@ -70,6 +70,7 @@
       "missing_publish_flag": null,
       "swapped_coordinates": null,
       "nonstandard_statuses": null,
+      "tariffs_from": null,
       "relay": null,
       "rate_limit": {
         "our_gap_seconds": 2.0,
@@ -184,6 +185,7 @@
           "FAULTED": "out_of_order"
         }
       },
+      "tariffs_from": null,
       "relay": null,
       "rate_limit": {
         "our_gap_seconds": 6.0,
@@ -269,6 +271,168 @@
       ]
     },
     {
+      "id": "chargeplace_scotland",
+      "name": "ChargePlace Scotland",
+      "enabled": true,
+      "adapter": "ocpi_221",
+      "engagement": {
+        "status": "open_anonymous",
+        "label": "Open, no registration",
+        "headline": "Open, no registration (as of 2026-10-10)",
+        "as_of": "2026-10-10",
+        "last_request": null,
+        "last_response": null,
+        "last_response_text": "No request sent",
+        "evidence": [
+          {
+            "date": "2026-10-10",
+            "url": "https://chargeplacescotland.org/network-performance-2/",
+            "file": null,
+            "note": "ChargePlace Scotland's Network Performance page answers \"Does ChargePlace Scotland offer open data API access?\" with two links, \"Locations\" and \"Tariffs\", on info.smartcharging.uk. The answer mentions no registration step, key, licence or rate limit. Both feeds answered without a key on 2026-10-10."
+          }
+        ],
+        "log": [
+          {
+            "date": "2026-10-10",
+            "action": "feed_searched",
+            "action_label": "Searched for a feed",
+            "channel": null,
+            "channel_label": null,
+            "summary": "ChargePlace Scotland's home page was read and its sitemap addresses were tried (they gave no sitemap); the home page has no open data link and links its Network Performance page.",
+            "quote": null,
+            "evidence_url": "https://chargeplacescotland.org/",
+            "evidence_file": null
+          },
+          {
+            "date": "2026-10-10",
+            "action": "page_checked",
+            "action_label": "Operator's page checked",
+            "channel": null,
+            "channel_label": null,
+            "summary": "ChargePlace Scotland's Network Performance page was read; it links a locations feed and a tariffs feed for open data API access, and the answer mentions no registration, key, licence or rate limit.",
+            "quote": "Yes, ChargePlace Scotland offers open data API access for data and roaming partners via the following links:",
+            "evidence_url": "https://chargeplacescotland.org/network-performance-2/",
+            "evidence_file": null
+          },
+          {
+            "date": "2026-10-10",
+            "action": "page_checked",
+            "action_label": "Operator's page checked",
+            "channel": null,
+            "channel_label": null,
+            "summary": "ChargePlace Scotland's Scheme Terms, privacy notice, cookie policy and driver terms were read; none mentions the open data.",
+            "quote": null,
+            "evidence_url": "https://chargeplacescotland.org/scheme-terms/",
+            "evidence_file": null
+          }
+        ]
+      },
+      "access_requested": null,
+      "access_granted": null,
+      "feeds": [
+        {
+          "kind": "locations",
+          "url": "https://info.smartcharging.uk/public_feed/locations/2463",
+          "status": "documented"
+        },
+        {
+          "kind": "tariffs",
+          "url": "https://info.smartcharging.uk/public_feed/locations/2463/tariffs",
+          "status": "documented"
+        }
+      ],
+      "licence": {
+        "name": "OGL-3.0",
+        "url": "https://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/",
+        "checked": "2026-10-10"
+      },
+      "attribution": "Contains data from ChargePlace Scotland published under the Public Charge Point Regulations 2023, used in line with the Open Government Licence v3.0.",
+      "missing_publish_flag": null,
+      "swapped_coordinates": null,
+      "nonstandard_statuses": null,
+      "tariffs_from": {
+        "decided": "2026-10-10",
+        "basis": "Some ChargePlace Scotland connectors name tariffs that only Evolt Network's feed holds. The repository owner decided that a connector may be priced from Evolt Network's tariff only when it is definitely the same tariff for that site and the two operators are related, never because of a coincidental tariff name: the connector names that exact tariff id, which is a UUID, ChargePlace Scotland's own response does not have it, and Evolt Network's response has it once, with the same country code. ChargePlace Scotland's Scheme Terms say SWARCO Smart Charging Ltd operates the network, Evolt Network's terms say SWARCO Smart Charging owns and operates its network, and both feeds are published on info.smartcharging.uk.",
+        "evidence_url": "https://chargeplacescotland.org/scheme-terms/",
+        "operators": [
+          "evolt"
+        ]
+      },
+      "relay": null,
+      "rate_limit": {
+        "our_gap_seconds": 2.0,
+        "our_max_per_hour": 1800,
+        "ours": "At least 2 s between requests to the operator's host, measured from the end of the previous request (at most 1800 in any hour), retries included.",
+        "published": [],
+        "limits_checked": "2026-10-10",
+        "comparison": "No limit published (checked 2026-10-10). The gap is our own choice.",
+        "difference_from_regulations": "Neither the operator nor the regulations set a limit.",
+        "notes": "Neither ChargePlace Scotland's pages nor the responses state a rate limit. The 2 second gap is this project's own choice, shared with PoGo Charge and Evolt Network, whose feeds are on the same host and are fetched one after another. Each response holds every record, so a full run makes two requests."
+      },
+      "findings": [
+        {
+          "date": "2026-10-10",
+          "kind": "spec_conformance",
+          "kind_label": "Differs from OCPI 2.2.1",
+          "summary": "Location and connector ids are sent as JSON numbers (for example 96214 and 1) rather than the strings OCPI 2.2.1 requires.",
+          "handling": "Each is read as the string of its digits, which names the same record, and the run report notes it.",
+          "evidence_url": "https://info.smartcharging.uk/public_feed/locations/2463",
+          "status": "open",
+          "resolved_date": null
+        },
+        {
+          "date": "2026-10-10",
+          "kind": "data_quality",
+          "kind_label": "Data quirk",
+          "summary": "462 connectors at 110 locations name one of 11 tariff ids that are not in ChargePlace Scotland's tariff response; all 11 are in Evolt Network's tariff response on the same host. Another 33 connectors name no tariff (on 2026-10-10).",
+          "handling": "By the repository owner's decision of 2026-10-10 (tariffs_from above, ADR 0020), the 462 connectors are priced from the Evolt Network tariff with that exact id, fetched in the same run, and the details on the map say so and credit Evolt Network's feed. Tariff names are never matched. If Evolt Network's feed is not fetched in the same run, the price shows as unknown. The 33 connectors that name no tariff show \"Price unknown\".",
+          "evidence_url": "https://info.smartcharging.uk/public_feed/locations/2463/tariffs",
+          "status": "open",
+          "resolved_date": null
+        },
+        {
+          "date": "2026-10-10",
+          "kind": "data_quality",
+          "kind_label": "Data quirk",
+          "summary": "2 locations, \"Kilchoan Ferry Terminal\" and \"University of St Andrews, Observatory Building\", have the same coordinates and number of EVSEs as locations in Evolt Network's feed, with different EVSE ids; ChargePlace Scotland's EVSEs there report UNKNOWN and Evolt Network's report AVAILABLE (on 2026-10-10).",
+          "handling": "Each feed's records are kept as published, so both appear on the map. Whether they are the same chargers is unknown.",
+          "evidence_url": "https://info.smartcharging.uk/public_feed/locations/2463",
+          "status": "open",
+          "resolved_date": null
+        },
+        {
+          "date": "2026-10-10",
+          "kind": "data_quality",
+          "kind_label": "Data quirk",
+          "summary": "2 connectors, at \"Dornoch Castle Hotel\" and \"Dunfermline Learning Campus Woodmill & St Columbus\", give 0 for max_amperage, max_electric_power and max_charge_rate.",
+          "handling": "Their power is shown as unknown.",
+          "evidence_url": "https://info.smartcharging.uk/public_feed/locations/2463",
+          "status": "open",
+          "resolved_date": null
+        },
+        {
+          "date": "2026-10-10",
+          "kind": "data_quality",
+          "kind_label": "Data quirk",
+          "summary": "2,145 of 5,263 EVSEs report status UNKNOWN (on 2026-10-10).",
+          "handling": "They are shown with status unknown.",
+          "evidence_url": "https://info.smartcharging.uk/public_feed/locations/2463",
+          "status": "open",
+          "resolved_date": null
+        },
+        {
+          "date": "2026-10-10",
+          "kind": "data_quality",
+          "kind_label": "Data quirk",
+          "summary": "No location gives opening_times, and records carry fields that are not in OCPI 2.2.1: \"facility\" on locations (always null), \"id\" and \"location_id\" on EVSEs, and \"max_charge_rate\" on connectors.",
+          "handling": "Opening hours are shown as unknown. The extra fields are not used.",
+          "evidence_url": "https://info.smartcharging.uk/public_feed/locations/2463",
+          "status": "open",
+          "resolved_date": null
+        }
+      ]
+    },
+    {
       "id": "clenergy_ev",
       "name": "Clenergy EV",
       "enabled": true,
@@ -317,6 +481,7 @@
         "basis": "Where a location's latitude and longitude are obviously the wrong way round, the repository owner decided to show it in the right place rather than leave it off the map, with the operator's own figures kept and the correction shown on the map and recorded in the findings below. On the same day the owner decided a longitude obviously missing its minus sign is corrected the same way."
       },
       "nonstandard_statuses": null,
+      "tariffs_from": null,
       "relay": null,
       "rate_limit": {
         "our_gap_seconds": 11.0,
@@ -422,6 +587,181 @@
       ]
     },
     {
+      "id": "evolt",
+      "name": "Evolt Network",
+      "enabled": true,
+      "adapter": "ocpi_221",
+      "engagement": {
+        "status": "open_anonymous",
+        "label": "Open, no registration",
+        "headline": "Open, no registration (as of 2026-10-10)",
+        "as_of": "2026-10-10",
+        "last_request": null,
+        "last_response": null,
+        "last_response_text": "No request sent",
+        "evidence": [
+          {
+            "date": "2026-10-10",
+            "url": "https://evoltnetwork.co.uk/faqs/",
+            "file": null,
+            "note": "Evolt Network's FAQ page answers \"Does Evolt Network offer open data API access?\" with two links, \"Locations\" and \"Tariffs\", on info.smartcharging.uk. The answer mentions no registration step, key, licence or rate limit. Both feeds answered without a key on 2026-10-10."
+          }
+        ],
+        "log": [
+          {
+            "date": "2026-10-10",
+            "action": "feed_searched",
+            "action_label": "Searched for a feed",
+            "channel": null,
+            "channel_label": null,
+            "summary": "Evolt Network's home page was read; it has no open data link and links its FAQ page.",
+            "quote": null,
+            "evidence_url": "https://evoltnetwork.co.uk/",
+            "evidence_file": null
+          },
+          {
+            "date": "2026-10-10",
+            "action": "page_checked",
+            "action_label": "Operator's page checked",
+            "channel": null,
+            "channel_label": null,
+            "summary": "Evolt Network's FAQ page was read; it links a locations feed and a tariffs feed for open data API access, and the answer mentions no registration, key, licence or rate limit.",
+            "quote": "Yes, Evolt Network offers open data API access for roaming partners via the following links:",
+            "evidence_url": "https://evoltnetwork.co.uk/faqs/",
+            "evidence_file": null
+          },
+          {
+            "date": "2026-10-10",
+            "action": "page_checked",
+            "action_label": "Operator's page checked",
+            "channel": null,
+            "channel_label": null,
+            "summary": "Evolt Network's terms of use, privacy notice and cookie policy were read; none mentions the open data.",
+            "quote": null,
+            "evidence_url": "https://evoltnetwork.co.uk/terms-of-use/",
+            "evidence_file": null
+          }
+        ]
+      },
+      "access_requested": null,
+      "access_granted": null,
+      "feeds": [
+        {
+          "kind": "locations",
+          "url": "https://info.smartcharging.uk/public_feed/locations/3666",
+          "status": "documented"
+        },
+        {
+          "kind": "tariffs",
+          "url": "https://info.smartcharging.uk/public_feed/locations/3666/tariffs",
+          "status": "documented"
+        }
+      ],
+      "licence": {
+        "name": "OGL-3.0",
+        "url": "https://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/",
+        "checked": "2026-10-10"
+      },
+      "attribution": "Contains data from Evolt Network published under the Public Charge Point Regulations 2023, used in line with the Open Government Licence v3.0.",
+      "missing_publish_flag": null,
+      "swapped_coordinates": {
+        "decided": "2026-10-10",
+        "basis": "Where a location's longitude is obviously missing its minus sign, or its latitude and longitude are obviously the wrong way round, the repository owner decided to show it in the right place rather than leave it off the map, with the operator's own figures kept and the correction shown on the map and recorded in the findings below."
+      },
+      "nonstandard_statuses": null,
+      "tariffs_from": {
+        "decided": "2026-10-10",
+        "basis": "Two Evolt Network connectors name a tariff that only ChargePlace Scotland's feed holds. The repository owner decided that a connector may be priced from ChargePlace Scotland's tariff only when it is definitely the same tariff for that site and the two operators are related, never because of a coincidental tariff name: the connector names that exact tariff id, which is a UUID, Evolt Network's own response does not have it, and ChargePlace Scotland's response has it once, with the same country code. Evolt Network's terms say SWARCO Smart Charging owns and operates its network, ChargePlace Scotland's Scheme Terms say SWARCO Smart Charging Ltd operates that network, and both feeds are published on info.smartcharging.uk.",
+        "evidence_url": "https://evoltnetwork.co.uk/terms-of-use/",
+        "operators": [
+          "chargeplace_scotland"
+        ]
+      },
+      "relay": null,
+      "rate_limit": {
+        "our_gap_seconds": 2.0,
+        "our_max_per_hour": 1800,
+        "ours": "At least 2 s between requests to the operator's host, measured from the end of the previous request (at most 1800 in any hour), retries included.",
+        "published": [],
+        "limits_checked": "2026-10-10",
+        "comparison": "No limit published (checked 2026-10-10). The gap is our own choice.",
+        "difference_from_regulations": "Neither the operator nor the regulations set a limit.",
+        "notes": "Neither Evolt Network's pages nor the responses state a rate limit. The 2 second gap is this project's own choice, shared with PoGo Charge and ChargePlace Scotland, whose feeds are on the same host and are fetched one after another. Each response holds every record, so a full run makes two requests."
+      },
+      "findings": [
+        {
+          "date": "2026-10-10",
+          "kind": "spec_conformance",
+          "kind_label": "Differs from OCPI 2.2.1",
+          "summary": "Location and connector ids are sent as JSON numbers (for example 95471 and 1) rather than the strings OCPI 2.2.1 requires.",
+          "handling": "Each is read as the string of its digits, which names the same record, and the run report notes it.",
+          "evidence_url": "https://info.smartcharging.uk/public_feed/locations/3666",
+          "status": "open",
+          "resolved_date": null
+        },
+        {
+          "date": "2026-10-10",
+          "kind": "data_quality",
+          "kind_label": "Data quirk",
+          "summary": "45 locations have Isle of Man postcodes (IM) with country GBR and country_code GB, and one location, \"Gemtek\", has country AUS and coordinates in Western Australia (on 2026-10-10).",
+          "handling": "The map shows only locations in the UK (ADR 0017), so these are left off it and the manifest lists them as not mapped.",
+          "evidence_url": "https://info.smartcharging.uk/public_feed/locations/3666",
+          "status": "open",
+          "resolved_date": null
+        },
+        {
+          "date": "2026-10-10",
+          "kind": "data_quality",
+          "kind_label": "Data quirk",
+          "summary": "One location, \"Cadworks Castle Building Services\" (postcode G2 7LP, in Glasgow), has longitude 4.26275, which is in the North Sea. Glasgow is at about longitude -4.26, west of the Greenwich meridian, so the minus sign appears to be missing.",
+          "handling": "By the repository owner's decision of 2026-10-10 (swapped_coordinates above), it is shown with the minus sign added, and its details on the map say so and give the operator's own figures. The manifest lists it as corrected.",
+          "evidence_url": "https://info.smartcharging.uk/public_feed/locations/3666",
+          "status": "open",
+          "resolved_date": null
+        },
+        {
+          "date": "2026-10-10",
+          "kind": "data_quality",
+          "kind_label": "Data quirk",
+          "summary": "2 connectors at \"Granton Western Village\" name a tariff that is not in Evolt Network's tariff response but is in ChargePlace Scotland's, and 2 connectors name no tariff (on 2026-10-10).",
+          "handling": "By the repository owner's decision of 2026-10-10 (tariffs_from above, ADR 0020), the 2 connectors are priced from the ChargePlace Scotland tariff with that exact id, fetched in the same run, and the details on the map say so and credit ChargePlace Scotland's feed. Tariff names are never matched. If ChargePlace Scotland's feed is not fetched in the same run, the price shows as unknown. The 2 connectors that name no tariff show \"Price unknown\".",
+          "evidence_url": "https://info.smartcharging.uk/public_feed/locations/3666/tariffs",
+          "status": "open",
+          "resolved_date": null
+        },
+        {
+          "date": "2026-10-10",
+          "kind": "data_quality",
+          "kind_label": "Data quirk",
+          "summary": "3 connectors at \"Daresbury Laboratory\" give 0 for max_amperage, max_electric_power and max_charge_rate.",
+          "handling": "Their power is shown as unknown.",
+          "evidence_url": "https://info.smartcharging.uk/public_feed/locations/3666",
+          "status": "open",
+          "resolved_date": null
+        },
+        {
+          "date": "2026-10-10",
+          "kind": "data_quality",
+          "kind_label": "Data quirk",
+          "summary": "645 of 3,421 EVSEs report status UNKNOWN (on 2026-10-10).",
+          "handling": "They are shown with status unknown.",
+          "evidence_url": "https://info.smartcharging.uk/public_feed/locations/3666",
+          "status": "open",
+          "resolved_date": null
+        },
+        {
+          "date": "2026-10-10",
+          "kind": "data_quality",
+          "kind_label": "Data quirk",
+          "summary": "No location gives opening_times, and records carry fields that are not in OCPI 2.2.1: \"facility\" on locations (always null), \"id\" and \"location_id\" on EVSEs, and \"max_charge_rate\" on connectors.",
+          "handling": "Opening hours are shown as unknown. The extra fields are not used.",
+          "evidence_url": "https://info.smartcharging.uk/public_feed/locations/3666",
+          "status": "open",
+          "resolved_date": null
+        }
+      ]
+    },
+    {
       "id": "geniepoint",
       "name": "GeniePoint",
       "enabled": true,
@@ -470,6 +810,7 @@
         "basis": "Where a location's longitude is obviously missing its minus sign, or its latitude and longitude are obviously the wrong way round, the repository owner decided to show it in the right place rather than leave it off the map, with the operator's own figures kept and the correction shown on the map and recorded in the findings below."
       },
       "nonstandard_statuses": null,
+      "tariffs_from": null,
       "relay": {
         "decided": "2026-10-08",
         "reason": "The files answered HTTP 403 to the first request from a GitHub Actions runner in the first daily run, while answering normally from another network. The repository owner decided to fetch them through the project's relay on Cloudflare Workers, with the project's User-Agent and the same rate limits.",
@@ -624,6 +965,7 @@
       },
       "swapped_coordinates": null,
       "nonstandard_statuses": null,
+      "tariffs_from": null,
       "relay": null,
       "rate_limit": {
         "our_gap_seconds": 2.0,
@@ -816,6 +1158,7 @@
       "missing_publish_flag": null,
       "swapped_coordinates": null,
       "nonstandard_statuses": null,
+      "tariffs_from": null,
       "relay": null,
       "rate_limit": {
         "our_gap_seconds": 2.0,
@@ -916,6 +1259,7 @@
       "missing_publish_flag": null,
       "swapped_coordinates": null,
       "nonstandard_statuses": null,
+      "tariffs_from": null,
       "relay": null,
       "rate_limit": {
         "our_gap_seconds": 2.0,
@@ -945,6 +1289,138 @@
           "summary": "The files send no Access-Control-Allow-Origin header, so web browsers cannot read them directly.",
           "handling": "The map uses data fetched by the pipeline, not requests from visitors' browsers.",
           "evidence_url": "https://opendata.motorfuelgroup.net/locations",
+          "status": "open",
+          "resolved_date": null
+        }
+      ]
+    },
+    {
+      "id": "pogo_charge",
+      "name": "PoGo Charge",
+      "enabled": true,
+      "adapter": "ocpi_221",
+      "engagement": {
+        "status": "open_anonymous",
+        "label": "Open, no registration",
+        "headline": "Open, no registration (as of 2026-10-10)",
+        "as_of": "2026-10-10",
+        "last_request": null,
+        "last_response": null,
+        "last_response_text": "No request sent",
+        "evidence": [
+          {
+            "date": "2026-10-10",
+            "url": "https://pogocharge.com/faqs/",
+            "file": null,
+            "note": "PoGo Charge's FAQ page answers \"Does PoGo offer open data API access?\" with two links, \"Locations\" and \"Tariffs\", on info.smartcharging.uk. The answer mentions no registration step, key, licence or rate limit. Both feeds answered without a key on 2026-10-10."
+          }
+        ],
+        "log": [
+          {
+            "date": "2026-10-10",
+            "action": "feed_searched",
+            "action_label": "Searched for a feed",
+            "channel": null,
+            "channel_label": null,
+            "summary": "PoGo Charge's home page and page sitemap were read; neither links an open data page, and the sitemap lists its FAQ page.",
+            "quote": null,
+            "evidence_url": "https://pogocharge.com/page-sitemap.xml",
+            "evidence_file": null
+          },
+          {
+            "date": "2026-10-10",
+            "action": "page_checked",
+            "action_label": "Operator's page checked",
+            "channel": null,
+            "channel_label": null,
+            "summary": "PoGo Charge's FAQ page was read; it links a locations feed and a tariffs feed for open data API access, and the answer mentions no registration, key, licence or rate limit.",
+            "quote": "Yes, PoGo offers open data API access for roaming and data partners via the following links:",
+            "evidence_url": "https://pogocharge.com/faqs/",
+            "evidence_file": null
+          },
+          {
+            "date": "2026-10-10",
+            "action": "page_checked",
+            "action_label": "Operator's page checked",
+            "channel": null,
+            "channel_label": null,
+            "summary": "PoGo Charge's driver terms and conditions, privacy notice and cookie policy were read; none mentions the open data.",
+            "quote": null,
+            "evidence_url": "https://pogocharge.com/terms/",
+            "evidence_file": null
+          }
+        ]
+      },
+      "access_requested": null,
+      "access_granted": null,
+      "feeds": [
+        {
+          "kind": "locations",
+          "url": "https://info.smartcharging.uk/public_feed/locations/4009",
+          "status": "documented"
+        },
+        {
+          "kind": "tariffs",
+          "url": "https://info.smartcharging.uk/public_feed/locations/4009/tariffs",
+          "status": "documented"
+        }
+      ],
+      "licence": {
+        "name": "OGL-3.0",
+        "url": "https://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/",
+        "checked": "2026-10-10"
+      },
+      "attribution": "Contains data from PoGo Charge published under the Public Charge Point Regulations 2023, used in line with the Open Government Licence v3.0.",
+      "missing_publish_flag": null,
+      "swapped_coordinates": null,
+      "nonstandard_statuses": null,
+      "tariffs_from": {
+        "decided": "2026-10-10",
+        "basis": "PoGo Charge's connectors name tariffs that only Evolt Network's feed holds. The repository owner decided that a connector may be priced from Evolt Network's tariff only when it is definitely the same tariff for that site and the two operators are related, never because of a coincidental tariff name: the connector names that exact tariff id, which is a UUID, PoGo Charge's own response does not have it, and Evolt Network's response has it once, with the same country code. PoGo Charge's terms name SWARCO Smart Charging Ltd as the network's operator, Evolt Network's terms say SWARCO Smart Charging owns and operates its network, and both feeds are published on info.smartcharging.uk.",
+        "evidence_url": "https://pogocharge.com/terms/",
+        "operators": [
+          "evolt"
+        ]
+      },
+      "relay": null,
+      "rate_limit": {
+        "our_gap_seconds": 2.0,
+        "our_max_per_hour": 1800,
+        "ours": "At least 2 s between requests to the operator's host, measured from the end of the previous request (at most 1800 in any hour), retries included.",
+        "published": [],
+        "limits_checked": "2026-10-10",
+        "comparison": "No limit published (checked 2026-10-10). The gap is our own choice.",
+        "difference_from_regulations": "Neither the operator nor the regulations set a limit.",
+        "notes": "Neither PoGo Charge's pages nor the responses state a rate limit. The 2 second gap is this project's own choice, shared with Evolt Network and ChargePlace Scotland, whose feeds are on the same host and are fetched one after another. Each response holds every record, so a full run makes two requests."
+      },
+      "findings": [
+        {
+          "date": "2026-10-10",
+          "kind": "spec_conformance",
+          "kind_label": "Differs from OCPI 2.2.1",
+          "summary": "Location and connector ids are sent as JSON numbers (for example 100595 and 1) rather than the strings OCPI 2.2.1 requires.",
+          "handling": "Each is read as the string of its digits, which names the same record, and the run report notes it.",
+          "evidence_url": "https://info.smartcharging.uk/public_feed/locations/4009",
+          "status": "open",
+          "resolved_date": null
+        },
+        {
+          "date": "2026-10-10",
+          "kind": "data_quality",
+          "kind_label": "Data quirk",
+          "summary": "806 of 809 connectors name one of 5 tariff ids that are not in PoGo Charge's tariff response; all 5 are in Evolt Network's tariff response on the same host (party SSM). None of the 13 tariffs in PoGo Charge's own response is named by a connector. The other 3 connectors name no tariff (on 2026-10-10).",
+          "handling": "By the repository owner's decision of 2026-10-10 (tariffs_from above, ADR 0020), these connectors are priced from the Evolt Network tariff with that exact id, fetched in the same run, and the details on the map say so and credit Evolt Network's feed. Tariff names are never matched. If Evolt Network's feed is not fetched in the same run, the price shows as unknown. The 3 connectors that name no tariff show \"Price unknown\".",
+          "evidence_url": "https://info.smartcharging.uk/public_feed/locations/4009/tariffs",
+          "status": "open",
+          "resolved_date": null
+        },
+        {
+          "date": "2026-10-10",
+          "kind": "data_quality",
+          "kind_label": "Data quirk",
+          "summary": "No location gives opening_times, and records carry fields that are not in OCPI 2.2.1: \"facility\" on locations (always null), \"id\" and \"location_id\" on EVSEs, and \"max_charge_rate\" on connectors.",
+          "handling": "Opening hours are shown as unknown. The extra fields are not used.",
+          "evidence_url": "https://info.smartcharging.uk/public_feed/locations/4009",
           "status": "open",
           "resolved_date": null
         }
@@ -1009,6 +1485,7 @@
       "missing_publish_flag": null,
       "swapped_coordinates": null,
       "nonstandard_statuses": null,
+      "tariffs_from": null,
       "relay": null,
       "rate_limit": {
         "our_gap_seconds": 125.0,
@@ -1124,6 +1601,7 @@
       "missing_publish_flag": null,
       "swapped_coordinates": null,
       "nonstandard_statuses": null,
+      "tariffs_from": null,
       "relay": null,
       "rate_limit": {
         "our_gap_seconds": 125.0,
@@ -1223,6 +1701,7 @@
       "missing_publish_flag": null,
       "swapped_coordinates": null,
       "nonstandard_statuses": null,
+      "tariffs_from": null,
       "relay": null,
       "rate_limit": {
         "our_gap_seconds": 2,
@@ -1282,6 +1761,7 @@
       "missing_publish_flag": null,
       "swapped_coordinates": null,
       "nonstandard_statuses": null,
+      "tariffs_from": null,
       "relay": null,
       "rate_limit": {
         "our_gap_seconds": 31.0,
@@ -1387,6 +1867,7 @@
       "missing_publish_flag": null,
       "swapped_coordinates": null,
       "nonstandard_statuses": null,
+      "tariffs_from": null,
       "relay": null,
       "rate_limit": {
         "our_gap_seconds": 2,
@@ -1442,6 +1923,7 @@
       "missing_publish_flag": null,
       "swapped_coordinates": null,
       "nonstandard_statuses": null,
+      "tariffs_from": null,
       "relay": null,
       "rate_limit": {
         "our_gap_seconds": 2.0,
@@ -1514,6 +1996,7 @@
       "missing_publish_flag": null,
       "swapped_coordinates": null,
       "nonstandard_statuses": null,
+      "tariffs_from": null,
       "relay": null,
       "rate_limit": {
         "our_gap_seconds": 125.0,
@@ -1636,6 +2119,7 @@
       "missing_publish_flag": null,
       "swapped_coordinates": null,
       "nonstandard_statuses": null,
+      "tariffs_from": null,
       "relay": null,
       "rate_limit": {
         "our_gap_seconds": 125.0,

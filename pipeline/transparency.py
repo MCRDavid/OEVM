@@ -255,6 +255,16 @@ def operator_view(config: OperatorConfig) -> dict:
             if config.nonstandard_statuses
             else None
         ),
+        "tariffs_from": (
+            {
+                "decided": str(config.tariffs_from.decided),
+                "basis": config.tariffs_from.basis,
+                "evidence_url": config.tariffs_from.evidence_url,
+                "operators": list(config.tariffs_from.operators),
+            }
+            if config.tariffs_from
+            else None
+        ),
         "relay": (
             {
                 "decided": str(config.relay.decided),
@@ -299,6 +309,7 @@ def last_reviewed(operators: dict[str, OperatorConfig]) -> str:
             config.relay.decided if config.relay else None,
             config.swapped_coordinates.decided if config.swapped_coordinates else None,
             config.nonstandard_statuses.decided if config.nonstandard_statuses else None,
+            config.tariffs_from.decided if config.tariffs_from else None,
         ]
         dates += [d for d in candidates if isinstance(d, date)]
     return max(dates).isoformat() if dates else "unknown"
@@ -332,6 +343,7 @@ def _feed_url(url: str) -> str:
 
 def _sources_table(data: dict) -> str:
     rows = []
+    names_by_id = {op["id"]: op["name"] for op in data["operators"]}
     for op in data["operators"]:
         feeds = (
             "<br>".join(
@@ -379,10 +391,21 @@ def _sources_table(data: dict) -> str:
             )
         statuses = op["nonstandard_statuses"]
         if op["enabled"] and statuses:
+            fetched = fetched.rstrip(".")  # a basis may end with its own full stop
             fetched += (
                 f". Statuses that are not OCPI values are shown by the owner's decision of "
                 f"{_e(statuses['decided'])}: {_e(statuses['basis'])} "
                 f"({_link(statuses['evidence_url'], 'evidence')})"
+            )
+        related = op["tariffs_from"]
+        if op["enabled"] and related:
+            names = ", ".join(_e(names_by_id.get(i, i)) for i in related["operators"])
+            fetched = fetched.rstrip(".")
+            fetched += (
+                f". Connectors that name a tariff only {names} publishes are priced from that "
+                f"exact tariff, never by name, by the owner's decision of "
+                f"{_e(related['decided'])}: {_e(related['basis'])} "
+                f"({_link(related['evidence_url'], 'evidence')})"
             )
         rows.append(
             "<tr>"

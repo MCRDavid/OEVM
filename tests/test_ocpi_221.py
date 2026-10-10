@@ -664,6 +664,31 @@ def test_values_that_are_not_ocpi_become_unknown():
     assert len(issues.lines()) == 3
 
 
+def test_ids_sent_as_numbers_are_read_as_their_digits():
+    # info.smartcharging.uk sends location and connector ids as JSON numbers (2026-10-10).
+    issues = IssueLog()
+    raw = raw_location(95471)
+    raw["evses"][0]["connectors"][0]["id"] = 1
+    location = location_from_ocpi(
+        raw, make_config(), source_url=EXAMPLE, fetched_at=NOW, issues=issues
+    )
+    assert location.id == "example_operator:GB:EXA:95471"
+    assert location.evses[0].connectors[0].id == "1"
+    assert issues.lines() == [
+        "connector id is a number, not a string; read as its digits",
+        "location id is a number, not a string; read as its digits",
+    ]
+
+
+def test_an_id_that_is_true_or_false_is_still_refused():
+    raw = raw_location()
+    raw["evses"][0]["connectors"][0]["id"] = True
+    with pytest.raises(ValidationError):
+        location_from_ocpi(
+            raw, make_config(), source_url=EXAMPLE, fetched_at=NOW, issues=IssueLog()
+        )
+
+
 def test_timestamps_without_a_zone_are_utc():
     assert parse_ocpi_datetime("2026-10-07T10:00:00") == datetime(2026, 10, 7, 10, tzinfo=UTC)
     assert parse_ocpi_datetime("2026-10-07T10:00:00Z") == datetime(2026, 10, 7, 10, tzinfo=UTC)
@@ -710,7 +735,8 @@ def test_live_all_fetches_every_enabled_operator_in_turn(tmp_path, monkeypatch):
     monkeypatch.setattr(run, "run_operator", fake)
     assert run.main(["--live", "all", "--log-dir", str(tmp_path)]) == 1
     enabled = sorted(i for i, c in load_registry().items() if c.enabled)
-    assert fetched == enabled
+    # Operators on different hosts are fetched at the same time, so only the set is fixed.
+    assert sorted(fetched) == enabled
     assert sorted(p.stem for p in tmp_path.glob("*.json")) == enabled
 
 

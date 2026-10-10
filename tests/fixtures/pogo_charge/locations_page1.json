@@ -1,0 +1,592 @@
+{
+  "request": {
+    "method": "GET",
+    "url": "https://info.smartcharging.uk/public_feed/locations/4009"
+  },
+  "response": {
+    "status_code": 200,
+    "headers": {
+      "content-type": "application/json",
+      "x-total-count": "5",
+      "x-limit": "5"
+    },
+    "body": {
+      "status_code": 1000,
+      "data": [
+        {
+          "id": 156948,
+          "party_id": "POG",
+          "publish": true,
+          "country_code": "GB",
+          "name": "Lancing Manor Leisure Centre",
+          "address": "Manor Road",
+          "city": "Lancing",
+          "postal_code": "BN15 0PH",
+          "country": "GBR",
+          "coordinates": {
+            "latitude": "50.837724",
+            "longitude": "-0.315072"
+          },
+          "evses": [
+            {
+              "id": "SEC50029",
+              "uid": "SEC50029_1",
+              "evse_id": "GB*POG*ESEC50029*1",
+              "physical_reference": "SEC50029",
+              "location_id": 156948,
+              "status": "UNKNOWN",
+              "capabilities": [
+                "REMOTE_START_STOP_CAPABLE",
+                "RFID_READER"
+              ],
+              "connectors": [
+                {
+                  "id": 1,
+                  "standard": "IEC_62196_T2_COMBO",
+                  "format": "SOCKET",
+                  "max_charge_rate": 44,
+                  "power_type": "DC",
+                  "max_voltage": 220,
+                  "max_amperage": 200,
+                  "max_electric_power": 44000,
+                  "tariff_ids": [
+                    "b08d697e-f42f-4b96-944b-4da53fbc2339"
+                  ],
+                  "last_updated": "2026-10-10T00:04:04"
+                }
+              ],
+              "last_updated": "2026-10-10T00:04:04"
+            },
+            {
+              "id": "SEC50029",
+              "uid": "SEC50029_2",
+              "evse_id": "GB*POG*ESEC50029*2",
+              "physical_reference": "SEC50029",
+              "location_id": 156948,
+              "status": "UNKNOWN",
+              "capabilities": [
+                "REMOTE_START_STOP_CAPABLE",
+                "RFID_READER"
+              ],
+              "connectors": [
+                {
+                  "id": 2,
+                  "standard": "CHADEMO",
+                  "format": "SOCKET",
+                  "max_charge_rate": 44,
+                  "power_type": "DC",
+                  "max_voltage": 220,
+                  "max_amperage": 200,
+                  "max_electric_power": 44000,
+                  "tariff_ids": [
+                    "b08d697e-f42f-4b96-944b-4da53fbc2339"
+                  ],
+                  "last_updated": "2026-10-10T00:04:04"
+                }
+              ],
+              "last_updated": "2026-10-10T00:04:04"
+            },
+            {
+              "id": "SEC50029",
+              "uid": "SEC50029_3",
+              "evse_id": "GB*POG*ESEC50029*3",
+              "physical_reference": "SEC50029",
+              "location_id": 156948,
+              "status": "UNKNOWN",
+              "capabilities": [
+                "REMOTE_START_STOP_CAPABLE",
+                "RFID_READER"
+              ],
+              "connectors": [
+                {
+                  "id": 3,
+                  "standard": "IEC_62196_T2",
+                  "format": "SOCKET",
+                  "max_charge_rate": 22,
+                  "power_type": "AC_3_PHASE",
+                  "max_voltage": 415,
+                  "max_amperage": 31,
+                  "max_electric_power": 22000,
+                  "tariff_ids": [
+                    "1d20faaa-d024-4479-911c-5b6d66fee061"
+                  ],
+                  "last_updated": "2026-10-10T00:04:04"
+                }
+              ],
+              "last_updated": "2026-10-10T00:04:04"
+            }
+          ],
+          "time_zone": "Europe/London",
+          "facility": null,
+          "last_updated": "2026-10-10T00:04:04"
+        },
+        {
+          "id": 230093,
+          "party_id": "POG",
+          "publish": true,
+          "country_code": "GB",
+          "name": "Red Lion Faversham",
+          "address": "London Road",
+          "city": "Kent",
+          "postal_code": "ME13 9LL",
+          "country": "GBR",
+          "coordinates": {
+            "latitude": "51.2908879",
+            "longitude": "0.988396"
+          },
+          "evses": [
+            {
+              "id": "SEC50055",
+              "uid": "SEC50055_1",
+              "evse_id": "GB*POG*ESEC50055*1",
+              "physical_reference": "SEC50055",
+              "location_id": 230093,
+              "status": "AVAILABLE",
+              "capabilities": [
+                "REMOTE_START_STOP_CAPABLE",
+                "RFID_READER"
+              ],
+              "connectors": [
+                {
+                  "id": 1,
+                  "standard": "IEC_62196_T2_COMBO",
+                  "format": "SOCKET",
+                  "max_charge_rate": 50,
+                  "power_type": "DC",
+                  "max_voltage": 220,
+                  "max_amperage": 227,
+                  "max_electric_power": 50000,
+                  "tariff_ids": [],
+                  "last_updated": "2026-10-10T00:04:05"
+                }
+              ],
+              "last_updated": "2026-10-10T00:04:05"
+            },
+            {
+              "id": "SEC50055",
+              "uid": "SEC50055_2",
+              "evse_id": "GB*POG*ESEC50055*2",
+              "physical_reference": "SEC50055",
+              "location_id": 230093,
+              "status": "AVAILABLE",
+              "capabilities": [
+                "REMOTE_START_STOP_CAPABLE",
+                "RFID_READER"
+              ],
+              "connectors": [
+                {
+                  "id": 2,
+                  "standard": "CHADEMO",
+                  "format": "SOCKET",
+                  "max_charge_rate": 50,
+                  "power_type": "DC",
+                  "max_voltage": 220,
+                  "max_amperage": 227,
+                  "max_electric_power": 50000,
+                  "tariff_ids": [],
+                  "last_updated": "2026-10-10T00:04:05"
+                }
+              ],
+              "last_updated": "2026-10-10T00:04:05"
+            },
+            {
+              "id": "SEC50055",
+              "uid": "SEC50055_3",
+              "evse_id": "GB*POG*ESEC50055*3",
+              "physical_reference": "SEC50055",
+              "location_id": 230093,
+              "status": "AVAILABLE",
+              "capabilities": [
+                "REMOTE_START_STOP_CAPABLE",
+                "RFID_READER"
+              ],
+              "connectors": [
+                {
+                  "id": 3,
+                  "standard": "IEC_62196_T2",
+                  "format": "SOCKET",
+                  "max_charge_rate": 22,
+                  "power_type": "AC_3_PHASE",
+                  "max_voltage": 415,
+                  "max_amperage": 31,
+                  "max_electric_power": 22000,
+                  "tariff_ids": [],
+                  "last_updated": "2026-10-10T00:04:05"
+                }
+              ],
+              "last_updated": "2026-10-10T00:04:05"
+            }
+          ],
+          "time_zone": "Europe/London",
+          "facility": null,
+          "last_updated": "2026-10-10T00:04:05"
+        },
+        {
+          "id": 241228,
+          "party_id": "POG",
+          "publish": true,
+          "country_code": "GB",
+          "name": "Edde Cross Car Park",
+          "address": "Trenchard Street",
+          "city": "Ross-on-Wye",
+          "postal_code": "HR9 7BU",
+          "country": "GBR",
+          "coordinates": {
+            "latitude": "51.916576",
+            "longitude": "-2.58552"
+          },
+          "evses": [
+            {
+              "id": "SEC50089",
+              "uid": "SEC50089_1",
+              "evse_id": "GB*POG*ESEC50089*1",
+              "physical_reference": "SEC50089",
+              "location_id": 241228,
+              "status": "CHARGING",
+              "capabilities": [
+                "REMOTE_START_STOP_CAPABLE",
+                "RFID_READER"
+              ],
+              "connectors": [
+                {
+                  "id": 1,
+                  "standard": "IEC_62196_T2_COMBO",
+                  "format": "SOCKET",
+                  "max_charge_rate": 50,
+                  "power_type": "DC",
+                  "max_voltage": 220,
+                  "max_amperage": 227,
+                  "max_electric_power": 50000,
+                  "tariff_ids": [
+                    "b08d697e-f42f-4b96-944b-4da53fbc2339"
+                  ],
+                  "last_updated": "2026-10-10T00:04:06"
+                }
+              ],
+              "last_updated": "2026-10-10T00:04:06"
+            },
+            {
+              "id": "SEC50089",
+              "uid": "SEC50089_2",
+              "evse_id": "GB*POG*ESEC50089*2",
+              "physical_reference": "SEC50089",
+              "location_id": 241228,
+              "status": "INOPERATIVE",
+              "capabilities": [
+                "REMOTE_START_STOP_CAPABLE",
+                "RFID_READER"
+              ],
+              "connectors": [
+                {
+                  "id": 2,
+                  "standard": "CHADEMO",
+                  "format": "SOCKET",
+                  "max_charge_rate": 50,
+                  "power_type": "DC",
+                  "max_voltage": 220,
+                  "max_amperage": 227,
+                  "max_electric_power": 50000,
+                  "tariff_ids": [
+                    "b08d697e-f42f-4b96-944b-4da53fbc2339"
+                  ],
+                  "last_updated": "2026-10-10T00:04:06"
+                }
+              ],
+              "last_updated": "2026-10-10T00:04:06"
+            },
+            {
+              "id": "SEC50089",
+              "uid": "SEC50089_3",
+              "evse_id": "GB*POG*ESEC50089*3",
+              "physical_reference": "SEC50089",
+              "location_id": 241228,
+              "status": "AVAILABLE",
+              "capabilities": [
+                "REMOTE_START_STOP_CAPABLE",
+                "RFID_READER"
+              ],
+              "connectors": [
+                {
+                  "id": 3,
+                  "standard": "IEC_62196_T2",
+                  "format": "SOCKET",
+                  "max_charge_rate": 22,
+                  "power_type": "AC_3_PHASE",
+                  "max_voltage": 415,
+                  "max_amperage": 31,
+                  "max_electric_power": 22000,
+                  "tariff_ids": [
+                    "1d20faaa-d024-4479-911c-5b6d66fee061"
+                  ],
+                  "last_updated": "2026-10-10T00:04:06"
+                }
+              ],
+              "last_updated": "2026-10-10T00:04:06"
+            }
+          ],
+          "time_zone": "Europe/London",
+          "facility": null,
+          "last_updated": "2026-10-10T00:04:06"
+        },
+        {
+          "id": 957309,
+          "party_id": "POG",
+          "publish": true,
+          "country_code": "GB",
+          "name": "Swales Central Avenue",
+          "address": "Central Avenue",
+          "city": "Sittingbourne",
+          "postal_code": "ME10 4AH",
+          "country": "GBR",
+          "coordinates": {
+            "latitude": "51.33903",
+            "longitude": "0.73513"
+          },
+          "evses": [
+            {
+              "id": "SEC50124",
+              "uid": "SEC50124_1",
+              "evse_id": "GB*POG*ESEC50124*1",
+              "physical_reference": "SEC50124",
+              "location_id": 957309,
+              "status": "UNKNOWN",
+              "capabilities": [
+                "REMOTE_START_STOP_CAPABLE",
+                "RFID_READER"
+              ],
+              "connectors": [
+                {
+                  "id": 1,
+                  "standard": "IEC_62196_T2_COMBO",
+                  "format": "SOCKET",
+                  "max_charge_rate": 50,
+                  "power_type": "DC",
+                  "max_voltage": 220,
+                  "max_amperage": 227,
+                  "max_electric_power": 50000,
+                  "tariff_ids": [
+                    "57053db1-3fb6-44fa-8134-955c76593c50"
+                  ],
+                  "last_updated": "2025-12-09T00:04:20"
+                }
+              ],
+              "last_updated": "2025-12-09T00:04:20",
+              "parking_restrictions": [
+                "TAXI_ONLY"
+              ]
+            },
+            {
+              "id": "SEC50124",
+              "uid": "SEC50124_2",
+              "evse_id": "GB*POG*ESEC50124*2",
+              "physical_reference": "SEC50124",
+              "location_id": 957309,
+              "status": "UNKNOWN",
+              "capabilities": [
+                "REMOTE_START_STOP_CAPABLE",
+                "RFID_READER"
+              ],
+              "connectors": [
+                {
+                  "id": 2,
+                  "standard": "CHADEMO",
+                  "format": "SOCKET",
+                  "max_charge_rate": 50,
+                  "power_type": "DC",
+                  "max_voltage": 220,
+                  "max_amperage": 227,
+                  "max_electric_power": 50000,
+                  "tariff_ids": [
+                    "57053db1-3fb6-44fa-8134-955c76593c50"
+                  ],
+                  "last_updated": "2025-12-09T00:04:21"
+                }
+              ],
+              "last_updated": "2025-12-09T00:04:21",
+              "parking_restrictions": [
+                "TAXI_ONLY"
+              ]
+            },
+            {
+              "id": "SEC50124",
+              "uid": "SEC50124_3",
+              "evse_id": "GB*POG*ESEC50124*3",
+              "physical_reference": "SEC50124",
+              "location_id": 957309,
+              "status": "UNKNOWN",
+              "capabilities": [
+                "REMOTE_START_STOP_CAPABLE",
+                "RFID_READER"
+              ],
+              "connectors": [
+                {
+                  "id": 3,
+                  "standard": "IEC_62196_T2",
+                  "format": "SOCKET",
+                  "max_charge_rate": 22,
+                  "power_type": "AC_3_PHASE",
+                  "max_voltage": 415,
+                  "max_amperage": 31,
+                  "max_electric_power": 22000,
+                  "tariff_ids": [
+                    "821d458e-9ca1-4a90-ab8e-7e8373db5b4c"
+                  ],
+                  "last_updated": "2025-12-09T00:04:21"
+                }
+              ],
+              "last_updated": "2025-12-09T00:04:21",
+              "parking_restrictions": [
+                "TAXI_ONLY"
+              ]
+            }
+          ],
+          "time_zone": "Europe/London",
+          "facility": null,
+          "last_updated": "2025-12-09T00:04:20"
+        },
+        {
+          "id": 4527565,
+          "party_id": "POG",
+          "publish": true,
+          "country_code": "GB",
+          "name": "Pierce Street",
+          "address": "1 Pierce Street",
+          "city": "Deeside",
+          "postal_code": "CH5 1SY",
+          "country": "GBR",
+          "coordinates": {
+            "latitude": "53.20669",
+            "longitude": "-3.02454"
+          },
+          "evses": [
+            {
+              "id": "SEC21244",
+              "uid": "SEC21244_1",
+              "evse_id": "GB*POG*ESEC21244*1",
+              "physical_reference": "SEC21244",
+              "location_id": 4527565,
+              "status": "AVAILABLE",
+              "capabilities": [
+                "REMOTE_START_STOP_CAPABLE",
+                "RFID_READER"
+              ],
+              "connectors": [
+                {
+                  "id": 1,
+                  "standard": "IEC_62196_T2",
+                  "format": "SOCKET",
+                  "max_charge_rate": 7,
+                  "power_type": "AC_1_PHASE",
+                  "max_voltage": 220,
+                  "max_amperage": 32,
+                  "max_electric_power": 7000,
+                  "tariff_ids": [
+                    "d43326d1-329d-4c1e-8e93-7ab63a087e57"
+                  ],
+                  "last_updated": "2026-10-10T00:03:58"
+                }
+              ],
+              "last_updated": "2026-10-10T00:03:58"
+            },
+            {
+              "id": "SEC21244",
+              "uid": "SEC21244_2",
+              "evse_id": "GB*POG*ESEC21244*2",
+              "physical_reference": "SEC21244",
+              "location_id": 4527565,
+              "status": "AVAILABLE",
+              "capabilities": [
+                "REMOTE_START_STOP_CAPABLE",
+                "RFID_READER"
+              ],
+              "connectors": [
+                {
+                  "id": 2,
+                  "standard": "IEC_62196_T2",
+                  "format": "SOCKET",
+                  "max_charge_rate": 7,
+                  "power_type": "AC_1_PHASE",
+                  "max_voltage": 220,
+                  "max_amperage": 32,
+                  "max_electric_power": 7000,
+                  "tariff_ids": [
+                    "d43326d1-329d-4c1e-8e93-7ab63a087e57"
+                  ],
+                  "last_updated": "2026-10-10T00:03:58"
+                }
+              ],
+              "last_updated": "2026-10-10T00:03:58"
+            },
+            {
+              "id": "SEC21245",
+              "uid": "SEC21245_1",
+              "evse_id": "GB*POG*ESEC21245*1",
+              "physical_reference": "SEC21245",
+              "location_id": 4527565,
+              "status": "AVAILABLE",
+              "capabilities": [
+                "REMOTE_START_STOP_CAPABLE",
+                "RFID_READER"
+              ],
+              "connectors": [
+                {
+                  "id": 1,
+                  "standard": "IEC_62196_T2",
+                  "format": "SOCKET",
+                  "max_charge_rate": 7,
+                  "power_type": "AC_1_PHASE",
+                  "max_voltage": 220,
+                  "max_amperage": 32,
+                  "max_electric_power": 7000,
+                  "tariff_ids": [
+                    "d43326d1-329d-4c1e-8e93-7ab63a087e57"
+                  ],
+                  "last_updated": "2026-10-10T00:03:58"
+                }
+              ],
+              "last_updated": "2026-10-10T00:03:58"
+            },
+            {
+              "id": "SEC21245",
+              "uid": "SEC21245_2",
+              "evse_id": "GB*POG*ESEC21245*2",
+              "physical_reference": "SEC21245",
+              "location_id": 4527565,
+              "status": "AVAILABLE",
+              "capabilities": [
+                "REMOTE_START_STOP_CAPABLE",
+                "RFID_READER"
+              ],
+              "connectors": [
+                {
+                  "id": 2,
+                  "standard": "IEC_62196_T2",
+                  "format": "SOCKET",
+                  "max_charge_rate": 7,
+                  "power_type": "AC_1_PHASE",
+                  "max_voltage": 220,
+                  "max_amperage": 32,
+                  "max_electric_power": 7000,
+                  "tariff_ids": [
+                    "d43326d1-329d-4c1e-8e93-7ab63a087e57"
+                  ],
+                  "last_updated": "2026-10-10T00:03:58"
+                }
+              ],
+              "last_updated": "2026-10-10T00:03:58"
+            }
+          ],
+          "time_zone": "Europe/London",
+          "facility": null,
+          "last_updated": "2026-10-10T00:03:58"
+        }
+      ],
+      "status_message": "Success",
+      "timestamp": "2026-10-10T08:16:23",
+      "meta": {
+        "total": 5,
+        "limit": null
+      }
+    }
+  }
+}

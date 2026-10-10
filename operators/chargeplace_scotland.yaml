@@ -1,0 +1,203 @@
+# yaml-language-server: $schema=schema.json
+id: chargeplace_scotland
+display_name: ChargePlace Scotland
+ocpi_country_code: GB
+ocpi_party_id: CPS # Confirmed from the feed's own country_code and party_id on 2026-10-10.
+adapter: ocpi_221
+base_url: unknown
+endpoints:
+  locations:
+    url: https://info.smartcharging.uk/public_feed/locations/2463
+    status: documented
+    note: >-
+      Linked as "Locations" from ChargePlace Scotland's Network Performance page (read
+      2026-10-10).
+  tariffs:
+    url: https://info.smartcharging.uk/public_feed/locations/2463/tariffs
+    status: documented
+    note: >-
+      Linked as "Tariffs" from ChargePlace Scotland's Network Performance page (read
+      2026-10-10).
+auth:
+  method: none
+  name: null
+  secret_name: null
+rate_limit:
+  min_seconds_between_requests: 2
+  limits: []
+  limits_checked: 2026-10-10
+  notes: >-
+    Neither ChargePlace Scotland's pages nor the responses state a rate limit. The 2 second
+    gap is this project's own choice, shared with PoGo Charge and Evolt Network, whose feeds
+    are on the same host and are fetched one after another. Each response holds every
+    record, so a full run makes two requests.
+supports_single_location: unknown
+cors: needs_testing
+attribution: >-
+  Contains data from ChargePlace Scotland published under the Public Charge Point Regulations
+  2023, used in line with the Open Government Licence v3.0.
+licence:
+  name: OGL-3.0
+  url: https://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/
+  basis: >-
+    ChargePlace Scotland's Network Performance page answers "Does ChargePlace Scotland offer
+    open data API access?" with "Yes, ChargePlace Scotland offers open data API access for
+    data and roaming partners via the following links:" and links the two feeds. The answer
+    states no registration step, key, licence, terms or rate limit (read 2026-10-10). DfT's
+    guidance (updated 21 October 2024) says "Data must be open in line with the Open
+    Government Licence". ChargePlace Scotland's Scheme Terms (read 2026-10-10) are "the terms
+    and conditions on which we supply the Services to you" to drivers, and say SWARCO Smart
+    Charging Ltd operates the network "for and on behalf of Transport Scotland". Its other
+    pages are a privacy notice, a cookie policy, driver terms on its account site and the
+    footer line "© ChargePlace Scotland, all rights reserved"; none of them mentions the open
+    data. Transport Scotland's own website terms offer the material on transport.gov.scot
+    under the Open Government Licence and do not mention ChargePlace Scotland or its feeds.
+    On 2026-10-10 the repository owner decided, as a standing rule for operators whose data
+    has no terms of its own, to read general website or charging terms as not covering the
+    open data, which regulation 10(5) requires to be available without terms on its use. The
+    page's words "for data and roaming partners" say who the access is for and set no terms.
+  checked: 2026-10-10
+tariffs_from:
+  decided: 2026-10-10
+  basis: >-
+    Some ChargePlace Scotland connectors name tariffs that only Evolt Network's feed holds.
+    The repository owner decided that a connector may be priced from Evolt Network's tariff
+    only when it is definitely the same tariff for that site and the two operators are
+    related, never because of a coincidental tariff name: the connector names that exact
+    tariff id, which is a UUID, ChargePlace Scotland's own response does not have it, and
+    Evolt Network's response has it once, with the same country code. ChargePlace Scotland's
+    Scheme Terms say SWARCO Smart Charging Ltd operates the network, Evolt Network's terms
+    say SWARCO Smart Charging owns and operates its network, and both feeds are published on
+    info.smartcharging.uk.
+  evidence_url: https://chargeplacescotland.org/scheme-terms/
+  operators: [evolt]
+engagement:
+  status: open_anonymous
+  evidence:
+    - date: 2026-10-10
+      url: https://chargeplacescotland.org/network-performance-2/
+      note: >-
+        ChargePlace Scotland's Network Performance page answers "Does ChargePlace Scotland
+        offer open data API access?" with two links, "Locations" and "Tariffs", on
+        info.smartcharging.uk. The answer mentions no registration step, key, licence or rate
+        limit. Both feeds answered without a key on 2026-10-10.
+  log:
+    - date: 2026-10-10
+      action: feed_searched
+      summary: >-
+        ChargePlace Scotland's home page was read and its sitemap addresses were tried (they
+        gave no sitemap); the home page has no open data link and links its Network
+        Performance page.
+      evidence_url: https://chargeplacescotland.org/
+    - date: 2026-10-10
+      action: page_checked
+      summary: >-
+        ChargePlace Scotland's Network Performance page was read; it links a locations feed
+        and a tariffs feed for open data API access, and the answer mentions no registration,
+        key, licence or rate limit.
+      quote: >-
+        Yes, ChargePlace Scotland offers open data API access for data and roaming partners
+        via the following links:
+      evidence_url: https://chargeplacescotland.org/network-performance-2/
+    - date: 2026-10-10
+      action: page_checked
+      summary: >-
+        ChargePlace Scotland's Scheme Terms, privacy notice, cookie policy and driver terms
+        were read; none mentions the open data.
+      evidence_url: https://chargeplacescotland.org/scheme-terms/
+access_requested: null
+access_granted: null
+sources:
+  - url: https://chargeplacescotland.org/
+    note: ChargePlace Scotland's home page (read 2026-10-10). No open data link.
+  - url: https://chargeplacescotland.org/network-performance-2/
+    note: >-
+      ChargePlace Scotland's Network Performance page (read 2026-10-10). Monthly performance
+      figures by local authority area, and links to the locations and tariffs feeds. It says
+      charge points in each area are "not necessarily all owned by the respective Local
+      Authorities."
+  - url: https://chargeplacescotland.org/scheme-terms/
+    note: >-
+      ChargePlace Scotland's Scheme Terms for drivers (read 2026-10-10). They name SWARCO
+      Smart Charging Ltd as the network's operator for Transport Scotland and do not mention
+      the data.
+  - url: https://chargeplacescotland.org/about-us/
+    note: >-
+      ChargePlace Scotland's About us page (read 2026-10-10). It says the network is owned
+      and was developed by the Scottish Government.
+  - url: https://chargeplacescotland.org/transition-resource-hub/
+    note: >-
+      ChargePlace Scotland's Transition Resource Hub (read 2026-10-10). It says "As the CPS
+      contract comes to an end, many charge points across Scotland are being transferred to
+      new operators", that owners will move their charge points to new networks "by the end
+      of December 2026", and that "CPS and Transport Scotland do not own the public charge
+      points on CPS."
+findings:
+  - date: 2026-10-10
+    kind: spec_conformance
+    summary: >-
+      Location and connector ids are sent as JSON numbers (for example 96214 and 1) rather
+      than the strings OCPI 2.2.1 requires.
+    handling: >-
+      Each is read as the string of its digits, which names the same record, and the run
+      report notes it.
+    evidence_url: https://info.smartcharging.uk/public_feed/locations/2463
+  - date: 2026-10-10
+    kind: data_quality
+    summary: >-
+      462 connectors at 110 locations name one of 11 tariff ids that are not in ChargePlace
+      Scotland's tariff response; all 11 are in Evolt Network's tariff response on the same
+      host. Another 33 connectors name no tariff (on 2026-10-10).
+    handling: >-
+      By the repository owner's decision of 2026-10-10 (tariffs_from above, ADR 0020), the
+      462 connectors are priced from the Evolt Network tariff with that exact id, fetched in
+      the same run, and the details on the map say so and credit Evolt Network's feed.
+      Tariff names are never matched. If Evolt Network's feed is not fetched in the same run,
+      the price shows as unknown. The 33 connectors that name no tariff show "Price unknown".
+    evidence_url: https://info.smartcharging.uk/public_feed/locations/2463/tariffs
+  - date: 2026-10-10
+    kind: data_quality
+    summary: >-
+      2 locations, "Kilchoan Ferry Terminal" and "University of St Andrews, Observatory
+      Building", have the same coordinates and number of EVSEs as locations in Evolt
+      Network's feed, with different EVSE ids; ChargePlace Scotland's EVSEs there report
+      UNKNOWN and Evolt Network's report AVAILABLE (on 2026-10-10).
+    handling: >-
+      Each feed's records are kept as published, so both appear on the map. Whether they are
+      the same chargers is unknown.
+    evidence_url: https://info.smartcharging.uk/public_feed/locations/2463
+  - date: 2026-10-10
+    kind: data_quality
+    summary: >-
+      2 connectors, at "Dornoch Castle Hotel" and "Dunfermline Learning Campus Woodmill & St
+      Columbus", give 0 for max_amperage, max_electric_power and max_charge_rate.
+    handling: Their power is shown as unknown.
+    evidence_url: https://info.smartcharging.uk/public_feed/locations/2463
+  - date: 2026-10-10
+    kind: data_quality
+    summary: >-
+      2,145 of 5,263 EVSEs report status UNKNOWN (on 2026-10-10).
+    handling: They are shown with status unknown.
+    evidence_url: https://info.smartcharging.uk/public_feed/locations/2463
+  - date: 2026-10-10
+    kind: data_quality
+    summary: >-
+      No location gives opening_times, and records carry fields that are not in OCPI 2.2.1:
+      "facility" on locations (always null), "id" and "location_id" on EVSEs, and
+      "max_charge_rate" on connectors.
+    handling: >-
+      Opening hours are shown as unknown. The extra fields are not used.
+    evidence_url: https://info.smartcharging.uk/public_feed/locations/2463
+notes: >-
+  The feeds are standard OCPI 2.2.1 responses on info.smartcharging.uk, read by the ocpi_221
+  adapter. Each holds every record, with X-Total-Count (1,479 locations, 5,263 EVSEs and 323
+  GBP tariffs on 2026-10-10). The same host serves PoGo Charge (4009) and Evolt Network
+  (3666); the terms pages of all three name SWARCO Smart Charging Ltd as operator. The
+  network's charge points belong to many hosts, including local authorities, and the map
+  shows them under ChargePlace Scotland, the network that publishes the data. Its site says
+  the CPS contract is ending and charge points are moving to new networks by the end of
+  December 2026, so this feed is expected to shrink; whether a charger can appear in this
+  feed and a new network's feed at once needs testing. Not yet
+  fetched from a GitHub Actions runner; the first daily run will show whether the host
+  answers requests from there.
+enabled: true

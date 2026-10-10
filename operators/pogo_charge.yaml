@@ -1,0 +1,158 @@
+# yaml-language-server: $schema=schema.json
+id: pogo_charge
+display_name: PoGo Charge
+ocpi_country_code: GB
+ocpi_party_id: POG # Confirmed from the feed's own country_code and party_id on 2026-10-10.
+adapter: ocpi_221
+base_url: unknown
+endpoints:
+  locations:
+    url: https://info.smartcharging.uk/public_feed/locations/4009
+    status: documented
+    note: Linked as "Locations" from question 8 of PoGo Charge's FAQ page (read 2026-10-10).
+  tariffs:
+    url: https://info.smartcharging.uk/public_feed/locations/4009/tariffs
+    status: documented
+    note: Linked as "Tariffs" from question 8 of PoGo Charge's FAQ page (read 2026-10-10).
+auth:
+  method: none
+  name: null
+  secret_name: null
+rate_limit:
+  min_seconds_between_requests: 2
+  limits: []
+  limits_checked: 2026-10-10
+  notes: >-
+    Neither PoGo Charge's pages nor the responses state a rate limit. The 2 second gap is this
+    project's own choice, shared with Evolt Network and ChargePlace Scotland, whose feeds are
+    on the same host and are fetched one after another. Each response holds every record, so
+    a full run makes two requests.
+supports_single_location: unknown
+cors: needs_testing
+attribution: >-
+  Contains data from PoGo Charge published under the Public Charge Point Regulations 2023, used
+  in line with the Open Government Licence v3.0.
+licence:
+  name: OGL-3.0
+  url: https://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/
+  basis: >-
+    PoGo Charge's FAQ page answers "Does PoGo offer open data API access?" with "Yes, PoGo
+    offers open data API access for roaming and data partners via the following links:" and
+    links the two feeds. The answer states no registration step, key, licence, terms or rate
+    limit (read 2026-10-10). DfT's guidance (updated 21 October 2024) says "Data must be open
+    in line with the Open Government Licence". PoGo Charge's driver terms and conditions
+    (headed 02/2023, read 2026-10-10) say "The terms provided in this document relate only to
+    Your rights whilst Using Our Electric Vehicle Recharging Network". Its other pages are a
+    privacy notice, a cookie policy, purchasing terms for suppliers and the footer line
+    "© PoGo charge 2026 All rights reserved"; none of them mentions the open data. On
+    2026-10-10 the repository owner decided, as a standing rule for operators whose data has
+    no terms of its own, to read general website or charging terms as not covering the open
+    data, which regulation 10(5) requires to be available without terms on its use. The
+    FAQ's words "for roaming and data partners" say who the access is for and set no terms.
+  checked: 2026-10-10
+tariffs_from:
+  decided: 2026-10-10
+  basis: >-
+    PoGo Charge's connectors name tariffs that only Evolt Network's feed holds. The
+    repository owner decided that a connector may be priced from Evolt Network's tariff only
+    when it is definitely the same tariff for that site and the two operators are related,
+    never because of a coincidental tariff name: the connector names that exact tariff id,
+    which is a UUID, PoGo Charge's own response does not have it, and Evolt Network's
+    response has it once, with the same country code. PoGo Charge's terms name SWARCO Smart
+    Charging Ltd as the network's operator, Evolt Network's terms say SWARCO Smart Charging
+    owns and operates its network, and both feeds are published on info.smartcharging.uk.
+  evidence_url: https://pogocharge.com/terms/
+  operators: [evolt]
+engagement:
+  status: open_anonymous
+  evidence:
+    - date: 2026-10-10
+      url: https://pogocharge.com/faqs/
+      note: >-
+        PoGo Charge's FAQ page answers "Does PoGo offer open data API access?" with two
+        links, "Locations" and "Tariffs", on info.smartcharging.uk. The answer mentions no
+        registration step, key, licence or rate limit. Both feeds answered without a key on
+        2026-10-10.
+  log:
+    - date: 2026-10-10
+      action: feed_searched
+      summary: >-
+        PoGo Charge's home page and page sitemap were read; neither links an open data page,
+        and the sitemap lists its FAQ page.
+      evidence_url: https://pogocharge.com/page-sitemap.xml
+    - date: 2026-10-10
+      action: page_checked
+      summary: >-
+        PoGo Charge's FAQ page was read; it links a locations feed and a tariffs feed for open
+        data API access, and the answer mentions no registration, key, licence or rate limit.
+      quote: >-
+        Yes, PoGo offers open data API access for roaming and data partners via the following
+        links:
+      evidence_url: https://pogocharge.com/faqs/
+    - date: 2026-10-10
+      action: page_checked
+      summary: >-
+        PoGo Charge's driver terms and conditions, privacy notice and cookie policy were read;
+        none mentions the open data.
+      evidence_url: https://pogocharge.com/terms/
+access_requested: null
+access_granted: null
+sources:
+  - url: https://pogocharge.com/
+    note: PoGo Charge's home page (read 2026-10-10). No open data link.
+  - url: https://pogocharge.com/page-sitemap.xml
+    note: >-
+      PoGo Charge's page sitemap (read 2026-10-10), reached from its sitemap index. No open
+      data page; lists its FAQ page.
+  - url: https://pogocharge.com/faqs/
+    note: >-
+      PoGo Charge's FAQ page (read 2026-10-10). Question 8 links the locations and tariffs
+      feeds.
+  - url: https://pogocharge.com/terms/
+    note: >-
+      PoGo Charge Driver Terms and Conditions 02/2023, linked as "Terms" in the site footer
+      (read 2026-10-10). They name the network's operator as SWARCO SMART CHARGING Ltd and do
+      not mention the data.
+  - url: https://pogocharge.com/privacy-notice/
+    note: PoGo Charge's privacy notice (read 2026-10-10). It covers personal data only.
+findings:
+  - date: 2026-10-10
+    kind: spec_conformance
+    summary: >-
+      Location and connector ids are sent as JSON numbers (for example 100595 and 1) rather
+      than the strings OCPI 2.2.1 requires.
+    handling: >-
+      Each is read as the string of its digits, which names the same record, and the run
+      report notes it.
+    evidence_url: https://info.smartcharging.uk/public_feed/locations/4009
+  - date: 2026-10-10
+    kind: data_quality
+    summary: >-
+      806 of 809 connectors name one of 5 tariff ids that are not in PoGo Charge's tariff
+      response; all 5 are in Evolt Network's tariff response on the same host (party SSM).
+      None of the 13 tariffs in PoGo Charge's own response is named by a connector. The other
+      3 connectors name no tariff (on 2026-10-10).
+    handling: >-
+      By the repository owner's decision of 2026-10-10 (tariffs_from above, ADR 0020), these
+      connectors are priced from the Evolt Network tariff with that exact id, fetched in the
+      same run, and the details on the map say so and credit Evolt Network's feed. Tariff
+      names are never matched. If Evolt Network's feed is not fetched in the same run, the
+      price shows as unknown. The 3 connectors that name no tariff show "Price unknown".
+    evidence_url: https://info.smartcharging.uk/public_feed/locations/4009/tariffs
+  - date: 2026-10-10
+    kind: data_quality
+    summary: >-
+      No location gives opening_times, and records carry fields that are not in OCPI 2.2.1:
+      "facility" on locations (always null), "id" and "location_id" on EVSEs, and
+      "max_charge_rate" on connectors.
+    handling: >-
+      Opening hours are shown as unknown. The extra fields are not used.
+    evidence_url: https://info.smartcharging.uk/public_feed/locations/4009
+notes: >-
+  The feeds are standard OCPI 2.2.1 responses on info.smartcharging.uk, read by the ocpi_221
+  adapter. Each holds every record, with X-Total-Count (161 locations, 809 EVSEs and 13 GBP
+  tariffs on 2026-10-10). The same host serves Evolt Network (3666) and ChargePlace Scotland
+  (2463); the terms pages of all three name SWARCO Smart Charging Ltd as operator. Not yet
+  fetched from a GitHub Actions runner; the first daily run will show whether the host
+  answers requests from there.
+enabled: true

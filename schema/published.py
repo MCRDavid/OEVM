@@ -120,6 +120,24 @@ class TariffOptionOut(_Model):
     includes_vat: bool | None = Field(
         default=None, description="Whether ppk_low and ppk_high include VAT."
     )
+    published_by: str | None = Field(
+        default=None,
+        description="Set when the tariff was found in a related operator's feed, by the "
+        "owner's decision in the operator file (tariffs_from, ADR 0020): that operator's "
+        "name. Null when it is the location's own operator's tariff.",
+    )
+
+
+class TariffSource(_Model):
+    """A related operator's feed that some of a location's tariffs were found in (ADR 0020)."""
+
+    name: str = Field(description="The related operator's name.")
+    note: str = Field(description="Why its tariffs are used here, shown with the location.")
+    attribution: str
+    source_url: str = Field(description="The related operator's tariff feed.")
+    licence: str
+    licence_url: str | None = None
+    fetched_at: AwareDatetime
 
 
 class CoordinatesCorrection(_Model):
@@ -147,6 +165,11 @@ class LocationDetail(_Model):
         default=None,
         description="Which listed tariff has the lowest energy price, worded by "
         "pipeline/pricing.py; null when they cannot be compared fairly.",
+    )
+    tariff_sources: list[TariffSource] = Field(
+        default_factory=list,
+        description="Related operators' feeds that some listed tariffs were found in, by the "
+        "owner's decision in the operator file (tariffs_from, ADR 0020). Empty otherwise.",
     )
     attribution: str
     licence: str
@@ -214,6 +237,12 @@ class OperatorEntry(_Model):
         default_factory=list, description="Ids of the corrected locations."
     )
     tariffs: int = Field(ge=0)
+    priced_from_related: int = Field(
+        default=0,
+        ge=0,
+        description="Connectors priced from a tariff found in a related operator's feed, by "
+        "the owner's decision in the operator file (tariffs_from, ADR 0020).",
+    )
     attribution: str
     licence: str
     licence_url: str | None = None
