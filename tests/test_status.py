@@ -149,7 +149,7 @@ def test_operators_with_no_run_are_not_fetched_yet(tmp_path):
     empty = tmp_path / "empty"
     empty.mkdir()
     page, data = render(empty, tmp_path / "out")
-    assert text_of(page)[0].count("Not fetched yet") == len(data["operators"]) == 7
+    assert text_of(page)[0].count("Not fetched yet") == len(data["operators"]) == 6
 
 
 def test_the_committed_site_folder_is_never_written(logs):

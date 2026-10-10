@@ -22,16 +22,10 @@ POLICY_URL = f"{REPOSITORY_URL}/blob/main/SECURITY.md"
 KEY_LIKE = re.compile(r"[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}", re.I)
 # Recorded feed data holds operators' own record ids, and the lock file holds hashes.
 KEY_SCAN_SKIPPED = ("tests/fixtures/", "uv.lock")
-# Public notice ids on the government's Contracts Finder site, cited in the blueprint, and
-# feed addresses an operator links on its own public page with no key: the id in them names
-# the operator's account on its data host (operators/arnold_clark_charge.yaml).
-PUBLISHED_FEED_ADDRESSES = {
-    "https://api.fuuse.io/opendata/e6397b95-1624-49cd-824d-ab2f9dfe7294/",
-}
+# Public notice ids on the government's Contracts Finder site, cited in the blueprint.
 KEY_LIKE_ALLOWED = {
     "https://www.contractsfinder.service.gov.uk/Notice/9b22d88e-38ba-4055-8e0e-84c58a196aa0",
     "https://www.contractsfinder.service.gov.uk/Notice/Attachment/3f6da4fd-2533-4289-a49e-ebad9a25c086",
-    *PUBLISHED_FEED_ADDRESSES,
 }
 # RFC 9116 fields, plus CSAF and Bug-Bounty, which IANA's registry added later.
 RFC_9116_FIELDS = {
