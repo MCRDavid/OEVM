@@ -56,21 +56,44 @@ function statusLine(evse) {
 
 // How many charge points are free, in use, out of service or unknown, coloured, and when
 // the operator's feed was read. Statuses come from the daily fetch for now (ADR 0015).
-export function statusSection(detail) {
+// Given onHideOut, the out of service count is a button that switches the map's "Hide out of service"
+// filter (ADR 0012) on or off, as the owner chose on 10 October 2026.
+export function statusSection(detail, { hideOut = false, onHideOut = null } = {}) {
   const counts = countByGroup(detail.location?.evses);
   if (!counts.total) return [];
+  const all = chips(counts);
+  const filterButton = onHideOut && all.some((chip) => chip.group === "out");
+  const chip = ({ group, className, symbol, text }) => {
+    const parts = [h("span", { "aria-hidden": "true", text: `${symbol} ` }), text];
+    if (!(filterButton && group === "out")) return h("span", { className }, ...parts);
+    return h(
+      "button",
+      {
+        type: "button",
+        className,
+        "data-filter": "working",
+        // The name says what pressing it does, and still contains the visible words.
+        "aria-label": `Hide out of service: ${text}`,
+        "aria-pressed": String(Boolean(hideOut)),
+        "aria-describedby": "status-filter-hint",
+        onClick: onHideOut,
+      },
+      ...parts,
+    );
+  };
   return [
     h("h3", { text: "Charge point status" }),
     h("p", { className: "status-summary", text: summaryText(counts) }),
-    h(
-      "p",
-      { className: "status-chips" },
-      chips(counts).map((chip) =>
-        h("span", { className: chip.className }, h("span", { "aria-hidden": "true", text: `${chip.symbol} ` }), chip.text),
-      ),
-    ),
+    h("p", { className: "status-chips" }, all.map(chip)),
+    filterButton
+      ? h("p", {
+          className: "hint",
+          id: "status-filter-hint",
+          text: "Press the \"reported out of service\" count to hide or show chargers where every charge point was reported out of service, on the map and in the list. It is the same as the \"Hide out of service\" button.",
+        })
+      : null,
     h("p", { className: "hint", text: `${asOfText(detail.fetched_at)}. It may have changed since.` }),
-  ];
+  ].filter(Boolean);
 }
 
 function connectorItem(evse, connector, price) {
@@ -273,7 +296,7 @@ export function plansSection(detail, allPlans, mine = new Set()) {
   return plans.length ? parts.filter(Boolean) : [];
 }
 
-export function renderDetail(detail, { repository, plans = [], mine = new Set() }) {
+export function renderDetail(detail, { repository, plans = [], mine = new Set(), hideOut = false, onHideOut = null }) {
   const location = detail.location;
   const items = [];
   for (const evse of location.evses ?? []) {
@@ -297,7 +320,7 @@ export function renderDetail(detail, { repository, plans = [], mine = new Set() 
       ? [h("p", { className: "hint corrected", text: detail.coordinates_corrected.note })]
       : []),
     openingHours(location.opening_hours),
-    ...statusSection(detail),
+    ...statusSection(detail, { hideOut, onHideOut }),
     h("h3", { text: "Connectors" }),
     items.length ? h("ul", { className: "connectors" }, items) : h("p", { text: "No charge points listed." }),
     ...tariffSection(detail),

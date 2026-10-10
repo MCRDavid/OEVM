@@ -760,6 +760,50 @@ def test_chargers_reported_out_of_service_can_be_hidden(visit):
     assert "Reported out of service" not in page.text_content("#list-items")
 
 
+def test_the_red_count_in_the_details_switches_hide_out_of_service(visit):
+    v = visit()
+    page = v.open("?view=list", map_ready=False)
+    expect(page.locator("#list-items li")).to_have_count(LOCATIONS)
+    _open_details_containing(page, "reported out of service")
+    button = page.locator('#detail-body button[data-filter="working"]')
+    expect(button).to_have_attribute("aria-pressed", "false")
+    assert button.get_attribute("aria-describedby") == "status-filter-hint"
+    expect(button).to_have_accessible_name(
+        re.compile(r"^Hide out of service: \d+ reported out of service$")
+    )
+    assert re.fullmatch(r"✕ \d+ reported out of service", button.text_content())
+    button.click()
+    page.wait_for_url("**ok=1**")
+    expect(button).to_have_attribute("aria-pressed", "true")
+    expect(page.locator("#quick-working")).to_have_attribute("aria-pressed", "true")
+    expect(page.locator("#list-items li")).to_have_count(LOCATIONS - OUT_OF_SERVICE)
+    # Details opened later show the filter's state, and the count switches it off again.
+    page.keyboard.press("Escape")
+    _open_details_containing(page, "reported out of service")
+    expect(button).to_have_attribute("aria-pressed", "true")
+    button.click()
+    page.wait_for_url(re.compile(r"^(?!.*ok=1)"))
+    expect(page.locator("#quick-working")).to_have_attribute("aria-pressed", "false")
+    expect(page.locator("#list-items li")).to_have_count(LOCATIONS)
+    # Counts for other groups stay plain text.
+    assert page.locator("#detail-body .status-chips button").count() == 1
+
+
+def test_on_a_wide_screen_the_red_count_follows_the_header_button(visit):
+    v = visit({"width": 1400, "height": 800})
+    v.page.route("**/assets/offline-style.json", lambda route: route.fulfill(status=404))
+    page = v.open(map_ready=False)
+    expect(page.locator("#notice")).to_contain_text("background map could not be loaded")
+    _open_details_containing(page, "reported out of service")
+    button = page.locator('#detail-body button[data-filter="working"]')
+    expect(button).to_have_attribute("aria-pressed", "false")
+    page.click("#quick-working")
+    expect(button).to_have_attribute("aria-pressed", "true")
+    button.click()
+    expect(page.locator("#quick-working")).to_have_attribute("aria-pressed", "false")
+    expect(button).to_be_focused()  # the details are not redrawn, so focus stays put
+
+
 def test_dark_mode_follows_the_device_and_the_button_switches_the_map(visit):
     v = visit(WIDE, color_scheme="dark")
     SERVED.clear()
