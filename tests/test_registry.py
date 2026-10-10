@@ -11,9 +11,11 @@ from pydantic import ValidationError
 
 from pipeline import registry
 from schema.operator import ENGAGEMENT_LABELS, EngagementStatus, OperatorConfig
+from tests.test_security_files import PUBLISHED_FEED_ADDRESSES
 
 OPERATORS_DIR = Path(__file__).resolve().parent.parent / "operators"
 SEED_IDS = {
+    "arnold_clark_charge",
     "bp_pulse",
     "chargy",
     "clenergy_ev",
@@ -94,12 +96,15 @@ def test_template_is_valid_and_disabled():
 
 def test_operator_files_contain_no_key_like_values():
     for path in sorted(OPERATORS_DIR.glob("*.yaml")):
-        assert not UUID_LIKE.search(path.read_text(encoding="utf-8")), path.name
+        text = path.read_text(encoding="utf-8")
+        for address in PUBLISHED_FEED_ADDRESSES:
+            text = text.replace(address, "")
+        assert not UUID_LIKE.search(text), path.name
 
 
 def test_cli_validate_succeeds_on_seed_registry(capsys):
     assert registry.main(["--validate"]) == 0
-    assert "Operator registry is valid: 14 operators" in capsys.readouterr().out
+    assert "Operator registry is valid: 15 operators" in capsys.readouterr().out
 
 
 def test_cli_without_validate_prints_help(capsys):
