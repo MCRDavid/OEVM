@@ -1,0 +1,50 @@
+# yaml-language-server: $schema=schema.json
+id: roam
+display_name: Roam
+ocpi_country_code: unknown
+ocpi_party_id: unknown
+adapter: unknown
+base_url: unknown
+endpoints: {}
+auth:
+  method: unknown
+  name: null
+  secret_name: null
+rate_limit:
+  min_seconds_between_requests: 2
+  limits: []
+  limits_checked: unknown
+  notes: null
+supports_single_location: unknown
+cors: unknown
+attribution: null
+licence: null
+engagement:
+  status: no_public_feed_found
+  evidence:
+    - date: 2026-10-10
+      url: https://www.roamcharging.com/
+      note: >-
+        Roam's home page has no open data, regulations or charge point data link. Its sitemap
+        and FAQ page list or give no open data feed or route for requesting open data.
+  log:
+    - date: 2026-10-10
+      action: feed_searched
+      summary: >-
+        Roam's home page, sitemap and FAQ page were read, and no open data feed or route for
+        requesting open data was found.
+      evidence_url: https://www.roamcharging.com/
+access_requested: null
+access_granted: null
+sources:
+  - url: https://www.roamcharging.com/
+    note: Roam's home page (read 2026-10-10). No open data link.
+  - url: https://www.roamcharging.com/sitemap.xml
+    note: Roam's sitemap (read 2026-10-10). No open data, OCPI or data request page is listed.
+  - url: https://www.roamcharging.com/help-and-advice/faqs
+    note: Roam's FAQ page (read 2026-10-10). Gives a 99% uptime rate; no open data link.
+findings: []
+notes: >-
+  No open data feed or request route was found on Roam's own website on 2026-10-10. A
+  written request could ask where its open data under regulation 10 is published.
+enabled: false

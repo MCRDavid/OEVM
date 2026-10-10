@@ -1,0 +1,65 @@
+# yaml-language-server: $schema=schema.json
+id: lidl
+display_name: Lidl
+ocpi_country_code: unknown
+ocpi_party_id: unknown
+adapter: unknown
+base_url: unknown
+endpoints: {}
+auth:
+  method: unknown
+  name: null
+  secret_name: null
+rate_limit:
+  min_seconds_between_requests: 2
+  limits: []
+  limits_checked: unknown
+  notes: null
+supports_single_location: unknown
+cors: unknown
+attribution: null
+licence: null
+engagement:
+  status: no_public_feed_found
+  evidence:
+    - date: 2026-10-10
+      url: https://www.lidl.co.uk/c/electric-vehicle-charging/s10049808
+      note: >-
+        Lidl's electric vehicle charging page gives its network's 2025 uptime (99%) and links
+        the Department for Transport's guidance on the regulations. It gives no open data feed
+        and no route for requesting open data, and Lidl's home page and page sitemap list no
+        open data page.
+  log:
+    - date: 2026-10-10
+      action: feed_searched
+      summary: >-
+        Lidl's home page, its electric vehicle charging page and its page sitemap were read,
+        and no open data feed or route for requesting open data was found.
+      quote: Lidl EV Charging network 2025 reliability results
+      evidence_url: https://www.lidl.co.uk/c/electric-vehicle-charging/s10049808
+access_requested: null
+access_granted: null
+sources:
+  - url: https://www.lidl.co.uk/c/electric-vehicle-charging/s10049808
+    note: >-
+      Lidl's electric vehicle charging page (read 2026-10-10). Gives prices, "Uptime: 99%"
+      for 2025, and a FAQ saying drivers with an e-mobility service provider "who is part of
+      the ChargePoint community" may be able to charge at Lidl charge points.
+  - url: https://www.lidl.co.uk/
+    note: >-
+      Lidl's home page (read 2026-10-10). Its only electric vehicle link is the charging page;
+      no open data link.
+  - url: https://www.lidl.co.uk/explore/assets/s/pages_en-GB_gb.xml.gz
+    note: >-
+      Lidl's page sitemap (read 2026-10-10), reached from its sitemap index. Its electric
+      vehicle pages are the charging page, charging terms and a charging data protection
+      policy; no open data, OCPI or data request page is listed.
+findings: []
+notes: >-
+  No open data feed or request route was found on Lidl's own website on 2026-10-10. Its FAQ
+  refers to the ChargePoint community for roaming, and ChargePoint's own PCPR data request
+  form (see the chargepoint file, read 2026-10-10) lists Lidl Great Britain Limited among
+  the networks whose data can be requested; Lidl's site does not link that form, so whether
+  it is Lidl's route needs confirming. A written request could ask where its open data under
+  regulation 10 is published.
+enabled: false

@@ -1,0 +1,62 @@
+# yaml-language-server: $schema=schema.json
+id: evyve
+display_name: evyve
+ocpi_country_code: unknown
+ocpi_party_id: unknown
+adapter: unknown
+base_url: unknown
+endpoints: {}
+auth:
+  method: unknown
+  name: null
+  secret_name: null
+rate_limit:
+  min_seconds_between_requests: 2
+  limits: []
+  limits_checked: unknown
+  notes: null
+supports_single_location: unknown
+cors: unknown
+attribution: null
+licence: null
+engagement:
+  status: key_on_request
+  evidence:
+    - date: 2026-10-10
+      url: https://evyve.co.uk/
+      note: >-
+        The "PCPR - Open Data Request" answer in the FAQs on evyve's home page links a Google
+        form and sends questions to Eco-Movement's PCPR support address. The page says the
+        data will be provided "in 48 hours"; the form says an answer will come "within 5
+        working days". Neither the FAQ answer nor the form names a licence, terms, agreement,
+        key or rate limit.
+  log:
+    - date: 2026-10-10
+      action: page_checked
+      summary: >-
+        The "PCPR - Open Data Request" FAQ on evyve's home page and the Google form it links
+        were read; the form asks for an email address, name, organisation and planned use of
+        the data, and says the request will be shared with Eco-Movement.
+      quote: >-
+        If you are interested in accessing our Open Data please complete the form from the
+        link below:
+      evidence_url: https://evyve.co.uk/
+access_requested: null
+access_granted: null
+sources:
+  - url: https://evyve.co.uk/
+    note: >-
+      evyve's home page, whose FAQs include "PCPR - Open Data Request" (read 2026-10-10). It
+      says "Our team will review your request and provide the data in a suitable format in
+      48 hours."
+  - url: https://forms.gle/tJCAi6pm4rZt513t8
+    note: >-
+      The "PCPR Data Request - evyve" Google form linked from that FAQ (read 2026-10-10, not
+      submitted). Its disclaimer says the request will be shared with Eco-Movement.
+findings: []
+notes: >-
+  Access could be requested through the Google form linked from the open data FAQ on
+  evyve's home page. Requests are passed to Eco-Movement, so the eco_movement_pcpr adapter
+  may apply once access is given, but the page does not say how the data is delivered;
+  this needs testing.
+enabled: false

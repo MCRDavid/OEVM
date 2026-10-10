@@ -1,0 +1,67 @@
+# yaml-language-server: $schema=schema.json
+id: chargeplace_scotland
+display_name: ChargePlace Scotland
+ocpi_country_code: unknown
+ocpi_party_id: unknown
+adapter: unknown
+base_url: unknown
+endpoints: {}
+auth:
+  method: unknown
+  name: null
+  secret_name: null
+rate_limit:
+  min_seconds_between_requests: 2
+  limits: []
+  limits_checked: unknown
+  notes: null
+supports_single_location: unknown
+cors: unknown
+attribution: null
+licence: null
+engagement:
+  status: open_anonymous
+  evidence:
+    - date: 2026-10-10
+      url: https://chargeplacescotland.org/network-performance-2/
+      note: >-
+        ChargePlace Scotland's Network Performance page answers "Does ChargePlace Scotland
+        offer open data API access?" with two links, "Locations" and "Tariffs", on
+        info.smartcharging.uk. The answer mentions no registration step, key, licence or rate
+        limit. One request to the locations feed on 2026-10-10 answered without a key.
+  log:
+    - date: 2026-10-10
+      action: feed_searched
+      summary: >-
+        ChargePlace Scotland's home page was read and its sitemap addresses were tried (they
+        gave no sitemap); the home page has no open data link and links its Network
+        Performance page.
+      evidence_url: https://chargeplacescotland.org/
+    - date: 2026-10-10
+      action: page_checked
+      summary: >-
+        ChargePlace Scotland's Network Performance page was read; it links a locations feed
+        and a tariffs feed for open data API access, and the answer mentions no registration,
+        key, licence or rate limit.
+      quote: >-
+        Yes, ChargePlace Scotland offers open data API access for data and roaming partners
+        via the following links:
+      evidence_url: https://chargeplacescotland.org/network-performance-2/
+access_requested: null
+access_granted: null
+sources:
+  - url: https://chargeplacescotland.org/
+    note: ChargePlace Scotland's home page (read 2026-10-10). No open data link.
+  - url: https://chargeplacescotland.org/network-performance-2/
+    note: >-
+      ChargePlace Scotland's Network Performance page (read 2026-10-10). Monthly performance
+      figures by local authority area, and links to the locations and tariffs feeds. It says
+      charge points in each area are "not necessarily all owned by the respective Local
+      Authorities."
+findings: []
+notes: >-
+  ChargePlace Scotland's Network Performance page (read 2026-10-10) links a locations feed
+  at https://info.smartcharging.uk/public_feed/locations/2463 and a tariffs feed at
+  https://info.smartcharging.uk/public_feed/locations/2463/tariffs. One request to the locations feed on 2026-10-10 answered without a key: an OCPI 2.2.1 response with X-Total-Count, holding 1,479 locations and 5,263 EVSEs with country code GB and party id CPS. The tariffs feed, the licence and any rate limits still need checking before the operator is switched on. The page describes the access as being
+  for data and roaming partners. The network covers charge points with several owners.
+enabled: false

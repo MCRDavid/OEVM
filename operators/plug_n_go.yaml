@@ -1,0 +1,42 @@
+# yaml-language-server: $schema=schema.json
+id: plug_n_go
+display_name: Plug-N-Go
+ocpi_country_code: unknown
+ocpi_party_id: unknown
+adapter: unknown
+base_url: unknown
+endpoints: {}
+auth:
+  method: unknown
+  name: null
+  secret_name: null
+rate_limit:
+  min_seconds_between_requests: 2
+  limits: []
+  limits_checked: unknown
+  notes: null
+supports_single_location: unknown
+cors: unknown
+attribution: null
+licence: null
+engagement:
+  status: unknown
+  evidence: []
+  log:
+    - date: 2026-10-10
+      action: feed_searched
+      summary: >-
+        On 2026-10-10 the address www.plugngo.co.uk redirected to a domain sale page and
+        Plug-N-Go's current website was not found, so its open data route is not yet known.
+access_requested: null
+access_granted: null
+sources:
+  - url: https://www.plugngo.co.uk/
+    note: >-
+      Checked 2026-10-10. Redirected (HTTP 307) to a page offering the domain for sale; no
+      Plug-N-Go content was shown.
+findings: []
+notes: >-
+  The address www.plugngo.co.uk no longer shows Plug-N-Go's website. Its current website, if
+  it has one, needs finding before its open data route can be checked.
+enabled: false

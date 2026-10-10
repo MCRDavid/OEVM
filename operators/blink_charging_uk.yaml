@@ -1,0 +1,68 @@
+# yaml-language-server: $schema=schema.json
+id: blink_charging_uk
+display_name: Blink Charging
+ocpi_country_code: unknown
+ocpi_party_id: unknown
+adapter: unknown
+base_url: unknown
+endpoints: {}
+auth:
+  method: unknown
+  name: null
+  secret_name: null
+rate_limit:
+  min_seconds_between_requests: 2
+  limits: []
+  limits_checked: unknown
+  notes: null
+supports_single_location: unknown
+cors: unknown
+attribution: null
+licence: null
+engagement:
+  status: key_on_request
+  evidence:
+    - date: 2026-10-10
+      url: https://blinkcharging.com/en-gb/getintouch/blink-open-data-request
+      note: >-
+        Blink Charging's open data request page links a request form and says requests are
+        shared with Eco-Movement and that the data is provided in API format. It states no
+        licence, terms or rate limit for the data.
+    - date: 2026-10-10
+      url: https://docs.google.com/forms/d/e/1FAIpQLSfCr1YljoUjIv8fTRahl9Ewhi3h3mpVEGvBZ7VryT34wTccsw/viewform
+      note: >-
+        The linked form, titled "PCPR Data Request - Blink Charging", asks for an email
+        address, name, organisation and planned use of the data, and says an answer is
+        given within 5 working days.
+  log:
+    - date: 2026-10-10
+      action: page_checked
+      summary: >-
+        Blink Charging's open data request page and its linked request form were read; the
+        page says requests are shared with Eco-Movement.
+      quote: >-
+        The Blink Data team will review your request and provide the data in api format and
+        a stipulated timeframe..
+      evidence_url: https://blinkcharging.com/en-gb/getintouch/blink-open-data-request
+access_requested: null
+access_granted: null
+sources:
+  - url: https://blinkcharging.com/en-gb/getintouch/blink-open-data-request
+    note: >-
+      Blink Charging's UK open data request page, read 2026-10-10. Says "Your request will
+      be shared with Eco-Movement, and in submitting the request you are consenting to the
+      processing of their data."
+  - url: https://docs.google.com/forms/d/e/1FAIpQLSfCr1YljoUjIv8fTRahl9Ewhi3h3mpVEGvBZ7VryT34wTccsw/viewform
+    note: >-
+      Blink Charging's PCPR data request form, linked from its open data request page,
+      read 2026-10-10 without submitting it. It says "Request data on the location,
+      status, and properties of Blink Charging's stations in the United Kingdom, in
+      accordance with the UK Public Charge Point Regulations."
+findings: []
+notes: >-
+  Blink Charging's page says requests are shared with Eco-Movement, so the
+  eco_movement_pcpr adapter may apply once access is given; this needs testing. Access
+  could be requested through the form linked from its open data request page. EB
+  Charging's former website redirected to Blink Charging's site when checked on
+  2026-10-10.
+enabled: false

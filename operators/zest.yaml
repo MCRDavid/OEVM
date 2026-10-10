@@ -1,0 +1,54 @@
+# yaml-language-server: $schema=schema.json
+id: zest
+display_name: Zest
+ocpi_country_code: unknown
+ocpi_party_id: unknown
+adapter: unknown
+base_url: unknown
+endpoints: {}
+auth:
+  method: unknown
+  name: null
+  secret_name: null
+rate_limit:
+  min_seconds_between_requests: 2
+  limits: []
+  limits_checked: unknown
+  notes: null
+supports_single_location: unknown
+cors: unknown
+attribution: null
+licence: null
+engagement:
+  status: key_on_request
+  evidence:
+    - date: 2026-10-10
+      url: https://www.zest.uk.com/charge-point-open-data
+      note: >-
+        Zest's open data page offers a request form asking for a first and last name,
+        email address, company and reason for the request. It says the data is licensed
+        under CC BY 4.0. It does not say whether access is given as a key, a file or by
+        other means.
+  log:
+    - date: 2026-10-10
+      action: page_checked
+      summary: >-
+        Zest's charge point open data page was read; it offers a request form and states a
+        licence for the data.
+      quote: >-
+        Request Zest’s charge point open data as per the Public Charge Point Regulations
+        2023.
+      evidence_url: https://www.zest.uk.com/charge-point-open-data
+access_requested: null
+access_granted: null
+sources:
+  - url: https://www.zest.uk.com/charge-point-open-data
+    note: >-
+      Zest's charge point open data page, read 2026-10-10. Request form, and the sentence
+      "Use of this data is licensed under CC BY 4.0.", which links to
+      https://creativecommons.org/licenses/by/4.0/. States no rate limit or data format.
+findings: []
+notes: >-
+  Zest's page says "Use of this data is licensed under CC BY 4.0." (read 2026-10-10). Access
+  could be requested through the form on its open data page.
+enabled: false

@@ -1,0 +1,75 @@
+# yaml-language-server: $schema=schema.json
+id: wenea
+display_name: Wenea
+ocpi_country_code: unknown
+ocpi_party_id: unknown
+adapter: unknown
+base_url: unknown
+endpoints: {}
+auth:
+  method: unknown
+  name: null
+  secret_name: null
+rate_limit:
+  min_seconds_between_requests: 2
+  limits: []
+  limits_checked: 2026-10-10
+  notes: >-
+    The Wenea Open Data Policy, read 2026-10-10, states no numeric limit. It says "We may
+    impose rate limits or other technical controls on your use of the API at our discretion
+    to maintain system integrity and performance." The API's technical documentation has
+    not been seen.
+supports_single_location: unknown
+cors: unknown
+attribution: null
+licence: null
+engagement:
+  status: key_on_request
+  evidence:
+    - date: 2026-10-10
+      url: https://wenea.com/uk/open-data/
+      note: >-
+        Wenea's UK open data page sets out the Wenea Open Data Policy and offers a form
+        asking for a first and last name, email address, company and intended use (business
+        or personal), with a box asking whether the requester agrees to the policy. The
+        policy refers to API keys or access tokens issued by Wenea.
+  log:
+    - date: 2026-10-10
+      action: page_checked
+      summary: >-
+        Wenea's UK open data page was read, including the Wenea Open Data Policy shown on
+        the same page and the request form, which asks the requester to agree to the policy.
+      quote: >-
+        API Credentials: You are responsible for safeguarding any API keys or access tokens
+        issued to you by Wenea.
+      evidence_url: https://wenea.com/uk/open-data/
+access_requested: null
+access_granted: null
+sources:
+  - url: https://wenea.com/uk/open-data/
+    note: >-
+      Wenea's UK open data page, read 2026-10-10. Holds the full Wenea Open Data Policy
+      (sections 1 to 14) and the request form. The form's checkbox reads "Do you agree
+      with the terms established by Wenea Open Data Policy?"
+findings:
+  - date: 2026-10-10
+    kind: access
+    summary: >-
+      Access is requested through a form that asks the requester to agree to the Wenea
+      Open Data Policy, which says "All rights, title, and interest in the Data and the API
+      remain with Wenea." and also says "Our Data is made publicly available free of charge
+      and under open terms, aligning with the Open Government Licence requirements for
+      machine-readable formats."
+    handling: >-
+      The policy is specific to the open data, so the repository owner's standing rule of
+      2026-10-10 on general website or charging terms does not settle it. The owner's
+      decision on the policy is needed before access is requested, as it was for
+      Gridserve. The operator stays switched off.
+    evidence_url: https://wenea.com/uk/open-data/
+notes: >-
+  The Wenea Open Data Policy grants "limited access to our API to view and use the Data in
+  accordance with The Public Charge Point Regulations 2023" and says "By accessing or using
+  the Wenea API and Data, you agree to abide by this Policy and all applicable laws and
+  regulations." Once the repository owner has decided on the policy, access could be
+  requested through the form on Wenea's UK open data page.
+enabled: false

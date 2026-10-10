@@ -1,0 +1,69 @@
+# yaml-language-server: $schema=schema.json
+id: believ
+display_name: Believ
+ocpi_country_code: unknown
+ocpi_party_id: unknown
+adapter: unknown
+base_url: unknown
+endpoints: {}
+auth:
+  method: unknown
+  name: null
+  secret_name: null
+rate_limit:
+  min_seconds_between_requests: 2
+  limits: []
+  limits_checked: unknown
+  notes: >-
+    Believ's API documentation is shown only after registering, so any published limits
+    have not been read.
+supports_single_location: unknown
+cors: unknown
+attribution: null
+licence: null
+engagement:
+  status: key_on_request
+  evidence:
+    - date: 2026-10-10
+      url: https://api.believ.com/
+      note: >-
+        Believ's API portal says credentials are generated after creating a free account.
+        Its registration page asks for a name, email address and password. No account was
+        created.
+  log:
+    - date: 2026-10-10
+      action: page_checked
+      summary: >-
+        Believ's open data page was read; it sends API users to Believ's API portal, which
+        says documentation and credentials are available after creating a free account.
+      quote: >-
+        This API provides machine readable access to EVSE data for the Believ network.
+        After creating your FREE account you'll be able to view the documentation and
+        generate credentials to call our service.
+      evidence_url: https://api.believ.com/
+access_requested: null
+access_granted: null
+sources:
+  - url: https://www.believ.com/open-data/
+    note: >-
+      Believ's open data page, read 2026-10-10. Says "For API access, please visit
+      https://api.believ.com/." and links a separate "Request Data" form for "a larger data
+      set". States no licence, terms or rate limit for the data.
+  - url: https://www.believ.com/believ-charge-point-live-data/
+    note: >-
+      Believ Charge Point Live Data page, linked from the site footer, read 2026-10-10.
+      Gives the same API portal link as the open data page.
+  - url: https://api.believ.com/
+    note: >-
+      Believ EVSE API portal home page, read 2026-10-10. Offers registration for a free
+      account and a sign-in link.
+  - url: https://api.believ.com/register
+    note: >-
+      Registration page, read 2026-10-10 without submitting it. Asks for a name, email
+      address and password; shows no terms to agree to.
+findings: []
+notes: >-
+  Access is through a free self-serve account on Believ's API portal, which gives
+  credentials and documentation after registering. The repository owner could register,
+  store the key as a GitHub Actions secret and then follow the add-operator steps.
+enabled: false

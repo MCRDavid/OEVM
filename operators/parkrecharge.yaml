@@ -1,0 +1,84 @@
+# yaml-language-server: $schema=schema.json
+id: parkrecharge
+display_name: ParkRecharge
+ocpi_country_code: unknown
+ocpi_party_id: unknown
+adapter: unknown
+base_url: unknown
+endpoints: {}
+auth:
+  method: unknown
+  name: null
+  secret_name: null
+rate_limit:
+  min_seconds_between_requests: 2
+  limits: []
+  limits_checked: unknown
+  notes: null
+supports_single_location: unknown
+cors: unknown
+attribution: null
+licence: null
+engagement:
+  status: open_anonymous
+  evidence:
+    - date: 2026-10-10
+      url: https://parkrecharge.com/public-charging
+      note: >-
+        ParkRecharge's "Public Charging and Open Data" page links its OCPI 2.2.1 reference
+        data for locations and for tariffs directly, and says authentication is required for
+        live availability data. This project has not fetched the reference data, so whether
+        it needs a key still needs testing.
+  log:
+    - date: 2026-10-10
+      action: page_checked
+      summary: >-
+        Read ParkRecharge's "Public Charging and Open Data" page, which links reference data
+        for locations and tariffs and offers a form for credentials to live availability
+        data.
+      quote: >-
+        Reference data updated daily. Availability data is near real-time (authentication
+        required).
+      evidence_url: https://parkrecharge.com/public-charging
+access_requested: null
+access_granted: null
+sources:
+  - url: https://parkrecharge.com/
+    note: >-
+      ParkRecharge's home page (read 2026-10-10). Built by JavaScript. Its menu lists a
+      "Public Charging & Open Data" link to /public-charging under "Knowledge".
+  - url: https://parkrecharge.com/sitemap.xml
+    note: >-
+      ParkRecharge's sitemap (read 2026-10-10). Lists the /public-charging page.
+  - url: https://parkrecharge.com/public-charging
+    note: >-
+      ParkRecharge's "Public Charging and Open Data" page (read 2026-10-10, including the
+      page's own script that holds its text). It says "Open data published in a
+      machine-readable format using OCPI (including reference and availability data)", that
+      the location and tariff data are each "Published as a JSON file following the OCPI
+      2.2.1 standard.", and, for live availability data, "Complete the form below and we'll
+      send your credentials." The form asks for a name, company, email address and use case.
+findings:
+  - date: 2026-10-10
+    kind: access
+    summary: >-
+      A request on 2026-10-10 to the locations reference data address,
+      https://ocpi-pcpr.hubeleon.net/2.2.1/reference, did not complete because this project's
+      HTTPS client reported the server's TLS certificate as expired. No data was read.
+    handling: >-
+      The project never turns off certificate checks. The address will be tried again later.
+    evidence_url: https://parkrecharge.com/public-charging
+    status: open
+notes: >-
+  The page links "Access Reference Data" to https://ocpi-pcpr.hubeleon.net/2.2.1/reference
+  (locations, EVSEs and connectors) and https://ocpi-pcpr.hubeleon.net/2.2.1/referencetariffs
+  (tariffs). This project has not fetched either, so whether they need a key, their format
+  and any rate limit need testing before an adapter is chosen; live availability needs
+  credentials requested through the form on the same page. The page's embedded dataset
+  description gives the government's Public Charge Point Regulations 2023 guidance page as
+  the licence for both datasets, and its visible text names no licence or terms. Its
+  sitemap lists a terms and conditions page, not read on 2026-10-10. The repository owner's
+  standing rule of 2026-10-10 reads general website or charging terms as not covering an
+  operator's open data; that page still needs reading, and the licence section filling in,
+  before ParkRecharge could be switched on.
+enabled: false

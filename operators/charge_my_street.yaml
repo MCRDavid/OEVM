@@ -1,0 +1,53 @@
+# yaml-language-server: $schema=schema.json
+id: charge_my_street
+display_name: Charge My Street
+ocpi_country_code: unknown
+ocpi_party_id: unknown
+adapter: unknown
+base_url: unknown
+endpoints: {}
+auth:
+  method: unknown
+  name: null
+  secret_name: null
+rate_limit:
+  min_seconds_between_requests: 2
+  limits: []
+  limits_checked: unknown
+  notes: null
+supports_single_location: unknown
+cors: unknown
+attribution: null
+licence: null
+engagement:
+  status: no_public_feed_found
+  evidence:
+    - date: 2026-10-10
+      url: https://chargemystreet.co.uk/
+      note: >-
+        Charge My Street's home page has no open data, regulations or charge point data link.
+        Its charge page gives no open data feed or route for requesting open data, and its
+        sitemap address answered "not found".
+  log:
+    - date: 2026-10-10
+      action: feed_searched
+      summary: >-
+        Charge My Street's home page and charge page were read and its sitemap address was
+        tried, and no open data feed or route for requesting open data was found.
+      evidence_url: https://chargemystreet.co.uk/
+access_requested: null
+access_granted: null
+sources:
+  - url: https://chargemystreet.co.uk/
+    note: >-
+      Charge My Street's home page (read 2026-10-10). Calls Fuuse "our partnered app" and
+      links Fuuse's driver terms; no open data link.
+  - url: https://chargemystreet.co.uk/charge
+    note: Charge My Street's charge page (read 2026-10-10). No open data link.
+findings: []
+notes: >-
+  No open data feed or request route was found on Charge My Street's own website on
+  2026-10-10. Its site names Fuuse as its partnered app; whether Fuuse hosts a feed for this
+  network is unknown. A written request could ask where its open data under regulation 10 is
+  published.
+enabled: false

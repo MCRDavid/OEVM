@@ -1,0 +1,48 @@
+# yaml-language-server: $schema=schema.json
+id: qwello
+display_name: Qwello
+ocpi_country_code: unknown
+ocpi_party_id: unknown
+adapter: unknown
+base_url: unknown
+endpoints: {}
+auth:
+  method: unknown
+  name: null
+  secret_name: null
+rate_limit:
+  min_seconds_between_requests: 2
+  limits: []
+  limits_checked: unknown
+  notes: null
+supports_single_location: unknown
+cors: unknown
+attribution: null
+licence: null
+engagement:
+  status: unknown
+  evidence: []
+  log:
+    - date: 2026-10-10
+      action: feed_searched
+      summary: >-
+        Qwello's UK website is built by JavaScript and showed only its title to this
+        project's automated checks on 2026-10-10, and it has no readable sitemap, so its open
+        data route is not yet known; it needs checking in a browser.
+      evidence_url: https://qwello.uk/en
+access_requested: null
+access_granted: null
+sources:
+  - url: https://qwello.uk/en
+    note: >-
+      Qwello's UK home page (2026-10-10). Built by JavaScript; only its title, "Qwello",
+      was readable.
+  - url: https://qwello.uk/sitemap.xml
+    note: >-
+      Read 2026-10-10. Answered with the site's app page rather than a sitemap, saying
+      "We're sorry but qwello doesn't work properly without JavaScript enabled."
+findings: []
+notes: >-
+  Qwello's UK website needs JavaScript to show its text. The next step is to read it in a
+  browser and look for an open data or regulations link.
+enabled: false

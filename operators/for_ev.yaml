@@ -1,0 +1,68 @@
+# yaml-language-server: $schema=schema.json
+id: for_ev
+display_name: FOR EV
+ocpi_country_code: unknown
+ocpi_party_id: unknown
+adapter: unknown
+base_url: unknown
+endpoints: {}
+auth:
+  method: unknown
+  name: null
+  secret_name: null
+rate_limit:
+  min_seconds_between_requests: 2
+  limits: []
+  limits_checked: unknown
+  notes: null
+supports_single_location: unknown
+cors: unknown
+attribution: null
+licence: null
+engagement:
+  status: key_on_request
+  evidence:
+    - date: 2026-10-10
+      url: https://forev.co.uk/public-charge-point-regulations/
+      note: >-
+        FOR EV's Public Charge Point Regulations page says access to its OCPI data is
+        available on request to four named groups. It gives no request route, feed address,
+        licence or key details. Its contact page offers a general contact form.
+  log:
+    - date: 2026-10-10
+      action: page_checked
+      summary: >-
+        FOR EV's Public Charge Point Regulations page was read; it says access to its OCPI
+        data is available on request to four named groups and does not say whether others
+        may request it.
+      quote: >-
+        FOR EV’s OCPI is accurate and open access is available to government bodies,
+        Distribution Network Operators, Transmission Owners and Electricity Systems
+        Operators upon request.
+      evidence_url: https://forev.co.uk/public-charge-point-regulations/
+access_requested: null
+access_granted: null
+sources:
+  - url: https://forev.co.uk/public-charge-point-regulations/
+    note: FOR EV's Public Charge Point Regulations page, with an "Open Data" section (read 2026-10-10).
+  - url: https://forev.co.uk/contact/
+    note: >-
+      FOR EV's contact page (read 2026-10-10, nothing sent). It offers a general contact
+      form and says it aims to reply within 24 hours.
+findings:
+  - date: 2026-10-10
+    kind: access
+    summary: >-
+      FOR EV's Public Charge Point Regulations page describes access to its OCPI data as
+      available on request to government bodies, Distribution Network Operators,
+      Transmission Owners and Electricity Systems Operators, and does not say whether other
+      users may request it.
+    handling: >-
+      Recorded only. Whether FOR EV would give this project access is unknown until it is
+      asked.
+    evidence_url: https://forev.co.uk/public-charge-point-regulations/
+notes: >-
+  Access could be asked for through the contact form on FOR EV's website, although its page
+  names only four groups of users. How the data is delivered and whether a key is needed are
+  unknown.
+enabled: false

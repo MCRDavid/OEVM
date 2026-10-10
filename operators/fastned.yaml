@@ -1,0 +1,84 @@
+# yaml-language-server: $schema=schema.json
+id: fastned
+display_name: Fastned
+ocpi_country_code: unknown
+ocpi_party_id: unknown
+adapter: unknown
+base_url: unknown
+endpoints: {}
+auth:
+  method: unknown
+  name: null
+  secret_name: null
+rate_limit:
+  min_seconds_between_requests: 2
+  limits: []
+  limits_checked: 2026-10-10
+  notes: >-
+    Fastned's Fair Use Policy, read 2026-10-10, states no numeric limit. It says "Fastned
+    may throttle your use of the APIs at any time." and "Fastned reserves the right to
+    implement rate limits on the API to ensure system performance, reliability, and overall
+    service quality or for other reasons at its discretion." The API's technical
+    documentation has not been seen.
+supports_single_location: unknown
+cors: unknown
+attribution: null
+licence: null
+engagement:
+  status: key_on_request
+  evidence:
+    - date: 2026-10-10
+      url: https://www.fastnedcharging.com/en-gb/uk-open-data
+      note: >-
+        Fastned's UK Open Data page is its Fair Use Policy for the Fastned UK Open Data API.
+        The policy refers to API keys and credentials. Directly below the policy the page
+        embeds a Typeform form that is loaded by JavaScript, so its questions could not be
+        read without running the script; they need checking in a browser.
+  log:
+    - date: 2026-10-10
+      action: page_checked
+      summary: >-
+        Fastned's UK Open Data page was read; it holds the Fair Use Policy for its UK Open
+        Data API, followed by an embedded form that is loaded by JavaScript.
+      quote: >-
+        You are responsible for maintaining the confidentiality of your API keys and
+        credentials.
+      evidence_url: https://www.fastnedcharging.com/en-gb/uk-open-data
+access_requested: null
+access_granted: null
+sources:
+  - url: https://www.fastnedcharging.com/en-gb/uk-open-data
+    note: >-
+      Fastned's UK Open Data page, which holds its Fair Use Policy for the Fastned UK Open
+      Data API, read 2026-10-10. Covers acceptable use, security measures, monitoring,
+      ownership, disclaimer, indemnification, liability, updates, no partnership and
+      jurisdiction, and says "By accessing the API you agree to adhere to this Fair Use
+      Policy". Links the regulations on legislation.gov.uk. Below the policy the page
+      embeds a Typeform form loaded by JavaScript; it shows no developer portal or
+      endpoint.
+findings:
+  - date: 2026-10-10
+    kind: access
+    summary: >-
+      Fastned's Fair Use Policy says "Fastned retains all rights, title and interest in
+      both the Data and the API. Nothing in this Policy shall be interpreted as transferring
+      any intellectual rights to you or any third party." and "Access to the API is provided
+      solely under a limited, non-exclusive, non-transferable, and revocable license for
+      permitted use as outlined in this Policy."
+    handling: >-
+      The policy is specific to the open data, so the repository owner's standing rule of
+      2026-10-10 on general website or charging terms does not settle it. The owner's
+      decision on the policy is needed before access is requested, as it was for
+      Gridserve. The operator stays switched off.
+    evidence_url: https://www.fastnedcharging.com/en-gb/uk-open-data
+notes: >-
+  The Fair Use Policy also says "Any use, adaption, exploitation, distribution, publishing,
+  transmission or dissemination of the Data to any third party must at all times acknowledge
+  the source of the Data as Fastned." and "Where the Data is adapted and exploited,
+  distributed, published, transmitted or disseminated to a third party by You, You must
+  acknowledge that Fastned’s source Data has been adapted." It grants "limited API access
+  for the purpose of consuming the Data as described in the Public Charge Point Regulations
+  2023 pursuant to 4.2." The form embedded below the policy needs reading in a browser to
+  confirm whether it is the route for requesting a key; access could then be requested once
+  the repository owner has decided on the policy.
+enabled: false

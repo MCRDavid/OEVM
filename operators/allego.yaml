@@ -1,0 +1,63 @@
+# yaml-language-server: $schema=schema.json
+id: allego
+display_name: Allego
+ocpi_country_code: unknown
+ocpi_party_id: unknown
+adapter: unknown
+base_url: unknown
+endpoints: {}
+auth:
+  method: unknown
+  name: null
+  secret_name: null
+rate_limit:
+  min_seconds_between_requests: 2
+  limits: []
+  limits_checked: unknown
+  notes: null
+supports_single_location: unknown
+cors: unknown
+attribution: null
+licence: null
+engagement:
+  status: key_on_request
+  evidence:
+    - date: 2026-10-10
+      url: https://www.allego.eu/charge-point-data/
+      note: >-
+        Allego's "Charge Point Data" page has a "Request charge point data" form asking for a
+        name, company name, email address, planned use of data and agreement to its privacy
+        policy. It does not say how the data is delivered or whether a key is issued.
+  log:
+    - date: 2026-10-10
+      action: feed_searched
+      summary: >-
+        Allego's home page has no open data link, and its page sitemap lists a "Charge Point
+        Data" page.
+      evidence_url: https://www.allego.eu/page-sitemap.xml
+    - date: 2026-10-10
+      action: page_checked
+      summary: >-
+        Allego's Charge Point Data page was read; it offers a form for requesting charge point
+        data and names no key, licence, data terms or rate limit.
+      quote: Request charge point data
+      evidence_url: https://www.allego.eu/charge-point-data/
+access_requested: null
+access_granted: null
+sources:
+  - url: https://www.allego.eu/
+    note: Allego's home page (read 2026-10-10). No open data or charge point data link.
+  - url: https://www.allego.eu/page-sitemap.xml
+    note: >-
+      Allego's page sitemap (read 2026-10-10), reached from its sitemap index. Lists the
+      Charge Point Data page.
+  - url: https://www.allego.eu/charge-point-data/
+    note: >-
+      Allego's "Charge Point Data" page (read 2026-10-10). Request form, and a statement of
+      its network's reliability for 2025 (99.016%).
+findings: []
+notes: >-
+  Access could be requested through the form on Allego's Charge Point Data page, which its
+  page sitemap lists but its home page does not link. How the data is delivered, whether a
+  key is issued and what licence applies are unknown.
+enabled: false

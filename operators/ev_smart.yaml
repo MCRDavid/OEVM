@@ -1,0 +1,56 @@
+# yaml-language-server: $schema=schema.json
+id: ev_smart
+display_name: EV Smart
+ocpi_country_code: unknown
+ocpi_party_id: unknown
+adapter: unknown
+base_url: unknown
+endpoints: {}
+auth:
+  method: unknown
+  name: null
+  secret_name: null
+rate_limit:
+  min_seconds_between_requests: 2
+  limits: []
+  limits_checked: unknown
+  notes: null
+supports_single_location: unknown
+cors: unknown
+attribution: null
+licence: null
+engagement:
+  status: key_on_request
+  evidence:
+    - date: 2026-10-10
+      url: https://www.ev-smart.co.uk/opendataregulatorycompliance
+      note: >-
+        EV Smart's "Open Data & Regulatory Compliance" page says its data is published using
+        OCPI and offers direct access to its OCPI data feed by contacting its support team by
+        email or phone. It gives no feed address and does not say whether a key is issued.
+  log:
+    - date: 2026-10-10
+      action: page_checked
+      summary: >-
+        EV Smart's open data page was read; it invites requests for direct access to its OCPI
+        data feed through its support team and says no terms, fees or usage restrictions
+        apply to the data.
+      quote: >-
+        If you would like direct access to our OCPI data feed or further technical
+        information on how our open data is structured and delivered, please contact us:
+      evidence_url: https://www.ev-smart.co.uk/opendataregulatorycompliance
+access_requested: null
+access_granted: null
+sources:
+  - url: https://www.ev-smart.co.uk/opendataregulatorycompliance
+    note: >-
+      EV Smart's "Open Data & Regulatory Compliance" page (read 2026-10-10). It says "EV
+      Smart does not require any user, government body, system operator, or third-party
+      service provider to agree to any terms or conditions in order to access our data.
+      There are no fees, NDAs, or data usage restrictions applied." It aims to answer
+      requests within two working days.
+findings: []
+notes: >-
+  Access could be requested from EV Smart's support team by email, as its open data page
+  invites. How the feed is delivered and whether a key is needed are unknown.
+enabled: false

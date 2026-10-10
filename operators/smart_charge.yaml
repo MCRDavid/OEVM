@@ -1,0 +1,53 @@
+# yaml-language-server: $schema=schema.json
+id: smart_charge
+display_name: Smart Charge
+ocpi_country_code: unknown
+ocpi_party_id: unknown
+adapter: unknown
+base_url: unknown
+endpoints: {}
+auth:
+  method: unknown
+  name: null
+  secret_name: null
+rate_limit:
+  min_seconds_between_requests: 2
+  limits: []
+  limits_checked: unknown
+  notes: null
+supports_single_location: unknown
+cors: unknown
+attribution: null
+licence: null
+engagement:
+  status: key_on_request
+  evidence:
+    - date: 2026-10-10
+      url: https://smartcharge.co.uk/
+      note: >-
+        The FAQs on Smart Charge's home page ask how to request its open access data end
+        point and answer by directing requests to its customer support team by phone. The
+        page gives no open data page, form, feed address, licence, key or rate limit.
+  log:
+    - date: 2026-10-10
+      action: page_checked
+      summary: >-
+        The FAQs on Smart Charge's home page were read; the answer to a question on its open
+        access data end point directs requests to its customer support line.
+      quote: How can I request Smart Charge’s open access data end point?
+      evidence_url: https://smartcharge.co.uk/
+access_requested: null
+access_granted: null
+sources:
+  - url: https://smartcharge.co.uk/
+    note: >-
+      Home page of Smart Charge, "Powered by Sainsbury's" (read 2026-10-10), whose FAQs
+      include the open access data question. The same page shows the website's general
+      terms of use; under the repository owner's standing rule of 2026-10-10, general
+      website or charging terms are not read as covering an operator's open data. Whether
+      the data itself comes with terms of its own is unknown.
+findings: []
+notes: >-
+  Access could be requested from Smart Charge's customer support team, as the FAQ on its
+  home page directs. How the data is delivered and whether a key is needed are unknown.
+enabled: false

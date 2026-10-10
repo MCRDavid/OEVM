@@ -951,6 +951,352 @@
       ]
     },
     {
+      "id": "allego",
+      "name": "Allego",
+      "enabled": false,
+      "adapter": "unknown",
+      "engagement": {
+        "status": "key_on_request",
+        "label": "Key issued on request",
+        "headline": "Key issued on request (as of 2026-10-10)",
+        "as_of": "2026-10-10",
+        "last_request": null,
+        "last_response": null,
+        "last_response_text": "No request sent",
+        "evidence": [
+          {
+            "date": "2026-10-10",
+            "url": "https://www.allego.eu/charge-point-data/",
+            "file": null,
+            "note": "Allego's \"Charge Point Data\" page has a \"Request charge point data\" form asking for a name, company name, email address, planned use of data and agreement to its privacy policy. It does not say how the data is delivered or whether a key is issued."
+          }
+        ],
+        "log": [
+          {
+            "date": "2026-10-10",
+            "action": "feed_searched",
+            "action_label": "Searched for a feed",
+            "channel": null,
+            "channel_label": null,
+            "summary": "Allego's home page has no open data link, and its page sitemap lists a \"Charge Point Data\" page.",
+            "quote": null,
+            "evidence_url": "https://www.allego.eu/page-sitemap.xml",
+            "evidence_file": null
+          },
+          {
+            "date": "2026-10-10",
+            "action": "page_checked",
+            "action_label": "Operator's page checked",
+            "channel": null,
+            "channel_label": null,
+            "summary": "Allego's Charge Point Data page was read; it offers a form for requesting charge point data and names no key, licence, data terms or rate limit.",
+            "quote": "Request charge point data",
+            "evidence_url": "https://www.allego.eu/charge-point-data/",
+            "evidence_file": null
+          }
+        ]
+      },
+      "access_requested": null,
+      "access_granted": null,
+      "feeds": [],
+      "licence": null,
+      "attribution": null,
+      "missing_publish_flag": null,
+      "swapped_coordinates": null,
+      "nonstandard_statuses": null,
+      "relay": null,
+      "rate_limit": {
+        "our_gap_seconds": 2.0,
+        "our_max_per_hour": 1800,
+        "ours": "At least 2 s between requests to the operator's host, measured from the end of the previous request (at most 1800 in any hour), retries included.",
+        "published": [],
+        "limits_checked": "unknown",
+        "comparison": "The operator's pages have not been checked for limits yet.",
+        "difference_from_regulations": "Not known yet.",
+        "notes": null
+      },
+      "findings": []
+    },
+    {
+      "id": "applegreen_electric",
+      "name": "Applegreen Fast Charge",
+      "enabled": false,
+      "adapter": "unknown",
+      "engagement": {
+        "status": "no_public_feed_found",
+        "label": "No public feed found",
+        "headline": "No public feed found (as of 2026-10-10)",
+        "as_of": "2026-10-10",
+        "last_request": null,
+        "last_response": null,
+        "last_response_text": "No request sent",
+        "evidence": [
+          {
+            "date": "2026-10-10",
+            "url": "https://www.applegreenfastcharge.com/",
+            "file": null,
+            "note": "Applegreen Fast Charge's home page has no open data, regulations or charge point data link. Its only data link, \"Data Requests\", leads to a portal on another host whose content could not be read without JavaScript."
+          }
+        ],
+        "log": [
+          {
+            "date": "2026-10-10",
+            "action": "feed_searched",
+            "action_label": "Searched for a feed",
+            "channel": null,
+            "channel_label": null,
+            "summary": "Applegreen Fast Charge's home page was read and its sitemap address was tried (it answered \"not found\"), and no open data feed or route for requesting open data was found.",
+            "quote": null,
+            "evidence_url": "https://www.applegreenfastcharge.com/",
+            "evidence_file": null
+          }
+        ]
+      },
+      "access_requested": null,
+      "access_granted": null,
+      "feeds": [],
+      "licence": null,
+      "attribution": null,
+      "missing_publish_flag": null,
+      "swapped_coordinates": null,
+      "nonstandard_statuses": null,
+      "relay": null,
+      "rate_limit": {
+        "our_gap_seconds": 2.0,
+        "our_max_per_hour": 1800,
+        "ours": "At least 2 s between requests to the operator's host, measured from the end of the previous request (at most 1800 in any hour), retries included.",
+        "published": [],
+        "limits_checked": "unknown",
+        "comparison": "The operator's pages have not been checked for limits yet.",
+        "difference_from_regulations": "Not known yet.",
+        "notes": null
+      },
+      "findings": []
+    },
+    {
+      "id": "asda_express_electric",
+      "name": "Asda Express Electric",
+      "enabled": false,
+      "adapter": "unknown",
+      "engagement": {
+        "status": "unknown",
+        "label": "Not yet established",
+        "headline": "Not yet established (as of 2026-10-10)",
+        "as_of": "2026-10-10",
+        "last_request": null,
+        "last_response": null,
+        "last_response_text": "No request sent",
+        "evidence": [],
+        "log": [
+          {
+            "date": "2026-10-10",
+            "action": "feed_searched",
+            "action_label": "Searched for a feed",
+            "channel": null,
+            "channel_label": null,
+            "summary": "Asda's website could not be read by this project's automated checks on 2026-10-10 (HTTP 403 for its home page), so the open data route for Asda Express Electric is not yet known; it needs checking in a browser.",
+            "quote": null,
+            "evidence_url": "https://www.asda.com/",
+            "evidence_file": null
+          }
+        ]
+      },
+      "access_requested": null,
+      "access_granted": null,
+      "feeds": [],
+      "licence": null,
+      "attribution": null,
+      "missing_publish_flag": null,
+      "swapped_coordinates": null,
+      "nonstandard_statuses": null,
+      "relay": null,
+      "rate_limit": {
+        "our_gap_seconds": 2.0,
+        "our_max_per_hour": 1800,
+        "ours": "At least 2 s between requests to the operator's host, measured from the end of the previous request (at most 1800 in any hour), retries included.",
+        "published": [],
+        "limits_checked": "unknown",
+        "comparison": "The operator's pages have not been checked for limits yet.",
+        "difference_from_regulations": "Not known yet.",
+        "notes": null
+      },
+      "findings": []
+    },
+    {
+      "id": "be_ev",
+      "name": "Be.EV",
+      "enabled": false,
+      "adapter": "unknown",
+      "engagement": {
+        "status": "no_public_feed_found",
+        "label": "No public feed found",
+        "headline": "No public feed found (as of 2026-10-10)",
+        "as_of": "2026-10-10",
+        "last_request": null,
+        "last_response": null,
+        "last_response_text": "No request sent",
+        "evidence": [
+          {
+            "date": "2026-10-10",
+            "url": "https://be-ev.co.uk/public-charge-point-regulations/",
+            "file": null,
+            "note": "Be.EV's \"Public Charge Point Regulations\" page reports its 2025 reliability score. It gives no open data feed and no route for requesting open data."
+          }
+        ],
+        "log": [
+          {
+            "date": "2026-10-10",
+            "action": "feed_searched",
+            "action_label": "Searched for a feed",
+            "channel": null,
+            "channel_label": null,
+            "summary": "Be.EV's home page, its Public Charge Point Regulations page, its sitemap and its help centre's front page were read, and no open data feed or route for requesting open data was found.",
+            "quote": "In 2025, our rapid and ultra-rapid network achieved an average reliability score of 99% across more than 600 public DC charge points (50kW+).",
+            "evidence_url": "https://be-ev.co.uk/public-charge-point-regulations/",
+            "evidence_file": null
+          }
+        ]
+      },
+      "access_requested": null,
+      "access_granted": null,
+      "feeds": [],
+      "licence": null,
+      "attribution": null,
+      "missing_publish_flag": null,
+      "swapped_coordinates": null,
+      "nonstandard_statuses": null,
+      "relay": null,
+      "rate_limit": {
+        "our_gap_seconds": 2.0,
+        "our_max_per_hour": 1800,
+        "ours": "At least 2 s between requests to the operator's host, measured from the end of the previous request (at most 1800 in any hour), retries included.",
+        "published": [],
+        "limits_checked": "unknown",
+        "comparison": "The operator's pages have not been checked for limits yet.",
+        "difference_from_regulations": "Not known yet.",
+        "notes": null
+      },
+      "findings": []
+    },
+    {
+      "id": "believ",
+      "name": "Believ",
+      "enabled": false,
+      "adapter": "unknown",
+      "engagement": {
+        "status": "key_on_request",
+        "label": "Key issued on request",
+        "headline": "Key issued on request (as of 2026-10-10)",
+        "as_of": "2026-10-10",
+        "last_request": null,
+        "last_response": null,
+        "last_response_text": "No request sent",
+        "evidence": [
+          {
+            "date": "2026-10-10",
+            "url": "https://api.believ.com/",
+            "file": null,
+            "note": "Believ's API portal says credentials are generated after creating a free account. Its registration page asks for a name, email address and password. No account was created."
+          }
+        ],
+        "log": [
+          {
+            "date": "2026-10-10",
+            "action": "page_checked",
+            "action_label": "Operator's page checked",
+            "channel": null,
+            "channel_label": null,
+            "summary": "Believ's open data page was read; it sends API users to Believ's API portal, which says documentation and credentials are available after creating a free account.",
+            "quote": "This API provides machine readable access to EVSE data for the Believ network. After creating your FREE account you'll be able to view the documentation and generate credentials to call our service.",
+            "evidence_url": "https://api.believ.com/",
+            "evidence_file": null
+          }
+        ]
+      },
+      "access_requested": null,
+      "access_granted": null,
+      "feeds": [],
+      "licence": null,
+      "attribution": null,
+      "missing_publish_flag": null,
+      "swapped_coordinates": null,
+      "nonstandard_statuses": null,
+      "relay": null,
+      "rate_limit": {
+        "our_gap_seconds": 2.0,
+        "our_max_per_hour": 1800,
+        "ours": "At least 2 s between requests to the operator's host, measured from the end of the previous request (at most 1800 in any hour), retries included.",
+        "published": [],
+        "limits_checked": "unknown",
+        "comparison": "The operator's pages have not been checked for limits yet.",
+        "difference_from_regulations": "Not known yet.",
+        "notes": "Believ's API documentation is shown only after registering, so any published limits have not been read."
+      },
+      "findings": []
+    },
+    {
+      "id": "blink_charging_uk",
+      "name": "Blink Charging",
+      "enabled": false,
+      "adapter": "unknown",
+      "engagement": {
+        "status": "key_on_request",
+        "label": "Key issued on request",
+        "headline": "Key issued on request (as of 2026-10-10)",
+        "as_of": "2026-10-10",
+        "last_request": null,
+        "last_response": null,
+        "last_response_text": "No request sent",
+        "evidence": [
+          {
+            "date": "2026-10-10",
+            "url": "https://blinkcharging.com/en-gb/getintouch/blink-open-data-request",
+            "file": null,
+            "note": "Blink Charging's open data request page links a request form and says requests are shared with Eco-Movement and that the data is provided in API format. It states no licence, terms or rate limit for the data."
+          },
+          {
+            "date": "2026-10-10",
+            "url": "https://docs.google.com/forms/d/e/1FAIpQLSfCr1YljoUjIv8fTRahl9Ewhi3h3mpVEGvBZ7VryT34wTccsw/viewform",
+            "file": null,
+            "note": "The linked form, titled \"PCPR Data Request - Blink Charging\", asks for an email address, name, organisation and planned use of the data, and says an answer is given within 5 working days."
+          }
+        ],
+        "log": [
+          {
+            "date": "2026-10-10",
+            "action": "page_checked",
+            "action_label": "Operator's page checked",
+            "channel": null,
+            "channel_label": null,
+            "summary": "Blink Charging's open data request page and its linked request form were read; the page says requests are shared with Eco-Movement.",
+            "quote": "The Blink Data team will review your request and provide the data in api format and a stipulated timeframe..",
+            "evidence_url": "https://blinkcharging.com/en-gb/getintouch/blink-open-data-request",
+            "evidence_file": null
+          }
+        ]
+      },
+      "access_requested": null,
+      "access_granted": null,
+      "feeds": [],
+      "licence": null,
+      "attribution": null,
+      "missing_publish_flag": null,
+      "swapped_coordinates": null,
+      "nonstandard_statuses": null,
+      "relay": null,
+      "rate_limit": {
+        "our_gap_seconds": 2.0,
+        "our_max_per_hour": 1800,
+        "ours": "At least 2 s between requests to the operator's host, measured from the end of the previous request (at most 1800 in any hour), retries included.",
+        "published": [],
+        "limits_checked": "unknown",
+        "comparison": "The operator's pages have not been checked for limits yet.",
+        "difference_from_regulations": "Not known yet.",
+        "notes": null
+      },
+      "findings": []
+    },
+    {
       "id": "bp_pulse",
       "name": "bp pulse",
       "enabled": false,
@@ -1073,6 +1419,213 @@
       ]
     },
     {
+      "id": "charge_my_street",
+      "name": "Charge My Street",
+      "enabled": false,
+      "adapter": "unknown",
+      "engagement": {
+        "status": "no_public_feed_found",
+        "label": "No public feed found",
+        "headline": "No public feed found (as of 2026-10-10)",
+        "as_of": "2026-10-10",
+        "last_request": null,
+        "last_response": null,
+        "last_response_text": "No request sent",
+        "evidence": [
+          {
+            "date": "2026-10-10",
+            "url": "https://chargemystreet.co.uk/",
+            "file": null,
+            "note": "Charge My Street's home page has no open data, regulations or charge point data link. Its charge page gives no open data feed or route for requesting open data, and its sitemap address answered \"not found\"."
+          }
+        ],
+        "log": [
+          {
+            "date": "2026-10-10",
+            "action": "feed_searched",
+            "action_label": "Searched for a feed",
+            "channel": null,
+            "channel_label": null,
+            "summary": "Charge My Street's home page and charge page were read and its sitemap address was tried, and no open data feed or route for requesting open data was found.",
+            "quote": null,
+            "evidence_url": "https://chargemystreet.co.uk/",
+            "evidence_file": null
+          }
+        ]
+      },
+      "access_requested": null,
+      "access_granted": null,
+      "feeds": [],
+      "licence": null,
+      "attribution": null,
+      "missing_publish_flag": null,
+      "swapped_coordinates": null,
+      "nonstandard_statuses": null,
+      "relay": null,
+      "rate_limit": {
+        "our_gap_seconds": 2.0,
+        "our_max_per_hour": 1800,
+        "ours": "At least 2 s between requests to the operator's host, measured from the end of the previous request (at most 1800 in any hour), retries included.",
+        "published": [],
+        "limits_checked": "unknown",
+        "comparison": "The operator's pages have not been checked for limits yet.",
+        "difference_from_regulations": "Not known yet.",
+        "notes": null
+      },
+      "findings": []
+    },
+    {
+      "id": "chargeplace_scotland",
+      "name": "ChargePlace Scotland",
+      "enabled": false,
+      "adapter": "unknown",
+      "engagement": {
+        "status": "open_anonymous",
+        "label": "Open, no registration",
+        "headline": "Open, no registration (as of 2026-10-10)",
+        "as_of": "2026-10-10",
+        "last_request": null,
+        "last_response": null,
+        "last_response_text": "No request sent",
+        "evidence": [
+          {
+            "date": "2026-10-10",
+            "url": "https://chargeplacescotland.org/network-performance-2/",
+            "file": null,
+            "note": "ChargePlace Scotland's Network Performance page answers \"Does ChargePlace Scotland offer open data API access?\" with two links, \"Locations\" and \"Tariffs\", on info.smartcharging.uk. The answer mentions no registration step, key, licence or rate limit. One request to the locations feed on 2026-10-10 answered without a key."
+          }
+        ],
+        "log": [
+          {
+            "date": "2026-10-10",
+            "action": "feed_searched",
+            "action_label": "Searched for a feed",
+            "channel": null,
+            "channel_label": null,
+            "summary": "ChargePlace Scotland's home page was read and its sitemap addresses were tried (they gave no sitemap); the home page has no open data link and links its Network Performance page.",
+            "quote": null,
+            "evidence_url": "https://chargeplacescotland.org/",
+            "evidence_file": null
+          },
+          {
+            "date": "2026-10-10",
+            "action": "page_checked",
+            "action_label": "Operator's page checked",
+            "channel": null,
+            "channel_label": null,
+            "summary": "ChargePlace Scotland's Network Performance page was read; it links a locations feed and a tariffs feed for open data API access, and the answer mentions no registration, key, licence or rate limit.",
+            "quote": "Yes, ChargePlace Scotland offers open data API access for data and roaming partners via the following links:",
+            "evidence_url": "https://chargeplacescotland.org/network-performance-2/",
+            "evidence_file": null
+          }
+        ]
+      },
+      "access_requested": null,
+      "access_granted": null,
+      "feeds": [],
+      "licence": null,
+      "attribution": null,
+      "missing_publish_flag": null,
+      "swapped_coordinates": null,
+      "nonstandard_statuses": null,
+      "relay": null,
+      "rate_limit": {
+        "our_gap_seconds": 2.0,
+        "our_max_per_hour": 1800,
+        "ours": "At least 2 s between requests to the operator's host, measured from the end of the previous request (at most 1800 in any hour), retries included.",
+        "published": [],
+        "limits_checked": "unknown",
+        "comparison": "The operator's pages have not been checked for limits yet.",
+        "difference_from_regulations": "Not known yet.",
+        "notes": null
+      },
+      "findings": []
+    },
+    {
+      "id": "chargepoint",
+      "name": "ChargePoint",
+      "enabled": false,
+      "adapter": "unknown",
+      "engagement": {
+        "status": "key_on_request",
+        "label": "Key issued on request",
+        "headline": "Key issued on request (as of 2026-10-10)",
+        "as_of": "2026-10-10",
+        "last_request": null,
+        "last_response": null,
+        "last_response_text": "No request sent",
+        "evidence": [
+          {
+            "date": "2026-10-10",
+            "url": "https://www.chargepoint.com/en-gb/blog/navigating-uk-public-charging-regulations-guide-charge-point-operators",
+            "file": null,
+            "note": "ChargePoint's UK guide to the regulations links a Google form for requesting data via API on the charge point operators it serves, and says the API covers all public charging stations on its station management software in the UK. Its UK home page and UK legal page do not link the form."
+          },
+          {
+            "date": "2026-10-10",
+            "url": "https://docs.google.com/forms/d/e/1FAIpQLSeJ9Z3dyMdsBjaQ3pj9F3aOAXE4jstoHFBxwVq3wxs5lU5JLg/viewform",
+            "file": null,
+            "note": "The \"PCPR Data Request - ChargePoint station management software\" form asks for an email address, name, organisation, network and planned use of data, and says requests are shared with Eco-Movement. It names no licence, terms, key or rate limit."
+          }
+        ],
+        "log": [
+          {
+            "date": "2026-10-10",
+            "action": "feed_searched",
+            "action_label": "Searched for a feed",
+            "channel": null,
+            "channel_label": null,
+            "summary": "ChargePoint's UK home page, its sitemap and its UK legal page were read; none links an open data page, and the sitemap lists a UK guide to the regulations.",
+            "quote": null,
+            "evidence_url": "https://www.chargepoint.com/en-gb",
+            "evidence_file": null
+          },
+          {
+            "date": "2026-10-10",
+            "action": "page_checked",
+            "action_label": "Operator's page checked",
+            "channel": null,
+            "channel_label": null,
+            "summary": "ChargePoint's UK guide to the regulations was read; it links a form for requesting data via API on the charge point operators that use its software.",
+            "quote": "If you would like to request data via API on any CPOs we serve, you can do so here.",
+            "evidence_url": "https://www.chargepoint.com/en-gb/blog/navigating-uk-public-charging-regulations-guide-charge-point-operators",
+            "evidence_file": null
+          },
+          {
+            "date": "2026-10-10",
+            "action": "page_checked",
+            "action_label": "Operator's page checked",
+            "channel": null,
+            "channel_label": null,
+            "summary": "ChargePoint's \"PCPR Data Request\" Google form was read, not submitted; it says the request will be shared with Eco-Movement and an answer will come within 5 working days.",
+            "quote": "Request data on the location, status, and properties of stations and networks using ChargePoint station management software in the United Kingdom, in accordance with the UK Public Charge Point Regulations. You will receive an answer within 5 working days.",
+            "evidence_url": "https://docs.google.com/forms/d/e/1FAIpQLSeJ9Z3dyMdsBjaQ3pj9F3aOAXE4jstoHFBxwVq3wxs5lU5JLg/viewform",
+            "evidence_file": null
+          }
+        ]
+      },
+      "access_requested": null,
+      "access_granted": null,
+      "feeds": [],
+      "licence": null,
+      "attribution": null,
+      "missing_publish_flag": null,
+      "swapped_coordinates": null,
+      "nonstandard_statuses": null,
+      "relay": null,
+      "rate_limit": {
+        "our_gap_seconds": 2.0,
+        "our_max_per_hour": 1800,
+        "ours": "At least 2 s between requests to the operator's host, measured from the end of the previous request (at most 1800 in any hour), retries included.",
+        "published": [],
+        "limits_checked": "unknown",
+        "comparison": "The operator's pages have not been checked for limits yet.",
+        "difference_from_regulations": "Not known yet.",
+        "notes": null
+      },
+      "findings": []
+    },
+    {
       "id": "community_by_shell_recharge",
       "name": "Community by Shell Recharge",
       "enabled": false,
@@ -1188,6 +1741,757 @@
       ]
     },
     {
+      "id": "connected_kerb",
+      "name": "Connected Kerb",
+      "enabled": false,
+      "adapter": "unknown",
+      "engagement": {
+        "status": "unknown",
+        "label": "Not yet established",
+        "headline": "Not yet established (as of 2026-10-10)",
+        "as_of": "2026-10-10",
+        "last_request": null,
+        "last_response": null,
+        "last_response_text": "No request sent",
+        "evidence": [],
+        "log": [
+          {
+            "date": "2026-10-10",
+            "action": "feed_searched",
+            "action_label": "Searched for a feed",
+            "channel": null,
+            "channel_label": null,
+            "summary": "Connected Kerb's home page and its \"Data\" page are built by JavaScript and showed only their titles to this project's automated checks on 2026-10-10, and its sitemap lists no page whose address mentions open data or the regulations, so its open data route is not yet known; it needs checking in a browser.",
+            "quote": null,
+            "evidence_url": "https://connectedkerb.com/our-technology/data/",
+            "evidence_file": null
+          }
+        ]
+      },
+      "access_requested": null,
+      "access_granted": null,
+      "feeds": [],
+      "licence": null,
+      "attribution": null,
+      "missing_publish_flag": null,
+      "swapped_coordinates": null,
+      "nonstandard_statuses": null,
+      "relay": null,
+      "rate_limit": {
+        "our_gap_seconds": 2.0,
+        "our_max_per_hour": 1800,
+        "ours": "At least 2 s between requests to the operator's host, measured from the end of the previous request (at most 1800 in any hour), retries included.",
+        "published": [],
+        "limits_checked": "unknown",
+        "comparison": "The operator's pages have not been checked for limits yet.",
+        "difference_from_regulations": "Not known yet.",
+        "notes": null
+      },
+      "findings": []
+    },
+    {
+      "id": "connekt",
+      "name": "Connekt",
+      "enabled": false,
+      "adapter": "unknown",
+      "engagement": {
+        "status": "no_public_feed_found",
+        "label": "No public feed found",
+        "headline": "No public feed found (as of 2026-10-10)",
+        "as_of": "2026-10-10",
+        "last_request": null,
+        "last_response": null,
+        "last_response_text": "No request sent",
+        "evidence": [
+          {
+            "date": "2026-10-10",
+            "url": "https://www.connektcharging.com/",
+            "file": null,
+            "note": "Connekt's home page has no open data, regulations or charge point data link. Its sitemap, driver support page and FAQ page list or give no open data feed or route for requesting open data."
+          }
+        ],
+        "log": [
+          {
+            "date": "2026-10-10",
+            "action": "feed_searched",
+            "action_label": "Searched for a feed",
+            "channel": null,
+            "channel_label": null,
+            "summary": "Connekt's home page, sitemap, driver support page and FAQ page were read, and no open data feed or route for requesting open data was found.",
+            "quote": null,
+            "evidence_url": "https://www.connektcharging.com/",
+            "evidence_file": null
+          }
+        ]
+      },
+      "access_requested": null,
+      "access_granted": null,
+      "feeds": [],
+      "licence": null,
+      "attribution": null,
+      "missing_publish_flag": null,
+      "swapped_coordinates": null,
+      "nonstandard_statuses": null,
+      "relay": null,
+      "rate_limit": {
+        "our_gap_seconds": 2.0,
+        "our_max_per_hour": 1800,
+        "ours": "At least 2 s between requests to the operator's host, measured from the end of the previous request (at most 1800 in any hour), retries included.",
+        "published": [],
+        "limits_checked": "unknown",
+        "comparison": "The operator's pages have not been checked for limits yet.",
+        "difference_from_regulations": "Not known yet.",
+        "notes": null
+      },
+      "findings": []
+    },
+    {
+      "id": "electric_blue",
+      "name": "Electric Blue",
+      "enabled": false,
+      "adapter": "unknown",
+      "engagement": {
+        "status": "unknown",
+        "label": "Not yet established",
+        "headline": "Not yet established (as of 2026-10-10)",
+        "as_of": "2026-10-10",
+        "last_request": null,
+        "last_response": null,
+        "last_response_text": "No request sent",
+        "evidence": [],
+        "log": [
+          {
+            "date": "2026-10-10",
+            "action": "feed_searched",
+            "action_label": "Searched for a feed",
+            "channel": null,
+            "channel_label": null,
+            "summary": "Electric Blue's website could not be read by this project's automated checks on 2026-10-10 (no answer, then its address could not be found), so its open data route is not yet known; it needs checking in a browser.",
+            "quote": null,
+            "evidence_url": "https://www.electricbluecharging.co.uk/",
+            "evidence_file": null
+          }
+        ]
+      },
+      "access_requested": null,
+      "access_granted": null,
+      "feeds": [],
+      "licence": null,
+      "attribution": null,
+      "missing_publish_flag": null,
+      "swapped_coordinates": null,
+      "nonstandard_statuses": null,
+      "relay": null,
+      "rate_limit": {
+        "our_gap_seconds": 2.0,
+        "our_max_per_hour": 1800,
+        "ours": "At least 2 s between requests to the operator's host, measured from the end of the previous request (at most 1800 in any hour), retries included.",
+        "published": [],
+        "limits_checked": "unknown",
+        "comparison": "The operator's pages have not been checked for limits yet.",
+        "difference_from_regulations": "Not known yet.",
+        "notes": null
+      },
+      "findings": []
+    },
+    {
+      "id": "elmtronics",
+      "name": "Elmtronics",
+      "enabled": false,
+      "adapter": "unknown",
+      "engagement": {
+        "status": "unknown",
+        "label": "Not yet established",
+        "headline": "Not yet established (as of 2026-10-10)",
+        "as_of": "2026-10-10",
+        "last_request": null,
+        "last_response": null,
+        "last_response_text": "No request sent",
+        "evidence": [],
+        "log": [
+          {
+            "date": "2026-10-10",
+            "action": "feed_searched",
+            "action_label": "Searched for a feed",
+            "channel": null,
+            "channel_label": null,
+            "summary": "Elmtronics' website could not be read by this project's automated checks on 2026-10-10 (connection reset, then HTTP 503), so its open data route is not yet known; it needs checking in a browser.",
+            "quote": null,
+            "evidence_url": "https://www.elmtronics.co.uk/",
+            "evidence_file": null
+          }
+        ]
+      },
+      "access_requested": null,
+      "access_granted": null,
+      "feeds": [],
+      "licence": null,
+      "attribution": null,
+      "missing_publish_flag": null,
+      "swapped_coordinates": null,
+      "nonstandard_statuses": null,
+      "relay": null,
+      "rate_limit": {
+        "our_gap_seconds": 2.0,
+        "our_max_per_hour": 1800,
+        "ours": "At least 2 s between requests to the operator's host, measured from the end of the previous request (at most 1800 in any hour), retries included.",
+        "published": [],
+        "limits_checked": "unknown",
+        "comparison": "The operator's pages have not been checked for limits yet.",
+        "difference_from_regulations": "Not known yet.",
+        "notes": null
+      },
+      "findings": []
+    },
+    {
+      "id": "esb_energy",
+      "name": "ESB Energy",
+      "enabled": false,
+      "adapter": "unknown",
+      "engagement": {
+        "status": "key_on_request",
+        "label": "Key issued on request",
+        "headline": "Key issued on request (as of 2026-10-10)",
+        "as_of": "2026-10-10",
+        "last_request": null,
+        "last_response": null,
+        "last_response_text": "No request sent",
+        "evidence": [
+          {
+            "date": "2026-10-10",
+            "url": "https://www.esbenergy.co.uk/ev",
+            "file": null,
+            "note": "The menu of ESB Energy's electric vehicle pages links \"PCPR Data Request\", a Google form asking for an email address, name, organisation and planned use of data. The form says requests are shared with Eco-Movement and names no licence, terms, key or rate limit."
+          }
+        ],
+        "log": [
+          {
+            "date": "2026-10-10",
+            "action": "feed_searched",
+            "action_label": "Searched for a feed",
+            "channel": null,
+            "channel_label": null,
+            "summary": "ESB Energy's home page has no open data link, and the menu of its electric vehicle pages links a \"PCPR Data Request\" form.",
+            "quote": null,
+            "evidence_url": "https://www.esbenergy.co.uk/ev",
+            "evidence_file": null
+          },
+          {
+            "date": "2026-10-10",
+            "action": "page_checked",
+            "action_label": "Operator's page checked",
+            "channel": null,
+            "channel_label": null,
+            "summary": "ESB Energy's \"PCPR Data Request\" Google form was read, not submitted; it says the request will be shared with Eco-Movement and an answer will come within 5 working days.",
+            "quote": "Request data on the location, status, and properties of the ESB network in the United Kingdom which complies with the Public Charge Point Regulations. You will receive an answer within 5 working days.",
+            "evidence_url": "https://docs.google.com/forms/d/e/1FAIpQLSfAe5GBI7djZfhpr-yq1QBpb6oSs2dF1rG4SxIYK7rj9AVnHw/viewform",
+            "evidence_file": null
+          }
+        ]
+      },
+      "access_requested": null,
+      "access_granted": null,
+      "feeds": [],
+      "licence": null,
+      "attribution": null,
+      "missing_publish_flag": null,
+      "swapped_coordinates": null,
+      "nonstandard_statuses": null,
+      "relay": null,
+      "rate_limit": {
+        "our_gap_seconds": 2.0,
+        "our_max_per_hour": 1800,
+        "ours": "At least 2 s between requests to the operator's host, measured from the end of the previous request (at most 1800 in any hour), retries included.",
+        "published": [],
+        "limits_checked": "unknown",
+        "comparison": "The operator's pages have not been checked for limits yet.",
+        "difference_from_regulations": "Not known yet.",
+        "notes": null
+      },
+      "findings": []
+    },
+    {
+      "id": "ev_smart",
+      "name": "EV Smart",
+      "enabled": false,
+      "adapter": "unknown",
+      "engagement": {
+        "status": "key_on_request",
+        "label": "Key issued on request",
+        "headline": "Key issued on request (as of 2026-10-10)",
+        "as_of": "2026-10-10",
+        "last_request": null,
+        "last_response": null,
+        "last_response_text": "No request sent",
+        "evidence": [
+          {
+            "date": "2026-10-10",
+            "url": "https://www.ev-smart.co.uk/opendataregulatorycompliance",
+            "file": null,
+            "note": "EV Smart's \"Open Data & Regulatory Compliance\" page says its data is published using OCPI and offers direct access to its OCPI data feed by contacting its support team by email or phone. It gives no feed address and does not say whether a key is issued."
+          }
+        ],
+        "log": [
+          {
+            "date": "2026-10-10",
+            "action": "page_checked",
+            "action_label": "Operator's page checked",
+            "channel": null,
+            "channel_label": null,
+            "summary": "EV Smart's open data page was read; it invites requests for direct access to its OCPI data feed through its support team and says no terms, fees or usage restrictions apply to the data.",
+            "quote": "If you would like direct access to our OCPI data feed or further technical information on how our open data is structured and delivered, please contact us:",
+            "evidence_url": "https://www.ev-smart.co.uk/opendataregulatorycompliance",
+            "evidence_file": null
+          }
+        ]
+      },
+      "access_requested": null,
+      "access_granted": null,
+      "feeds": [],
+      "licence": null,
+      "attribution": null,
+      "missing_publish_flag": null,
+      "swapped_coordinates": null,
+      "nonstandard_statuses": null,
+      "relay": null,
+      "rate_limit": {
+        "our_gap_seconds": 2.0,
+        "our_max_per_hour": 1800,
+        "ours": "At least 2 s between requests to the operator's host, measured from the end of the previous request (at most 1800 in any hour), retries included.",
+        "published": [],
+        "limits_checked": "unknown",
+        "comparison": "The operator's pages have not been checked for limits yet.",
+        "difference_from_regulations": "Not known yet.",
+        "notes": null
+      },
+      "findings": []
+    },
+    {
+      "id": "evolt",
+      "name": "Evolt Network",
+      "enabled": false,
+      "adapter": "unknown",
+      "engagement": {
+        "status": "open_anonymous",
+        "label": "Open, no registration",
+        "headline": "Open, no registration (as of 2026-10-10)",
+        "as_of": "2026-10-10",
+        "last_request": null,
+        "last_response": null,
+        "last_response_text": "No request sent",
+        "evidence": [
+          {
+            "date": "2026-10-10",
+            "url": "https://evoltnetwork.co.uk/faqs/",
+            "file": null,
+            "note": "Evolt Network's FAQ page answers \"Does Evolt Network offer open data API access?\" with two links, \"Locations\" and \"Tariffs\", on info.smartcharging.uk. The answer mentions no registration step, key, licence or rate limit. One request to the locations feed on 2026-10-10 answered without a key."
+          }
+        ],
+        "log": [
+          {
+            "date": "2026-10-10",
+            "action": "feed_searched",
+            "action_label": "Searched for a feed",
+            "channel": null,
+            "channel_label": null,
+            "summary": "Evolt Network's home page was read; it has no open data link and links its FAQ page.",
+            "quote": null,
+            "evidence_url": "https://evoltnetwork.co.uk/",
+            "evidence_file": null
+          },
+          {
+            "date": "2026-10-10",
+            "action": "page_checked",
+            "action_label": "Operator's page checked",
+            "channel": null,
+            "channel_label": null,
+            "summary": "Evolt Network's FAQ page was read; it links a locations feed and a tariffs feed for open data API access, and the answer mentions no registration, key, licence or rate limit.",
+            "quote": "Yes, Evolt Network offers open data API access for roaming partners via the following links:",
+            "evidence_url": "https://evoltnetwork.co.uk/faqs/",
+            "evidence_file": null
+          }
+        ]
+      },
+      "access_requested": null,
+      "access_granted": null,
+      "feeds": [],
+      "licence": null,
+      "attribution": null,
+      "missing_publish_flag": null,
+      "swapped_coordinates": null,
+      "nonstandard_statuses": null,
+      "relay": null,
+      "rate_limit": {
+        "our_gap_seconds": 2.0,
+        "our_max_per_hour": 1800,
+        "ours": "At least 2 s between requests to the operator's host, measured from the end of the previous request (at most 1800 in any hour), retries included.",
+        "published": [],
+        "limits_checked": "unknown",
+        "comparison": "The operator's pages have not been checked for limits yet.",
+        "difference_from_regulations": "Not known yet.",
+        "notes": null
+      },
+      "findings": []
+    },
+    {
+      "id": "evyve",
+      "name": "evyve",
+      "enabled": false,
+      "adapter": "unknown",
+      "engagement": {
+        "status": "key_on_request",
+        "label": "Key issued on request",
+        "headline": "Key issued on request (as of 2026-10-10)",
+        "as_of": "2026-10-10",
+        "last_request": null,
+        "last_response": null,
+        "last_response_text": "No request sent",
+        "evidence": [
+          {
+            "date": "2026-10-10",
+            "url": "https://evyve.co.uk/",
+            "file": null,
+            "note": "The \"PCPR - Open Data Request\" answer in the FAQs on evyve's home page links a Google form and sends questions to Eco-Movement's PCPR support address. The page says the data will be provided \"in 48 hours\"; the form says an answer will come \"within 5 working days\". Neither the FAQ answer nor the form names a licence, terms, agreement, key or rate limit."
+          }
+        ],
+        "log": [
+          {
+            "date": "2026-10-10",
+            "action": "page_checked",
+            "action_label": "Operator's page checked",
+            "channel": null,
+            "channel_label": null,
+            "summary": "The \"PCPR - Open Data Request\" FAQ on evyve's home page and the Google form it links were read; the form asks for an email address, name, organisation and planned use of the data, and says the request will be shared with Eco-Movement.",
+            "quote": "If you are interested in accessing our Open Data please complete the form from the link below:",
+            "evidence_url": "https://evyve.co.uk/",
+            "evidence_file": null
+          }
+        ]
+      },
+      "access_requested": null,
+      "access_granted": null,
+      "feeds": [],
+      "licence": null,
+      "attribution": null,
+      "missing_publish_flag": null,
+      "swapped_coordinates": null,
+      "nonstandard_statuses": null,
+      "relay": null,
+      "rate_limit": {
+        "our_gap_seconds": 2.0,
+        "our_max_per_hour": 1800,
+        "ours": "At least 2 s between requests to the operator's host, measured from the end of the previous request (at most 1800 in any hour), retries included.",
+        "published": [],
+        "limits_checked": "unknown",
+        "comparison": "The operator's pages have not been checked for limits yet.",
+        "difference_from_regulations": "Not known yet.",
+        "notes": null
+      },
+      "findings": []
+    },
+    {
+      "id": "ez_charge",
+      "name": "EZ-Charge",
+      "enabled": false,
+      "adapter": "unknown",
+      "engagement": {
+        "status": "no_public_feed_found",
+        "label": "No public feed found",
+        "headline": "No public feed found (as of 2026-10-10)",
+        "as_of": "2026-10-10",
+        "last_request": null,
+        "last_response": null,
+        "last_response_text": "No request sent",
+        "evidence": [
+          {
+            "date": "2026-10-10",
+            "url": "https://ez-charge.co.uk/",
+            "file": null,
+            "note": "EZ-Charge's home page has no open data, regulations or charge point data link. Its page sitemap and drivers page list or give no open data feed or route for requesting open data. Its /data/ page is its privacy and cookies policy."
+          }
+        ],
+        "log": [
+          {
+            "date": "2026-10-10",
+            "action": "feed_searched",
+            "action_label": "Searched for a feed",
+            "channel": null,
+            "channel_label": null,
+            "summary": "EZ-Charge's home page, sitemap and drivers page were read, and no open data feed or route for requesting open data was found.",
+            "quote": null,
+            "evidence_url": "https://ez-charge.co.uk/",
+            "evidence_file": null
+          }
+        ]
+      },
+      "access_requested": null,
+      "access_granted": null,
+      "feeds": [],
+      "licence": null,
+      "attribution": null,
+      "missing_publish_flag": null,
+      "swapped_coordinates": null,
+      "nonstandard_statuses": null,
+      "relay": null,
+      "rate_limit": {
+        "our_gap_seconds": 2.0,
+        "our_max_per_hour": 1800,
+        "ours": "At least 2 s between requests to the operator's host, measured from the end of the previous request (at most 1800 in any hour), retries included.",
+        "published": [],
+        "limits_checked": "unknown",
+        "comparison": "The operator's pages have not been checked for limits yet.",
+        "difference_from_regulations": "Not known yet.",
+        "notes": null
+      },
+      "findings": []
+    },
+    {
+      "id": "fastned",
+      "name": "Fastned",
+      "enabled": false,
+      "adapter": "unknown",
+      "engagement": {
+        "status": "key_on_request",
+        "label": "Key issued on request",
+        "headline": "Key issued on request (as of 2026-10-10)",
+        "as_of": "2026-10-10",
+        "last_request": null,
+        "last_response": null,
+        "last_response_text": "No request sent",
+        "evidence": [
+          {
+            "date": "2026-10-10",
+            "url": "https://www.fastnedcharging.com/en-gb/uk-open-data",
+            "file": null,
+            "note": "Fastned's UK Open Data page is its Fair Use Policy for the Fastned UK Open Data API. The policy refers to API keys and credentials. Directly below the policy the page embeds a Typeform form that is loaded by JavaScript, so its questions could not be read without running the script; they need checking in a browser."
+          }
+        ],
+        "log": [
+          {
+            "date": "2026-10-10",
+            "action": "page_checked",
+            "action_label": "Operator's page checked",
+            "channel": null,
+            "channel_label": null,
+            "summary": "Fastned's UK Open Data page was read; it holds the Fair Use Policy for its UK Open Data API, followed by an embedded form that is loaded by JavaScript.",
+            "quote": "You are responsible for maintaining the confidentiality of your API keys and credentials.",
+            "evidence_url": "https://www.fastnedcharging.com/en-gb/uk-open-data",
+            "evidence_file": null
+          }
+        ]
+      },
+      "access_requested": null,
+      "access_granted": null,
+      "feeds": [],
+      "licence": null,
+      "attribution": null,
+      "missing_publish_flag": null,
+      "swapped_coordinates": null,
+      "nonstandard_statuses": null,
+      "relay": null,
+      "rate_limit": {
+        "our_gap_seconds": 2.0,
+        "our_max_per_hour": 1800,
+        "ours": "At least 2 s between requests to the operator's host, measured from the end of the previous request (at most 1800 in any hour), retries included.",
+        "published": [],
+        "limits_checked": "2026-10-10",
+        "comparison": "No limit published (checked 2026-10-10). The gap is our own choice.",
+        "difference_from_regulations": "Neither the operator nor the regulations set a limit.",
+        "notes": "Fastned's Fair Use Policy, read 2026-10-10, states no numeric limit. It says \"Fastned may throttle your use of the APIs at any time.\" and \"Fastned reserves the right to implement rate limits on the API to ensure system performance, reliability, and overall service quality or for other reasons at its discretion.\" The API's technical documentation has not been seen."
+      },
+      "findings": [
+        {
+          "date": "2026-10-10",
+          "kind": "access",
+          "kind_label": "Access",
+          "summary": "Fastned's Fair Use Policy says \"Fastned retains all rights, title and interest in both the Data and the API. Nothing in this Policy shall be interpreted as transferring any intellectual rights to you or any third party.\" and \"Access to the API is provided solely under a limited, non-exclusive, non-transferable, and revocable license for permitted use as outlined in this Policy.\"",
+          "handling": "The policy is specific to the open data, so the repository owner's standing rule of 2026-10-10 on general website or charging terms does not settle it. The owner's decision on the policy is needed before access is requested, as it was for Gridserve. The operator stays switched off.",
+          "evidence_url": "https://www.fastnedcharging.com/en-gb/uk-open-data",
+          "status": "open",
+          "resolved_date": null
+        }
+      ]
+    },
+    {
+      "id": "for_ev",
+      "name": "FOR EV",
+      "enabled": false,
+      "adapter": "unknown",
+      "engagement": {
+        "status": "key_on_request",
+        "label": "Key issued on request",
+        "headline": "Key issued on request (as of 2026-10-10)",
+        "as_of": "2026-10-10",
+        "last_request": null,
+        "last_response": null,
+        "last_response_text": "No request sent",
+        "evidence": [
+          {
+            "date": "2026-10-10",
+            "url": "https://forev.co.uk/public-charge-point-regulations/",
+            "file": null,
+            "note": "FOR EV's Public Charge Point Regulations page says access to its OCPI data is available on request to four named groups. It gives no request route, feed address, licence or key details. Its contact page offers a general contact form."
+          }
+        ],
+        "log": [
+          {
+            "date": "2026-10-10",
+            "action": "page_checked",
+            "action_label": "Operator's page checked",
+            "channel": null,
+            "channel_label": null,
+            "summary": "FOR EV's Public Charge Point Regulations page was read; it says access to its OCPI data is available on request to four named groups and does not say whether others may request it.",
+            "quote": "FOR EV’s OCPI is accurate and open access is available to government bodies, Distribution Network Operators, Transmission Owners and Electricity Systems Operators upon request.",
+            "evidence_url": "https://forev.co.uk/public-charge-point-regulations/",
+            "evidence_file": null
+          }
+        ]
+      },
+      "access_requested": null,
+      "access_granted": null,
+      "feeds": [],
+      "licence": null,
+      "attribution": null,
+      "missing_publish_flag": null,
+      "swapped_coordinates": null,
+      "nonstandard_statuses": null,
+      "relay": null,
+      "rate_limit": {
+        "our_gap_seconds": 2.0,
+        "our_max_per_hour": 1800,
+        "ours": "At least 2 s between requests to the operator's host, measured from the end of the previous request (at most 1800 in any hour), retries included.",
+        "published": [],
+        "limits_checked": "unknown",
+        "comparison": "The operator's pages have not been checked for limits yet.",
+        "difference_from_regulations": "Not known yet.",
+        "notes": null
+      },
+      "findings": [
+        {
+          "date": "2026-10-10",
+          "kind": "access",
+          "kind_label": "Access",
+          "summary": "FOR EV's Public Charge Point Regulations page describes access to its OCPI data as available on request to government bodies, Distribution Network Operators, Transmission Owners and Electricity Systems Operators, and does not say whether other users may request it.",
+          "handling": "Recorded only. Whether FOR EV would give this project access is unknown until it is asked.",
+          "evidence_url": "https://forev.co.uk/public-charge-point-regulations/",
+          "status": "open",
+          "resolved_date": null
+        }
+      ]
+    },
+    {
+      "id": "forward_ev",
+      "name": "Forward EV",
+      "enabled": false,
+      "adapter": "unknown",
+      "engagement": {
+        "status": "no_public_feed_found",
+        "label": "No public feed found",
+        "headline": "No public feed found (as of 2026-10-10)",
+        "as_of": "2026-10-10",
+        "last_request": null,
+        "last_response": null,
+        "last_response_text": "No request sent",
+        "evidence": [
+          {
+            "date": "2026-10-10",
+            "url": "https://www.forward-ev.com/",
+            "file": null,
+            "note": "Forward EV's home page has no open data, regulations or charge point data link. Its sitemap and drivers page list or give no open data feed or route for requesting open data."
+          }
+        ],
+        "log": [
+          {
+            "date": "2026-10-10",
+            "action": "feed_searched",
+            "action_label": "Searched for a feed",
+            "channel": null,
+            "channel_label": null,
+            "summary": "Forward EV's home page, sitemap and drivers page were read, and no open data feed or route for requesting open data was found.",
+            "quote": null,
+            "evidence_url": "https://www.forward-ev.com/",
+            "evidence_file": null
+          }
+        ]
+      },
+      "access_requested": null,
+      "access_granted": null,
+      "feeds": [],
+      "licence": null,
+      "attribution": null,
+      "missing_publish_flag": null,
+      "swapped_coordinates": null,
+      "nonstandard_statuses": null,
+      "relay": null,
+      "rate_limit": {
+        "our_gap_seconds": 2.0,
+        "our_max_per_hour": 1800,
+        "ours": "At least 2 s between requests to the operator's host, measured from the end of the previous request (at most 1800 in any hour), retries included.",
+        "published": [],
+        "limits_checked": "unknown",
+        "comparison": "The operator's pages have not been checked for limits yet.",
+        "difference_from_regulations": "Not known yet.",
+        "notes": null
+      },
+      "findings": []
+    },
+    {
+      "id": "giga_power",
+      "name": "Giga Power",
+      "enabled": false,
+      "adapter": "unknown",
+      "engagement": {
+        "status": "key_on_request",
+        "label": "Key issued on request",
+        "headline": "Key issued on request (as of 2026-10-10)",
+        "as_of": "2026-10-10",
+        "last_request": null,
+        "last_response": null,
+        "last_response_text": "No request sent",
+        "evidence": [
+          {
+            "date": "2026-10-10",
+            "url": "https://gigapoweruk.com/opendata/",
+            "file": null,
+            "note": "Giga Power's Open Data Access page offers a form to request an API key, asking for a name, organisation, a name for the purpose, an email address and the purpose of the request. It states no licence, terms or rate limit for the data."
+          }
+        ],
+        "log": [
+          {
+            "date": "2026-10-10",
+            "action": "page_checked",
+            "action_label": "Operator's page checked",
+            "channel": null,
+            "channel_label": null,
+            "summary": "Giga Power's Open Data Access page was read; it asks requesters to fill in a form to request an API key.",
+            "quote": "To request an API key to the Giga Power Open Access Data, in line with Open Charge Point Regulations (2023) of the PCPR, please fill in the form below.",
+            "evidence_url": "https://gigapoweruk.com/opendata/",
+            "evidence_file": null
+          }
+        ]
+      },
+      "access_requested": null,
+      "access_granted": null,
+      "feeds": [],
+      "licence": null,
+      "attribution": null,
+      "missing_publish_flag": null,
+      "swapped_coordinates": null,
+      "nonstandard_statuses": null,
+      "relay": null,
+      "rate_limit": {
+        "our_gap_seconds": 2.0,
+        "our_max_per_hour": 1800,
+        "ours": "At least 2 s between requests to the operator's host, measured from the end of the previous request (at most 1800 in any hour), retries included.",
+        "published": [],
+        "limits_checked": "unknown",
+        "comparison": "The operator's pages have not been checked for limits yet.",
+        "difference_from_regulations": "Not known yet.",
+        "notes": null
+      },
+      "findings": []
+    },
+    {
       "id": "go_zero",
       "name": "Go Zero",
       "enabled": false,
@@ -1195,8 +2499,8 @@
       "engagement": {
         "status": "unknown",
         "label": "Not yet established",
-        "headline": "Not yet established (as of 2026-10-09)",
-        "as_of": "2026-10-09",
+        "headline": "Not yet established (as of 2026-10-10)",
+        "as_of": "2026-10-10",
         "last_request": null,
         "last_response": null,
         "last_response_text": "No request sent",
@@ -1211,6 +2515,17 @@
             "summary": "A web search for a Go Zero open data or Public Charge Point Regulations page found none. Go Zero's own website was not searched directly; this needs checking.",
             "quote": null,
             "evidence_url": null,
+            "evidence_file": null
+          },
+          {
+            "date": "2026-10-10",
+            "action": "feed_searched",
+            "action_label": "Searched for a feed",
+            "channel": null,
+            "channel_label": null,
+            "summary": "Go Zero's own website was checked directly; it answered \"too many requests\" (HTTP 429) to an earlier read that day, a single later read of its open data page address answered HTTP 404, and its home page and site map have not yet been searched.",
+            "quote": null,
+            "evidence_url": "https://www.gozerocharge.com/public-charge-point-open-data",
             "evidence_file": null
           }
         ]
@@ -1345,6 +2660,55 @@
       ]
     },
     {
+      "id": "hubsta",
+      "name": "Hubsta",
+      "enabled": false,
+      "adapter": "unknown",
+      "engagement": {
+        "status": "unknown",
+        "label": "Not yet established",
+        "headline": "Not yet established (as of 2026-10-10)",
+        "as_of": "2026-10-10",
+        "last_request": null,
+        "last_response": null,
+        "last_response_text": "No request sent",
+        "evidence": [],
+        "log": [
+          {
+            "date": "2026-10-10",
+            "action": "feed_searched",
+            "action_label": "Searched for a feed",
+            "channel": null,
+            "channel_label": null,
+            "summary": "Hubsta's website could not be read by this project's automated checks on 2026-10-10 (no answer, then its address could not be found), so its open data route is not yet known; it needs checking in a browser.",
+            "quote": null,
+            "evidence_url": "https://hubsta.co.uk/",
+            "evidence_file": null
+          }
+        ]
+      },
+      "access_requested": null,
+      "access_granted": null,
+      "feeds": [],
+      "licence": null,
+      "attribution": null,
+      "missing_publish_flag": null,
+      "swapped_coordinates": null,
+      "nonstandard_statuses": null,
+      "relay": null,
+      "rate_limit": {
+        "our_gap_seconds": 2.0,
+        "our_max_per_hour": 1800,
+        "ours": "At least 2 s between requests to the operator's host, measured from the end of the previous request (at most 1800 in any hour), retries included.",
+        "published": [],
+        "limits_checked": "unknown",
+        "comparison": "The operator's pages have not been checked for limits yet.",
+        "difference_from_regulations": "Not known yet.",
+        "notes": null
+      },
+      "findings": []
+    },
+    {
       "id": "instavolt",
       "name": "InstaVolt",
       "enabled": false,
@@ -1401,15 +2765,425 @@
       "findings": []
     },
     {
+      "id": "ionity",
+      "name": "IONITY",
+      "enabled": false,
+      "adapter": "unknown",
+      "engagement": {
+        "status": "key_on_request",
+        "label": "Key issued on request",
+        "headline": "Key issued on request (as of 2026-10-10)",
+        "as_of": "2026-10-10",
+        "last_request": null,
+        "last_response": null,
+        "last_response_text": "No request sent",
+        "evidence": [
+          {
+            "date": "2026-10-10",
+            "url": "https://www.ionity.eu/open-data-request",
+            "file": null,
+            "note": "IONITY's Open Data Request for the UK page embeds a request form and says requests are shared with Eco-Movement, which acts on IONITY's behalf. The page and the form name no licence, terms, agreement, key or rate limit."
+          }
+        ],
+        "log": [
+          {
+            "date": "2026-10-10",
+            "action": "page_checked",
+            "action_label": "Operator's page checked",
+            "channel": null,
+            "channel_label": null,
+            "summary": "IONITY's Open Data Request for the UK page and its embedded Google form were read; the form asks for an email address, name, organisation and planned use of the data, and says an answer will come within 5 working days.",
+            "quote": "Your request will be shared with Eco-Movement, who will act on behalf of IONITY, to fulfil your request.",
+            "evidence_url": "https://www.ionity.eu/open-data-request",
+            "evidence_file": null
+          }
+        ]
+      },
+      "access_requested": null,
+      "access_granted": null,
+      "feeds": [],
+      "licence": null,
+      "attribution": null,
+      "missing_publish_flag": null,
+      "swapped_coordinates": null,
+      "nonstandard_statuses": null,
+      "relay": null,
+      "rate_limit": {
+        "our_gap_seconds": 2.0,
+        "our_max_per_hour": 1800,
+        "ours": "At least 2 s between requests to the operator's host, measured from the end of the previous request (at most 1800 in any hour), retries included.",
+        "published": [],
+        "limits_checked": "unknown",
+        "comparison": "The operator's pages have not been checked for limits yet.",
+        "difference_from_regulations": "Not known yet.",
+        "notes": null
+      },
+      "findings": []
+    },
+    {
+      "id": "joju",
+      "name": "Joju",
+      "enabled": false,
+      "adapter": "unknown",
+      "engagement": {
+        "status": "unknown",
+        "label": "Not yet established",
+        "headline": "Not yet established (as of 2026-10-10)",
+        "as_of": "2026-10-10",
+        "last_request": null,
+        "last_response": null,
+        "last_response_text": "No request sent",
+        "evidence": [],
+        "log": [
+          {
+            "date": "2026-10-10",
+            "action": "feed_searched",
+            "action_label": "Searched for a feed",
+            "channel": null,
+            "channel_label": null,
+            "summary": "Joju's website could not be read by this project's automated checks on 2026-10-10 (a failed secure connection, then HTTP 503), so its open data route is not yet known; it needs checking in a browser.",
+            "quote": null,
+            "evidence_url": "https://jojucharging.com/",
+            "evidence_file": null
+          }
+        ]
+      },
+      "access_requested": null,
+      "access_granted": null,
+      "feeds": [],
+      "licence": null,
+      "attribution": null,
+      "missing_publish_flag": null,
+      "swapped_coordinates": null,
+      "nonstandard_statuses": null,
+      "relay": null,
+      "rate_limit": {
+        "our_gap_seconds": 2.0,
+        "our_max_per_hour": 1800,
+        "ours": "At least 2 s between requests to the operator's host, measured from the end of the previous request (at most 1800 in any hour), retries included.",
+        "published": [],
+        "limits_checked": "unknown",
+        "comparison": "The operator's pages have not been checked for limits yet.",
+        "difference_from_regulations": "Not known yet.",
+        "notes": null
+      },
+      "findings": []
+    },
+    {
+      "id": "liberty_charge",
+      "name": "Liberty Charge",
+      "enabled": false,
+      "adapter": "unknown",
+      "engagement": {
+        "status": "unknown",
+        "label": "Not yet established",
+        "headline": "Not yet established (as of 2026-10-10)",
+        "as_of": "2026-10-10",
+        "last_request": null,
+        "last_response": null,
+        "last_response_text": "No request sent",
+        "evidence": [],
+        "log": [
+          {
+            "date": "2026-10-10",
+            "action": "feed_searched",
+            "action_label": "Searched for a feed",
+            "channel": null,
+            "channel_label": null,
+            "summary": "Liberty Charge's website could not be read by this project's automated checks on 2026-10-10 (a dropped secure connection, then HTTP 503), so its open data route is not yet known; it needs checking in a browser.",
+            "quote": null,
+            "evidence_url": "https://libertycharge.co.uk/",
+            "evidence_file": null
+          }
+        ]
+      },
+      "access_requested": null,
+      "access_granted": null,
+      "feeds": [],
+      "licence": null,
+      "attribution": null,
+      "missing_publish_flag": null,
+      "swapped_coordinates": null,
+      "nonstandard_statuses": null,
+      "relay": null,
+      "rate_limit": {
+        "our_gap_seconds": 2.0,
+        "our_max_per_hour": 1800,
+        "ours": "At least 2 s between requests to the operator's host, measured from the end of the previous request (at most 1800 in any hour), retries included.",
+        "published": [],
+        "limits_checked": "unknown",
+        "comparison": "The operator's pages have not been checked for limits yet.",
+        "difference_from_regulations": "Not known yet.",
+        "notes": null
+      },
+      "findings": []
+    },
+    {
+      "id": "lidl",
+      "name": "Lidl",
+      "enabled": false,
+      "adapter": "unknown",
+      "engagement": {
+        "status": "no_public_feed_found",
+        "label": "No public feed found",
+        "headline": "No public feed found (as of 2026-10-10)",
+        "as_of": "2026-10-10",
+        "last_request": null,
+        "last_response": null,
+        "last_response_text": "No request sent",
+        "evidence": [
+          {
+            "date": "2026-10-10",
+            "url": "https://www.lidl.co.uk/c/electric-vehicle-charging/s10049808",
+            "file": null,
+            "note": "Lidl's electric vehicle charging page gives its network's 2025 uptime (99%) and links the Department for Transport's guidance on the regulations. It gives no open data feed and no route for requesting open data, and Lidl's home page and page sitemap list no open data page."
+          }
+        ],
+        "log": [
+          {
+            "date": "2026-10-10",
+            "action": "feed_searched",
+            "action_label": "Searched for a feed",
+            "channel": null,
+            "channel_label": null,
+            "summary": "Lidl's home page, its electric vehicle charging page and its page sitemap were read, and no open data feed or route for requesting open data was found.",
+            "quote": "Lidl EV Charging network 2025 reliability results",
+            "evidence_url": "https://www.lidl.co.uk/c/electric-vehicle-charging/s10049808",
+            "evidence_file": null
+          }
+        ]
+      },
+      "access_requested": null,
+      "access_granted": null,
+      "feeds": [],
+      "licence": null,
+      "attribution": null,
+      "missing_publish_flag": null,
+      "swapped_coordinates": null,
+      "nonstandard_statuses": null,
+      "relay": null,
+      "rate_limit": {
+        "our_gap_seconds": 2.0,
+        "our_max_per_hour": 1800,
+        "ours": "At least 2 s between requests to the operator's host, measured from the end of the previous request (at most 1800 in any hour), retries included.",
+        "published": [],
+        "limits_checked": "unknown",
+        "comparison": "The operator's pages have not been checked for limits yet.",
+        "difference_from_regulations": "Not known yet.",
+        "notes": null
+      },
+      "findings": []
+    },
+    {
+      "id": "osprey",
+      "name": "Osprey Charging",
+      "enabled": false,
+      "adapter": "unknown",
+      "engagement": {
+        "status": "no_public_feed_found",
+        "label": "No public feed found",
+        "headline": "No public feed found (as of 2026-10-10)",
+        "as_of": "2026-10-10",
+        "last_request": null,
+        "last_response": null,
+        "last_response_text": "No request sent",
+        "evidence": [
+          {
+            "date": "2026-10-10",
+            "url": "https://www.ospreycharging.co.uk/post/consumer-charge-point-regulations",
+            "file": null,
+            "note": "Osprey's post \"Consumer charge point regulations\", dated 6 December 2023, says it gives access to data through OCPI for three named groups. It gives no feed address or request route."
+          },
+          {
+            "date": "2026-10-10",
+            "url": "https://www.ospreycharging.co.uk/sitemap",
+            "file": null,
+            "note": "Osprey's site map page lists no open data or regulations page."
+          }
+        ],
+        "log": [
+          {
+            "date": "2026-10-10",
+            "action": "page_checked",
+            "action_label": "Operator's page checked",
+            "channel": null,
+            "channel_label": null,
+            "summary": "Osprey's post on the consumer charge point regulations was read; it describes access to its OCPI data for three named groups and gives no feed address or request route.",
+            "quote": "Osprey adheres to the Open Charge Point Interface as a standard, allowing accurate and open access to essential data for governmental bodies, Distribution Network Operators, and Electricity System Operators.",
+            "evidence_url": "https://www.ospreycharging.co.uk/post/consumer-charge-point-regulations",
+            "evidence_file": null
+          },
+          {
+            "date": "2026-10-10",
+            "action": "feed_searched",
+            "action_label": "Searched for a feed",
+            "channel": null,
+            "channel_label": null,
+            "summary": "Osprey's site map page was searched and lists no open data page, feed or request route.",
+            "quote": null,
+            "evidence_url": "https://www.ospreycharging.co.uk/sitemap",
+            "evidence_file": null
+          }
+        ]
+      },
+      "access_requested": null,
+      "access_granted": null,
+      "feeds": [],
+      "licence": null,
+      "attribution": null,
+      "missing_publish_flag": null,
+      "swapped_coordinates": null,
+      "nonstandard_statuses": null,
+      "relay": null,
+      "rate_limit": {
+        "our_gap_seconds": 2.0,
+        "our_max_per_hour": 1800,
+        "ours": "At least 2 s between requests to the operator's host, measured from the end of the previous request (at most 1800 in any hour), retries included.",
+        "published": [],
+        "limits_checked": "unknown",
+        "comparison": "The operator's pages have not been checked for limits yet.",
+        "difference_from_regulations": "Not known yet.",
+        "notes": null
+      },
+      "findings": [
+        {
+          "date": "2026-10-10",
+          "kind": "access",
+          "kind_label": "Access",
+          "summary": "Osprey's post on the consumer charge point regulations describes access to its OCPI data for governmental bodies, Distribution Network Operators and Electricity System Operators, and does not say where the data is published or how anyone can ask for it.",
+          "handling": "Recorded only. Whether Osprey would give this project access is unknown until it is asked.",
+          "evidence_url": "https://www.ospreycharging.co.uk/post/consumer-charge-point-regulations",
+          "status": "open",
+          "resolved_date": null
+        }
+      ]
+    },
+    {
+      "id": "parkrecharge",
+      "name": "ParkRecharge",
+      "enabled": false,
+      "adapter": "unknown",
+      "engagement": {
+        "status": "open_anonymous",
+        "label": "Open, no registration",
+        "headline": "Open, no registration (as of 2026-10-10)",
+        "as_of": "2026-10-10",
+        "last_request": null,
+        "last_response": null,
+        "last_response_text": "No request sent",
+        "evidence": [
+          {
+            "date": "2026-10-10",
+            "url": "https://parkrecharge.com/public-charging",
+            "file": null,
+            "note": "ParkRecharge's \"Public Charging and Open Data\" page links its OCPI 2.2.1 reference data for locations and for tariffs directly, and says authentication is required for live availability data. This project has not fetched the reference data, so whether it needs a key still needs testing."
+          }
+        ],
+        "log": [
+          {
+            "date": "2026-10-10",
+            "action": "page_checked",
+            "action_label": "Operator's page checked",
+            "channel": null,
+            "channel_label": null,
+            "summary": "Read ParkRecharge's \"Public Charging and Open Data\" page, which links reference data for locations and tariffs and offers a form for credentials to live availability data.",
+            "quote": "Reference data updated daily. Availability data is near real-time (authentication required).",
+            "evidence_url": "https://parkrecharge.com/public-charging",
+            "evidence_file": null
+          }
+        ]
+      },
+      "access_requested": null,
+      "access_granted": null,
+      "feeds": [],
+      "licence": null,
+      "attribution": null,
+      "missing_publish_flag": null,
+      "swapped_coordinates": null,
+      "nonstandard_statuses": null,
+      "relay": null,
+      "rate_limit": {
+        "our_gap_seconds": 2.0,
+        "our_max_per_hour": 1800,
+        "ours": "At least 2 s between requests to the operator's host, measured from the end of the previous request (at most 1800 in any hour), retries included.",
+        "published": [],
+        "limits_checked": "unknown",
+        "comparison": "The operator's pages have not been checked for limits yet.",
+        "difference_from_regulations": "Not known yet.",
+        "notes": null
+      },
+      "findings": [
+        {
+          "date": "2026-10-10",
+          "kind": "access",
+          "kind_label": "Access",
+          "summary": "A request on 2026-10-10 to the locations reference data address, https://ocpi-pcpr.hubeleon.net/2.2.1/reference, did not complete because this project's HTTPS client reported the server's TLS certificate as expired. No data was read.",
+          "handling": "The project never turns off certificate checks. The address will be tried again later.",
+          "evidence_url": "https://parkrecharge.com/public-charging",
+          "status": "open",
+          "resolved_date": null
+        }
+      ]
+    },
+    {
+      "id": "plug_n_go",
+      "name": "Plug-N-Go",
+      "enabled": false,
+      "adapter": "unknown",
+      "engagement": {
+        "status": "unknown",
+        "label": "Not yet established",
+        "headline": "Not yet established (as of 2026-10-10)",
+        "as_of": "2026-10-10",
+        "last_request": null,
+        "last_response": null,
+        "last_response_text": "No request sent",
+        "evidence": [],
+        "log": [
+          {
+            "date": "2026-10-10",
+            "action": "feed_searched",
+            "action_label": "Searched for a feed",
+            "channel": null,
+            "channel_label": null,
+            "summary": "On 2026-10-10 the address www.plugngo.co.uk redirected to a domain sale page and Plug-N-Go's current website was not found, so its open data route is not yet known.",
+            "quote": null,
+            "evidence_url": null,
+            "evidence_file": null
+          }
+        ]
+      },
+      "access_requested": null,
+      "access_granted": null,
+      "feeds": [],
+      "licence": null,
+      "attribution": null,
+      "missing_publish_flag": null,
+      "swapped_coordinates": null,
+      "nonstandard_statuses": null,
+      "relay": null,
+      "rate_limit": {
+        "our_gap_seconds": 2.0,
+        "our_max_per_hour": 1800,
+        "ours": "At least 2 s between requests to the operator's host, measured from the end of the previous request (at most 1800 in any hour), retries included.",
+        "published": [],
+        "limits_checked": "unknown",
+        "comparison": "The operator's pages have not been checked for limits yet.",
+        "difference_from_regulations": "Not known yet.",
+        "notes": null
+      },
+      "findings": []
+    },
+    {
       "id": "pod",
       "name": "Pod",
       "enabled": false,
       "adapter": "ocpi_221",
       "engagement": {
-        "status": "unknown",
-        "label": "Not yet established",
-        "headline": "Not yet established (as of 2026-10-09)",
-        "as_of": "2026-10-09",
+        "status": "no_public_feed_found",
+        "label": "No public feed found",
+        "headline": "No public feed found (as of 2026-10-10)",
+        "as_of": "2026-10-10",
         "last_request": null,
         "last_response": null,
         "last_response_text": "No request sent",
@@ -1425,6 +3199,17 @@
             "quote": null,
             "evidence_url": null,
             "evidence_file": null
+          },
+          {
+            "date": "2026-10-10",
+            "action": "feed_searched",
+            "action_label": "Searched for a feed",
+            "channel": null,
+            "channel_label": null,
+            "summary": "Pod's own website was searched directly; pod-point.com redirects to podenergy.com, whose home page, site map page and public charging page link no open data or Public Charge Point Regulations page, and the paths /open-data, /opendata and /public-charge-point-regulations each answered HTTP 404.",
+            "quote": null,
+            "evidence_url": "https://podenergy.com/sitemap",
+            "evidence_file": null
           }
         ]
       },
@@ -1437,6 +3222,283 @@
           "status": "needs_testing"
         }
       ],
+      "licence": null,
+      "attribution": null,
+      "missing_publish_flag": null,
+      "swapped_coordinates": null,
+      "nonstandard_statuses": null,
+      "relay": null,
+      "rate_limit": {
+        "our_gap_seconds": 2.0,
+        "our_max_per_hour": 1800,
+        "ours": "At least 2 s between requests to the operator's host, measured from the end of the previous request (at most 1800 in any hour), retries included.",
+        "published": [],
+        "limits_checked": "unknown",
+        "comparison": "The operator's pages have not been checked for limits yet.",
+        "difference_from_regulations": "Not known yet.",
+        "notes": null
+      },
+      "findings": []
+    },
+    {
+      "id": "pogo_charge",
+      "name": "PoGo Charge",
+      "enabled": false,
+      "adapter": "unknown",
+      "engagement": {
+        "status": "open_anonymous",
+        "label": "Open, no registration",
+        "headline": "Open, no registration (as of 2026-10-10)",
+        "as_of": "2026-10-10",
+        "last_request": null,
+        "last_response": null,
+        "last_response_text": "No request sent",
+        "evidence": [
+          {
+            "date": "2026-10-10",
+            "url": "https://pogocharge.com/faqs/",
+            "file": null,
+            "note": "PoGo Charge's FAQ page answers \"Does PoGo offer open data API access?\" with two links, \"Locations\" and \"Tariffs\", on info.smartcharging.uk. The answer mentions no registration step, key, licence or rate limit. One request to the locations feed on 2026-10-10 answered without a key."
+          }
+        ],
+        "log": [
+          {
+            "date": "2026-10-10",
+            "action": "feed_searched",
+            "action_label": "Searched for a feed",
+            "channel": null,
+            "channel_label": null,
+            "summary": "PoGo Charge's home page and page sitemap were read; neither links an open data page, and the sitemap lists its FAQ page.",
+            "quote": null,
+            "evidence_url": "https://pogocharge.com/page-sitemap.xml",
+            "evidence_file": null
+          },
+          {
+            "date": "2026-10-10",
+            "action": "page_checked",
+            "action_label": "Operator's page checked",
+            "channel": null,
+            "channel_label": null,
+            "summary": "PoGo Charge's FAQ page was read; it links a locations feed and a tariffs feed for open data API access, and the answer mentions no registration, key, licence or rate limit.",
+            "quote": "Yes, PoGo offers open data API access for roaming and data partners via the following links:",
+            "evidence_url": "https://pogocharge.com/faqs/",
+            "evidence_file": null
+          }
+        ]
+      },
+      "access_requested": null,
+      "access_granted": null,
+      "feeds": [],
+      "licence": null,
+      "attribution": null,
+      "missing_publish_flag": null,
+      "swapped_coordinates": null,
+      "nonstandard_statuses": null,
+      "relay": null,
+      "rate_limit": {
+        "our_gap_seconds": 2.0,
+        "our_max_per_hour": 1800,
+        "ours": "At least 2 s between requests to the operator's host, measured from the end of the previous request (at most 1800 in any hour), retries included.",
+        "published": [],
+        "limits_checked": "unknown",
+        "comparison": "The operator's pages have not been checked for limits yet.",
+        "difference_from_regulations": "Not known yet.",
+        "notes": null
+      },
+      "findings": []
+    },
+    {
+      "id": "qwello",
+      "name": "Qwello",
+      "enabled": false,
+      "adapter": "unknown",
+      "engagement": {
+        "status": "unknown",
+        "label": "Not yet established",
+        "headline": "Not yet established (as of 2026-10-10)",
+        "as_of": "2026-10-10",
+        "last_request": null,
+        "last_response": null,
+        "last_response_text": "No request sent",
+        "evidence": [],
+        "log": [
+          {
+            "date": "2026-10-10",
+            "action": "feed_searched",
+            "action_label": "Searched for a feed",
+            "channel": null,
+            "channel_label": null,
+            "summary": "Qwello's UK website is built by JavaScript and showed only its title to this project's automated checks on 2026-10-10, and it has no readable sitemap, so its open data route is not yet known; it needs checking in a browser.",
+            "quote": null,
+            "evidence_url": "https://qwello.uk/en",
+            "evidence_file": null
+          }
+        ]
+      },
+      "access_requested": null,
+      "access_granted": null,
+      "feeds": [],
+      "licence": null,
+      "attribution": null,
+      "missing_publish_flag": null,
+      "swapped_coordinates": null,
+      "nonstandard_statuses": null,
+      "relay": null,
+      "rate_limit": {
+        "our_gap_seconds": 2.0,
+        "our_max_per_hour": 1800,
+        "ours": "At least 2 s between requests to the operator's host, measured from the end of the previous request (at most 1800 in any hour), retries included.",
+        "published": [],
+        "limits_checked": "unknown",
+        "comparison": "The operator's pages have not been checked for limits yet.",
+        "difference_from_regulations": "Not known yet.",
+        "notes": null
+      },
+      "findings": []
+    },
+    {
+      "id": "raw_charging",
+      "name": "RAW Charging",
+      "enabled": false,
+      "adapter": "unknown",
+      "engagement": {
+        "status": "no_public_feed_found",
+        "label": "No public feed found",
+        "headline": "No public feed found (as of 2026-10-10)",
+        "as_of": "2026-10-10",
+        "last_request": null,
+        "last_response": null,
+        "last_response_text": "No request sent",
+        "evidence": [
+          {
+            "date": "2026-10-10",
+            "url": "https://rawcharging.com/news/article/new-government-ev-charging-regulations-faqs",
+            "file": null,
+            "note": "RAW Charging's FAQ article on the charging regulations describes reporting data to government. It gives no open data feed and no route for requesting open data."
+          }
+        ],
+        "log": [
+          {
+            "date": "2026-10-10",
+            "action": "feed_searched",
+            "action_label": "Searched for a feed",
+            "channel": null,
+            "channel_label": null,
+            "summary": "RAW Charging's home page, sitemap, driver support page, Legal Information page and two articles on the regulations were read and its /open-data, /opendata and /pcpr addresses were tried, and no open data feed or route for requesting open data was found.",
+            "quote": "We manage all necessary data reporting to government authorities.",
+            "evidence_url": "https://rawcharging.com/news/article/new-government-ev-charging-regulations-faqs",
+            "evidence_file": null
+          }
+        ]
+      },
+      "access_requested": null,
+      "access_granted": null,
+      "feeds": [],
+      "licence": null,
+      "attribution": null,
+      "missing_publish_flag": null,
+      "swapped_coordinates": null,
+      "nonstandard_statuses": null,
+      "relay": null,
+      "rate_limit": {
+        "our_gap_seconds": 2.0,
+        "our_max_per_hour": 1800,
+        "ours": "At least 2 s between requests to the operator's host, measured from the end of the previous request (at most 1800 in any hour), retries included.",
+        "published": [],
+        "limits_checked": "unknown",
+        "comparison": "The operator's pages have not been checked for limits yet.",
+        "difference_from_regulations": "Not known yet.",
+        "notes": null
+      },
+      "findings": []
+    },
+    {
+      "id": "roam",
+      "name": "Roam",
+      "enabled": false,
+      "adapter": "unknown",
+      "engagement": {
+        "status": "no_public_feed_found",
+        "label": "No public feed found",
+        "headline": "No public feed found (as of 2026-10-10)",
+        "as_of": "2026-10-10",
+        "last_request": null,
+        "last_response": null,
+        "last_response_text": "No request sent",
+        "evidence": [
+          {
+            "date": "2026-10-10",
+            "url": "https://www.roamcharging.com/",
+            "file": null,
+            "note": "Roam's home page has no open data, regulations or charge point data link. Its sitemap and FAQ page list or give no open data feed or route for requesting open data."
+          }
+        ],
+        "log": [
+          {
+            "date": "2026-10-10",
+            "action": "feed_searched",
+            "action_label": "Searched for a feed",
+            "channel": null,
+            "channel_label": null,
+            "summary": "Roam's home page, sitemap and FAQ page were read, and no open data feed or route for requesting open data was found.",
+            "quote": null,
+            "evidence_url": "https://www.roamcharging.com/",
+            "evidence_file": null
+          }
+        ]
+      },
+      "access_requested": null,
+      "access_granted": null,
+      "feeds": [],
+      "licence": null,
+      "attribution": null,
+      "missing_publish_flag": null,
+      "swapped_coordinates": null,
+      "nonstandard_statuses": null,
+      "relay": null,
+      "rate_limit": {
+        "our_gap_seconds": 2.0,
+        "our_max_per_hour": 1800,
+        "ours": "At least 2 s between requests to the operator's host, measured from the end of the previous request (at most 1800 in any hour), retries included.",
+        "published": [],
+        "limits_checked": "unknown",
+        "comparison": "The operator's pages have not been checked for limits yet.",
+        "difference_from_regulations": "Not known yet.",
+        "notes": null
+      },
+      "findings": []
+    },
+    {
+      "id": "scottishpower_recharge",
+      "name": "ScottishPower Recharge",
+      "enabled": false,
+      "adapter": "unknown",
+      "engagement": {
+        "status": "unknown",
+        "label": "Not yet established",
+        "headline": "Not yet established (as of 2026-10-10)",
+        "as_of": "2026-10-10",
+        "last_request": null,
+        "last_response": null,
+        "last_response_text": "No request sent",
+        "evidence": [],
+        "log": [
+          {
+            "date": "2026-10-10",
+            "action": "feed_searched",
+            "action_label": "Searched for a feed",
+            "channel": null,
+            "channel_label": null,
+            "summary": "ScottishPower's public EV charging page could not be read by this project's automated checks on 2026-10-10 (HTTP 403), so its open data route is not yet known; it needs checking in a browser.",
+            "quote": null,
+            "evidence_url": "https://www.scottishpower.co.uk/public-ev-charging",
+            "evidence_file": null
+          }
+        ]
+      },
+      "access_requested": null,
+      "access_granted": null,
+      "feeds": [],
       "licence": null,
       "attribution": null,
       "missing_publish_flag": null,
@@ -1578,6 +3640,325 @@
       ]
     },
     {
+      "id": "smart_charge",
+      "name": "Smart Charge",
+      "enabled": false,
+      "adapter": "unknown",
+      "engagement": {
+        "status": "key_on_request",
+        "label": "Key issued on request",
+        "headline": "Key issued on request (as of 2026-10-10)",
+        "as_of": "2026-10-10",
+        "last_request": null,
+        "last_response": null,
+        "last_response_text": "No request sent",
+        "evidence": [
+          {
+            "date": "2026-10-10",
+            "url": "https://smartcharge.co.uk/",
+            "file": null,
+            "note": "The FAQs on Smart Charge's home page ask how to request its open access data end point and answer by directing requests to its customer support team by phone. The page gives no open data page, form, feed address, licence, key or rate limit."
+          }
+        ],
+        "log": [
+          {
+            "date": "2026-10-10",
+            "action": "page_checked",
+            "action_label": "Operator's page checked",
+            "channel": null,
+            "channel_label": null,
+            "summary": "The FAQs on Smart Charge's home page were read; the answer to a question on its open access data end point directs requests to its customer support line.",
+            "quote": "How can I request Smart Charge’s open access data end point?",
+            "evidence_url": "https://smartcharge.co.uk/",
+            "evidence_file": null
+          }
+        ]
+      },
+      "access_requested": null,
+      "access_granted": null,
+      "feeds": [],
+      "licence": null,
+      "attribution": null,
+      "missing_publish_flag": null,
+      "swapped_coordinates": null,
+      "nonstandard_statuses": null,
+      "relay": null,
+      "rate_limit": {
+        "our_gap_seconds": 2.0,
+        "our_max_per_hour": 1800,
+        "ours": "At least 2 s between requests to the operator's host, measured from the end of the previous request (at most 1800 in any hour), retries included.",
+        "published": [],
+        "limits_checked": "unknown",
+        "comparison": "The operator's pages have not been checked for limits yet.",
+        "difference_from_regulations": "Not known yet.",
+        "notes": null
+      },
+      "findings": []
+    },
+    {
+      "id": "source_ev",
+      "name": "Source EV",
+      "enabled": false,
+      "adapter": "unknown",
+      "engagement": {
+        "status": "signed_agreement_required",
+        "label": "Signed agreement required",
+        "headline": "Signed agreement required (as of 2026-10-10)",
+        "as_of": "2026-10-10",
+        "last_request": null,
+        "last_response": null,
+        "last_response_text": "No request sent",
+        "evidence": [
+          {
+            "date": "2026-10-10",
+            "url": "https://source-ev.com/legal/request-compliance-data",
+            "file": null,
+            "note": "Source EV's Request Compliance Data page links a Google request form, says the request will be shared with Eco-Movement, asks requesters to \"Sign the agreement as required under the PCPR\" and states that the data \"is licensed on terms equivalent to the UK Open Government Licence\". It names no key or rate limit."
+          }
+        ],
+        "log": [
+          {
+            "date": "2026-10-10",
+            "action": "page_checked",
+            "action_label": "Operator's page checked",
+            "channel": null,
+            "channel_label": null,
+            "summary": "Source EV's Request Compliance Data page and the Google form it links were read; the page lists signing an agreement among the steps before a request, and its terms and conditions state a licence for the data.",
+            "quote": "PCPR open data provided by Source EV is licensed on terms equivalent to the UK Open Government Licence. You are free to copy, publish and distribute the data provided you attribute Source EV Ltd as the data provider and do not misrepresent the data or imply endorsement.",
+            "evidence_url": "https://source-ev.com/legal/request-compliance-data",
+            "evidence_file": null
+          }
+        ]
+      },
+      "access_requested": null,
+      "access_granted": null,
+      "feeds": [],
+      "licence": null,
+      "attribution": null,
+      "missing_publish_flag": null,
+      "swapped_coordinates": null,
+      "nonstandard_statuses": null,
+      "relay": null,
+      "rate_limit": {
+        "our_gap_seconds": 2.0,
+        "our_max_per_hour": 1800,
+        "ours": "At least 2 s between requests to the operator's host, measured from the end of the previous request (at most 1800 in any hour), retries included.",
+        "published": [],
+        "limits_checked": "unknown",
+        "comparison": "The operator's pages have not been checked for limits yet.",
+        "difference_from_regulations": "Not known yet.",
+        "notes": null
+      },
+      "findings": [
+        {
+          "date": "2026-10-10",
+          "kind": "documentation",
+          "kind_label": "Documentation",
+          "summary": "Source EV's Request Compliance Data page asks requesters to \"Sign the agreement as required under the PCPR\" and shows terms and conditions that a requester agrees to by submitting, but does not say whether those terms are the agreement, and no separate agreement or way to sign one was shown or linked on the page or in the linked request form when both were read.",
+          "handling": "Which agreement is meant will be confirmed and the agreement read before any request is sent, and the operator stays switched off until then.",
+          "evidence_url": "https://source-ev.com/legal/request-compliance-data",
+          "status": "open",
+          "resolved_date": null
+        }
+      ]
+    },
+    {
+      "id": "sprint",
+      "name": "Sprint",
+      "enabled": false,
+      "adapter": "unknown",
+      "engagement": {
+        "status": "unknown",
+        "label": "Not yet established",
+        "headline": "Not yet established (as of 2026-10-10)",
+        "as_of": "2026-10-10",
+        "last_request": null,
+        "last_response": null,
+        "last_response_text": "No request sent",
+        "evidence": [],
+        "log": [
+          {
+            "date": "2026-10-10",
+            "action": "feed_searched",
+            "action_label": "Searched for a feed",
+            "channel": null,
+            "channel_label": null,
+            "summary": "Sprint's website could not be read by this project's automated checks on 2026-10-10 (no answer, then its address could not be found), so its open data route is not yet known; it needs checking in a browser.",
+            "quote": null,
+            "evidence_url": "https://www.sprintev.co.uk/",
+            "evidence_file": null
+          }
+        ]
+      },
+      "access_requested": null,
+      "access_granted": null,
+      "feeds": [],
+      "licence": null,
+      "attribution": null,
+      "missing_publish_flag": null,
+      "swapped_coordinates": null,
+      "nonstandard_statuses": null,
+      "relay": null,
+      "rate_limit": {
+        "our_gap_seconds": 2.0,
+        "our_max_per_hour": 1800,
+        "ours": "At least 2 s between requests to the operator's host, measured from the end of the previous request (at most 1800 in any hour), retries included.",
+        "published": [],
+        "limits_checked": "unknown",
+        "comparison": "The operator's pages have not been checked for limits yet.",
+        "difference_from_regulations": "Not known yet.",
+        "notes": null
+      },
+      "findings": []
+    },
+    {
+      "id": "tesla",
+      "name": "Tesla",
+      "enabled": false,
+      "adapter": "unknown",
+      "engagement": {
+        "status": "unknown",
+        "label": "Not yet established",
+        "headline": "Not yet established (as of 2026-10-10)",
+        "as_of": "2026-10-10",
+        "last_request": null,
+        "last_response": null,
+        "last_response_text": "No request sent",
+        "evidence": [],
+        "log": [
+          {
+            "date": "2026-10-10",
+            "action": "feed_searched",
+            "action_label": "Searched for a feed",
+            "channel": null,
+            "channel_label": null,
+            "summary": "Tesla's website could not be read by this project's automated checks on 2026-10-10 (HTTP 403 for its UK home page and for an address tried for a Supercharger open data support page), so its open data route is not yet known; it needs checking in a browser.",
+            "quote": null,
+            "evidence_url": "https://www.tesla.com/en_gb",
+            "evidence_file": null
+          }
+        ]
+      },
+      "access_requested": null,
+      "access_granted": null,
+      "feeds": [],
+      "licence": null,
+      "attribution": null,
+      "missing_publish_flag": null,
+      "swapped_coordinates": null,
+      "nonstandard_statuses": null,
+      "relay": null,
+      "rate_limit": {
+        "our_gap_seconds": 2.0,
+        "our_max_per_hour": 1800,
+        "ours": "At least 2 s between requests to the operator's host, measured from the end of the previous request (at most 1800 in any hour), retries included.",
+        "published": [],
+        "limits_checked": "unknown",
+        "comparison": "The operator's pages have not been checked for limits yet.",
+        "difference_from_regulations": "Not known yet.",
+        "notes": null
+      },
+      "findings": []
+    },
+    {
+      "id": "totalenergies",
+      "name": "TotalEnergies",
+      "enabled": false,
+      "adapter": "unknown",
+      "engagement": {
+        "status": "unknown",
+        "label": "Not yet established",
+        "headline": "Not yet established (as of 2026-10-10)",
+        "as_of": "2026-10-10",
+        "last_request": null,
+        "last_response": null,
+        "last_response_text": "No request sent",
+        "evidence": [],
+        "log": [
+          {
+            "date": "2026-10-10",
+            "action": "feed_searched",
+            "action_label": "Searched for a feed",
+            "channel": null,
+            "channel_label": null,
+            "summary": "TotalEnergies' UK charging services page (HTTP 403) and the Source London website (no answer, then HTTP 503) could not be read by this project's automated checks on 2026-10-10, so its open data route is not yet known; it needs checking in a browser.",
+            "quote": null,
+            "evidence_url": "https://chargingservices.totalenergies.com/en/home/united-kingdom",
+            "evidence_file": null
+          }
+        ]
+      },
+      "access_requested": null,
+      "access_granted": null,
+      "feeds": [],
+      "licence": null,
+      "attribution": null,
+      "missing_publish_flag": null,
+      "swapped_coordinates": null,
+      "nonstandard_statuses": null,
+      "relay": null,
+      "rate_limit": {
+        "our_gap_seconds": 2.0,
+        "our_max_per_hour": 1800,
+        "ours": "At least 2 s between requests to the operator's host, measured from the end of the previous request (at most 1800 in any hour), retries included.",
+        "published": [],
+        "limits_checked": "unknown",
+        "comparison": "The operator's pages have not been checked for limits yet.",
+        "difference_from_regulations": "Not known yet.",
+        "notes": null
+      },
+      "findings": []
+    },
+    {
+      "id": "trojan_energy",
+      "name": "Trojan Energy",
+      "enabled": false,
+      "adapter": "unknown",
+      "engagement": {
+        "status": "unknown",
+        "label": "Not yet established",
+        "headline": "Not yet established (as of 2026-10-10)",
+        "as_of": "2026-10-10",
+        "last_request": null,
+        "last_response": null,
+        "last_response_text": "No request sent",
+        "evidence": [],
+        "log": [
+          {
+            "date": "2026-10-10",
+            "action": "feed_searched",
+            "action_label": "Searched for a feed",
+            "channel": null,
+            "channel_label": null,
+            "summary": "The address www.trojanenergy.com was found to be the website of Trojan Energy Systems, a boiler and combustion company, not of the UK charge point network, and trojanenergy.co.uk could not be reached, so the network's own website was not found.",
+            "quote": null,
+            "evidence_url": "https://www.trojanenergy.com/",
+            "evidence_file": null
+          }
+        ]
+      },
+      "access_requested": null,
+      "access_granted": null,
+      "feeds": [],
+      "licence": null,
+      "attribution": null,
+      "missing_publish_flag": null,
+      "swapped_coordinates": null,
+      "nonstandard_statuses": null,
+      "relay": null,
+      "rate_limit": {
+        "our_gap_seconds": 2.0,
+        "our_max_per_hour": 1800,
+        "ours": "At least 2 s between requests to the operator's host, measured from the end of the previous request (at most 1800 in any hour), retries included.",
+        "published": [],
+        "limits_checked": "unknown",
+        "comparison": "The operator's pages have not been checked for limits yet.",
+        "difference_from_regulations": "Not known yet.",
+        "notes": null
+      },
+      "findings": []
+    },
+    {
       "id": "ubitricity",
       "name": "ubitricity",
       "enabled": false,
@@ -1698,6 +4079,245 @@
           "resolved_date": null
         }
       ]
+    },
+    {
+      "id": "wattif",
+      "name": "Wattif",
+      "enabled": false,
+      "adapter": "unknown",
+      "engagement": {
+        "status": "unknown",
+        "label": "Not yet established",
+        "headline": "Not yet established (as of 2026-10-10)",
+        "as_of": "2026-10-10",
+        "last_request": null,
+        "last_response": null,
+        "last_response_text": "No request sent",
+        "evidence": [],
+        "log": [
+          {
+            "date": "2026-10-10",
+            "action": "feed_searched",
+            "action_label": "Searched for a feed",
+            "channel": null,
+            "channel_label": null,
+            "summary": "On 2026-10-10 www.wattif.co.uk sent visitors on to a page at /lander whose code loads from an address named \"parking-lander\", and its sitemap listed only that page, so Wattif's current website and open data route were not found; they need checking in a browser.",
+            "quote": null,
+            "evidence_url": "https://www.wattif.co.uk/",
+            "evidence_file": null
+          }
+        ]
+      },
+      "access_requested": null,
+      "access_granted": null,
+      "feeds": [],
+      "licence": null,
+      "attribution": null,
+      "missing_publish_flag": null,
+      "swapped_coordinates": null,
+      "nonstandard_statuses": null,
+      "relay": null,
+      "rate_limit": {
+        "our_gap_seconds": 2.0,
+        "our_max_per_hour": 1800,
+        "ours": "At least 2 s between requests to the operator's host, measured from the end of the previous request (at most 1800 in any hour), retries included.",
+        "published": [],
+        "limits_checked": "unknown",
+        "comparison": "The operator's pages have not been checked for limits yet.",
+        "difference_from_regulations": "Not known yet.",
+        "notes": null
+      },
+      "findings": []
+    },
+    {
+      "id": "weev",
+      "name": "Weev",
+      "enabled": false,
+      "adapter": "unknown",
+      "engagement": {
+        "status": "key_on_request",
+        "label": "Key issued on request",
+        "headline": "Key issued on request (as of 2026-10-10)",
+        "as_of": "2026-10-10",
+        "last_request": null,
+        "last_response": null,
+        "last_response_text": "No request sent",
+        "evidence": [
+          {
+            "date": "2026-10-10",
+            "url": "https://weev.ie/open-data",
+            "file": null,
+            "note": "Weev's Open Data API page offers a form to request an API key, asking for a name, email address and the purpose of the request. The form asks the requester to confirm they agree to Weev's API access and fair use terms and conditions, and links those words to Weev's general terms and conditions page."
+          }
+        ],
+        "log": [
+          {
+            "date": "2026-10-10",
+            "action": "page_checked",
+            "action_label": "Operator's page checked",
+            "channel": null,
+            "channel_label": null,
+            "summary": "Weev's Open Data API page and the terms and conditions page its form links to were read; the page offers a form to request an API key.",
+            "quote": "Request an API key to access Weev Open Data",
+            "evidence_url": "https://weev.ie/open-data",
+            "evidence_file": null
+          }
+        ]
+      },
+      "access_requested": null,
+      "access_granted": null,
+      "feeds": [],
+      "licence": null,
+      "attribution": null,
+      "missing_publish_flag": null,
+      "swapped_coordinates": null,
+      "nonstandard_statuses": null,
+      "relay": null,
+      "rate_limit": {
+        "our_gap_seconds": 2.0,
+        "our_max_per_hour": 1800,
+        "ours": "At least 2 s between requests to the operator's host, measured from the end of the previous request (at most 1800 in any hour), retries included.",
+        "published": [],
+        "limits_checked": "unknown",
+        "comparison": "The operator's pages have not been checked for limits yet.",
+        "difference_from_regulations": "Not known yet.",
+        "notes": null
+      },
+      "findings": [
+        {
+          "date": "2026-10-10",
+          "kind": "access",
+          "kind_label": "Access",
+          "summary": "Weev's API key request form asks requesters to agree to its \"API access and fair use terms & conditions\", and links to its general terms and conditions for its charging services, which hold no separate terms for the open data.",
+          "handling": "Under the repository owner's standing rule of 2026-10-10 for operators whose data has no terms of its own, general website or charging terms are read as not covering the open data. The operator stays switched off until a key is granted and its feed is tested.",
+          "evidence_url": "https://weev.ie/terms-and-conditions",
+          "status": "open",
+          "resolved_date": null
+        }
+      ]
+    },
+    {
+      "id": "wenea",
+      "name": "Wenea",
+      "enabled": false,
+      "adapter": "unknown",
+      "engagement": {
+        "status": "key_on_request",
+        "label": "Key issued on request",
+        "headline": "Key issued on request (as of 2026-10-10)",
+        "as_of": "2026-10-10",
+        "last_request": null,
+        "last_response": null,
+        "last_response_text": "No request sent",
+        "evidence": [
+          {
+            "date": "2026-10-10",
+            "url": "https://wenea.com/uk/open-data/",
+            "file": null,
+            "note": "Wenea's UK open data page sets out the Wenea Open Data Policy and offers a form asking for a first and last name, email address, company and intended use (business or personal), with a box asking whether the requester agrees to the policy. The policy refers to API keys or access tokens issued by Wenea."
+          }
+        ],
+        "log": [
+          {
+            "date": "2026-10-10",
+            "action": "page_checked",
+            "action_label": "Operator's page checked",
+            "channel": null,
+            "channel_label": null,
+            "summary": "Wenea's UK open data page was read, including the Wenea Open Data Policy shown on the same page and the request form, which asks the requester to agree to the policy.",
+            "quote": "API Credentials: You are responsible for safeguarding any API keys or access tokens issued to you by Wenea.",
+            "evidence_url": "https://wenea.com/uk/open-data/",
+            "evidence_file": null
+          }
+        ]
+      },
+      "access_requested": null,
+      "access_granted": null,
+      "feeds": [],
+      "licence": null,
+      "attribution": null,
+      "missing_publish_flag": null,
+      "swapped_coordinates": null,
+      "nonstandard_statuses": null,
+      "relay": null,
+      "rate_limit": {
+        "our_gap_seconds": 2.0,
+        "our_max_per_hour": 1800,
+        "ours": "At least 2 s between requests to the operator's host, measured from the end of the previous request (at most 1800 in any hour), retries included.",
+        "published": [],
+        "limits_checked": "2026-10-10",
+        "comparison": "No limit published (checked 2026-10-10). The gap is our own choice.",
+        "difference_from_regulations": "Neither the operator nor the regulations set a limit.",
+        "notes": "The Wenea Open Data Policy, read 2026-10-10, states no numeric limit. It says \"We may impose rate limits or other technical controls on your use of the API at our discretion to maintain system integrity and performance.\" The API's technical documentation has not been seen."
+      },
+      "findings": [
+        {
+          "date": "2026-10-10",
+          "kind": "access",
+          "kind_label": "Access",
+          "summary": "Access is requested through a form that asks the requester to agree to the Wenea Open Data Policy, which says \"All rights, title, and interest in the Data and the API remain with Wenea.\" and also says \"Our Data is made publicly available free of charge and under open terms, aligning with the Open Government Licence requirements for machine-readable formats.\"",
+          "handling": "The policy is specific to the open data, so the repository owner's standing rule of 2026-10-10 on general website or charging terms does not settle it. The owner's decision on the policy is needed before access is requested, as it was for Gridserve. The operator stays switched off.",
+          "evidence_url": "https://wenea.com/uk/open-data/",
+          "status": "open",
+          "resolved_date": null
+        }
+      ]
+    },
+    {
+      "id": "zest",
+      "name": "Zest",
+      "enabled": false,
+      "adapter": "unknown",
+      "engagement": {
+        "status": "key_on_request",
+        "label": "Key issued on request",
+        "headline": "Key issued on request (as of 2026-10-10)",
+        "as_of": "2026-10-10",
+        "last_request": null,
+        "last_response": null,
+        "last_response_text": "No request sent",
+        "evidence": [
+          {
+            "date": "2026-10-10",
+            "url": "https://www.zest.uk.com/charge-point-open-data",
+            "file": null,
+            "note": "Zest's open data page offers a request form asking for a first and last name, email address, company and reason for the request. It says the data is licensed under CC BY 4.0. It does not say whether access is given as a key, a file or by other means."
+          }
+        ],
+        "log": [
+          {
+            "date": "2026-10-10",
+            "action": "page_checked",
+            "action_label": "Operator's page checked",
+            "channel": null,
+            "channel_label": null,
+            "summary": "Zest's charge point open data page was read; it offers a request form and states a licence for the data.",
+            "quote": "Request Zest’s charge point open data as per the Public Charge Point Regulations 2023.",
+            "evidence_url": "https://www.zest.uk.com/charge-point-open-data",
+            "evidence_file": null
+          }
+        ]
+      },
+      "access_requested": null,
+      "access_granted": null,
+      "feeds": [],
+      "licence": null,
+      "attribution": null,
+      "missing_publish_flag": null,
+      "swapped_coordinates": null,
+      "nonstandard_statuses": null,
+      "relay": null,
+      "rate_limit": {
+        "our_gap_seconds": 2.0,
+        "our_max_per_hour": 1800,
+        "ours": "At least 2 s between requests to the operator's host, measured from the end of the previous request (at most 1800 in any hour), retries included.",
+        "published": [],
+        "limits_checked": "unknown",
+        "comparison": "The operator's pages have not been checked for limits yet.",
+        "difference_from_regulations": "Not known yet.",
+        "notes": null
+      },
+      "findings": []
     }
   ]
 }

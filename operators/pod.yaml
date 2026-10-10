@@ -23,7 +23,7 @@ supports_single_location: unknown
 cors: unknown
 attribution: null
 engagement:
-  status: unknown
+  status: no_public_feed_found
   evidence: []
   log:
     - date: 2026-10-09
@@ -31,9 +31,29 @@ engagement:
       summary: >-
         Two web searches for a Pod open data or Public Charge Point Regulations page found
         none. Pod's own website was not searched directly; this needs checking.
+    - date: 2026-10-10
+      action: feed_searched
+      summary: >-
+        Pod's own website was searched directly; pod-point.com redirects to podenergy.com,
+        whose home page, site map page and public charging page link no open data or Public
+        Charge Point Regulations page, and the paths /open-data, /opendata and
+        /public-charge-point-regulations each answered HTTP 404.
+      evidence_url: https://podenergy.com/sitemap
 access_requested: null
 access_granted: null
-sources: []
+sources:
+  - url: https://podenergy.com/
+    note: >-
+      Pod's home page, reached from https://pod-point.com/ by redirect (read 2026-10-10).
+      It links no open data or Public Charge Point Regulations page.
+  - url: https://podenergy.com/sitemap
+    note: >-
+      Pod's site map page (read 2026-10-10). It lists no open data or Public Charge Point
+      Regulations page.
+  - url: https://podenergy.com/public-charging-zapmap
+    note: >-
+      Pod's public charging page (read 2026-10-10). It covers how drivers use the network and
+      says nothing about open data.
 notes: >-
   The blueprint says the ocpi_221 adapter covers Pod "once a token is granted", so a token
   is expected, but how tokens are issued and how they are sent are not recorded.

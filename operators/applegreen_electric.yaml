@@ -1,0 +1,54 @@
+# yaml-language-server: $schema=schema.json
+id: applegreen_electric
+display_name: Applegreen Fast Charge
+ocpi_country_code: unknown
+ocpi_party_id: unknown
+adapter: unknown
+base_url: unknown
+endpoints: {}
+auth:
+  method: unknown
+  name: null
+  secret_name: null
+rate_limit:
+  min_seconds_between_requests: 2
+  limits: []
+  limits_checked: unknown
+  notes: null
+supports_single_location: unknown
+cors: unknown
+attribution: null
+licence: null
+engagement:
+  status: no_public_feed_found
+  evidence:
+    - date: 2026-10-10
+      url: https://www.applegreenfastcharge.com/
+      note: >-
+        Applegreen Fast Charge's home page has no open data, regulations or charge point data
+        link. Its only data link, "Data Requests", leads to a portal on another host whose
+        content could not be read without JavaScript.
+  log:
+    - date: 2026-10-10
+      action: feed_searched
+      summary: >-
+        Applegreen Fast Charge's home page was read and its sitemap address was tried (it
+        answered "not found"), and no open data feed or route for requesting open data was
+        found.
+      evidence_url: https://www.applegreenfastcharge.com/
+access_requested: null
+access_granted: null
+sources:
+  - url: https://www.applegreenfastcharge.com/
+    note: >-
+      Applegreen Fast Charge's home page (read 2026-10-10). Says it has ultra-rapid charging
+      stations across Ireland, the UK and the USA. Footer link "Data Requests" leads to
+      a portal on portals.dporganizer.com (tried 2026-10-10), which is built by JavaScript
+      and showed no readable content. This project's survey of the same day recorded it as
+      a portal for personal data requests.
+findings: []
+notes: >-
+  No open data feed or request route was found on Applegreen Fast Charge's own website on
+  2026-10-10. A written request could ask where its open data under regulation 10 is
+  published.
+enabled: false

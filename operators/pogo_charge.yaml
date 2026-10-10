@@ -1,0 +1,67 @@
+# yaml-language-server: $schema=schema.json
+id: pogo_charge
+display_name: PoGo Charge
+ocpi_country_code: unknown
+ocpi_party_id: unknown
+adapter: unknown
+base_url: unknown
+endpoints: {}
+auth:
+  method: unknown
+  name: null
+  secret_name: null
+rate_limit:
+  min_seconds_between_requests: 2
+  limits: []
+  limits_checked: unknown
+  notes: null
+supports_single_location: unknown
+cors: unknown
+attribution: null
+licence: null
+engagement:
+  status: open_anonymous
+  evidence:
+    - date: 2026-10-10
+      url: https://pogocharge.com/faqs/
+      note: >-
+        PoGo Charge's FAQ page answers "Does PoGo offer open data API access?" with two
+        links, "Locations" and "Tariffs", on info.smartcharging.uk. The answer mentions no
+        registration step, key, licence or rate limit. One request to the locations feed on
+        2026-10-10 answered without a key.
+  log:
+    - date: 2026-10-10
+      action: feed_searched
+      summary: >-
+        PoGo Charge's home page and page sitemap were read; neither links an open data page,
+        and the sitemap lists its FAQ page.
+      evidence_url: https://pogocharge.com/page-sitemap.xml
+    - date: 2026-10-10
+      action: page_checked
+      summary: >-
+        PoGo Charge's FAQ page was read; it links a locations feed and a tariffs feed for open
+        data API access, and the answer mentions no registration, key, licence or rate limit.
+      quote: >-
+        Yes, PoGo offers open data API access for roaming and data partners via the following
+        links:
+      evidence_url: https://pogocharge.com/faqs/
+access_requested: null
+access_granted: null
+sources:
+  - url: https://pogocharge.com/
+    note: PoGo Charge's home page (read 2026-10-10). No open data link.
+  - url: https://pogocharge.com/page-sitemap.xml
+    note: >-
+      PoGo Charge's page sitemap (read 2026-10-10), reached from its sitemap index. No open
+      data page; lists its FAQ page.
+  - url: https://pogocharge.com/faqs/
+    note: >-
+      PoGo Charge's FAQ page (read 2026-10-10). Question 8 links the locations and tariffs
+      feeds.
+findings: []
+notes: >-
+  PoGo Charge's FAQ page (read 2026-10-10) links a locations feed at
+  https://info.smartcharging.uk/public_feed/locations/4009 and a tariffs feed at
+  https://info.smartcharging.uk/public_feed/locations/4009/tariffs. One request to the locations feed on 2026-10-10 answered without a key: an OCPI 2.2.1 response with X-Total-Count, holding 161 locations and 809 EVSEs with country code GB and party id POG. The tariffs feed, the licence and any rate limits still need checking before the operator is switched on. The FAQ describes the access as being
+  for roaming and data partners.
+enabled: false

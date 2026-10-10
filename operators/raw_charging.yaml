@@ -1,0 +1,82 @@
+# yaml-language-server: $schema=schema.json
+id: raw_charging
+display_name: RAW Charging
+ocpi_country_code: unknown
+ocpi_party_id: unknown
+adapter: unknown
+base_url: unknown
+endpoints: {}
+auth:
+  method: unknown
+  name: null
+  secret_name: null
+rate_limit:
+  min_seconds_between_requests: 2
+  limits: []
+  limits_checked: unknown
+  notes: null
+supports_single_location: unknown
+cors: unknown
+attribution: null
+licence: null
+engagement:
+  status: no_public_feed_found
+  evidence:
+    - date: 2026-10-10
+      url: https://rawcharging.com/news/article/new-government-ev-charging-regulations-faqs
+      note: >-
+        RAW Charging's FAQ article on the charging regulations describes reporting data to
+        government. It gives no open data feed and no route for requesting open data.
+  log:
+    - date: 2026-10-10
+      action: feed_searched
+      summary: >-
+        RAW Charging's home page, sitemap, driver support page, Legal Information page and two
+        articles on the regulations were read and its /open-data, /opendata and /pcpr
+        addresses were tried, and no open data feed or route for requesting open data was
+        found.
+      quote: We manage all necessary data reporting to government authorities.
+      evidence_url: https://rawcharging.com/news/article/new-government-ev-charging-regulations-faqs
+access_requested: null
+access_granted: null
+sources:
+  - url: https://rawcharging.com/
+    note: >-
+      RAW Charging's home page (read 2026-10-10). Links Driver Support, News and Legal
+      Information; no open data or regulations link.
+  - url: https://rawcharging.com/sitemap.xml
+    note: >-
+      RAW Charging's sitemap (read 2026-10-10). Lists 158 pages; none is an open data, OCPI
+      or data request page.
+  - url: https://rawcharging.com/driver-support
+    note: >-
+      RAW Charging's driver support page (read 2026-10-10). Covers using the ChargePoint app,
+      how to charge and roaming partners; no open data link.
+  - url: https://rawcharging.com/news/article/new-government-ev-charging-regulations-faqs
+    note: >-
+      RAW Charging's "New Government EV Charging Regulations - FAQs" article (read
+      2026-10-10). Covers data reporting to government; no open data feed.
+  - url: https://rawcharging.com/news/article/what-do-the-new-ev-charging-regulations-mean-for-hospitality-leisure-and-retail-businesses
+    note: >-
+      RAW Charging's article "What do the new EV charging regulations mean for Hospitality,
+      Leisure and Retail businesses?" (read 2026-10-10). Covers reliability, support, pricing
+      and contactless payment; no open data feed or request route.
+  - url: https://rawcharging.com/legal-information
+    note: >-
+      RAW Charging's Legal Information page (read 2026-10-10). Its "Public Charge Point
+      Regulations" section covers reliability only; no open data feed or request route.
+  - url: https://rawcharging.com/open-data
+    note: Tried 2026-10-10. Shows RAW Charging's "Not Found" page.
+  - url: https://rawcharging.com/opendata
+    note: Tried 2026-10-10. Shows RAW Charging's "Not Found" page.
+  - url: https://rawcharging.com/pcpr
+    note: Tried 2026-10-10. Shows RAW Charging's "Not Found" page.
+findings: []
+notes: >-
+  No open data feed or request route was found on RAW Charging's own website on 2026-10-10.
+  ChargePoint's own PCPR data request form (see the chargepoint file, read 2026-10-10) lists
+  Raw Charging among the networks whose data can be requested; RAW Charging's site does not
+  link that form, so whether it is its route needs confirming.
+  A written request could ask RAW Charging where its open data under regulation 10 is
+  published.
+enabled: false

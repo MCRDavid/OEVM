@@ -1,0 +1,41 @@
+# yaml-language-server: $schema=schema.json
+id: trojan_energy
+display_name: Trojan Energy
+ocpi_country_code: unknown
+ocpi_party_id: unknown
+adapter: unknown
+base_url: unknown
+endpoints: {}
+auth:
+  method: unknown
+  name: null
+  secret_name: null
+rate_limit:
+  min_seconds_between_requests: 2
+  limits: []
+  limits_checked: unknown
+  notes: null
+supports_single_location: unknown
+cors: unknown
+attribution: null
+licence: null
+engagement:
+  status: unknown
+  evidence: []
+  log:
+    - date: 2026-10-10
+      action: feed_searched
+      summary: >-
+        The address www.trojanenergy.com was found to be the website of Trojan Energy
+        Systems, a boiler and combustion company, not of the UK charge point network, and
+        trojanenergy.co.uk could not be reached, so the network's own website was not found.
+      evidence_url: https://www.trojanenergy.com/
+access_requested: null
+access_granted: null
+sources: []
+findings: []
+notes: >-
+  Trojan Energy's own website was not found on 2026-10-10, so whether it publishes open data
+  under regulation 10, and how, is unknown. Its own website, or the organisation that runs
+  its charge points, needs to be identified from a first-party source.
+enabled: false
