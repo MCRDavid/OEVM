@@ -1,0 +1,712 @@
+{
+  "request": {
+    "method": "GET",
+    "url": "https://api.fuuse.io/opendata/e6397b95-1624-49cd-824d-ab2f9dfe7294/location"
+  },
+  "response": {
+    "status_code": 200,
+    "headers": {
+      "content-type": "application/json; charset=utf-8",
+      "x-total-count": "5",
+      "x-limit": "1000"
+    },
+    "body": {
+      "status_code": 1000,
+      "data": [
+        {
+          "id": "86469642-4421-4202-900b-d2f842297921",
+          "publish": true,
+          "name": "Arnold Clark Ayr BYD",
+          "address": "127 Prestwick Road",
+          "city": "Ayr",
+          "postal_code": "KA8 8NJ",
+          "country": "GBR",
+          "coordinates": {
+            "latitude": "55.480800",
+            "longitude": "-4.620100"
+          },
+          "parking_type": "PARKING_LOT",
+          "evses": [
+            {
+              "uid": "3e1aa2a1-347d-4d9b-8bf9-363033f74495",
+              "evse_id": "K0025957A*4",
+              "status": "AVAILABLE",
+              "capabilities": [
+                "CONTACTLESS_CARD_SUPPORT",
+                "REMOTE_START_STOP_CAPABLE",
+                "RFID_READER",
+                "UNLOCK_CAPABLE",
+                "REMOTE_START_STOP_CAPABLE"
+              ],
+              "connectors": [
+                {
+                  "id": "ca501dcf-4ab6-431b-bf2d-3b7f0f9f337a",
+                  "standard": "IEC_62196_T2_COMBO",
+                  "format": "CABLE",
+                  "power_type": "DC",
+                  "max_voltage": 500,
+                  "max_amperage": 300,
+                  "max_electric_power": 150000,
+                  "tariff_ids": [
+                    "5effcf94-85c8-447b-bd2e-404af540af23"
+                  ],
+                  "last_updated": "2026-10-09T19:26:41.033Z"
+                }
+              ],
+              "coordinates": {
+                "latitude": "55.480800",
+                "longitude": "-4.620100"
+              },
+              "physical_reference": "PRES-3",
+              "last_updated": "2026-10-10T02:20:34.727Z"
+            },
+            {
+              "uid": "aa76464b-d14f-4708-b82b-9137899bf8d7",
+              "evse_id": "K0025957A*6",
+              "status": "AVAILABLE",
+              "capabilities": [
+                "CONTACTLESS_CARD_SUPPORT",
+                "REMOTE_START_STOP_CAPABLE",
+                "RFID_READER",
+                "UNLOCK_CAPABLE",
+                "REMOTE_START_STOP_CAPABLE"
+              ],
+              "connectors": [
+                {
+                  "id": "e2dc35b6-ebc2-4466-b552-d5c2842e07af",
+                  "standard": "IEC_62196_T2_COMBO",
+                  "format": "CABLE",
+                  "power_type": "DC",
+                  "max_voltage": 500,
+                  "max_amperage": 300,
+                  "max_electric_power": 150000,
+                  "last_updated": "2026-10-09T20:30:07.153Z"
+                }
+              ],
+              "coordinates": {
+                "latitude": "55.480800",
+                "longitude": "-4.620100"
+              },
+              "physical_reference": "PRES-5",
+              "last_updated": "2026-10-10T02:20:34.727Z"
+            },
+            {
+              "uid": "b7b523c9-74bb-48f1-821b-4b97a733f7fd",
+              "evse_id": "K0025957A*5",
+              "status": "AVAILABLE",
+              "capabilities": [
+                "CONTACTLESS_CARD_SUPPORT",
+                "REMOTE_START_STOP_CAPABLE",
+                "RFID_READER",
+                "UNLOCK_CAPABLE",
+                "REMOTE_START_STOP_CAPABLE"
+              ],
+              "connectors": [
+                {
+                  "id": "40e84af3-40a0-439e-a799-ccf7901c33d7",
+                  "standard": "IEC_62196_T2_COMBO",
+                  "format": "CABLE",
+                  "power_type": "DC",
+                  "max_voltage": 500,
+                  "max_amperage": 300,
+                  "max_electric_power": 150000,
+                  "last_updated": "2026-10-09T18:12:46.958Z"
+                }
+              ],
+              "coordinates": {
+                "latitude": "55.480800",
+                "longitude": "-4.620100"
+              },
+              "physical_reference": "PRES-4",
+              "last_updated": "2026-10-10T02:20:34.727Z"
+            },
+            {
+              "uid": "fb6735c5-932a-4a58-9457-cf40e86d5bb6",
+              "evse_id": "K0025957A*7",
+              "status": "AVAILABLE",
+              "capabilities": [
+                "CONTACTLESS_CARD_SUPPORT",
+                "REMOTE_START_STOP_CAPABLE",
+                "RFID_READER",
+                "UNLOCK_CAPABLE",
+                "REMOTE_START_STOP_CAPABLE"
+              ],
+              "connectors": [
+                {
+                  "id": "9e9addd4-7b52-4efa-b5a6-6e9653d035bb",
+                  "standard": "IEC_62196_T2_COMBO",
+                  "format": "CABLE",
+                  "power_type": "DC",
+                  "max_voltage": 500,
+                  "max_amperage": 300,
+                  "max_electric_power": 150000,
+                  "last_updated": "2026-10-09T17:50:56.846Z"
+                }
+              ],
+              "coordinates": {
+                "latitude": "55.480800",
+                "longitude": "-4.620100"
+              },
+              "physical_reference": "PRES-6",
+              "last_updated": "2026-10-10T02:20:34.727Z"
+            }
+          ],
+          "operator": {
+            "name": "Arnold Clark Automobiles Ltd"
+          },
+          "time_zone": "Europe/London",
+          "opening_times": {
+            "twentyfourseven": true
+          },
+          "charging_when_closed": false,
+          "last_updated": "2026-10-09T20:30:07.153Z"
+        },
+        {
+          "id": "95aef489-44c7-4b0d-a676-16d5bf414a3f",
+          "publish": true,
+          "name": "Arnold Clark Livingston Vauxhall",
+          "address": "Carmondean Centre, Deans",
+          "city": "Livingston",
+          "postal_code": "EH54 8PT",
+          "country": "GBR",
+          "coordinates": {
+            "latitude": "55.902800",
+            "longitude": "-3.544900"
+          },
+          "parking_type": "PARKING_LOT",
+          "evses": [
+            {
+              "uid": "56696530-84a9-4be2-b0cd-2c6f730a25b7",
+              "evse_id": "K0027638*4",
+              "status": "AVAILABLE",
+              "capabilities": [
+                "CONTACTLESS_CARD_SUPPORT",
+                "REMOTE_START_STOP_CAPABLE",
+                "RFID_READER",
+                "UNLOCK_CAPABLE",
+                "REMOTE_START_STOP_CAPABLE"
+              ],
+              "connectors": [
+                {
+                  "id": "a306f6d8-5513-4fb9-8706-309ce1dbe4d5",
+                  "standard": "IEC_62196_T2_COMBO",
+                  "format": "CABLE",
+                  "power_type": "DC",
+                  "max_voltage": 500,
+                  "max_amperage": 300,
+                  "max_electric_power": 150000,
+                  "tariff_ids": [
+                    "74035a47-8172-44c7-90f5-87b1f38167c1"
+                  ],
+                  "last_updated": "2026-10-09T18:33:29.778Z"
+                }
+              ],
+              "coordinates": {
+                "latitude": "55.902800",
+                "longitude": "-3.544900"
+              },
+              "physical_reference": "CARM-3",
+              "last_updated": "2026-10-09T20:49:42.905Z"
+            },
+            {
+              "uid": "ea472fc3-7046-46c8-af0a-bd6c44883991",
+              "evse_id": "K0027638*3",
+              "status": "AVAILABLE",
+              "capabilities": [
+                "CONTACTLESS_CARD_SUPPORT",
+                "REMOTE_START_STOP_CAPABLE",
+                "RFID_READER",
+                "UNLOCK_CAPABLE",
+                "REMOTE_START_STOP_CAPABLE"
+              ],
+              "connectors": [
+                {
+                  "id": "bd3c97fd-c304-4c58-941f-31520effef2e",
+                  "standard": "IEC_62196_T2_COMBO",
+                  "format": "CABLE",
+                  "power_type": "DC",
+                  "max_voltage": 500,
+                  "max_amperage": 300,
+                  "max_electric_power": 150000,
+                  "last_updated": "2026-10-09T16:26:24.384Z"
+                }
+              ],
+              "coordinates": {
+                "latitude": "55.902800",
+                "longitude": "-3.544900"
+              },
+              "physical_reference": "CARM-2",
+              "last_updated": "2026-10-09T20:49:42.905Z"
+            }
+          ],
+          "operator": {
+            "name": "Arnold Clark Automobiles Ltd"
+          },
+          "time_zone": "Europe/London",
+          "opening_times": {
+            "twentyfourseven": true
+          },
+          "charging_when_closed": false,
+          "last_updated": "2026-10-09T20:37:26.638Z"
+        },
+        {
+          "id": "244b3c13-83d4-4db6-9bae-6a25d699abbf",
+          "publish": true,
+          "name": "Arnold Clark West Bromwich Motorstore (App Bookings)",
+          "address": "Millenium Park, New Swan Ln",
+          "city": "West Bromwich",
+          "postal_code": "B70 0NR",
+          "country": "GBR",
+          "coordinates": {
+            "latitude": "52.528900",
+            "longitude": "-2.013400"
+          },
+          "parking_type": "PARKING_LOT",
+          "evses": [
+            {
+              "uid": "08e34793-03bb-4016-a9bf-a24267ca1639",
+              "evse_id": "K0031412*1",
+              "status": "AVAILABLE",
+              "capabilities": [
+                "CONTACTLESS_CARD_SUPPORT",
+                "REMOTE_START_STOP_CAPABLE",
+                "RESERVABLE",
+                "RFID_READER",
+                "UNLOCK_CAPABLE",
+                "REMOTE_START_STOP_CAPABLE"
+              ],
+              "connectors": [
+                {
+                  "id": "3673ea96-853a-475f-91aa-99c373708d5a",
+                  "standard": "CHADEMO",
+                  "format": "CABLE",
+                  "power_type": "DC",
+                  "max_voltage": 415,
+                  "max_amperage": 120,
+                  "max_electric_power": 50000,
+                  "last_updated": "2026-10-09T16:32:38.179Z"
+                }
+              ],
+              "coordinates": {
+                "latitude": "52.528900",
+                "longitude": "-2.013400"
+              },
+              "physical_reference": "MILL-CHA-1",
+              "last_updated": "2026-10-09T16:46:05.552Z"
+            },
+            {
+              "uid": "56366277-f987-482a-a6e8-89a8cfea63d9",
+              "evse_id": "K0031412*3",
+              "status": "OUTOFORDER",
+              "capabilities": [
+                "CONTACTLESS_CARD_SUPPORT",
+                "REMOTE_START_STOP_CAPABLE",
+                "RESERVABLE",
+                "RFID_READER",
+                "UNLOCK_CAPABLE",
+                "REMOTE_START_STOP_CAPABLE"
+              ],
+              "connectors": [
+                {
+                  "id": "3cf9cbfa-94fe-4f5c-a0e2-e1b4aa445ab5",
+                  "standard": "IEC_62196_T2_COMBO",
+                  "format": "CABLE",
+                  "power_type": "DC",
+                  "max_voltage": 500,
+                  "max_amperage": 300,
+                  "max_electric_power": 150000,
+                  "last_updated": "2026-10-08T07:53:19.007Z"
+                }
+              ],
+              "coordinates": {
+                "latitude": "52.528900",
+                "longitude": "-2.013400"
+              },
+              "physical_reference": "MILL-2",
+              "last_updated": "2026-10-09T16:46:05.552Z"
+            },
+            {
+              "uid": "d26cb6f8-1b35-43d2-90ce-cb3ab7c99ae7",
+              "evse_id": "K0031412*2",
+              "status": "AVAILABLE",
+              "capabilities": [
+                "CONTACTLESS_CARD_SUPPORT",
+                "REMOTE_START_STOP_CAPABLE",
+                "RESERVABLE",
+                "RFID_READER",
+                "UNLOCK_CAPABLE",
+                "REMOTE_START_STOP_CAPABLE"
+              ],
+              "connectors": [
+                {
+                  "id": "a06fc983-36f5-4088-9e73-2427af6a4daf",
+                  "standard": "IEC_62196_T2_COMBO",
+                  "format": "CABLE",
+                  "power_type": "DC",
+                  "max_voltage": 415,
+                  "max_amperage": 361,
+                  "max_electric_power": 150000,
+                  "last_updated": "2026-10-09T16:32:38.226Z"
+                }
+              ],
+              "coordinates": {
+                "latitude": "52.528900",
+                "longitude": "-2.013400"
+              },
+              "physical_reference": "MILL-CCS-1",
+              "last_updated": "2026-10-09T16:46:05.552Z"
+            }
+          ],
+          "operator": {
+            "name": "Arnold Clark Automobiles Ltd"
+          },
+          "time_zone": "Europe/London",
+          "opening_times": {
+            "twentyfourseven": false,
+            "regular_hours": [
+              {
+                "period_begin": "08:00",
+                "period_end": "20:00",
+                "weekday": 1
+              },
+              {
+                "period_begin": "08:00",
+                "period_end": "20:00",
+                "weekday": 2
+              },
+              {
+                "period_begin": "08:00",
+                "period_end": "20:00",
+                "weekday": 3
+              },
+              {
+                "period_begin": "08:00",
+                "period_end": "20:00",
+                "weekday": 4
+              },
+              {
+                "period_begin": "08:00",
+                "period_end": "20:00",
+                "weekday": 5
+              },
+              {
+                "period_begin": "08:00",
+                "period_end": "18:00",
+                "weekday": 6
+              },
+              {
+                "period_begin": "11:00",
+                "period_end": "17:00",
+                "weekday": 7
+              }
+            ]
+          },
+          "charging_when_closed": false,
+          "last_updated": "2026-10-09T16:32:38.226Z"
+        },
+        {
+          "id": "8a2d3596-3804-43fe-ba18-a8ca4015124e",
+          "publish": true,
+          "name": "Arnold Clark Glasgow Crow Road Volkswagen",
+          "address": "459 Crow Road",
+          "city": "Glasgow",
+          "postal_code": "G11 7DN",
+          "country": "GBR",
+          "coordinates": {
+            "latitude": "55.882000",
+            "longitude": "-4.327000"
+          },
+          "parking_type": "PARKING_LOT",
+          "evses": [
+            {
+              "uid": "0929e734-e728-4a9c-b75d-4859e2b057c1",
+              "evse_id": "K0025956A*6",
+              "status": "CHARGING",
+              "capabilities": [
+                "CONTACTLESS_CARD_SUPPORT",
+                "REMOTE_START_STOP_CAPABLE",
+                "RFID_READER",
+                "UNLOCK_CAPABLE",
+                "REMOTE_START_STOP_CAPABLE"
+              ],
+              "connectors": [
+                {
+                  "id": "71909f1c-b240-4d05-90fb-ce7fcb2c493a",
+                  "standard": "IEC_62196_T2_COMBO",
+                  "format": "CABLE",
+                  "power_type": "DC",
+                  "max_voltage": 500,
+                  "max_amperage": 300,
+                  "max_electric_power": 150000,
+                  "last_updated": "2026-10-09T18:22:49.709Z"
+                }
+              ],
+              "coordinates": {
+                "latitude": "55.882000",
+                "longitude": "-4.327000"
+              },
+              "physical_reference": "CROW-5",
+              "last_updated": "2026-10-09T22:47:08.530Z"
+            },
+            {
+              "uid": "889ed477-6333-4ba3-976b-83e7096da098",
+              "evse_id": "K0025956A*4",
+              "status": "AVAILABLE",
+              "capabilities": [
+                "CONTACTLESS_CARD_SUPPORT",
+                "REMOTE_START_STOP_CAPABLE",
+                "RFID_READER",
+                "UNLOCK_CAPABLE",
+                "REMOTE_START_STOP_CAPABLE"
+              ],
+              "connectors": [
+                {
+                  "id": "828dd415-18a2-40e2-8180-a3beb9191c8b",
+                  "standard": "IEC_62196_T2_COMBO",
+                  "format": "CABLE",
+                  "power_type": "DC",
+                  "max_voltage": 500,
+                  "max_amperage": 300,
+                  "max_electric_power": 150000,
+                  "last_updated": "2026-10-09T22:12:00.911Z"
+                }
+              ],
+              "coordinates": {
+                "latitude": "55.882000",
+                "longitude": "-4.327000"
+              },
+              "physical_reference": "CROW-3",
+              "last_updated": "2026-10-09T22:47:08.530Z"
+            },
+            {
+              "uid": "8ac02bfe-8bac-46a5-83ab-40ff188257bf",
+              "evse_id": "K0025956A*5",
+              "status": "AVAILABLE",
+              "capabilities": [
+                "CONTACTLESS_CARD_SUPPORT",
+                "REMOTE_START_STOP_CAPABLE",
+                "RFID_READER",
+                "UNLOCK_CAPABLE",
+                "REMOTE_START_STOP_CAPABLE"
+              ],
+              "connectors": [
+                {
+                  "id": "eda06de7-3493-498d-bf74-3ad00c58b629",
+                  "standard": "IEC_62196_T2_COMBO",
+                  "format": "CABLE",
+                  "power_type": "DC",
+                  "max_voltage": 500,
+                  "max_amperage": 300,
+                  "max_electric_power": 150000,
+                  "last_updated": "2026-10-09T18:30:25.073Z"
+                }
+              ],
+              "coordinates": {
+                "latitude": "55.882000",
+                "longitude": "-4.327000"
+              },
+              "physical_reference": "CROW-4",
+              "last_updated": "2026-10-09T22:47:08.530Z"
+            },
+            {
+              "uid": "ac268789-35ba-4d10-82aa-efe740cef6e6",
+              "evse_id": "K0025956A*7",
+              "status": "AVAILABLE",
+              "capabilities": [
+                "CONTACTLESS_CARD_SUPPORT",
+                "REMOTE_START_STOP_CAPABLE",
+                "RFID_READER",
+                "UNLOCK_CAPABLE",
+                "REMOTE_START_STOP_CAPABLE"
+              ],
+              "connectors": [
+                {
+                  "id": "fdb1baa9-ac9b-43b5-850f-7d5bba67ad38",
+                  "standard": "IEC_62196_T2_COMBO",
+                  "format": "CABLE",
+                  "power_type": "DC",
+                  "max_voltage": 500,
+                  "max_amperage": 300,
+                  "max_electric_power": 150000,
+                  "last_updated": "2026-10-09T19:25:23.583Z"
+                }
+              ],
+              "coordinates": {
+                "latitude": "55.882000",
+                "longitude": "-4.327000"
+              },
+              "physical_reference": "CROW-6",
+              "last_updated": "2026-10-09T22:47:08.530Z"
+            }
+          ],
+          "operator": {
+            "name": "Arnold Clark Automobiles Ltd"
+          },
+          "time_zone": "Europe/London",
+          "opening_times": {
+            "twentyfourseven": true
+          },
+          "charging_when_closed": false,
+          "last_updated": "2026-10-09T22:26:04.495Z"
+        },
+        {
+          "id": "5c158c7b-e826-4b53-b60f-981ad8bc5157",
+          "publish": true,
+          "name": "Arnold Clark Leyland Motorstore (App Bookings)",
+          "address": "Farington Business Park, Golden Hill Lane",
+          "city": "Leyland",
+          "postal_code": "PR25 3GG",
+          "state": "Lancashire",
+          "country": "GBR",
+          "coordinates": {
+            "latitude": "53.699000",
+            "longitude": "-2.692900"
+          },
+          "parking_type": "PARKING_LOT",
+          "evses": [
+            {
+              "uid": "8842e919-69ee-40b6-9d20-b479853d9a8f",
+              "evse_id": "K0031411A*3",
+              "status": "AVAILABLE",
+              "capabilities": [
+                "CONTACTLESS_CARD_SUPPORT",
+                "REMOTE_START_STOP_CAPABLE",
+                "RESERVABLE",
+                "RFID_READER",
+                "UNLOCK_CAPABLE",
+                "REMOTE_START_STOP_CAPABLE"
+              ],
+              "connectors": [
+                {
+                  "id": "d405a76e-fae6-4d0f-80d8-942980c73a51",
+                  "standard": "IEC_62196_T2_COMBO",
+                  "format": "CABLE",
+                  "power_type": "DC",
+                  "max_voltage": 500,
+                  "max_amperage": 300,
+                  "max_electric_power": 150000,
+                  "last_updated": "2026-10-09T17:26:26.644Z"
+                }
+              ],
+              "coordinates": {
+                "latitude": "53.699007",
+                "longitude": "-2.692924"
+              },
+              "physical_reference": "FARR-2",
+              "last_updated": "2026-10-09T17:34:22.016Z"
+            },
+            {
+              "uid": "b26dbf01-9a74-4fc8-b208-6daf45f38103",
+              "evse_id": "K0031411A*1",
+              "status": "AVAILABLE",
+              "capabilities": [
+                "CONTACTLESS_CARD_SUPPORT",
+                "REMOTE_START_STOP_CAPABLE",
+                "RESERVABLE",
+                "RFID_READER",
+                "UNLOCK_CAPABLE",
+                "REMOTE_START_STOP_CAPABLE"
+              ],
+              "connectors": [
+                {
+                  "id": "3c9e6224-28e3-4e71-8a72-4b8a452f1956",
+                  "standard": "CHADEMO",
+                  "format": "CABLE",
+                  "power_type": "DC",
+                  "max_voltage": 415,
+                  "max_amperage": 120,
+                  "max_electric_power": 50000,
+                  "last_updated": "2026-10-09T17:30:41.136Z"
+                }
+              ],
+              "coordinates": {
+                "latitude": "53.699007",
+                "longitude": "-2.692924"
+              },
+              "physical_reference": "FARR-CHA-1",
+              "last_updated": "2026-10-09T17:34:22.016Z"
+            },
+            {
+              "uid": "e48197ca-e082-423d-848e-117d35ee6fcd",
+              "evse_id": "K0031411A*2",
+              "status": "AVAILABLE",
+              "capabilities": [
+                "CONTACTLESS_CARD_SUPPORT",
+                "REMOTE_START_STOP_CAPABLE",
+                "RESERVABLE",
+                "RFID_READER",
+                "UNLOCK_CAPABLE",
+                "REMOTE_START_STOP_CAPABLE"
+              ],
+              "connectors": [
+                {
+                  "id": "f1293320-432e-49ee-969c-e6b7dd5e7b32",
+                  "standard": "IEC_62196_T2_COMBO",
+                  "format": "CABLE",
+                  "power_type": "DC",
+                  "max_voltage": 500,
+                  "max_amperage": 300,
+                  "max_electric_power": 150000,
+                  "last_updated": "2026-10-09T17:30:39.093Z"
+                }
+              ],
+              "coordinates": {
+                "latitude": "53.699007",
+                "longitude": "-2.692924"
+              },
+              "physical_reference": "FARR-CCS-1",
+              "last_updated": "2026-10-09T17:34:22.016Z"
+            }
+          ],
+          "operator": {
+            "name": "Arnold Clark Automobiles Ltd"
+          },
+          "time_zone": "Europe/London",
+          "opening_times": {
+            "twentyfourseven": false,
+            "regular_hours": [
+              {
+                "period_begin": "08:00",
+                "period_end": "20:00",
+                "weekday": 1
+              },
+              {
+                "period_begin": "08:00",
+                "period_end": "20:00",
+                "weekday": 2
+              },
+              {
+                "period_begin": "08:00",
+                "period_end": "20:00",
+                "weekday": 3
+              },
+              {
+                "period_begin": "08:00",
+                "period_end": "20:00",
+                "weekday": 4
+              },
+              {
+                "period_begin": "08:00",
+                "period_end": "20:00",
+                "weekday": 5
+              },
+              {
+                "period_begin": "08:00",
+                "period_end": "18:00",
+                "weekday": 6
+              },
+              {
+                "period_begin": "11:00",
+                "period_end": "17:00",
+                "weekday": 7
+              }
+            ]
+          },
+          "charging_when_closed": false,
+          "last_updated": "2026-10-09T17:30:41.136Z"
+        }
+      ],
+      "timestamp": "2026-10-10T02:46:30.824Z"
+    }
+  }
+}
