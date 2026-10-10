@@ -1,10 +1,10 @@
 // Live status on the details screen (Phase 3, docs/PHASE3_PLAN.md and ADR 0015).
 //
-// Groundwork only: nothing imports this file yet, so the map is unchanged. When the live
-// Worker (proxy/worker.js) is running, the details screen will ask it for the location's
-// statuses and show how many charge points are in each group below, coloured, with the
-// time the operator's feed was read. Colour is never the only cue: every group has a
-// text label and a symbol, and the counts are written out.
+// The details screen (detail.js) shows how many charge points are in each group below,
+// coloured, with the time the operator's feed was read. Today the statuses come from the
+// daily fetch, in the location's detail file. When the live Worker (proxy/worker.js) runs,
+// the same wording will show its fresher statuses. Colour is never the only cue: every
+// group has a text label and a symbol, and the counts are written out.
 //
 // Feed text is never put into the page as HTML; this file returns plain values only.
 
@@ -71,7 +71,14 @@ export function chips(counts) {
       out.push({ group, className, symbol, text: `${counts.working} working (free or in use, not stated)` });
       n -= counts.working;
     }
-    if (n > 0) out.push({ group, className, symbol, text: `${n} ${label.toLowerCase()}` });
+    if (n <= 0) continue;
+    let words = label.toLowerCase();
+    // Say "blocked" or "status unknown" alone when only one of them is present.
+    if (group === "other") {
+      const blocked = n - counts.unknown;
+      words = blocked && counts.unknown ? words : blocked ? "blocked" : "status unknown";
+    }
+    out.push({ group, className, symbol, text: `${n} ${words}` });
   }
   return out;
 }

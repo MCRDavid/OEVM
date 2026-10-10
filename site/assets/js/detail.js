@@ -2,6 +2,7 @@
 
 import { h, safeLink } from "./dom.js";
 import { STATUS_LABELS, formatDateTime, formatKw, plugName } from "./format.js";
+import { STATUS_GROUPS, asOfText, chips, countByGroup, groupOf, summaryText } from "./live.js";
 import { breakEven, breakEvenText, cheapest, discounted, plansFor } from "./plans.js";
 
 const WEEKDAYS = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"];
@@ -40,14 +41,44 @@ function priceFor(prices, evse, connector) {
   return prices.find((p) => p.evse_uid === evse.uid && p.connector_id === connector.id);
 }
 
+// A status in its group's colour, with the group's symbol, so colour is never the only cue.
+function statusLine(evse) {
+  const known = Object.hasOwn(STATUS_LABELS, evse.status) ? evse.status : "unknown";
+  const group = groupOf(known);
+  const when = known === "unknown" ? "" : `, reported ${formatDateTime(evse.status_at)}`;
+  return h(
+    "p",
+    { className: `status status-${group.replace("_", "-")}` },
+    h("span", { "aria-hidden": "true", text: `${STATUS_GROUPS[group].symbol} ` }),
+    `${STATUS_LABELS[known]}${when}`,
+  );
+}
+
+// How many charge points are free, in use, out of service or unknown, coloured, and when
+// the operator's feed was read. Statuses come from the daily fetch for now (ADR 0015).
+export function statusSection(detail) {
+  const counts = countByGroup(detail.location?.evses);
+  if (!counts.total) return [];
+  return [
+    h("h3", { text: "Charge point status" }),
+    h("p", { className: "status-summary", text: summaryText(counts) }),
+    h(
+      "p",
+      { className: "status-chips" },
+      chips(counts).map((chip) =>
+        h("span", { className: chip.className }, h("span", { "aria-hidden": "true", text: `${chip.symbol} ` }), chip.text),
+      ),
+    ),
+    h("p", { className: "hint", text: `${asOfText(detail.fetched_at)}. It may have changed since.` }),
+  ];
+}
+
 function connectorItem(evse, connector, price) {
-  const status = STATUS_LABELS[evse.status] ?? STATUS_LABELS.unknown;
-  const when = evse.status === "unknown" ? "" : `, reported ${formatDateTime(evse.status_at)}`;
   return h(
     "li",
     {},
     h("p", { className: "plug" }, h("strong", { text: plugName(connector.standard) }), ` · ${formatKw(connector.max_kw)}`),
-    h("p", { text: `${status}${when}` }),
+    statusLine(evse),
     h(
       "p",
       { className: "price" },
@@ -266,6 +297,7 @@ export function renderDetail(detail, { repository, plans = [], mine = new Set() 
       ? [h("p", { className: "hint corrected", text: detail.coordinates_corrected.note })]
       : []),
     openingHours(location.opening_hours),
+    ...statusSection(detail),
     h("h3", { text: "Connectors" }),
     items.length ? h("ul", { className: "connectors" }, items) : h("p", { text: "No charge points listed." }),
     ...tariffSection(detail),

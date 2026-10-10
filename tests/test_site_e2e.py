@@ -226,6 +226,27 @@ def test_details_show_provenance_and_return_focus(visit):
     assert page.evaluate("document.activeElement.classList.contains('item')")
 
 
+def test_details_colour_charge_point_statuses_with_words_and_the_time_read(visit):
+    page = visit().open("?view=list", map_ready=False)
+    expect(page.locator("#list-items li")).to_have_count(LOCATIONS)
+    _open_details_containing(page, "● ")  # a location with a charge point available
+    summary = page.text_content("#detail-body .status-summary")
+    assert re.fullmatch(r"\d+ of \d+ charge points? available", summary)
+    chip = page.locator("#detail-body .status-chips .status-available")
+    expect(chip).to_have_count(1)
+    assert re.fullmatch(r"● \d+ available", chip.text_content())
+    assert chip.locator("[aria-hidden=true]").text_content() == "● "
+    body = page.text_content("#detail-body")
+    assert "Status from the operator's feed, read " in body
+    # Each connector's status has its group's colour too.
+    colours = {
+        page.evaluate("(e) => getComputedStyle(e).color", e.element_handle())
+        for e in page.locator("#detail-body .connectors .status").all()
+    }
+    available = page.evaluate("(e) => getComputedStyle(e).color", chip.element_handle())
+    assert available in colours
+
+
 def test_details_list_every_tariff_with_the_lowest_energy_price(visit):
     page = visit().open("?view=list", map_ready=False)
     expect(page.locator("#list-items li")).to_have_count(LOCATIONS)
