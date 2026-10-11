@@ -1,0 +1,66 @@
+# yaml-language-server: $schema=schema.json
+id: ncp
+display_name: NCP
+ocpi_country_code: unknown
+ocpi_party_id: unknown
+adapter: unknown
+base_url: unknown
+endpoints: {}
+auth:
+  method: unknown
+  name: null
+  secret_name: null
+rate_limit:
+  min_seconds_between_requests: 2
+  limits: []
+  limits_checked: unknown
+  notes: null
+supports_single_location: unknown
+cors: unknown
+attribution: null
+licence: null
+engagement:
+  status: possibly_out_of_scope
+  evidence:
+    - date: 2026-10-11
+      url: https://www.pwc.co.uk/press-room/press-releases/administrations/national-car-parks-limited--ncp----in-administration---further-4.html
+      note: >-
+        PwC's update on National Car Parks Limited says joint administrators were appointed on
+        16 March 2026 and lists car parks that closed on 27 March and 16 April 2026. Press
+        reports of 8 October 2026 say the business and most of its car parks were sold to a
+        new owner and still trade as NCP.
+  log:
+    - date: 2026-10-11
+      action: feed_searched
+      summary: >-
+        No sign was found that NCP runs a charging network itself; charge points listed at NCP
+        car parks name other networks, and NCP's own website could not be read by this
+        project's automated checks, so it needs checking in a browser.
+      evidence_url: https://www.ncp.co.uk/
+access_requested: null
+access_granted: null
+sources:
+  - url: https://www.ncp.co.uk/
+    note: >-
+      NCP's home page. On 2026-10-11 it answered this project's automated check with HTTP 403,
+      so its charging pages were not read.
+  - url: https://www.pwc.co.uk/press-room/press-releases/administrations/national-car-parks-limited--ncp----in-administration---further-4.html
+    note: >-
+      PwC's update on National Car Parks Limited (read 2026-10-11) says that on Monday 16 March
+      2026 three people from PwC "were appointed as Joint Administrators of National Car Parks
+      Limited", and lists the car parks that closed on 27 March and 16 April 2026.
+  - url: https://www.propertyweek.com/news/martin-property-group-buys-ncp-car-park-business-from-administrators
+    note: >-
+      Press report of 8 October 2026 (read 2026-10-11): the business and assets of National
+      Car Parks were acquired, with "the majority of its 145 UK car parks", through NCP UK
+      Trade Co., quoting PwC that the sale was completed.
+findings: []
+notes: >-
+  NCP is a car park operator. National Car Parks Limited entered administration on
+  2026-03-16 and press reports of 2026-10-08 say its business and most car parks were sold
+  and still trade as NCP. Charge points listed at NCP car parks on 2026-10-11 name other
+  networks (Roam, Be.EV and bp pulse among them), whose own data would cover them, and no
+  sign of an NCP charging network was found. NCP's website refused automated reads, so the
+  next step is to read its charging pages in a browser; if NCP runs no charge points itself,
+  this file can be removed.
+enabled: false
