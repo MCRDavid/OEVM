@@ -23,6 +23,7 @@ from schema.operator import OperatorConfig
 
 HOST = "data.example.com"
 FEED = f"https://{HOST}/locations"
+OTHER = "https://other.example.com/locations"
 PINNED = b"the expired certificate the owner accepted"
 NOW = datetime(2026, 10, 11, 18, 0, tzinfo=UTC)
 EXPIRED = {"notBefore": "Mar 23 07:59:07 2026 GMT", "notAfter": "Oct  7 07:59:07 2026 GMT"}
@@ -129,9 +130,11 @@ def test_the_accepted_certificate_is_read_without_a_note():
 
 def test_another_expired_certificate_stops_the_fetch_without_retrying():
     calls: list[str] = []
-    with client_for(b"a different certificate", EXPIRED, calls) as client:
-        with pytest.raises(FeedError, match="not using the response"):
-            client.get(FEED)
+    with (
+        client_for(b"a different certificate", EXPIRED, calls) as client,
+        pytest.raises(FeedError, match="not using the response"),
+    ):
+        client.get(FEED)
     assert calls == [FEED]
 
 
@@ -149,10 +152,12 @@ def test_a_real_connection_without_a_readable_certificate_stops_the_fetch():
     def handler(request: httpx.Request) -> httpx.Response:
         return httpx.Response(200, json={}, extensions={"network_stream": FakeStream(None)})
 
-    config = make_config()
-    with PoliteClient(config, transport=httpx.MockTransport(handler), sleep=lambda _s: None) as c:
-        with pytest.raises(FeedError, match="could not read the TLS certificate"):
-            c.get(FEED)
+    transport = httpx.MockTransport(handler)
+    with (
+        PoliteClient(make_config(), transport=transport, sleep=lambda _s: None) as client,
+        pytest.raises(FeedError, match="could not read the TLS certificate"),
+    ):
+        client.get(FEED)
 
 
 def test_recorded_responses_have_no_connection_to_check():
@@ -179,7 +184,7 @@ def test_operators_without_the_decision_never_relax_dates():
             "only a feed that needs no key may be read past a certificate",
         ),
         (
-            {"endpoints": {"locations": {"url": "https://other.example.com/l", "status": "documented"}}},
+            {"endpoints": {"locations": {"url": OTHER, "status": "documented"}}},
             "must be an https URL on data.example.com",
         ),
         (

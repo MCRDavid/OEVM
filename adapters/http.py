@@ -395,8 +395,7 @@ def certificate_problem(
     if starts <= now.timestamp() <= ends:
         return None, True
     return (
-        f"certificate {fingerprint} is not in date and is not the one the operator file "
-        "accepts",
+        f"certificate {fingerprint} is not in date and is not the one the operator file accepts",
         False,
     )
 

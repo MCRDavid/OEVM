@@ -8,8 +8,8 @@ Locations with publish set to false are never kept: OCPI 2.2.1 says such a locat
 not be published on a website or app. Locations without a publish flag are skipped too,
 unless the operator file records the owner's decision to show them (see
 normalise.publish_allowed). Locations the owner decided to leave off, such as test sites,
-are skipped by their exact OCPI id (normalise.excluded_by_owner). Other adapters reuse `convert_records`, so the same rules
-apply to every feed.
+are skipped by their exact OCPI id (normalise.excluded_by_owner). Other adapters reuse
+`convert_records`, so the same rules apply to every feed.
 """
 
 from dataclasses import dataclass, field
