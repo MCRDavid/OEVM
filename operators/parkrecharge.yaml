@@ -3,22 +3,66 @@ id: parkrecharge
 display_name: ParkRecharge
 ocpi_country_code: unknown
 ocpi_party_id: unknown
-adapter: unknown
+adapter: ocpi_221
 base_url: unknown
-endpoints: {}
+endpoints:
+  locations:
+    url: https://ocpi-pcpr.hubeleon.net/2.2.1/reference
+    status: documented
+    note: >-
+      Linked as "Access Reference Data" under "Reference Data: Locations & Connectors" on
+      ParkRecharge's "Public Charging and Open Data" page (read 2026-10-11). Hosted by
+      Hubeleon, whose e-mobility portal ParkRecharge links as its customer portal.
+  tariffs:
+    url: https://ocpi-pcpr.hubeleon.net/2.2.1/referencetariffs
+    status: documented
+    note: >-
+      Linked as "Access Reference Data" under "Reference Data: Tariffs & Pricing" on the
+      same page (read 2026-10-11).
 auth:
-  method: unknown
+  method: none
   name: null
   secret_name: null
 rate_limit:
   min_seconds_between_requests: 2
   limits: []
-  limits_checked: unknown
-  notes: null
+  limits_checked: 2026-10-11
+  notes: >-
+    Neither ParkRecharge's page nor the responses state a rate limit. The 2 second gap is
+    this project's own choice. Each response holds every record, so a full run makes two
+    requests (about 0.8 MB on 2026-10-11).
 supports_single_location: unknown
-cors: unknown
-attribution: null
-licence: null
+cors: needs_testing
+attribution: >-
+  Contains data from ParkRecharge published under the Public Charge Point Regulations
+  2023, used in line with the Open Government Licence v3.0.
+licence:
+  name: OGL-3.0
+  url: https://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/
+  basis: >-
+    ParkRecharge's "Public Charging and Open Data" page says the reference data is
+    "Published as a JSON file following the OCPI 2.2.1 standard" and that the location data
+    "can be consumed by roaming platforms, mapping services, and fleet management tools".
+    It states no licence, terms or rate limit for the files, and links the government's
+    Public Charge Point Regulations 2023 guidance. DfT's guidance (updated 21 October 2024)
+    says "Data must be open in line with the Open Government Licence". ParkRecharge's terms
+    and conditions (read 2026-10-11) "apply to all Pay-As-You-Go and Top-Up charging
+    carried out through the ParkRecharge app" and say nothing about the data. On 2026-10-10
+    the repository owner decided, as a standing rule for operators whose data has no terms
+    of its own, to read general website or charging terms as not covering the open data,
+    which regulation 10(5) requires to be available without terms on its use.
+  checked: 2026-10-11
+expired_certificate:
+  decided: 2026-10-11
+  basis: >-
+    The certificate of the host ParkRecharge links for its open data expired on 7 October
+    2026, and its date is the only problem OpenSSL reports with it. The repository owner
+    decided on 2026-10-11 to read the two files past it, with a note on the transparency
+    page. The feed needs no key, so nothing secret is sent.
+  evidence_url: https://parkrecharge.com/public-charging
+  host: ocpi-pcpr.hubeleon.net
+  sha256: 49:82:A7:AD:8B:2B:D2:E6:A5:7A:A5:83:46:E1:F1:E6:6F:CB:55:00:9C:E5:81:AE:6D:9F:1F:64:A9:4B:6C:6D
+  expired: 2026-10-07
 engagement:
   status: open_anonymous
   evidence:
@@ -81,4 +125,4 @@ notes: >-
   standing rule of 2026-10-10 reads general website or charging terms as not covering an
   operator's open data; that page still needs reading, and the licence section filling in,
   before ParkRecharge could be switched on.
-enabled: false
+enabled: true
