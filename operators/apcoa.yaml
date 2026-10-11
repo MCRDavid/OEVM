@@ -45,16 +45,13 @@ sources:
       points" in its car parks, started and paid for through the APCOA Connect app, with
       ScanPay QR codes at selected sites, and that "Payment for Tesla chargers can be made
       directly on the Tesla App". No open data link.
-  - url: https://www.apcoa.co.uk/help-center/faqs/ev-charging-faqs
-    note: >-
-      APCOA's EV charging FAQs (read 2026-10-11). Gives an EV helpline number for charging
-      problems. No open data link.
   - url: https://www.apcoa.co.uk/llms.txt
     note: >-
       APCOA's full UK site index (read 2026-10-11). Its charging pages are "Find a charging
       station", "Electric Vehicle Charging" and the EV charging FAQs; no open data, OCPI or
-      regulations page is listed. The home page, legal page and sitemap had no open data link
-      either.
+      regulations page is listed. The EV charging FAQs page (read the same day) gives an EV
+      helpline number for charging problems and no open data link. The home page, legal page
+      and sitemap had no open data link either.
   - url: https://uk.apcoa.com/business-lines/charging/
     note: >-
       APCOA UK's business page on charging (read 2026-10-11): "In the UK, we already have
