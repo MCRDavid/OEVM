@@ -89,7 +89,61 @@ sources:
       ScottishPower's public EV charging blog page, read in a browser on 2026-10-11. Its
       "Open data access" section gives the two data links and states no licence, terms or
       rate limit. It also links the Recharge terms and conditions for drivers, not read.
-findings: []
+findings:
+  - date: 2026-10-11
+    kind: access
+    summary: >-
+      The host answered the tariff request, sent 2 seconds after the location request, with
+      HTTP 429, a page titled "The Fuuse API is currently being rate limited" and Retry-After
+      30. The same request 30 seconds later was answered normally. The pages state no limit.
+    handling: >-
+      Requests to the host are spaced 31 seconds apart, for this operator and Arnold Clark
+      Charge. A recording made that way on 2026-10-11 needed no retry.
+    evidence_url: https://api.fuuse.io/opendata/e11a667d-c56a-468f-b8d3-a50b41628292/tariff
+  - date: 2026-10-11
+    kind: spec_conformance
+    summary: >-
+      Locations and tariffs carry no country_code or party_id, which OCPI 2.2.1 requires.
+    handling: >-
+      Record ids use "unknown" for the country and party, from this file, until the
+      operator's own data gives them.
+    evidence_url: https://api.fuuse.io/opendata/e11a667d-c56a-468f-b8d3-a50b41628292/location
+  - date: 2026-10-11
+    kind: spec_conformance
+    summary: >-
+      Tariff prices, VAT rates and minimum kWh are sent as strings (for example "0.5417",
+      "20.0000" and "0.1000") rather than numbers.
+    handling: Read as the numbers they spell. Values that are not numbers would be unknown.
+    evidence_url: https://api.fuuse.io/opendata/e11a667d-c56a-468f-b8d3-a50b41628292/tariff
+  - date: 2026-10-11
+    kind: data_quality
+    summary: >-
+      11 of 187 connectors, at 3 locations, name no tariff in tariff_ids (on 2026-10-11).
+    handling: Connectors with no tariff show "Price unknown".
+    evidence_url: https://api.fuuse.io/opendata/e11a667d-c56a-468f-b8d3-a50b41628292/location
+  - date: 2026-10-11
+    kind: data_quality
+    summary: >-
+      The 2 connectors at one location (Glengarry, Invergarry) name a tariff whose
+      description is "Harbour test" and whose energy, flat and time prices are all zero
+      (on 2026-10-11).
+    handling: >-
+      Shown as published: the tariff's prices are all zero with no minimum charge, so those
+      connectors show as free, under the tariff's own description.
+    evidence_url: https://api.fuuse.io/opendata/e11a667d-c56a-468f-b8d3-a50b41628292/tariff
+  - date: 2026-10-11
+    kind: data_quality
+    summary: >-
+      One 50 kW connector (Storage Vault - Hamilton) is a Type 2 cable (IEC_62196_T2) with
+      power_type DC. Type 2 connectors are usually AC.
+    handling: Kept as published.
+    evidence_url: https://api.fuuse.io/opendata/e11a667d-c56a-468f-b8d3-a50b41628292/location
+  - date: 2026-10-11
+    kind: data_quality
+    summary: >-
+      One postcode is written with a letter O where a zero would be expected ("KA2 OFE").
+    handling: Kept as published. The map places locations by their coordinates.
+    evidence_url: https://api.fuuse.io/opendata/e11a667d-c56a-468f-b8d3-a50b41628292/location
 notes: >-
   The files are standard OCPI 2.2.1 responses, read by the ocpi_221 adapter, on the same
   Fuuse host as Arnold Clark Charge. ScottishPower's own pages refuse this project's

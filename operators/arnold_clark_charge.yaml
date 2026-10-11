@@ -85,6 +85,17 @@ sources:
       Arnold Clark Charge's charging terms, last updated 1 December 2025, read 2026-10-10.
       They do not mention the data.
 findings:
+  - date: 2026-10-11
+    kind: access
+    summary: >-
+      The daily run of 2026-10-11 made 3 requests for the 2 files and took 33 seconds over
+      the tariff file. The same day the host answered ScottishPower Recharge's tariff
+      request, sent 2 seconds after its location request, with HTTP 429 and Retry-After 30,
+      which matches that run. The pages state no limit.
+    handling: >-
+      Requests to the host are spaced 31 seconds apart from 2026-10-11, for this operator
+      and ScottishPower Recharge.
+    evidence_url: https://github.com/MCRDavid/OEVM/actions/runs/38133263489
   - date: 2026-10-10
     kind: spec_conformance
     summary: >-
