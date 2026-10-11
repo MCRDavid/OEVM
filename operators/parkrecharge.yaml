@@ -1,8 +1,8 @@
 # yaml-language-server: $schema=schema.json
 id: parkrecharge
 display_name: ParkRecharge
-ocpi_country_code: unknown
-ocpi_party_id: unknown
+ocpi_country_code: GB # From the feed's own records, 2026-10-11.
+ocpi_party_id: HUB
 adapter: ocpi_221
 base_url: unknown
 endpoints:
@@ -71,8 +71,12 @@ engagement:
       note: >-
         ParkRecharge's "Public Charging and Open Data" page links its OCPI 2.2.1 reference
         data for locations and for tariffs directly, and says authentication is required for
-        live availability data. This project has not fetched the reference data, so whether
-        it needs a key still needs testing.
+        live availability data.
+    - date: 2026-10-11
+      url: https://ocpi-pcpr.hubeleon.net/2.2.1/reference
+      note: >-
+        Both reference data files answered without a key, read past the host's expired
+        certificate: 447 locations and 469 tariffs, all with country code GB and party HUB.
   log:
     - date: 2026-10-10
       action: page_checked
@@ -84,6 +88,13 @@ engagement:
         Reference data updated daily. Availability data is near real-time (authentication
         required).
       evidence_url: https://parkrecharge.com/public-charging
+    - date: 2026-10-11
+      action: page_checked
+      summary: >-
+        Read the page again and ParkRecharge's terms and conditions, which cover charging
+        through its app and say nothing about the data. Both reference data files answered
+        without a key once read past the host's expired certificate.
+      evidence_url: https://parkrecharge.com/knowledge/terms-and-conditions
 access_requested: null
 access_granted: null
 sources:
@@ -93,15 +104,23 @@ sources:
       "Public Charging & Open Data" link to /public-charging under "Knowledge".
   - url: https://parkrecharge.com/sitemap.xml
     note: >-
-      ParkRecharge's sitemap (read 2026-10-10). Lists the /public-charging page.
+      ParkRecharge's sitemap (read 2026-10-10 and 2026-10-11). Lists the /public-charging
+      page and the terms and conditions page.
   - url: https://parkrecharge.com/public-charging
     note: >-
-      ParkRecharge's "Public Charging and Open Data" page (read 2026-10-10, including the
-      page's own script that holds its text). It says "Open data published in a
-      machine-readable format using OCPI (including reference and availability data)", that
-      the location and tariff data are each "Published as a JSON file following the OCPI
-      2.2.1 standard.", and, for live availability data, "Complete the form below and we'll
-      send your credentials." The form asks for a name, company, email address and use case.
+      ParkRecharge's "Public Charging and Open Data" page (read 2026-10-10, and rendered in a
+      browser on 2026-10-11). It says "Open data published in a machine-readable format
+      using OCPI (including reference and availability data)", that the location and tariff
+      data are each "Published as a JSON file following the OCPI 2.2.1 standard.", links
+      both files as "Access Reference Data", and, for live availability data, says
+      "Complete the form below and we'll send your credentials." The form asks for a name,
+      company, email address and use case. No licence, terms or rate limit for the files.
+  - url: https://parkrecharge.com/knowledge/terms-and-conditions
+    note: >-
+      ParkRecharge's terms and conditions (rendered in a browser on 2026-10-11). ParkRecharge
+      is a trading name of Hanger19 Limited. The terms "apply to all Pay-As-You-Go and
+      Top-Up charging carried out through the ParkRecharge app" and do not mention the
+      open data.
 findings:
   - date: 2026-10-10
     kind: access
@@ -110,19 +129,106 @@ findings:
       https://ocpi-pcpr.hubeleon.net/2.2.1/reference, did not complete because this project's
       HTTPS client reported the server's TLS certificate as expired. No data was read.
     handling: >-
-      The project never turns off certificate checks. The address will be tried again later.
+      On 2026-10-11 the repository owner decided to read both files past this certificate
+      (expired_certificate). The project still checks the certificate's chain and host name
+      and accepts only that one certificate, or one in date once it is renewed.
     evidence_url: https://parkrecharge.com/public-charging
     status: open
+  - date: 2026-10-11
+    kind: access
+    summary: >-
+      ocpi-pcpr.hubeleon.net presents a certificate for *.hubeleon.net issued by Go Daddy
+      Secure Certificate Authority G2, valid from 23 March 2026 to 7 October 2026 07:59 UTC.
+      Its expiry is the only problem OpenSSL reports with it.
+    handling: >-
+      Read past the expiry by the owner's decision of 2026-10-11, noted on this page. The
+      exception is checked on every request and can be removed once the certificate is
+      renewed; the run log says when that happens.
+    evidence_url: https://parkrecharge.com/public-charging
+  - date: 2026-10-11
+    kind: data_quality
+    summary: >-
+      The locations file's timestamp is 2026-04-27T14:24:34Z and its newest location
+      last_updated is 2026-04-01 (read 2026-10-11), although the page says reference data
+      is updated daily. The tariffs file's timestamp is the time of the request.
+    handling: >-
+      Locations are kept as published. Each EVSE status is shown with its own date, so a
+      status from April reads as reported in April.
+    evidence_url: https://ocpi-pcpr.hubeleon.net/2.2.1/reference
+  - date: 2026-10-11
+    kind: spec_conformance
+    summary: >-
+      59 of 447 locations give last_updated as "0000-00-00T00:00:00Z", which is not a valid
+      date.
+    handling: >-
+      The date is recorded as unknown and the locations are kept. Their EVSEs carry valid
+      dates of their own, which are used for their statuses.
+    evidence_url: https://ocpi-pcpr.hubeleon.net/2.2.1/reference
+  - date: 2026-10-11
+    kind: spec_conformance
+    summary: >-
+      Each tariff's elements is a single object holding price_components, where OCPI 2.2.1
+      gives a list of elements.
+    handling: >-
+      Read as a list of one element; the price components are read exactly as sent.
+    evidence_url: https://ocpi-pcpr.hubeleon.net/2.2.1/referencetariffs
+  - date: 2026-10-11
+    kind: spec_conformance
+    summary: >-
+      Locations have an empty city and no postal_code; the full address, postcode included,
+      is in the address field.
+    handling: Shown as published.
+    evidence_url: https://ocpi-pcpr.hubeleon.net/2.2.1/reference
+  - date: 2026-10-11
+    kind: data_quality
+    summary: >-
+      Connectors name 447 different tariff ids, 17 of which are not in the tariffs file
+      (read 2026-10-11).
+    handling: Connectors whose tariff is not found show "Price unknown".
+    evidence_url: https://ocpi-pcpr.hubeleon.net/2.2.1/referencetariffs
+  - date: 2026-10-11
+    kind: data_quality
+    summary: >-
+      7 locations are in Argentina, with country GBR, and 8 tariffs are in US dollars (5) or
+      Argentine pesos (3).
+    handling: >-
+      Locations outside the UK are left off the map (ADR 0017). Tariffs in other currencies
+      show "Price unknown".
+    evidence_url: https://ocpi-pcpr.hubeleon.net/2.2.1/reference
+  - date: 2026-10-11
+    kind: data_quality
+    summary: >-
+      Two locations at the same office address in Writtle, Chelmsford, are named as test
+      units: "UK-HBN-PAYTERTEST" (id 3166) and "TR0047 Hubeleon Test Centre" (id 1183). Both
+      are marked for publishing.
+    handling: Kept as published.
+    evidence_url: https://ocpi-pcpr.hubeleon.net/2.2.1/reference
+  - date: 2026-10-11
+    kind: data_quality
+    summary: >-
+      23 UK locations use a tariff whose every price is zero. Their names include hospital,
+      college and company sites and one marked "HCC Fleet Only".
+    handling: >-
+      Shown as free, as the tariffs state. The file does not say who may use these
+      chargers.
+    evidence_url: https://ocpi-pcpr.hubeleon.net/2.2.1/referencetariffs
+  - date: 2026-10-11
+    kind: documentation
+    summary: >-
+      Locations carry no operator object. Their names start with several prefixes (PR 354,
+      GR 21, AW 17, SCC 14 and others) and include sites such as Belfast City Hospital, which
+      suggests the file covers sites ParkRecharge runs for several hosts (inferred).
+    handling: Every location is shown as ParkRecharge's, the publisher of the file.
+    evidence_url: https://ocpi-pcpr.hubeleon.net/2.2.1/reference
+  - date: 2026-10-11
+    kind: data_quality
+    summary: One connector gives max_electric_power and max_amperage as 0.
+    handling: Its power is recorded as unknown.
+    evidence_url: https://ocpi-pcpr.hubeleon.net/2.2.1/reference
 notes: >-
-  The page links "Access Reference Data" to https://ocpi-pcpr.hubeleon.net/2.2.1/reference
-  (locations, EVSEs and connectors) and https://ocpi-pcpr.hubeleon.net/2.2.1/referencetariffs
-  (tariffs). This project has not fetched either, so whether they need a key, their format
-  and any rate limit need testing before an adapter is chosen; live availability needs
-  credentials requested through the form on the same page. The page's embedded dataset
-  description gives the government's Public Charge Point Regulations 2023 guidance page as
-  the licence for both datasets, and its visible text names no licence or terms. Its
-  sitemap lists a terms and conditions page, not read on 2026-10-10. The repository owner's
-  standing rule of 2026-10-10 reads general website or charging terms as not covering an
-  operator's open data; that page still needs reading, and the licence section filling in,
-  before ParkRecharge could be switched on.
+  Two standard OCPI 2.2.1 response files, one for locations and one for tariffs, each
+  holding every record, read by the ocpi_221 adapter. The host's certificate expired on
+  2026-10-07 and is read past by the owner's decision (expired_certificate, ADR 0021). Live
+  availability needs credentials requested through the form on ParkRecharge's page; not
+  requested yet.
 enabled: true
