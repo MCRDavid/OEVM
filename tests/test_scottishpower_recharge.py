@@ -13,7 +13,6 @@ from pipeline.registry import load_registry
 
 FIXTURES = Path(__file__).parent / "fixtures" / "scottishpower_recharge"
 FEED = "https://api.fuuse.io/opendata/e11a667d-c56a-468f-b8d3-a50b41628292/"
-ZERO_TARIFF = "2bf0030b-e446-473f-96ef-76de022b87e9"
 
 
 def replay():
@@ -62,12 +61,12 @@ def test_recorded_locations_convert_faithfully():
 
 def test_prices_given_as_strings_are_read_and_unlinked_connectors_are_unknown():
     result, _ = replay()
-    tariffs = {tariff.id.rsplit(":", 1)[1]: tariff for tariff in result.tariffs}
+    tariffs = {tariff.alt_text: tariff for tariff in result.tariffs}
     assert len(tariffs) == 8
     assert all(tariff.currency == "GBP" for tariff in tariffs.values())
-    shown = {tid: describe_tariff(tariff) for tid, tariff in tariffs.items()}
-    assert "75p per kWh" in shown["4b0378aa-ff00-4e0e-b780-b5f72f3e58a7"].text
-    assert {s.state for tid, s in shown.items() if tid != ZERO_TARIFF} == {"priced"}
+    shown = {name: describe_tariff(tariff) for name, tariff in tariffs.items()}
+    assert "75p per kWh" in shown["Guest Rapid charging 051223"].text
+    assert {s.state for name, s in shown.items() if name != "Harbour test"} == {"priced"}
     linked = [c for _loc, c in connectors(result) if c.tariff_ids]
     assert {t for c in linked for t in c.tariff_ids} <= {t.id for t in result.tariffs}
     assert len(connectors(result)) - len(linked) == 2
@@ -76,7 +75,7 @@ def test_prices_given_as_strings_are_read_and_unlinked_connectors_are_unknown():
 def test_the_zero_priced_tariff_is_shown_as_published():
     """Finding of 2026-10-11: every price zero, described as "Harbour test"."""
     result, _ = replay()
-    zero = next(t for t in result.tariffs if t.id.endswith(ZERO_TARIFF))
+    zero = next(t for t in result.tariffs if t.alt_text == "Harbour test")
     assert zero.price_state == "free_confirmed"
     assert describe_tariff(zero).text == "Free"
     users = {loc.name for loc, c in connectors(result) if zero.id in c.tariff_ids}
