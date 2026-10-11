@@ -1,0 +1,71 @@
+# yaml-language-server: $schema=schema.json
+id: apcoa
+display_name: APCOA
+ocpi_country_code: unknown
+ocpi_party_id: unknown
+adapter: unknown
+base_url: unknown
+endpoints: {}
+auth:
+  method: unknown
+  name: null
+  secret_name: null
+rate_limit:
+  min_seconds_between_requests: 2
+  limits: []
+  limits_checked: unknown
+  notes: null
+supports_single_location: unknown
+cors: unknown
+attribution: null
+licence: null
+engagement:
+  status: no_public_feed_found
+  evidence:
+    - date: 2026-10-11
+      url: https://www.apcoa.co.uk/ev-charging-services/electric-vehicle-charging/electric-vehicle-charging
+      note: >-
+        APCOA's electric vehicle charging page says it offers charging at car parks nationwide,
+        paid through the APCOA Connect app or ScanPay. It gives no open data feed and no route
+        for requesting open data.
+  log:
+    - date: 2026-10-11
+      action: feed_searched
+      summary: >-
+        APCOA's UK websites, its full site index and its help centre were searched, and no open
+        data feed or route for requesting open data was found.
+      quote: APCOA offers accessible EV charging stations at car parks nationwide, so you can plug in and go.
+      evidence_url: https://www.apcoa.co.uk/ev-charging-services/electric-vehicle-charging/electric-vehicle-charging
+access_requested: null
+access_granted: null
+sources:
+  - url: https://www.apcoa.co.uk/ev-charging-services/electric-vehicle-charging/electric-vehicle-charging
+    note: >-
+      APCOA's electric vehicle charging page (read 2026-10-11). Says "hundreds of charging
+      points" in its car parks, started and paid for through the APCOA Connect app, with
+      ScanPay QR codes at selected sites, and that "Payment for Tesla chargers can be made
+      directly on the Tesla App". No open data link.
+  - url: https://www.apcoa.co.uk/llms.txt
+    note: >-
+      APCOA's full UK site index (read 2026-10-11). Its charging pages are "Find a charging
+      station", "Electric Vehicle Charging" and the EV charging FAQs; no open data, OCPI or
+      regulations page is listed. The EV charging FAQs page (read the same day) gives an EV
+      helpline number for charging problems and no open data link. The home page, legal page
+      and sitemap had no open data link either.
+  - url: https://uk.apcoa.com/business-lines/charging/
+    note: >-
+      APCOA UK's business page on charging (read 2026-10-11): "In the UK, we already have
+      c.1,000 EV charging stations available in car parks operated by APCOA." No open data
+      link.
+  - url: https://helpcentre.apcoa.com/hc/en-gb
+    note: >-
+      APCOA's help centre, searched on 2026-10-11 for "open data", "charge point regulations"
+      and "OCPI"; no article about open data was found.
+findings: []
+notes: >-
+  APCOA runs its own public charging network in the car parks it operates, which drivers use
+  through the APCOA Connect app; on 2026-10-11 its UK business page gave about 1,000 charging
+  stations. No open data feed or request route was found on its own websites on 2026-10-11.
+  The next step is a written request asking where its open data under regulation 10 is
+  published. Some APCOA car parks host Tesla chargers, which are Tesla's own data.
+enabled: false

@@ -1659,6 +1659,63 @@
       "findings": []
     },
     {
+      "id": "apcoa",
+      "name": "APCOA",
+      "enabled": false,
+      "adapter": "unknown",
+      "engagement": {
+        "status": "no_public_feed_found",
+        "label": "No public feed found",
+        "headline": "No public feed found (as of 2026-10-11)",
+        "as_of": "2026-10-11",
+        "last_request": null,
+        "last_response": null,
+        "last_response_text": "No request sent",
+        "evidence": [
+          {
+            "date": "2026-10-11",
+            "url": "https://www.apcoa.co.uk/ev-charging-services/electric-vehicle-charging/electric-vehicle-charging",
+            "file": null,
+            "note": "APCOA's electric vehicle charging page says it offers charging at car parks nationwide, paid through the APCOA Connect app or ScanPay. It gives no open data feed and no route for requesting open data."
+          }
+        ],
+        "log": [
+          {
+            "date": "2026-10-11",
+            "action": "feed_searched",
+            "action_label": "Searched for a feed",
+            "channel": null,
+            "channel_label": null,
+            "summary": "APCOA's UK websites, its full site index and its help centre were searched, and no open data feed or route for requesting open data was found.",
+            "quote": "APCOA offers accessible EV charging stations at car parks nationwide, so you can plug in and go.",
+            "evidence_url": "https://www.apcoa.co.uk/ev-charging-services/electric-vehicle-charging/electric-vehicle-charging",
+            "evidence_file": null
+          }
+        ]
+      },
+      "access_requested": null,
+      "access_granted": null,
+      "feeds": [],
+      "licence": null,
+      "attribution": null,
+      "missing_publish_flag": null,
+      "swapped_coordinates": null,
+      "nonstandard_statuses": null,
+      "tariffs_from": null,
+      "relay": null,
+      "rate_limit": {
+        "our_gap_seconds": 2.0,
+        "our_max_per_hour": 1800,
+        "ours": "At least 2 s between requests to the operator's host, measured from the end of the previous request (at most 1800 in any hour), retries included.",
+        "published": [],
+        "limits_checked": "unknown",
+        "comparison": "The operator's pages have not been checked for limits yet.",
+        "difference_from_regulations": "Not known yet.",
+        "notes": null
+      },
+      "findings": []
+    },
+    {
       "id": "applegreen_electric",
       "name": "Applegreen Fast Charge",
       "enabled": false,
@@ -3484,6 +3541,63 @@
             "summary": "Lidl's home page, its electric vehicle charging page and its page sitemap were read, and no open data feed or route for requesting open data was found.",
             "quote": "Lidl EV Charging network 2025 reliability results",
             "evidence_url": "https://www.lidl.co.uk/c/electric-vehicle-charging/s10049808",
+            "evidence_file": null
+          }
+        ]
+      },
+      "access_requested": null,
+      "access_granted": null,
+      "feeds": [],
+      "licence": null,
+      "attribution": null,
+      "missing_publish_flag": null,
+      "swapped_coordinates": null,
+      "nonstandard_statuses": null,
+      "tariffs_from": null,
+      "relay": null,
+      "rate_limit": {
+        "our_gap_seconds": 2.0,
+        "our_max_per_hour": 1800,
+        "ours": "At least 2 s between requests to the operator's host, measured from the end of the previous request (at most 1800 in any hour), retries included.",
+        "published": [],
+        "limits_checked": "unknown",
+        "comparison": "The operator's pages have not been checked for limits yet.",
+        "difference_from_regulations": "Not known yet.",
+        "notes": null
+      },
+      "findings": []
+    },
+    {
+      "id": "ncp",
+      "name": "NCP",
+      "enabled": false,
+      "adapter": "unknown",
+      "engagement": {
+        "status": "possibly_out_of_scope",
+        "label": "Possibly out of scope",
+        "headline": "Possibly out of scope (as of 2026-10-11)",
+        "as_of": "2026-10-11",
+        "last_request": null,
+        "last_response": null,
+        "last_response_text": "No request sent",
+        "evidence": [
+          {
+            "date": "2026-10-11",
+            "url": "https://www.pwc.co.uk/press-room/press-releases/administrations/national-car-parks-limited--ncp----in-administration---further-4.html",
+            "file": null,
+            "note": "PwC's update on National Car Parks Limited says joint administrators were appointed on 16 March 2026 and lists car parks that closed on 27 March and 16 April 2026. Press reports of 8 October 2026 say the business and most of its car parks were sold to a new owner and still trade as NCP."
+          }
+        ],
+        "log": [
+          {
+            "date": "2026-10-11",
+            "action": "feed_searched",
+            "action_label": "Searched for a feed",
+            "channel": null,
+            "channel_label": null,
+            "summary": "No sign was found that NCP runs a charging network itself; charge points listed at NCP car parks name other networks, and NCP's own website could not be read by this project's automated checks, so it needs checking in a browser.",
+            "quote": null,
+            "evidence_url": "https://www.ncp.co.uk/",
             "evidence_file": null
           }
         ]
