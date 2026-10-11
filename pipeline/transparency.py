@@ -265,6 +265,16 @@ def operator_view(config: OperatorConfig) -> dict:
             if config.tariffs_from
             else None
         ),
+        "zero_price_tariffs": (
+            {
+                "decided": str(config.zero_price_tariffs.decided),
+                "basis": config.zero_price_tariffs.basis,
+                "evidence_url": config.zero_price_tariffs.evidence_url,
+                "tariffs": len(config.zero_price_tariffs.tariff_ids),
+            }
+            if config.zero_price_tariffs
+            else None
+        ),
         "relay": (
             {
                 "decided": str(config.relay.decided),
@@ -310,6 +320,7 @@ def last_reviewed(operators: dict[str, OperatorConfig]) -> str:
             config.swapped_coordinates.decided if config.swapped_coordinates else None,
             config.nonstandard_statuses.decided if config.nonstandard_statuses else None,
             config.tariffs_from.decided if config.tariffs_from else None,
+            config.zero_price_tariffs.decided if config.zero_price_tariffs else None,
         ]
         dates += [d for d in candidates if isinstance(d, date)]
     return max(dates).isoformat() if dates else "unknown"
@@ -406,6 +417,18 @@ def _sources_table(data: dict) -> str:
                 f"exact tariff, never by name, by the owner's decision of "
                 f"{_e(related['decided'])}: {_e(related['basis'])} "
                 f"({_link(related['evidence_url'], 'evidence')})"
+            )
+        zero = op["zero_price_tariffs"]
+        if op["enabled"] and zero:
+            one = zero["tariffs"] == 1
+            named = "1 tariff" if one else f"{zero['tariffs']} tariffs"
+            fetched = fetched.rstrip(".")
+            fetched += (
+                f". {named} whose prices are all zero, named by exact id, "
+                f"{'shows' if one else 'show'} "
+                f"&quot;Price unknown&quot; rather than &quot;Free&quot;, by the owner's "
+                f"decision of {_e(zero['decided'])}: {_e(zero['basis'])} "
+                f"({_link(zero['evidence_url'], 'evidence')})"
             )
         rows.append(
             "<tr>"

@@ -418,6 +418,34 @@ class NonstandardStatuses(_Model):
         return self
 
 
+class ZeroPriceTariffs(_Model):
+    """The repository owner's recorded decision that named tariffs whose prices are all zero
+    show "Price unknown" rather than "Free" (ADR 0022).
+
+    Without this decision a tariff with at least one price component, every component at
+    zero and no minimum charge is confirmed free. A tariff is matched only by its exact OCPI
+    id, never by name, and only while its prices are all zero: if the operator gives it a
+    price, that price is shown. The tariff itself is published unchanged.
+    """
+
+    decided: dt.date = Field(description="Date the owner made the decision (YYYY-MM-DD).")
+    basis: NeutralText = Field(description="Why these tariffs are not shown as free.")
+    evidence_url: SafeUrl = Field(description="Where the tariffs can be seen in the feed.")
+    tariff_ids: list[str] = Field(
+        min_length=1,
+        description="Each tariff's OCPI id exactly as the feed sends it (CiString(36)).",
+    )
+
+    @model_validator(mode="after")
+    def _ids(self) -> "ZeroPriceTariffs":
+        for item in self.tariff_ids:
+            if not re.fullmatch(r"[A-Za-z0-9._-]{1,36}", item):
+                raise ValueError(f"{item!r} is not an OCPI tariff id")
+        if len(set(self.tariff_ids)) != len(self.tariff_ids):
+            raise ValueError("tariff_ids lists a tariff twice")
+        return self
+
+
 class Relay(_Model):
     """The repository owner's recorded decision to fetch this operator through a relay the
     project runs, because the operator's server refused requests from the daily run.
@@ -634,6 +662,12 @@ class OperatorConfig(_Model):
         description="Only by the repository owner's decision: price connectors that name a "
         "tariff only a related operator's feed holds from that feed. Null means such "
         "connectors show 'Price unknown'.",
+    )
+    zero_price_tariffs: ZeroPriceTariffs | None = Field(
+        default=None,
+        description="Only by the repository owner's decision: tariffs, by exact OCPI id, "
+        "whose prices are all zero but which show 'Price unknown' rather than 'Free'. Null "
+        "means a tariff whose prices are all zero shows as free.",
     )
     engagement: Engagement
     access_requested: dt.date | None = None

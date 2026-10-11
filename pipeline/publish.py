@@ -31,6 +31,9 @@ Rules:
   that only a related operator's feed holds, matched exactly by pipeline.tariffs
   related_tariffs, and only when that operator was fetched in the same run. The detail
   file names the feed each such tariff came from, with its attribution.
+- A tariff the owner names in zero_price_tariffs in the operator file (ADR 0022) shows
+  "Price unknown" while its prices are all zero, instead of "Free". The tariff itself is
+  published unchanged in the detail file.
 - Every file is validated against schema/published.py before it is written.
 - The committed site/ folder is never written to; the deploy step copies site/ and adds
   this output.
@@ -59,6 +62,7 @@ from pipeline.tariffs import (
     price_locations,
     related_tariffs,
     site_tariffs,
+    withheld_free_tariffs,
 )
 from schema.models import Connector, Coordinates, Location, Tariff
 from schema.operator import OperatorConfig
@@ -472,9 +476,13 @@ def publish(
             # Only operators fetched in this run: a kept copy holds no tariffs (ADR 0020).
             others = {i: fresh_tariffs[i] for i in config.tariffs_from.operators if i in fresh}
             related = related_tariffs(result.locations, result.tariffs, others)
+        withheld: frozenset[str] = frozenset()
+        if config.zero_price_tariffs is not None:
+            ids = config.zero_price_tariffs.tariff_ids
+            withheld = withheld_free_tariffs(result.tariffs, ids)
         by_location: dict[str, list[ConnectorPrice]] = defaultdict(list)
         priced_from_related = 0
-        for price in price_locations(result.locations, result.tariffs, related):
+        for price in price_locations(result.locations, result.tariffs, related, withheld):
             by_location[price.location_id].append(price)
             own = f"{result.operator_id}:"
             priced_from_related += any(not i.startswith(own) for i in price.tariff_ids)
@@ -494,7 +502,7 @@ def publish(
             if key in details:
                 raise PublishError(f"two locations share the detail file name {key}")
             prices = by_location[location.id]
-            site = site_tariffs(location, tariffs)
+            site = site_tariffs(location, tariffs, withheld)
             listed = sorted(o.tariff_id for o in site.options if o.tariff_id in tariffs)
             found = [tariffs[i] for i in listed]
             elsewhere = [t for t in found if t.provenance.source_id != result.operator_id]

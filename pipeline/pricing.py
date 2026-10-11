@@ -6,7 +6,9 @@ regulations describe the price in reference data as "the price in pence per kilo
 
 - A tariff published in any currency other than GBP is shown as "Price unknown", with the
   reason. Prices are never converted: a converted figure is not what the operator charges.
-- "Free" is shown only for a GBP tariff whose price_state is free_confirmed.
+- "Free" is shown only for a GBP tariff whose price_state is free_confirmed, and never for
+  one the owner has named in zero_price_tariffs in the operator file (ADR 0022), which
+  shows "Price unknown" while its prices are all zero.
 - Energy prices are shown in pence per kWh, as the blueprint asks. VAT is added only when
   every component that costs something states it. Otherwise prices are shown as
   published (OCPI prices exclude VAT) and marked "excluding VAT, VAT not stated".
@@ -189,12 +191,21 @@ def energy_range(tariff: Tariff) -> tuple[Decimal, Decimal, bool] | None:
     return min(energy), max(energy), vat_stated
 
 
-def describe_tariff(tariff: Tariff) -> PriceDisplay:
-    """The price text the map shows for one tariff."""
+ZERO_PRICE_WITHHELD = (
+    "Every price in this tariff is zero, but the repository owner decided not to show it as "
+    "free (zero_price_tariffs in the operator file)."
+)
+
+
+def describe_tariff(tariff: Tariff, *, zero_price_withheld: bool = False) -> PriceDisplay:
+    """The price text the map shows for one tariff. zero_price_withheld is True only for a
+    tariff the owner names in zero_price_tariffs (ADR 0022)."""
     problem = _gbp_problem(tariff)
     if problem:
         return problem
     if tariff.price_state == "free_confirmed":
+        if zero_price_withheld:
+            return PriceDisplay("unknown", "Price unknown", ZERO_PRICE_WITHHELD)
         return PriceDisplay("free", "Free")
     if tariff.price_state == "unknown":
         return PriceDisplay("unknown", "Price unknown", "The tariff has no price components.")

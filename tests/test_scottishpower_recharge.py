@@ -1,18 +1,22 @@
 """ScottishPower Recharge's open data files, hosted by Fuuse, are OCPI 2.2.1 responses read
 by the ocpi_221 adapter (no network)."""
 
+import json
 from collections import Counter
+from datetime import UTC, datetime
 from pathlib import Path
 
 from adapters.http import PoliteClient, operator_hosts
 from adapters.ocpi_221 import fetch
 from adapters.replay import ReplayTransport
+from pipeline import publish, run
 from pipeline.health import in_uk
 from pipeline.pricing import describe_tariff
 from pipeline.registry import load_registry
 
 FIXTURES = Path(__file__).parent / "fixtures" / "scottishpower_recharge"
 FEED = "https://api.fuuse.io/opendata/e11a667d-c56a-468f-b8d3-a50b41628292/"
+WHEN = datetime(2026, 10, 11, 19, 0, tzinfo=UTC)
 
 
 def replay():
@@ -72,7 +76,7 @@ def test_prices_given_as_strings_are_read_and_unlinked_connectors_are_unknown():
     assert len(connectors(result)) - len(linked) == 2
 
 
-def test_the_zero_priced_tariff_is_shown_as_published():
+def test_the_zero_priced_tariff_is_kept_as_published():
     """Finding of 2026-10-11: every price zero, described as "Harbour test"."""
     result, _ = replay()
     zero = next(t for t in result.tariffs if t.alt_text == "Harbour test")
@@ -80,6 +84,43 @@ def test_the_zero_priced_tariff_is_shown_as_published():
     assert describe_tariff(zero).text == "Free"
     users = {loc.name for loc, c in connectors(result) if zero.id in c.tariff_ids}
     assert users == {"Glengarry"}
+
+
+def published_glengarry(tmp_path, operators):
+    config = operators["scottishpower_recharge"]
+    result = run.run_operator(config, transport=ReplayTransport(FIXTURES), sleep=lambda _s: None)
+    publish.publish([result], operators, tmp_path, mode="fixtures", generated_at=WHEN)
+    layer = json.loads((tmp_path / "data" / "locations.geojson").read_text())
+    (feature,) = [f for f in layer["features"] if f["properties"]["name"] == "Glengarry"]
+    key = feature["properties"]["key"]
+    detail = json.loads((tmp_path / "data" / "loc" / key[:2] / f"{key}.json").read_text())
+    return feature["properties"], detail
+
+
+def test_the_owners_decision_shows_the_zero_priced_tariff_as_price_unknown(tmp_path):
+    """zero_price_tariffs, decided 2026-10-11 (ADR 0022)."""
+    operators = load_registry()
+    decision = operators["scottishpower_recharge"].zero_price_tariffs
+    assert decision is not None and decision.decided.isoformat() == "2026-10-11"
+    properties, detail = published_glengarry(tmp_path, operators)
+    assert properties["price"] != "free" and "Free" not in properties["pt"]
+    assert [p["text"] for p in detail["prices"]] == ["Price unknown"] * 2
+    assert all("zero_price_tariffs" in p["reason"] for p in detail["prices"])
+    (option,) = detail["tariff_options"]
+    assert option["state"] == "unknown" and option["name"] == "Harbour test"
+    # The tariff itself is published unchanged.
+    (tariff,) = detail["tariffs"]
+    assert tariff["price_state"] == "free_confirmed"
+
+
+def test_without_the_decision_the_zero_priced_tariff_shows_as_free(tmp_path):
+    operators = load_registry()
+    operators["scottishpower_recharge"] = operators["scottishpower_recharge"].model_copy(
+        update={"zero_price_tariffs": None}
+    )
+    properties, detail = published_glengarry(tmp_path, operators)
+    assert properties["price"] == "free"
+    assert [p["text"] for p in detail["prices"]] == ["Free"] * 2
 
 
 def test_a_type_2_cable_sent_as_dc_is_kept_as_published():

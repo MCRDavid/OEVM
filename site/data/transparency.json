@@ -71,6 +71,7 @@
       "swapped_coordinates": null,
       "nonstandard_statuses": null,
       "tariffs_from": null,
+      "zero_price_tariffs": null,
       "relay": null,
       "rate_limit": {
         "our_gap_seconds": 31.0,
@@ -196,6 +197,7 @@
         }
       },
       "tariffs_from": null,
+      "zero_price_tariffs": null,
       "relay": null,
       "rate_limit": {
         "our_gap_seconds": 6.0,
@@ -368,6 +370,7 @@
           "evolt"
         ]
       },
+      "zero_price_tariffs": null,
       "relay": null,
       "rate_limit": {
         "our_gap_seconds": 2.0,
@@ -492,6 +495,7 @@
       },
       "nonstandard_statuses": null,
       "tariffs_from": null,
+      "zero_price_tariffs": null,
       "relay": null,
       "rate_limit": {
         "our_gap_seconds": 11.0,
@@ -687,6 +691,7 @@
           "chargeplace_scotland"
         ]
       },
+      "zero_price_tariffs": null,
       "relay": null,
       "rate_limit": {
         "our_gap_seconds": 2.0,
@@ -821,6 +826,7 @@
       },
       "nonstandard_statuses": null,
       "tariffs_from": null,
+      "zero_price_tariffs": null,
       "relay": {
         "decided": "2026-10-08",
         "reason": "The files answered HTTP 403 to the first request from a GitHub Actions runner in the first daily run, while answering normally from another network. The repository owner decided to fetch them through the project's relay on Cloudflare Workers, with the project's User-Agent and the same rate limits.",
@@ -976,6 +982,7 @@
       "swapped_coordinates": null,
       "nonstandard_statuses": null,
       "tariffs_from": null,
+      "zero_price_tariffs": null,
       "relay": null,
       "rate_limit": {
         "our_gap_seconds": 2.0,
@@ -1169,6 +1176,7 @@
       "swapped_coordinates": null,
       "nonstandard_statuses": null,
       "tariffs_from": null,
+      "zero_price_tariffs": null,
       "relay": null,
       "rate_limit": {
         "our_gap_seconds": 2.0,
@@ -1270,6 +1278,7 @@
       "swapped_coordinates": null,
       "nonstandard_statuses": null,
       "tariffs_from": null,
+      "zero_price_tariffs": null,
       "relay": null,
       "rate_limit": {
         "our_gap_seconds": 2.0,
@@ -1392,6 +1401,7 @@
           "evolt"
         ]
       },
+      "zero_price_tariffs": null,
       "relay": null,
       "rate_limit": {
         "our_gap_seconds": 2.0,
@@ -1506,6 +1516,12 @@
       "swapped_coordinates": null,
       "nonstandard_statuses": null,
       "tariffs_from": null,
+      "zero_price_tariffs": {
+        "decided": "2026-10-11",
+        "basis": "The tariff's description is \"Harbour test\" and every price in it is zero, so it may not be the price drivers pay at the 2 connectors that name it. On 2026-10-11 the repository owner decided these connectors show \"Price unknown\" rather than \"Free\".",
+        "evidence_url": "https://api.fuuse.io/opendata/e11a667d-c56a-468f-b8d3-a50b41628292/tariff",
+        "tariffs": 1
+      },
       "relay": null,
       "rate_limit": {
         "our_gap_seconds": 31.0,
@@ -1563,7 +1579,7 @@
           "kind": "data_quality",
           "kind_label": "Data quirk",
           "summary": "The 2 connectors at one location (Glengarry, Invergarry) name a tariff whose description is \"Harbour test\" and whose energy, flat and time prices are all zero (on 2026-10-11).",
-          "handling": "Shown as published: the tariff's prices are all zero with no minimum charge, so those connectors show as free, under the tariff's own description.",
+          "handling": "The tariff is published unchanged, but by the owner's decision of 2026-10-11 (zero_price_tariffs) those connectors show \"Price unknown\" rather than \"Free\" while its prices are all zero.",
           "evidence_url": "https://api.fuuse.io/opendata/e11a667d-c56a-468f-b8d3-a50b41628292/tariff",
           "status": "open",
           "resolved_date": null
@@ -1645,6 +1661,7 @@
       "swapped_coordinates": null,
       "nonstandard_statuses": null,
       "tariffs_from": null,
+      "zero_price_tariffs": null,
       "relay": null,
       "rate_limit": {
         "our_gap_seconds": 2.0,
@@ -1702,6 +1719,7 @@
       "swapped_coordinates": null,
       "nonstandard_statuses": null,
       "tariffs_from": null,
+      "zero_price_tariffs": null,
       "relay": null,
       "rate_limit": {
         "our_gap_seconds": 2.0,
@@ -1759,6 +1777,7 @@
       "swapped_coordinates": null,
       "nonstandard_statuses": null,
       "tariffs_from": null,
+      "zero_price_tariffs": null,
       "relay": null,
       "rate_limit": {
         "our_gap_seconds": 2.0,
@@ -1809,6 +1828,7 @@
       "swapped_coordinates": null,
       "nonstandard_statuses": null,
       "tariffs_from": null,
+      "zero_price_tariffs": null,
       "relay": null,
       "rate_limit": {
         "our_gap_seconds": 2.0,
@@ -1866,6 +1886,7 @@
       "swapped_coordinates": null,
       "nonstandard_statuses": null,
       "tariffs_from": null,
+      "zero_price_tariffs": null,
       "relay": null,
       "rate_limit": {
         "our_gap_seconds": 2.0,
@@ -1923,6 +1944,7 @@
       "swapped_coordinates": null,
       "nonstandard_statuses": null,
       "tariffs_from": null,
+      "zero_price_tariffs": null,
       "relay": null,
       "rate_limit": {
         "our_gap_seconds": 2.0,
@@ -1986,6 +2008,7 @@
       "swapped_coordinates": null,
       "nonstandard_statuses": null,
       "tariffs_from": null,
+      "zero_price_tariffs": null,
       "relay": null,
       "rate_limit": {
         "our_gap_seconds": 2.0,
@@ -2059,6 +2082,7 @@
       "swapped_coordinates": null,
       "nonstandard_statuses": null,
       "tariffs_from": null,
+      "zero_price_tariffs": null,
       "relay": null,
       "rate_limit": {
         "our_gap_seconds": 125.0,
@@ -2166,6 +2190,7 @@
       "swapped_coordinates": null,
       "nonstandard_statuses": null,
       "tariffs_from": null,
+      "zero_price_tariffs": null,
       "relay": null,
       "rate_limit": {
         "our_gap_seconds": 2.0,
@@ -2251,6 +2276,7 @@
       "swapped_coordinates": null,
       "nonstandard_statuses": null,
       "tariffs_from": null,
+      "zero_price_tariffs": null,
       "relay": null,
       "rate_limit": {
         "our_gap_seconds": 2.0,
@@ -2317,6 +2343,7 @@
       "swapped_coordinates": null,
       "nonstandard_statuses": null,
       "tariffs_from": null,
+      "zero_price_tariffs": null,
       "relay": null,
       "rate_limit": {
         "our_gap_seconds": 125.0,
@@ -2417,6 +2444,7 @@
       "swapped_coordinates": null,
       "nonstandard_statuses": null,
       "tariffs_from": null,
+      "zero_price_tariffs": null,
       "relay": null,
       "rate_limit": {
         "our_gap_seconds": 2.0,
@@ -2474,6 +2502,7 @@
       "swapped_coordinates": null,
       "nonstandard_statuses": null,
       "tariffs_from": null,
+      "zero_price_tariffs": null,
       "relay": null,
       "rate_limit": {
         "our_gap_seconds": 2.0,
@@ -2524,6 +2553,7 @@
       "swapped_coordinates": null,
       "nonstandard_statuses": null,
       "tariffs_from": null,
+      "zero_price_tariffs": null,
       "relay": null,
       "rate_limit": {
         "our_gap_seconds": 2.0,
@@ -2574,6 +2604,7 @@
       "swapped_coordinates": null,
       "nonstandard_statuses": null,
       "tariffs_from": null,
+      "zero_price_tariffs": null,
       "relay": null,
       "rate_limit": {
         "our_gap_seconds": 2.0,
@@ -2642,6 +2673,7 @@
       "swapped_coordinates": null,
       "nonstandard_statuses": null,
       "tariffs_from": null,
+      "zero_price_tariffs": null,
       "relay": null,
       "rate_limit": {
         "our_gap_seconds": 2.0,
@@ -2699,6 +2731,7 @@
       "swapped_coordinates": null,
       "nonstandard_statuses": null,
       "tariffs_from": null,
+      "zero_price_tariffs": null,
       "relay": null,
       "rate_limit": {
         "our_gap_seconds": 2.0,
@@ -2756,6 +2789,7 @@
       "swapped_coordinates": null,
       "nonstandard_statuses": null,
       "tariffs_from": null,
+      "zero_price_tariffs": null,
       "relay": null,
       "rate_limit": {
         "our_gap_seconds": 2.0,
@@ -2813,6 +2847,7 @@
       "swapped_coordinates": null,
       "nonstandard_statuses": null,
       "tariffs_from": null,
+      "zero_price_tariffs": null,
       "relay": null,
       "rate_limit": {
         "our_gap_seconds": 2.0,
@@ -2870,6 +2905,7 @@
       "swapped_coordinates": null,
       "nonstandard_statuses": null,
       "tariffs_from": null,
+      "zero_price_tariffs": null,
       "relay": null,
       "rate_limit": {
         "our_gap_seconds": 2.0,
@@ -2938,6 +2974,7 @@
       "swapped_coordinates": null,
       "nonstandard_statuses": null,
       "tariffs_from": null,
+      "zero_price_tariffs": null,
       "relay": null,
       "rate_limit": {
         "our_gap_seconds": 2.0,
@@ -3006,6 +3043,7 @@
       "swapped_coordinates": null,
       "nonstandard_statuses": null,
       "tariffs_from": null,
+      "zero_price_tariffs": null,
       "relay": null,
       "rate_limit": {
         "our_gap_seconds": 2.0,
@@ -3063,6 +3101,7 @@
       "swapped_coordinates": null,
       "nonstandard_statuses": null,
       "tariffs_from": null,
+      "zero_price_tariffs": null,
       "relay": null,
       "rate_limit": {
         "our_gap_seconds": 2.0,
@@ -3124,6 +3163,7 @@
       "swapped_coordinates": null,
       "nonstandard_statuses": null,
       "tariffs_from": null,
+      "zero_price_tariffs": null,
       "relay": null,
       "rate_limit": {
         "our_gap_seconds": 2,
@@ -3184,6 +3224,7 @@
       "swapped_coordinates": null,
       "nonstandard_statuses": null,
       "tariffs_from": null,
+      "zero_price_tariffs": null,
       "relay": null,
       "rate_limit": {
         "our_gap_seconds": 31.0,
@@ -3283,6 +3324,7 @@
       "swapped_coordinates": null,
       "nonstandard_statuses": null,
       "tariffs_from": null,
+      "zero_price_tariffs": null,
       "relay": null,
       "rate_limit": {
         "our_gap_seconds": 2.0,
@@ -3340,6 +3382,7 @@
       "swapped_coordinates": null,
       "nonstandard_statuses": null,
       "tariffs_from": null,
+      "zero_price_tariffs": null,
       "relay": null,
       "rate_limit": {
         "our_gap_seconds": 2,
@@ -3397,6 +3440,7 @@
       "swapped_coordinates": null,
       "nonstandard_statuses": null,
       "tariffs_from": null,
+      "zero_price_tariffs": null,
       "relay": null,
       "rate_limit": {
         "our_gap_seconds": 2.0,
@@ -3447,6 +3491,7 @@
       "swapped_coordinates": null,
       "nonstandard_statuses": null,
       "tariffs_from": null,
+      "zero_price_tariffs": null,
       "relay": null,
       "rate_limit": {
         "our_gap_seconds": 2.0,
@@ -3497,6 +3542,7 @@
       "swapped_coordinates": null,
       "nonstandard_statuses": null,
       "tariffs_from": null,
+      "zero_price_tariffs": null,
       "relay": null,
       "rate_limit": {
         "our_gap_seconds": 2.0,
@@ -3554,6 +3600,7 @@
       "swapped_coordinates": null,
       "nonstandard_statuses": null,
       "tariffs_from": null,
+      "zero_price_tariffs": null,
       "relay": null,
       "rate_limit": {
         "our_gap_seconds": 2.0,
@@ -3611,6 +3658,7 @@
       "swapped_coordinates": null,
       "nonstandard_statuses": null,
       "tariffs_from": null,
+      "zero_price_tariffs": null,
       "relay": null,
       "rate_limit": {
         "our_gap_seconds": 2.0,
@@ -3685,6 +3733,7 @@
       "swapped_coordinates": null,
       "nonstandard_statuses": null,
       "tariffs_from": null,
+      "zero_price_tariffs": null,
       "relay": null,
       "rate_limit": {
         "our_gap_seconds": 2.0,
@@ -3753,6 +3802,7 @@
       "swapped_coordinates": null,
       "nonstandard_statuses": null,
       "tariffs_from": null,
+      "zero_price_tariffs": null,
       "relay": null,
       "rate_limit": {
         "our_gap_seconds": 2.0,
@@ -3814,6 +3864,7 @@
       "swapped_coordinates": null,
       "nonstandard_statuses": null,
       "tariffs_from": null,
+      "zero_price_tariffs": null,
       "relay": null,
       "rate_limit": {
         "our_gap_seconds": 2.0,
@@ -3881,6 +3932,7 @@
       "swapped_coordinates": null,
       "nonstandard_statuses": null,
       "tariffs_from": null,
+      "zero_price_tariffs": null,
       "relay": null,
       "rate_limit": {
         "our_gap_seconds": 2.0,
@@ -3931,6 +3983,7 @@
       "swapped_coordinates": null,
       "nonstandard_statuses": null,
       "tariffs_from": null,
+      "zero_price_tariffs": null,
       "relay": null,
       "rate_limit": {
         "our_gap_seconds": 2.0,
@@ -3988,6 +4041,7 @@
       "swapped_coordinates": null,
       "nonstandard_statuses": null,
       "tariffs_from": null,
+      "zero_price_tariffs": null,
       "relay": null,
       "rate_limit": {
         "our_gap_seconds": 2.0,
@@ -4045,6 +4099,7 @@
       "swapped_coordinates": null,
       "nonstandard_statuses": null,
       "tariffs_from": null,
+      "zero_price_tariffs": null,
       "relay": null,
       "rate_limit": {
         "our_gap_seconds": 2.0,
@@ -4118,6 +4173,7 @@
       "swapped_coordinates": null,
       "nonstandard_statuses": null,
       "tariffs_from": null,
+      "zero_price_tariffs": null,
       "relay": null,
       "rate_limit": {
         "our_gap_seconds": 125.0,
@@ -4225,6 +4281,7 @@
       "swapped_coordinates": null,
       "nonstandard_statuses": null,
       "tariffs_from": null,
+      "zero_price_tariffs": null,
       "relay": null,
       "rate_limit": {
         "our_gap_seconds": 2.0,
@@ -4282,6 +4339,7 @@
       "swapped_coordinates": null,
       "nonstandard_statuses": null,
       "tariffs_from": null,
+      "zero_price_tariffs": null,
       "relay": null,
       "rate_limit": {
         "our_gap_seconds": 2.0,
@@ -4343,6 +4401,7 @@
       "swapped_coordinates": null,
       "nonstandard_statuses": null,
       "tariffs_from": null,
+      "zero_price_tariffs": null,
       "relay": null,
       "rate_limit": {
         "our_gap_seconds": 2.0,
@@ -4393,6 +4452,7 @@
       "swapped_coordinates": null,
       "nonstandard_statuses": null,
       "tariffs_from": null,
+      "zero_price_tariffs": null,
       "relay": null,
       "rate_limit": {
         "our_gap_seconds": 2.0,
@@ -4443,6 +4503,7 @@
       "swapped_coordinates": null,
       "nonstandard_statuses": null,
       "tariffs_from": null,
+      "zero_price_tariffs": null,
       "relay": null,
       "rate_limit": {
         "our_gap_seconds": 2.0,
@@ -4493,6 +4554,7 @@
       "swapped_coordinates": null,
       "nonstandard_statuses": null,
       "tariffs_from": null,
+      "zero_price_tariffs": null,
       "relay": null,
       "rate_limit": {
         "our_gap_seconds": 2.0,
@@ -4566,6 +4628,7 @@
       "swapped_coordinates": null,
       "nonstandard_statuses": null,
       "tariffs_from": null,
+      "zero_price_tariffs": null,
       "relay": null,
       "rate_limit": {
         "our_gap_seconds": 125.0,
@@ -4666,6 +4729,7 @@
       "swapped_coordinates": null,
       "nonstandard_statuses": null,
       "tariffs_from": null,
+      "zero_price_tariffs": null,
       "relay": null,
       "rate_limit": {
         "our_gap_seconds": 2.0,
@@ -4723,6 +4787,7 @@
       "swapped_coordinates": null,
       "nonstandard_statuses": null,
       "tariffs_from": null,
+      "zero_price_tariffs": null,
       "relay": null,
       "rate_limit": {
         "our_gap_seconds": 2.0,
@@ -4791,6 +4856,7 @@
       "swapped_coordinates": null,
       "nonstandard_statuses": null,
       "tariffs_from": null,
+      "zero_price_tariffs": null,
       "relay": null,
       "rate_limit": {
         "our_gap_seconds": 2.0,
@@ -4859,6 +4925,7 @@
       "swapped_coordinates": null,
       "nonstandard_statuses": null,
       "tariffs_from": null,
+      "zero_price_tariffs": null,
       "relay": null,
       "rate_limit": {
         "our_gap_seconds": 2.0,

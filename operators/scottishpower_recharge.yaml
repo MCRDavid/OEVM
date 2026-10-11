@@ -54,6 +54,15 @@ licence:
     general website or charging terms as not covering the open data, which regulation
     10(5) requires to be available without terms on its use.
   checked: 2026-10-11
+zero_price_tariffs:
+  decided: 2026-10-11
+  basis: >-
+    The tariff's description is "Harbour test" and every price in it is zero, so it may not
+    be the price drivers pay at the 2 connectors that name it. On 2026-10-11 the repository
+    owner decided these connectors show "Price unknown" rather than "Free".
+  evidence_url: https://api.fuuse.io/opendata/e11a667d-c56a-468f-b8d3-a50b41628292/tariff
+  tariff_ids:
+    - 2bf0030b-e446-473f-96ef-76de022b87e9
 engagement:
   status: open_anonymous
   evidence:
@@ -128,8 +137,9 @@ findings:
       description is "Harbour test" and whose energy, flat and time prices are all zero
       (on 2026-10-11).
     handling: >-
-      Shown as published: the tariff's prices are all zero with no minimum charge, so those
-      connectors show as free, under the tariff's own description.
+      The tariff is published unchanged, but by the owner's decision of 2026-10-11
+      (zero_price_tariffs) those connectors show "Price unknown" rather than "Free" while
+      its prices are all zero.
     evidence_url: https://api.fuuse.io/opendata/e11a667d-c56a-468f-b8d3-a50b41628292/tariff
   - date: 2026-10-11
     kind: data_quality

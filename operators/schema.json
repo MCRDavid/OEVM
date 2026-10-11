@@ -802,6 +802,47 @@
       ],
       "title": "TariffsFrom",
       "type": "object"
+    },
+    "ZeroPriceTariffs": {
+      "additionalProperties": false,
+      "description": "The repository owner's recorded decision that named tariffs whose prices are all zero\nshow \"Price unknown\" rather than \"Free\" (ADR 0022).\n\nWithout this decision a tariff with at least one price component, every component at\nzero and no minimum charge is confirmed free. A tariff is matched only by its exact OCPI\nid, never by name, and only while its prices are all zero: if the operator gives it a\nprice, that price is shown. The tariff itself is published unchanged.",
+      "properties": {
+        "decided": {
+          "description": "Date the owner made the decision (YYYY-MM-DD).",
+          "format": "date",
+          "title": "Decided",
+          "type": "string"
+        },
+        "basis": {
+          "description": "Why these tariffs are not shown as free.",
+          "minLength": 1,
+          "title": "Basis",
+          "type": "string"
+        },
+        "evidence_url": {
+          "description": "Where the tariffs can be seen in the feed.",
+          "pattern": "^https?://\\S+$",
+          "title": "Evidence Url",
+          "type": "string"
+        },
+        "tariff_ids": {
+          "description": "Each tariff's OCPI id exactly as the feed sends it (CiString(36)).",
+          "items": {
+            "type": "string"
+          },
+          "minItems": 1,
+          "title": "Tariff Ids",
+          "type": "array"
+        }
+      },
+      "required": [
+        "decided",
+        "basis",
+        "evidence_url",
+        "tariff_ids"
+      ],
+      "title": "ZeroPriceTariffs",
+      "type": "object"
     }
   },
   "additionalProperties": false,
@@ -990,6 +1031,18 @@
       ],
       "default": null,
       "description": "Only by the repository owner's decision: price connectors that name a tariff only a related operator's feed holds from that feed. Null means such connectors show 'Price unknown'."
+    },
+    "zero_price_tariffs": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/ZeroPriceTariffs"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "description": "Only by the repository owner's decision: tariffs, by exact OCPI id, whose prices are all zero but which show 'Price unknown' rather than 'Free'. Null means a tariff whose prices are all zero shows as free."
     },
     "engagement": {
       "$ref": "#/$defs/Engagement"
