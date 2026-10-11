@@ -1,5 +1,5 @@
 {
-  "last_reviewed": "2026-10-10",
+  "last_reviewed": "2026-10-11",
   "disclaimer": "OEVM is a personal, experimental project for learning about AI tools. Much of its code and text was written with an AI assistant, and it will contain mistakes. Charger data comes from the operators and other sources credited on every record, and remains their work. Everything is provided \"as is\", with no warranty or guarantee of any kind. Always check prices and availability at the charger.",
   "regulation": {
     "summary": "The Public Charge Point Regulations 2023 set no limit on how often data users may request the data. Regulation 10(5) requires the data to be available free of charge without terms on its use. DfT's guidance allows terms covering the means of access, which is where operators' rate limits come from.",
@@ -73,16 +73,26 @@
       "tariffs_from": null,
       "relay": null,
       "rate_limit": {
-        "our_gap_seconds": 2.0,
-        "our_max_per_hour": 1800,
-        "ours": "At least 2 s between requests to the operator's host, measured from the end of the previous request (at most 1800 in any hour), retries included.",
+        "our_gap_seconds": 31.0,
+        "our_max_per_hour": 117,
+        "ours": "At least 31 s between requests to the operator's host, measured from the end of the previous request (at most 117 in any hour), retries included.",
         "published": [],
         "limits_checked": "2026-10-10",
         "comparison": "No limit published (checked 2026-10-10). The gap is our own choice.",
         "difference_from_regulations": "Neither the operator nor the regulations set a limit.",
-        "notes": "Neither Arnold Clark's pages nor the responses state a rate limit. The 2 second gap is this project's own choice. Each response holds every record, so a full run makes two requests (about 0.3 MB on 2026-10-10)."
+        "notes": "Arnold Clark's pages state no rate limit. The gap is this project's own choice: 2 seconds until 11 October 2026, then 31 seconds, because the host answered the second request of each run with HTTP 429 and Retry-After 30 (see findings). 31 seconds is the 30 the host asks for, plus a 1 second margin. ScottishPower Recharge's files are on the same host and use the same gap. Each response holds every record, so a full run makes two requests (about 0.3 MB on 2026-10-10)."
       },
       "findings": [
+        {
+          "date": "2026-10-11",
+          "kind": "access",
+          "kind_label": "Access",
+          "summary": "The daily run of 2026-10-11 made 3 requests for the 2 files and took 33 seconds over the tariff file. The same day the host answered ScottishPower Recharge's tariff request, sent 2 seconds after its location request, with HTTP 429 and Retry-After 30, which matches that run. The pages state no limit.",
+          "handling": "Requests to the host are spaced 31 seconds apart from 2026-10-11, for this operator and ScottishPower Recharge.",
+          "evidence_url": "https://github.com/MCRDavid/OEVM/actions/runs/38133263489",
+          "status": "open",
+          "resolved_date": null
+        },
         {
           "date": "2026-10-10",
           "kind": "spec_conformance",
@@ -1421,6 +1431,160 @@
           "summary": "No location gives opening_times, and records carry fields that are not in OCPI 2.2.1: \"facility\" on locations (always null), \"id\" and \"location_id\" on EVSEs, and \"max_charge_rate\" on connectors.",
           "handling": "Opening hours are shown as unknown. The extra fields are not used.",
           "evidence_url": "https://info.smartcharging.uk/public_feed/locations/4009",
+          "status": "open",
+          "resolved_date": null
+        }
+      ]
+    },
+    {
+      "id": "scottishpower_recharge",
+      "name": "ScottishPower Recharge",
+      "enabled": true,
+      "adapter": "ocpi_221",
+      "engagement": {
+        "status": "open_anonymous",
+        "label": "Open, no registration",
+        "headline": "Open, no registration (as of 2026-10-11)",
+        "as_of": "2026-10-11",
+        "last_request": null,
+        "last_response": null,
+        "last_response_text": "No request sent",
+        "evidence": [
+          {
+            "date": "2026-10-11",
+            "url": "https://www.scottishpower.co.uk/blog/public-ev-charging",
+            "file": null,
+            "note": "The \"Open data access\" section links location and tariff data on api.fuuse.io and states no licence, terms or rate limit. Read in a browser."
+          }
+        ],
+        "log": [
+          {
+            "date": "2026-10-10",
+            "action": "feed_searched",
+            "action_label": "Searched for a feed",
+            "channel": null,
+            "channel_label": null,
+            "summary": "ScottishPower's public EV charging page could not be read by this project's automated checks on 2026-10-10 (HTTP 403), so its open data route is not yet known; it needs checking in a browser.",
+            "quote": null,
+            "evidence_url": "https://www.scottishpower.co.uk/public-ev-charging",
+            "evidence_file": null
+          },
+          {
+            "date": "2026-10-11",
+            "action": "page_checked",
+            "action_label": "Operator's page checked",
+            "channel": null,
+            "channel_label": null,
+            "summary": "Read ScottishPower's public EV charging pages in a browser. The blog page's \"Open data access\" section links location and tariff files that need no key.",
+            "quote": null,
+            "evidence_url": "https://www.scottishpower.co.uk/blog/public-ev-charging",
+            "evidence_file": null
+          }
+        ]
+      },
+      "access_requested": null,
+      "access_granted": null,
+      "feeds": [
+        {
+          "kind": "locations",
+          "url": "https://api.fuuse.io/opendata/e11a667d-c56a-468f-b8d3-a50b41628292/location",
+          "status": "documented"
+        },
+        {
+          "kind": "tariffs",
+          "url": "https://api.fuuse.io/opendata/e11a667d-c56a-468f-b8d3-a50b41628292/tariff",
+          "status": "documented"
+        }
+      ],
+      "licence": {
+        "name": "OGL-3.0",
+        "url": "https://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/",
+        "checked": "2026-10-11"
+      },
+      "attribution": "Contains data from ScottishPower Recharge published under the Public Charge Point Regulations 2023, used in line with the Open Government Licence v3.0.",
+      "missing_publish_flag": null,
+      "swapped_coordinates": null,
+      "nonstandard_statuses": null,
+      "tariffs_from": null,
+      "relay": null,
+      "rate_limit": {
+        "our_gap_seconds": 31.0,
+        "our_max_per_hour": 117,
+        "ours": "At least 31 s between requests to the operator's host, measured from the end of the previous request (at most 117 in any hour), retries included.",
+        "published": [],
+        "limits_checked": "2026-10-11",
+        "comparison": "No limit published (checked 2026-10-11). The gap is our own choice.",
+        "difference_from_regulations": "Neither the operator nor the regulations set a limit.",
+        "notes": "ScottishPower's pages state no rate limit. The host answers a second request sent 2 seconds after the first with HTTP 429 and Retry-After 30 (see findings). The 31 second gap is this project's own choice: the 30 seconds the host asks for, plus a 1 second margin. Arnold Clark Charge's files are on the same host and use the same gap. Each response holds every record, so a full run makes two requests (about 0.2 MB on 2026-10-11)."
+      },
+      "findings": [
+        {
+          "date": "2026-10-11",
+          "kind": "access",
+          "kind_label": "Access",
+          "summary": "The host answered the tariff request, sent 2 seconds after the location request, with HTTP 429, a page titled \"The Fuuse API is currently being rate limited\" and Retry-After 30. The same request 30 seconds later was answered normally. The pages state no limit.",
+          "handling": "Requests to the host are spaced 31 seconds apart, for this operator and Arnold Clark Charge. A recording made that way on 2026-10-11 needed no retry.",
+          "evidence_url": "https://api.fuuse.io/opendata/e11a667d-c56a-468f-b8d3-a50b41628292/tariff",
+          "status": "open",
+          "resolved_date": null
+        },
+        {
+          "date": "2026-10-11",
+          "kind": "spec_conformance",
+          "kind_label": "Differs from OCPI 2.2.1",
+          "summary": "Locations and tariffs carry no country_code or party_id, which OCPI 2.2.1 requires.",
+          "handling": "Record ids use \"unknown\" for the country and party, from this file, until the operator's own data gives them.",
+          "evidence_url": "https://api.fuuse.io/opendata/e11a667d-c56a-468f-b8d3-a50b41628292/location",
+          "status": "open",
+          "resolved_date": null
+        },
+        {
+          "date": "2026-10-11",
+          "kind": "spec_conformance",
+          "kind_label": "Differs from OCPI 2.2.1",
+          "summary": "Tariff prices, VAT rates and minimum kWh are sent as strings (for example \"0.5417\", \"20.0000\" and \"0.1000\") rather than numbers.",
+          "handling": "Read as the numbers they spell. Values that are not numbers would be unknown.",
+          "evidence_url": "https://api.fuuse.io/opendata/e11a667d-c56a-468f-b8d3-a50b41628292/tariff",
+          "status": "open",
+          "resolved_date": null
+        },
+        {
+          "date": "2026-10-11",
+          "kind": "data_quality",
+          "kind_label": "Data quirk",
+          "summary": "11 of 187 connectors, at 3 locations, name no tariff in tariff_ids (on 2026-10-11).",
+          "handling": "Connectors with no tariff show \"Price unknown\".",
+          "evidence_url": "https://api.fuuse.io/opendata/e11a667d-c56a-468f-b8d3-a50b41628292/location",
+          "status": "open",
+          "resolved_date": null
+        },
+        {
+          "date": "2026-10-11",
+          "kind": "data_quality",
+          "kind_label": "Data quirk",
+          "summary": "The 2 connectors at one location (Glengarry, Invergarry) name a tariff whose description is \"Harbour test\" and whose energy, flat and time prices are all zero (on 2026-10-11).",
+          "handling": "Shown as published: the tariff's prices are all zero with no minimum charge, so those connectors show as free, under the tariff's own description.",
+          "evidence_url": "https://api.fuuse.io/opendata/e11a667d-c56a-468f-b8d3-a50b41628292/tariff",
+          "status": "open",
+          "resolved_date": null
+        },
+        {
+          "date": "2026-10-11",
+          "kind": "data_quality",
+          "kind_label": "Data quirk",
+          "summary": "One 50 kW connector (Storage Vault - Hamilton) is a Type 2 cable (IEC_62196_T2) with power_type DC. Type 2 connectors are usually AC.",
+          "handling": "Kept as published.",
+          "evidence_url": "https://api.fuuse.io/opendata/e11a667d-c56a-468f-b8d3-a50b41628292/location",
+          "status": "open",
+          "resolved_date": null
+        },
+        {
+          "date": "2026-10-11",
+          "kind": "data_quality",
+          "kind_label": "Data quirk",
+          "summary": "One postcode is written with a letter O where a zero would be expected (\"KA2 OFE\").",
+          "handling": "Kept as published. The map places locations by their coordinates.",
+          "evidence_url": "https://api.fuuse.io/opendata/e11a667d-c56a-468f-b8d3-a50b41628292/location",
           "status": "open",
           "resolved_date": null
         }
@@ -3754,56 +3918,6 @@
             "summary": "Roam's home page, sitemap and FAQ page were read, and no open data feed or route for requesting open data was found.",
             "quote": null,
             "evidence_url": "https://www.roamcharging.com/",
-            "evidence_file": null
-          }
-        ]
-      },
-      "access_requested": null,
-      "access_granted": null,
-      "feeds": [],
-      "licence": null,
-      "attribution": null,
-      "missing_publish_flag": null,
-      "swapped_coordinates": null,
-      "nonstandard_statuses": null,
-      "tariffs_from": null,
-      "relay": null,
-      "rate_limit": {
-        "our_gap_seconds": 2.0,
-        "our_max_per_hour": 1800,
-        "ours": "At least 2 s between requests to the operator's host, measured from the end of the previous request (at most 1800 in any hour), retries included.",
-        "published": [],
-        "limits_checked": "unknown",
-        "comparison": "The operator's pages have not been checked for limits yet.",
-        "difference_from_regulations": "Not known yet.",
-        "notes": null
-      },
-      "findings": []
-    },
-    {
-      "id": "scottishpower_recharge",
-      "name": "ScottishPower Recharge",
-      "enabled": false,
-      "adapter": "unknown",
-      "engagement": {
-        "status": "unknown",
-        "label": "Not yet established",
-        "headline": "Not yet established (as of 2026-10-10)",
-        "as_of": "2026-10-10",
-        "last_request": null,
-        "last_response": null,
-        "last_response_text": "No request sent",
-        "evidence": [],
-        "log": [
-          {
-            "date": "2026-10-10",
-            "action": "feed_searched",
-            "action_label": "Searched for a feed",
-            "channel": null,
-            "channel_label": null,
-            "summary": "ScottishPower's public EV charging page could not be read by this project's automated checks on 2026-10-10 (HTTP 403), so its open data route is not yet known; it needs checking in a browser.",
-            "quote": null,
-            "evidence_url": "https://www.scottishpower.co.uk/public-ev-charging",
             "evidence_file": null
           }
         ]

@@ -24,9 +24,11 @@ KEY_LIKE = re.compile(r"[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]
 KEY_SCAN_SKIPPED = ("tests/fixtures/", "uv.lock")
 # Public notice ids on the government's Contracts Finder site, cited in the blueprint, and
 # feed addresses an operator links on its own public page with no key: the id in them names
-# the operator's account on its data host (operators/arnold_clark_charge.yaml).
+# the operator's account on its data host (operators/arnold_clark_charge.yaml and
+# operators/scottishpower_recharge.yaml).
 PUBLISHED_FEED_ADDRESSES = {
     "https://api.fuuse.io/opendata/e6397b95-1624-49cd-824d-ab2f9dfe7294/",
+    "https://api.fuuse.io/opendata/e11a667d-c56a-468f-b8d3-a50b41628292/",
 }
 KEY_LIKE_ALLOWED = {
     "https://www.contractsfinder.service.gov.uk/Notice/9b22d88e-38ba-4055-8e0e-84c58a196aa0",
