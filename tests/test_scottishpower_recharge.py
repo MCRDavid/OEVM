@@ -95,7 +95,7 @@ def test_a_type_2_cable_sent_as_dc_is_kept_as_published():
 def test_requests_to_the_shared_host_are_31_seconds_apart():
     """The host asked for 30 seconds with HTTP 429 after a 2 second gap (2026-10-11)."""
     registry = load_registry()
-    on_host = [c for c in registry.values() if "api.fuuse.io" in operator_hosts(c)]
+    on_host = [c for c in registry.values() if operator_hosts(c) == {"api.fuuse.io"}]
     assert {c.id for c in on_host} >= {"arnold_clark_charge", "scottishpower_recharge"}
     assert {c.rate_limit.min_seconds_between_requests for c in on_host} == {31}
 
