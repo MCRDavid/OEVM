@@ -24,13 +24,16 @@ auth:
   name: null
   secret_name: null
 rate_limit:
-  min_seconds_between_requests: 2
+  min_seconds_between_requests: 31
   limits: []
   limits_checked: 2026-10-11
   notes: >-
-    ScottishPower's pages state no rate limit. The 2 second gap is this project's own
-    choice and matches Arnold Clark Charge, whose files are on the same host. Each response
-    holds every record, so a full run makes two requests.
+    ScottishPower's pages state no rate limit. The host answers a second request sent 2
+    seconds after the first with HTTP 429 and Retry-After 30 (see findings). The 31 second
+    gap is this project's own choice: the 30 seconds the host asks for, plus a 1 second
+    margin. Arnold Clark Charge's files are on the same host and use the same gap. Each
+    response holds every record, so a full run makes two requests (about 0.2 MB on
+    2026-10-11).
 supports_single_location: unknown
 cors: needs_testing
 attribution: >-
