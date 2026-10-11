@@ -24,6 +24,12 @@ from schema.operator import OperatorConfig
 HOST = "data.example.com"
 FEED = f"https://{HOST}/locations"
 OTHER = "https://other.example.com/locations"
+# Names the variable a key would be in; holds no key.
+KEYED = {
+    "method": "header",
+    "name": "Authorization",
+    "secret_name": "EXAMPLE_KEY",  # pragma: allowlist secret
+}
 PINNED = b"the expired certificate the owner accepted"
 NOW = datetime(2026, 10, 11, 18, 0, tzinfo=UTC)
 EXPIRED = {"notBefore": "Mar 23 07:59:07 2026 GMT", "notAfter": "Oct  7 07:59:07 2026 GMT"}
@@ -180,7 +186,7 @@ def test_operators_without_the_decision_never_relax_dates():
     ("overrides", "problem"),
     [
         (
-            {"auth": {"method": "header", "name": "Authorization", "secret_name": "EXAMPLE_KEY"}},
+            {"auth": KEYED},
             "only a feed that needs no key may be read past a certificate",
         ),
         (

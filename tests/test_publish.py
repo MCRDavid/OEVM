@@ -71,6 +71,7 @@ def test_the_manifest_records_operators_attribution_and_sizes(results, tmp_path)
         "jolt",
         "mer_uk",
         "mfg_ev_power",
+        "parkrecharge",
         "pogo_charge",
     }
     for operator_id, entry in manifest.operators.items():
