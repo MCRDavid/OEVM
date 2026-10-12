@@ -62,14 +62,19 @@ def test_the_map_page_shows_the_short_disclaimer(page):
 
 
 def test_the_map_page_links_to_the_required_documents(page):
-    for path in ("DISCLAIMER.md", "DATA_LICENCES.md", "SECURITY.md"):
-        assert f"{REPOSITORY_URL}/blob/main/{path}" in page.hrefs
-    assert "transparency/" in page.hrefs
-    assert "privacy/" in page.hrefs
+    for path in (
+        "disclaimer/",
+        "data-licences/",
+        "privacy/",
+        "security/",
+        "transparency/",
+        "status/",
+        "report/",
+    ):
+        assert path in page.hrefs
+    # Every link stays on the site except "Source code" (the owner's request, 11 Oct 2026).
     github = [href for href in page.hrefs if urlsplit(href).hostname == "github.com"]
-    assert github and all(
-        href.startswith(f"{REPOSITORY_URL}/") or href == REPOSITORY_URL for href in github
-    )
+    assert github == [REPOSITORY_URL]
 
 
 def test_the_footer_tells_visitors_about_the_basemap_and_its_error_reports():
@@ -198,6 +203,27 @@ def test_build_copies_the_site_maplibre_and_notices(node_modules, tmp_path):
     }
     assert not (out / "assets" / "offline-style.json").exists()
     assert f"map style: {build_site.STYLE_URL}" in report
+    for folder in ("disclaimer", "data-licences", "security", "report"):
+        assert "<h1>" in (out / folder / "index.html").read_text(encoding="utf-8")
+    assert "published disclaimer/, data-licences/, security/, report/" in report
+
+
+def test_every_link_between_pages_of_the_built_site_finds_a_page(node_modules, tmp_path):
+    out = tmp_path / "build"
+    build_site.build(out)
+    for path in out.rglob("*.html"):
+        parsed = Page()
+        parsed.feed(path.read_text(encoding="utf-8"))
+        for href in parsed.hrefs:
+            if urlsplit(href).scheme or href.startswith("#"):
+                continue
+            target = (path.parent / urlsplit(href).path).resolve()
+            if target.is_dir():
+                target = target / "index.html"
+            # status/ and data/ come from the daily run, not from the build.
+            if target.is_relative_to((out / "status").resolve()):
+                continue
+            assert target.exists(), f"{path.relative_to(out)} links to missing {href}"
 
 
 def test_offline_style_build_needs_no_outside_service(node_modules, tmp_path):

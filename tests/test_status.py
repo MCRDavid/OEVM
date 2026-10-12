@@ -73,10 +73,8 @@ def test_the_page_renders_from_fixtures_with_neutral_labels(logs, tmp_path):
 def test_the_page_shows_the_disclaimer_and_required_links(logs, tmp_path):
     page, _ = render(logs, tmp_path)
     assert short_disclaimer().replace('"', "&quot;") in page
-    for path in ("DISCLAIMER.md", "DATA_LICENCES.md", "SECURITY.md"):
-        assert path in page
-    assert 'href="../transparency/"' in page
-    assert 'href="../privacy/"' in page
+    for path in ("disclaimer", "data-licences", "privacy", "security", "report", "transparency"):
+        assert f'href="../{path}/"' in page
 
 
 def test_health_figures_are_counted_from_what_was_received(logs):

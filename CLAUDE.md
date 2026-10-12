@@ -36,7 +36,9 @@ decisions are in docs/adr/.
   estimate a price. Permission requests to the others are tracked in providers/README.md.
 - pipeline/transparency.py: site/transparency/. pipeline/publish.py: map files; schema/published.py.
 - pipeline/geography.py and pipeline/data/: whether a point is in the UK (Natural Earth outlines).
-- pipeline/status.py: feed health page. schema/runlog.py: run log format. pipeline/health.py: figures.
+- pipeline/status.py: feed health page, with a green, yellow, red or grey circle per operator.
+  schema/runlog.py: run log format. pipeline/health.py: figures.
+- pipeline/documents.py: disclaimer, data licences, security and report pages, written by build_site.
 - pipeline/project.py: repository URL (also in site/index.html, site/.well-known/security.txt and .github/ISSUE_TEMPLATE).
 - site/index.html, site/assets/: the map page. pipeline/build_site.py: build folder with MapLibre.
 - proxy/: Phase 3 live status Worker, not deployed (docs/PHASE3_PLAN.md). pipeline/live_snapshot.py, schema/live.py: its snapshots.
@@ -89,8 +91,8 @@ decisions are in docs/adr/.
 - Text from feeds goes into the page as text only (textContent), never as HTML.
 - Tests never contact the basemap (OpenFreeMap): use --offline-style.
 - Nothing is stored on a visitor's device until they opt in; "Forget my settings" deletes it all.
-- Every page shows the short disclaimer and links to DISCLAIMER.md, data sources, the privacy notice
-  and SECURITY.md.
+- Every page shows the short disclaimer and links to the disclaimer, data sources, privacy notice
+  and security policy pages. Footer links stay on the site; only "Source code" goes to GitHub.
 
 ## Security (SECURITY.md)
 - Vulnerabilities, leaked keys and personal data are reported privately, never in public issues.
