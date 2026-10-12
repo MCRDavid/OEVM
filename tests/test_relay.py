@@ -156,6 +156,6 @@ def test_the_worker_settings_deploy_the_relay_and_nothing_else():
     assert settings["name"] == "oevm-relay"
     assert (relay / settings["main"]).is_file()
     assert settings["preview_urls"] is False
-    assert not {"vars", "routes", "route", "triggers"} & settings.keys(), (
-        "secrets stay in Cloudflare"
-    )
+    assert not {"vars", "routes", "route"} & settings.keys(), "secrets stay in Cloudflare"
+    # The only trigger is the timer that starts Fetch daily (ADR 0024, tests/test_daily_runs.py).
+    assert set(settings.get("triggers", {})) == {"crons"}
