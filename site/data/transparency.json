@@ -11,6 +11,20 @@
       }
     ]
   },
+  "private_rule": {
+    "decided": "2026-10-11",
+    "summary": "The repository owner decided on 11 October 2026 that chargers marked as not for public use are hidden on the map unless a visitor ticks \"Show chargers marked private or restricted\" in the filters. OCPI 2.2.1 has no field that says a location is private, and no feed read so far marks one in any other field, so a location is marked only when the operator's own name for it contains one of these phrases, as whole words in any mix of capitals:",
+    "phrases": [
+      "\"private use\", \"private access\" or \"private only\", as in \"Private Use Only\"",
+      "\"private\" at the end of the name or in brackets, as in \"Site - PRIVATE\"",
+      "\"not public\", \"not for public use\" or \"non-public\"",
+      "\"no public access\"",
+      "\"restricted access\" or \"restricted use\"",
+      "\"staff only\", \"fleet only\", \"employees only\", \"residents only\", \"tenants only\", \"members only\" or \"permit holders only\", with or without \"use\" before \"only\"",
+      "\"staff car park\""
+    ],
+    "not_counted": "Words that often name a place rather than a rule, such as \"Fleet\" in Fleetwood Road, \"Depot\", \"Residential\", \"Visitor Centre\" or \"Blue Badge holders only\", are not counted. A marked location is published unchanged: its details say which words were found, and the feed health page lists every location marked in the latest run."
+  },
   "operators": [
     {
       "id": "arnold_clark_charge",

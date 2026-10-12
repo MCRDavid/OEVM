@@ -166,12 +166,9 @@ function referenceNote(location) {
       { className: "hint", "aria-label": "Reference numbers" },
       h("li", { text: `Site: ${site} in ${network}'s feed (on this map: ${location.id}).` }),
       (location.evses ?? []).map((evse, index) => {
-        const parts = [
-          evse.evse_id ? `EVSE ID ${evse.evse_id}` : null,
-          `uid ${evse.uid}`,
-          evse.physical_reference ? `label ${evse.physical_reference}` : null,
-        ].filter(Boolean);
-        return h("li", { text: `Charge point ${index + 1}: ${parts.join(", ")}.` });
+        const name = chargePointName(evse, index);
+        const parts = [evse.evse_id && evse.evse_id !== name ? `EVSE ID ${evse.evse_id}` : null, `uid ${evse.uid}`];
+        return h("li", { text: `${name}: ${parts.filter(Boolean).join(", ")}.` });
       }),
     ),
   );

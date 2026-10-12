@@ -223,3 +223,64 @@ def test_the_command_line_writes_both_files(logs, tmp_path, capsys):
     assert (out / "status" / "index.html").exists()
     StatusFile.model_validate_json((out / "data" / "status.json").read_text())
     assert re.search(r"Wrote .*status\.json", capsys.readouterr().out)
+
+
+# Locations hidden on the map unless asked for (ADR 0023)
+
+
+@pytest.fixture(scope="module")
+def published(tmp_path_factory) -> Path:
+    out = tmp_path_factory.mktemp("published")
+    assert run.main(["--fixtures", "--publish", str(out)]) == 0
+    return out / "data" / "locations.geojson"
+
+
+def test_the_page_lists_locations_marked_private_with_the_words_found(logs, published, tmp_path):
+    out = tmp_path / "out"
+    assert (
+        status.main(
+            [
+                "--runs",
+                str(logs),
+                "--out",
+                str(out),
+                "--now",
+                NOW.isoformat(),
+                "--map",
+                str(published),
+            ]
+        )
+        == 0
+    )
+    page = (out / "status" / "index.html").read_text()
+    text, _ = text_of(page)
+    neutral_text(text)
+    assert 'id="private"' in page and 'href="../transparency/#private"' in page
+    assert "1 location marked" in text
+    assert "Evolt Network Arthur House - Private Use Only “Private Use Only”" in text
+
+
+def test_without_the_map_file_the_page_says_so(logs, tmp_path):
+    page, _ = render(logs, tmp_path)
+    assert "The map files were not available when this page was built." in text_of(page)[0]
+
+
+def test_a_missing_or_damaged_map_file_is_refused(logs, tmp_path):
+    with pytest.raises(status.StatusError, match="does not exist"):
+        status.outputs(logs, tmp_path / "out", None, NOW, tmp_path / "missing.geojson")
+    broken = tmp_path / "broken.geojson"
+    broken.write_text("{}")
+    with pytest.raises(status.StatusError, match="not a valid map file"):
+        status.outputs(logs, tmp_path / "out", None, NOW, broken)
+
+
+def test_names_from_the_map_file_are_escaped(logs, published, tmp_path):
+    layer = json.loads(published.read_text())
+    feature = next(f for f in layer["features"] if f["properties"]["priv"])
+    feature["properties"]["name"] = "<b>Private</b>"
+    changed = tmp_path / "locations.geojson"
+    changed.write_text(json.dumps(layer))
+    page = status.outputs(logs, tmp_path / "out", None, NOW, changed)[
+        tmp_path / "out" / "status" / "index.html"
+    ]
+    assert "<b>" not in page and "&lt;b&gt;Private&lt;/b&gt;" in page

@@ -18,6 +18,7 @@ import sys
 from datetime import date
 from pathlib import Path
 
+from pipeline.access import PHRASES
 from pipeline.project import REPOSITORY_URL
 from pipeline.registry import ROOT, RegistryError, load_registry
 from schema.operator import (
@@ -53,6 +54,27 @@ REGULATION = {
             ),
         },
     ],
+}
+
+# Chargers hidden unless a visitor asks to see them (pipeline/access.py, ADR 0023).
+PRIVATE_RULE = {
+    "decided": "2026-10-11",
+    "summary": (
+        "The repository owner decided on 11 October 2026 that chargers marked as not for "
+        "public use are hidden on the map unless a visitor ticks \"Show chargers marked "
+        "private or restricted\" in the filters. OCPI 2.2.1 has no field that says a "
+        "location is private, and no feed read so far marks one in any other field, so a "
+        "location is marked only when the operator's own name for it contains one of these "
+        "phrases, as whole words in any mix of capitals:"
+    ),
+    "phrases": [description for description, _ in PHRASES],
+    "not_counted": (
+        "Words that often name a place rather than a rule, such as \"Fleet\" in Fleetwood "
+        "Road, \"Depot\", \"Residential\", \"Visitor Centre\" or \"Blue Badge holders "
+        "only\", are not counted. A marked location is published unchanged: its details "
+        "say which words were found, and the feed health page lists every location marked "
+        "in the latest run."
+    ),
 }
 
 FINDING_KINDS = {
@@ -359,6 +381,7 @@ def build(operators: dict[str, OperatorConfig]) -> dict:
         "last_reviewed": last_reviewed(operators),
         "disclaimer": short_disclaimer(),
         "regulation": REGULATION,
+        "private_rule": PRIVATE_RULE,
         "operators": [operator_view(c) for c in ordered],
     }
 
@@ -648,6 +671,8 @@ footer ul { padding-left: 1.2rem; }
 
 def render_html(data: dict) -> str:
     links = "".join(f"<li>{_link(url, text)}</li>" for text, url in LINKS)
+    private = data["private_rule"]
+    phrases = "".join(f"<li>{_e(p)}</li>" for p in private["phrases"])
     regulation_quotes = "".join(
         f"<li>&ldquo;{_e(q['text'])}&rdquo; ({_link(q['url'], q['source'])})</li>"
         for q in data["regulation"]["quotes"]
@@ -701,6 +726,10 @@ rules.</p>
 with the date it was seen and what this project does about it. Values that are not valid
 are shown as unknown, never guessed. Only prices in pounds sterling are shown.</p>
 <div class="table-wrap">{_findings_section(data)}</div>
+<h2 id="private">Private and restricted chargers</h2>
+<p>{_e(private["summary"])}</p>
+<ul>{phrases}</ul>
+<p>{_e(private["not_counted"])} See the <a href="../status/#private">feed health page</a>.</p>
 <h2>Latest runs</h2>
 <p>The results of each daily run, with counts, problems logged and a 30-day history, are
 on the <a href="../status/">feed health page</a>.</p>
