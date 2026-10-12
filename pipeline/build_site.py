@@ -6,7 +6,9 @@
 
 copies the committed site/ pages into the build folder, adds MapLibre GL JS from
 node_modules (served from the site itself, so visitors contact no script host), its
-licence and the notices of the packages it bundles, and writes assets/config.json.
+licence and the notices of the packages it bundles, and writes assets/config.json. It
+also publishes the disclaimer, data licences, security policy and "Report a mistake"
+pages (pipeline/documents.py), so the footer links stay on the site.
 
 --offline-style points the map at a plain local style instead of the OpenFreeMap
 basemap. Tests and CI use it, because the basemap's terms forbid automated collection
@@ -20,6 +22,7 @@ import sys
 from pathlib import Path
 from urllib.parse import urlsplit
 
+from pipeline import documents
 from pipeline.project import REPOSITORY_URL
 from pipeline.registry import ROOT
 
@@ -149,10 +152,12 @@ def build(out: Path, *, offline_style: bool = False) -> list[str]:
     (out / "assets" / "config.json").write_text(
         json.dumps(config, indent=2) + "\n", encoding="utf-8"
     )
+    pages = documents.write(out)
     return [
         f"copied site/ to {out}",
         f"added MapLibre GL JS {version} to {vendor.relative_to(out)}",
         f"map style: {config['style']}",
+        "published " + ", ".join(str(path.parent.relative_to(out)) + "/" for path in pages),
     ]
 
 

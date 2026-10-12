@@ -61,12 +61,14 @@ FINDING_KINDS = {
     "access": "Access",
     "documentation": "Documentation",
 }
+# Footer links on every page. All stay on the site except "Source code" (the owner's
+# request, 11 October 2026); pipeline/documents.py publishes the documents as pages.
 LINKS = (
-    ("Disclaimer", f"{REPOSITORY_URL}/blob/main/DISCLAIMER.md"),
-    ("Data sources and licences", f"{REPOSITORY_URL}/blob/main/DATA_LICENCES.md"),
+    ("Disclaimer", "../disclaimer/"),
+    ("Data sources and licences", "../data-licences/"),
     ("Privacy and cookies", "../privacy/"),
-    ("Security policy", f"{REPOSITORY_URL}/blob/main/SECURITY.md"),
-    ("Report a mistake", f"{REPOSITORY_URL}/issues/new/choose"),
+    ("Security policy", "../security/"),
+    ("Report a mistake", "../report/"),
     ("Source code", REPOSITORY_URL),
 )
 
