@@ -1,12 +1,28 @@
 name: Fetch daily
+run-name: ${{ github.event_name == 'schedule' && format('Fetch daily (GitHub schedule {0})', github.event.schedule) || inputs.started_by == 'timer' && 'Fetch daily (Cloudflare timer)' || 'Fetch daily (by hand)' }}
 
 # Fetches every operator that is enabled in the registry, publishes the map files and
 # the feed health page, then deploys the site. Blueprint task 10.
+#
+# Started once a day by the relay Worker's timer (relay/wrangler.toml, 04:17 UTC with a
+# second try at 06:17 UTC), which asks GitHub to start this workflow with started_by set to
+# timer. GitHub's own schedule below is a backup only: GitHub starts scheduled runs late or
+# not at all when it is busy (ADR 0024). The first job lets only the first timer or
+# schedule run each day (UTC) fetch; a run started by hand always fetches.
 
 on:
   schedule:
-    - cron: "17 4 * * *" # 04:17 UTC every day, away from the busy top of the hour
+    # Away from the busy top of the hour, and after the timer's two tries.
+    - cron: "47 4 * * *"
+    - cron: "47 10 * * *"
+    - cron: "47 16 * * *"
   workflow_dispatch:
+    inputs:
+      started_by:
+        description: How this run was started. Leave as hand; the Cloudflare timer sends timer.
+        type: choice
+        options: [hand, timer]
+        default: hand
 
 permissions:
   contents: read
@@ -17,10 +33,36 @@ concurrency:
   cancel-in-progress: false
 
 jobs:
-  fetch:
-    name: Fetch operator feeds
+  check:
+    name: Check whether today's fetch has run
     # Only main publishes, so a run started on another branch cannot replace the site.
     if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    permissions:
+      contents: read
+      actions: read # to list today's runs of this workflow
+    outputs:
+      fetch: ${{ steps.check.outputs.fetch }}
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+          sparse-checkout: pipeline
+
+      # Standard library only, so nothing needs installing.
+      - name: Fetch only if no run has fetched today, unless started by hand
+        id: check
+        env:
+          GH_TOKEN: ${{ github.token }}
+          EVENT: ${{ github.event_name }}
+          STARTED_BY: ${{ inputs.started_by }}
+        run: python3 -m pipeline.daily_runs check --event "$EVENT" --started-by "$STARTED_BY"
+
+  fetch:
+    name: Fetch operator feeds
+    needs: check
+    if: github.ref == 'refs/heads/main' && needs.check.outputs.fetch == 'true'
     runs-on: ubuntu-latest
     timeout-minutes: 60
     permissions:
@@ -74,10 +116,16 @@ jobs:
             exit "$code"
           fi
 
+      - name: Read how the daily fetch started over the last 30 days
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: uv run python -m pipeline.daily_runs record --out record/daily-runs.json
+
       - name: Build the feed health page
         run: |
           uv run python -m pipeline.status --runs logs --out build \
-            --previous previous/data/status.json --map build/data/locations.geojson
+            --previous previous/data/status.json --map build/data/locations.geojson \
+            --daily-runs record/daily-runs.json
 
       - name: Keep the map files and feed health page for the deploy
         uses: actions/upload-artifact@v7
