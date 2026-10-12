@@ -3,7 +3,8 @@
 # Cloudflare's Git integration deploys it from main by running "npx wrangler deploy" in
 # this folder (the root directory set in the Worker's build settings). The name must
 # match the Worker's name in the Cloudflare dashboard. Its token, RELAY_TOKEN, is a Worker
-# secret set in the dashboard; it is never in this file, and deploys keep it.
+# secret set in the dashboard; it is never in this file, and deploys keep it. So is
+# GITHUB_DISPATCH_TOKEN, which the timer below uses to start Fetch daily.
 name = "oevm-relay"
 main = "worker.js"
 compatibility_date = "2026-10-01"
@@ -13,3 +14,9 @@ preview_urls = false
 
 [observability]
 enabled = false
+
+# The timer (ADR 0024): start Fetch daily at 04:17 UTC, and try again at 06:17 UTC. The
+# workflow fetches only once a day, so the second start stops at once if the first worked.
+# Cloudflare's free plan allows five Cron Triggers per account; this uses two.
+[triggers]
+crons = ["17 4 * * *", "17 6 * * *"]
