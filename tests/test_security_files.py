@@ -24,14 +24,22 @@ KEY_LIKE = re.compile(r"[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]
 KEY_SCAN_SKIPPED = ("tests/fixtures/", "uv.lock")
 # Public notice ids on the government's Contracts Finder site, cited in the blueprint, and
 # feed addresses an operator links on its own public page with no key: the id in them names
-# the operator's account on its data host (operators/arnold_clark_charge.yaml).
+# the operator's account on its data host (operators/arnold_clark_charge.yaml and
+# operators/scottishpower_recharge.yaml).
 PUBLISHED_FEED_ADDRESSES = {
     "https://api.fuuse.io/opendata/e6397b95-1624-49cd-824d-ab2f9dfe7294/",
+    "https://api.fuuse.io/opendata/e11a667d-c56a-468f-b8d3-a50b41628292/",
+}
+# Record ids an operator publishes in its open data, named in an owner's decision in its
+# operator file (zero_price_tariffs in operators/scottishpower_recharge.yaml, ADR 0022).
+PUBLISHED_RECORD_IDS = {
+    "2bf0030b-e446-473f-96ef-76de022b87e9",
 }
 KEY_LIKE_ALLOWED = {
     "https://www.contractsfinder.service.gov.uk/Notice/9b22d88e-38ba-4055-8e0e-84c58a196aa0",
     "https://www.contractsfinder.service.gov.uk/Notice/Attachment/3f6da4fd-2533-4289-a49e-ebad9a25c086",
     *PUBLISHED_FEED_ADDRESSES,
+    *PUBLISHED_RECORD_IDS,
 }
 # RFC 9116 fields, plus CSAF and Bug-Bounty, which IANA's registry added later.
 RFC_9116_FIELDS = {

@@ -1,0 +1,340 @@
+{
+  "request": {
+    "method": "GET",
+    "url": "https://api.fuuse.io/opendata/e11a667d-c56a-468f-b8d3-a50b41628292/tariff"
+  },
+  "response": {
+    "status_code": 200,
+    "headers": {
+      "content-type": "application/json; charset=utf-8",
+      "x-total-count": "8",
+      "x-limit": "1000"
+    },
+    "body": {
+      "status_code": 1000,
+      "data": [
+        {
+          "id": "2d082975-1f8b-4725-b0e2-6cf816ad86ce",
+          "currency": "GBP",
+          "type": "AD_HOC_PAYMENT",
+          "tariff_alt_text": [
+            {
+              "language": "en",
+              "text": "Luce Memorial Hall"
+            }
+          ],
+          "elements": [
+            {
+              "price_components": [
+                {
+                  "type": "ENERGY",
+                  "price": "0.3750",
+                  "vat": "20.0000",
+                  "step_size": 1
+                },
+                {
+                  "type": "FLAT",
+                  "price": "0.0000",
+                  "vat": "20.0000",
+                  "step_size": 1
+                },
+                {
+                  "type": "TIME",
+                  "price": "0.0000",
+                  "vat": "20.0000",
+                  "step_size": 1
+                }
+              ],
+              "restrictions": {
+                "min_kwh": "0.1000",
+                "min_duration": 60
+              }
+            }
+          ],
+          "last_updated": "2025-08-09T18:31:58.904Z"
+        },
+        {
+          "id": "116262a2-ee24-4f1f-aad1-9ea609a90885",
+          "currency": "GBP",
+          "type": "AD_HOC_PAYMENT",
+          "tariff_alt_text": [
+            {
+              "language": "en",
+              "text": "Yeovil Regional Tariff"
+            }
+          ],
+          "elements": [
+            {
+              "price_components": [
+                {
+                  "type": "ENERGY",
+                  "price": "0.2500",
+                  "vat": "20.0000",
+                  "step_size": 1
+                },
+                {
+                  "type": "FLAT",
+                  "price": "0.0000",
+                  "vat": "20.0000",
+                  "step_size": 1
+                },
+                {
+                  "type": "TIME",
+                  "price": "0.0000",
+                  "vat": "20.0000",
+                  "step_size": 1
+                }
+              ],
+              "restrictions": {
+                "min_kwh": "0.1000",
+                "min_duration": 60
+              }
+            }
+          ],
+          "last_updated": "2025-09-25T13:31:07.586Z"
+        },
+        {
+          "id": "c37480d9-cd73-431a-967e-5f8521402310",
+          "currency": "GBP",
+          "type": "AD_HOC_PAYMENT",
+          "tariff_alt_text": [
+            {
+              "language": "en",
+              "text": "Spring Tariff selected sites"
+            }
+          ],
+          "elements": [
+            {
+              "price_components": [
+                {
+                  "type": "ENERGY",
+                  "price": "0.4167",
+                  "vat": "20.0000",
+                  "step_size": 1
+                },
+                {
+                  "type": "FLAT",
+                  "price": "0.0000",
+                  "vat": "20.0000",
+                  "step_size": 1
+                },
+                {
+                  "type": "TIME",
+                  "price": "0.0000",
+                  "vat": "20.0000",
+                  "step_size": 1
+                }
+              ],
+              "restrictions": {
+                "min_kwh": "0.1000",
+                "min_duration": 60
+              }
+            }
+          ],
+          "last_updated": "2025-10-02T03:06:28.996Z"
+        },
+        {
+          "id": "2bf0030b-e446-473f-96ef-76de022b87e9",
+          "currency": "GBP",
+          "type": "AD_HOC_PAYMENT",
+          "tariff_alt_text": [
+            {
+              "language": "en",
+              "text": "Harbour test"
+            }
+          ],
+          "elements": [
+            {
+              "price_components": [
+                {
+                  "type": "ENERGY",
+                  "price": "0.0000",
+                  "vat": "20.0000",
+                  "step_size": 1
+                },
+                {
+                  "type": "FLAT",
+                  "price": "0.0000",
+                  "vat": "20.0000",
+                  "step_size": 1
+                },
+                {
+                  "type": "TIME",
+                  "price": "0.0000",
+                  "vat": "20.0000",
+                  "step_size": 1
+                }
+              ],
+              "restrictions": {
+                "min_kwh": "0.1000",
+                "min_duration": 60
+              }
+            }
+          ],
+          "last_updated": "2026-08-14T10:11:12.753Z"
+        },
+        {
+          "id": "4b0378aa-ff00-4e0e-b780-b5f72f3e58a7",
+          "currency": "GBP",
+          "type": "AD_HOC_PAYMENT",
+          "tariff_alt_text": [
+            {
+              "language": "en",
+              "text": "Guest Rapid charging 051223"
+            }
+          ],
+          "elements": [
+            {
+              "price_components": [
+                {
+                  "type": "ENERGY",
+                  "price": "0.6250",
+                  "vat": "20.0000",
+                  "step_size": 1
+                },
+                {
+                  "type": "FLAT",
+                  "price": "0.0000",
+                  "vat": "20.0000",
+                  "step_size": 1
+                },
+                {
+                  "type": "TIME",
+                  "price": "0.0000",
+                  "vat": "20.0000",
+                  "step_size": 1
+                }
+              ],
+              "restrictions": {
+                "min_kwh": "0.1000",
+                "min_duration": 60
+              }
+            }
+          ],
+          "last_updated": "2026-09-28T03:05:00.954Z"
+        },
+        {
+          "id": "31c170d9-c052-435a-9d9b-637ac7b16ed9",
+          "currency": "GBP",
+          "type": "AD_HOC_PAYMENT",
+          "tariff_alt_text": [
+            {
+              "language": "en",
+              "text": "Gleaner Introductory Offer"
+            }
+          ],
+          "elements": [
+            {
+              "price_components": [
+                {
+                  "type": "ENERGY",
+                  "price": "0.3250",
+                  "vat": "20.0000",
+                  "step_size": 1
+                },
+                {
+                  "type": "FLAT",
+                  "price": "0.0000",
+                  "vat": "20.0000",
+                  "step_size": 1
+                },
+                {
+                  "type": "TIME",
+                  "price": "0.0000",
+                  "vat": "20.0000",
+                  "step_size": 1
+                }
+              ],
+              "restrictions": {
+                "min_kwh": "0.1000",
+                "min_duration": 60
+              }
+            }
+          ],
+          "last_updated": "2026-09-29T03:04:03.836Z"
+        },
+        {
+          "id": "254c6444-66c2-40f8-a755-0b389bbf5055",
+          "currency": "GBP",
+          "type": "AD_HOC_PAYMENT",
+          "tariff_alt_text": [
+            {
+              "language": "en",
+              "text": "Guest Fast Charging"
+            }
+          ],
+          "elements": [
+            {
+              "price_components": [
+                {
+                  "type": "ENERGY",
+                  "price": "0.5417",
+                  "vat": "20.0000",
+                  "step_size": 1
+                },
+                {
+                  "type": "FLAT",
+                  "price": "0.0000",
+                  "vat": "20.0000",
+                  "step_size": 1
+                },
+                {
+                  "type": "TIME",
+                  "price": "0.0000",
+                  "vat": "20.0000",
+                  "step_size": 1
+                }
+              ],
+              "restrictions": {
+                "min_kwh": "0.1000",
+                "min_duration": 60
+              }
+            }
+          ],
+          "last_updated": "2026-10-03T03:03:16.331Z"
+        },
+        {
+          "id": "f0a59600-5bc1-4fb4-98ce-bc0cb828e2e1",
+          "currency": "GBP",
+          "type": "AD_HOC_PAYMENT",
+          "tariff_alt_text": [
+            {
+              "language": "en",
+              "text": "Gairloch Coop Opening Offer"
+            }
+          ],
+          "elements": [
+            {
+              "price_components": [
+                {
+                  "type": "ENERGY",
+                  "price": "0.3250",
+                  "vat": "20.0000",
+                  "step_size": 1
+                },
+                {
+                  "type": "FLAT",
+                  "price": "0.0000",
+                  "vat": "20.0000",
+                  "step_size": 1
+                },
+                {
+                  "type": "TIME",
+                  "price": "0.0000",
+                  "vat": "20.0000",
+                  "step_size": 1
+                }
+              ],
+              "restrictions": {
+                "min_kwh": "0.1000",
+                "min_duration": 60
+              }
+            }
+          ],
+          "last_updated": "2026-10-11T03:03:25.056Z"
+        }
+      ],
+      "timestamp": "2026-10-11T18:27:13.391Z"
+    }
+  }
+}

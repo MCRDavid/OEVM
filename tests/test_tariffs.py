@@ -17,6 +17,7 @@ from pipeline.tariffs import (
     related_tariffs,
     site_tariffs,
     summary,
+    withheld_free_tariffs,
 )
 from schema.models import Connector, Location, Tariff, TariffRestrictions
 
@@ -189,6 +190,64 @@ def test_a_parking_fee_shows_when_it_starts():
 
 
 # Recorded operator data
+
+
+# Zero-price tariffs the owner does not show as free (ADR 0022)
+
+
+def _zero(tariff_id="Z"):
+    return tariff(tariff_id, [{"price_components": [component("energy", 0), component("flat", 0)]}])
+
+
+def test_a_withheld_zero_price_tariff_shows_price_unknown_with_the_reason():
+    zero = _zero()
+    withheld = withheld_free_tariffs([zero], ["Z"])
+    assert withheld == {zero.id}
+    shown = price_connector(
+        connector("Z"), {zero.id: zero}, location_id="L", evse_uid="E", withheld=withheld
+    )
+    assert shown.state == "unknown" and shown.text == "Price unknown"
+    assert "zero_price_tariffs" in shown.reason
+    assert shown.indicative is None and shown.tariff_ids == [zero.id]
+    # The tariff itself is unchanged, and without the decision it is free.
+    assert zero.price_state == "free_confirmed"
+    assert price(connector("Z"), zero).state == "free_confirmed"
+
+
+def test_only_tariffs_named_by_exact_id_and_still_free_are_withheld():
+    priced = tariff("P")
+    others = [_zero("Z"), _zero("Z2"), priced]
+    assert withheld_free_tariffs(others, ["Z"]) == {"example:GB:EXA:Z"}
+    # A named tariff the operator has since priced is shown with its price.
+    assert withheld_free_tariffs(others, ["P"]) == frozenset()
+    assert withheld_free_tariffs(others, ["z"]) == frozenset()
+
+
+def test_a_priced_tariff_alongside_a_withheld_one_is_still_shown():
+    zero, priced = _zero(), tariff("P", type_="ad_hoc_payment")
+    zero = zero.model_copy(update={"type": "ad_hoc_payment"})
+    index = {zero.id: zero, priced.id: priced}
+    withheld = withheld_free_tariffs([zero, priced], ["Z"])
+    shown = price_connector(
+        connector("Z", "P"), index, location_id="L", evse_uid="E", withheld=withheld
+    )
+    assert shown.state == "priced" and shown.text == "48p per kWh including VAT"
+    assert shown.indicative == "48p/kWh"
+
+
+def test_the_site_lists_a_withheld_tariff_as_unknown():
+    zero = _zero()
+    location = Location.model_validate(
+        json.loads((FIXTURES / "normalised" / "location.json").read_text())
+    )
+    evse = location.evses[0].model_copy(update={"connectors": [connector("Z")]})
+    location = location.model_copy(update={"evses": [evse]})
+    withheld = withheld_free_tariffs([zero], ["Z"])
+    (option,) = site_tariffs(location, {zero.id: zero}, withheld).options
+    assert option.state == "unknown" and option.text == "Price unknown"
+    assert option.energy_low is None and "zero_price_tariffs" in option.reason
+    (free,) = site_tariffs(location, {zero.id: zero}).options
+    assert free.state == "free"
 
 
 def replay(operator_id: str):

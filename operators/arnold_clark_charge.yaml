@@ -23,13 +23,16 @@ auth:
   name: null
   secret_name: null
 rate_limit:
-  min_seconds_between_requests: 2
+  min_seconds_between_requests: 31
   limits: []
   limits_checked: 2026-10-10
   notes: >-
-    Neither Arnold Clark's pages nor the responses state a rate limit. The 2 second gap is
-    this project's own choice. Each response holds every record, so a full run makes two
-    requests (about 0.3 MB on 2026-10-10).
+    Arnold Clark's pages state no rate limit. The gap is this project's own choice: 2
+    seconds until 11 October 2026, then 31 seconds, because the host answered the second
+    request of each run with HTTP 429 and Retry-After 30 (see findings). 31 seconds is the
+    30 the host asks for, plus a 1 second margin. ScottishPower Recharge's files are on the
+    same host and use the same gap. Each response holds every record, so a full run makes
+    two requests (about 0.3 MB on 2026-10-10).
 supports_single_location: unknown
 cors: needs_testing
 attribution: >-
@@ -82,6 +85,17 @@ sources:
       Arnold Clark Charge's charging terms, last updated 1 December 2025, read 2026-10-10.
       They do not mention the data.
 findings:
+  - date: 2026-10-11
+    kind: access
+    summary: >-
+      The daily run of 2026-10-11 made 3 requests for the 2 files and took 33 seconds over
+      the tariff file. The same day the host answered ScottishPower Recharge's tariff
+      request, sent 2 seconds after its location request, with HTTP 429 and Retry-After 30,
+      which matches that run. The pages state no limit.
+    handling: >-
+      Requests to the host are spaced 31 seconds apart from 2026-10-11, for this operator
+      and ScottishPower Recharge.
+    evidence_url: https://github.com/MCRDavid/OEVM/actions/runs/38133263489
   - date: 2026-10-10
     kind: spec_conformance
     summary: >-

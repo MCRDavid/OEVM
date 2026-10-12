@@ -11,7 +11,7 @@ from pydantic import ValidationError
 
 from pipeline import registry
 from schema.operator import ENGAGEMENT_LABELS, EngagementStatus, OperatorConfig
-from tests.test_security_files import PUBLISHED_FEED_ADDRESSES
+from tests.test_security_files import PUBLISHED_FEED_ADDRESSES, PUBLISHED_RECORD_IDS
 
 OPERATORS_DIR = Path(__file__).resolve().parent.parent / "operators"
 SEED_IDS = {
@@ -147,8 +147,8 @@ def test_template_is_valid_and_disabled():
 def test_operator_files_contain_no_key_like_values():
     for path in sorted(OPERATORS_DIR.glob("*.yaml")):
         text = path.read_text(encoding="utf-8")
-        for address in PUBLISHED_FEED_ADDRESSES:
-            text = text.replace(address, "")
+        for published in PUBLISHED_FEED_ADDRESSES | PUBLISHED_RECORD_IDS:
+            text = text.replace(published, "")
         assert not UUID_LIKE.search(text), path.name
 
 
@@ -644,3 +644,32 @@ def test_only_the_smartcharging_networks_carry_a_tariffs_from_decision():
         "evolt": ["chargeplace_scotland"],
         "pogo_charge": ["evolt"],
     }
+
+
+# Zero-price tariffs the owner does not show as free (ADR 0022)
+
+ZERO = {
+    "decided": "2026-10-11",
+    "basis": "The tariff's description says it is a test.",
+    "evidence_url": "https://example.invalid/tariffs",
+}
+
+
+@pytest.mark.parametrize(
+    "tariff_ids",
+    [[], ["T1", "T1"], ["has space"], ["x" * 37]],
+    ids=["none", "named-twice", "not-an-id", "too-long"],
+)
+def test_a_zero_price_tariffs_decision_needs_ocpi_tariff_ids(tariff_ids):
+    with pytest.raises(ValidationError):
+        OperatorConfig.model_validate(
+            enabled_open(zero_price_tariffs={**ZERO, "tariff_ids": tariff_ids})
+        )
+
+
+def test_only_scottishpower_recharge_carries_a_zero_price_tariffs_decision():
+    operators = registry.load_registry(OPERATORS_DIR)
+    decisions = {
+        i: c.zero_price_tariffs.tariff_ids for i, c in operators.items() if c.zero_price_tariffs
+    }
+    assert decisions == {"scottishpower_recharge": sorted(PUBLISHED_RECORD_IDS)}
