@@ -13,8 +13,8 @@ decisions are in docs/adr/.
 - Validate plan providers: uv run python -m pipeline.plans --validate
 - Offline pipeline: uv run python -m pipeline.run --fixtures
 - Map files from fixtures: uv run python -m pipeline.run --fixtures --publish build (never site/)
-- Feed health page: uv run python -m pipeline.run --fixtures --log-dir logs, then
-  uv run python -m pipeline.status --runs logs --out build
+- Feed health page: uv run python -m pipeline.run --fixtures --log-dir logs --publish build, then
+  uv run python -m pipeline.status --runs logs --out build --map build/data/locations.geojson
 - One live page (sparingly, enabled operators only): uv run python -m pipeline.run --live chargy --max-pages 1
 - Daily run (workflows only, not locally): uv run python -m pipeline.run --live all --log-dir logs --publish build
 - After changing a model: uv run python -m schema.export (CI runs it with --check)
@@ -36,6 +36,7 @@ decisions are in docs/adr/.
   estimate a price. Permission requests to the others are tracked in providers/README.md.
 - pipeline/transparency.py: site/transparency/. pipeline/publish.py: map files; schema/published.py.
 - pipeline/geography.py and pipeline/data/: whether a point is in the UK (Natural Earth outlines).
+- pipeline/access.py: names that mark a location private or restricted, hidden unless asked (ADR 0023).
 - pipeline/status.py: feed health page, with a green, yellow, red or grey circle per operator.
   schema/runlog.py: run log format. pipeline/health.py: figures.
 - pipeline/documents.py: disclaimer, data licences, security and report pages, written by build_site.
@@ -80,6 +81,10 @@ decisions are in docs/adr/.
 - Switch an operator on only after reading its own terms and filling in its licence section.
 - Price a connector from another operator's tariff only where the operator file records the
   owner's decision in tariffs_from, only by exact tariff id, never by name (ADR 0020); never add one yourself.
+- Hide a location as private only by the phrases in pipeline/access.py, and as taxi-only only
+  where the operator file records the owner's decision in nonstandard_parking_restrictions
+  (ADR 0023); never add one yourself. Hidden locations stay in the data and are listed on the
+  feed health page.
 - Show a tariff whose prices are all zero as "Price unknown" rather than "Free" only where the
   operator file records the owner's decision in zero_price_tariffs, by exact tariff id (ADR 0022); never add one yourself.
 - Fetch through the relay (relay/worker.js) only when the operator file records the owner's

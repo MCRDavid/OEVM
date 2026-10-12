@@ -2,10 +2,13 @@
 
     uv run python -m pipeline.run --fixtures --log-dir logs
     uv run python -m pipeline.status --runs logs --out build [--previous old-status.json]
+        [--map build/data/locations.geojson]
 
 writes build/status/index.html and build/data/status.json. Each run is added to the
 history from --previous (the status.json last published), keeping one entry per day for
-30 days, so the daily fetch (blueprint task 10) builds up a trend.
+30 days, so the daily fetch (blueprint task 10) builds up a trend. With --map (the map
+file just published), the page also lists every location the map hides unless a visitor
+asks, because its name marks it private or restricted (pipeline/access.py, ADR 0023).
 
 The page reports what this project received from each operator, counted automatically,
 with neutral, dated wording. It does not say whether anyone has met their legal duties.
@@ -30,7 +33,7 @@ from pydantic import ValidationError
 from pipeline.registry import ROOT, RegistryError, load_registry
 from pipeline.transparency import LINKS, STYLE, _e, _link, short_disclaimer
 from schema.operator import OperatorConfig
-from schema.published import HistoryPoint, OperatorStatus, StatusFile
+from schema.published import HistoryPoint, MapLayer, OperatorStatus, StatusFile
 from schema.runlog import RunLog
 
 HISTORY_DAYS = 30
@@ -324,6 +327,61 @@ def _trend(status: OperatorStatus, now: datetime) -> str:
     )
 
 
+# One row per hidden location: network, location name, why it is hidden.
+PrivateRow = tuple[str, str, str]
+
+
+def _why_hidden(priv: str | None, taxi: bool) -> str:
+    reasons = [f"Its name includes \u201c{priv}\u201d" if priv else None]
+    reasons.append("every charge point is marked for taxis only" if taxi else None)
+    text = "; ".join(r for r in reasons if r)
+    return text[0].upper() + text[1:]
+
+
+def private_rows(layer: MapLayer, operators: dict[str, OperatorConfig]) -> list[PrivateRow]:
+    """Every location in the map file that the map hides unless asked: marked private or
+    restricted by its name, or taxis only at every charge point, by network and name."""
+    rows = [
+        (
+            operators[f.properties.op].display_name
+            if f.properties.op in operators
+            else f.properties.op,
+            f.properties.name or "Name not given",
+            _why_hidden(f.properties.priv, f.properties.taxi),
+        )
+        for f in layer.features
+        if f.properties.priv or f.properties.taxi
+    ]
+    return sorted(rows, key=lambda row: (row[0].lower(), row[1].lower()))
+
+
+def _private_section(rows: list[PrivateRow] | None) -> str:
+    intro = (
+        '<h2 id="private">Hidden on the map unless asked for</h2>'
+        "<p>Locations whose name, as the operator published it, marks them private or "
+        "restricted, and locations where the operator marks every charge point for taxis "
+        "only. The map hides them unless a visitor ticks &ldquo;Show chargers marked "
+        "private or restricted&rdquo;. The phrases looked for, and the owner&rsquo;s "
+        'decisions on taxis, are on the <a href="../transparency/#private">transparency '
+        "page</a>.</p>"
+    )
+    if rows is None:
+        return intro + "<p>The map files were not available when this page was built.</p>"
+    if not rows:
+        return intro + "<p>No location in the latest map files is hidden this way.</p>"
+    body = "".join(
+        f"<tr><td>{_e(network)}</td><td>{_e(name)}</td><td>{_e(why)}</td></tr>"
+        for network, name, why in rows
+    )
+    return (
+        f'{intro}<div class="table-wrap"><table><caption>{len(rows)} location'
+        f"{'' if len(rows) == 1 else 's'} hidden unless asked for</caption>"
+        '<thead><tr><th scope="col">Network</th><th scope="col">Location</th>'
+        '<th scope="col">Why</th></tr></thead>'
+        f"<tbody>{body}</tbody></table></div>"
+    )
+
+
 # Added to the shared style: the key, and the switched-off list in columns.
 EXTRA_STYLE = """
 .key, .off { list-style: none; padding-left: 0; }
@@ -332,7 +390,11 @@ EXTRA_STYLE = """
 """
 
 
-def render_html(data: StatusFile, switched_off: Sequence[str] = ()) -> str:
+def render_html(
+    data: StatusFile,
+    private: list[PrivateRow] | None = None,
+    switched_off: Sequence[str] = (),
+) -> str:
     """The page. switched_off is the display names of registry operators not switched on."""
     links = "".join(f"<li>{_link(url, text)}</li>" for text, url in LINKS)
     trends = "".join(_trend(status, data.generated_at) for status in data.operators.values())
@@ -360,6 +422,7 @@ evidence are on the <a href="../transparency/">transparency page</a>.</p>
 {_switched_off(switched_off)}
 <h2>The last {HISTORY_DAYS} days</h2>
 {trends}
+{_private_section(private)}
 </main>
 <footer>
 <p class="note">{_e(short_disclaimer())}</p>
@@ -375,7 +438,13 @@ def render_json(data: StatusFile) -> str:
     return json.dumps(data.model_dump(mode="json"), indent=2, ensure_ascii=False) + "\n"
 
 
-def outputs(runs_dir: Path, out_dir: Path, previous: Path | None, now: datetime) -> dict[Path, str]:
+def outputs(
+    runs_dir: Path,
+    out_dir: Path,
+    previous: Path | None,
+    now: datetime,
+    map_layer: Path | None = None,
+) -> dict[Path, str]:
     if out_dir.resolve() == (ROOT / "site").resolve():
         raise StatusError("write to a build folder, not the committed site/ folder")
     before = None
@@ -385,10 +454,20 @@ def outputs(runs_dir: Path, out_dir: Path, previous: Path | None, now: datetime)
         except ValidationError as exc:
             problem = exc.errors()[0]["msg"]
             raise StatusError(f"{previous} is not a valid status file: {problem}") from None
-    registry = load_registry()
-    data = build(registry, load_runs(runs_dir), before, now)
-    off = sorted((c.display_name for c in registry.values() if not c.enabled), key=str.casefold)
-    page, json_text = render_html(data, off), render_json(data)
+    operators = load_registry()
+    data = build(operators, load_runs(runs_dir), before, now)
+    private = None
+    if map_layer is not None:
+        try:
+            layer = MapLayer.model_validate_json(map_layer.read_bytes())
+        except FileNotFoundError:
+            raise StatusError(f"{map_layer} does not exist") from None
+        except ValidationError as exc:
+            problem = exc.errors()[0]["msg"]
+            raise StatusError(f"{map_layer} is not a valid map file: {problem}") from None
+        private = private_rows(layer, operators)
+    off = sorted((c.display_name for c in operators.values() if not c.enabled), key=str.casefold)
+    page, json_text = render_html(data, private, off), render_json(data)
     StatusFile.model_validate_json(json_text)
     return {out_dir / "status" / "index.html": page, out_dir / "data" / "status.json": json_text}
 
@@ -399,6 +478,9 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--out", type=Path, required=True, help="build folder (not site/)")
     parser.add_argument("--previous", type=Path, help="the status.json last published")
     parser.add_argument(
+        "--map", type=Path, help="the locations.geojson just published, to list private ones"
+    )
+    parser.add_argument(
         "--now", type=datetime.fromisoformat, help="time to stamp the page (default: now)"
     )
     args = parser.parse_args(argv)
@@ -406,7 +488,7 @@ def main(argv: list[str] | None = None) -> int:
     if now.tzinfo is None:
         parser.error("--now needs a time zone, for example 2026-10-08T12:00:00+00:00")
     try:
-        files = outputs(args.runs, args.out, args.previous, now)
+        files = outputs(args.runs, args.out, args.previous, now, args.map)
     except (RegistryError, StatusError) as exc:
         print(f"Error: {exc}", file=sys.stderr)
         return 1

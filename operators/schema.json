@@ -679,6 +679,48 @@
       "title": "MissingPublishFlag",
       "type": "object"
     },
+    "NonstandardParkingRestrictions": {
+      "additionalProperties": false,
+      "description": "The repository owner's recorded decision on how EVSE parking restrictions that are\nnot OCPI 2.2.1 values are read (ADR 0023).\n\nWithout this decision such values are ignored and logged. A value may only be read as\n\"taxis_only\": the charge point is labelled \"Taxis only\", and a location where every\ncharge point is taxis only is hidden on the map with private ones unless a visitor asks\nto see them.",
+      "properties": {
+        "decided": {
+          "description": "Date the owner made the decision (YYYY-MM-DD).",
+          "format": "date",
+          "title": "Decided",
+          "type": "string"
+        },
+        "basis": {
+          "description": "Why the values may be read this way.",
+          "minLength": 1,
+          "title": "Basis",
+          "type": "string"
+        },
+        "evidence_url": {
+          "description": "Where the values can be seen in the feed.",
+          "pattern": "^https?://\\S+$",
+          "title": "Evidence Url",
+          "type": "string"
+        },
+        "restrictions": {
+          "additionalProperties": {
+            "const": "taxis_only",
+            "type": "string"
+          },
+          "description": "Each value as the feed sends it, and how it is read.",
+          "minProperties": 1,
+          "title": "Restrictions",
+          "type": "object"
+        }
+      },
+      "required": [
+        "decided",
+        "basis",
+        "evidence_url",
+        "restrictions"
+      ],
+      "title": "NonstandardParkingRestrictions",
+      "type": "object"
+    },
     "NonstandardStatuses": {
       "additionalProperties": false,
       "description": "The repository owner's recorded decision on how EVSE statuses that are not OCPI\n2.2.1 values are shown.\n\nWithout this decision such statuses are recorded as unknown. A value may only be read\nas \"working\" (in service, free or in use not stated) or \"out_of_order\", so a\nnon-standard value is never shown as available or in use.",
@@ -1122,6 +1164,18 @@
       ],
       "default": null,
       "description": "Only by the repository owner's decision: how EVSE statuses that are not OCPI 2.2.1 values are shown. Null means they are recorded as unknown."
+    },
+    "nonstandard_parking_restrictions": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/NonstandardParkingRestrictions"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "description": "Only by the repository owner's decision: how EVSE parking restrictions that are not OCPI 2.2.1 values are read. Null means they are ignored."
     },
     "relay": {
       "anyOf": [

@@ -16,7 +16,7 @@ test("an empty address gives the defaults", () => {
 });
 
 test("addresses round-trip in a fixed order", () => {
-  const query = "minkw=50&plug=ccs%2Cchademo&free=1&maxp=45.5&unknown=0&op=chargy%2Cjolt&view=list";
+  const query = "minkw=50&plug=ccs%2Cchademo&free=1&maxp=45.5&unknown=0&ok=1&priv=1&op=chargy%2Cjolt&group=0&view=list";
   assert.equal(serialise(parse(query)), query);
   assert.equal(serialise(parse("op=jolt,chargy&plug=chademo,ccs,ccs")), "plug=ccs%2Cchademo&op=chargy%2Cjolt");
 });
@@ -118,4 +118,31 @@ test("the Filters button counts each filter that differs from the defaults", () 
   assert.equal(activeCount(defaults()), 0);
   assert.equal(activeCount(parse("minkw=50&plug=ccs,type2&ok=1&op=jolt")), 4);
   assert.equal(activeCount(parse("free=1&maxp=0&unknown=0")), 3);
+  assert.equal(activeCount(parse("priv=1")), 1, "showing private chargers is a filter");
+  assert.equal(activeCount(parse("group=0&view=list")), 0, "grouping and the view are not");
+});
+
+test("locations marked private or restricted are hidden unless asked for", () => {
+  const marked = point([connector()], { priv: "Private Use Only" });
+  assert.equal(defaults().priv, false);
+  assert.equal(matches(marked, defaults()), false);
+  assert.equal(matches(marked, parse("priv=1")), true);
+  assert.equal(matches(point([connector()], { priv: null }), defaults()), true);
+  assert.equal(matches(point([connector()]), defaults()), true, "older map files have no priv");
+  // Other filters still apply when they are shown.
+  assert.equal(matches(marked, parse("priv=1&minkw=150")), false);
+  assert.equal(serialise(parse("priv=1")), "priv=1");
+  assert.equal(parse("priv=yes").priv, false);
+  const taxis = point([connector()], { taxi: true });
+  assert.equal(matches(taxis, defaults()), false, "taxis only at every charge point");
+  assert.equal(matches(taxis, parse("priv=1")), true);
+});
+
+test("grouping is on unless the address turns it off", () => {
+  assert.equal(defaults().group, true);
+  assert.equal(parse("").group, true);
+  assert.equal(parse("group=0").group, false);
+  assert.equal(parse("group=no").group, true, "only 0 turns it off");
+  assert.equal(serialise({ ...defaults(), group: false }), "group=0");
+  assert.equal(matches(point([connector()]), parse("group=0")), true, "it never hides a charger");
 });
