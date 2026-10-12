@@ -43,7 +43,9 @@ decisions are in docs/adr/.
 - pipeline/project.py: repository URL (also in site/index.html, site/.well-known/security.txt and .github/ISSUE_TEMPLATE).
 - site/index.html, site/assets/: the map page. pipeline/build_site.py: build folder with MapLibre.
 - proxy/: Phase 3 live status Worker, not deployed (docs/PHASE3_PLAN.md). pipeline/live_snapshot.py, schema/live.py: its snapshots.
-- .github/workflows/: ci, fetch-daily (cron, calls deploy), deploy (Pages from main), keepalive.
+- .github/workflows/: ci, fetch-daily (calls deploy), deploy (Pages from main), keepalive.
+  The relay Worker's timer starts fetch-daily; GitHub's schedule is a backup, and
+  pipeline/daily_runs.py lets only the first each day fetch and records runs (ADR 0024).
 
 ## Hard rules
 - Never commit or print secrets. Reference keys by secret_name only, even keys an operator publishes.
