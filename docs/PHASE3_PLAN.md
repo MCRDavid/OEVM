@@ -29,6 +29,10 @@ From https://developers.cloudflare.com/workers/platform/limits/:
 - "Number of Cron Triggers per account | 5"
 - "Scheduled Workers have a maximum wall time of 15 minutes per invocation."
 
+(12 October 2026) The relay Worker now uses 2 of the 5 Cron Triggers to start the daily
+fetch, because GitHub's own schedule started it six to seven hours late (ADR 0024). An
+hourly workflow here would meet the same delays, so it may need the same timer.
+
 From https://developers.cloudflare.com/kv/platform/limits/:
 
 - "100,000 reads per day"; "1,000 writes per day" to different keys; writes to the same

@@ -21,7 +21,10 @@ from main, and a keepalive. Accept: three green scheduled runs in a row; site li
   a URL, a key or feed text, and are flushed at once so the Actions log shows them live.
   A full run took about 14 minutes on 8 October 2026, almost all of it char.gy at 6
   seconds a page, and printed nothing until the end.
-- **`fetch-daily.yml`** runs at 04:17 UTC each day and from the Actions tab. It validates
+- **`fetch-daily.yml`** runs at 04:17 UTC each day and from the Actions tab. (Changed 12
+  October 2026 by ADR 0024: GitHub started it six to seven hours late, so a timer on the
+  relay Worker starts it at 04:17 UTC, GitHub's schedule at 04:47, 10:47 and 16:47 UTC is
+  a backup, and only the first of these runs each day fetches.) It validates
   the registry, downloads the last `site-data` artifact to carry the feed health history
   forward (`pipeline.status --previous`), fetches, publishes the map files, builds the
   feed health page, keeps them as a `site-data` artifact for 30 days, then calls the

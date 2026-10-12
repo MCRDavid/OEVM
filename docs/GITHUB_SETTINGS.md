@@ -147,7 +147,8 @@ Needed before the first run of the **Fetch daily** workflow (`.github/workflows/
    repository, as `CLAUDE.md` asks.
 4. Open the **Actions** tab, choose **Fetch daily**, and click **Run workflow** on
    `main`. When it finishes, the site's address is shown on the run's summary page.
-   From then on it runs every day at 04:17 UTC.
+   From then on it runs every day: the relay Worker's timer starts it at 04:17 UTC once
+   section 10's steps 12 to 16 are done, and GitHub's own schedule is a backup.
 
 If an operator fails, the site is still updated with the others, and the map keeps
 showing the failed operator's last good copy (up to 7 days old) with its own fetch date
@@ -224,6 +225,44 @@ so each change to `relay/` merged into `main` is deployed without copying code b
 11. Open the **Actions** tab, choose **Fetch daily** and select **Run workflow** on `main`.
     The run's log shows whether GeniePoint came through.
 
+### The timer that starts Fetch daily
+
+GitHub's own schedule started Fetch daily six to seven hours late in October 2026, or not
+at all, so the relay Worker also has a timer (ADR 0024). At 04:17 UTC, and again at 06:17
+UTC, it asks GitHub to start Fetch daily. Only the first run each day fetches; later ones
+stop within a minute. The timer needs a GitHub token of its own:
+
+12. On GitHub, select your profile picture, then **Settings > Developer settings >
+    Personal access tokens > Fine-grained tokens > Generate new token**. Fill in:
+    - **Token name**: `oevm-relay-timer`;
+    - **Resource owner**: your account;
+    - **Expiration**: a date up to a year ahead. Put a reminder in your calendar a week
+      before it (step 16);
+    - **Repository access**: **Only select repositories**, and pick this repository only;
+    - **Permissions**: under **Repository permissions**, set **Actions** to **Read and
+      write**. GitHub adds **Metadata: Read-only** by itself. Leave everything else at
+      **No access**.
+    Select **Generate token** and copy it. Do not paste it anywhere but step 13.
+13. In the Cloudflare dashboard, open the `oevm-relay` Worker, then **Settings > Variables
+    and Secrets > Add**. Set **Type** to **Secret**, **Variable name** to
+    `GITHUB_DISPATCH_TOKEN`, paste the token as the **Value**, and select **Deploy**.
+14. Merge the pull request that adds the timer. Cloudflare deploys `relay/` with its two
+    Cron Triggers, which can take up to 15 minutes to take effect. The Worker's
+    **Settings** then list them under **Trigger events** (or the nearest match) as
+    `17 4 * * *` and `17 6 * * *`.
+15. The next morning, the **Actions** tab shows a run named **Fetch daily (Cloudflare
+    timer)** that started at about 04:17 UTC. Runs named **Fetch daily (GitHub schedule
+    ...)** later that day finish within a minute without fetching. The feed health page's
+    "How the daily fetch started" section shows the same. If no timer run appears, the
+    Worker's Cron Events say why: HTTP 401 means the token is wrong or has expired; 403 or
+    404 means it lacks **Actions: Read and write** on this repository.
+16. Before the token expires, open it on GitHub (step 12's page), select **Regenerate
+    token**, and replace the secret's value in Cloudflare (step 13). Until you do, GitHub's
+    schedule still starts the fetch, only later in the day.
+
+To stop the timer, delete the `GITHUB_DISPATCH_TOKEN` secret in Cloudflare and the token on
+GitHub; GitHub's schedule carries on.
+
 Cloudflare's app posts a build result on commits and pull requests that change `relay/`.
 Menu names in Cloudflare's dashboard change from time to time; if a label differs, look
 for the nearest match. To stop using the relay, delete **both** GitHub secrets,
@@ -236,6 +275,10 @@ Sources: https://developers.cloudflare.com/workers/ci-cd/builds/ (with its confi
 build branches, build watch paths and GitHub integration pages) and
 https://developers.cloudflare.com/workers/configuration/secrets/, read 8 October 2026,
 and the **Set up your application** form as it appeared on the same day.
+For the timer: https://developers.cloudflare.com/workers/configuration/cron-triggers/,
+https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/managing-your-personal-access-tokens
+and https://docs.github.com/en/rest/actions/workflows#create-a-workflow-dispatch-event,
+read 12 October 2026.
 
 ## Later: security.txt on the website
 

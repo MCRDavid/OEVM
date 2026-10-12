@@ -9,6 +9,8 @@ history from --previous (the status.json last published), keeping one entry per 
 30 days, so the daily fetch (blueprint task 10) builds up a trend. With --map (the map
 file just published), the page also lists every location the map hides unless a visitor
 asks, because its name marks it private or restricted (pipeline/access.py, ADR 0023).
+With --daily-runs (written by pipeline.daily_runs record), it also shows how the daily
+fetch started each day, and how often GitHub's own schedule started it on time (ADR 0024).
 
 The page reports what this project received from each operator, counted automatically,
 with neutral, dated wording. It does not say whether anyone has met their legal duties.
@@ -30,6 +32,7 @@ from pathlib import Path
 
 from pydantic import ValidationError
 
+from pipeline import daily_runs
 from pipeline.registry import ROOT, RegistryError, load_registry
 from pipeline.transparency import LINKS, STYLE, _e, _link, short_disclaimer
 from schema.operator import OperatorConfig
@@ -382,6 +385,79 @@ def _private_section(rows: list[PrivateRow] | None) -> str:
     )
 
 
+def _day(value) -> str:
+    return f"{value.day} {value:%B %Y}"
+
+
+def _daily_runs_section(record: "daily_runs.Record | str") -> str:
+    """How the daily fetch started; a string is the reason the record is missing."""
+    intro = (
+        '<h2 id="daily-runs">How the daily fetch started</h2>'
+        "<p>The daily fetch is a GitHub Actions workflow. It can be started by a timer on "
+        "this project&rsquo;s Cloudflare Worker, by GitHub&rsquo;s own schedule, or by "
+        "hand. GitHub says scheduled runs can be delayed when it is busy, and some dropped, "
+        "so its schedule is kept as a backup. When a timer or scheduled run finds that "
+        "day&rsquo;s fetch has already run, it stops without fetching. These figures are "
+        "read from GitHub&rsquo;s list of the workflow&rsquo;s runs; days are in UTC.</p>"
+    )
+    if isinstance(record, str):
+        return f"{intro}<p>{_e(record)}</p>"
+    summary = daily_runs.summarise(record)
+    since = _day(record.since)
+    items = [f"Days the map was updated: {summary.days_updated} of {summary.days}, since {since}."]
+    if summary.schedule_runs:
+        median = summary.schedule_median_delay
+        items.append(
+            f"GitHub&rsquo;s schedule started a run on {summary.schedule_days} of "
+            f"{summary.days} days. {summary.schedule_on_time} of its "
+            f"{summary.schedule_runs} runs started within "
+            f"{daily_runs.duration(daily_runs.ON_TIME)} of the time set"
+            + (f"; the median delay was {daily_runs.duration(median)}." if median else ".")
+        )
+    else:
+        items.append(f"GitHub&rsquo;s schedule started no run since {since}.")
+    if summary.timer_since:
+        items.append(
+            f"The Cloudflare timer started a run on {summary.timer_days} of "
+            f"{summary.timer_span} days since its first run on "
+            f"{_day(summary.timer_since)}."
+        )
+    else:
+        items.append(f"The Cloudflare timer started no run since {since}.")
+    by_day: dict = {}
+    for run in record.runs:
+        by_day.setdefault(run.created_at.date(), []).append(run)
+    rows = []
+    day = record.generated_at.date()
+    while day >= record.since:
+        runs = by_day.get(day, [])
+        if not runs:
+            rows.append(f"<tr><td>{_e(day)}</td><td></td><td></td><td></td><td>No run</td></tr>")
+        for run in sorted(runs, key=lambda r: r.created_at, reverse=True):
+            delay = run.delay
+            number = f"run {run.number}"
+            link = _link(run.url or None, number)
+            rows.append(
+                "<tr>"
+                f"<td>{_e(day)}</td>"
+                f"<td>{_e(run.created_at.strftime('%H:%M'))}</td>"
+                f"<td>{_e(daily_runs.STARTED_BY_LABELS[run.started_by])}</td>"
+                f"<td>{_e(daily_runs.duration(delay)) if delay is not None else ''}</td>"
+                f"<td>{_e(daily_runs.OUTCOME_LABELS[run.outcome])} ({link})</td>"
+                "</tr>"
+            )
+        day -= timedelta(days=1)
+    return (
+        f"{intro}<ul>{''.join(f'<li>{item}</li>' for item in items)}</ul>"
+        '<details><summary>Run by run</summary><div class="table-wrap"><table>'
+        f"<caption>Runs of the daily fetch since {_e(since)}</caption>"
+        '<thead><tr><th scope="col">Date</th><th scope="col">Started (UTC)</th>'
+        '<th scope="col">Started by</th><th scope="col">Delay after the time set</th>'
+        '<th scope="col">Result</th></tr></thead>'
+        f"<tbody>{''.join(rows)}</tbody></table></div></details>"
+    )
+
+
 # Added to the shared style: the key, and the switched-off list in columns.
 EXTRA_STYLE = """
 .key, .off { list-style: none; padding-left: 0; }
@@ -394,8 +470,10 @@ def render_html(
     data: StatusFile,
     private: list[PrivateRow] | None = None,
     switched_off: Sequence[str] = (),
+    record: "daily_runs.Record | str | None" = None,
 ) -> str:
-    """The page. switched_off is the display names of registry operators not switched on."""
+    """The page. switched_off is the display names of registry operators not switched on;
+    record is the daily run record, or why it is missing (None leaves the section out)."""
     links = "".join(f"<li>{_link(url, text)}</li>" for text, url in LINKS)
     trends = "".join(_trend(status, data.generated_at) for status in data.operators.values())
     return f"""<!doctype html>
@@ -420,6 +498,7 @@ evidence are on the <a href="../transparency/">transparency page</a>.</p>
 <h2>Latest runs</h2>
 <div class="table-wrap">{_latest_table(data)}</div>
 {_switched_off(switched_off)}
+{"" if record is None else _daily_runs_section(record)}
 <h2>The last {HISTORY_DAYS} days</h2>
 {trends}
 {_private_section(private)}
@@ -444,6 +523,7 @@ def outputs(
     previous: Path | None,
     now: datetime,
     map_layer: Path | None = None,
+    daily_runs_file: Path | None = None,
 ) -> dict[Path, str]:
     if out_dir.resolve() == (ROOT / "site").resolve():
         raise StatusError("write to a build folder, not the committed site/ folder")
@@ -467,7 +547,14 @@ def outputs(
             raise StatusError(f"{map_layer} is not a valid map file: {problem}") from None
         private = private_rows(layer, operators)
     off = sorted((c.display_name for c in operators.values() if not c.enabled), key=str.casefold)
-    page, json_text = render_html(data, private, off), render_json(data)
+    record = None
+    if daily_runs_file is not None:
+        try:
+            record = daily_runs.load_record(daily_runs_file)
+        except daily_runs.DailyRunsError:
+            # The fetch still publishes; the page says the record is missing today.
+            record = "The record of runs could not be read from GitHub when this page was built."
+    page, json_text = render_html(data, private, off, record), render_json(data)
     StatusFile.model_validate_json(json_text)
     return {out_dir / "status" / "index.html": page, out_dir / "data" / "status.json": json_text}
 
@@ -481,6 +568,9 @@ def main(argv: list[str] | None = None) -> int:
         "--map", type=Path, help="the locations.geojson just published, to list private ones"
     )
     parser.add_argument(
+        "--daily-runs", type=Path, help="the record from pipeline.daily_runs record"
+    )
+    parser.add_argument(
         "--now", type=datetime.fromisoformat, help="time to stamp the page (default: now)"
     )
     args = parser.parse_args(argv)
@@ -488,7 +578,7 @@ def main(argv: list[str] | None = None) -> int:
     if now.tzinfo is None:
         parser.error("--now needs a time zone, for example 2026-10-08T12:00:00+00:00")
     try:
-        files = outputs(args.runs, args.out, args.previous, now, args.map)
+        files = outputs(args.runs, args.out, args.previous, now, args.map, args.daily_runs)
     except (RegistryError, StatusError) as exc:
         print(f"Error: {exc}", file=sys.stderr)
         return 1
