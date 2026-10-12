@@ -6,7 +6,8 @@ import { PLUG_GROUPS, plugGroup } from "./format.js";
 export const POWER_STEPS = [0, 7, 22, 50, 150];
 export const MAX_PRICE_PENCE = 500;
 
-// priv: show locations marked private or restricted (hidden unless asked for, ADR 0023).
+// priv: show locations marked private or restricted, or taxis only at every charge point
+// (hidden unless asked for, ADR 0023).
 // group: draw nearby chargers as numbered circles on the map. It changes how the map
 // looks, not which chargers match, so it is not counted as a filter.
 export function defaults() {
@@ -114,7 +115,7 @@ export function activeCount(state) {
 const NOTHING_KNOWN = [{ std: null, kw: null, price: "unknown", ppk: null, out: false }];
 
 export function matches(props, state) {
-  if (props.priv && !state.priv) return false;
+  if ((props.priv || props.taxi) && !state.priv) return false;
   if (state.ops.length && !state.ops.includes(props.op)) return false;
   if (!connectorFilters(state)) return true;
   const cons = props.cons?.length ? props.cons : NOTHING_KNOWN;

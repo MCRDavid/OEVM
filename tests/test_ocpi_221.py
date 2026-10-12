@@ -782,3 +782,33 @@ def test_charge_point_labels_and_parking_restrictions_are_kept():
     assert issues.lines() == [
         "EVSE parking restriction 'TAXI_ONLY' is not an OCPI 2.2.1 value; ignored (2 times)"
     ]
+
+
+def test_a_nonstandard_parking_restriction_is_read_only_as_the_owner_decided():
+    decision = {
+        "decided": "2026-10-12",
+        "basis": "Read as taxis only.",
+        "evidence_url": "https://example.invalid/locations",
+        "restrictions": {"TAXI_ONLY": "taxis_only"},
+    }
+    issues = IssueLog()
+    raw = raw_location()
+    raw["evses"][0]["parking_restrictions"] = ["TAXI_ONLY", "BUS_ONLY"]
+    location = location_from_ocpi(
+        raw,
+        make_config(nonstandard_parking_restrictions=decision),
+        source_url=EXAMPLE,
+        fetched_at=NOW,
+        issues=issues,
+    )
+    assert location.evses[0].parking_restrictions == ["taxis_only"]
+    assert issues.lines() == [
+        "EVSE parking restriction 'BUS_ONLY' is not an OCPI 2.2.1 value; ignored",
+        "EVSE parking restriction 'TAXI_ONLY' is not an OCPI 2.2.1 value; read as taxis_only "
+        "under the decision recorded in the operator file",
+    ]
+    for value, reading in (("CUSTOMERS", "taxis_only"), ("BUS_ONLY", "available")):
+        with pytest.raises(ValidationError):
+            make_config(
+                nonstandard_parking_restrictions={**decision, "restrictions": {value: reading}}
+            )

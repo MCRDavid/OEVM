@@ -256,8 +256,11 @@ def test_the_page_lists_locations_marked_private_with_the_words_found(logs, publ
     text, _ = text_of(page)
     neutral_text(text)
     assert 'id="private"' in page and 'href="../transparency/#private"' in page
-    assert "1 location marked" in text
-    assert "Evolt Network Arthur House - Private Use Only “Private Use Only”" in text
+    assert "2 locations hidden unless asked for" in text
+    assert (
+        "Evolt Network Arthur House - Private Use Only Its name includes “Private Use Only”" in text
+    )
+    assert "PoGo Charge Swales Central Avenue Every charge point is marked for taxis only" in text
 
 
 def test_without_the_map_file_the_page_says_so(logs, tmp_path):

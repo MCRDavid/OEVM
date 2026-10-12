@@ -2,8 +2,10 @@
 
 Field meanings follow OCPI 2.2.1 sections 8 (Locations) and 11 (Tariffs). A value that
 is not valid OCPI is recorded as "unknown" and logged as an issue, never guessed. The one
-exception is an EVSE status the operator file maps in nonstandard_statuses, the owner's
-recorded decision, which may read such a value only as working or out_of_order.
+exceptions are an EVSE status the operator file maps in nonstandard_statuses, the owner's
+recorded decision, which may read such a value only as working or out_of_order, and a
+parking restriction it maps in nonstandard_parking_restrictions, which may read such a
+value only as taxis_only.
 """
 
 from collections import Counter
@@ -261,7 +263,7 @@ def _evse(
         physical_reference=_physical_reference(raw.get("physical_reference")),
         status=status,
         status_at=status_at,
-        parking_restrictions=_parking_restrictions(raw.get("parking_restrictions"), issues),
+        parking_restrictions=_parking_restrictions(raw.get("parking_restrictions"), issues, config),
         connectors=[_connector(c, prefix, issues) for c in raw.get("connectors") or []],
     )
 
@@ -275,17 +277,25 @@ def _physical_reference(value: object) -> str | None:
     return None
 
 
-def _parking_restrictions(values: object, issues: IssueLog) -> list[str]:
+def _parking_restrictions(values: object, issues: IssueLog, config: OperatorConfig) -> list[str]:
     """OCPI 2.2.1 parking restrictions, in the order sent, each once. Other values are
-    ignored and logged."""
+    ignored and logged, unless the operator file maps them in
+    nonstandard_parking_restrictions, the owner's recorded decision."""
     if values in (None, []):
         return []
     if not isinstance(values, list):
         issues.add("EVSE parking_restrictions is not a list; ignored")
         return []
+    decision = config.nonstandard_parking_restrictions
     kept = []
     for value in values:
         restriction = PARKING_RESTRICTIONS.get(value) if isinstance(value, str) else None
+        if restriction is None and decision is not None and value in decision.restrictions:
+            restriction = decision.restrictions[value]
+            issues.add(
+                f"EVSE parking restriction {value!r} is not an OCPI 2.2.1 value; read as "
+                f"{restriction} under the decision recorded in the operator file"
+            )
         if restriction is None:
             issues.add(f"EVSE parking restriction {value!r} is not an OCPI 2.2.1 value; ignored")
         elif restriction not in kept:

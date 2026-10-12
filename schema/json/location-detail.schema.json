@@ -336,7 +336,8 @@
               "plugged",
               "disabled",
               "customers",
-              "motorcycles"
+              "motorcycles",
+              "taxis_only"
             ],
             "type": "string"
           },

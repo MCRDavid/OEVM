@@ -281,7 +281,7 @@ function renderList() {
         h("span", { className: "meta", text: `${app.operators.get(p.op) ?? p.op} · up to ${formatKw(p.kw)} · ${plugsSummary(p.plugs)}` }),
         h("span", { className: `meta price-${p.price}`, text: p.pt || "Price unknown" }),
         p.down ? h("span", { className: "meta out-note", text: "Reported out of service at the last daily fetch" }) : null,
-        p.priv ? h("span", { className: "meta private-note", text: privateText(p.priv) }) : null,
+        p.priv || p.taxi ? h("span", { className: "meta private-note", text: privateText(p) }) : null,
       ),
     );
   });
@@ -321,19 +321,26 @@ function toggleHideOut() {
   stateChanged();
 }
 
-function privateText(words) {
-  return `Marked private or restricted: the operator's name for it includes "${words}"`;
+// Why a location is hidden unless asked for (ADR 0023): words in its name, or every charge
+// point marked for taxis only.
+function privateText({ priv, taxi }) {
+  return priv
+    ? `Marked private or restricted: the operator's name for it includes "${priv}"`
+    : "Taxis only: the operator marks every charge point here for taxis only";
 }
 
 function detailOptions() {
-  const priv = app.byKey.get(app.lastKey)?.priv;
+  const props = app.byKey.get(app.lastKey);
+  const hidden = props && (props.priv || props.taxi);
   return {
     ...app.config,
     plans: app.plans,
     mine: app.mine,
     hideOut: app.state.working,
     onHideOut: toggleHideOut,
-    privateNote: priv ? `${privateText(priv)}. Chargers like this are hidden unless "Show chargers marked private or restricted" is ticked in the filters.` : null,
+    privateNote: hidden
+      ? `${privateText(props)}. Chargers like this are hidden unless "Show chargers marked private or restricted" is ticked in the filters.`
+      : null,
   };
 }
 

@@ -103,6 +103,8 @@ const PARKING = {
   disabled: "Blue Badge holders only",
   customers: "customers only",
   motorcycles: "electric motorcycles and scooters only",
+  // Not an OCPI value: read so only by the owner's decision in an operator file.
+  taxis_only: "taxis only",
 };
 
 // A charge point's name: the label the operator says is on it (OCPI physical_reference),

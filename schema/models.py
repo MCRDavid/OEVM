@@ -72,8 +72,12 @@ EvseStatus = Literal[
     "working",
 ]
 ConnectorFormat = Literal["socket", "cable", "unknown"]
-# OCPI 2.2.1 ParkingRestriction values. A value outside these is ignored and logged.
-ParkingRestriction = Literal["ev_only", "plugged", "disabled", "customers", "motorcycles"]
+# OCPI 2.2.1 ParkingRestriction values, and one that is not: taxis_only, used only under
+# the owner's decision recorded in an operator file (nonstandard_parking_restrictions).
+# Any other value is ignored and logged.
+ParkingRestriction = Literal[
+    "ev_only", "plugged", "disabled", "customers", "motorcycles", "taxis_only"
+]
 PowerType = Literal["ac_1_phase", "ac_2_phase", "ac_2_phase_split", "ac_3_phase", "dc", "unknown"]
 PriceState = Literal["priced", "free_confirmed", "unknown"]
 PriceComponentType = Literal["energy", "flat", "parking_time", "time"]

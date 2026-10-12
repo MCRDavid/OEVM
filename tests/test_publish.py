@@ -452,9 +452,11 @@ def test_a_location_named_private_is_marked_with_its_words_and_counted(results, 
     assert {name: words for name, words in marked.items() if words} == {
         "Arthur House - Private Use Only": "Private Use Only"
     }
-    assert {op: e.private for op, e in out.manifest.operators.items() if e.private} == {"evolt": 1}
+    hidden = {op: e.private for op, e in out.manifest.operators.items() if e.private}
+    assert hidden == {"evolt": 1, "pogo_charge": 1}
     assert any(
-        "evolt: 7 locations mapped" in line and "1 marked private" in line for line in out.report
+        "evolt: 7 locations mapped" in line and "1 private or taxis only" in line
+        for line in out.report
     )
     detail = _detail(tmp_path, "evolt:GB:SSM:12343565")
     assert [e["physical_reference"] for e in detail["location"]["evses"]] == [
@@ -465,3 +467,16 @@ def test_a_location_named_private_is_marked_with_its_words_and_counted(results, 
         "SEC31620",
         "SEC31619",
     ]
+
+
+def test_taxi_only_locations_are_flagged_by_the_owners_decision(results, tmp_path):
+    # PoGo Charge's "Swales Central Avenue": every EVSE is TAXI_ONLY, read as taxis only by
+    # the decision in operators/pogo_charge.yaml (ADR 0023).
+    published(results, tmp_path)
+    layer = json.loads((tmp_path / "data" / "locations.geojson").read_text())
+    taxis = [f["properties"]["name"] for f in layer["features"] if f["properties"]["taxi"]]
+    assert taxis == ["Swales Central Avenue"]
+    detail = _detail(tmp_path, "pogo_charge:GB:POG:957309")
+    assert {tuple(e["parking_restrictions"]) for e in detail["location"]["evses"]} == {
+        ("taxis_only",)
+    }

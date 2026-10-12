@@ -79,6 +79,17 @@ tariffs_from:
     published on info.smartcharging.uk.
   evidence_url: https://evoltnetwork.co.uk/terms-of-use/
   operators: [chargeplace_scotland]
+nonstandard_parking_restrictions:
+  decided: 2026-10-12
+  basis: >-
+    Evolt Network marks some EVSEs with the parking restriction TAXI_ONLY, which is not an OCPI
+    2.2.1 value. The repository owner decided that it is read as taxis only: each such
+    charge point is labelled "Taxis only", and a location where every charge point is
+    taxis only is hidden on the map with private ones unless a visitor asks to see them,
+    because a driver without a taxi licence cannot use it.
+  evidence_url: https://info.smartcharging.uk/public_feed/locations/3666
+  restrictions:
+    TAXI_ONLY: taxis_only
 engagement:
   status: open_anonymous
   evidence:
@@ -200,6 +211,18 @@ findings:
       "max_charge_rate" on connectors.
     handling: >-
       Opening hours are shown as unknown. The extra fields are not used.
+    evidence_url: https://info.smartcharging.uk/public_feed/locations/3666
+  - date: 2026-10-12
+    kind: spec_conformance
+    summary: >-
+      78 EVSEs carry the parking restriction TAXI_ONLY, which is not an OCPI 2.2.1 value
+      (OCPI 2.2.1 lists EV_ONLY, PLUGGED, DISABLED, CUSTOMERS and MOTORCYCLES). At 26
+      locations, such as taxi ranks and bus stations, every EVSE carries it.
+    handling: >-
+      By the repository owner's decision of 2026-10-12, recorded in
+      nonstandard_parking_restrictions, TAXI_ONLY is read as taxis only: each such charge
+      point is labelled "Taxis only", and a location where every charge point is taxis only
+      is hidden on the map unless a visitor asks to see private and restricted chargers.
     evidence_url: https://info.smartcharging.uk/public_feed/locations/3666
 notes: >-
   The feeds are standard OCPI 2.2.1 responses on info.smartcharging.uk, read by the ocpi_221

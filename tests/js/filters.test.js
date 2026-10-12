@@ -133,6 +133,9 @@ test("locations marked private or restricted are hidden unless asked for", () =>
   assert.equal(matches(marked, parse("priv=1&minkw=150")), false);
   assert.equal(serialise(parse("priv=1")), "priv=1");
   assert.equal(parse("priv=yes").priv, false);
+  const taxis = point([connector()], { taxi: true });
+  assert.equal(matches(taxis, defaults()), false, "taxis only at every charge point");
+  assert.equal(matches(taxis, parse("priv=1")), true);
 });
 
 test("grouping is on unless the address turns it off", () => {

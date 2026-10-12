@@ -232,22 +232,30 @@ def _trend(status: OperatorStatus) -> str:
     )
 
 
-# One row per marked location: network, location name, the words found.
+# One row per hidden location: network, location name, why it is hidden.
 PrivateRow = tuple[str, str, str]
 
 
+def _why_hidden(priv: str | None, taxi: bool) -> str:
+    reasons = [f"Its name includes \u201c{priv}\u201d" if priv else None]
+    reasons.append("every charge point is marked for taxis only" if taxi else None)
+    text = "; ".join(r for r in reasons if r)
+    return text[0].upper() + text[1:]
+
+
 def private_rows(layer: MapLayer, operators: dict[str, OperatorConfig]) -> list[PrivateRow]:
-    """Every location in the map file marked private or restricted, by network and name."""
+    """Every location in the map file that the map hides unless asked: marked private or
+    restricted by its name, or taxis only at every charge point, by network and name."""
     rows = [
         (
             operators[f.properties.op].display_name
             if f.properties.op in operators
             else f.properties.op,
             f.properties.name or "Name not given",
-            f.properties.priv,
+            _why_hidden(f.properties.priv, f.properties.taxi),
         )
         for f in layer.features
-        if f.properties.priv
+        if f.properties.priv or f.properties.taxi
     ]
     return sorted(rows, key=lambda row: (row[0].lower(), row[1].lower()))
 
@@ -256,23 +264,25 @@ def _private_section(rows: list[PrivateRow] | None) -> str:
     intro = (
         '<h2 id="private">Hidden on the map unless asked for</h2>'
         "<p>Locations whose name, as the operator published it, marks them private or "
-        "restricted. The map hides them unless a visitor ticks &ldquo;Show chargers marked "
-        "private or restricted&rdquo;. The phrases looked for are on the "
-        '<a href="../transparency/#private">transparency page</a>.</p>'
+        "restricted, and locations where the operator marks every charge point for taxis "
+        "only. The map hides them unless a visitor ticks &ldquo;Show chargers marked "
+        "private or restricted&rdquo;. The phrases looked for, and the owner&rsquo;s "
+        'decisions on taxis, are on the <a href="../transparency/#private">transparency '
+        "page</a>.</p>"
     )
     if rows is None:
         return intro + "<p>The map files were not available when this page was built.</p>"
     if not rows:
-        return intro + "<p>No location in the latest map files is marked.</p>"
+        return intro + "<p>No location in the latest map files is hidden this way.</p>"
     body = "".join(
-        f"<tr><td>{_e(network)}</td><td>{_e(name)}</td><td>&ldquo;{_e(words)}&rdquo;</td></tr>"
-        for network, name, words in rows
+        f"<tr><td>{_e(network)}</td><td>{_e(name)}</td><td>{_e(why)}</td></tr>"
+        for network, name, why in rows
     )
     return (
         f'{intro}<div class="table-wrap"><table><caption>{len(rows)} location'
-        f"{'' if len(rows) == 1 else 's'} marked</caption>"
+        f"{'' if len(rows) == 1 else 's'} hidden unless asked for</caption>"
         '<thead><tr><th scope="col">Network</th><th scope="col">Location</th>'
-        '<th scope="col">Words in its name</th></tr></thead>'
+        '<th scope="col">Why</th></tr></thead>'
         f"<tbody>{body}</tbody></table></div>"
     )
 

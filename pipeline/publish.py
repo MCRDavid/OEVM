@@ -35,8 +35,9 @@ Rules:
   "Price unknown" while its prices are all zero, instead of "Free". The tariff itself is
   published unchanged in the detail file.
 - A location whose name marks it private or restricted (pipeline/access.py, ADR 0023)
-  carries those words in the map file, so the map can hide it unless the visitor asks.
-  It is published unchanged otherwise.
+  carries those words in the map file, and one where every charge point is marked for
+  taxis only (by the owner's decision in the operator file) is flagged, so the map can
+  hide them unless the visitor asks. They are published unchanged otherwise.
 - Every file is validated against schema/published.py before it is written.
 - The committed site/ folder is never written to; the deploy step copies site/ and adds
   this output.
@@ -245,6 +246,8 @@ def map_properties(location: Location, prices: list[ConnectorPrice], key: str) -
         ),
         pt=location_summary(prices),
         cons=[summaries[k] for k in sorted(summaries)],
+        taxi=bool(location.evses)
+        and all("taxis_only" in e.parking_restrictions for e in location.evses),
     )
 
 
@@ -559,7 +562,7 @@ def publish(
     private: dict[str, int] = defaultdict(int)
     for feature in features:
         feature.properties.priv = private_words(feature.properties.name)
-        private[feature.properties.op] += feature.properties.priv is not None
+        private[feature.properties.op] += bool(feature.properties.priv or feature.properties.taxi)
     entries = {i: e.model_copy(update={"private": private[i]}) for i, e in entries.items()}
     features.sort(key=lambda f: (f.properties.op, f.properties.id))
     layer = MapLayer(
@@ -602,7 +605,11 @@ def publish(
             if entry.priced_from_related
             else ""
         )
-        hidden = f", {entry.private} marked private or restricted" if entry.private else ""
+        hidden = (
+            f", {entry.private} private or taxis only (hidden unless asked)"
+            if entry.private
+            else ""
+        )
         last_good = (
             f", from its last good copy fetched {entry.fetched_at:%Y-%m-%d %H:%M} UTC"
             if entry.kept_from_previous

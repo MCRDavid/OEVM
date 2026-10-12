@@ -70,6 +70,12 @@ class MapProperties(_Model):
         "or restricted, as written (pipeline/access.py, ADR 0023); the map hides it unless "
         "the visitor asks. Null otherwise.",
     )
+    taxi: bool = Field(
+        default=False,
+        description="True when every charge point is marked for taxis only, read so by the "
+        "owner's decision in the operator file (nonstandard_parking_restrictions, ADR 0023); "
+        "the map hides it unless the visitor asks.",
+    )
 
 
 class MapFeature(_Model):
@@ -246,8 +252,9 @@ class OperatorEntry(_Model):
     private: int = Field(
         default=0,
         ge=0,
-        description="Locations whose name marks them private or restricted, hidden on the map "
-        "unless the visitor asks (pipeline/access.py, ADR 0023).",
+        description="Locations hidden on the map unless the visitor asks: those whose name "
+        "marks them private or restricted (pipeline/access.py), and those where every charge "
+        "point is marked for taxis only (ADR 0023).",
     )
     priced_from_related: int = Field(
         default=0,
