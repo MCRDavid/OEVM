@@ -1,0 +1,615 @@
+{
+  "request": {
+    "method": "GET",
+    "url": "https://ocpi-pcpr.hubeleon.net/2.2.1/reference"
+  },
+  "response": {
+    "status_code": 200,
+    "headers": {
+      "content-type": "application/json"
+    },
+    "body": {
+      "data": [
+        {
+          "country_code": "GB",
+          "party_id": "HUB",
+          "id": "460",
+          "publish": true,
+          "parking_type": "PARKING_LOT",
+          "name": "PNR0275 Earlsdon Retirement Village 1",
+          "address": "40 Albany Rd, Earlsdon, Coventry CV5 6JU, UK",
+          "city": "",
+          "country": "GBR",
+          "coordinates": {
+            "latitude": "52.403111",
+            "longitude": "-1.52649"
+          },
+          "time_zone": "Europe/London",
+          "last_updated": "2020-08-26T15:38:39Z",
+          "evses": [
+            {
+              "uid": "671",
+              "evse_id": "UK-HBN-PNR0275",
+              "status": "AVAILABLE",
+              "capabilities": [
+                "START_SESSION_CONNECTOR_REQUIRED",
+                "UNLOCK_CAPABLE",
+                "RFID_READER",
+                "REMOTE_START_STOP_CAPABLE"
+              ],
+              "last_updated": "2026-04-27T12:47:12Z",
+              "connectors": [
+                {
+                  "status": "AVAILABLE",
+                  "id": "1",
+                  "standard": "IEC_62196_T2",
+                  "format": "SOCKET",
+                  "power_type": "AC_1_PHASE",
+                  "max_voltage": 230,
+                  "max_amperage": 30,
+                  "max_electric_power": 7000,
+                  "last_updated": "2026-04-27T12:47:12Z",
+                  "tariff_ids": [
+                    "460"
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "country_code": "GB",
+          "party_id": "HUB",
+          "id": "610",
+          "publish": true,
+          "parking_type": "PARKING_LOT",
+          "name": "Geberit House PNR0586",
+          "address": "Geberit House, Edgehill Drive, Warwick",
+          "city": "",
+          "country": "GBR",
+          "coordinates": {
+            "latitude": "52.264588",
+            "longitude": "-1.606231"
+          },
+          "time_zone": "Europe/London",
+          "last_updated": "0000-00-00T00:00:00Z",
+          "evses": [
+            {
+              "uid": "1004",
+              "evse_id": "UK-HBN-PNR0586",
+              "status": "AVAILABLE",
+              "capabilities": [
+                "START_SESSION_CONNECTOR_REQUIRED",
+                "UNLOCK_CAPABLE",
+                "RFID_READER",
+                "REMOTE_START_STOP_CAPABLE"
+              ],
+              "last_updated": "2026-04-27T14:23:33Z",
+              "connectors": [
+                {
+                  "status": "AVAILABLE",
+                  "id": "1",
+                  "standard": "IEC_62196_T2",
+                  "format": "SOCKET",
+                  "power_type": "AC_1_PHASE",
+                  "max_voltage": 230,
+                  "max_amperage": 30,
+                  "max_electric_power": 7000,
+                  "last_updated": "2026-04-27T12:43:57Z",
+                  "tariff_ids": [
+                    "610"
+                  ]
+                },
+                {
+                  "status": "CHARGING",
+                  "id": "2",
+                  "standard": "IEC_62196_T2",
+                  "format": "SOCKET",
+                  "power_type": "AC_1_PHASE",
+                  "max_voltage": 230,
+                  "max_amperage": 30,
+                  "max_electric_power": 7000,
+                  "last_updated": "2026-04-27T14:23:33Z",
+                  "tariff_ids": [
+                    "610"
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "country_code": "GB",
+          "party_id": "HUB",
+          "id": "1133",
+          "publish": true,
+          "parking_type": "PARKING_LOT",
+          "name": "GR10117 The Climbing Depot",
+          "address": "1 Maybrook Industrial Estate, Armley Road, Leeds",
+          "city": "",
+          "country": "GBR",
+          "coordinates": {
+            "latitude": "53.79838366135994",
+            "longitude": "-1.5729213537257336"
+          },
+          "time_zone": "Europe/London",
+          "last_updated": "2022-05-26T11:27:40Z",
+          "evses": [
+            {
+              "uid": "1825",
+              "evse_id": "UK-HBN-GR10117",
+              "status": "UNKNOWN",
+              "capabilities": [
+                "START_SESSION_CONNECTOR_REQUIRED",
+                "UNLOCK_CAPABLE",
+                "RFID_READER",
+                "REMOTE_START_STOP_CAPABLE"
+              ],
+              "last_updated": "2024-02-25T17:37:58Z",
+              "connectors": [
+                {
+                  "status": "UNKNOWN",
+                  "id": "1",
+                  "standard": "IEC_62196_T2",
+                  "format": "SOCKET",
+                  "power_type": "AC_1_PHASE",
+                  "max_voltage": 230,
+                  "max_amperage": 30,
+                  "max_electric_power": 7000,
+                  "last_updated": "2024-02-25T17:36:55Z",
+                  "tariff_ids": [
+                    "1133"
+                  ]
+                },
+                {
+                  "status": "UNKNOWN",
+                  "id": "2",
+                  "standard": "IEC_62196_T2",
+                  "format": "SOCKET",
+                  "power_type": "AC_1_PHASE",
+                  "max_voltage": 230,
+                  "max_amperage": 30,
+                  "max_electric_power": 7000,
+                  "last_updated": "2024-02-25T17:37:58Z",
+                  "tariff_ids": [
+                    "1133"
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "country_code": "GB",
+          "party_id": "HUB",
+          "id": "1183",
+          "publish": true,
+          "parking_type": "PARKING_LOT",
+          "name": "TR0047 Hubeleon Test Centre",
+          "address": "Office 2, Montpelier Farm, Margaretting Road, Writtle, Chelmsford",
+          "city": "",
+          "country": "GBR",
+          "coordinates": {
+            "latitude": "51.71846033913665",
+            "longitude": "0.4169266044712948"
+          },
+          "time_zone": "Europe/London",
+          "last_updated": "2022-06-23T16:36:10Z",
+          "evses": [
+            {
+              "uid": "1889",
+              "evse_id": "UK-HBN-DANTESTDUO",
+              "status": "AVAILABLE",
+              "capabilities": [
+                "START_SESSION_CONNECTOR_REQUIRED",
+                "UNLOCK_CAPABLE",
+                "RFID_READER",
+                "REMOTE_START_STOP_CAPABLE"
+              ],
+              "last_updated": "2026-04-27T14:24:25Z",
+              "connectors": [
+                {
+                  "status": "AVAILABLE",
+                  "id": "1",
+                  "standard": "IEC_62196_T2",
+                  "format": "SOCKET",
+                  "power_type": "AC_3_PHASE",
+                  "max_voltage": 415,
+                  "max_amperage": 53,
+                  "max_electric_power": 22000,
+                  "last_updated": "2026-04-27T14:24:25Z",
+                  "tariff_ids": [
+                    "1183"
+                  ]
+                },
+                {
+                  "status": "CHARGING",
+                  "id": "2",
+                  "standard": "IEC_62196_T2",
+                  "format": "SOCKET",
+                  "power_type": "AC_3_PHASE",
+                  "max_voltage": 415,
+                  "max_amperage": 53,
+                  "max_electric_power": 22000,
+                  "last_updated": "2026-04-27T14:24:25Z",
+                  "tariff_ids": [
+                    "1183"
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "country_code": "GB",
+          "party_id": "HUB",
+          "id": "1966",
+          "publish": true,
+          "parking_type": "PARKING_LOT",
+          "name": "TR0059 Perth and Kinross Council",
+          "address": "2 High Street, Perth, PH1 5PH",
+          "city": "",
+          "country": "GBR",
+          "coordinates": {
+            "latitude": "56.39639",
+            "longitude": "-3.42650"
+          },
+          "time_zone": "Europe/London",
+          "last_updated": "2023-05-12T00:00:00Z",
+          "evses": [
+            {
+              "uid": "2741",
+              "evse_id": "UK-HBN-PNR0641",
+              "status": "CHARGING",
+              "capabilities": [
+                "START_SESSION_CONNECTOR_REQUIRED",
+                "UNLOCK_CAPABLE",
+                "RFID_READER",
+                "REMOTE_START_STOP_CAPABLE"
+              ],
+              "last_updated": "2026-04-27T14:21:07Z",
+              "connectors": [
+                {
+                  "status": "CHARGING",
+                  "id": "1",
+                  "standard": "IEC_62196_T2",
+                  "format": "SOCKET",
+                  "power_type": "AC_1_PHASE",
+                  "max_voltage": 230,
+                  "max_amperage": 31,
+                  "max_electric_power": 7200,
+                  "last_updated": "2026-04-27T14:21:07Z",
+                  "tariff_ids": [
+                    "1966"
+                  ]
+                },
+                {
+                  "status": "CHARGING",
+                  "id": "2",
+                  "standard": "IEC_62196_T2",
+                  "format": "SOCKET",
+                  "power_type": "AC_3_PHASE",
+                  "max_voltage": 415,
+                  "max_amperage": 17,
+                  "max_electric_power": 7200,
+                  "last_updated": "2026-04-27T14:21:07Z",
+                  "tariff_ids": [
+                    "1966"
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "country_code": "GB",
+          "party_id": "HUB",
+          "id": "2645",
+          "publish": true,
+          "parking_type": "PARKING_LOT",
+          "name": "PR3020 - Victoria Road Car Park - 83770r013",
+          "address": "Victoria Road, Southampton, SO19 9EG",
+          "city": "",
+          "country": "GBR",
+          "coordinates": {
+            "latitude": "50.890728",
+            "longitude": "-1.382705"
+          },
+          "time_zone": "Europe/London",
+          "last_updated": "2024-05-29T14:57:44Z",
+          "evses": [
+            {
+              "uid": "3600",
+              "evse_id": "UK-HBN-PR3020",
+              "status": "AVAILABLE",
+              "capabilities": [
+                "START_SESSION_CONNECTOR_REQUIRED",
+                "UNLOCK_CAPABLE",
+                "RFID_READER",
+                "REMOTE_START_STOP_CAPABLE"
+              ],
+              "last_updated": "2026-04-27T13:05:06Z",
+              "connectors": [
+                {
+                  "status": "AVAILABLE",
+                  "id": "1",
+                  "standard": "IEC_62196_T2",
+                  "format": "SOCKET",
+                  "power_type": "AC_1_PHASE",
+                  "max_voltage": 230,
+                  "max_amperage": 32,
+                  "max_electric_power": 7400,
+                  "last_updated": "2026-04-27T13:05:06Z",
+                  "tariff_ids": [
+                    "2645"
+                  ]
+                },
+                {
+                  "status": "AVAILABLE",
+                  "id": "2",
+                  "standard": "IEC_62196_T2",
+                  "format": "SOCKET",
+                  "power_type": "AC_1_PHASE",
+                  "max_voltage": 230,
+                  "max_amperage": 32,
+                  "max_electric_power": 7400,
+                  "last_updated": "2026-04-27T13:05:06Z",
+                  "tariff_ids": [
+                    "2645"
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "country_code": "GB",
+          "party_id": "HUB",
+          "id": "3166",
+          "publish": true,
+          "parking_type": "PARKING_LOT",
+          "name": "UK-HBN-PAYTERTEST",
+          "address": "Office 2, Montpelier Farm, Margaretting Rd, Writtle, Chelmsford ",
+          "city": "",
+          "country": "GBR",
+          "coordinates": {
+            "latitude": "51.71849547495869",
+            "longitude": "0.4169359643566276"
+          },
+          "time_zone": "Europe/London",
+          "last_updated": "2024-12-11T12:12:52Z",
+          "evses": [
+            {
+              "uid": "4282",
+              "evse_id": "UK-HBN-PAYTERTEST",
+              "status": "UNKNOWN",
+              "capabilities": [
+                "START_SESSION_CONNECTOR_REQUIRED",
+                "UNLOCK_CAPABLE",
+                "RFID_READER",
+                "REMOTE_START_STOP_CAPABLE"
+              ],
+              "last_updated": "2026-03-10T12:06:01Z",
+              "connectors": [
+                {
+                  "status": "UNKNOWN",
+                  "id": "1",
+                  "standard": "IEC_62196_T2",
+                  "format": "SOCKET",
+                  "power_type": "AC_1_PHASE",
+                  "max_voltage": 230,
+                  "max_amperage": 31,
+                  "max_electric_power": 7200,
+                  "last_updated": "2026-03-10T12:06:01Z",
+                  "tariff_ids": [
+                    "3166"
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "country_code": "GB",
+          "party_id": "HUB",
+          "id": "3315",
+          "publish": true,
+          "parking_type": "PARKING_LOT",
+          "name": "PR3245 Castle House",
+          "address": "Castle House, Great N Rd, Newark",
+          "city": "",
+          "country": "GBR",
+          "coordinates": {
+            "latitude": "53.080674771056195",
+            "longitude": "-0.8136984955764105"
+          },
+          "time_zone": "Europe/London",
+          "last_updated": "2025-02-26T09:45:01Z",
+          "evses": [
+            {
+              "uid": "4447",
+              "evse_id": "UK-HBN-PR3245",
+              "status": "AVAILABLE",
+              "capabilities": [
+                "START_SESSION_CONNECTOR_REQUIRED",
+                "UNLOCK_CAPABLE",
+                "RFID_READER",
+                "REMOTE_START_STOP_CAPABLE"
+              ],
+              "last_updated": "2026-04-27T09:31:36Z",
+              "connectors": [
+                {
+                  "status": "AVAILABLE",
+                  "id": "2",
+                  "standard": "IEC_62196_T2_COMBO",
+                  "format": "CABLE",
+                  "power_type": "DC",
+                  "max_voltage": 500,
+                  "max_amperage": 100,
+                  "max_electric_power": 50000,
+                  "last_updated": "2026-04-27T09:31:36Z",
+                  "tariff_ids": [
+                    "3315"
+                  ]
+                },
+                {
+                  "status": "AVAILABLE",
+                  "id": "3",
+                  "standard": "CHADEMO",
+                  "format": "CABLE",
+                  "power_type": "DC",
+                  "max_voltage": 500,
+                  "max_amperage": 100,
+                  "max_electric_power": 50000,
+                  "last_updated": "2026-04-27T09:31:36Z",
+                  "tariff_ids": [
+                    "3315"
+                  ]
+                },
+                {
+                  "status": "AVAILABLE",
+                  "id": "4",
+                  "standard": "IEC_62196_T2_COMBO",
+                  "format": "CABLE",
+                  "power_type": "DC",
+                  "max_voltage": 500,
+                  "max_amperage": 100,
+                  "max_electric_power": 50000,
+                  "last_updated": "2026-04-27T09:31:36Z",
+                  "tariff_ids": [
+                    "3315"
+                  ]
+                },
+                {
+                  "status": "AVAILABLE",
+                  "id": "1",
+                  "standard": "IEC_62196_T2_COMBO",
+                  "format": "CABLE",
+                  "power_type": "DC",
+                  "max_voltage": 500,
+                  "max_amperage": 100,
+                  "max_electric_power": 50000,
+                  "last_updated": "2026-04-27T09:31:36Z",
+                  "tariff_ids": [
+                    "3315"
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "country_code": "GB",
+          "party_id": "HUB",
+          "id": "3421",
+          "publish": true,
+          "parking_type": "PARKING_LOT",
+          "name": "Teison 22kW",
+          "address": "INT. LEESON 2190, C7000 Tandil, Provincia de Buenos Aires",
+          "city": "",
+          "country": "GBR",
+          "coordinates": {
+            "latitude": "-37.3646817",
+            "longitude": "-59.1095128"
+          },
+          "time_zone": "Europe/London",
+          "last_updated": "0000-00-00T00:00:00Z",
+          "evses": [
+            {
+              "uid": "4587",
+              "evse_id": "AT2499000362",
+              "status": "AVAILABLE",
+              "capabilities": [
+                "START_SESSION_CONNECTOR_REQUIRED",
+                "UNLOCK_CAPABLE",
+                "RFID_READER",
+                "REMOTE_START_STOP_CAPABLE"
+              ],
+              "last_updated": "2026-04-27T14:16:15Z",
+              "connectors": [
+                {
+                  "status": "AVAILABLE",
+                  "id": "1",
+                  "standard": "IEC_62196_T2",
+                  "format": "SOCKET",
+                  "power_type": "AC_3_PHASE",
+                  "max_voltage": 415,
+                  "max_amperage": 53,
+                  "max_electric_power": 22000,
+                  "last_updated": "2026-04-27T14:16:15Z",
+                  "tariff_ids": [
+                    "3421"
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "country_code": "GB",
+          "party_id": "HUB",
+          "id": "3802",
+          "publish": true,
+          "parking_type": "PARKING_LOT",
+          "name": "PR6296 - Wade Road Depot",
+          "address": "Wade Road, Basingstoke",
+          "city": "",
+          "country": "GBR",
+          "coordinates": {
+            "latitude": "51.27765",
+            "longitude": "-1.06697"
+          },
+          "time_zone": "Europe/London",
+          "last_updated": "0000-00-00T00:00:00Z",
+          "evses": [
+            {
+              "uid": "5035",
+              "evse_id": "UK-HBN-PR6296",
+              "status": "UNKNOWN",
+              "capabilities": [
+                "START_SESSION_CONNECTOR_REQUIRED",
+                "UNLOCK_CAPABLE",
+                "RFID_READER",
+                "REMOTE_START_STOP_CAPABLE"
+              ],
+              "last_updated": "2026-03-09T07:53:52Z",
+              "connectors": [
+                {
+                  "status": "UNKNOWN",
+                  "id": "1",
+                  "standard": "IEC_62196_T2",
+                  "format": "SOCKET",
+                  "power_type": "AC_3_PHASE",
+                  "max_voltage": 415,
+                  "max_amperage": 53,
+                  "max_electric_power": 22000,
+                  "last_updated": "2026-03-09T07:53:52Z",
+                  "tariff_ids": [
+                    "3802"
+                  ]
+                },
+                {
+                  "status": "UNKNOWN",
+                  "id": "2",
+                  "standard": "IEC_62196_T2",
+                  "format": "SOCKET",
+                  "power_type": "AC_1_PHASE",
+                  "max_voltage": 230,
+                  "max_amperage": 0,
+                  "max_electric_power": 0,
+                  "last_updated": "2026-03-09T07:53:52Z",
+                  "tariff_ids": [
+                    "3802"
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "status_code": 1000,
+      "status_message": "Success",
+      "timestamp": "2026-04-27T14:24:34Z"
+    }
+  }
+}

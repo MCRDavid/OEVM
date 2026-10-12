@@ -25,6 +25,10 @@
   records that decision and the relay's address and token are set in the environment.
   The relay gets the same request path and User-Agent; gaps, retries and every message
   still refer to the operator's own host and URLs. Only feeds with no key are relayed.
+- Reads a feed past one expired TLS certificate only when the operator file records that
+  decision (expired_certificate, ADR 0021). The chain and host name are still checked;
+  only the dates are not, and a response is used only if the server presented exactly
+  that certificate or one in date today. Only feeds with no key.
 
 Timers live in memory, so they cover one run of the program. Runs that use the same host
 must not be started in parallel. Within one run, pipeline.run fetches operators on
@@ -32,8 +36,10 @@ different hosts at the same time, but never two operators that share a host
 (`operator_hosts`).
 """
 
+import hashlib
 import os
 import re
+import ssl
 import threading
 import time
 from collections.abc import Callable, Iterable
@@ -48,6 +54,7 @@ from pipeline.project import NAME, REPOSITORY_URL, VERSION
 from schema.operator import (
     LIMIT_MARGIN_SECONDS,
     MIN_SECONDS_BETWEEN_REQUESTS,
+    ExpiredCertificate,
     OperatorConfig,
     is_credential_param,
 )
@@ -340,6 +347,59 @@ def relay_route(config: OperatorConfig) -> RelayRoute | None:
     return RelayRoute(base=base, prefix=relay.path_prefix, token=token, hosts=hosts)
 
 
+# OpenSSL's X509_V_FLAG_NO_CHECK_TIME: check a certificate chain without checking dates.
+# Python's ssl module has no name for it but passes the flag on to OpenSSL as given.
+NO_CHECK_TIME = 0x200000
+
+
+def expired_certificate_context() -> ssl.SSLContext:
+    """httpx's usual TLS settings, except that certificate dates are not checked.
+
+    The chain must still lead to a trusted authority and the certificate must still name
+    the host. Only for an operator whose file records expired_certificate; the client then
+    checks which certificate the server presented (certificate_problem).
+    """
+    context = httpx.create_ssl_context()
+    context.verify_flags |= NO_CHECK_TIME
+    if context.verify_mode != ssl.CERT_REQUIRED or not context.check_hostname:
+        raise FeedError("TLS checks are not on; refusing to relax only the dates")
+    return context
+
+
+def certificate_fingerprint(der: bytes) -> str:
+    """SHA-256 fingerprint of a DER certificate, as '49:82:...' in capitals."""
+    digest = hashlib.sha256(der).hexdigest().upper()
+    return ":".join(digest[i : i + 2] for i in range(0, len(digest), 2))
+
+
+def certificate_problem(
+    der: bytes | None, details: dict, decision: ExpiredCertificate, now: datetime
+) -> tuple[str | None, bool]:
+    """(problem, renewed) for the certificate a server presented, under the owner's
+    decision to accept one expired certificate.
+
+    problem is None when the response may be used: the certificate is exactly the one the
+    decision names, or it is in date now (then renewed is True, and the decision can be
+    removed). details is the certificate as Python's ssl module decodes it.
+    """
+    if not der:
+        return "the server presented no certificate", False
+    fingerprint = certificate_fingerprint(der)
+    if fingerprint == decision.sha256:
+        return None, False
+    try:
+        starts = ssl.cert_time_to_seconds(details["notBefore"])
+        ends = ssl.cert_time_to_seconds(details["notAfter"])
+    except (KeyError, TypeError, ValueError):
+        return f"certificate {fingerprint} has no readable dates", False
+    if starts <= now.timestamp() <= ends:
+        return None, True
+    return (
+        f"certificate {fingerprint} is not in date and is not the one the operator file accepts",
+        False,
+    )
+
+
 def required_gap(config: OperatorConfig) -> float:
     """The gap the client keeps: never less than the floor or what any limit needs."""
     rate = config.rate_limit
@@ -373,11 +433,18 @@ class PoliteClient:
         self._secrets = tuple(
             value for value in (secret, self._relay.token if self._relay else None) if value
         )
+        # The owner's decision to read past one expired certificate (ADR 0021). The
+        # validator keeps every URL of such an operator on that one host.
+        self._expired_certificate = config.expired_certificate
+        self._own_transport = transport is None
         self._client = httpx.Client(
             headers={"User-Agent": USER_AGENT, "Accept": "application/json", **headers},
             timeout=timeout_seconds,
             transport=transport,
             follow_redirects=False,
+            verify=(
+                expired_certificate_context() if self._expired_certificate is not None else True
+            ),
         )
         self.min_interval = required_gap(config)
         self.max_retries = max_retries
@@ -426,6 +493,38 @@ class PoliteClient:
         if ready > now:
             self._sleep(ready - now)
 
+    def _check_certificate(self, response: httpx.Response, url: str) -> None:
+        """Stop unless the server presented the one expired certificate the operator file
+        accepts, or one in date today. Called before the body is read."""
+        decision = self._expired_certificate
+        stream = response.extensions.get("network_stream")
+        if stream is None and not self._own_transport:
+            return  # a recorded or test response: there was no TLS connection
+        tls = stream.get_extra_info("ssl_object") if stream is not None else None
+        if tls is None:
+            raise FeedError(f"could not read the TLS certificate for {redact_url(url)}")
+        problem, renewed = certificate_problem(
+            tls.getpeercert(True), tls.getpeercert() or {}, decision, self._wall_clock()
+        )
+        if problem is not None:
+            raise FeedError(f"{redact_url(url)}: {problem}; not using the response")
+        if renewed:
+            event = (
+                f"{decision.host} now presents a certificate that is in date; the "
+                "expired_certificate decision in the operator file can be removed"
+            )
+            if event not in self.events:
+                self.events.append(event)
+                self._notice(event)
+
+    def _send(self, url: str, headers: dict[str, str]) -> httpx.Response:
+        if self._expired_certificate is None:
+            return self._client.get(url, headers=headers)
+        with self._client.stream("GET", url, headers=headers) as response:
+            self._check_certificate(response, url)
+            response.read()
+        return response
+
     def get(self, url: str) -> httpx.Response:
         """GET url, retrying temporary failures. Raises FeedError when retries run out."""
         if self._secrets and urlsplit(url).scheme != "https":
@@ -445,7 +544,7 @@ class PoliteClient:
             self.requests_made += 1
             response = None
             try:
-                response = self._client.get(request_url, headers=headers)
+                response = self._send(request_url, headers)
             except httpx.TransportError as exc:
                 problem, retry_after = type(exc).__name__, None
             finally:

@@ -482,6 +482,62 @@ class TariffsFrom(_Model):
         return self
 
 
+class ExpiredCertificate(_Model):
+    """The repository owner's recorded decision to read this operator's feed past one
+    expired TLS certificate (ADR 0021).
+
+    Requests to the host still check the certificate chain against the usual trusted
+    authorities and check the host name; only the certificate's dates are not checked. A
+    response is then used only if the server presented exactly the certificate named by
+    sha256, or one that is in date today, which means the certificate has been renewed and
+    this decision can be removed. Anything else stops the fetch. Only feeds that need no
+    key, all on this one host, so no key is ever sent over such a connection. Without this
+    decision an expired certificate stops the fetch.
+    """
+
+    decided: dt.date = Field(description="Date the owner made the decision (YYYY-MM-DD).")
+    basis: NeutralText = Field(description="Why the feed may be read past the certificate.")
+    evidence_url: SafeUrl = Field(description="Where the operator links the feed.")
+    host: str = Field(
+        pattern=r"^[a-z0-9]([a-z0-9-]*[a-z0-9])?(\.[a-z0-9]([a-z0-9-]*[a-z0-9])?)+$",
+        description="The host whose certificate has expired, for example "
+        "'ocpi-pcpr.hubeleon.net'. Every feed URL in the file must be on it.",
+    )
+    sha256: str = Field(
+        pattern=r"^([0-9A-F]{2}:){31}[0-9A-F]{2}$",
+        description="SHA-256 fingerprint of the one expired certificate accepted, as "
+        "'49:82:...', in capitals.",
+    )
+    expired: dt.date = Field(description="The day the certificate expired (YYYY-MM-DD).")
+
+
+class ExcludedLocation(_Model):
+    id: str = Field(min_length=1, description="The location's OCPI id, exactly as sent.")
+    name: str = Field(min_length=1, description="The location's name as the feed sends it.")
+
+
+class ExcludedLocations(_Model):
+    """The repository owner's recorded decision to leave named locations off the map, such
+    as test sites an operator's feed marks for publishing.
+
+    Only the listed OCPI location ids are left off, each logged as an issue in the run, and
+    the transparency page lists them. Without this decision every location the feed marks
+    for publishing is kept.
+    """
+
+    decided: dt.date = Field(description="Date the owner made the decision (YYYY-MM-DD).")
+    basis: NeutralText = Field(description="Why these locations are left off.")
+    evidence_url: SafeUrl = Field(description="Where the locations can be seen in the feed.")
+    locations: list[ExcludedLocation] = Field(min_length=1)
+
+    @model_validator(mode="after")
+    def _unique(self) -> "ExcludedLocations":
+        ids = [location.id for location in self.locations]
+        if len(set(ids)) != len(ids):
+            raise ValueError("each location may be listed once")
+        return self
+
+
 class EngagementEvent(_Model):
     """One dated step in getting access to an operator's data: a check, a request, a reply."""
 
@@ -635,6 +691,18 @@ class OperatorConfig(_Model):
         "tariff only a related operator's feed holds from that feed. Null means such "
         "connectors show 'Price unknown'.",
     )
+    expired_certificate: ExpiredCertificate | None = Field(
+        default=None,
+        description="Only by the repository owner's decision: read the feed past one "
+        "expired TLS certificate, still checking its chain and host name. Null means an "
+        "expired certificate stops the fetch.",
+    )
+    excluded_locations: ExcludedLocations | None = Field(
+        default=None,
+        description="Only by the repository owner's decision: OCPI location ids to leave off "
+        "the map, such as test sites. Null means every location marked for publishing is "
+        "kept.",
+    )
     engagement: Engagement
     access_requested: dt.date | None = None
     access_granted: dt.date | None = None
@@ -702,6 +770,23 @@ class OperatorConfig(_Model):
                 problems.append("relay url_variable and secret_name must differ")
         if self.tariffs_from is not None and self.id in self.tariffs_from.operators:
             problems.append("tariffs_from cannot name the operator itself")
+        if self.expired_certificate is not None:
+            if self.auth.method != "none":
+                problems.append("only a feed that needs no key may be read past a certificate")
+            if self.relay is not None:
+                problems.append("a relayed feed cannot also be read past a certificate")
+            urls = [endpoint.url for endpoint in self.endpoints.values()]
+            if self.base_url != "unknown":
+                urls.append(self.base_url)
+            problems += [
+                f"{url} must be an https URL on {self.expired_certificate.host}, the host "
+                "named in expired_certificate"
+                for url in urls
+                if urlsplit(url).scheme != "https"
+                or urlsplit(url).netloc.lower() != self.expired_certificate.host
+            ]
+            if not urls:
+                problems.append("expired_certificate needs the feed URLs on its host")
         if self.auth.method in ("header", "query_param"):
             urls = [endpoint.url for endpoint in self.endpoints.values()]
             if self.base_url != "unknown":
