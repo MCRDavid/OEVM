@@ -358,10 +358,12 @@ def summarise(record: Record) -> Summary:
 
 
 def duration(value: timedelta) -> str:
-    """A delay in words, such as "6 h 18 min" or "4 min"."""
+    """A delay in words, such as "6 h 18 min", "1 h" or "4 min"."""
     minutes = max(0, round(value.total_seconds() / 60))
     hours, minutes = divmod(minutes, 60)
-    return f"{hours} h {minutes} min" if hours else f"{minutes} min"
+    if not hours:
+        return f"{minutes} min"
+    return f"{hours} h {minutes} min" if minutes else f"{hours} h"
 
 
 # Command line

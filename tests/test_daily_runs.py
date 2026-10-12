@@ -150,7 +150,11 @@ def test_only_daily_schedules_are_measured():
 
 @pytest.mark.parametrize(
     ("value", "words"),
-    [(timedelta(minutes=4), "4 min"), (timedelta(hours=6, minutes=18, seconds=40), "6 h 19 min")],
+    [
+        (timedelta(minutes=4), "4 min"),
+        (timedelta(hours=1), "1 h"),
+        (timedelta(hours=6, minutes=18, seconds=40), "6 h 19 min"),
+    ],
 )
 def test_delays_read_as_hours_and_minutes(value, words):
     assert daily_runs.duration(value) == words
@@ -347,7 +351,9 @@ def test_the_feed_health_page_shows_how_the_daily_fetch_started(logs, tmp_path):
     page = page_with(logs, tmp_path, path)
     assert '<h2 id="daily-runs">How the daily fetch started</h2>' in page
     assert "Days the map was updated: 5 of 5, since 8 October 2026." in page
-    assert "started a run on 3 of 5 days. 0 of its 3 runs started within 1 h 0 min" in page
+    assert (
+        "started a run on 3 of 5 days. 0 of its 3 runs started within 1 h of the time set" in page
+    )
     assert "the median delay was 6 h 31 min." in page
     assert (
         "The Cloudflare timer started a run on 1 of 1 days since its first run on 12 October"
