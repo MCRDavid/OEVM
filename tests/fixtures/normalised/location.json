@@ -31,8 +31,10 @@
     {
       "uid": "EVSE-1",
       "evse_id": "GB*EXA*E0001",
+      "physical_reference": "A",
       "status": "available",
       "status_at": "2026-10-06T09:00:00Z",
+      "parking_restrictions": ["customers"],
       "connectors": [
         {
           "id": "1",
@@ -47,8 +49,10 @@
     {
       "uid": "EVSE-2",
       "evse_id": null,
+      "physical_reference": null,
       "status": "unknown",
       "status_at": null,
+      "parking_restrictions": [],
       "connectors": [
         {
           "id": "1",

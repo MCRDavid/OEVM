@@ -312,3 +312,19 @@ def test_the_feed_health_page_says_the_map_kept_the_last_good_copy():
         "(5948 locations)"
     )
     assert label in status.render_html(data)
+
+
+def test_a_kept_copy_is_checked_against_todays_private_phrases(monkeypatch, replayed, tmp_path):
+    # Map files published before ADR 0023 have no "priv" on their points.
+    _, before, _ = live_run(monkeypatch, replayed, tmp_path, "before")
+    layer = _layer(before)
+    for feature in layer["features"]:
+        del feature["properties"]["priv"]
+    (before / "data" / "locations.geojson").write_text(json.dumps(layer))
+    code, after, _ = live_run(monkeypatch, replayed, tmp_path, "after", {"evolt"}, before)
+    assert code == run.EXIT_KEPT_LAST_GOOD
+    marked = {f["properties"]["name"] for f in _layer(after)["features"] if f["properties"]["priv"]}
+    assert marked == {"Arthur House - Private Use Only"}
+    manifest = json.loads((after / "data" / "manifest.json").read_text())
+    assert manifest["operators"]["evolt"]["kept_from_previous"] is True
+    assert manifest["operators"]["evolt"]["private"] == 1

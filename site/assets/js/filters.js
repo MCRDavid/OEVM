@@ -6,8 +6,23 @@ import { PLUG_GROUPS, plugGroup } from "./format.js";
 export const POWER_STEPS = [0, 7, 22, 50, 150];
 export const MAX_PRICE_PENCE = 500;
 
+// priv: show locations marked private or restricted, or taxis only at every charge point
+// (hidden unless asked for, ADR 0023).
+// group: draw nearby chargers as numbered circles on the map. It changes how the map
+// looks, not which chargers match, so it is not counted as a filter.
 export function defaults() {
-  return { minkw: 0, plugs: [], free: false, maxp: null, unknown: true, working: false, ops: [], view: "map" };
+  return {
+    minkw: 0,
+    plugs: [],
+    free: false,
+    maxp: null,
+    unknown: true,
+    working: false,
+    priv: false,
+    ops: [],
+    group: true,
+    view: "map",
+  };
 }
 
 function list(value, allowed) {
@@ -31,6 +46,8 @@ export function parse(search) {
   }
   state.unknown = params.get("unknown") !== "0";
   state.working = params.get("ok") === "1";
+  state.priv = params.get("priv") === "1";
+  state.group = params.get("group") !== "0";
   state.ops = list(params.get("op"), (op) => /^[a-z0-9_]{1,40}$/.test(op));
   state.view = params.get("view") === "list" ? "list" : "map";
   return state;
@@ -45,7 +62,9 @@ export function serialise(state) {
   if (state.maxp !== null) params.set("maxp", String(state.maxp));
   if (!state.unknown) params.set("unknown", "0");
   if (state.working) params.set("ok", "1");
+  if (state.priv) params.set("priv", "1");
   if (state.ops.length) params.set("op", [...state.ops].sort().join(","));
+  if (!state.group) params.set("group", "0");
   if (state.view === "list") params.set("view", "list");
   return params.toString();
 }
@@ -79,8 +98,16 @@ function connectorFilters(state) {
 
 // How many filters differ from the defaults, for the count on the Filters button.
 export function activeCount(state) {
-  return [state.minkw, state.plugs.length, state.free, state.maxp !== null, !state.unknown, state.working, state.ops.length]
-    .filter(Boolean).length;
+  return [
+    state.minkw,
+    state.plugs.length,
+    state.free,
+    state.maxp !== null,
+    !state.unknown,
+    state.working,
+    state.priv,
+    state.ops.length,
+  ].filter(Boolean).length;
 }
 
 // A location with no connectors listed is treated as one connector about which nothing is
@@ -88,6 +115,7 @@ export function activeCount(state) {
 const NOTHING_KNOWN = [{ std: null, kw: null, price: "unknown", ppk: null, out: false }];
 
 export function matches(props, state) {
+  if ((props.priv || props.taxi) && !state.priv) return false;
   if (state.ops.length && !state.ops.includes(props.op)) return false;
   if (!connectorFilters(state)) return true;
   const cons = props.cons?.length ? props.cons : NOTHING_KNOWN;

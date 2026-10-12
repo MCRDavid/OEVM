@@ -43,17 +43,17 @@ def test_each_feed_is_read_in_one_request():
     result, transport = replay()
     assert transport.requested == [FEED, f"{FEED}/tariffs"]
     assert result.complete
-    assert result.modules["locations"].total_reported == 8
+    assert result.modules["locations"].total_reported == 9
     assert result.issues == [
-        "connector id is a number, not a string; read as its digits (36 times)",
+        "connector id is a number, not a string; read as its digits (42 times)",
         "connector power not calculated for power_type 'ac_3_phase' (3 times)",
-        "location id is a number, not a string; read as its digits (8 times)",
+        "location id is a number, not a string; read as its digits (9 times)",
     ]
 
 
 def test_recorded_locations_convert_faithfully():
     result, _ = replay()
-    assert len(result.locations) == 8
+    assert len(result.locations) == 9
     assert all(
         loc.id.split(":")[:3] in (["evolt", "GB", "SSM"], ["evolt", "AU", "SSM"])
         for loc in result.locations

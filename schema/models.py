@@ -72,6 +72,12 @@ EvseStatus = Literal[
     "working",
 ]
 ConnectorFormat = Literal["socket", "cable", "unknown"]
+# OCPI 2.2.1 ParkingRestriction values, and one that is not: taxis_only, used only under
+# the owner's decision recorded in an operator file (nonstandard_parking_restrictions).
+# Any other value is ignored and logged.
+ParkingRestriction = Literal[
+    "ev_only", "plugged", "disabled", "customers", "motorcycles", "taxis_only"
+]
 PowerType = Literal["ac_1_phase", "ac_2_phase", "ac_2_phase_split", "ac_3_phase", "dc", "unknown"]
 PriceState = Literal["priced", "free_confirmed", "unknown"]
 PriceComponentType = Literal["energy", "flat", "parking_time", "time"]
@@ -170,9 +176,18 @@ class EVSE(_Model):
         default=None,
         description="eMI3 EVSE ID (for example 'GB*ABC*E123'), used to match across sources.",
     )
+    physical_reference: str | None = Field(
+        default=None,
+        description="The name or number the operator says is shown on the charge point "
+        "(OCPI physical_reference), as published.",
+    )
     status: EvseStatus = "unknown"
     status_at: AwareDatetime | None = Field(
         default=None, description="When the status was last reported."
+    )
+    parking_restrictions: list[ParkingRestriction] = Field(
+        default_factory=list,
+        description="Who may park at the charge point (OCPI 2.2.1 parking_restrictions).",
     )
     connectors: list[Connector] = Field(default_factory=list)
 

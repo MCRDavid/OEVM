@@ -64,6 +64,18 @@ class MapProperties(_Model):
     )
     pt: str = Field(description="Price summary worded by pipeline/pricing.py.")
     cons: list[ConnectorSummary] = Field(description="Each kind of connector, sorted.")
+    priv: str | None = Field(
+        default=None,
+        description="The words in the operator's name for the location that mark it private "
+        "or restricted, as written (pipeline/access.py, ADR 0023); the map hides it unless "
+        "the visitor asks. Null otherwise.",
+    )
+    taxi: bool = Field(
+        default=False,
+        description="True when every charge point is marked for taxis only, read so by the "
+        "owner's decision in the operator file (nonstandard_parking_restrictions, ADR 0023); "
+        "the map hides it unless the visitor asks.",
+    )
 
 
 class MapFeature(_Model):
@@ -237,6 +249,13 @@ class OperatorEntry(_Model):
         default_factory=list, description="Ids of the corrected locations."
     )
     tariffs: int = Field(ge=0)
+    private: int = Field(
+        default=0,
+        ge=0,
+        description="Locations hidden on the map unless the visitor asks: those whose name "
+        "marks them private or restricted (pipeline/access.py), and those where every charge "
+        "point is marked for taxis only (ADR 0023).",
+    )
     priced_from_related: int = Field(
         default=0,
         ge=0,

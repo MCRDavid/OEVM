@@ -9,6 +9,7 @@ CHROME_PATH to the browser if Playwright cannot find its own. Without them the t
 skipped, unless OEVM_REQUIRE_E2E=1 (as in CI), when they fail instead.
 """
 
+import base64
 import functools
 import json
 import os
@@ -39,7 +40,12 @@ BROWSER_ARGS = [
     "--no-proxy-server",
     "--host-resolver-rules=MAP * ~NOTFOUND, EXCLUDE 127.0.0.1",
 ]
-LOCATIONS = 66  # in the recorded fixtures
+# In the recorded fixtures, without the two hidden unless asked for (ADR 0023): Evolt
+# Network's "Arthur House - Private Use Only" and PoGo Charge's taxi-only "Swales Central
+# Avenue".
+LOCATIONS = 65
+PRIVATE = "Arthur House - Private Use Only"
+TAXIS = "Swales Central Avenue"
 OUT_OF_SERVICE = 3  # fixture locations with every charger reported out of service
 SERVED: list[str] = []  # every path the test server was asked for
 # MapLibre writes the map position after the # a moment after the map settles, starting
@@ -238,10 +244,10 @@ def test_details_colour_charge_point_statuses_with_words_and_the_time_read(visit
     assert chip.locator("[aria-hidden=true]").text_content() == "● "
     body = page.text_content("#detail-body")
     assert "Status from the operator's feed, read " in body
-    # Each connector's status has its group's colour too.
+    # Each charge point's status has its group's colour too.
     colours = {
         page.evaluate("(e) => getComputedStyle(e).color", e.element_handle())
-        for e in page.locator("#detail-body .connectors .status").all()
+        for e in page.locator("#detail-body .charge-points .status").all()
     }
     available = page.evaluate("(e) => getComputedStyle(e).color", chip.element_handle())
     assert available in colours
@@ -422,7 +428,7 @@ def test_details_say_when_tariffs_come_from_a_related_networks_feed(visit):
     page.locator("#list-items button", has_text="Lancing Manor Leisure Centre").click()
     body = page.locator("#detail-body")
     expect(body.locator(".related")).to_contain_text("only Evolt Network's tariff data holds")
-    expect(body.locator(".connectors")).to_contain_text("56p per kWh including VAT")
+    expect(body.locator(".charge-points")).to_contain_text("56p per kWh including VAT")
     options = body.locator(".tariffs li", has_text="Published in Evolt Network's tariff data.")
     expect(options).to_have_count(2)
     expect(body).to_contain_text("Contains data from Evolt Network")
@@ -892,3 +898,150 @@ def test_a_refused_location_is_explained(visit):
     page = v.open()
     page.click("button.maplibregl-ctrl-geolocate")
     expect(page.locator("#notice")).to_contain_text("did not allow the map to use your location")
+
+
+# Grouping, private chargers and each charge point (ADR 0023)
+
+# The colour of a numbered circle on the map (main.js), counted in a screenshot of the map
+# by drawing it on a canvas in the page, since the map's own canvas cannot be read back.
+COUNT_CLUSTER_PIXELS = """async (src) => {
+  const img = new Image();
+  img.src = src;
+  await img.decode();
+  const canvas = document.createElement("canvas");
+  canvas.width = img.width;
+  canvas.height = img.height;
+  const context = canvas.getContext("2d");
+  context.drawImage(img, 0, 0);
+  const data = context.getImageData(0, 0, img.width, img.height).data;
+  let count = 0;
+  const near = (value, target) => Math.abs(value - target) < 6;
+  for (let i = 0; i < data.length; i += 4) {
+    if (near(data[i], 0x24) && near(data[i + 1], 0x32) && near(data[i + 2], 0x3f)) count++;
+  }
+  return count;
+}"""
+
+
+def cluster_pixels(page) -> int:
+    shot = base64.b64encode(page.locator("#map").screenshot()).decode()
+    return page.evaluate(COUNT_CLUSTER_PIXELS, f"data:image/png;base64,{shot}")
+
+
+def wait_for_clusters(page, present: bool):
+    for _ in range(40):
+        if (cluster_pixels(page) > 50) == present:
+            return
+        page.wait_for_timeout(250)
+    raise AssertionError(f"numbered circles {'never appeared' if present else 'stayed'}")
+
+
+def test_grouping_can_be_turned_off_and_on_from_the_map_or_the_filters(visit):
+    v = visit()
+    page = v.open()
+    button = page.locator("#toggle-group")
+    expect(button).to_have_attribute("aria-pressed", "true")
+    wait_for_clusters(page, True)
+    button.click()
+    page.wait_for_url("**?group=0**")
+    expect(button).to_have_attribute("aria-pressed", "false")
+    wait_for_clusters(page, False)
+    open_filters(page)
+    assert not page.is_checked("#group")
+    assert page.text_content("#toggle-filters") == "Filters", "grouping is not a filter"
+    assert page.locator("#list-items li").count() == LOCATIONS, "no charger is hidden"
+    page.check("#group")
+    expect(button).to_have_attribute("aria-pressed", "true")
+    assert "group=" not in page.url
+    wait_for_clusters(page, True)
+    # Clearing the filters leaves grouping as the visitor set it.
+    page.uncheck("#group")
+    page.click("#reset")
+    assert not page.is_checked("#group") and "group=0" in page.url
+    assert v.errors == [] and v.stored() == {}
+
+
+def test_a_link_with_grouping_off_opens_without_numbered_circles(visit):
+    page = visit().open("?group=0")
+    expect(page.locator("#toggle-group")).to_have_attribute("aria-pressed", "false")
+    wait_for_clusters(page, False)
+
+
+def test_private_chargers_are_hidden_until_the_visitor_asks(visit):
+    v = visit()
+    page = v.open("?view=list", map_ready=False)
+    expect(page.locator("#list-items li")).to_have_count(LOCATIONS)
+    assert PRIVATE not in page.text_content("#list-items")
+    assert TAXIS not in page.text_content("#list-items")
+    open_filters(page)
+    assert not page.is_checked("#private")
+    page.check("#private")
+    page.wait_for_url("**priv=1**")
+    expect(page.locator("#list-items li")).to_have_count(LOCATIONS + 2)
+    assert page.text_content("#toggle-filters") == "Filters (1)"
+    expect(page.locator("#list-items li", has_text=TAXIS)).to_contain_text(
+        "Taxis only: the operator marks every charge point here for taxis only"
+    )
+    item = page.locator("#list-items li", has_text=PRIVATE)
+    expect(item).to_contain_text(
+        'Marked private or restricted: the operator\'s name for it includes "Private Use Only"'
+    )
+    page.click("#done")
+    item.locator("button").click()
+    expect(page.locator("#detail-heading")).to_have_text(PRIVATE)
+    expect(page.locator("#detail-body .private-note")).to_contain_text(
+        'Chargers like this are hidden unless "Show chargers marked private or restricted"'
+    )
+    page.keyboard.press("Escape")
+    open_filters(page)
+    page.click("#reset")
+    expect(page.locator("#list-items li")).to_have_count(LOCATIONS)
+    links = page.locator("#private-hint a")
+    assert [links.nth(i).get_attribute("href") for i in range(2)] == [
+        "transparency/#private",
+        "status/#private",
+    ]
+    assert v.errors == []
+
+
+def test_details_list_each_charge_point_with_its_label_id_and_status(visit):
+    page = visit().open("?view=list&priv=1", map_ready=False)
+    page.locator("#list-items button", has_text=PRIVATE).click()
+    expect(page.locator("#detail-heading")).to_be_focused()
+    points = page.locator("#detail-body .charge-points > li")
+    expect(points).to_have_count(6)
+    assert page.text_content("#detail-body h3 >> nth=1") == "Charge points (6)"
+    first = points.first
+    assert first.locator(".charge-point-name").text_content() == "SEC31617"
+    expect(first).to_contain_text("ID GB*SSM*ESEC31617*1")
+    assert re.fullmatch(r"● Available, reported .+", first.locator(".status").text_content())
+    expect(first.locator(".connectors li")).to_have_count(1)
+    expect(first.locator(".connectors")).to_contain_text("Type 2 · 7 kW")
+    # The reference numbers come last, in small print.
+    last = page.locator("#detail-body > *").last
+    assert last.get_attribute("class") == "references"
+    refs = [li.text_content() for li in last.locator("li").all()]
+    assert refs[0] == (
+        "Site: 12343565 in Evolt Network's feed (on this map: evolt:GB:SSM:12343565)."
+    )
+    assert refs[1] == "SEC31617: EVSE ID GB*SSM*ESEC31617*1, uid SEC31617_1."
+    assert len(refs) == 7
+
+
+def test_parking_restrictions_are_shown_with_each_charge_point(visit):
+    page = visit().open("?view=list", map_ready=False)
+    page.locator("#list-items button", has_text="Premier Inn Alnwick").click()
+    expect(page.locator("#detail-heading")).to_be_focused()
+    expect(page.locator("#detail-body .charge-points .parking").first).to_have_text(
+        "Parking: only while plugged in and charging; customers only."
+    )
+
+
+def test_taxi_only_charge_points_are_labelled(visit):
+    page = visit().open("?view=list&priv=1", map_ready=False)
+    page.locator("#list-items button", has_text=TAXIS).click()
+    expect(page.locator("#detail-heading")).to_be_focused()
+    expect(page.locator("#detail-body .private-note")).to_contain_text("Taxis only")
+    parking = page.locator("#detail-body .charge-points .parking")
+    expect(parking).to_have_count(3)
+    expect(parking.first).to_have_text("Parking: taxis only.")

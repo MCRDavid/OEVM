@@ -418,6 +418,39 @@ class NonstandardStatuses(_Model):
         return self
 
 
+# OCPI 2.2.1 parking restrictions, which a non-standard reading can never replace.
+OCPI_PARKING_RESTRICTIONS = frozenset(
+    {"EV_ONLY", "PLUGGED", "DISABLED", "CUSTOMERS", "MOTORCYCLES"}
+)
+
+
+class NonstandardParkingRestrictions(_Model):
+    """The repository owner's recorded decision on how EVSE parking restrictions that are
+    not OCPI 2.2.1 values are read (ADR 0023).
+
+    Without this decision such values are ignored and logged. A value may only be read as
+    "taxis_only": the charge point is labelled "Taxis only", and a location where every
+    charge point is taxis only is hidden on the map with private ones unless a visitor asks
+    to see them.
+    """
+
+    decided: dt.date = Field(description="Date the owner made the decision (YYYY-MM-DD).")
+    basis: NeutralText = Field(description="Why the values may be read this way.")
+    evidence_url: SafeUrl = Field(description="Where the values can be seen in the feed.")
+    restrictions: dict[str, Literal["taxis_only"]] = Field(
+        min_length=1, description="Each value as the feed sends it, and how it is read."
+    )
+
+    @model_validator(mode="after")
+    def _not_ocpi(self) -> "NonstandardParkingRestrictions":
+        for value in self.restrictions:
+            if value.upper() in OCPI_PARKING_RESTRICTIONS:
+                raise ValueError(
+                    f"{value!r} is an OCPI 2.2.1 parking restriction and is read as such"
+                )
+        return self
+
+
 class ZeroPriceTariffs(_Model):
     """The repository owner's recorded decision that named tariffs whose prices are all zero
     show "Price unknown" rather than "Free" (ADR 0022).
@@ -707,6 +740,11 @@ class OperatorConfig(_Model):
         default=None,
         description="Only by the repository owner's decision: how EVSE statuses that are not "
         "OCPI 2.2.1 values are shown. Null means they are recorded as unknown.",
+    )
+    nonstandard_parking_restrictions: NonstandardParkingRestrictions | None = Field(
+        default=None,
+        description="Only by the repository owner's decision: how EVSE parking restrictions "
+        "that are not OCPI 2.2.1 values are read. Null means they are ignored.",
     )
     relay: Relay | None = Field(
         default=None,

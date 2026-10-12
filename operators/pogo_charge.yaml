@@ -63,6 +63,17 @@ tariffs_from:
     owns and operates its network, and both feeds are published on info.smartcharging.uk.
   evidence_url: https://pogocharge.com/terms/
   operators: [evolt]
+nonstandard_parking_restrictions:
+  decided: 2026-10-12
+  basis: >-
+    PoGo Charge marks some EVSEs with the parking restriction TAXI_ONLY, which is not an OCPI
+    2.2.1 value. The repository owner decided that it is read as taxis only: each such
+    charge point is labelled "Taxis only", and a location where every charge point is
+    taxis only is hidden on the map with private ones unless a visitor asks to see them,
+    because a driver without a taxi licence cannot use it.
+  evidence_url: https://info.smartcharging.uk/public_feed/locations/4009
+  restrictions:
+    TAXI_ONLY: taxis_only
 engagement:
   status: open_anonymous
   evidence:
@@ -147,6 +158,18 @@ findings:
       "max_charge_rate" on connectors.
     handling: >-
       Opening hours are shown as unknown. The extra fields are not used.
+    evidence_url: https://info.smartcharging.uk/public_feed/locations/4009
+  - date: 2026-10-10
+    kind: spec_conformance
+    summary: >-
+      Some EVSEs carry the parking restriction TAXI_ONLY, which is not an OCPI 2.2.1 value
+      (OCPI 2.2.1 lists EV_ONLY, PLUGGED, DISABLED, CUSTOMERS and MOTORCYCLES). At "Swales
+      Central Avenue" every EVSE carries it.
+    handling: >-
+      By the repository owner's decision of 2026-10-12, recorded in
+      nonstandard_parking_restrictions, TAXI_ONLY is read as taxis only: each such charge
+      point is labelled "Taxis only", and a location where every charge point is taxis only
+      is hidden on the map unless a visitor asks to see private and restricted chargers.
     evidence_url: https://info.smartcharging.uk/public_feed/locations/4009
 notes: >-
   The feeds are standard OCPI 2.2.1 responses on info.smartcharging.uk, read by the ocpi_221

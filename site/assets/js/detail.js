@@ -96,17 +96,82 @@ export function statusSection(detail, { hideOut = false, onHideOut = null } = {}
   ].filter(Boolean);
 }
 
-function connectorItem(evse, connector, price) {
+// OCPI 2.2.1 parking restrictions, worded for drivers (ADR 0023).
+const PARKING = {
+  ev_only: "electric vehicles only",
+  plugged: "only while plugged in and charging",
+  disabled: "Blue Badge holders only",
+  customers: "customers only",
+  motorcycles: "electric motorcycles and scooters only",
+  // Not an OCPI value: read so only by the owner's decision in an operator file.
+  taxis_only: "taxis only",
+};
+
+// A charge point's name: the label the operator says is on it (OCPI physical_reference),
+// else its EVSE ID, else its place in the operator's list.
+export function chargePointName(evse, index) {
+  return evse.physical_reference || evse.evse_id || `Charge point ${index + 1}`;
+}
+
+function connectorItem(connector, price) {
   return h(
     "li",
     {},
     h("p", { className: "plug" }, h("strong", { text: plugName(connector.standard) }), ` · ${formatKw(connector.max_kw)}`),
-    statusLine(evse),
     h(
       "p",
       { className: "price" },
       price ? price.text : "Price unknown",
       price?.reason ? h("span", { className: "hint", text: ` ${price.reason}` }) : null,
+    ),
+  );
+}
+
+// One item per charge point (OCPI EVSE), each with its own name, status and connectors, so
+// people can see which one is free, in use or out of service. A charge point charges one
+// vehicle at a time, whichever of its connectors is used.
+function chargePointItem(evse, index, prices) {
+  const name = chargePointName(evse, index);
+  const connectors = evse.connectors ?? [];
+  const parking = (evse.parking_restrictions ?? []).map((r) => PARKING[r]).filter(Boolean);
+  return h(
+    "li",
+    { className: "charge-point" },
+    h("p", { className: "charge-point-name" }, h("strong", { text: name })),
+    evse.evse_id && evse.evse_id !== name ? h("p", { className: "hint", text: `ID ${evse.evse_id}` }) : null,
+    statusLine(evse),
+    parking.length ? h("p", { className: "parking", text: `Parking: ${parking.join("; ")}.` }) : null,
+    connectors.length > 1
+      ? h("p", { className: "hint", text: `${connectors.length} connectors, one vehicle at a time.` })
+      : null,
+    connectors.length
+      ? h(
+          "ul",
+          { className: "connectors", "aria-label": `Connectors on ${name}` },
+          connectors.map((c) => connectorItem(c, priceFor(prices, evse, c))),
+        )
+      : h("p", { text: "No connectors listed by the operator." }),
+  );
+}
+
+// A small note at the foot of the details with the operator's own references for the
+// location and each charge point, to quote when reporting a fault or a mistake.
+function referenceNote(location) {
+  const site = location.id.split(":").slice(3).join(":");
+  const network = location.operator?.name ?? "the operator";
+  return h(
+    "div",
+    { className: "references" },
+    h("h3", { text: "Reference numbers" }),
+    h(
+      "ul",
+      { className: "hint", "aria-label": "Reference numbers" },
+      h("li", { text: `Site: ${site} in ${network}'s feed (on this map: ${location.id}).` }),
+      (location.evses ?? []).map((evse, index) => {
+        const name = chargePointName(evse, index);
+        const parts = [evse.evse_id && evse.evse_id !== name ? `EVSE ID ${evse.evse_id}` : null, `uid ${evse.uid}`];
+        return h("li", { text: `${name}: ${parts.filter(Boolean).join(", ")}.` });
+      }),
     ),
   );
 }
@@ -310,17 +375,13 @@ export function plansSection(detail, allPlans, mine = new Set()) {
   ].filter(Boolean);
 }
 
-export function renderDetail(detail, { repository, plans = [], mine = new Set(), hideOut = false, onHideOut = null }) {
+export function renderDetail(
+  detail,
+  { repository, plans = [], mine = new Set(), hideOut = false, onHideOut = null, privateNote = null },
+) {
   const location = detail.location;
-  const items = [];
-  for (const evse of location.evses ?? []) {
-    if (!evse.connectors?.length) {
-      items.push(h("li", { text: `Charge point ${evse.uid}: no connectors listed by the operator.` }));
-    }
-    for (const connector of evse.connectors ?? []) {
-      items.push(connectorItem(evse, connector, priceFor(detail.prices ?? [], evse, connector)));
-    }
-  }
+  const evses = location.evses ?? [];
+  const items = evses.map((evse, index) => chargePointItem(evse, index, detail.prices ?? []));
   const { latitude, longitude } = location.coordinates;
   const report = new URL(`${repository}/issues/new`);
   report.searchParams.set("template", "correction.yml");
@@ -331,13 +392,16 @@ export function renderDetail(detail, { repository, plans = [], mine = new Set(),
     h("h2", { id: "detail-heading", tabindex: "-1", text: location.name || "Charger location" }),
     h("p", { className: "operator", text: location.operator?.name ?? "Operator not given" }),
     h("p", { text: address(location) }),
+    privateNote ? h("p", { className: "hint private-note", text: privateNote }) : null,
     ...(detail.coordinates_corrected?.note
       ? [h("p", { className: "hint corrected", text: detail.coordinates_corrected.note })]
       : []),
     openingHours(location.opening_hours),
     ...statusSection(detail, { hideOut, onHideOut }),
-    h("h3", { text: "Connectors" }),
-    items.length ? h("ul", { className: "connectors" }, items) : h("p", { text: "No charge points listed." }),
+    h("h3", { text: items.length ? `Charge points (${items.length})` : "Charge points" }),
+    items.length
+      ? h("ul", { className: "charge-points", "aria-label": "Charge points" }, items)
+      : h("p", { text: "No charge points listed." }),
     ...sources.map((source) => h("p", { className: "hint related", text: source.note })),
     ...tariffSection(detail),
     ...plansSection(detail, plans, mine),
@@ -378,5 +442,6 @@ export function renderDetail(detail, { repository, plans = [], mine = new Set(),
       h("li", {}, h("a", { href: `geo:${latitude},${longitude}` }, "Open in a maps app (Android and some other devices)")),
       h("li", {}, safeLink(report.href, "Report a mistake about this charger")),
     ),
-  ];
+    referenceNote(location),
+  ].filter(Boolean);
 }

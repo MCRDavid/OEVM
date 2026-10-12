@@ -398,7 +398,8 @@ button.status-chip {
   font-weight: 600;
 }
 
-.legend .key-heading:last-child {
+.legend .key-heading:last-child,
+.legend .key-note {
   font-weight: normal;
 }
 
@@ -444,6 +445,11 @@ button.status-chip {
 
 .dot.out {
   opacity: 0.45;
+}
+
+/* Matches the cluster circles drawn in main.js. */
+.dot.cluster {
+  background: #24323f;
 }
 
 .list-view {
@@ -560,6 +566,7 @@ body[data-view="list"] .map-view {
   font-weight: 600;
 }
 
+.charge-points,
 .connectors,
 .tariffs {
   margin: 0;
@@ -567,12 +574,41 @@ body[data-view="list"] .map-view {
   list-style: none;
 }
 
-.connectors > li,
+.charge-points > li,
 .tariffs > li {
   margin-bottom: 0.5rem;
   padding: 0.5rem 0.75rem;
   border: 1px solid var(--line);
   border-radius: 6px;
+}
+
+/* Each charge point's connectors, inside its box. */
+.connectors > li {
+  margin-top: 0.4rem;
+  padding-top: 0.4rem;
+  border-top: 1px solid var(--line);
+}
+
+.charge-point-name {
+  font-size: 1.05rem;
+}
+
+/* The reference numbers at the foot of the details: small print. */
+.references h3 {
+  margin-top: 1.25rem;
+  font-size: 0.9rem;
+}
+
+.references ul {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  font-size: 0.85rem;
+  overflow-wrap: anywhere;
+}
+
+.references li {
+  margin: 0.15rem 0;
 }
 
 .hours {
@@ -629,6 +665,26 @@ body[data-view="list"] .map-view {
   padding: 0;
   border: 0;
   border-radius: 0;
+}
+
+/* The "Group" button on the map (main.js): words rather than an icon, in MapLibre's light
+   look, filled dark with a tick while grouping is on. */
+.maplibregl-ctrl-group button.group-toggle {
+  width: auto;
+  padding: 0 0.7rem;
+  background: #ffffff;
+  color: #1b1b1b;
+  font-size: 0.9rem;
+  font-weight: 600;
+}
+
+.maplibregl-ctrl-group button.group-toggle[aria-pressed="true"] {
+  background: #1b1b1b;
+  color: #ffffff;
+}
+
+.maplibregl-ctrl-group button.group-toggle[aria-pressed="true"]::before {
+  content: "\2713\00a0";
 }
 
 /* MapLibre's buttons keep their light look in dark mode, with a border so they stand out

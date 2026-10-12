@@ -33,10 +33,12 @@ const settings = createSettings(storage);
 const app = {
   config: null,
   features: [],
+  byKey: new Map(), // each location's properties by its key, for its details
   filtered: [],
   operators: new Map(),
   state: defaults(),
   map: null,
+  grouped: null, // whether the map's source currently groups points, once it exists
   area: null,
   mapPending: false,
   lastTrigger: null,
@@ -64,7 +66,7 @@ function notice(text) {
 // Filters and the page address
 
 function hasFilterParams() {
-  const keys = ["minkw", "plug", "free", "maxp", "unknown", "ok", "op", "view"];
+  const keys = ["minkw", "plug", "free", "maxp", "unknown", "ok", "priv", "op", "group", "view"];
   const params = new URLSearchParams(window.location.search);
   return keys.some((key) => params.has(key));
 }
@@ -92,6 +94,8 @@ function stateToForm() {
   $("maxp").value = app.state.maxp === null ? "" : String(app.state.maxp);
   $("unknown").checked = app.state.unknown;
   $("working").checked = app.state.working;
+  $("private").checked = app.state.priv;
+  $("group").checked = app.state.group;
   showActiveFilters();
 }
 
@@ -102,6 +106,7 @@ function showActiveFilters() {
   $("quick-rapid").setAttribute("aria-pressed", String(app.state.minkw >= 50));
   $("quick-free").setAttribute("aria-pressed", String(app.state.free));
   $("quick-working").setAttribute("aria-pressed", String(app.state.working));
+  $("toggle-group")?.setAttribute("aria-pressed", String(app.state.group));
   // The out of service count on an open charger's details switches the same filter.
   for (const button of document.querySelectorAll('#detail-body [data-filter="working"]')) {
     button.setAttribute("aria-pressed", String(app.state.working));
@@ -125,6 +130,8 @@ function formToState() {
   if ($("maxp").value.trim() !== "") query.set("maxp", $("maxp").value.trim());
   if (!$("unknown").checked) query.set("unknown", "0");
   if ($("working").checked) query.set("ok", "1");
+  if ($("private").checked) query.set("priv", "1");
+  if (!$("group").checked) query.set("group", "0");
   if (app.state.view === "list") query.set("view", "list");
   return parse(query.toString());
 }
@@ -143,7 +150,18 @@ function applyFilters() {
   app.filtered = app.features.filter((f) => matches(f.properties, app.state));
   const source = app.map?.getSource("chargers");
   if (source) source.setData({ type: "FeatureCollection", features: app.filtered });
+  applyGrouping();
   renderList();
+}
+
+// Nearby points are drawn as numbered circles unless the visitor turns grouping off.
+const CLUSTER = { clusterRadius: 50, clusterMaxZoom: 13 };
+
+function applyGrouping() {
+  const source = app.map?.getSource("chargers");
+  if (!source || app.grouped === app.state.group) return;
+  app.grouped = app.state.group;
+  source.setClusterOptions({ cluster: app.state.group, ...CLUSTER });
 }
 
 function buildNetworks() {
@@ -263,6 +281,7 @@ function renderList() {
         h("span", { className: "meta", text: `${app.operators.get(p.op) ?? p.op} · up to ${formatKw(p.kw)} · ${plugsSummary(p.plugs)}` }),
         h("span", { className: `meta price-${p.price}`, text: p.pt || "Price unknown" }),
         p.down ? h("span", { className: "meta out-note", text: "Reported out of service at the last daily fetch" }) : null,
+        p.priv || p.taxi ? h("span", { className: "meta private-note", text: privateText(p) }) : null,
       ),
     );
   });
@@ -302,8 +321,27 @@ function toggleHideOut() {
   stateChanged();
 }
 
+// Why a location is hidden unless asked for (ADR 0023): words in its name, or every charge
+// point marked for taxis only.
+function privateText({ priv, taxi }) {
+  return priv
+    ? `Marked private or restricted: the operator's name for it includes "${priv}"`
+    : "Taxis only: the operator marks every charge point here for taxis only";
+}
+
 function detailOptions() {
-  return { ...app.config, plans: app.plans, mine: app.mine, hideOut: app.state.working, onHideOut: toggleHideOut };
+  const props = app.byKey.get(app.lastKey);
+  const hidden = props && (props.priv || props.taxi);
+  return {
+    ...app.config,
+    plans: app.plans,
+    mine: app.mine,
+    hideOut: app.state.working,
+    onHideOut: toggleHideOut,
+    privateNote: hidden
+      ? `${privateText(props)}. Chargers like this are hidden unless "Show chargers marked private or restricted" is ticked in the filters.`
+      : null,
+  };
 }
 
 // Ticking a plan while a charger's details are open (possible on a wide screen) redraws
@@ -428,6 +466,7 @@ async function startMap() {
   }
   app.map.addControl(new maplibre.NavigationControl({ showCompass: false }), "top-right");
   addLocateControl(maplibre);
+  addGroupControl();
   app.map.on("style.load", () => {
     styleLoaded = true;
     addChargerLayers();
@@ -469,10 +508,10 @@ function addChargerLayers() {
   app.map.addSource("chargers", {
     type: "geojson",
     data: { type: "FeatureCollection", features: app.filtered },
-    cluster: true,
-    clusterRadius: 50,
-    clusterMaxZoom: 13,
+    cluster: app.state.group,
+    ...CLUSTER,
   });
+  app.grouped = app.state.group;
   const band = (values) => ["match", ["get", "band"], ...Object.entries(values).flat(), values.unknown];
   const faded = (normal) => ["case", ["get", "down"], 0.45, normal];
   app.map.addLayer({
@@ -523,6 +562,25 @@ function addChargerLayers() {
     paint: { "text-color": "#ffffff", "text-opacity": faded(1) },
   });
   renderList();
+}
+
+// The "Group" button switches grouping on and off, the same as the box in the filters.
+function addGroupControl() {
+  const button = h("button", {
+    type: "button",
+    id: "toggle-group",
+    className: "group-toggle",
+    "aria-pressed": String(app.state.group),
+    title: "Group nearby chargers into numbered circles",
+    text: "Group",
+    onClick: () => {
+      app.state = { ...app.state, group: !app.state.group };
+      stateToForm();
+      stateChanged();
+    },
+  });
+  const container = h("div", { className: "maplibregl-ctrl maplibregl-ctrl-group" }, button);
+  app.map.addControl({ onAdd: () => container, onRemove: () => container.remove() }, "top-right");
 }
 
 // "Find my location" uses MapLibre's own control, which asks the browser for one
@@ -592,7 +650,7 @@ function setUpSettings() {
   remember.addEventListener("change", () => {
     if (remember.checked) {
       if (settings.save(app.state, app.theme, [...app.mine])) {
-        message.textContent = "Your settings are saved on this device: filters, ticked charging plans and light or dark mode if you picked one.";
+        message.textContent = "Your settings are saved on this device: filters, map grouping, ticked charging plans and light or dark mode if you picked one.";
       } else {
         remember.checked = false;
         message.textContent = "Your browser did not allow saving settings.";
@@ -659,7 +717,7 @@ function wireUp() {
     $("toggle-filters").focus();
   });
   $("reset").addEventListener("click", () => {
-    app.state = { ...defaults(), view: app.state.view };
+    app.state = { ...defaults(), view: app.state.view, group: app.state.group };
     stateToForm();
     stateChanged();
   });
@@ -723,6 +781,7 @@ async function start() {
     for (const { properties } of app.features) {
       properties.band = speedBand(properties.kw);
       properties.down = allOut(properties);
+      app.byKey.set(properties.key, properties);
     }
     try {
       const manifest = await loadJson("data/manifest.json");
