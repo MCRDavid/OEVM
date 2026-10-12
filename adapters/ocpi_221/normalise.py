@@ -114,12 +114,45 @@ def publish_allowed(raw: dict, config: OperatorConfig, issues: IssueLog) -> bool
     return False
 
 
+def excluded_by_owner(raw: dict, config: OperatorConfig, issues: IssueLog) -> bool:
+    """Whether the operator file records the owner's decision to leave this location off
+    the map (excluded_locations), matched by its exact OCPI id."""
+    decision = config.excluded_locations
+    if decision is None or raw.get("id") is None:
+        return False
+    if str(raw["id"]) in {location.id for location in decision.locations}:
+        issues.add(
+            f"location {str(raw['id'])!r} not kept: left off under the decision recorded in "
+            "the operator file"
+        )
+        return True
+    return False
+
+
 def parse_ocpi_datetime(value: object) -> datetime | None:
     """OCPI timestamps are UTC; one without a time zone designator means UTC."""
     if value in (None, ""):
         return None
     parsed = datetime.fromisoformat(str(value))
     return parsed if parsed.tzinfo else parsed.replace(tzinfo=UTC)
+
+
+def _last_updated(raw: dict, what: str, issues: IssueLog) -> datetime | None:
+    """A record's last_updated, or None if it is not a real date and time.
+
+    Some feeds send placeholders such as "0000-00-00T00:00:00Z". The record is kept and
+    the date recorded as unknown, so an EVSE whose own date is unknown too has its status
+    recorded as unknown (_evse). Tariff start and end dates stay strict, because a wrong
+    one could show a price that is not in force.
+    """
+    try:
+        return parse_ocpi_datetime(raw.get("last_updated"))
+    except (TypeError, ValueError):
+        issues.add(
+            f"{what} last_updated {raw.get('last_updated')!r} is not a valid date and time; "
+            "recorded as unknown"
+        )
+        return None
 
 
 def _party(raw: dict, config: OperatorConfig) -> tuple[str, str]:
@@ -211,7 +244,7 @@ def _evse(
             f"EVSE status {raw.get('status')!r} is not an OCPI 2.2.1 value; recorded as unknown"
         )
         status = "unknown"
-    status_at = parse_ocpi_datetime(raw.get("last_updated")) or fallback_time
+    status_at = _last_updated(raw, "EVSE", issues) or fallback_time
     if status != "unknown" and status_at is None:
         issues.add("EVSE status has no timestamp; recorded as unknown")
         status = "unknown"
@@ -263,7 +296,7 @@ def location_from_ocpi(
     """Convert one OCPI Location. Raises KeyError, TypeError or ValueError if unusable."""
     country, party = _party(raw, config)
     prefix = f"{config.id}:{country}:{party}"
-    last_updated = parse_ocpi_datetime(raw.get("last_updated"))
+    last_updated = _last_updated(raw, "location", issues)
     coordinates = raw["coordinates"]
     return Location(
         id=f"{prefix}:{_ocpi_id(raw['id'], 'location', issues)}",
@@ -327,6 +360,12 @@ def tariff_from_ocpi(
     tariff_type = raw.get("type")
     if tariff_type is not None and tariff_type not in TARIFF_TYPES:
         issues.add(f"tariff type {tariff_type!r} is not an OCPI 2.2.1 value; ignored")
+    raw_elements = raw.get("elements") or []
+    if isinstance(raw_elements, dict):
+        # OCPI 2.2.1 elements is a list. One element sent on its own is read as a list of
+        # one; its price components and restrictions are read exactly as sent.
+        issues.add("tariff elements is one object, not a list; read as a list of one")
+        raw_elements = [raw_elements]
     elements = [
         TariffElement(
             price_components=[
@@ -340,7 +379,7 @@ def tariff_from_ocpi(
             ],
             restrictions=_restrictions(element.get("restrictions"), issues),
         )
-        for element in raw.get("elements") or []
+        for element in raw_elements
     ]
     return Tariff(
         id=f"{config.id}:{country}:{party}:{raw['id']}",
@@ -353,6 +392,6 @@ def tariff_from_ocpi(
         alt_url=raw.get("tariff_alt_url"),
         start_date_time=parse_ocpi_datetime(raw.get("start_date_time")),
         end_date_time=parse_ocpi_datetime(raw.get("end_date_time")),
-        last_updated=parse_ocpi_datetime(raw.get("last_updated")),
+        last_updated=_last_updated(raw, "tariff", issues),
         provenance=_provenance(config, source_url, fetched_at),
     )
