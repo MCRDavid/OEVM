@@ -2567,6 +2567,66 @@
       "findings": []
     },
     {
+      "id": "citicharge",
+      "name": "CitiCharge",
+      "enabled": false,
+      "adapter": "unknown",
+      "engagement": {
+        "status": "no_public_feed_found",
+        "label": "No public feed found",
+        "headline": "No public feed found (as of 2026-10-11)",
+        "as_of": "2026-10-11",
+        "last_request": null,
+        "last_response": null,
+        "last_response_text": "No request sent",
+        "evidence": [
+          {
+            "date": "2026-10-11",
+            "url": "https://citicharge.co.uk/",
+            "file": null,
+            "note": "CitiCharge's website describes it as a subscription free charging network with its own app. It gives no open data feed and no route for requesting open data."
+          }
+        ],
+        "log": [
+          {
+            "date": "2026-10-11",
+            "action": "feed_searched",
+            "action_label": "Searched for a feed",
+            "channel": null,
+            "channel_label": null,
+            "summary": "CitiCharge's website and its site index, and the CitiPark website, were searched, and no open data feed or route for requesting open data was found.",
+            "quote": "CitiCharge is a subscription free electric vehicle charging network",
+            "evidence_url": "https://citicharge.co.uk/",
+            "evidence_file": null
+          }
+        ]
+      },
+      "access_requested": null,
+      "access_granted": null,
+      "feeds": [],
+      "licence": null,
+      "attribution": null,
+      "missing_publish_flag": null,
+      "swapped_coordinates": null,
+      "nonstandard_statuses": null,
+      "tariffs_from": null,
+      "zero_price_tariffs": null,
+      "relay": null,
+      "expired_certificate": null,
+      "excluded_locations": null,
+      "rate_limit": {
+        "our_gap_seconds": 2.0,
+        "our_max_per_hour": 1800,
+        "ours": "At least 2 s between requests to the operator's host, measured from the end of the previous request (at most 1800 in any hour), retries included.",
+        "published": [],
+        "limits_checked": "unknown",
+        "comparison": "The operator's pages have not been checked for limits yet.",
+        "difference_from_regulations": "Not known yet.",
+        "notes": null
+      },
+      "findings": []
+    },
+    {
       "id": "community_by_shell_recharge",
       "name": "Community by Shell Recharge",
       "enabled": false,
@@ -4377,6 +4437,66 @@
       "findings": []
     },
     {
+      "id": "saba_parking",
+      "name": "Saba Parking",
+      "enabled": false,
+      "adapter": "unknown",
+      "engagement": {
+        "status": "no_public_feed_found",
+        "label": "No public feed found",
+        "headline": "No public feed found (as of 2026-10-11)",
+        "as_of": "2026-10-11",
+        "last_request": null,
+        "last_response": null,
+        "last_response_text": "No request sent",
+        "evidence": [
+          {
+            "date": "2026-10-11",
+            "url": "https://www.sabaparking.co.uk/en/electric-charging-points",
+            "file": null,
+            "note": "Saba Parking UK's electric charging points page says it has a network of charging hubs in its car parks, free to use with paid parking. It gives no open data feed and no route for requesting open data."
+          }
+        ],
+        "log": [
+          {
+            "date": "2026-10-11",
+            "action": "feed_searched",
+            "action_label": "Searched for a feed",
+            "channel": null,
+            "channel_label": null,
+            "summary": "Saba Parking UK's website, its site index and its frequently asked questions were searched, and no open data feed or route for requesting open data was found.",
+            "quote": "Saba has developed a network of hubs in its car parks.",
+            "evidence_url": "https://www.sabaparking.co.uk/en/electric-charging-points",
+            "evidence_file": null
+          }
+        ]
+      },
+      "access_requested": null,
+      "access_granted": null,
+      "feeds": [],
+      "licence": null,
+      "attribution": null,
+      "missing_publish_flag": null,
+      "swapped_coordinates": null,
+      "nonstandard_statuses": null,
+      "tariffs_from": null,
+      "zero_price_tariffs": null,
+      "relay": null,
+      "expired_certificate": null,
+      "excluded_locations": null,
+      "rate_limit": {
+        "our_gap_seconds": 2.0,
+        "our_max_per_hour": 1800,
+        "ours": "At least 2 s between requests to the operator's host, measured from the end of the previous request (at most 1800 in any hour), retries included.",
+        "published": [],
+        "limits_checked": "unknown",
+        "comparison": "The operator's pages have not been checked for limits yet.",
+        "difference_from_regulations": "Not known yet.",
+        "notes": null
+      },
+      "findings": []
+    },
+    {
       "id": "shell_recharge",
       "name": "Shell Recharge",
       "enabled": false,
@@ -5165,6 +5285,66 @@
           "resolved_date": null
         }
       ]
+    },
+    {
+      "id": "yourparkingspace",
+      "name": "YourParkingSpace",
+      "enabled": false,
+      "adapter": "unknown",
+      "engagement": {
+        "status": "possibly_out_of_scope",
+        "label": "Possibly out of scope",
+        "headline": "Possibly out of scope (as of 2026-10-11)",
+        "as_of": "2026-10-11",
+        "last_request": null,
+        "last_response": null,
+        "last_response_text": "No request sent",
+        "evidence": [
+          {
+            "date": "2026-10-11",
+            "url": "https://www.yourparkingspace.co.uk/business/solutions/electric-charge-points",
+            "file": null,
+            "note": "YourParkingSpace's page for businesses says it funds and installs charging hardware at business premises and takes one payment for parking and charging. It does not say who is the operator of the charge points, and gives no open data feed or route for requesting open data."
+          }
+        ],
+        "log": [
+          {
+            "date": "2026-10-11",
+            "action": "feed_searched",
+            "action_label": "Searched for a feed",
+            "channel": null,
+            "channel_label": null,
+            "summary": "YourParkingSpace's website and its site indexes were searched, and no open data feed or route for requesting open data was found.",
+            "quote": "YourParkingSpace funds and installs charging station hardware on your property under a minimum fixed term contract so there is no capital outlay for your business.",
+            "evidence_url": "https://www.yourparkingspace.co.uk/business/solutions/electric-charge-points",
+            "evidence_file": null
+          }
+        ]
+      },
+      "access_requested": null,
+      "access_granted": null,
+      "feeds": [],
+      "licence": null,
+      "attribution": null,
+      "missing_publish_flag": null,
+      "swapped_coordinates": null,
+      "nonstandard_statuses": null,
+      "tariffs_from": null,
+      "zero_price_tariffs": null,
+      "relay": null,
+      "expired_certificate": null,
+      "excluded_locations": null,
+      "rate_limit": {
+        "our_gap_seconds": 2.0,
+        "our_max_per_hour": 1800,
+        "ours": "At least 2 s between requests to the operator's host, measured from the end of the previous request (at most 1800 in any hour), retries included.",
+        "published": [],
+        "limits_checked": "unknown",
+        "comparison": "The operator's pages have not been checked for limits yet.",
+        "difference_from_regulations": "Not known yet.",
+        "notes": null
+      },
+      "findings": []
     },
     {
       "id": "zest",

@@ -1,0 +1,63 @@
+# yaml-language-server: $schema=schema.json
+id: yourparkingspace
+display_name: YourParkingSpace
+ocpi_country_code: unknown
+ocpi_party_id: unknown
+adapter: unknown
+base_url: unknown
+endpoints: {}
+auth:
+  method: unknown
+  name: null
+  secret_name: null
+rate_limit:
+  min_seconds_between_requests: 2
+  limits: []
+  limits_checked: unknown
+  notes: null
+supports_single_location: unknown
+cors: unknown
+attribution: null
+licence: null
+engagement:
+  status: possibly_out_of_scope
+  evidence:
+    - date: 2026-10-11
+      url: https://www.yourparkingspace.co.uk/business/solutions/electric-charge-points
+      note: >-
+        YourParkingSpace's page for businesses says it funds and installs charging hardware at
+        business premises and takes one payment for parking and charging. It does not say who
+        is the operator of the charge points, and gives no open data feed or route for
+        requesting open data.
+  log:
+    - date: 2026-10-11
+      action: feed_searched
+      summary: >-
+        YourParkingSpace's website and its site indexes were searched, and no open data feed or
+        route for requesting open data was found.
+      quote: >-
+        YourParkingSpace funds and installs charging station hardware on your property under a
+        minimum fixed term contract so there is no capital outlay for your business.
+      evidence_url: https://www.yourparkingspace.co.uk/business/solutions/electric-charge-points
+access_requested: null
+access_granted: null
+sources:
+  - url: https://www.yourparkingspace.co.uk/business/solutions/electric-charge-points
+    note: >-
+      YourParkingSpace's electric charging page for businesses (read 2026-10-11). It offers
+      survey, installation and maintenance, says "One payment for both parking and charging",
+      and describes a partnership with EVBox for pre-bookable park and charge spaces. No open
+      data link.
+  - url: https://www.yourparkingspace.co.uk/robots.txt
+    note: >-
+      Lists the site's indexes (read 2026-10-11). The page, company, support and business
+      page indexes name only two charging pages, both for businesses, and no open data,
+      OCPI or regulations page.
+findings: []
+notes: >-
+  YourParkingSpace is mainly a parking booking marketplace, where many listed spaces are
+  private driveways. Its business offer funds and installs chargers in car parks it manages
+  or lists, but its pages do not say whether it or the site owner is the operator of those
+  charge points, so it is recorded as possibly out of scope. The next step is to ask whether
+  it operates any public charge points itself and, if so, where its open data is published.
+enabled: false

@@ -1,0 +1,63 @@
+# yaml-language-server: $schema=schema.json
+id: saba_parking
+display_name: Saba Parking
+ocpi_country_code: unknown
+ocpi_party_id: unknown
+adapter: unknown
+base_url: unknown
+endpoints: {}
+auth:
+  method: unknown
+  name: null
+  secret_name: null
+rate_limit:
+  min_seconds_between_requests: 2
+  limits: []
+  limits_checked: unknown
+  notes: null
+supports_single_location: unknown
+cors: unknown
+attribution: null
+licence: null
+engagement:
+  status: no_public_feed_found
+  evidence:
+    - date: 2026-10-11
+      url: https://www.sabaparking.co.uk/en/electric-charging-points
+      note: >-
+        Saba Parking UK's electric charging points page says it has a network of charging hubs
+        in its car parks, free to use with paid parking. It gives no open data feed and no
+        route for requesting open data.
+  log:
+    - date: 2026-10-11
+      action: feed_searched
+      summary: >-
+        Saba Parking UK's website, its site index and its frequently asked questions were
+        searched, and no open data feed or route for requesting open data was found.
+      quote: Saba has developed a network of hubs in its car parks.
+      evidence_url: https://www.sabaparking.co.uk/en/electric-charging-points
+access_requested: null
+access_granted: null
+sources:
+  - url: https://www.sabaparking.co.uk/en/electric-charging-points
+    note: >-
+      Saba Parking UK's electric charging points page (read 2026-10-11): "Saba has developed a
+      network of hubs in its car parks. Charging your car is Free! Simply pay for your parking
+      and park up and one of our electric charging stations." It names its London car parks at
+      Kensington High Street and West India Quay "as well as a number of other sites around
+      the UK". No open data link.
+  - url: https://www.sabaparking.co.uk/en/o/sitemap-gb.xml
+    note: >-
+      Saba Parking UK's site index (read 2026-10-11), 681 addresses, with no open data, OCPI or
+      regulations page. Its home, frequently asked questions and sustainability pages (read
+      the same day) had no open data link either. The former Indigo UK address,
+      www.parkindigo.co.uk, redirected to www.sabaparking.co.uk on the same day.
+findings: []
+notes: >-
+  Saba Parking UK runs car parks in town centres and at railway stations (West Midlands
+  Railway, London Northwestern Railway and London St Pancras among them). Its own page on
+  2026-10-11 said it has charging hubs in its car parks that are free to use with paid
+  parking. No open data feed or request route was found on its own website on 2026-10-11, so
+  the next step is a written request asking where its open data under regulation 10 is
+  published. Tesla chargers in its car parks are Tesla's own data.
+enabled: false

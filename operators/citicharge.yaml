@@ -1,0 +1,61 @@
+# yaml-language-server: $schema=schema.json
+id: citicharge
+display_name: CitiCharge
+ocpi_country_code: unknown
+ocpi_party_id: unknown
+adapter: unknown
+base_url: unknown
+endpoints: {}
+auth:
+  method: unknown
+  name: null
+  secret_name: null
+rate_limit:
+  min_seconds_between_requests: 2
+  limits: []
+  limits_checked: unknown
+  notes: null
+supports_single_location: unknown
+cors: unknown
+attribution: null
+licence: null
+engagement:
+  status: no_public_feed_found
+  evidence:
+    - date: 2026-10-11
+      url: https://citicharge.co.uk/
+      note: >-
+        CitiCharge's website describes it as a subscription free charging network with its own
+        app. It gives no open data feed and no route for requesting open data.
+  log:
+    - date: 2026-10-11
+      action: feed_searched
+      summary: >-
+        CitiCharge's website and its site index, and the CitiPark website, were searched, and
+        no open data feed or route for requesting open data was found.
+      quote: CitiCharge is a subscription free electric vehicle charging network
+      evidence_url: https://citicharge.co.uk/
+access_requested: null
+access_granted: null
+sources:
+  - url: https://citicharge.co.uk/
+    note: >-
+      CitiCharge's home page (read 2026-10-11): "CitiCharge is a subscription free electric
+      vehicle charging network", used through its own app with in-app credit. It names SWARCO
+      and Monta as partners. Its map page loads location data for the website map from
+      cp.citicharge.co.uk; that is the website's own map data, not a published open data feed,
+      so this project does not use it. Its site index (wp-sitemap.xml, read the same day) lists
+      no open data page. Contact is through a general enquiries email on the home page.
+  - url: https://www.citipark.co.uk/
+    note: >-
+      CitiPark's home page (read 2026-10-11): "EV Charging is available across the majority of
+      our portfolio through our subsidiary, CitiCharge. With both universal and Tesla
+      Destination charging bays available". No open data link.
+findings: []
+notes: >-
+  CitiCharge is the charging network of the car park operator CitiPark, which runs car parks
+  in Leeds, Manchester, London, Watford, Cheltenham and other towns. No open data feed or
+  request route was found on either website on 2026-10-11, so the next step is a written
+  request asking where its open data under regulation 10 is published. Tesla Destination bays
+  in CitiPark car parks are Tesla's own data.
+enabled: false

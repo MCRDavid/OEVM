@@ -61,11 +61,20 @@ sources:
     note: >-
       APCOA's help centre, searched on 2026-10-11 for "open data", "charge point regulations"
       and "OCPI"; no article about open data was found.
+  - url: https://www.cittimagazine.co.uk/news/electric-vehicles-charging/network-rail-equips-car-parks-with-ev-chargepoints.html
+    note: >-
+      Trade press report of 18 July 2022 (read 2026-10-11), used as a pointer only: Network
+      Rail installed 450 chargers, rising to 833, in station car parks run by APCOA, with
+      Compleo hardware and software, a contract managed by E.ON, and payment through the
+      APCOA Connect app. Who is the operator of record for these charge points is not stated.
 findings: []
 notes: >-
   APCOA runs its own public charging network in the car parks it operates, which drivers use
   through the APCOA Connect app; on 2026-10-11 its UK business page gave about 1,000 charging
   stations. No open data feed or request route was found on its own websites on 2026-10-11.
   The next step is a written request asking where its open data under regulation 10 is
-  published. Some APCOA car parks host Tesla chargers, which are Tesla's own data.
+  published. Some APCOA car parks host Tesla chargers, which are Tesla's own data. Chargers
+  in Network Rail station car parks run by APCOA are paid through the same app; whether APCOA,
+  Network Rail or another company is their operator of record is unknown, so the request
+  should ask that too.
 enabled: false
