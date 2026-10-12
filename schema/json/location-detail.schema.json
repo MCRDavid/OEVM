@@ -284,6 +284,19 @@
           "description": "eMI3 EVSE ID (for example 'GB*ABC*E123'), used to match across sources.",
           "title": "Evse Id"
         },
+        "physical_reference": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "The name or number the operator says is shown on the charge point (OCPI physical_reference), as published.",
+          "title": "Physical Reference"
+        },
         "status": {
           "default": "unknown",
           "enum": [
@@ -315,6 +328,21 @@
           "description": "When the status was last reported.",
           "title": "Status At"
         },
+        "parking_restrictions": {
+          "description": "Who may park at the charge point (OCPI 2.2.1 parking_restrictions).",
+          "items": {
+            "enum": [
+              "ev_only",
+              "plugged",
+              "disabled",
+              "customers",
+              "motorcycles"
+            ],
+            "type": "string"
+          },
+          "title": "Parking Restrictions",
+          "type": "array"
+        },
         "connectors": {
           "items": {
             "$ref": "#/$defs/Connector"
@@ -326,8 +354,10 @@
       "required": [
         "uid",
         "evse_id",
+        "physical_reference",
         "status",
         "status_at",
+        "parking_restrictions",
         "connectors"
       ],
       "title": "EVSE",

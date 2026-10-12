@@ -170,6 +170,19 @@
           },
           "title": "Cons",
           "type": "array"
+        },
+        "priv": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "The words in the operator's name for the location that mark it private or restricted, as written (pipeline/access.py, ADR 0023); the map hides it unless the visitor asks. Null otherwise.",
+          "title": "Priv"
         }
       },
       "required": [
@@ -182,7 +195,8 @@
         "evses",
         "price",
         "pt",
-        "cons"
+        "cons",
+        "priv"
       ],
       "title": "MapProperties",
       "type": "object"

@@ -446,6 +446,11 @@ button.status-chip {
   opacity: 0.45;
 }
 
+/* Matches the cluster circles drawn in main.js. */
+.dot.cluster {
+  background: #24323f;
+}
+
 .list-view {
   padding: 0 1rem 1rem;
 }
@@ -629,6 +634,26 @@ body[data-view="list"] .map-view {
   padding: 0;
   border: 0;
   border-radius: 0;
+}
+
+/* The "Group" button on the map (main.js): words rather than an icon, in MapLibre's light
+   look, filled dark with a tick while grouping is on. */
+.maplibregl-ctrl-group button.group-toggle {
+  width: auto;
+  padding: 0 0.7rem;
+  background: #ffffff;
+  color: #1b1b1b;
+  font-size: 0.9rem;
+  font-weight: 600;
+}
+
+.maplibregl-ctrl-group button.group-toggle[aria-pressed="true"] {
+  background: #1b1b1b;
+  color: #ffffff;
+}
+
+.maplibregl-ctrl-group button.group-toggle[aria-pressed="true"]::before {
+  content: "\2713\00a0";
 }
 
 /* MapLibre's buttons keep their light look in dark mode, with a border so they stand out

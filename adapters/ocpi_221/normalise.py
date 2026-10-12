@@ -49,6 +49,13 @@ POWER_TYPES = {
 # only given a power figure when the feed states max_electric_power.
 PHASES = {"ac_1_phase": 1, "ac_3_phase": 3, "dc": 1}
 FORMATS = {"SOCKET": "socket", "CABLE": "cable"}
+PARKING_RESTRICTIONS = {
+    "EV_ONLY": "ev_only",
+    "PLUGGED": "plugged",
+    "DISABLED": "disabled",
+    "CUSTOMERS": "customers",
+    "MOTORCYCLES": "motorcycles",
+}
 DIMENSIONS = {"ENERGY": "energy", "FLAT": "flat", "PARKING_TIME": "parking_time", "TIME": "time"}
 TARIFF_TYPES = {
     "AD_HOC_PAYMENT": "ad_hoc_payment",
@@ -251,10 +258,39 @@ def _evse(
     return EVSE(
         uid=raw["uid"],
         evse_id=raw.get("evse_id"),
+        physical_reference=_physical_reference(raw.get("physical_reference")),
         status=status,
         status_at=status_at,
+        parking_restrictions=_parking_restrictions(raw.get("parking_restrictions"), issues),
         connectors=[_connector(c, prefix, issues) for c in raw.get("connectors") or []],
     )
+
+
+def _physical_reference(value: object) -> str | None:
+    """The label on the charge point as text, or None when none is given."""
+    if isinstance(value, int) and not isinstance(value, bool):
+        return str(value)
+    if isinstance(value, str) and value.strip():
+        return value.strip()
+    return None
+
+
+def _parking_restrictions(values: object, issues: IssueLog) -> list[str]:
+    """OCPI 2.2.1 parking restrictions, in the order sent, each once. Other values are
+    ignored and logged."""
+    if values in (None, []):
+        return []
+    if not isinstance(values, list):
+        issues.add("EVSE parking_restrictions is not a list; ignored")
+        return []
+    kept = []
+    for value in values:
+        restriction = PARKING_RESTRICTIONS.get(value) if isinstance(value, str) else None
+        if restriction is None:
+            issues.add(f"EVSE parking restriction {value!r} is not an OCPI 2.2.1 value; ignored")
+        elif restriction not in kept:
+            kept.append(restriction)
+    return kept
 
 
 def _opening_hours(raw: dict | None, issues: IssueLog) -> OpeningHours | None:

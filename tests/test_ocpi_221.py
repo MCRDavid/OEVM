@@ -757,3 +757,28 @@ def test_live_all_publishes_the_rest_when_one_operator_fails(tmp_path, monkeypat
     assert "jolt" not in manifest["operators"]
     assert set(manifest["operators"]) == set(replayed) - {"jolt"}
     assert "left out: jolt" in capsys.readouterr().err
+
+
+def test_charge_point_labels_and_parking_restrictions_are_kept():
+    issues = IssueLog()
+    raw = raw_location()
+    raw["evses"][0].update(
+        physical_reference=" Bay 3 ",
+        parking_restrictions=["CUSTOMERS", "EV_ONLY", "CUSTOMERS", "TAXI_ONLY"],
+    )
+    raw["evses"].append({**raw["evses"][0], "uid": "E2", "physical_reference": 12})
+    raw["evses"].append({**raw["evses"][0], "uid": "E3", "physical_reference": ""})
+    raw["evses"][2].pop("parking_restrictions")
+    location = location_from_ocpi(
+        raw, make_config(), source_url=EXAMPLE, fetched_at=NOW, issues=issues
+    )
+    first, second, third = location.evses
+    assert first.physical_reference == "Bay 3"
+    # In the order sent, each once; a value outside OCPI 2.2.1 is ignored and logged.
+    assert first.parking_restrictions == ["customers", "ev_only"]
+    assert second.physical_reference == "12"
+    assert third.physical_reference is None
+    assert third.parking_restrictions == []
+    assert issues.lines() == [
+        "EVSE parking restriction 'TAXI_ONLY' is not an OCPI 2.2.1 value; ignored (2 times)"
+    ]

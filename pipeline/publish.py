@@ -34,6 +34,9 @@ Rules:
 - A tariff the owner names in zero_price_tariffs in the operator file (ADR 0022) shows
   "Price unknown" while its prices are all zero, instead of "Free". The tariff itself is
   published unchanged in the detail file.
+- A location whose name marks it private or restricted (pipeline/access.py, ADR 0023)
+  carries those words in the map file, so the map can hide it unless the visitor asks.
+  It is published unchanged otherwise.
 - Every file is validated against schema/published.py before it is written.
 - The committed site/ folder is never written to; the deploy step copies site/ and adds
   this output.
@@ -51,6 +54,7 @@ from decimal import ROUND_HALF_UP, Decimal
 from pathlib import Path
 
 from adapters.ocpi_221 import AdapterResult
+from pipeline.access import private_words
 from pipeline.geography import place_in_uk
 from pipeline.health import in_uk
 from pipeline.plans import load_providers
@@ -551,6 +555,12 @@ def publish(
             licence_url=config.licence.url,
         )
 
+    # Kept copies too, so every location is checked against today's phrases (ADR 0023).
+    private: dict[str, int] = defaultdict(int)
+    for feature in features:
+        feature.properties.priv = private_words(feature.properties.name)
+        private[feature.properties.op] += feature.properties.priv is not None
+    entries = {i: e.model_copy(update={"private": private[i]}) for i, e in entries.items()}
     features.sort(key=lambda f: (f.properties.op, f.properties.id))
     layer = MapLayer(
         generated_at=generated_at,
@@ -592,6 +602,7 @@ def publish(
             if entry.priced_from_related
             else ""
         )
+        hidden = f", {entry.private} marked private or restricted" if entry.private else ""
         last_good = (
             f", from its last good copy fetched {entry.fetched_at:%Y-%m-%d %H:%M} UTC"
             if entry.kept_from_previous
@@ -599,7 +610,7 @@ def publish(
         )
         report.append(
             f"  {operator_id}: {entry.mapped} locations mapped{left_off}{swapped}{related}"
-            f"{last_good}"
+            f"{hidden}{last_good}"
         )
     kept_at = {c.operator_id: c.entry.fetched_at for c in kept}
     return Published(manifest=manifest, report=report, kept=kept_at)

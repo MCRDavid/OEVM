@@ -102,6 +102,13 @@
           "title": "Tariffs",
           "type": "integer"
         },
+        "private": {
+          "default": 0,
+          "description": "Locations whose name marks them private or restricted, hidden on the map unless the visitor asks (pipeline/access.py, ADR 0023).",
+          "minimum": 0,
+          "title": "Private",
+          "type": "integer"
+        },
         "priced_from_related": {
           "default": 0,
           "description": "Connectors priced from a tariff found in a related operator's feed, by the owner's decision in the operator file (tariffs_from, ADR 0020).",
@@ -147,6 +154,7 @@
         "corrected",
         "corrected_ids",
         "tariffs",
+        "private",
         "priced_from_related",
         "attribution",
         "licence",

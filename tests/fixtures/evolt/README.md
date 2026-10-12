@@ -27,13 +27,18 @@ and connector ids are JSON numbers rather than strings. To keep the fixtures sho
     longitude is 4.26275, in the North Sea; the map shows it with the minus sign added,
     by the repository owner's decision recorded in `operators/evolt.yaml`.
   X-Total-Count, X-Limit and `meta.total` were changed to 8 to match.
+- `locations_page1.json` also has, last, "Arthur House - Private Use Only", whose name marks
+  it private (ADR 0023), copied whole from a later fetch of the same URL on 12 October 2026
+  (one request each, with `--save-raw`). X-Total-Count, X-Limit and `meta.total` were
+  changed to 9.
 - `tariffs_page1.json` keeps the 8 tariffs those locations name that are in the response,
   and the 6 tariffs that the PoGo Charge and ChargePlace Scotland fixture locations name,
   which are only in this response, so the tests can check they are used by the repository
   owner's decisions recorded in `operators/pogo_charge.yaml` and
-  `operators/chargeplace_scotland.yaml` (ADR 0020). Its X-Total-Count, X-Limit and
-  `meta.total` were changed to 14 to match.
-- Every record is exactly as sent, in the order sent. The content-type, X-Total-Count and
+  `operators/chargeplace_scotland.yaml` (ADR 0020), and, last, the one tariff Arthur House
+  names, from the 12 October 2026 fetch. Its X-Total-Count, X-Limit and `meta.total` were
+  changed to 15 to match.
+- Every record is exactly as sent, in the order sent, apart from the two added last. The content-type, X-Total-Count and
   X-Limit headers were kept.
 
 `manifest.json` tells `python -m pipeline.run --fixtures` how to replay them.

@@ -29,6 +29,7 @@ def test_each_feed_is_read_in_one_request():
     assert result.complete
     assert result.modules["locations"].total_reported == 5
     assert result.issues == [
+        "EVSE parking restriction 'TAXI_ONLY' is not an OCPI 2.2.1 value; ignored (3 times)",
         "connector id is a number, not a string; read as its digits (16 times)",
         "location id is a number, not a string; read as its digits (5 times)",
     ]

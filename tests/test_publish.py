@@ -39,7 +39,7 @@ def test_every_output_validates_against_its_exported_schema(results, tmp_path):
     jsonschema.validate(layer, schema("map-layer"))
     jsonschema.validate(json.loads((data / "manifest.json").read_text()), schema("manifest"))
     details = sorted((data / "loc").glob("*/*.json"))
-    assert len(details) == len(layer["features"]) == 66
+    assert len(details) == len(layer["features"]) == 67
     for path in details:
         jsonschema.validate(json.loads(path.read_text()), schema("location-detail"))
 
@@ -81,7 +81,7 @@ def test_the_manifest_records_operators_attribution_and_sizes(results, tmp_path)
         assert entry.licence == "OGL-3.0"
     sizes = {f.path: f for f in manifest.files}
     assert sizes["data/locations.geojson"].bytes > sizes["data/locations.geojson"].gzip_bytes > 0
-    assert sizes["data/loc/"].files == 66
+    assert sizes["data/loc/"].files == 67
     assert any("gzipped" in line for line in out.report)
 
 
@@ -218,7 +218,7 @@ def test_a_missing_minus_sign_is_restored_by_the_owners_decision_for_evolt(resul
     # ones stay off the map.
     out = published(results, tmp_path)
     entry = out.manifest.operators["evolt"]
-    assert (entry.mapped, entry.not_mapped, entry.corrected) == (6, 2, 1)
+    assert (entry.mapped, entry.not_mapped, entry.corrected) == (7, 2, 1)
     assert entry.corrected_ids == ["evolt:GB:SSM:1261778"]
     assert "evolt:GB:SSM:1261778" not in entry.not_mapped_ids
     key = publish.location_key("evolt:GB:SSM:1261778")
@@ -441,3 +441,27 @@ def test_details_list_every_tariff_the_connectors_refer_to(results, tmp_path):
             reason = option["reason"] or ""
             missing = "could not be read from the operator's tariff data" in reason
             assert (option["tariff_id"] in found) != missing
+
+
+def test_a_location_named_private_is_marked_with_its_words_and_counted(results, tmp_path):
+    # Evolt Network's "Arthur House - Private Use Only" (ADR 0023). The map hides it unless
+    # the visitor asks; its detail file is published unchanged.
+    out = published(results, tmp_path)
+    layer = json.loads((tmp_path / "data" / "locations.geojson").read_text())
+    marked = {f["properties"]["name"]: f["properties"]["priv"] for f in layer["features"]}
+    assert {name: words for name, words in marked.items() if words} == {
+        "Arthur House - Private Use Only": "Private Use Only"
+    }
+    assert {op: e.private for op, e in out.manifest.operators.items() if e.private} == {"evolt": 1}
+    assert any(
+        "evolt: 7 locations mapped" in line and "1 marked private" in line for line in out.report
+    )
+    detail = _detail(tmp_path, "evolt:GB:SSM:12343565")
+    assert [e["physical_reference"] for e in detail["location"]["evses"]] == [
+        "SEC31617",
+        "SEC31615",
+        "SEC31616",
+        "SEC31618",
+        "SEC31620",
+        "SEC31619",
+    ]

@@ -48,6 +48,11 @@
     <p class="hint" id="working-hint">Hides a charger when every connector&rsquo;s charge point was reported out of order, inoperative, planned or removed in the operator&rsquo;s feed at the last daily fetch. Status changes often, so a charger shown here may still be out of use. The details give each status with its date.</p>
   </fieldset>
   <fieldset>
+    <legend>Private and restricted</legend>
+    <label><input type="checkbox" id="private" name="private" aria-describedby="private-hint"> Show chargers marked private or restricted</label>
+    <p class="hint" id="private-hint">Off unless you tick it. Hides a charger when the operator&rsquo;s name for it says it is not for public use, such as &ldquo;Private Use Only&rdquo;, &ldquo;Restricted access&rdquo; or &ldquo;Staff only&rdquo;. The feeds have no field that says so. The words looked for are on the <a href="transparency/#private">transparency page</a>, and the <a href="status/#private">feed health page</a> lists each charger they hide.</p>
+  </fieldset>
+  <fieldset>
     <legend>Connector</legend>
     <p class="hint" id="plugs-hint">Leave all unticked to show every connector.</p>
     <label><input type="checkbox" name="plug" value="type2" aria-describedby="plugs-hint"> Type 2</label>
@@ -66,6 +71,11 @@
   <fieldset id="networks">
     <legend>Network</legend>
     <p class="hint">Leave all unticked to show every network.</p>
+  </fieldset>
+  <fieldset>
+    <legend>Map</legend>
+    <label><input type="checkbox" id="group" name="group" aria-describedby="group-hint" checked> Group nearby chargers into numbered circles</label>
+    <p class="hint" id="group-hint">Untick to show every charger on its own at every zoom level. The &ldquo;Group&rdquo; button on the map does the same.</p>
   </fieldset>
   <div class="actions">
     <button type="button" id="done">Show chargers</button>
@@ -104,6 +114,7 @@
         <li><i class="dot plain" aria-hidden="true">£</i> Priced</li>
         <li><i class="dot plain" aria-hidden="true">?</i> Price unknown</li>
       </ul>
+      <p class="key-heading"><i class="dot cluster" aria-hidden="true">3</i> Numbered circle: that many charger locations close together. Press it to zoom in, or turn off &ldquo;Group&rdquo;.</p>
       <p class="key-heading"><i class="dot plain out" aria-hidden="true"></i> Faded: every connector reported out of service at the last daily fetch</p>
     </details>
   </section>
