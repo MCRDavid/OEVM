@@ -650,7 +650,7 @@ function setUpSettings() {
   remember.addEventListener("change", () => {
     if (remember.checked) {
       if (settings.save(app.state, app.theme, [...app.mine])) {
-        message.textContent = "Your settings are saved on this device: filters, ticked charging plans and light or dark mode if you picked one.";
+        message.textContent = "Your settings are saved on this device: filters, map grouping, ticked charging plans and light or dark mode if you picked one.";
       } else {
         remember.checked = false;
         message.textContent = "Your browser did not allow saving settings.";

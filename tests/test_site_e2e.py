@@ -40,8 +40,12 @@ BROWSER_ARGS = [
     "--no-proxy-server",
     "--host-resolver-rules=MAP * ~NOTFOUND, EXCLUDE 127.0.0.1",
 ]
-LOCATIONS = 66  # in the recorded fixtures, without the one marked private
-PRIVATE = "Arthur House - Private Use Only"  # Evolt Network's, hidden unless asked for
+# In the recorded fixtures, without the two hidden unless asked for (ADR 0023): Evolt
+# Network's "Arthur House - Private Use Only" and PoGo Charge's taxi-only "Swales Central
+# Avenue".
+LOCATIONS = 65
+PRIVATE = "Arthur House - Private Use Only"
+TAXIS = "Swales Central Avenue"
 OUT_OF_SERVICE = 3  # fixture locations with every charger reported out of service
 SERVED: list[str] = []  # every path the test server was asked for
 # MapLibre writes the map position after the # a moment after the map settles, starting
@@ -968,12 +972,16 @@ def test_private_chargers_are_hidden_until_the_visitor_asks(visit):
     page = v.open("?view=list", map_ready=False)
     expect(page.locator("#list-items li")).to_have_count(LOCATIONS)
     assert PRIVATE not in page.text_content("#list-items")
+    assert TAXIS not in page.text_content("#list-items")
     open_filters(page)
     assert not page.is_checked("#private")
     page.check("#private")
     page.wait_for_url("**priv=1**")
-    expect(page.locator("#list-items li")).to_have_count(LOCATIONS + 1)
+    expect(page.locator("#list-items li")).to_have_count(LOCATIONS + 2)
     assert page.text_content("#toggle-filters") == "Filters (1)"
+    expect(page.locator("#list-items li", has_text=TAXIS)).to_contain_text(
+        "Taxis only: the operator marks every charge point here for taxis only"
+    )
     item = page.locator("#list-items li", has_text=PRIVATE)
     expect(item).to_contain_text(
         'Marked private or restricted: the operator\'s name for it includes "Private Use Only"'
@@ -1027,3 +1035,13 @@ def test_parking_restrictions_are_shown_with_each_charge_point(visit):
     expect(page.locator("#detail-body .charge-points .parking").first).to_have_text(
         "Parking: only while plugged in and charging; customers only."
     )
+
+
+def test_taxi_only_charge_points_are_labelled(visit):
+    page = visit().open("?view=list&priv=1", map_ready=False)
+    page.locator("#list-items button", has_text=TAXIS).click()
+    expect(page.locator("#detail-heading")).to_be_focused()
+    expect(page.locator("#detail-body .private-note")).to_contain_text("Taxis only")
+    parking = page.locator("#detail-body .charge-points .parking")
+    expect(parking).to_have_count(3)
+    expect(parking.first).to_have_text("Parking: taxis only.")
