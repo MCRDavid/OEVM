@@ -1,0 +1,259 @@
+{
+  "request": {
+    "method": "GET",
+    "url": "https://ocpi-pcpr.hubeleon.net/2.2.1/referencetariffs"
+  },
+  "response": {
+    "status_code": 200,
+    "headers": {
+      "content-type": "application/json"
+    },
+    "body": {
+      "data": [
+        {
+          "country_code": "GB",
+          "party_id": "HUB",
+          "id": "460",
+          "currency": "GBP",
+          "type": "REGULAR",
+          "elements": {
+            "price_components": [
+              {
+                "type": "FLAT",
+                "price": 0,
+                "vat": 20,
+                "step_size": 1
+              },
+              {
+                "type": "ENERGY",
+                "price": 0.22,
+                "vat": 20,
+                "step_size": 1
+              },
+              {
+                "type": "TIME",
+                "price": 0,
+                "vat": 20,
+                "step_size": 1800
+              }
+            ]
+          },
+          "last_updated": "2022-10-24T17:19:31Z"
+        },
+        {
+          "country_code": "GB",
+          "party_id": "HUB",
+          "id": "610",
+          "currency": "GBP",
+          "type": "REGULAR",
+          "elements": {
+            "price_components": [
+              {
+                "type": "FLAT",
+                "price": 0,
+                "vat": 20,
+                "step_size": 1
+              },
+              {
+                "type": "ENERGY",
+                "price": 0,
+                "vat": 20,
+                "step_size": 1
+              },
+              {
+                "type": "TIME",
+                "price": 0,
+                "vat": 20,
+                "step_size": 1800
+              }
+            ]
+          },
+          "last_updated": "2021-04-28T21:05:04Z"
+        },
+        {
+          "country_code": "GB",
+          "party_id": "HUB",
+          "id": "1133",
+          "currency": "GBP",
+          "type": "REGULAR",
+          "elements": {
+            "price_components": [
+              {
+                "type": "FLAT",
+                "price": 0,
+                "vat": 20,
+                "step_size": 1
+              },
+              {
+                "type": "ENERGY",
+                "price": 0.38,
+                "vat": 20,
+                "step_size": 1
+              },
+              {
+                "type": "TIME",
+                "price": 0,
+                "vat": 20,
+                "step_size": 1800
+              }
+            ]
+          },
+          "last_updated": "2023-12-18T23:55:52Z"
+        },
+        {
+          "country_code": "GB",
+          "party_id": "HUB",
+          "id": "1966",
+          "currency": "GBP",
+          "type": "REGULAR",
+          "elements": {
+            "price_components": [
+              {
+                "type": "FLAT",
+                "price": 0,
+                "vat": 20,
+                "step_size": 1
+              },
+              {
+                "type": "ENERGY",
+                "price": 0.38,
+                "vat": 20,
+                "step_size": 1
+              },
+              {
+                "type": "TIME",
+                "price": 0,
+                "vat": 20,
+                "step_size": 1800
+              }
+            ]
+          },
+          "last_updated": "2024-10-14T23:22:21Z"
+        },
+        {
+          "country_code": "GB",
+          "party_id": "HUB",
+          "id": "1183",
+          "currency": "GBP",
+          "type": "REGULAR",
+          "elements": {
+            "price_components": [
+              {
+                "type": "FLAT",
+                "price": 0.42,
+                "vat": 20,
+                "step_size": 1
+              },
+              {
+                "type": "ENERGY",
+                "price": 0.37,
+                "vat": 20,
+                "step_size": 1
+              },
+              {
+                "type": "TIME",
+                "price": 0,
+                "vat": 20,
+                "step_size": 1800
+              }
+            ]
+          },
+          "last_updated": "2026-04-29T15:00:10Z"
+        },
+        {
+          "country_code": "GB",
+          "party_id": "HUB",
+          "id": "3315",
+          "currency": "GBP",
+          "type": "REGULAR",
+          "elements": {
+            "price_components": [
+              {
+                "type": "FLAT",
+                "price": 0,
+                "vat": 20,
+                "step_size": 1
+              },
+              {
+                "type": "ENERGY",
+                "price": 0.29,
+                "vat": 20,
+                "step_size": 1
+              },
+              {
+                "type": "TIME",
+                "price": 0,
+                "vat": 20,
+                "step_size": 1800
+              }
+            ]
+          },
+          "last_updated": "2026-04-23T23:48:51Z"
+        },
+        {
+          "country_code": "GB",
+          "party_id": "HUB",
+          "id": "3166",
+          "currency": "GBP",
+          "type": "REGULAR",
+          "elements": {
+            "price_components": [
+              {
+                "type": "FLAT",
+                "price": 0.25,
+                "vat": 20,
+                "step_size": 1
+              },
+              {
+                "type": "ENERGY",
+                "price": 0.53,
+                "vat": 20,
+                "step_size": 1
+              },
+              {
+                "type": "TIME",
+                "price": 0,
+                "vat": 20,
+                "step_size": 1800
+              }
+            ]
+          },
+          "last_updated": "2026-07-02T18:56:37Z"
+        },
+        {
+          "country_code": "GB",
+          "party_id": "HUB",
+          "id": "3421",
+          "currency": "ARS",
+          "type": "REGULAR",
+          "elements": {
+            "price_components": [
+              {
+                "type": "FLAT",
+                "price": 0,
+                "vat": 20,
+                "step_size": 1
+              },
+              {
+                "type": "ENERGY",
+                "price": 0,
+                "vat": 20,
+                "step_size": 1
+              },
+              {
+                "type": "TIME",
+                "price": 0,
+                "vat": 20,
+                "step_size": 1800
+              }
+            ]
+          },
+          "last_updated": "2026-03-28T03:35:41Z"
+        }
+      ],
+      "status_code": 1000,
+      "status_message": "Success",
+      "timestamp": "2026-10-11T18:37:17Z"
+    }
+  }
+}

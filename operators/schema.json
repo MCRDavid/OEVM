@@ -397,6 +397,121 @@
       "title": "Evidence",
       "type": "object"
     },
+    "ExcludedLocation": {
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "description": "The location's OCPI id, exactly as sent.",
+          "minLength": 1,
+          "title": "Id",
+          "type": "string"
+        },
+        "name": {
+          "description": "The location's name as the feed sends it.",
+          "minLength": 1,
+          "title": "Name",
+          "type": "string"
+        }
+      },
+      "required": [
+        "id",
+        "name"
+      ],
+      "title": "ExcludedLocation",
+      "type": "object"
+    },
+    "ExcludedLocations": {
+      "additionalProperties": false,
+      "description": "The repository owner's recorded decision to leave named locations off the map, such\nas test sites an operator's feed marks for publishing.\n\nOnly the listed OCPI location ids are left off, each logged as an issue in the run, and\nthe transparency page lists them. Without this decision every location the feed marks\nfor publishing is kept.",
+      "properties": {
+        "decided": {
+          "description": "Date the owner made the decision (YYYY-MM-DD).",
+          "format": "date",
+          "title": "Decided",
+          "type": "string"
+        },
+        "basis": {
+          "description": "Why these locations are left off.",
+          "minLength": 1,
+          "title": "Basis",
+          "type": "string"
+        },
+        "evidence_url": {
+          "description": "Where the locations can be seen in the feed.",
+          "pattern": "^https?://\\S+$",
+          "title": "Evidence Url",
+          "type": "string"
+        },
+        "locations": {
+          "items": {
+            "$ref": "#/$defs/ExcludedLocation"
+          },
+          "minItems": 1,
+          "title": "Locations",
+          "type": "array"
+        }
+      },
+      "required": [
+        "decided",
+        "basis",
+        "evidence_url",
+        "locations"
+      ],
+      "title": "ExcludedLocations",
+      "type": "object"
+    },
+    "ExpiredCertificate": {
+      "additionalProperties": false,
+      "description": "The repository owner's recorded decision to read this operator's feed past one\nexpired TLS certificate (ADR 0021).\n\nRequests to the host still check the certificate chain against the usual trusted\nauthorities and check the host name; only the certificate's dates are not checked. A\nresponse is then used only if the server presented exactly the certificate named by\nsha256, or one that is in date today, which means the certificate has been renewed and\nthis decision can be removed. Anything else stops the fetch. Only feeds that need no\nkey, all on this one host, so no key is ever sent over such a connection. Without this\ndecision an expired certificate stops the fetch.",
+      "properties": {
+        "decided": {
+          "description": "Date the owner made the decision (YYYY-MM-DD).",
+          "format": "date",
+          "title": "Decided",
+          "type": "string"
+        },
+        "basis": {
+          "description": "Why the feed may be read past the certificate.",
+          "minLength": 1,
+          "title": "Basis",
+          "type": "string"
+        },
+        "evidence_url": {
+          "description": "Where the operator links the feed.",
+          "pattern": "^https?://\\S+$",
+          "title": "Evidence Url",
+          "type": "string"
+        },
+        "host": {
+          "description": "The host whose certificate has expired, for example 'ocpi-pcpr.hubeleon.net'. Every feed URL in the file must be on it.",
+          "pattern": "^[a-z0-9]([a-z0-9-]*[a-z0-9])?(\\.[a-z0-9]([a-z0-9-]*[a-z0-9])?)+$",
+          "title": "Host",
+          "type": "string"
+        },
+        "sha256": {
+          "description": "SHA-256 fingerprint of the one expired certificate accepted, as '49:82:...', in capitals.",
+          "pattern": "^([0-9A-F]{2}:){31}[0-9A-F]{2}$",
+          "title": "Sha256",
+          "type": "string"
+        },
+        "expired": {
+          "description": "The day the certificate expired (YYYY-MM-DD).",
+          "format": "date",
+          "title": "Expired",
+          "type": "string"
+        }
+      },
+      "required": [
+        "decided",
+        "basis",
+        "evidence_url",
+        "host",
+        "sha256",
+        "expired"
+      ],
+      "title": "ExpiredCertificate",
+      "type": "object"
+    },
     "Finding": {
       "additionalProperties": false,
       "description": "Something observed about a source: a spec difference, a data quirk or an access issue.",
@@ -1043,6 +1158,30 @@
       ],
       "default": null,
       "description": "Only by the repository owner's decision: tariffs, by exact OCPI id, whose prices are all zero but which show 'Price unknown' rather than 'Free'. Null means a tariff whose prices are all zero shows as free."
+    },
+    "expired_certificate": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/ExpiredCertificate"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "description": "Only by the repository owner's decision: read the feed past one expired TLS certificate, still checking its chain and host name. Null means an expired certificate stops the fetch."
+    },
+    "excluded_locations": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/ExcludedLocations"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "description": "Only by the repository owner's decision: OCPI location ids to leave off the map, such as test sites. Null means every location marked for publishing is kept."
     },
     "engagement": {
       "$ref": "#/$defs/Engagement"

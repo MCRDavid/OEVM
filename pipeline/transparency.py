@@ -284,6 +284,31 @@ def operator_view(config: OperatorConfig) -> dict:
             if config.relay
             else None
         ),
+        "expired_certificate": (
+            {
+                "decided": str(config.expired_certificate.decided),
+                "basis": config.expired_certificate.basis,
+                "evidence_url": config.expired_certificate.evidence_url,
+                "host": config.expired_certificate.host,
+                "sha256": config.expired_certificate.sha256,
+                "expired": str(config.expired_certificate.expired),
+            }
+            if config.expired_certificate
+            else None
+        ),
+        "excluded_locations": (
+            {
+                "decided": str(config.excluded_locations.decided),
+                "basis": config.excluded_locations.basis,
+                "evidence_url": config.excluded_locations.evidence_url,
+                "locations": [
+                    {"id": location.id, "name": location.name}
+                    for location in config.excluded_locations.locations
+                ],
+            }
+            if config.excluded_locations
+            else None
+        ),
         "rate_limit": rate_limit_view(config),
         "findings": [
             {
@@ -321,6 +346,8 @@ def last_reviewed(operators: dict[str, OperatorConfig]) -> str:
             config.nonstandard_statuses.decided if config.nonstandard_statuses else None,
             config.tariffs_from.decided if config.tariffs_from else None,
             config.zero_price_tariffs.decided if config.zero_price_tariffs else None,
+            config.expired_certificate.decided if config.expired_certificate else None,
+            config.excluded_locations.decided if config.excluded_locations else None,
         ]
         dates += [d for d in candidates if isinstance(d, date)]
     return max(dates).isoformat() if dates else "unknown"
@@ -429,6 +456,29 @@ def _sources_table(data: dict) -> str:
                 f"&quot;Price unknown&quot; rather than &quot;Free&quot;, by the owner's "
                 f"decision of {_e(zero['decided'])}: {_e(zero['basis'])} "
                 f"({_link(zero['evidence_url'], 'evidence')})"
+            )
+        certificate = op["expired_certificate"]
+        if op["enabled"] and certificate:
+            fetched = fetched.rstrip(".")
+            fetched += (
+                f". Read past the TLS certificate of {_e(certificate['host'])}, which expired "
+                f"on {_e(certificate['expired'])}, by the owner's decision of "
+                f"{_e(certificate['decided'])}: {_e(certificate['basis'])} The certificate's "
+                "chain and host name are still checked, and only that one certificate "
+                f"(SHA-256 <code>{_e(certificate['sha256'])}</code>) or one in date is "
+                f"accepted ({_link(certificate['evidence_url'], 'evidence')})"
+            )
+        excluded = op["excluded_locations"]
+        if op["enabled"] and excluded:
+            names = ", ".join(
+                f"{_e(location['name'])} (id {_e(location['id'])})"
+                for location in excluded["locations"]
+            )
+            fetched = fetched.rstrip(".")
+            fetched += (
+                f". Left off the map by the owner's decision of {_e(excluded['decided'])}: "
+                f"{names}. {_e(excluded['basis'])} "
+                f"({_link(excluded['evidence_url'], 'evidence')})"
             )
         rows.append(
             "<tr>"
