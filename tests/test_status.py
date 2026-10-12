@@ -1,5 +1,6 @@
 """Tests for the feed health page (pipeline/status.py, blueprint task 8). No network."""
 
+import html
 import json
 import re
 import shutil
@@ -14,7 +15,7 @@ from pipeline import run, status
 from pipeline.registry import ROOT, load_registry
 from pipeline.transparency import short_disclaimer
 from schema.operator import neutral_text
-from schema.published import StatusFile
+from schema.published import OperatorStatus, StatusFile
 from schema.runlog import RunLog
 
 NOW = datetime(2026, 10, 8, 13, 0, tzinfo=UTC)
@@ -150,6 +151,52 @@ def test_operators_with_no_run_are_not_fetched_yet(tmp_path):
     empty.mkdir()
     page, data = render(empty, tmp_path / "out")
     assert text_of(page)[0].count("Not fetched yet") == len(data["operators"]) == 12
+
+
+def latest(log: dict) -> OperatorStatus:
+    return OperatorStatus(name="Jolt", latest=RunLog.model_validate(log), history=[])
+
+
+def test_each_switched_on_operator_gets_a_colour_from_its_latest_run(logs):
+    good = json.loads((logs / "jolt.json").read_text())
+    when = datetime.fromisoformat(good["fetched_at"].replace("Z", "+00:00"))
+    assert status.colour(OperatorStatus(name="Jolt", history=[]), when) == status.GREY
+    assert status.colour(latest(good), when) == status.GREEN
+    # Still green two days on; older than that, a missed daily fetch shows yellow.
+    assert status.colour(latest(good), when + timedelta(days=2)) == status.GREEN
+    assert status.colour(latest(good), when + timedelta(days=2, hours=1)) == status.YELLOW
+    assert status.colour(latest(good | {"complete": False}), when) == status.YELLOW
+    nothing = good | {"kept": {"locations": 0, "tariffs": 0}}
+    assert status.colour(latest(nothing), when) == status.RED
+    failed = run.failure_log("jolt", "live", "HTTP 503", when)
+    assert status.colour(latest(failed), when) == status.RED
+    yesterday = when - timedelta(days=1)
+    kept = run.failure_log("jolt", "live", "HTTP 503", when, kept_copy=(yesterday, 4))
+    assert status.colour(latest(kept), when) == status.YELLOW
+    empty = run.failure_log("jolt", "live", "HTTP 503", when, kept_copy=(yesterday, 0))
+    assert status.colour(latest(empty), when) == status.RED
+
+
+def test_every_operator_has_a_circle_and_switched_off_ones_are_listed(logs, tmp_path):
+    page, data = render(logs, tmp_path)
+    registry = load_registry()
+    for operator_id, config in registry.items():
+        name = html.escape(config.display_name)
+        if config.enabled:
+            assert operator_id in data["operators"]
+            assert re.search(
+                rf'<th scope="row"><span class="circle"[^>]*>.</span> {re.escape(name)}</th>', page
+            )
+        else:
+            assert operator_id not in data["operators"]  # status.json is unchanged
+            assert f"{status.CIRCLES[status.GREY]}</span> {name}</li>" in page
+    text, _ = text_of(page)
+    assert f"Of {len(registry)} operators in the registry:" in text
+    for shade in status.CIRCLES:
+        assert f"<strong>{status.LABELS[shade]}</strong>:" in page  # the key
+    # The labels are read out, not just shown as colours.
+    assert 'role="img" aria-label="Working"' in page
+    assert 'aria-label="Some problems"' in page  # the char.gy fixtures stop after two pages
 
 
 def test_the_committed_site_folder_is_never_written(logs):

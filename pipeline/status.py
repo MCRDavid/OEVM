@@ -11,11 +11,17 @@ The page reports what this project received from each operator, counted automati
 with neutral, dated wording. It does not say whether anyone has met their legal duties.
 Sources, findings and engagement evidence are on the transparency page. It has no
 scripts, no cookies and no third-party files.
+
+Each operator also gets a coloured circle for a view at a glance (the owner's request, 11
+October 2026): green working, yellow some problems but data on the map, red nothing on
+the map, grey switched off or not fetched yet. The colours come only from the run logs
+and the registry, so they describe what this project received, not any operator's duties.
 """
 
 import argparse
 import json
 import sys
+from collections.abc import Sequence
 from datetime import UTC, datetime, timedelta
 from pathlib import Path
 
@@ -28,6 +34,39 @@ from schema.published import HistoryPoint, OperatorStatus, StatusFile
 from schema.runlog import RunLog
 
 HISTORY_DAYS = 30
+# A latest run older than this shows yellow, so a day the daily fetch missed is visible.
+STALE_AFTER = timedelta(days=2)
+
+GREEN, YELLOW, RED, GREY = "green", "yellow", "red", "grey"
+# Unicode has no grey circle emoji, so grey is the white circle, which most systems draw
+# light grey with an outline.
+CIRCLES = {
+    GREEN: "\N{LARGE GREEN CIRCLE}",
+    YELLOW: "\N{LARGE YELLOW CIRCLE}",
+    RED: "\N{LARGE RED CIRCLE}",
+    GREY: "\N{MEDIUM WHITE CIRCLE}",
+}
+LABELS = {
+    GREEN: "Working",
+    YELLOW: "Some problems",
+    RED: "Not working",
+    GREY: "Switched off",
+}
+# How each colour's count reads in the summary line.
+COUNTED = {
+    GREEN: "working",
+    YELLOW: "with some problems",
+    RED: "not working",
+    GREY: "switched off or not fetched yet",
+}
+MEANINGS = {
+    GREEN: f"the last fetch received complete data, in the last {STALE_AFTER.days} days.",
+    YELLOW: "there is data on the map, but the last fetch was incomplete, failed (so the "
+    f"map shows the last good copy) or is more than {STALE_AFTER.days} days old.",
+    RED: "the last fetch failed or received no locations, and the map shows nothing from "
+    "this operator.",
+    GREY: "this project does not fetch the operator's data, or has not fetched it yet.",
+}
 
 
 class StatusError(Exception):
@@ -147,6 +186,60 @@ def result_label(status: OperatorStatus) -> str:
     return "Fetched" if run.complete else "Fetched, incomplete"
 
 
+def colour(status: OperatorStatus, now: datetime) -> str:
+    """Green, yellow, red or grey for a switched-on operator, from its latest run."""
+    run = status.latest
+    if run is None:
+        return GREY
+    if run.failed:
+        return YELLOW if run.kept_copy is not None and run.kept_copy.locations else RED
+    if not run.kept.locations:
+        return RED
+    if not run.complete or now - _when(run) > STALE_AFTER:
+        return YELLOW
+    return GREEN
+
+
+def _circle(colour: str, label: str | None = None) -> str:
+    label = label or LABELS[colour]
+    return (
+        f'<span class="circle" role="img" aria-label="{_e(label)}" title="{_e(label)}">'
+        f"{CIRCLES[colour]}</span>"
+    )
+
+
+def _operator_circle(status: OperatorStatus, now: datetime) -> str:
+    shown = colour(status, now)
+    return _circle(shown, "Not fetched yet" if status.latest is None else None)
+
+
+def _at_a_glance(data: StatusFile, switched_off: Sequence[str]) -> str:
+    counts = dict.fromkeys(CIRCLES, 0)
+    for status in data.operators.values():
+        counts[colour(status, data.generated_at)] += 1
+    counts[GREY] += len(switched_off)
+    summary = ", ".join(f"{_circle(shade)} {counts[shade]} {COUNTED[shade]}" for shade in CIRCLES)
+    key = "".join(
+        f"<li>{_circle(shade)} <strong>{LABELS[shade]}</strong>: {_e(MEANINGS[shade])}</li>"
+        for shade in CIRCLES
+    )
+    total = sum(counts.values())
+    return f'<p>Of {total} operators in the registry: {summary}.</p><ul class="key">{key}</ul>'
+
+
+def _switched_off(names: Sequence[str]) -> str:
+    if not names:
+        return ""
+    items = "".join(f"<li>{_circle(GREY)} {_e(name)}</li>" for name in names)
+    return (
+        "<h2>Switched off</h2>"
+        "<p>These operators are in this project&rsquo;s registry, but their data is not "
+        "fetched, so none of it is on the map. The "
+        '<a href="../transparency/">transparency page</a> gives the status of each one and '
+        f'the steps taken so far.</p><ul class="off">{items}</ul>'
+    )
+
+
 def _latest_table(data: StatusFile) -> str:
     rows = []
     for status in data.operators.values():
@@ -166,7 +259,7 @@ def _latest_table(data: StatusFile) -> str:
             cells[4] = "<br>".join(_e(issue) for issue in run.issues)
         rows.append(
             "<tr>"
-            f'<th scope="row">{_e(status.name)}</th>'
+            f'<th scope="row">{_operator_circle(status, data.generated_at)} {_e(status.name)}</th>'
             f"<td>{_e(result_label(status))}</td>"
             f"<td>{_e(_time(status.last_attempt))}</td>"
             f"<td>{_e(_time(status.last_success))}</td>"
@@ -196,10 +289,11 @@ def _percent(value: float | None) -> str:
     return "" if value is None else f"{value:g}%"
 
 
-def _trend(status: OperatorStatus) -> str:
+def _trend(status: OperatorStatus, now: datetime) -> str:
+    heading = f"<h3>{_operator_circle(status, now)} {_e(status.name)}</h3>"
     points = status.history
     if not points:
-        return f"<h3>{_e(status.name)}</h3><p>No runs recorded yet.</p>"
+        return f"{heading}<p>No runs recorded yet.</p>"
     ok = sum(not p.failed for p in points)
     counts = [p.locations for p in points if not p.failed]
     span = (
@@ -218,7 +312,7 @@ def _trend(status: OperatorStatus) -> str:
         for p in reversed(points)
     )
     return (
-        f"<h3>{_e(status.name)}</h3>"
+        f"{heading}"
         f"<p>{ok} of {len(points)} daily runs fetched data{_e(span)}.</p>"
         '<details><summary>Day by day</summary><div class="table-wrap"><table>'
         f"<caption>{_e(status.name)}: the last {HISTORY_DAYS} days</caption>"
@@ -229,16 +323,25 @@ def _trend(status: OperatorStatus) -> str:
     )
 
 
-def render_html(data: StatusFile) -> str:
+# Added to the shared style: the key, and the switched-off list in columns.
+EXTRA_STYLE = """
+.key, .off { list-style: none; padding-left: 0; }
+.off { columns: 16rem; }
+.off li { break-inside: avoid; }
+"""
+
+
+def render_html(data: StatusFile, switched_off: Sequence[str] = ()) -> str:
+    """The page. switched_off is the display names of registry operators not switched on."""
     links = "".join(f"<li>{_link(url, text)}</li>" for text, url in LINKS)
-    trends = "".join(_trend(status) for status in data.operators.values())
+    trends = "".join(_trend(status, data.generated_at) for status in data.operators.values())
     return f"""<!doctype html>
 <html lang="en-GB">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Feed health: OEVM</title>
-<style>{STYLE}</style>
+<style>{STYLE}{EXTRA_STYLE}</style>
 </head>
 <body>
 <header>
@@ -249,8 +352,11 @@ they do not say whether anyone has met their legal duties. Sources, findings and
 evidence are on the <a href="../transparency/">transparency page</a>.</p>
 </header>
 <main>
+<h2>At a glance</h2>
+{_at_a_glance(data, switched_off)}
 <h2>Latest runs</h2>
 <div class="table-wrap">{_latest_table(data)}</div>
+{_switched_off(switched_off)}
 <h2>The last {HISTORY_DAYS} days</h2>
 {trends}
 </main>
@@ -278,8 +384,10 @@ def outputs(runs_dir: Path, out_dir: Path, previous: Path | None, now: datetime)
         except ValidationError as exc:
             problem = exc.errors()[0]["msg"]
             raise StatusError(f"{previous} is not a valid status file: {problem}") from None
-    data = build(load_registry(), load_runs(runs_dir), before, now)
-    page, json_text = render_html(data), render_json(data)
+    registry = load_registry()
+    data = build(registry, load_runs(runs_dir), before, now)
+    off = sorted((c.display_name for c in registry.values() if not c.enabled), key=str.casefold)
+    page, json_text = render_html(data, off), render_json(data)
     StatusFile.model_validate_json(json_text)
     return {out_dir / "status" / "index.html": page, out_dir / "data" / "status.json": json_text}
 
