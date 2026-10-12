@@ -37,8 +37,9 @@ def test_the_page_names_every_party_that_sees_a_visit(page):
 
 def test_the_page_shows_the_disclaimer_and_required_links(page):
     assert html.escape(short_disclaimer(), quote=True) in page
-    for path in ("DISCLAIMER.md", "DATA_LICENCES.md", "SECURITY.md", "docs/PRIVACY_AND_COOKIES.md"):
-        assert f"{REPOSITORY_URL}/blob/main/{path}" in page
+    for path in ("disclaimer", "data-licences", "security", "report"):
+        assert f'href="../{path}/"' in page
+    assert f"{REPOSITORY_URL}/blob/main/docs/PRIVACY_AND_COOKIES.md" in page
     assert "<script" not in page
 
 

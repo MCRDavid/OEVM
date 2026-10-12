@@ -77,7 +77,8 @@ jobs:
         run: |
           for file in index.html data/locations.geojson data/manifest.json \
             data/status.json status/index.html privacy/index.html transparency/index.html \
-            .well-known/security.txt; do
+            disclaimer/index.html data-licences/index.html security/index.html \
+            report/index.html .well-known/security.txt; do
             test -f "build/$file" || { echo "::error::build/$file is missing"; exit 1; }
           done
 
