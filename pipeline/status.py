@@ -60,7 +60,8 @@ COUNTED = {
     GREY: "switched off or not fetched yet",
 }
 MEANINGS = {
-    GREEN: f"the last fetch received complete data, in the last {STALE_AFTER.days} days.",
+    GREEN: f"the last fetch received complete data, in the last {STALE_AFTER.days} days. "
+    "Data quirks listed under Problems logged do not change the colour.",
     YELLOW: "there is data on the map, but the last fetch was incomplete, failed (so the "
     f"map shows the last good copy) or is more than {STALE_AFTER.days} days old.",
     RED: "the last fetch failed or received no locations, and the map shows nothing from "
