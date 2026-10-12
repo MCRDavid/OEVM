@@ -78,6 +78,8 @@ decisions are in docs/adr/.
 - Switch an operator on only after reading its own terms and filling in its licence section.
 - Price a connector from another operator's tariff only where the operator file records the
   owner's decision in tariffs_from, only by exact tariff id, never by name (ADR 0020); never add one yourself.
+- Show a tariff whose prices are all zero as "Price unknown" rather than "Free" only where the
+  operator file records the owner's decision in zero_price_tariffs, by exact tariff id (ADR 0022); never add one yourself.
 - Fetch through the relay (relay/worker.js) only when the operator file records the owner's
   decision in relay; only feeds that need no key; same User-Agent and rate limits; never
   rotate addresses or disguise the project. Cloudflare deploys relay/ from main (relay/wrangler.toml).

@@ -10,6 +10,9 @@ Blueprint task 6. For each connector:
   the price someone pays at the charger without an account. Otherwise all are used.
 - "Free" (price_state free_confirmed) only when every listed tariff was found and every
   one is confirmed free. One tariff that could not be read is enough to withhold "Free".
+- A tariff the owner names in zero_price_tariffs (ADR 0022) shows "Price unknown" while
+  its prices are all zero, and gives no indicative price. withheld_free_tariffs finds them
+  among the operator's own tariffs by exact OCPI id.
 - The indicative price per kWh is the lowest and highest energy price that can apply,
   including VAT when the operator states it. It is a guide for filters and map labels;
   the text from pipeline.pricing is what explains the price.
@@ -80,10 +83,30 @@ def _candidates(tariffs: list[Tariff]) -> list[Tariff]:
     return ad_hoc or tariffs
 
 
+def withheld_free_tariffs(tariffs: list[Tariff], ocpi_ids: list[str]) -> frozenset[str]:
+    """Record ids of the operator's own tariffs (`tariffs`) that a zero_price_tariffs
+    decision names (`ocpi_ids`, exact OCPI ids) and that are confirmed free as published
+    (ADR 0022). Names are never compared."""
+    wanted = set(ocpi_ids)
+    return frozenset(
+        tariff.id
+        for tariff in tariffs
+        if tariff.price_state == "free_confirmed"
+        and (parts := _parts(tariff.id)) is not None
+        and parts[2] in wanted
+    )
+
+
 def price_connector(
-    connector: Connector, tariffs: dict[str, Tariff], *, location_id: str, evse_uid: str
+    connector: Connector,
+    tariffs: dict[str, Tariff],
+    *,
+    location_id: str,
+    evse_uid: str,
+    withheld: frozenset[str] = frozenset(),
 ) -> ConnectorPrice:
-    """The price for one connector, using a dictionary of the operator's tariffs by id."""
+    """The price for one connector, using a dictionary of the operator's tariffs by id.
+    `withheld` holds the ids from withheld_free_tariffs."""
     where = {"location_id": location_id, "evse_uid": evse_uid, "connector_id": connector.id}
     if not connector.tariff_ids:
         return ConnectorPrice(
@@ -101,9 +124,10 @@ def price_connector(
         )
 
     chosen = _candidates(found)
-    shown = [describe_tariff(t) for t in chosen]
+    shown = [describe_tariff(t, zero_price_withheld=t.id in withheld) for t in chosen]
     ids = [t.id for t in chosen]
-    ranges = [r for r in (energy_range(t) for t in chosen) if r is not None]
+    priceable = [t for t in chosen if t.id not in withheld]
+    ranges = [r for r in (energy_range(t) for t in priceable) if r is not None]
     energy = {}
     if ranges:
         energy = {
@@ -175,9 +199,9 @@ class SiteTariffs:
     connectors: int
 
 
-def _option(tariff: Tariff, count: int) -> TariffOption:
-    shown = describe_tariff(tariff)
-    energy = energy_range(tariff)
+def _option(tariff: Tariff, count: int, withheld: frozenset[str]) -> TariffOption:
+    shown = describe_tariff(tariff, zero_price_withheld=tariff.id in withheld)
+    energy = None if tariff.id in withheld else energy_range(tariff)
     return TariffOption(
         tariff_id=tariff.id,
         name=readable_name(tariff.alt_text),
@@ -208,16 +232,19 @@ def _cheapest_first(option: TariffOption) -> tuple:
     return (3 if option.state == "priced" else 4, Decimal(0), Decimal(0))
 
 
-def site_tariffs(location: Location, tariffs: dict[str, Tariff]) -> SiteTariffs:
+def site_tariffs(
+    location: Location, tariffs: dict[str, Tariff], withheld: frozenset[str] = frozenset()
+) -> SiteTariffs:
     """Every tariff the location's connectors list, cheapest first (see _cheapest_first);
-    tariffs that sort the same keep the order they are first listed in."""
+    tariffs that sort the same keep the order they are first listed in. `withheld` holds
+    the ids from withheld_free_tariffs."""
     connectors = [c for evse in location.evses for c in evse.connectors]
     counts: dict[str, int] = {}
     for connector in connectors:
         for tariff_id in dict.fromkeys(connector.tariff_ids):
             counts[tariff_id] = counts.get(tariff_id, 0) + 1
     options = [
-        _option(tariffs[i], n)
+        _option(tariffs[i], n, withheld)
         if i in tariffs
         else TariffOption(
             tariff_id=i,
@@ -278,13 +305,19 @@ def related_tariffs(
 
 
 def price_locations(
-    locations: list[Location], tariffs: list[Tariff], related: dict[str, Tariff] | None = None
+    locations: list[Location],
+    tariffs: list[Tariff],
+    related: dict[str, Tariff] | None = None,
+    withheld: frozenset[str] = frozenset(),
 ) -> list[ConnectorPrice]:
     """The price for every connector at every location, in order. `related` adds tariffs
-    from related_tariffs, keyed by the id the connector names."""
+    from related_tariffs, keyed by the id the connector names; `withheld` holds the ids
+    from withheld_free_tariffs."""
     index = {tariff.id: tariff for tariff in tariffs} | (related or {})
     return [
-        price_connector(connector, index, location_id=location.id, evse_uid=evse.uid)
+        price_connector(
+            connector, index, location_id=location.id, evse_uid=evse.uid, withheld=withheld
+        )
         for location in locations
         for evse in location.evses
         for connector in evse.connectors

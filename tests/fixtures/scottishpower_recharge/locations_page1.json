@@ -1,0 +1,787 @@
+{
+  "request": {
+    "method": "GET",
+    "url": "https://api.fuuse.io/opendata/e11a667d-c56a-468f-b8d3-a50b41628292/location"
+  },
+  "response": {
+    "status_code": 200,
+    "headers": {
+      "content-type": "application/json; charset=utf-8",
+      "x-total-count": "7",
+      "x-limit": "1000"
+    },
+    "body": {
+      "status_code": 1000,
+      "data": [
+        {
+          "id": "edfaffe1-699a-4e83-a720-6a502c84856c",
+          "publish": true,
+          "name": "Harbour Service Station",
+          "address": "Harbour Service Station, 5 Shore Street",
+          "city": "Lossiemouth",
+          "postal_code": "IV31 6PB",
+          "country": "GBR",
+          "coordinates": {
+            "latitude": "57.723900",
+            "longitude": "-3.282300"
+          },
+          "parking_type": "PARKING_LOT",
+          "evses": [
+            {
+              "uid": "592b9bc0-086c-48d4-8685-cca6a3da98a8",
+              "evse_id": "GBSPOHARBOUR*1",
+              "status": "INOPERATIVE",
+              "capabilities": [
+                "REMOTE_START_STOP_CAPABLE"
+              ],
+              "connectors": [
+                {
+                  "id": "19a92e68-175a-4eef-b205-9271415dace8",
+                  "standard": "IEC_62196_T2_COMBO",
+                  "format": "SOCKET",
+                  "power_type": "DC",
+                  "max_voltage": 415,
+                  "max_amperage": 181,
+                  "max_electric_power": 75000,
+                  "tariff_ids": [
+                    "31c170d9-c052-435a-9d9b-637ac7b16ed9"
+                  ],
+                  "last_updated": "2026-10-07T18:55:45.360Z"
+                }
+              ],
+              "coordinates": {
+                "latitude": "57.723900",
+                "longitude": "-3.282300"
+              },
+              "physical_reference": "Harbour_Servic_1",
+              "last_updated": "2026-10-08T05:43:09.408Z"
+            },
+            {
+              "uid": "a4ca3976-3943-4d17-94b1-c9dc27d702f2",
+              "evse_id": "GBSPOHARBOUR*2",
+              "status": "INOPERATIVE",
+              "capabilities": [
+                "REMOTE_START_STOP_CAPABLE"
+              ],
+              "connectors": [
+                {
+                  "id": "466009b0-d736-4348-8455-153dbe559360",
+                  "standard": "IEC_62196_T2_COMBO",
+                  "format": "SOCKET",
+                  "power_type": "DC",
+                  "max_voltage": 415,
+                  "max_amperage": 181,
+                  "max_electric_power": 75000,
+                  "tariff_ids": [
+                    "31c170d9-c052-435a-9d9b-637ac7b16ed9"
+                  ],
+                  "last_updated": "2026-10-07T16:28:35.506Z"
+                }
+              ],
+              "coordinates": {
+                "latitude": "57.723900",
+                "longitude": "-3.282300"
+              },
+              "physical_reference": "Harbour_Servic_2",
+              "last_updated": "2026-10-08T05:43:09.408Z"
+            }
+          ],
+          "operator": {
+            "name": "Scottish Power Recharge - Public Charging Network"
+          },
+          "time_zone": "Europe/London",
+          "opening_times": {
+            "twentyfourseven": true
+          },
+          "charging_when_closed": false,
+          "last_updated": "2026-10-07T18:55:45.360Z"
+        },
+        {
+          "id": "bb48e015-5fbb-4197-b619-a5b27d65c296",
+          "publish": true,
+          "name": "Braehead Foods - Kilmarnock",
+          "address": "Braehead Foods, North Industrial Park",
+          "city": "Kilmarnock",
+          "postal_code": "KA2 OFE",
+          "country": "GBR",
+          "coordinates": {
+            "latitude": "55.604500",
+            "longitude": "-4.538100"
+          },
+          "parking_type": "PARKING_LOT",
+          "evses": [
+            {
+              "uid": "4b939862-5394-4f90-b11c-c0db1668ed87",
+              "evse_id": "0cdee0*969818",
+              "status": "AVAILABLE",
+              "capabilities": [
+                "REMOTE_START_STOP_CAPABLE"
+              ],
+              "connectors": [
+                {
+                  "id": "8103f9ab-1261-4d19-8b7b-e0a8b109af47",
+                  "standard": "IEC_62196_T2",
+                  "format": "SOCKET",
+                  "power_type": "AC_3_PHASE",
+                  "max_voltage": 240,
+                  "max_amperage": 32,
+                  "max_electric_power": 22000,
+                  "tariff_ids": [
+                    "254c6444-66c2-40f8-a755-0b389bbf5055"
+                  ],
+                  "last_updated": "2026-09-30T17:02:26.407Z"
+                }
+              ],
+              "coordinates": {
+                "latitude": "55.604500",
+                "longitude": "-4.538100"
+              },
+              "physical_reference": "Braehead_Left",
+              "last_updated": "2026-10-09T23:13:48.362Z"
+            },
+            {
+              "uid": "f459966c-881b-49c2-b036-be116afafcbe",
+              "evse_id": "0d1654*1cf3f8",
+              "status": "AVAILABLE",
+              "capabilities": [
+                "REMOTE_START_STOP_CAPABLE"
+              ],
+              "connectors": [
+                {
+                  "id": "82ece602-24fa-496a-937f-758fd519248a",
+                  "standard": "IEC_62196_T2",
+                  "format": "SOCKET",
+                  "power_type": "AC_3_PHASE",
+                  "max_voltage": 415,
+                  "max_amperage": 32,
+                  "max_electric_power": 22000,
+                  "tariff_ids": [
+                    "254c6444-66c2-40f8-a755-0b389bbf5055"
+                  ],
+                  "last_updated": "2026-10-09T07:37:36.592Z"
+                }
+              ],
+              "coordinates": {
+                "latitude": "55.604500",
+                "longitude": "-4.538100"
+              },
+              "physical_reference": "Braehead_right",
+              "last_updated": "2026-10-09T23:13:48.362Z"
+            }
+          ],
+          "operator": {
+            "name": "Scottish Power Recharge - Public Charging Network"
+          },
+          "time_zone": "Europe/London",
+          "opening_times": {
+            "twentyfourseven": true
+          },
+          "charging_when_closed": false,
+          "last_updated": "2026-10-09T07:37:36.592Z"
+        },
+        {
+          "id": "3a38d652-36e1-4fc4-a4e2-f6e0edeb94ab",
+          "publish": true,
+          "name": "North Devon Enterprise Centre",
+          "address": "North Devon Enterprise Centre",
+          "city": "Barnstaple",
+          "postal_code": "EX31 3UD",
+          "country": "GBR",
+          "coordinates": {
+            "latitude": "51.061100",
+            "longitude": "-4.083600"
+          },
+          "parking_type": "PARKING_LOT",
+          "evses": [
+            {
+              "uid": "339501c5-600a-4fcc-9bf7-a9addf7e91f1",
+              "evse_id": "GBSPODCC11*1",
+              "status": "AVAILABLE",
+              "capabilities": [
+                "CONTACTLESS_CARD_SUPPORT",
+                "REMOTE_START_STOP_CAPABLE"
+              ],
+              "connectors": [
+                {
+                  "id": "2cd2641a-60a3-4e43-b9df-2f527a05daa9",
+                  "standard": "IEC_62196_T2",
+                  "format": "SOCKET",
+                  "power_type": "AC_3_PHASE",
+                  "max_voltage": 240,
+                  "max_amperage": 32,
+                  "max_electric_power": 11000,
+                  "last_updated": "2026-10-09T19:51:52.156Z"
+                }
+              ],
+              "coordinates": {
+                "latitude": "51.061100",
+                "longitude": "-4.083600"
+              },
+              "physical_reference": "NDEC-Right_1",
+              "last_updated": "2026-10-11T18:04:53.781Z"
+            },
+            {
+              "uid": "36347931-11df-4e9c-81f2-5a3a2331b220",
+              "evse_id": "GBSPODCC11*2",
+              "status": "AVAILABLE",
+              "capabilities": [
+                "CONTACTLESS_CARD_SUPPORT",
+                "REMOTE_START_STOP_CAPABLE"
+              ],
+              "connectors": [
+                {
+                  "id": "d66573a6-1d41-4faa-a45d-26a2c7a9e89b",
+                  "standard": "IEC_62196_T2",
+                  "format": "SOCKET",
+                  "power_type": "AC_3_PHASE",
+                  "max_voltage": 415,
+                  "max_amperage": 15,
+                  "max_electric_power": 11000,
+                  "last_updated": "2026-10-07T13:00:43.802Z"
+                }
+              ],
+              "coordinates": {
+                "latitude": "51.061100",
+                "longitude": "-4.083600"
+              },
+              "physical_reference": "NDEC-Right_2",
+              "last_updated": "2026-10-11T18:04:53.781Z"
+            },
+            {
+              "uid": "4ae566d5-7f11-4796-b85a-db55292bf257",
+              "evse_id": "GBSPODCC10*1",
+              "status": "AVAILABLE",
+              "capabilities": [
+                "CONTACTLESS_CARD_SUPPORT",
+                "REMOTE_START_STOP_CAPABLE"
+              ],
+              "connectors": [
+                {
+                  "id": "227ee8bd-ebe2-4d67-bed6-3708093e7116",
+                  "standard": "IEC_62196_T2",
+                  "format": "SOCKET",
+                  "power_type": "AC_3_PHASE",
+                  "max_voltage": 415,
+                  "max_amperage": 15,
+                  "max_electric_power": 11000,
+                  "tariff_ids": [
+                    "254c6444-66c2-40f8-a755-0b389bbf5055"
+                  ],
+                  "last_updated": "2026-10-06T12:40:51.488Z"
+                }
+              ],
+              "coordinates": {
+                "latitude": "51.061100",
+                "longitude": "-4.083600"
+              },
+              "physical_reference": "NDEC-Left_1",
+              "last_updated": "2026-10-09T14:17:59.882Z"
+            },
+            {
+              "uid": "b155c711-f941-4b58-bb9c-5d2e444c8a7f",
+              "evse_id": "GBSPODCC10*2",
+              "status": "AVAILABLE",
+              "capabilities": [
+                "CONTACTLESS_CARD_SUPPORT",
+                "REMOTE_START_STOP_CAPABLE"
+              ],
+              "connectors": [
+                {
+                  "id": "b5176ba4-80a4-4a1a-b6dc-117d2657d4de",
+                  "standard": "IEC_62196_T2",
+                  "format": "SOCKET",
+                  "power_type": "AC_3_PHASE",
+                  "max_voltage": 240,
+                  "max_amperage": 32,
+                  "max_electric_power": 11000,
+                  "tariff_ids": [
+                    "254c6444-66c2-40f8-a755-0b389bbf5055"
+                  ],
+                  "last_updated": "2026-10-08T10:28:53.263Z"
+                }
+              ],
+              "coordinates": {
+                "latitude": "51.061100",
+                "longitude": "-4.083600"
+              },
+              "physical_reference": "NDEC-Left_2",
+              "last_updated": "2026-10-09T14:17:59.882Z"
+            }
+          ],
+          "operator": {
+            "name": "Scottish Power Recharge - Public Charging Network"
+          },
+          "time_zone": "Europe/London",
+          "opening_times": {
+            "twentyfourseven": true
+          },
+          "charging_when_closed": false,
+          "last_updated": "2026-10-09T19:51:52.156Z"
+        },
+        {
+          "id": "f8998490-469e-4048-8827-c3ade2c84e58",
+          "publish": true,
+          "name": "Storage Vault - Hamilton",
+          "address": "Storage Vault, Barrack Street",
+          "city": "Hamilton",
+          "postal_code": "ML3 0HZ",
+          "country": "GBR",
+          "coordinates": {
+            "latitude": "55.779600",
+            "longitude": "-4.045800"
+          },
+          "parking_type": "PARKING_LOT",
+          "evses": [
+            {
+              "uid": "1471d804-a62e-4ca7-845a-5daa51def27a",
+              "evse_id": "SPSVHAM00001*3",
+              "status": "AVAILABLE",
+              "capabilities": [
+                "CONTACTLESS_CARD_SUPPORT",
+                "RESERVABLE",
+                "REMOTE_START_STOP_CAPABLE"
+              ],
+              "connectors": [
+                {
+                  "id": "39f44a07-2631-4051-896c-8a9c24a8b496",
+                  "standard": "IEC_62196_T2",
+                  "format": "CABLE",
+                  "power_type": "AC_3_PHASE",
+                  "max_voltage": 240,
+                  "max_amperage": 53,
+                  "max_electric_power": 22000,
+                  "tariff_ids": [
+                    "254c6444-66c2-40f8-a755-0b389bbf5055"
+                  ],
+                  "last_updated": "2026-10-04T20:45:21.338Z"
+                }
+              ],
+              "coordinates": {
+                "latitude": "55.779600",
+                "longitude": "-4.045800"
+              },
+              "physical_reference": "Type2_SVHAM",
+              "last_updated": "2026-10-11T18:14:10.690Z"
+            },
+            {
+              "uid": "a511a77d-5a63-4413-894c-b974f95b1425",
+              "evse_id": "c440cd*458fe4",
+              "status": "AVAILABLE",
+              "capabilities": [
+                "CONTACTLESS_CARD_SUPPORT",
+                "RESERVABLE",
+                "REMOTE_START_STOP_CAPABLE"
+              ],
+              "connectors": [
+                {
+                  "id": "cae767a9-be91-4158-9751-95812e053e7a",
+                  "standard": "IEC_62196_T2",
+                  "format": "CABLE",
+                  "power_type": "DC",
+                  "max_voltage": 415,
+                  "max_amperage": 126,
+                  "max_electric_power": 50000,
+                  "tariff_ids": [
+                    "4b0378aa-ff00-4e0e-b780-b5f72f3e58a7"
+                  ],
+                  "last_updated": "2026-10-11T00:27:19.064Z"
+                }
+              ],
+              "coordinates": {
+                "latitude": "55.779600",
+                "longitude": "-4.045800"
+              },
+              "physical_reference": "CHAdeMo-SVHAM",
+              "last_updated": "2026-10-11T18:14:10.690Z"
+            },
+            {
+              "uid": "e59435b1-49fd-41f9-91bf-0c382f9a96ad",
+              "evse_id": "00f95f*a31d6e",
+              "status": "AVAILABLE",
+              "capabilities": [
+                "CONTACTLESS_CARD_SUPPORT",
+                "RESERVABLE",
+                "REMOTE_START_STOP_CAPABLE"
+              ],
+              "connectors": [
+                {
+                  "id": "46b2f6f8-c2cc-46ec-89c9-89e1ac822681",
+                  "standard": "IEC_62196_T2_COMBO",
+                  "format": "CABLE",
+                  "power_type": "DC",
+                  "max_voltage": 400,
+                  "max_amperage": 125,
+                  "max_electric_power": 50000,
+                  "tariff_ids": [
+                    "4b0378aa-ff00-4e0e-b780-b5f72f3e58a7"
+                  ],
+                  "last_updated": "2026-10-11T00:42:57.730Z"
+                }
+              ],
+              "coordinates": {
+                "latitude": "55.779600",
+                "longitude": "-4.045800"
+              },
+              "physical_reference": "CCS_SVHAM",
+              "last_updated": "2026-10-11T18:14:10.690Z"
+            }
+          ],
+          "operator": {
+            "name": "Scottish Power Recharge - Public Charging Network"
+          },
+          "time_zone": "Europe/London",
+          "opening_times": {
+            "twentyfourseven": true
+          },
+          "charging_when_closed": false,
+          "last_updated": "2026-10-11T00:42:57.730Z"
+        },
+        {
+          "id": "f6d0969f-16f1-45b9-b691-9dcd9997bdf3",
+          "publish": true,
+          "name": "Storage Vault Cambuslang",
+          "address": "Storage Vault Cambuslang, Fullerton Road",
+          "city": "Glasgow",
+          "postal_code": "G32 8YL",
+          "country": "GBR",
+          "coordinates": {
+            "latitude": "55.834400",
+            "longitude": "-4.172600"
+          },
+          "parking_type": "PARKING_LOT",
+          "evses": [
+            {
+              "uid": "5f3ab2c0-a08d-4bda-bd18-ce0e3e661bf4",
+              "evse_id": "SPSVCAM00001*1",
+              "status": "AVAILABLE",
+              "capabilities": [
+                "CONTACTLESS_CARD_SUPPORT",
+                "RESERVABLE",
+                "REMOTE_START_STOP_CAPABLE"
+              ],
+              "connectors": [
+                {
+                  "id": "c276915f-aad4-44dd-8b27-d056e59dcf71",
+                  "standard": "IEC_62196_T2_COMBO",
+                  "format": "SOCKET",
+                  "power_type": "DC",
+                  "max_voltage": 415,
+                  "max_amperage": 120,
+                  "max_electric_power": 50000,
+                  "tariff_ids": [
+                    "4b0378aa-ff00-4e0e-b780-b5f72f3e58a7"
+                  ],
+                  "last_updated": "2026-10-11T14:29:57.305Z"
+                }
+              ],
+              "coordinates": {
+                "latitude": "55.834400",
+                "longitude": "-4.172600"
+              },
+              "physical_reference": "CCS_Cambuslang",
+              "last_updated": "2026-10-11T14:45:03.471Z"
+            },
+            {
+              "uid": "677f0e3a-506f-44c4-83af-a1c5c82bf611",
+              "evse_id": "SPSVCAM00001*3",
+              "status": "AVAILABLE",
+              "capabilities": [
+                "CONTACTLESS_CARD_SUPPORT",
+                "RESERVABLE",
+                "REMOTE_START_STOP_CAPABLE"
+              ],
+              "connectors": [
+                {
+                  "id": "cefd9327-2127-4a19-b8dd-e1a06251eb0e",
+                  "standard": "IEC_62196_T2",
+                  "format": "SOCKET",
+                  "power_type": "AC_3_PHASE",
+                  "max_voltage": 415,
+                  "max_amperage": 31,
+                  "max_electric_power": 22000,
+                  "tariff_ids": [
+                    "254c6444-66c2-40f8-a755-0b389bbf5055"
+                  ],
+                  "last_updated": "2026-10-11T14:45:03.471Z"
+                }
+              ],
+              "coordinates": {
+                "latitude": "55.834400",
+                "longitude": "-4.172600"
+              },
+              "physical_reference": "Type2_Cambuslang",
+              "last_updated": "2026-10-11T14:45:03.471Z"
+            },
+            {
+              "uid": "da24b850-8934-415a-9edc-fa2ffbcd90a0",
+              "evse_id": "d6ab84*15fce8",
+              "status": "AVAILABLE",
+              "capabilities": [
+                "CONTACTLESS_CARD_SUPPORT",
+                "RESERVABLE",
+                "REMOTE_START_STOP_CAPABLE"
+              ],
+              "connectors": [
+                {
+                  "id": "466f822e-31d3-485d-b3ed-934d9e49fcce",
+                  "standard": "CHADEMO",
+                  "format": "SOCKET",
+                  "power_type": "DC",
+                  "max_voltage": 415,
+                  "max_amperage": 120,
+                  "max_electric_power": 50000,
+                  "tariff_ids": [
+                    "4b0378aa-ff00-4e0e-b780-b5f72f3e58a7"
+                  ],
+                  "last_updated": "2026-10-11T14:29:57.523Z"
+                }
+              ],
+              "coordinates": {
+                "latitude": "55.834400",
+                "longitude": "-4.172600"
+              },
+              "physical_reference": "CHAdeMO2_Cambusl",
+              "last_updated": "2026-10-11T14:45:03.471Z"
+            }
+          ],
+          "operator": {
+            "name": "Scottish Power Recharge - Public Charging Network"
+          },
+          "time_zone": "Europe/London",
+          "opening_times": {
+            "twentyfourseven": true
+          },
+          "charging_when_closed": false,
+          "last_updated": "2026-10-11T14:45:03.471Z"
+        },
+        {
+          "id": "d574a855-f503-4db3-9120-8a3e65defc40",
+          "publish": true,
+          "name": "Honiton Road Park & Ride",
+          "address": "Honiton Road Park & Ride",
+          "city": "Honiton",
+          "postal_code": "EX2 7JA",
+          "state": "Exeter",
+          "country": "GBR",
+          "coordinates": {
+            "latitude": "50.725100",
+            "longitude": "-3.471000"
+          },
+          "parking_type": "PARKING_LOT",
+          "evses": [
+            {
+              "uid": "3cb0f47f-4917-4feb-b22e-b839b1a79111",
+              "evse_id": "01abab*e6bdd1",
+              "status": "AVAILABLE",
+              "capabilities": [
+                "CONTACTLESS_CARD_SUPPORT",
+                "REMOTE_START_STOP_CAPABLE"
+              ],
+              "connectors": [
+                {
+                  "id": "028bee19-d08b-4973-a6d2-f0fbf2b938ee",
+                  "standard": "IEC_62196_T2",
+                  "format": "SOCKET",
+                  "power_type": "AC_3_PHASE",
+                  "max_voltage": 240,
+                  "max_amperage": 32,
+                  "max_electric_power": 22000,
+                  "tariff_ids": [
+                    "254c6444-66c2-40f8-a755-0b389bbf5055"
+                  ],
+                  "last_updated": "2026-10-09T11:45:07.310Z"
+                }
+              ],
+              "coordinates": {
+                "latitude": "50.725100",
+                "longitude": "-3.471000"
+              },
+              "physical_reference": "Honiton-PR_2",
+              "parking_restrictions": [
+                "EV_ONLY"
+              ],
+              "last_updated": "2026-10-11T18:04:53.781Z"
+            },
+            {
+              "uid": "8c20e3e0-d474-4020-b267-881ff465932f",
+              "evse_id": "b456bf*82c133",
+              "status": "AVAILABLE",
+              "capabilities": [
+                "CONTACTLESS_CARD_SUPPORT",
+                "REMOTE_START_STOP_CAPABLE"
+              ],
+              "connectors": [
+                {
+                  "id": "faf75c73-2cef-4231-859d-27c2fe59f05a",
+                  "standard": "IEC_62196_T2",
+                  "format": "SOCKET",
+                  "power_type": "AC_3_PHASE",
+                  "max_voltage": 415,
+                  "max_amperage": 31,
+                  "max_electric_power": 22000,
+                  "tariff_ids": [
+                    "254c6444-66c2-40f8-a755-0b389bbf5055"
+                  ],
+                  "last_updated": "2026-10-11T16:05:39.140Z"
+                }
+              ],
+              "coordinates": {
+                "latitude": "50.725100",
+                "longitude": "-3.471000"
+              },
+              "physical_reference": "Honiton-PR_1",
+              "parking_restrictions": [
+                "EV_ONLY"
+              ],
+              "last_updated": "2026-10-11T18:04:53.781Z"
+            }
+          ],
+          "operator": {
+            "name": "Scottish Power Recharge - Public Charging Network"
+          },
+          "time_zone": "Europe/London",
+          "opening_times": {
+            "twentyfourseven": false,
+            "regular_hours": [
+              {
+                "period_begin": "04:30",
+                "period_end": "11:59",
+                "weekday": 1
+              },
+              {
+                "period_begin": "04:30",
+                "period_end": "11:59",
+                "weekday": 2
+              },
+              {
+                "period_begin": "04:30",
+                "period_end": "11:59",
+                "weekday": 3
+              },
+              {
+                "period_begin": "04:30",
+                "period_end": "11:59",
+                "weekday": 4
+              },
+              {
+                "period_begin": "04:30",
+                "period_end": "11:59",
+                "weekday": 5
+              },
+              {
+                "period_begin": "04:30",
+                "period_end": "11:59",
+                "weekday": 6
+              },
+              {
+                "period_begin": "04:30",
+                "period_end": "11:59",
+                "weekday": 7
+              }
+            ]
+          },
+          "charging_when_closed": false,
+          "last_updated": "2026-10-11T16:05:39.140Z"
+        },
+        {
+          "id": "6954e95c-7c5b-4bed-b1c5-d9433e67bf5b",
+          "publish": true,
+          "name": "Glengarry",
+          "address": "Inverness-shire",
+          "city": "Invergarry",
+          "postal_code": "PH35 4HL",
+          "country": "GBR",
+          "coordinates": {
+            "latitude": "57.070459",
+            "longitude": "-4.788848"
+          },
+          "parking_type": "PARKING_LOT",
+          "evses": [
+            {
+              "uid": "ab3e3145-15d0-442c-80aa-966db316e7aa",
+              "evse_id": "GBSPOGLENGAR1*1",
+              "status": "CHARGING",
+              "capabilities": [
+                "CHARGING_PROFILE_CAPABLE",
+                "CONTACTLESS_CARD_SUPPORT",
+                "RFID_READER",
+                "REMOTE_START_STOP_CAPABLE"
+              ],
+              "connectors": [
+                {
+                  "id": "4c7e21cb-db2d-4299-96b1-180d6677364b",
+                  "standard": "IEC_62196_T2_COMBO",
+                  "format": "CABLE",
+                  "power_type": "DC",
+                  "max_voltage": 400,
+                  "max_amperage": 75,
+                  "max_electric_power": 30000,
+                  "tariff_ids": [
+                    "2bf0030b-e446-473f-96ef-76de022b87e9"
+                  ],
+                  "last_updated": "2026-10-11T18:07:39.315Z"
+                }
+              ],
+              "coordinates": {
+                "latitude": "57.070459",
+                "longitude": "-4.788848"
+              },
+              "physical_reference": "Glengarry-1",
+              "parking_restrictions": [
+                "EV_ONLY",
+                "PLUGGED"
+              ],
+              "last_updated": "2026-10-11T18:07:39.315Z"
+            },
+            {
+              "uid": "d6125d95-b5b2-44ae-9a61-a6feeea66fc1",
+              "evse_id": "GBSPOGLENGAR1*2",
+              "status": "AVAILABLE",
+              "capabilities": [
+                "CHARGING_PROFILE_CAPABLE",
+                "CONTACTLESS_CARD_SUPPORT",
+                "RFID_READER",
+                "REMOTE_START_STOP_CAPABLE"
+              ],
+              "connectors": [
+                {
+                  "id": "8a9af73b-33e9-4098-aa59-e4d4cae85b99",
+                  "standard": "IEC_62196_T2_COMBO",
+                  "format": "CABLE",
+                  "power_type": "DC",
+                  "max_voltage": 415,
+                  "max_amperage": 72,
+                  "max_electric_power": 30000,
+                  "tariff_ids": [
+                    "2bf0030b-e446-473f-96ef-76de022b87e9"
+                  ],
+                  "last_updated": "2026-10-11T18:06:56.528Z"
+                }
+              ],
+              "coordinates": {
+                "latitude": "57.070459",
+                "longitude": "-4.788848"
+              },
+              "physical_reference": "Glengarry-2",
+              "parking_restrictions": [
+                "EV_ONLY",
+                "PLUGGED"
+              ],
+              "last_updated": "2026-10-11T18:07:39.315Z"
+            }
+          ],
+          "operator": {
+            "name": "Scottish Power Recharge - Public Charging Network"
+          },
+          "time_zone": "Europe/London",
+          "opening_times": {
+            "twentyfourseven": true
+          },
+          "charging_when_closed": false,
+          "last_updated": "2026-10-11T18:07:39.315Z"
+        }
+      ],
+      "timestamp": "2026-10-11T18:26:41.527Z"
+    }
+  }
+}

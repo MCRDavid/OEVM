@@ -1,27 +1,76 @@
 # yaml-language-server: $schema=schema.json
 id: scottishpower_recharge
 display_name: ScottishPower Recharge
-ocpi_country_code: unknown
+ocpi_country_code: unknown # The feed's records carry no country_code or party_id (2026-10-11).
 ocpi_party_id: unknown
-adapter: unknown
+adapter: ocpi_221
 base_url: unknown
-endpoints: {}
+endpoints:
+  locations:
+    url: https://api.fuuse.io/opendata/e11a667d-c56a-468f-b8d3-a50b41628292/location
+    status: documented
+    note: >-
+      Linked as location data in the "Open data access" section of ScottishPower's public
+      EV charging blog page (read in a browser on 2026-10-11). Hosted by Fuuse, the
+      network's back office provider, as for Arnold Clark Charge.
+  tariffs:
+    url: https://api.fuuse.io/opendata/e11a667d-c56a-468f-b8d3-a50b41628292/tariff
+    status: documented
+    note: >-
+      Linked as tariff data in the same section of the same page (read in a browser on
+      2026-10-11).
 auth:
-  method: unknown
+  method: none
   name: null
   secret_name: null
 rate_limit:
-  min_seconds_between_requests: 2
+  min_seconds_between_requests: 31
   limits: []
-  limits_checked: unknown
-  notes: null
+  limits_checked: 2026-10-11
+  notes: >-
+    ScottishPower's pages state no rate limit. The host answers a second request sent 2
+    seconds after the first with HTTP 429 and Retry-After 30 (see findings). The 31 second
+    gap is this project's own choice: the 30 seconds the host asks for, plus a 1 second
+    margin. Arnold Clark Charge's files are on the same host and use the same gap. Each
+    response holds every record, so a full run makes two requests (about 0.2 MB on
+    2026-10-11).
 supports_single_location: unknown
-cors: unknown
-attribution: null
-licence: null
+cors: needs_testing
+attribution: >-
+  Contains data from ScottishPower Recharge published under the Public Charge Point
+  Regulations 2023, used in line with the Open Government Licence v3.0.
+licence:
+  name: OGL-3.0
+  url: https://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/
+  basis: >-
+    ScottishPower's public EV charging page says "Open data provided (location and
+    tariff)", and its blog page links the two files in a section headed "Open data access".
+    Neither page states a licence, terms or rate limit for the files (both read in a
+    browser on 2026-10-11). DfT's guidance (updated 21 October 2024) says "Data must be
+    open in line with the Open Government Licence". The blog page also links the Recharge
+    terms and conditions for drivers (SP_Recharge_TCs_Oct25.pdf), which were not read: the
+    site refuses this project's automated requests. On 2026-10-10 the repository owner
+    decided, as a standing rule for operators whose data has no terms of its own, to read
+    general website or charging terms as not covering the open data, which regulation
+    10(5) requires to be available without terms on its use.
+  checked: 2026-10-11
+zero_price_tariffs:
+  decided: 2026-10-11
+  basis: >-
+    The tariff's description is "Harbour test" and every price in it is zero, so it may not
+    be the price drivers pay at the 2 connectors that name it. On 2026-10-11 the repository
+    owner decided these connectors show "Price unknown" rather than "Free".
+  evidence_url: https://api.fuuse.io/opendata/e11a667d-c56a-468f-b8d3-a50b41628292/tariff
+  tariff_ids:
+    - 2bf0030b-e446-473f-96ef-76de022b87e9
 engagement:
-  status: unknown
-  evidence: []
+  status: open_anonymous
+  evidence:
+    - date: 2026-10-11
+      url: https://www.scottishpower.co.uk/blog/public-ev-charging
+      note: >-
+        The "Open data access" section links location and tariff data on api.fuuse.io and
+        states no licence, terms or rate limit. Read in a browser.
   log:
     - date: 2026-10-10
       action: feed_searched
@@ -30,15 +79,84 @@ engagement:
         checks on 2026-10-10 (HTTP 403), so its open data route is not yet known; it needs
         checking in a browser.
       evidence_url: https://www.scottishpower.co.uk/public-ev-charging
+    - date: 2026-10-11
+      action: page_checked
+      summary: >-
+        Read ScottishPower's public EV charging pages in a browser. The blog page's "Open
+        data access" section links location and tariff files that need no key.
+      evidence_url: https://www.scottishpower.co.uk/blog/public-ev-charging
 access_requested: null
 access_granted: null
 sources:
   - url: https://www.scottishpower.co.uk/public-ev-charging
     note: >-
-      ScottishPower's public EV charging page. Answered HTTP 403 to this project's automated
-      checks on 2026-10-10, so it was not read.
-findings: []
+      ScottishPower's public EV charging page, read in a browser on 2026-10-11. It says
+      "Open data provided (location and tariff)" but gives no link. It answers HTTP 403 to
+      this project's automated requests (2026-10-10 and 2026-10-11).
+  - url: https://www.scottishpower.co.uk/blog/public-ev-charging
+    note: >-
+      ScottishPower's public EV charging blog page, read in a browser on 2026-10-11. Its
+      "Open data access" section gives the two data links and states no licence, terms or
+      rate limit. It also links the Recharge terms and conditions for drivers, not read.
+findings:
+  - date: 2026-10-11
+    kind: access
+    summary: >-
+      The host answered the tariff request, sent 2 seconds after the location request, with
+      HTTP 429, a page titled "The Fuuse API is currently being rate limited" and Retry-After
+      30. The same request 30 seconds later was answered normally. The pages state no limit.
+    handling: >-
+      Requests to the host are spaced 31 seconds apart, for this operator and Arnold Clark
+      Charge. A recording made that way on 2026-10-11 needed no retry.
+    evidence_url: https://api.fuuse.io/opendata/e11a667d-c56a-468f-b8d3-a50b41628292/tariff
+  - date: 2026-10-11
+    kind: spec_conformance
+    summary: >-
+      Locations and tariffs carry no country_code or party_id, which OCPI 2.2.1 requires.
+    handling: >-
+      Record ids use "unknown" for the country and party, from this file, until the
+      operator's own data gives them.
+    evidence_url: https://api.fuuse.io/opendata/e11a667d-c56a-468f-b8d3-a50b41628292/location
+  - date: 2026-10-11
+    kind: spec_conformance
+    summary: >-
+      Tariff prices, VAT rates and minimum kWh are sent as strings (for example "0.5417",
+      "20.0000" and "0.1000") rather than numbers.
+    handling: Read as the numbers they spell. Values that are not numbers would be unknown.
+    evidence_url: https://api.fuuse.io/opendata/e11a667d-c56a-468f-b8d3-a50b41628292/tariff
+  - date: 2026-10-11
+    kind: data_quality
+    summary: >-
+      11 of 187 connectors, at 3 locations, name no tariff in tariff_ids (on 2026-10-11).
+    handling: Connectors with no tariff show "Price unknown".
+    evidence_url: https://api.fuuse.io/opendata/e11a667d-c56a-468f-b8d3-a50b41628292/location
+  - date: 2026-10-11
+    kind: data_quality
+    summary: >-
+      The 2 connectors at one location (Glengarry, Invergarry) name a tariff whose
+      description is "Harbour test" and whose energy, flat and time prices are all zero
+      (on 2026-10-11).
+    handling: >-
+      The tariff is published unchanged, but by the owner's decision of 2026-10-11
+      (zero_price_tariffs) those connectors show "Price unknown" rather than "Free" while
+      its prices are all zero.
+    evidence_url: https://api.fuuse.io/opendata/e11a667d-c56a-468f-b8d3-a50b41628292/tariff
+  - date: 2026-10-11
+    kind: data_quality
+    summary: >-
+      One 50 kW connector (Storage Vault - Hamilton) is a Type 2 cable (IEC_62196_T2) with
+      power_type DC. Type 2 connectors are usually AC.
+    handling: Kept as published.
+    evidence_url: https://api.fuuse.io/opendata/e11a667d-c56a-468f-b8d3-a50b41628292/location
+  - date: 2026-10-11
+    kind: data_quality
+    summary: >-
+      One postcode is written with a letter O where a zero would be expected ("KA2 OFE").
+    handling: Kept as published. The map places locations by their coordinates.
+    evidence_url: https://api.fuuse.io/opendata/e11a667d-c56a-468f-b8d3-a50b41628292/location
 notes: >-
-  ScottishPower's website refused automated reads on 2026-10-10. The next step is to read
-  its public EV charging page in a browser and look for an open data or regulations link.
-enabled: false
+  The files are standard OCPI 2.2.1 responses, read by the ocpi_221 adapter, on the same
+  Fuuse host as Arnold Clark Charge. ScottishPower's own pages refuse this project's
+  automated requests, so they were read in a browser on 2026-10-11; the data host itself
+  answers normally.
+enabled: true

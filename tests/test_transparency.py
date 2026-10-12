@@ -313,6 +313,17 @@ def test_a_decision_to_swap_back_coordinates_is_shown(page):
     assert "obviously missing a minus sign, are corrected and marked" in " ".join(page.split())
 
 
+def test_a_decision_on_zero_price_tariffs_is_shown(page):
+    data = json.loads(transparency.outputs()[transparency.JSON_PATH])
+    decisions = {op["id"]: op["zero_price_tariffs"] for op in data["operators"]}
+    assert {k: (v["decided"], v["tariffs"]) for k, v in decisions.items() if v} == {
+        "scottishpower_recharge": ("2026-10-11", 1)
+    }
+    text = " ".join(page.split())
+    assert "1 tariff whose prices are all zero, named by exact id, shows" in text
+    assert "by the owner's decision of 2026-10-11" in text
+
+
 def test_a_decision_to_use_a_related_operators_tariffs_is_shown(page):
     data = json.loads(transparency.outputs()[transparency.JSON_PATH])
     decisions = {op["id"]: op["tariffs_from"] for op in data["operators"]}
