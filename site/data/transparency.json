@@ -1,5 +1,5 @@
 {
-  "last_reviewed": "2026-10-12",
+  "last_reviewed": "2026-10-13",
   "disclaimer": "OEVM is a personal, experimental project for learning about AI tools. Much of its code and text was written with an AI assistant, and it will contain mistakes. Charger data comes from the operators and other sources credited on every record, and remains their work. Everything is provided \"as is\", with no warranty or guarantee of any kind. Always check prices and availability at the charger.",
   "regulation": {
     "summary": "The Public Charge Point Regulations 2023 set no limit on how often data users may request the data. Regulation 10(5) requires the data to be available free of charge without terms on its use. DfT's guidance allows terms covering the means of access, which is where operators' rate limits come from.",
@@ -4917,14 +4917,21 @@
       "enabled": false,
       "adapter": "unknown",
       "engagement": {
-        "status": "unknown",
-        "label": "Not yet established",
-        "headline": "Not yet established (as of 2026-10-10)",
-        "as_of": "2026-10-10",
+        "status": "key_on_request",
+        "label": "Key issued on request",
+        "headline": "Key issued on request (as of 2026-10-13)",
+        "as_of": "2026-10-13",
         "last_request": null,
         "last_response": null,
         "last_response_text": "No request sent",
-        "evidence": [],
+        "evidence": [
+          {
+            "date": "2026-10-13",
+            "url": "https://developer.tesla.com/en_GB/docs/charging/roaming",
+            "file": null,
+            "note": "Tesla's developer page for charging roaming says the Tesla Roaming Portal is available on a pilot and invitation basis only and gives an address to ask about timing and availability. Connecting needs a Tesla Account and a request that Tesla reviews. No account was created and no request was made."
+          }
+        ],
         "log": [
           {
             "date": "2026-10-10",
@@ -4935,6 +4942,28 @@
             "summary": "Tesla's website could not be read by this project's automated checks on 2026-10-10 (HTTP 403 for its UK home page and for an address tried for a Supercharger open data support page), so its open data route is not yet known; it needs checking in a browser.",
             "quote": null,
             "evidence_url": "https://www.tesla.com/en_gb",
+            "evidence_file": null
+          },
+          {
+            "date": "2026-10-11",
+            "action": "page_checked",
+            "action_label": "Operator's page checked",
+            "channel": null,
+            "channel_label": null,
+            "summary": "Tesla's UK Supercharger, Supercharging and EV roaming pages, its legal page and its site map were read in a browser. None of them describes open data, the Public Charge Point Regulations or OCPI, and two addresses tried for such pages did not exist.",
+            "quote": null,
+            "evidence_url": "https://www.tesla.com/en_gb/supercharger",
+            "evidence_file": null
+          },
+          {
+            "date": "2026-10-13",
+            "action": "page_checked",
+            "action_label": "Operator's page checked",
+            "channel": null,
+            "channel_label": null,
+            "summary": "Tesla's developer page for charging roaming was read. It describes an OCPI connection for which a party signs in with a Tesla Account and submits a connection scope, authentication token, role, URL and party ID for Tesla to review, and says the portal is currently open by invitation only.",
+            "quote": "The Tesla Roaming Portal is currently available on a pilot and invitation basis only",
+            "evidence_url": "https://developer.tesla.com/en_GB/docs/charging/roaming",
             "evidence_file": null
           }
         ]
@@ -4963,7 +4992,18 @@
         "difference_from_regulations": "Not known yet.",
         "notes": null
       },
-      "findings": []
+      "findings": [
+        {
+          "date": "2026-10-13",
+          "kind": "access",
+          "kind_label": "Access",
+          "summary": "Tesla's developer page says the Tesla Roaming Portal, through which it offers an OCPI connection, is currently available on a pilot and invitation basis only. A connection needs a Tesla Account and a request that Tesla reviews. The page states no terms, licence or rate limit for the data.",
+          "handling": "Recorded as a possible source of Tesla's data. Nothing has been requested. The OCPI credentials exchange asks for the requester's own URL, token and party ID, which this project does not have yet, so whether it can connect needs testing. The operator stays switched off.",
+          "evidence_url": "https://developer.tesla.com/en_GB/docs/charging/roaming",
+          "status": "open",
+          "resolved_date": null
+        }
+      ]
     },
     {
       "id": "totalenergies",

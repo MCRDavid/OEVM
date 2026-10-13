@@ -20,8 +20,15 @@ cors: unknown
 attribution: null
 licence: null
 engagement:
-  status: unknown
-  evidence: []
+  status: key_on_request
+  evidence:
+    - date: 2026-10-13
+      url: https://developer.tesla.com/en_GB/docs/charging/roaming
+      note: >-
+        Tesla's developer page for charging roaming says the Tesla Roaming Portal is
+        available on a pilot and invitation basis only and gives an address to ask about
+        timing and availability. Connecting needs a Tesla Account and a request that Tesla
+        reviews. No account was created and no request was made.
   log:
     - date: 2026-10-10
       action: feed_searched
@@ -30,6 +37,23 @@ engagement:
         (HTTP 403 for its UK home page and for an address tried for a Supercharger open data
         support page), so its open data route is not yet known; it needs checking in a browser.
       evidence_url: https://www.tesla.com/en_gb
+    - date: 2026-10-11
+      action: page_checked
+      summary: >-
+        Tesla's UK Supercharger, Supercharging and EV roaming pages, its legal page and its
+        site map were read in a browser. None of them describes open data, the Public Charge
+        Point Regulations or OCPI, and two addresses tried for such pages did not exist.
+      evidence_url: https://www.tesla.com/en_gb/supercharger
+    - date: 2026-10-13
+      action: page_checked
+      summary: >-
+        Tesla's developer page for charging roaming was read. It describes an OCPI connection
+        for which a party signs in with a Tesla Account and submits a connection scope,
+        authentication token, role, URL and party ID for Tesla to review, and says the
+        portal is currently open by invitation only.
+      quote: >-
+        The Tesla Roaming Portal is currently available on a pilot and invitation basis only
+      evidence_url: https://developer.tesla.com/en_GB/docs/charging/roaming
 access_requested: null
 access_granted: null
 sources:
@@ -42,9 +66,44 @@ sources:
       An address on Tesla's website tried for a Supercharger open data support page. It
       answered HTTP 403 to this project's automated checks on 2026-10-10, so whether a page
       exists at this address, and what it says, is unknown.
-findings: []
+  - url: https://www.tesla.com/en_gb/supercharger
+    note: >-
+      Tesla's UK Supercharger page, read in a browser on 2026-10-11 together with its UK
+      support pages on Supercharging, Supercharging for other EVs and EV roaming, its legal
+      page and https://www.tesla.com/sitemap.xml. No open data, regulations or OCPI page was
+      found; /en_gb/support/charging/open-data and /public-charge-point-regulations did not
+      exist.
+  - url: https://developer.tesla.com/en_GB/docs/charging/roaming
+    note: >-
+      Tesla's developer page "Getting Started" for charging roaming, read 2026-10-13. It is
+      on a different host from www.tesla.com, so the 2026-10-11 site map check did not
+      cover it. Steps: sign in with a Tesla Account (verified email and multi-factor
+      authentication), make a connection by giving a connection scope, authentication token,
+      role, URL and party ID, then "Tesla will validate the inputted information and pass
+      relevant data upon successful connection". States no licence, terms or rate limit.
+      The page's own script offers the connection scopes "US" and "UK" and links its
+      signed-in documentation for credentials, locations and tariffs to the OCPI 2.2.1
+      specification; the signed-in documentation itself was not read.
+findings:
+  - date: 2026-10-13
+    kind: access
+    summary: >-
+      Tesla's developer page says the Tesla Roaming Portal, through which it offers an OCPI
+      connection, is currently available on a pilot and invitation basis only. A connection
+      needs a Tesla Account and a request that Tesla reviews. The page states no terms,
+      licence or rate limit for the data.
+    handling: >-
+      Recorded as a possible source of Tesla's data. Nothing has been requested. The OCPI
+      credentials exchange asks for the requester's own URL, token and party ID, which this
+      project does not have yet, so whether it can connect needs testing. The operator stays
+      switched off.
+    evidence_url: https://developer.tesla.com/en_GB/docs/charging/roaming
 notes: >-
-  Tesla's own pages refused automated reads on 2026-10-10. The next step is to find Tesla's
-  UK Supercharger open data page, if it has one, in a browser and record what it says about
-  access.
+  Tesla's developer site describes an OCPI connection through the Tesla Roaming Portal, open
+  by invitation during a pilot. The page's own script offers a "UK" connection scope, which
+  suggests this is Tesla's route for the data the regulations ask for; the page text does not
+  say so. Next steps for the repository owner: ask Tesla, at the address on that page, for an
+  invitation for this project and about terms, rate limits and how data is passed, or sign in
+  with a Tesla Account to read the documentation first. A connection would need this project
+  to provide its own OCPI URL, token and party ID; nothing for that is built.
 enabled: false
