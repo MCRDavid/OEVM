@@ -39,6 +39,13 @@ class Health(_LogModel):
     connectors_with_tariff: int = Field(
         ge=0, description="At least one listed tariff was found in the operator's tariffs."
     )
+    connectors_with_tariff_from_related: int = Field(
+        default=0,
+        ge=0,
+        description="No listed tariff was found in the operator's tariffs, but one was found "
+        "in a related operator's feed fetched in the same run, by the owner's decision in the "
+        "operator file (tariffs_from, ADR 0020). The map prices these from that tariff.",
+    )
     median_last_updated_days: float | None = Field(
         ge=0,
         description="Median age, at fetch time, of the locations' own last_updated dates. "

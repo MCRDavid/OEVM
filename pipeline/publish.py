@@ -441,6 +441,19 @@ def corrected_coordinates(
     return None
 
 
+def related_for(
+    config: OperatorConfig, result: AdapterResult, fetched: dict[str, list[Tariff]]
+) -> dict[str, Tariff]:
+    """Tariffs from related operators' feeds for the connectors in `result`, keyed by the id
+    each connector names, where the owner has recorded tariffs_from (ADR 0020). Only the
+    operators it names that were fetched in this run (`fetched`: tariffs by operator id) are
+    searched, because a kept copy holds no tariffs. Empty without the owner's decision."""
+    if config.tariffs_from is None:
+        return {}
+    others = {i: fetched[i] for i in config.tariffs_from.operators if i in fetched}
+    return related_tariffs(result.locations, result.tariffs, others)
+
+
 def publish(
     results: list[AdapterResult],
     operators: dict[str, OperatorConfig],
@@ -478,11 +491,7 @@ def publish(
         if config is None or not config.enabled or config.licence is None:
             raise PublishError(f"{result.operator_id} is not switched on in the registry")
         attribution.append(" ".join(str(config.attribution).split()))
-        related: dict[str, Tariff] = {}
-        if config.tariffs_from is not None:
-            # Only operators fetched in this run: a kept copy holds no tariffs (ADR 0020).
-            others = {i: fresh_tariffs[i] for i in config.tariffs_from.operators if i in fresh}
-            related = related_tariffs(result.locations, result.tariffs, others)
+        related = related_for(config, result, fresh_tariffs)
         withheld: frozenset[str] = frozenset()
         if config.zero_price_tariffs is not None:
             ids = config.zero_price_tariffs.tariff_ids
