@@ -4965,6 +4965,17 @@
             "quote": "The Tesla Roaming Portal is currently available on a pilot and invitation basis only",
             "evidence_url": "https://developer.tesla.com/en_GB/docs/charging/roaming",
             "evidence_file": null
+          },
+          {
+            "date": "2026-10-13",
+            "action": "page_checked",
+            "action_label": "Operator's page checked",
+            "channel": null,
+            "channel_label": null,
+            "summary": "The repository owner signed in to Tesla's developer portal and read its Charging API documentation and connection form, without submitting anything. They describe an OCPI 2.2.1 credentials handshake started from the form, then locations and tariffs shared by the scope chosen, US or UK, and state no terms, licence or rate limit.",
+            "quote": "Charging Location Data will be shared based on selected scope (i.e. UK sites).",
+            "evidence_url": "https://developer.tesla.com/en_GB/dashboard/charging/roaming",
+            "evidence_file": null
           }
         ]
       },
@@ -4997,9 +5008,19 @@
           "date": "2026-10-13",
           "kind": "access",
           "kind_label": "Access",
-          "summary": "Tesla's developer page says the Tesla Roaming Portal, through which it offers an OCPI connection, is currently available on a pilot and invitation basis only. A connection needs a Tesla Account and a request that Tesla reviews. The page states no terms, licence or rate limit for the data.",
-          "handling": "Recorded as a possible source of Tesla's data. Nothing has been requested. The OCPI credentials exchange asks for the requester's own URL, token and party ID, which this project does not have yet, so whether it can connect needs testing. The operator stays switched off.",
+          "summary": "Tesla's developer page says the Tesla Roaming Portal, through which it offers an OCPI connection, is currently available on a pilot and invitation basis only. A connection needs a Tesla Account and a request that Tesla reviews. Neither the public page nor the signed-in documentation states terms, a licence or a rate limit for the data.",
+          "handling": "Recorded as a possible source of Tesla's data. Nothing has been requested. Under the OCPI 2.2.1 credentials handshake that the form starts, the requester supplies its own token and the address of its own OCPI versions endpoint, and must host versions and credentials endpoints that Tesla calls. This project is a static site and hosts none, so connecting needs a new hosted service and the repository owner's decision. The operator stays switched off.",
           "evidence_url": "https://developer.tesla.com/en_GB/docs/charging/roaming",
+          "status": "open",
+          "resolved_date": null
+        },
+        {
+          "date": "2026-10-13",
+          "kind": "spec_conformance",
+          "kind_label": "Differs from OCPI 2.2.1",
+          "summary": "Tesla's signed-in documentation says it extends OCPI 2.2.1. Locations gain access_type and evse_count fields. Tariffs gain a CONGESTION_TIME price component and min_vehicle_soc and min_congestion_threshold restrictions, none of which are in OCPI 2.2.1. The documentation also spells the connector field \"tarrif_ids\" (OCPI 2.2.1: tariff_ids) and describes power_type and one status field in US terms (\"DCFC, AC Level 2\"; \"operational, under construction, planned, or decommissioned\") rather than OCPI 2.2.1 values.",
+          "handling": "Not fetched yet, so how the data really looks needs testing. Before Tesla prices are shown, the adapter work must make sure a price that depends on these extensions is never shown as if it had no condition; how such tariffs are shown is for the repository owner to decide. Values that are not OCPI 2.2.1 values are recorded as unknown, as for every operator.",
+          "evidence_url": "https://developer.tesla.com/en_GB/dashboard/charging/roaming",
           "status": "open",
           "resolved_date": null
         }
