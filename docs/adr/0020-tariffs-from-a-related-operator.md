@@ -53,3 +53,20 @@ have no relationship and coincidental same tarrif names".
   show these connectors as having a tariff that was not found in the operator's own data.
   That is the state of each feed as published.
 - If the related operator's fetch fails, these prices show as unknown for that day.
+
+## Amendment, 15 October 2026: the feed health page
+
+Measured on its own, PoGo Charge's feed looked as if no tariff was found: the feed health
+page for 15 October 2026 showed 0 of its 809 connectors with a tariff that was found, while
+the map priced 806 of them from Evolt Network's tariffs. The owner agreed the same day that
+the page should also give the count priced from a related feed.
+
+- The run log counts, after `connectors_with_tariff`, the connectors whose tariff was found
+  only in a related operator's feed fetched in the same run, by the same rules as above
+  (`connectors_with_tariff_from_related`). The 30-day history keeps it as a percentage.
+- The feed health page shows the operator's own figure first, as before, then "N more
+  from a related operator's feed", with a note saying why and linking to the transparency
+  page. Operators without such connectors look as they did.
+- The first figure is still the state of each feed as published. The run report printed
+  by `pipeline.run` still measures each feed on its own; the publish report already gives
+  the manifest's `priced_from_related` count.

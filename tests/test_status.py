@@ -11,7 +11,7 @@ from pathlib import Path
 import jsonschema
 import pytest
 
-from pipeline import run, status
+from pipeline import health, publish, run, status
 from pipeline.registry import ROOT, load_registry
 from pipeline.transparency import short_disclaimer
 from schema.operator import neutral_text
@@ -88,6 +88,69 @@ def test_health_figures_are_counted_from_what_was_received(logs):
     # WORKING is not an OCPI 2.2.1 status, but the owner decided how it is shown
     # (nonstandard_statuses in operators/chargy.yaml), so it counts as a status.
     assert chargy.evses_with_status == chargy.evses == 4
+
+
+def test_connectors_priced_from_a_related_feed_are_counted_on_their_own(logs):
+    # PoGo Charge's connectors name tariffs only Evolt Network's feed holds; the owner
+    # decided they may be priced from it (tariffs_from, ADR 0020), as the map does.
+    def figures(operator_id: str) -> tuple[int, int, int]:
+        h = RunLog.model_validate_json((logs / f"{operator_id}.json").read_text()).health
+        return h.connectors, h.connectors_with_tariff, h.connectors_with_tariff_from_related
+
+    assert figures("pogo_charge") == (16, 0, 13)
+    assert figures("evolt") == (42, 39, 2)
+    assert figures("chargeplace_scotland") == (14, 9, 2)
+    assert figures("jolt") == (6, 5, 0)
+
+
+def test_without_the_decision_or_the_related_feed_nothing_more_is_counted():
+    operators = load_registry()
+    results = {r.operator_id: r for r in run.run_fixtures(operators)}
+    pogo = results["pogo_charge"]
+    fetched = {i: r.tariffs for i, r in results.items()}
+    assert health.health(pogo).connectors_with_tariff_from_related == 0
+    undecided = operators["pogo_charge"].model_copy(update={"tariffs_from": None})
+    assert publish.related_for(undecided, pogo, fetched) == {}
+    # Evolt Network's fetch failed or was not in this run.
+    without_evolt = {i: t for i, t in fetched.items() if i != "evolt"}
+    related = publish.related_for(operators["pogo_charge"], pogo, without_evolt)
+    assert related == {}
+    related = publish.related_for(operators["pogo_charge"], pogo, fetched)
+    assert health.health(pogo, related).connectors_with_tariff_from_related == 13
+
+
+def test_the_page_shows_connectors_priced_from_a_related_feed(logs, tmp_path):
+    page, data = render(logs, tmp_path)
+    text, _ = text_of(page)
+    assert "0 of 16 (0%) from its own feed 13 more from a related operator\u2019s feed" in text
+    assert "39 of 42 (92.9%) from its own feed 2 more from a related operator" in text
+    assert "5 of 6 (83.3%)" in text and "5 of 6 (83.3%) from its own feed" not in text
+    assert "the map prices those connectors from that exact tariff, never by its name" in text
+    (point,) = data["operators"]["pogo_charge"]["history"]
+    assert point["connectors_with_tariff_pct"] == 0
+    assert point["connectors_with_tariff_from_related_pct"] == 81.2
+    assert "0% from its own feed, 81.2% more from a related operator\u2019s feed" in text
+    (point,) = data["operators"]["jolt"]["history"]
+    assert point["connectors_with_tariff_from_related_pct"] == 0
+
+
+def test_without_related_prices_the_page_has_no_note_and_old_logs_still_load(logs, tmp_path):
+    # Run logs written before this count existed have no such field.
+    old = tmp_path / "old"
+    old.mkdir()
+    for path in logs.glob("*.json"):
+        log = json.loads(path.read_text())
+        del log["health"]["connectors_with_tariff_from_related"]
+        (old / path.name).write_text(json.dumps(log))
+    page, data = render(old, tmp_path / "out")
+    text, _ = text_of(page)
+    assert "from its own feed" not in text and "related operator" not in text
+    assert "0 of 16 (0%)" in text
+    assert (
+        data["operators"]["pogo_charge"]["latest"]["health"]["connectors_with_tariff_from_related"]
+        == 0
+    )
+    jsonschema.validate(data, SCHEMA)
 
 
 def test_history_keeps_one_run_a_day_for_30_days(logs, tmp_path):
