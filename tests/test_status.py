@@ -1,5 +1,6 @@
 """Tests for the feed health page (pipeline/status.py, blueprint task 8). No network."""
 
+import dataclasses
 import html
 import json
 import re
@@ -117,6 +118,36 @@ def test_without_the_decision_or_the_related_feed_nothing_more_is_counted():
     assert related == {}
     related = publish.related_for(operators["pogo_charge"], pogo, fetched)
     assert health.health(pogo, related).connectors_with_tariff_from_related == 13
+
+
+def test_a_connector_naming_its_own_tariff_too_is_counted_once():
+    # A connector that names a tariff found in its own operator's feed counts in the first
+    # figure only, even if it also names one found only in a related feed (ADR 0020).
+    operators = load_registry()
+    results = {r.operator_id: r for r in run.run_fixtures(operators)}
+    fetched = {i: r.tariffs for i, r in results.items()}
+    cps = results["chargeplace_scotland"]
+    related = publish.related_for(operators["chargeplace_scotland"], cps, fetched)
+    own_id = cps.tariffs[0].id
+    changed, locations = 0, []
+    for location in cps.locations:
+        evses = []
+        for evse in location.evses:
+            connectors = []
+            for connector in evse.connectors:
+                if not changed and any(i in related for i in connector.tariff_ids):
+                    ids = [own_id, *connector.tariff_ids]
+                    connector = connector.model_copy(update={"tariff_ids": ids})
+                    changed += 1
+                connectors.append(connector)
+            evses.append(evse.model_copy(update={"connectors": connectors}))
+        locations.append(location.model_copy(update={"evses": evses}))
+    mixed = dataclasses.replace(cps, locations=locations)
+    related = publish.related_for(operators["chargeplace_scotland"], mixed, fetched)
+    figures = health.health(mixed, related)
+    assert changed == 1
+    assert (figures.connectors, figures.connectors_with_tariff) == (14, 10)
+    assert figures.connectors_with_tariff_from_related == 1
 
 
 def test_the_page_shows_connectors_priced_from_a_related_feed(logs, tmp_path):
