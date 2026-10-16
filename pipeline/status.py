@@ -301,19 +301,25 @@ def _latest_table(data: StatusFile) -> str:
     )
 
 
+def _has_related(status: OperatorStatus) -> bool:
+    """True when the latest run or any day in the history has a second tariff figure."""
+    health = status.latest.health if status.latest else None
+    return bool(
+        (health and health.connectors_with_tariff_from_related)
+        or any(p.connectors_with_tariff_from_related_pct for p in status.history)
+    )
+
+
 def _related_note(data: StatusFile) -> str:
     """Why some operators have a second tariff figure; empty when none has."""
-    if not any(
-        s.latest and s.latest.health and s.latest.health.connectors_with_tariff_from_related
-        for s in data.operators.values()
-    ):
+    if not any(_has_related(status) for status in data.operators.values()):
         return ""
     return (
         "<p>Some connectors name a tariff that is not in their own operator&rsquo;s feed but "
-        "is in the feed of a related operator fetched the same day. Where the repository "
+        "is in the feed of a related operator fetched in the same run. Where the repository "
         "owner has decided the two operators are related, the map prices those connectors "
-        "from that exact tariff, never by its name, and the table counts them after the "
-        "figure for the operator&rsquo;s own feed. The "
+        "from that exact tariff, never by its name, and the tables on this page count them "
+        "after the figure for the operator&rsquo;s own feed. The "
         '<a href="../transparency/">transparency page</a> names the related operators and '
         "gives the reasons.</p>"
     )
@@ -333,7 +339,7 @@ def _tariff_percent(point: HistoryPoint) -> str:
     own, more = point.connectors_with_tariff_pct, point.connectors_with_tariff_from_related_pct
     if not more:
         return _percent(own)
-    return f"{_percent(own)} from its own feed, {more:g}% more from {RELATED_FEED}"
+    return f"{_percent(own)} from its own feed, {more:g}% from {RELATED_FEED}"
 
 
 def _trend(status: OperatorStatus, now: datetime) -> str:

@@ -126,10 +126,11 @@ def test_the_page_shows_connectors_priced_from_a_related_feed(logs, tmp_path):
     assert "39 of 42 (92.9%) from its own feed 2 more from a related operator" in text
     assert "5 of 6 (83.3%)" in text and "5 of 6 (83.3%) from its own feed" not in text
     assert "the map prices those connectors from that exact tariff, never by its name" in text
+    assert "a related operator fetched in the same run" in text
     (point,) = data["operators"]["pogo_charge"]["history"]
     assert point["connectors_with_tariff_pct"] == 0
     assert point["connectors_with_tariff_from_related_pct"] == 81.2
-    assert "0% from its own feed, 81.2% more from a related operator\u2019s feed" in text
+    assert "0% from its own feed, 81.2% from a related operator\u2019s feed" in text
     (point,) = data["operators"]["jolt"]["history"]
     assert point["connectors_with_tariff_from_related_pct"] == 0
 
@@ -151,6 +152,31 @@ def test_without_related_prices_the_page_has_no_note_and_old_logs_still_load(log
         == 0
     )
     jsonschema.validate(data, SCHEMA)
+
+
+def test_the_note_stays_while_the_history_shows_related_prices(logs, tmp_path):
+    # As on a day Evolt Network's fetch fails: no latest run counts any, but earlier days
+    # in the 30-day tables still do, so the note explaining them stays.
+    render(logs, tmp_path / "a")
+    later = tmp_path / "later"
+    later.mkdir()
+    when = NOW + timedelta(days=1)
+    for path in logs.glob("*.json"):
+        log = json.loads(path.read_text())
+        fetched = datetime.fromisoformat(log["fetched_at"].replace("Z", "+00:00"))
+        log["fetched_at"] = (fetched + timedelta(days=1)).strftime("%Y-%m-%dT%H:%M:%SZ")
+        log["health"]["connectors_with_tariff_from_related"] = 0
+        (later / path.name).write_text(json.dumps(log))
+    page, data = render(later, tmp_path / "b", tmp_path / "a" / "data" / "status.json", when)
+    text, _ = text_of(page)
+    shares = [
+        p["connectors_with_tariff_from_related_pct"]
+        for p in data["operators"]["pogo_charge"]["history"]
+    ]
+    assert shares == [81.2, 0]
+    assert "13 more from a related operator" not in text
+    assert "0% from its own feed, 81.2% from a related operator\u2019s feed" in text
+    assert "the map prices those connectors from that exact tariff, never by its name" in text
 
 
 def test_history_keeps_one_run_a_day_for_30_days(logs, tmp_path):

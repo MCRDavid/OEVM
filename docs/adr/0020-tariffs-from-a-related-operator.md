@@ -65,8 +65,12 @@ the page should also give the count priced from a related feed.
   only in a related operator's feed fetched in the same run, by the same rules as above
   (`connectors_with_tariff_from_related`). The 30-day history keeps it as a percentage.
 - The feed health page shows the operator's own figure first, as before, then "N more
-  from a related operator's feed", with a note saying why and linking to the transparency
-  page. Operators without such connectors look as they did.
+  from a related operator's feed", and the 30-day tables show both percentages. While any
+  of these figures is on the page, a note says why and links to the transparency page.
+  Operators without such connectors look as they did.
 - The first figure is still the state of each feed as published. The run report printed
   by `pipeline.run` still measures each feed on its own; the publish report already gives
   the manifest's `priced_from_related` count.
+- A connector that names both a tariff in its own operator's feed and one found only in a
+  related feed counts in the first figure, not the second, so the two never overlap. The
+  manifest's `priced_from_related` counts it too, so the two counts can differ.
