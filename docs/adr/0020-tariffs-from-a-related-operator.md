@@ -73,4 +73,5 @@ the page should also give the count priced from a related feed.
   the manifest's `priced_from_related` count.
 - A connector that names both a tariff in its own operator's feed and one found only in a
   related feed counts in the first figure, not the second, so the two never overlap. The
-  manifest's `priced_from_related` counts it too, so the two counts can differ.
+  manifest's `priced_from_related` also counts it when its price uses the related tariff,
+  so the two counts can differ.
