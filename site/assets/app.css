@@ -24,6 +24,11 @@
   --speed-fast: #0d6b62;
   --speed-slow: #2f5d9e;
   --speed-unknown: #5c5c5c;
+  /* Price labels; the same colours as PILLS in main.js. */
+  --tag-fill: #ffffff;
+  --tag-edge: #24323f;
+  --tag-plan: #ffe08a;
+  --tag-text: #1b1b1b;
   /* Live status groups on the details screen (Phase 3, site/assets/js/live.js). Not used
      until the live Worker runs. Each meets 4.5:1 on --page and --panel. */
   --status-available: #17733a;
@@ -56,6 +61,10 @@
     --status-other: #b4bcc2;
     --map-bg: #1f2428;
     --overlay: rgb(21 24 27 / 94%);
+    --tag-fill: #20252a;
+    --tag-edge: #e8eaed;
+    --tag-plan: #6b4a00;
+    --tag-text: #f4f6f8;
   }
 }
 
@@ -78,6 +87,10 @@
   --status-other: #b4bcc2;
   --map-bg: #1f2428;
   --overlay: rgb(21 24 27 / 94%);
+  --tag-fill: #20252a;
+  --tag-edge: #e8eaed;
+  --tag-plan: #6b4a00;
+  --tag-text: #f4f6f8;
 }
 
 *,
@@ -450,6 +463,29 @@ button.status-chip {
 /* Matches the cluster circles drawn in main.js. */
 .dot.cluster {
   background: #24323f;
+}
+
+/* A price label, as drawn above the points on the map (PILLS in main.js). */
+.price-tag {
+  display: inline-block;
+  flex: none;
+  padding: 0 0.35rem;
+  border: 1px solid var(--tag-edge);
+  border-radius: 6px;
+  background: var(--tag-fill);
+  color: var(--tag-text);
+  font-size: 0.8rem;
+  font-weight: 600;
+  line-height: 1.4;
+  white-space: nowrap;
+}
+
+.price-tag.with-plan {
+  background: var(--tag-plan);
+}
+
+.map-label {
+  margin-top: 0.5rem;
 }
 
 .list-view {

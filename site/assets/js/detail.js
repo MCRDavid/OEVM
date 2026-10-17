@@ -375,9 +375,50 @@ export function plansSection(detail, allPlans, mine = new Set()) {
   ].filter(Boolean);
 }
 
+// Where the price in the label above this location's point on the map comes from
+// (labels.js, ADR 0026): the tariff or ticked plan that gives it. label is what
+// priceLabel returned for this location; filtered says whether the visitor's filters
+// leave out some connectors.
+export function mapLabelLine(detail, label, filtered = false) {
+  if (!label) return null;
+  const which = filtered ? " for the connectors that match your filters" : "";
+  const fees = "Other charges, such as a fee per session or for staying longer, are not in the label.";
+  let source;
+  if (label.plan) {
+    source = `with your plan ${label.plan.name} from ${label.plan.provider} (${label.plan.fee_text.toLowerCase()})`;
+  } else if (label.low === null) {
+    source = `at least one connector here${which} has a tariff the operator confirms is free`;
+  } else {
+    const option = (detail.tariff_options ?? []).find(
+      (o) => o.state === "priced" && o.ppk_low === label.low && Boolean(o.includes_vat) === label.lvat,
+    );
+    const whose = option?.published_by ? `${option.published_by}'s` : "the operator's";
+    const name = option?.name ? ` "${option.name}"` : "";
+    const kind = option ? `: ${option.kind[0].toLowerCase()}${option.kind.slice(1)}` : "";
+    source = `the lowest price per kWh listed here${which}, from ${whose}${name} tariff${kind}`;
+  }
+  return h(
+    "p",
+    { className: "map-label" },
+    "On the map: ",
+    h("span", { className: `price-tag${label.plan ? " with-plan" : ""}`, text: label.text }),
+    `, ${source}. `,
+    h("span", { className: "hint", text: fees }),
+  );
+}
+
 export function renderDetail(
   detail,
-  { repository, plans = [], mine = new Set(), hideOut = false, onHideOut = null, privateNote = null },
+  {
+    repository,
+    plans = [],
+    mine = new Set(),
+    hideOut = false,
+    onHideOut = null,
+    privateNote = null,
+    label = null,
+    filtered = false,
+  },
 ) {
   const location = detail.location;
   const evses = location.evses ?? [];
@@ -397,6 +438,7 @@ export function renderDetail(
       ? [h("p", { className: "hint corrected", text: detail.coordinates_corrected.note })]
       : []),
     openingHours(location.opening_hours),
+    mapLabelLine(detail, label, filtered),
     ...statusSection(detail, { hideOut, onHideOut }),
     h("h3", { text: items.length ? `Charge points (${items.length})` : "Charge points" }),
     items.length

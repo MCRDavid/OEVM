@@ -77,7 +77,7 @@ function priceKnown(connector) {
   return connector.price === "free" || (connector.ppk !== null && connector.ppk !== undefined);
 }
 
-function connectorMatches(connector, state) {
+export function connectorMatches(connector, state) {
   if (state.working && connector.out === true) return false;
   if (state.minkw && !(Number.isFinite(connector.kw) && connector.kw >= state.minkw)) return false;
   if (state.plugs.length && !(connector.std && state.plugs.includes(plugGroup(connector.std)))) return false;
@@ -90,7 +90,7 @@ function connectorMatches(connector, state) {
   return true;
 }
 
-function connectorFilters(state) {
+export function connectorFilters(state) {
   return Boolean(
     state.minkw || state.plugs.length || state.free || state.maxp !== null || !state.unknown || state.working,
   );

@@ -3,9 +3,10 @@
 // visitor turns on "Remember my settings" (see settings.js).
 
 import { renderDetail, detailUrl } from "./detail.js";
-import { activeCount, defaults, matches, parse, serialise } from "./filters.js";
+import { activeCount, connectorFilters as connectorFiltersOn, defaults, matches, parse, serialise } from "./filters.js";
 import { h } from "./dom.js";
 import { allOut, formatKw, plugsSummary, speedBand } from "./format.js";
+import { bestPlans, priceLabel } from "./labels.js";
 import { createSettings } from "./settings.js";
 
 const LIST_LIMIT = 200;
@@ -13,8 +14,18 @@ const LIST_LIMIT = 200;
 // at least 4.5:1 contrast with the white letter drawn on it.
 const SPEED_COLOURS = { ultra: "#9b2c74", rapid: "#b3460c", fast: "#0d6b62", slow: "#2f5d9e", unknown: "#5c5c5c" };
 const SPEED_RADIUS = { ultra: 13, rapid: 12, fast: 11, slow: 10, unknown: 10 };
-const CHARGER_LAYERS = ["clusters", "points", "cluster-count", "point-labels"];
+const CHARGER_LAYERS = ["clusters", "points", "price-labels", "cluster-count", "point-labels"];
 const FONT = ["Noto Sans Regular"];
+// Price labels above the points (labels.js, ADR 0026) appear from about the zoom of a
+// town, where they can be read. Below that there are too many points for labels to help.
+const LABEL_MIN_ZOOM = 11;
+// The rounded box behind each price label: white with a dark edge, or dark with a light
+// edge in dark mode, and amber when the price comes from a plan the visitor ticked. Text
+// on each meets 4.5:1 contrast.
+const PILLS = {
+  light: { fill: "#ffffff", edge: "#24323f", plan: "#ffe08a", text: "#1b1b1b" },
+  dark: { fill: "#20252a", edge: "#e8eaed", plan: "#6b4a00", text: "#f4f6f8" },
+};
 const $ = (id) => document.getElementById(id);
 const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 const PREFERS_DARK = window.matchMedia("(prefers-color-scheme: dark)");
@@ -148,10 +159,31 @@ function stateChanged() {
 
 function applyFilters() {
   app.filtered = app.features.filter((f) => matches(f.properties, app.state));
+  labelPrices();
   const source = app.map?.getSource("chargers");
   if (source) source.setData({ type: "FeatureCollection", features: app.filtered });
   applyGrouping();
   renderList();
+}
+
+// Each matching location's price label (labels.js) for the map and the list: lab is the
+// text, labk orders labels cheapest first and labplan marks a price from a ticked plan.
+// They follow the filters and the plans the visitor ticked, so they are worked out again
+// whenever either changes.
+function labelPrices() {
+  const plans = bestPlans(app.plans, app.mine);
+  for (const { properties } of app.filtered) {
+    const label = priceLabel(properties, app.state, plans.get(properties.op));
+    if (label) {
+      properties.lab = label.text;
+      properties.labk = label.key;
+      properties.labplan = Boolean(label.plan);
+    } else {
+      delete properties.lab;
+      delete properties.labk;
+      delete properties.labplan;
+    }
+  }
 }
 
 // Nearby points are drawn as numbered circles unless the visitor turns grouping off.
@@ -206,6 +238,7 @@ function buildPlanPicker() {
         if (box.checked) app.mine.add(plan.id);
         else app.mine.delete(plan.id);
         saveIfRemembered();
+        applyFilters(); // the price labels can change
         redrawDetail();
       });
       group.append(h("label", {}, box, ` ${plan.name}: ${plan.fee_text}; ${plan.price_text}`));
@@ -279,6 +312,15 @@ function renderList() {
           p.name || "Charger location",
         ),
         h("span", { className: "meta", text: `${app.operators.get(p.op) ?? p.op} · up to ${formatKw(p.kw)} · ${plugsSummary(p.plugs)}` }),
+        p.lab
+          ? h(
+              "span",
+              { className: "meta cheapest-here" },
+              "Cheapest here: ",
+              h("span", { className: `price-tag${p.labplan ? " with-plan" : ""}`, text: p.lab }),
+              p.labplan ? " with your plan" : "",
+            )
+          : null,
         h("span", { className: `meta price-${p.price}`, text: p.pt || "Price unknown" }),
         p.down ? h("span", { className: "meta out-note", text: "Reported out of service at the last daily fetch" }) : null,
         p.priv || p.taxi ? h("span", { className: "meta private-note", text: privateText(p) }) : null,
@@ -336,6 +378,8 @@ function detailOptions() {
     ...app.config,
     plans: app.plans,
     mine: app.mine,
+    label: props ? priceLabel(props, app.state, bestPlans(app.plans, app.mine).get(props.op)) : null,
+    filtered: connectorFiltersOn(app.state),
     hideOut: app.state.working,
     onHideOut: toggleHideOut,
     privateNote: hidden
@@ -540,6 +584,7 @@ function addChargerLayers() {
       "circle-stroke-opacity": faded(1),
     },
   });
+  addPriceLabels(faded);
   app.map.addLayer({
     id: "cluster-count",
     type: "symbol",
@@ -562,6 +607,90 @@ function addChargerLayers() {
     paint: { "text-color": "#ffffff", "text-opacity": faded(1) },
   });
   renderList();
+}
+
+// A rounded box, drawn once per theme, that MapLibre stretches to fit each price label.
+// Returns null where the browser cannot draw it; the labels then show without a box.
+const PILL = { size: 24, radius: 7, ratio: 2 };
+
+function pillImage(fill, edge) {
+  const { size, radius, ratio } = PILL;
+  const canvas = document.createElement("canvas");
+  canvas.width = canvas.height = size * ratio;
+  const context = canvas.getContext("2d");
+  if (!context?.roundRect) return null;
+  context.scale(ratio, ratio);
+  context.beginPath();
+  context.roundRect(1, 1, size - 2, size - 2, radius);
+  context.fillStyle = fill;
+  context.fill();
+  context.lineWidth = 1.5;
+  context.strokeStyle = edge;
+  context.stroke();
+  try {
+    return context.getImageData(0, 0, size * ratio, size * ratio);
+  } catch {
+    return null; // some privacy settings block reading a canvas back
+  }
+}
+
+function addPillImages(colours) {
+  const { size, radius, ratio } = PILL;
+  const stretch = [[radius * ratio, (size - radius) * ratio]];
+  const options = {
+    pixelRatio: ratio,
+    stretchX: stretch,
+    stretchY: stretch,
+    content: [radius * ratio, (radius / 2) * ratio, (size - radius) * ratio, (size - radius / 2) * ratio],
+  };
+  let added = true;
+  for (const [id, fill] of [
+    ["price-pill", colours.fill],
+    ["price-pill-plan", colours.plan],
+  ]) {
+    if (app.map.hasImage(id)) app.map.removeImage(id);
+    const image = pillImage(fill, colours.edge);
+    if (image) app.map.addImage(id, image, options);
+    else added = false;
+  }
+  return added;
+}
+
+// The cheapest price the visitor can pay at each point, in a box above it (labels.js).
+// Where labels would overlap, the cheapest are placed first (symbol-sort-key). The layer
+// sits under the letters in the circles, so a label never covers another point's letter.
+function addPriceLabels(faded) {
+  const colours = PILLS[effectiveTheme()];
+  const boxed = addPillImages(colours);
+  app.map.addLayer({
+    id: "price-labels",
+    type: "symbol",
+    source: "chargers",
+    minzoom: LABEL_MIN_ZOOM,
+    filter: ["all", ["!", ["has", "point_count"]], ["has", "lab"]],
+    layout: {
+      "text-field": ["get", "lab"],
+      "text-font": FONT,
+      "text-size": 12,
+      "text-anchor": "bottom",
+      // Clears the largest circle (13px radius and its 2px edge) with a small gap.
+      "text-offset": [0, -1.45],
+      "symbol-sort-key": ["get", "labk"],
+      ...(boxed
+        ? {
+            "icon-image": ["case", ["get", "labplan"], "price-pill-plan", "price-pill"],
+            "icon-text-fit": "both",
+            "icon-text-fit-padding": [2, 5, 1, 5],
+          }
+        : {}),
+    },
+    paint: {
+      "text-color": colours.text,
+      "text-opacity": faded(1),
+      "icon-opacity": faded(1),
+      ...(boxed ? {} : { "text-halo-color": colours.fill, "text-halo-width": 2 }),
+    },
+  });
 }
 
 // The "Group" button switches grouping on and off, the same as the box in the filters.
