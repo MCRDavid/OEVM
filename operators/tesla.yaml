@@ -20,8 +20,15 @@ cors: unknown
 attribution: null
 licence: null
 engagement:
-  status: unknown
-  evidence: []
+  status: key_on_request
+  evidence:
+    - date: 2026-10-13
+      url: https://developer.tesla.com/en_GB/docs/charging/roaming
+      note: >-
+        Tesla's developer page for charging roaming says the Tesla Roaming Portal is
+        available on a pilot and invitation basis only and gives an address to ask about
+        timing and availability. Connecting needs a Tesla Account and a request that Tesla
+        reviews. No account was created and no request was made.
   log:
     - date: 2026-10-10
       action: feed_searched
@@ -30,6 +37,33 @@ engagement:
         (HTTP 403 for its UK home page and for an address tried for a Supercharger open data
         support page), so its open data route is not yet known; it needs checking in a browser.
       evidence_url: https://www.tesla.com/en_gb
+    - date: 2026-10-11
+      action: page_checked
+      summary: >-
+        Tesla's UK Supercharger, Supercharging and EV roaming pages, its legal page and its
+        site map were read in a browser. None of them describes open data, the Public Charge
+        Point Regulations or OCPI, and two addresses tried for such pages did not exist.
+      evidence_url: https://www.tesla.com/en_gb/supercharger
+    - date: 2026-10-13
+      action: page_checked
+      summary: >-
+        Tesla's developer page for charging roaming was read. It describes an OCPI connection
+        for which a party signs in with a Tesla Account and submits a connection scope,
+        authentication token, role, URL and party ID for Tesla to review, and says the
+        portal is currently open by invitation only.
+      quote: >-
+        The Tesla Roaming Portal is currently available on a pilot and invitation basis only
+      evidence_url: https://developer.tesla.com/en_GB/docs/charging/roaming
+    - date: 2026-10-13
+      action: page_checked
+      summary: >-
+        The repository owner signed in to Tesla's developer portal and read its Charging API
+        documentation and connection form, without submitting anything. They describe an
+        OCPI 2.2.1 credentials handshake started from the form, then locations and tariffs
+        shared by the scope chosen, US or UK, and state no terms, licence or rate limit.
+      quote: >-
+        Charging Location Data will be shared based on selected scope (i.e. UK sites).
+      evidence_url: https://developer.tesla.com/en_GB/dashboard/charging/roaming
 access_requested: null
 access_granted: null
 sources:
@@ -42,9 +76,78 @@ sources:
       An address on Tesla's website tried for a Supercharger open data support page. It
       answered HTTP 403 to this project's automated checks on 2026-10-10, so whether a page
       exists at this address, and what it says, is unknown.
-findings: []
+  - url: https://www.tesla.com/en_gb/supercharger
+    note: >-
+      Tesla's UK Supercharger page, read in a browser on 2026-10-11 together with its UK
+      support pages on Supercharging, Supercharging for other EVs and EV roaming, its legal
+      page and https://www.tesla.com/sitemap.xml. No open data, regulations or OCPI page was
+      found; /en_gb/support/charging/open-data and /public-charge-point-regulations did not
+      exist.
+  - url: https://developer.tesla.com/en_GB/docs/charging/roaming
+    note: >-
+      Tesla's developer page "Getting Started" for charging roaming, read 2026-10-13. It is
+      on a different host from www.tesla.com, so the 2026-10-11 site map check did not
+      cover it. Steps: sign in with a Tesla Account (verified email and multi-factor
+      authentication), make a connection by giving a connection scope, authentication token,
+      role, URL and party ID, then "Tesla will validate the inputted information and pass
+      relevant data upon successful connection". States no licence, terms or rate limit.
+  - url: https://developer.tesla.com/en_GB/dashboard/charging/roaming
+    note: >-
+      Tesla's Charging API documentation, shown only after signing in; read by the
+      repository owner on 2026-10-13. Sections: Credentials ("Credentials module as defined
+      in OCPI 2.2.1 is used to perform handshake between Tesla systems and 3rd party
+      platform requesting tesla location data"), Locations ("Tesla is following OCPI 2.2.1
+      specs for location data, and has also extended the specs with additional fields") and
+      Tariffs. States no licence, terms or rate limit.
+  - url: https://developer.tesla.com/en_GB/dashboard/charging/roaming/connection
+    note: >-
+      Tesla's "Charging OCPI Connection" form, shown only after signing in; read by the
+      repository owner on 2026-10-13 and not submitted. Fields: connection scope (US or UK),
+      an authentication token that identifies the requester, role (EMSP, HUB, NAP, NSP or
+      OTHER), URL ("URL to OCPI Versions endpoint") and party ID, for which the form says a
+      requester with no ID may use a three-letter abbreviation of its name.
+findings:
+  - date: 2026-10-13
+    kind: access
+    summary: >-
+      Tesla's developer page says the Tesla Roaming Portal, through which it offers an OCPI
+      connection, is currently available on a pilot and invitation basis only. A connection
+      needs a Tesla Account and a request that Tesla reviews. Neither the public page nor
+      the signed-in documentation states terms, a licence or a rate limit for the data.
+    handling: >-
+      Recorded as a possible source of Tesla's data. Nothing has been requested. Under the
+      OCPI 2.2.1 credentials handshake that the form starts, the requester supplies its own
+      token and the address of its own OCPI versions endpoint, and must host versions and
+      credentials endpoints that Tesla calls. This project is a static site and hosts none,
+      so connecting needs a new hosted service and the repository owner's decision. The
+      operator stays switched off.
+    evidence_url: https://developer.tesla.com/en_GB/docs/charging/roaming
+  - date: 2026-10-13
+    kind: spec_conformance
+    summary: >-
+      Tesla's signed-in documentation says it extends OCPI 2.2.1. Locations gain
+      access_type and evse_count fields. Tariffs gain a CONGESTION_TIME price component and
+      min_vehicle_soc and min_congestion_threshold restrictions, none of which are in OCPI
+      2.2.1. The documentation also spells the connector field "tarrif_ids" (OCPI 2.2.1:
+      tariff_ids) and describes power_type and one status field in US terms ("DCFC, AC
+      Level 2"; "operational, under construction, planned, or decommissioned") rather than
+      OCPI 2.2.1 values.
+    handling: >-
+      Not fetched yet, so how the data really looks needs testing. Before Tesla prices are
+      shown, the adapter work must make sure a price that depends on these extensions is
+      never shown as if it had no condition; how such tariffs are shown is for the
+      repository owner to decide. Values that are not OCPI 2.2.1 values are recorded as
+      unknown, as for every operator.
+    evidence_url: https://developer.tesla.com/en_GB/dashboard/charging/roaming
 notes: >-
-  Tesla's own pages refused automated reads on 2026-10-10. The next step is to find Tesla's
-  UK Supercharger open data page, if it has one, in a browser and record what it says about
-  access.
+  Tesla offers its data through an OCPI 2.2.1 connection on its developer portal, open by
+  invitation during a pilot, with a UK scope ("Charging Location Data will be shared based on
+  selected scope (i.e. UK sites)"). Connecting needs this project to host its own OCPI
+  versions, version details and credentials endpoints for the handshake, choose a role (NSP,
+  navigation service provider, fits best) and a three-letter party ID, and then fetch
+  locations and tariffs with the token Tesla returns. OCPI 2.2.1 also asks for the token to
+  be Base64-encoded and for request ID headers, which the ocpi_221 adapter does not do yet.
+  Next steps for the repository owner: ask Tesla, at the address on its developer page,
+  about an invitation, terms and rate limits, and decide whether to plan the hosted
+  handshake service.
 enabled: false
