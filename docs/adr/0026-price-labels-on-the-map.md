@@ -41,8 +41,8 @@ otherwise through a free app or paying at the charger by contactless card.
 - **Wording stays in the pipeline.** Each kind of connector in `data/locations.geojson`
   carries `low` (the lowest price per kWh, in pence), `lvat` and `lt`, the label worded by
   `pipeline/pricing.py` (`map_label`); plans in `data/plans.json` carry `label`
-  (`plan_label`). The browser only picks one. The map file grows by about a tenth
-  before compression (about 6% gzipped, measured on the fixtures).
+  (`plan_label`). The browser only picks one. The map file grows by about 12%
+  before compression (6.5% gzipped, measured on the fixtures).
 - **Readable at a glance.** Labels appear from zoom 11 (about a town). Where labels would
   overlap, the cheapest are placed first and the others left out; a label never covers
   a numbered circle's count, and the letters in the points are drawn over the labels.
