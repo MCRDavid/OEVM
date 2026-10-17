@@ -1,5 +1,5 @@
 {
-  "last_reviewed": "2026-10-12",
+  "last_reviewed": "2026-10-17",
   "disclaimer": "OEVM is a personal, experimental project for learning about AI tools. Much of its code and text was written with an AI assistant, and it will contain mistakes. Charger data comes from the operators and other sources credited on every record, and remains their work. Everything is provided \"as is\", with no warranty or guarantee of any kind. Always check prices and availability at the charger.",
   "regulation": {
     "summary": "The Public Charge Point Regulations 2023 set no limit on how often data users may request the data. Regulation 10(5) requires the data to be available free of charge without terms on its use. DfT's guidance allows terms covering the means of access, which is where operators' rate limits come from.",
@@ -1380,8 +1380,8 @@
       "engagement": {
         "status": "open_anonymous",
         "label": "Open, no registration",
-        "headline": "Open, no registration (as of 2026-10-11)",
-        "as_of": "2026-10-11",
+        "headline": "Open, no registration (as of 2026-10-17)",
+        "as_of": "2026-10-17",
         "last_request": null,
         "last_response": null,
         "last_response_text": "No request sent",
@@ -1397,6 +1397,12 @@
             "url": "https://ocpi-pcpr.hubeleon.net/2.2.1/reference",
             "file": null,
             "note": "Both reference data files answered without a key, read past the host's expired certificate: 447 locations and 469 tariffs, all with country code GB and party HUB."
+          },
+          {
+            "date": "2026-10-17",
+            "url": "https://parkrecharge.com/public-charging",
+            "file": null,
+            "note": "The page now links the reference data at https://ocpi.hubeleon.net/ocpi/public/2.2.1/locations and https://ocpi.hubeleon.net/ocpi/public/2.2.1/tariffs, says live availability is included in the locations feed, and says no registration or credentials are needed. Both answered without a key: 288 locations and 292 tariffs, all with country code GB and party HUB."
           }
         ],
         "log": [
@@ -1421,6 +1427,17 @@
             "quote": null,
             "evidence_url": "https://parkrecharge.com/knowledge/terms-and-conditions",
             "evidence_file": null
+          },
+          {
+            "date": "2026-10-17",
+            "action": "page_checked",
+            "action_label": "Operator's page checked",
+            "channel": null,
+            "channel_label": null,
+            "summary": "The daily fetch could not reach the old reference data host from 2026-10-14. Read the page again: it now links the reference data on a different host, with live availability included and no registration needed.",
+            "quote": "Reference data is updated daily. Live availability is included in the locations feed and updates in near real time. All of this data is open and free to use, with no registration or credentials needed.",
+            "evidence_url": "https://parkrecharge.com/public-charging",
+            "evidence_file": null
           }
         ]
       },
@@ -1429,19 +1446,19 @@
       "feeds": [
         {
           "kind": "locations",
-          "url": "https://ocpi-pcpr.hubeleon.net/2.2.1/reference",
+          "url": "https://ocpi.hubeleon.net/ocpi/public/2.2.1/locations",
           "status": "documented"
         },
         {
           "kind": "tariffs",
-          "url": "https://ocpi-pcpr.hubeleon.net/2.2.1/referencetariffs",
+          "url": "https://ocpi.hubeleon.net/ocpi/public/2.2.1/tariffs",
           "status": "documented"
         }
       ],
       "licence": {
         "name": "OGL-3.0",
         "url": "https://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/",
-        "checked": "2026-10-11"
+        "checked": "2026-10-17"
       },
       "attribution": "Contains data from ParkRecharge published under the Public Charge Point Regulations 2023, used in line with the Open Government Licence v3.0.",
       "missing_publish_flag": null,
@@ -1451,22 +1468,15 @@
       "nonstandard_parking_restrictions": null,
       "zero_price_tariffs": null,
       "relay": null,
-      "expired_certificate": {
-        "decided": "2026-10-11",
-        "basis": "The certificate of the host ParkRecharge links for its open data expired on 7 October 2026, and its date is the only problem OpenSSL reports with it. The repository owner decided on 2026-10-11 to read the two files past it, with a note on the transparency page. The feed needs no key, so nothing secret is sent.",
-        "evidence_url": "https://parkrecharge.com/public-charging",
-        "host": "ocpi-pcpr.hubeleon.net",
-        "sha256": "49:82:A7:AD:8B:2B:D2:E6:A5:7A:A5:83:46:E1:F1:E6:6F:CB:55:00:9C:E5:81:AE:6D:9F:1F:64:A9:4B:6C:6D",
-        "expired": "2026-10-07"
-      },
+      "expired_certificate": null,
       "excluded_locations": {
         "decided": "2026-10-11",
         "basis": "Both are named as test units and sit at the same office address in Writtle, Chelmsford, so a driver could be sent somewhere they cannot charge. The repository owner decided on 2026-10-11 to leave them off the map.",
-        "evidence_url": "https://ocpi-pcpr.hubeleon.net/2.2.1/reference",
+        "evidence_url": "https://ocpi.hubeleon.net/ocpi/public/2.2.1/locations",
         "locations": [
           {
             "id": "3166",
-            "name": "UK-HBN-PAYTERTEST"
+            "name": "PR06767 H19 Test Unit"
           },
           {
             "id": "1183",
@@ -1479,10 +1489,10 @@
         "our_max_per_hour": 1800,
         "ours": "At least 2 s between requests to the operator's host, measured from the end of the previous request (at most 1800 in any hour), retries included.",
         "published": [],
-        "limits_checked": "2026-10-11",
-        "comparison": "No limit published (checked 2026-10-11). The gap is our own choice.",
+        "limits_checked": "2026-10-17",
+        "comparison": "No limit published (checked 2026-10-17). The gap is our own choice.",
         "difference_from_regulations": "Neither the operator nor the regulations set a limit.",
-        "notes": "Neither ParkRecharge's page nor the responses state a rate limit. The 2 second gap is this project's own choice. Each response holds every record, so a full run makes two requests (about 0.8 MB on 2026-10-11)."
+        "notes": "ParkRecharge's page states no rate limit. Responses carry X-RateLimit-Limit 60 and X-RateLimit-Reset 60 (see findings), which a 2 second gap stays well within. The 2 second gap is this project's own choice. Each page holds up to 100 records, so a full run makes six requests (about 0.9 MB on 2026-10-17)."
       },
       "findings": [
         {
@@ -1490,88 +1500,88 @@
           "kind": "access",
           "kind_label": "Access",
           "summary": "A request on 2026-10-10 to the locations reference data address, https://ocpi-pcpr.hubeleon.net/2.2.1/reference, did not complete because this project's HTTPS client reported the server's TLS certificate as expired. No data was read.",
-          "handling": "On 2026-10-11 the repository owner decided to read both files past this certificate (expired_certificate). The project still checks the certificate's chain and host name and accepts only that one certificate, or one in date once it is renewed.",
+          "handling": "On 2026-10-11 the repository owner decided to read both files past this certificate (expired_certificate). The project checked the certificate's chain and host name and accepted only that one certificate. On 2026-10-17 ParkRecharge's page linked the data on a host whose certificate is in date, so the exception was removed.",
           "evidence_url": "https://parkrecharge.com/public-charging",
-          "status": "open",
-          "resolved_date": null
+          "status": "resolved",
+          "resolved_date": "2026-10-17"
         },
         {
           "date": "2026-10-11",
           "kind": "access",
           "kind_label": "Access",
           "summary": "ocpi-pcpr.hubeleon.net presents a certificate for *.hubeleon.net issued by Go Daddy Secure Certificate Authority G2, valid from 23 March 2026 to 7 October 2026 07:59 UTC. Its expiry is the only problem OpenSSL reports with it.",
-          "handling": "Read past the expiry by the owner's decision of 2026-10-11, noted on this page. The exception is checked on every request and can be removed once the certificate is renewed; the run log says when that happens.",
+          "handling": "Read past the expiry by the owner's decision of 2026-10-11, until the data moved to ocpi.hubeleon.net, whose certificate was in date on 2026-10-17.",
           "evidence_url": "https://parkrecharge.com/public-charging",
-          "status": "open",
-          "resolved_date": null
+          "status": "resolved",
+          "resolved_date": "2026-10-17"
         },
         {
           "date": "2026-10-11",
           "kind": "data_quality",
           "kind_label": "Data quirk",
           "summary": "The locations file's timestamp is 2026-04-27T14:24:34Z and its newest location last_updated is 2026-04-01 (read 2026-10-11), although the page says reference data is updated daily. The tariffs file's timestamp is the time of the request.",
-          "handling": "Locations are kept as published. Each EVSE status is shown with its own date, so a status from April reads as reported in April.",
+          "handling": "Locations were kept as published, each EVSE status shown with its own date. In the feed linked on 2026-10-17, location last_updated values run from 2026-09-08 to the day of the request.",
           "evidence_url": "https://ocpi-pcpr.hubeleon.net/2.2.1/reference",
-          "status": "open",
-          "resolved_date": null
+          "status": "resolved",
+          "resolved_date": "2026-10-17"
         },
         {
           "date": "2026-10-11",
           "kind": "spec_conformance",
           "kind_label": "Differs from OCPI 2.2.1",
           "summary": "59 of 447 locations give last_updated as \"0000-00-00T00:00:00Z\", which is not a valid date.",
-          "handling": "The date is recorded as unknown and the locations are kept. Their EVSEs carry valid dates of their own, which are used for their statuses.",
+          "handling": "The date was recorded as unknown and the locations kept. None of the 288 locations in the feed linked on 2026-10-17 gives an invalid date.",
           "evidence_url": "https://ocpi-pcpr.hubeleon.net/2.2.1/reference",
-          "status": "open",
-          "resolved_date": null
+          "status": "resolved",
+          "resolved_date": "2026-10-17"
         },
         {
           "date": "2026-10-11",
           "kind": "spec_conformance",
           "kind_label": "Differs from OCPI 2.2.1",
           "summary": "Each tariff's elements is a single object holding price_components, where OCPI 2.2.1 gives a list of elements.",
-          "handling": "Read as a list of one element; the price components are read exactly as sent.",
+          "handling": "Read as a list of one element, with the price components exactly as sent. Every tariff in the feed linked on 2026-10-17 gives a list.",
           "evidence_url": "https://ocpi-pcpr.hubeleon.net/2.2.1/referencetariffs",
-          "status": "open",
-          "resolved_date": null
+          "status": "resolved",
+          "resolved_date": "2026-10-17"
         },
         {
           "date": "2026-10-11",
           "kind": "spec_conformance",
           "kind_label": "Differs from OCPI 2.2.1",
           "summary": "Locations have an empty city and no postal_code; the full address, postcode included, is in the address field.",
-          "handling": "Shown as published.",
+          "handling": "Shown as published. Every location in the feed linked on 2026-10-17 has a city and a postal_code.",
           "evidence_url": "https://ocpi-pcpr.hubeleon.net/2.2.1/reference",
-          "status": "open",
-          "resolved_date": null
+          "status": "resolved",
+          "resolved_date": "2026-10-17"
         },
         {
           "date": "2026-10-11",
           "kind": "data_quality",
           "kind_label": "Data quirk",
           "summary": "Connectors name 447 different tariff ids, 17 of which are not in the tariffs file (read 2026-10-11).",
-          "handling": "Connectors whose tariff is not found show \"Price unknown\".",
+          "handling": "Connectors whose tariff is not found show \"Price unknown\". Every tariff id named in the feed linked on 2026-10-17 is in its tariffs feed.",
           "evidence_url": "https://ocpi-pcpr.hubeleon.net/2.2.1/referencetariffs",
-          "status": "open",
-          "resolved_date": null
+          "status": "resolved",
+          "resolved_date": "2026-10-17"
         },
         {
           "date": "2026-10-11",
           "kind": "data_quality",
           "kind_label": "Data quirk",
           "summary": "7 locations are in Argentina, with country GBR, and 8 tariffs are in US dollars (5) or Argentine pesos (3).",
-          "handling": "Checked on 2026-10-11: their addresses and postcodes are Argentine, and neither swapping their coordinates nor changing a sign puts any of them in the UK. They are left off the map as outside the UK (ADR 0017). Tariffs in other currencies show \"Price unknown\".",
+          "handling": "Checked on 2026-10-11: their addresses and postcodes are Argentine, and neither swapping their coordinates nor changing a sign puts any of them in the UK. They were left off the map as outside the UK (ADR 0017), and tariffs in other currencies showed \"Price unknown\". The feed linked on 2026-10-17 has only UK locations and GBP tariffs.",
           "evidence_url": "https://ocpi-pcpr.hubeleon.net/2.2.1/reference",
-          "status": "open",
-          "resolved_date": null
+          "status": "resolved",
+          "resolved_date": "2026-10-17"
         },
         {
           "date": "2026-10-11",
           "kind": "data_quality",
           "kind_label": "Data quirk",
           "summary": "Two locations at the same office address in Writtle, Chelmsford, are named as test units: \"UK-HBN-PAYTERTEST\" (id 3166) and \"TR0047 Hubeleon Test Centre\" (id 1183). Both are marked for publishing.",
-          "handling": "Left off the map by the repository owner's decision of 2026-10-11 (excluded_locations).",
-          "evidence_url": "https://ocpi-pcpr.hubeleon.net/2.2.1/reference",
+          "handling": "Left off the map by the repository owner's decision of 2026-10-11 (excluded_locations). Both are still in the feed linked on 2026-10-17; id 3166 is now named \"PR06767 H19 Test Unit\", at the same address.",
+          "evidence_url": "https://ocpi.hubeleon.net/ocpi/public/2.2.1/locations",
           "status": "open",
           "resolved_date": null
         },
@@ -1580,28 +1590,68 @@
           "kind": "data_quality",
           "kind_label": "Data quirk",
           "summary": "23 UK locations use a tariff whose every price is zero. Their names include hospital, college and company sites and one marked \"HCC Fleet Only\".",
-          "handling": "Shown as free, as the tariffs state. The file does not say who may use these chargers.",
+          "handling": "Shown as free, as the tariffs stated. In the feed linked on 2026-10-17 no connector uses a tariff whose every price is zero.",
           "evidence_url": "https://ocpi-pcpr.hubeleon.net/2.2.1/referencetariffs",
-          "status": "open",
-          "resolved_date": null
+          "status": "resolved",
+          "resolved_date": "2026-10-17"
         },
         {
           "date": "2026-10-11",
           "kind": "documentation",
           "kind_label": "Documentation",
           "summary": "Locations carry no operator object. Their names start with several prefixes (PR 354, GR 21, AW 17, SCC 14 and others) and include sites such as Belfast City Hospital, which suggests the file covers sites ParkRecharge runs for several hosts (inferred).",
-          "handling": "Every location is shown as ParkRecharge's, the publisher of the file.",
+          "handling": "Every location is shown as ParkRecharge's, the publisher of the file. In the feed linked on 2026-10-17 every location names its operator as \"Park&Recharge Limited\".",
           "evidence_url": "https://ocpi-pcpr.hubeleon.net/2.2.1/reference",
-          "status": "open",
-          "resolved_date": null
+          "status": "resolved",
+          "resolved_date": "2026-10-17"
         },
         {
           "date": "2026-10-11",
           "kind": "data_quality",
           "kind_label": "Data quirk",
           "summary": "One connector gives max_electric_power and max_amperage as 0.",
-          "handling": "Its power is recorded as unknown.",
+          "handling": "Its power was recorded as unknown. Every connector in the feed linked on 2026-10-17 gives a power figure.",
           "evidence_url": "https://ocpi-pcpr.hubeleon.net/2.2.1/reference",
+          "status": "resolved",
+          "resolved_date": "2026-10-17"
+        },
+        {
+          "date": "2026-10-17",
+          "kind": "access",
+          "kind_label": "Access",
+          "summary": "From 2026-10-14 to 2026-10-17 the daily fetch could not connect to https://ocpi-pcpr.hubeleon.net/2.2.1/reference. On 2026-10-17 that host name no longer resolved, and ParkRecharge's page linked the reference data at https://ocpi.hubeleon.net/ocpi/public/2.2.1/locations and https://ocpi.hubeleon.net/ocpi/public/2.2.1/tariffs.",
+          "handling": "The operator file now uses the addresses the page links. Until then the map showed the copy fetched on 2026-10-13, as the feed health page said.",
+          "evidence_url": "https://parkrecharge.com/public-charging",
+          "status": "resolved",
+          "resolved_date": "2026-10-17"
+        },
+        {
+          "date": "2026-10-17",
+          "kind": "documentation",
+          "kind_label": "Documentation",
+          "summary": "The feed linked on 2026-10-17 is paged, 100 records a page, with X-Total-Count and Link headers as OCPI 2.2.1 describes. Responses carry X-RateLimit-Limit 60, X-RateLimit-Remaining and X-RateLimit-Reset 60; no page states what they mean.",
+          "handling": "The adapter follows the Link headers. The project leaves 2 seconds between requests, within 60 requests a minute if that is what the headers mean, and makes six requests a run.",
+          "evidence_url": "https://ocpi.hubeleon.net/ocpi/public/2.2.1/locations",
+          "status": "open",
+          "resolved_date": null
+        },
+        {
+          "date": "2026-10-17",
+          "kind": "data_quality",
+          "kind_label": "Data quirk",
+          "summary": "The feed linked on 2026-10-17 holds 288 locations; the file linked until 2026-10-13 held 447 on 2026-10-11, 7 of them in Argentina.",
+          "handling": "Every location the feed marks for publishing is mapped, as published.",
+          "evidence_url": "https://ocpi.hubeleon.net/ocpi/public/2.2.1/locations",
+          "status": "open",
+          "resolved_date": null
+        },
+        {
+          "date": "2026-10-17",
+          "kind": "data_quality",
+          "kind_label": "Data quirk",
+          "summary": "Two location names begin \"(REMOVED)\" (id 2647) and \"(Archived)\" (id 3779), while their EVSEs report AVAILABLE or CHARGING. Five locations have every EVSE marked REMOVED.",
+          "handling": "Shown as published, each EVSE with the status and date it reports. A REMOVED EVSE shows as Removed and counts as reported out of service.",
+          "evidence_url": "https://ocpi.hubeleon.net/ocpi/public/2.2.1/locations",
           "status": "open",
           "resolved_date": null
         }
