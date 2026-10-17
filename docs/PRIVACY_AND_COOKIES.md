@@ -93,10 +93,12 @@ the site goes live.
 11. **Workers that browsers never call** (16 October 2026). The relay (ADR 0010) and the OCPI
    handshake Worker (ADR 0025) answer only the daily run and operators' servers. The map never
    contacts them, so they receive nothing from visitors and the notice does not mention them.
-   The handshake Worker stores only an operator's token, hashes of the tokens it accepts, the
-   operator's OCPI addresses and roles, and when and how the operator last called it, none of
-   which is personal data, and Cloudflare's logs are off for both. If the map ever calls one
-   of them, update the notice first, as for the live status Worker (ADR 0015).
+   The handshake Worker stores only an operator's token, hashes of the tokens it accepts and of
+   setup tokens already used, the operator's OCPI addresses and roles, when the connection was
+   made, when and how the operator last called it, the result of the last handshake and how
+   often the token was handed out, none of which is personal data, and Cloudflare's logs are
+   off for both. If the map ever calls one of them, update the notice first, as for the live
+   status Worker (ADR 0015).
 
 ## Notice for the site
 

@@ -147,12 +147,12 @@ notes: >-
   handshake from a separate Cloudflare Worker, oevm-ocpi in ocpi/ (ADR 0025, proposed until
   the owner confirms its defaults D1 to D8), which gives role NSP (navigation service
   provider) and a three-letter party ID; the daily run will fetch locations and tariffs
-  itself with the token Tesla returns. OCPI 2.2.1 also asks for the token to be Base64
-  encoded and for request ID headers, which the ocpi_221 adapter does not do yet. Next
-  steps: the owner sets up the Worker (docs/GITHUB_SETTINGS.md, section 11) and only then
-  submits Tesla's form, recording a request_sent step the same day; after the first
-  registration the owner records Tesla's host here, never a full address or a token (D8);
-  ask Tesla, at the address on its developer page, about an invitation, terms and rate
-  limits; the pipeline side and the adapter follow in later pull requests. The operator
-  stays switched off until Tesla's terms are read.
+  itself with the token Tesla sends in its credentials POST. OCPI 2.2.1 also asks for the
+  token to be Base64 encoded and for request ID headers, which the ocpi_221 adapter does not
+  do yet. Next steps: the owner sets up the Worker (docs/GITHUB_SETTINGS.md, section 11) and
+  only then submits Tesla's form, recording a request_sent step the same day; after the first
+  registration the owner records Tesla's host here, never a full address or a token (D8); ask
+  Tesla, at the address on its developer page, about an invitation, terms and rate limits;
+  the pipeline side and the adapter follow in later pull requests. The operator stays
+  switched off until Tesla's terms are read.
 enabled: false

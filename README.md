@@ -143,7 +143,7 @@ schema/operator.py    the model for an operator registry file
 schema/export.py      writes the JSON Schema files
 schema/json/          exported JSON Schema for published data
 tests/                tests; tests/fixtures/ holds sample data, never live calls
-tests/js/             unit tests for the map page's scripts (npm test)
+tests/js/             unit tests for the map page's scripts and the Workers (npm test)
 docs/BLUEPRINT.md     the project brief
 docs/adr/             records of decisions
 ```

@@ -51,7 +51,7 @@ OCPI conformance and for security, on 17 October 2026.
 - **One Durable Object holds the connection.** One SQLite-backed Durable Object keeps all of
   the Worker's state as one record under one key: TOKEN_B and the form Tesla accepts it in,
   Tesla's versions, details, credentials, locations and tariffs addresses, the hash of TOKEN_C,
-  the hashes of setup tokens already used, whether a handshake is in progress, and what the
+  the hashes of the last ten setup tokens used, whether a handshake is in progress, and what the
   owner needs to see (below). Every change is one write, made with the synchronous storage API
   with no wait between reading and writing: "SQLite storage operations are synchronous and do
   not yield the event loop, so they execute atomically without it"
@@ -118,7 +118,7 @@ OCPI conformance and for security, on 17 October 2026.
   with no port and no IP address (D4), never follow a redirect, give up after 10 seconds
   including reading the answer, and keep the 2 seconds between requests set in
   `operators/tesla.yaml`, measured from the end of the last answer, also across handshakes. On
-  a registration they send TOKEN_B in the form Tesla used for its own token; the first call
+  a registration they send TOKEN_B in the form Tesla used for the setup token; the first call
   Tesla refuses with HTTP 401 or 403 is tried once more in the other form, which is then used.
   A renewal uses the stored form only. The form that works is kept and given to the daily run.
   Waiting uses no CPU time.

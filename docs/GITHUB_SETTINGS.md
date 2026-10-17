@@ -419,8 +419,8 @@ merged into `main` is deployed without copying code by hand.
       answer; see "Needs testing" in ADR 0025;
     - `"last_handshake"`: the result of Tesla's last attempt. `1000` is success, `2001` means
       Tesla's request was not usable, `3001` that the Worker could not use Tesla's addresses
-      (the message says why), `3002` that Tesla offers no version 2.2.1, and `3003` that it
-      offers no locations;
+      or ran out of time (the message says why), `3002` that Tesla offers no version 2.2.1,
+      `3003` that it offers no locations, and `3000` an unexpected error in the Worker;
     - `"handouts"`: how many times the Worker has handed Tesla's token to anyone with the pull
       token (your own checks count too).
 
