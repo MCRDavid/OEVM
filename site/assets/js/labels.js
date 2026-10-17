@@ -11,18 +11,12 @@
 //   prices (ADR 0016), and plans nobody ticked are left out, because many are limited (to
 //   taxis, off-peak hours or one council area, for example).
 // Only connectors that match the visitor's filters count, so a rapid charger's label is
-// never a slow connector's price. Free comes first, then prices including VAT from lowest
-// to highest, then prices whose VAT is not stated, which cannot be compared fairly with
-// the others, the same order as a site's details (pipeline/tariffs.py).
+// never a slow connector's price. Free comes first, then the lowest figure, whether or not
+// its VAT is stated: VAT is never added, and a higher price including VAT could be the
+// dearer one. On a tie, a price including VAT comes before one whose VAT is not stated,
+// and a price that applies all the time before one that applies only at some times.
 
 import { connectorMatches } from "./filters.js";
-
-const FREE = 0;
-const WITH_VAT = 1;
-const VAT_NOT_STATED = 2;
-// Ranks are kept apart in the sort key, which also decides which labels the map shows
-// first where they would overlap.
-const RANK_STEP = 10000;
 
 function finite(value) {
   return typeof value === "number" && Number.isFinite(value);
@@ -44,25 +38,39 @@ export function bestPlans(plans, mine) {
 
 function candidate(connector) {
   if (!connector.lt) return null;
-  if (connector.price === "free") return { rank: FREE, value: 0, text: connector.lt };
+  if (connector.price === "free") return { free: true, value: 0, text: connector.lt };
   if (!finite(connector.low)) return null;
   return {
-    rank: connector.lvat ? WITH_VAT : VAT_NOT_STATED,
+    free: false,
     value: connector.low,
     text: connector.lt,
-    low: connector.low,
     lvat: Boolean(connector.lvat),
+    lvar: Boolean(connector.lvar),
   };
 }
 
+// Negative when a is the better label: free, then lower, then including VAT, then not
+// only at some times.
 function lower(a, b) {
-  return a.rank - b.rank || a.value - b.value;
+  return (
+    Number(b.free) - Number(a.free) ||
+    a.value - b.value ||
+    Number(b.lvat) - Number(a.lvat) ||
+    Number(a.lvar) - Number(b.lvar)
+  );
+}
+
+// The map draws labels with a lower key first, where they would overlap. Prices are in
+// tenths of a penny, so the tie breaks fit between them.
+function sortKey(best) {
+  if (best.free) return 0;
+  return 1 + Math.round(best.value * 10) * 4 + (best.lvat ? 0 : 2) + (best.lvar ? 1 : 0);
 }
 
 // The label for one location, as { text, key, low, lvat, plan }, or null when no price
 // can be shown. key orders labels cheapest first; plan is the ticked plan the price comes
-// from, if it does. A plan counts only where a connector matches the filters, and on a
-// tie the operator's own price is kept, as it needs no plan.
+// from, if it does. A plan counts only where a connector matches the filters, and only
+// when it is lower: on a tie the operator's own price is kept, as it needs no plan.
 export function priceLabel(props, state, plan = null) {
   let best = null;
   let matched = false;
@@ -72,16 +80,23 @@ export function priceLabel(props, state, plan = null) {
     const found = candidate(connector);
     if (found && (!best || lower(found, best) < 0)) best = found;
   }
-  if (matched && plan && finite(plan.ppk) && plan.label) {
-    const fromPlan = { rank: WITH_VAT, value: plan.ppk, text: plan.label, low: plan.ppk, lvat: true, plan };
-    if (!best || lower(fromPlan, best) < 0) best = fromPlan;
+  const planCounts = matched && plan && finite(plan.ppk) && plan.label;
+  if (planCounts && (!best || (!best.free && plan.ppk < best.value))) {
+    best = {
+      free: false,
+      value: plan.ppk,
+      text: plan.label,
+      lvat: true,
+      lvar: Boolean(plan.only_at_some_times),
+      plan,
+    };
   }
   if (!best) return null;
   return {
     text: best.text,
-    key: best.rank * RANK_STEP + best.value,
-    low: best.low ?? null,
-    lvat: best.lvat ?? null,
+    key: sortKey(best),
+    low: best.free ? null : best.value,
+    lvat: best.free ? null : best.lvat,
     plan: best.plan ?? null,
   };
 }

@@ -218,6 +218,7 @@ def _connector_summary(
         out=status in OUT_OF_SERVICE,
         low=None if price.lowest is None else _pence(price.lowest),
         lvat=None if price.lowest is None else price.lowest_vat,
+        lvar=None if price.lowest is None else price.lowest_varies,
         lt=price.label,
     )
 
@@ -356,7 +357,10 @@ def plans_file(operators: dict[str, OperatorConfig], generated_at: datetime) -> 
                     ),
                     monthly_fee=None if plan.monthly_fee is None else float(plan.monthly_fee),
                     ppk=_pence(plan.price_per_kwh) if fixed else None,
-                    label=plan_label(plan.price_per_kwh, plan.includes_vat),
+                    label=plan_label(
+                        plan.price_per_kwh, plan.includes_vat, plan.only_at_some_times
+                    ),
+                    only_at_some_times=plan.only_at_some_times,
                     discount_percent=(
                         None if plan.discount_percent is None else float(plan.discount_percent)
                     ),

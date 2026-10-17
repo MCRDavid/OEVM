@@ -11,7 +11,17 @@ const TYPE2 = "IEC_62196_T2";
 const rapid = { std: CCS, kw: 50, price: "priced", ppk: 92.4, out: false, low: 82.8, lvat: true, lt: "82.8p" };
 const slow = { std: TYPE2, kw: 7, price: "priced", ppk: 57.6, out: false, low: 57.6, lvat: true, lt: "57.6p" };
 const free = { std: TYPE2, kw: 7, price: "free", ppk: null, out: false, low: null, lvat: null, lt: "Free" };
-const noVat = { std: TYPE2, kw: 5, price: "priced", ppk: null, out: false, low: 32.5, lvat: false, lt: "from 32.5p excl. VAT" };
+const noVat = {
+  std: TYPE2,
+  kw: 5,
+  price: "priced",
+  ppk: null,
+  out: false,
+  low: 32.5,
+  lvat: false,
+  lvar: true,
+  lt: "from 32.5p excl. VAT",
+};
 const unknown = { std: CCS, kw: 50, price: "unknown", ppk: null, out: false, low: null, lvat: null, lt: null };
 const site = (...cons) => ({ op: "geniepoint", cons });
 const plan = (id, ppk, label = ppk === null ? null : `${ppk}p`) => ({ id, ppk, label, operator_ids: ["geniepoint"] });
@@ -38,12 +48,35 @@ test("free comes first, and only from a connector confirmed free", () => {
   assert.equal(priceLabel(site(notFree), defaults()), null);
 });
 
-test("prices including VAT come before those whose VAT is not stated", () => {
-  const label = priceLabel(site(noVat, rapid), defaults());
-  assert.equal(label.text, "82.8p");
+test("the lowest figure wins whether or not its VAT is stated, and VAT is never added", () => {
+  // 32.5p plus any VAT is still below 82.8p, so the price including VAT is not the cheapest.
+  assert.equal(priceLabel(site(noVat, rapid), defaults()).text, "from 32.5p excl. VAT");
   assert.equal(priceLabel(site(noVat), defaults()).text, "from 32.5p excl. VAT");
-  assert.ok(priceLabel(site(rapid), defaults()).key < priceLabel(site(noVat), defaults()).key);
-  assert.ok(priceLabel(site(free), defaults()).key < priceLabel(site(slow), defaults()).key);
+  // A price including VAT that is not higher wins.
+  const vat30 = { ...rapid, low: 30, lt: "30p" };
+  const noVat30 = { ...noVat, low: 30, lvar: false, lt: "30p excl. VAT" };
+  assert.equal(priceLabel(site(noVat30, vat30), defaults()).text, "30p");
+  assert.equal(priceLabel(site(vat30, noVat30), defaults()).text, "30p");
+});
+
+test("on a tie, a price that applies all the time comes before one only at some times", () => {
+  const some = { ...rapid, std: "CHADEMO", low: 30, lvar: true, lt: "from 30p" };
+  const always = { ...slow, low: 30, lvar: false, lt: "30p" };
+  assert.equal(priceLabel(site(some, always), defaults()).text, "30p");
+  assert.equal(priceLabel(site(always, some), defaults()).text, "30p");
+});
+
+test("the sort key puts free first, then lower prices, then the tie breaks", () => {
+  const key = (...cons) => priceLabel(site(...cons), defaults()).key;
+  const vat30 = { ...rapid, low: 30, lt: "30p" };
+  const vat30some = { ...vat30, lvar: true, lt: "from 30p" };
+  const noVat30 = { ...noVat, low: 30, lvar: false, lt: "30p excl. VAT" };
+  const vat30point1 = { ...rapid, low: 30.1, lt: "30.1p" };
+  assert.ok(key(free) < key(vat30));
+  assert.ok(key(vat30) < key(vat30some));
+  assert.ok(key(vat30some) < key(noVat30));
+  assert.ok(key(noVat30) < key(vat30point1));
+  assert.ok(key(noVat) < key(slow));
 });
 
 test("no price, no label", () => {
@@ -62,8 +95,12 @@ test("a ticked plan with a lower fixed price gives the label, and says so", () =
   assert.equal(priceLabel(site(rapid), defaults(), plan("p.same", 82.8)).plan, null);
   // Free still comes first.
   assert.equal(priceLabel(site(free), defaults(), cheap).text, "Free");
-  // A plan price includes VAT, so it comes before a price whose VAT is not stated.
-  assert.equal(priceLabel(site(noVat), defaults(), plan("p.vat", 45)).text, "45p");
+  // A plan dearer than a price whose VAT is not stated leaves that price; a lower one wins.
+  assert.equal(priceLabel(site(noVat), defaults(), plan("p.vat", 45)).text, "from 32.5p excl. VAT");
+  assert.equal(priceLabel(site(noVat), defaults(), plan("p.vat", 30)).text, "30p");
+  // A plan that applies only at some times keeps its "from", worded by the pipeline.
+  const offPeak = { ...plan("p.night", 39, "from 39p"), only_at_some_times: true };
+  assert.equal(priceLabel(site(rapid), defaults(), offPeak).text, "from 39p");
 });
 
 test("a plan needs a connector that matches the filters", () => {

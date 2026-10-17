@@ -59,6 +59,11 @@ class ConnectorSummary(_Model):
     lvat: bool | None = Field(
         default=None, description="Whether low includes VAT; null when low is null."
     )
+    lvar: bool | None = Field(
+        default=None,
+        description="Whether low applies only at some times (the label then says 'from'); "
+        "null when low is null.",
+    )
     lt: str | None = Field(
         default=None,
         description="The label drawn above the location's point on the map for this "
@@ -232,8 +237,14 @@ class PlanOut(_Model):
     label: str | None = Field(
         default=None,
         description="ppk as the short label the map draws when the visitor ticked the plan "
-        "and it is the lowest price at a location (ADR 0026), worded by pipeline/pricing.py. "
-        "Null when ppk is null.",
+        "and it is the lowest price at a location (ADR 0026), worded by pipeline/pricing.py, "
+        "such as '39p', or 'from 44p' for a plan that applies only at some times. Null when "
+        "ppk is null or would show as '0p'.",
+    )
+    only_at_some_times: bool = Field(
+        default=False,
+        description="True when the plan's price applies only at some times of day or on some "
+        "days, as conditions says.",
     )
     discount_percent: float | None = Field(default=None, gt=0, lt=100)
     networks: list[str]

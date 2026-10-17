@@ -24,7 +24,8 @@ regulations describe the price in reference data as "the price in pence per kilo
   folded into that comparison, so it says so.
 - The label above a point on the map (ADR 0026) is the lowest price per kWh a connector's
   tariffs give, marked "from" when it applies only at some times and "excl. VAT" when VAT
-  is not stated, or "Free" when the connector is confirmed free.
+  is not stated, or "Free" when the connector is confirmed free. A price that would show
+  as "0p" is never a label.
 """
 
 import re
@@ -406,12 +407,22 @@ def map_label(
     return text if includes_vat else f"{text} excl. VAT"
 
 
-def plan_label(price_per_kwh: Decimal | None, includes_vat: bool | None) -> str | None:
+def shows_as_zero(amount: float | Decimal) -> bool:
+    """Whether a price per kWh would be shown as "0p". Such a price is never put in a label,
+    because "0p" reads as free and only free_confirmed is ever called free."""
+    return pence(amount) == pence(0)
+
+
+def plan_label(
+    price_per_kwh: Decimal | None, includes_vat: bool | None, only_at_some_times: bool = False
+) -> str | None:
     """The short price drawn on the map for a plan the visitor ticked: its fixed price per
-    kWh, only when the provider says it includes VAT. None otherwise."""
-    if price_per_kwh is None or includes_vat is not True:
+    kWh, only when the provider says it includes VAT, marked "from" when the plan applies
+    only at some times. None otherwise, and for a price that would show as "0p"."""
+    if price_per_kwh is None or includes_vat is not True or shows_as_zero(price_per_kwh):
         return None
-    return pence(price_per_kwh)
+    text = pence(price_per_kwh)
+    return f"from {text}" if only_at_some_times else text
 
 
 def plan_fee_text(monthly_fee: Decimal | None) -> str:

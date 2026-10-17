@@ -132,6 +132,10 @@ def test_the_published_plan_list_matches_the_provider_files(tmp_path: Path):
         assert (plan.label is None) == (plan.ppk is None)
     fastned = next(plan for plan in plans if plan.id == "fastned.fastned_standard")
     assert (fastned.ppk, fastned.label) == (79.0, "79p")
+    # A plan that applies only at some times says so in its label.
+    off_peak = next(plan for plan in plans if plan.id == "be_ev.be_ev_members_off_peak")
+    assert (off_peak.ppk, off_peak.label, off_peak.only_at_some_times) == (49.0, "from 49p", True)
+    assert not fastned.only_at_some_times
     manifest = json.loads((tmp_path / "data" / "manifest.json").read_text())
     assert "data/plans.json" in {f["path"] for f in manifest["files"]}
 

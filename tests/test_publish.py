@@ -490,8 +490,10 @@ def test_each_kind_of_connector_carries_its_map_label(results, tmp_path):
             # Free only from the price state; a lowest price always says its VAT basis.
             assert (summary["lt"] == "Free") == (summary["price"] == "free")
             assert (summary["lvat"] is None) == (summary["low"] is None)
+            assert (summary["lvar"] is None) == (summary["low"] is None)
             if summary["low"] is not None and summary["lt"] != "Free":
                 assert summary["lt"].endswith("excl. VAT") != summary["lvat"]
+                assert summary["lt"].startswith("from ") == summary["lvar"]
         lows = [s["low"] for s in properties["cons"] if s["low"] is not None]
         listed = [
             o["ppk_low"]

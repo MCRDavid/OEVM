@@ -22,27 +22,33 @@ otherwise through a free app or paying at the charger by contactless card.
   taken as open to anyone, as the details already list it. Tariffs from a related
   operator's feed count only where ADR 0020 already matched them by exact id.
 - **"Free" only for a connector confirmed free.** A label says "Free" only when the
-  connector's price state is free_confirmed. A tariff whose lowest price per kWh is zero
-  is left out, because a label could not say what such a session costs. Tariffs the owner
-  named in zero_price_tariffs (ADR 0022) give no label.
-- **Like with like.** Prices including VAT come first, then prices whose VAT is not
-  stated, marked "excl. VAT" (char.gy and Clenergy publish no VAT). VAT is never added.
-  A price that applies only at some times is marked "from", for example "from 32.5p excl.
-  VAT" for char.gy's weekday night price.
+  connector's price state is free_confirmed. A tariff whose lowest price per kWh is zero,
+  or would show as "0p", is left out, because a label could not say what such a session
+  costs and "0p" reads as free. Tariffs the owner named in zero_price_tariffs (ADR 0022)
+  give no label.
+- **The lowest figure, with its VAT basis.** A price whose VAT is not stated is marked
+  "excl. VAT" (char.gy and Clenergy publish no VAT) and VAT is never added. The lowest
+  figure wins whether or not its VAT is stated, because a higher price including VAT
+  could be the dearer one: 30p plus any VAT is still less than 60p. On a tie, a price
+  including VAT comes first, then a price that applies all the time. A price that applies
+  only at some times is marked "from", for example "from 32.5p excl. VAT" for char.gy's
+  weekday night price.
 - **Plans count only once ticked.** A plan from `providers/` counts at a location only
   when the visitor ticked it under "Your charging plans", its provider publishes a fixed
   price including VAT, and it names the location's network. Plans nobody ticked are left
   out because many are limited (taxi drivers only, off-peak hours, one council area).
-  Discounts are never turned into prices (ADR 0016). A label from a plan is drawn in amber
-  and the list and details say "with your plan".
+  Discounts are never turned into prices (ADR 0016). A plan wins only when it is lower
+  than the operator's own price. A plan whose price applies only at some times
+  (`only_at_some_times` in its provider file, such as off-peak plans) is marked "from". A
+  label from a plan is drawn in amber and the list and details say "with your plan".
 - **Labels follow the filters.** Only connectors that match the power, connector, price
   and status filters count, so a rapid charger is never labelled with a slow connector's
   price.
 - **Wording stays in the pipeline.** Each kind of connector in `data/locations.geojson`
-  carries `low` (the lowest price per kWh, in pence), `lvat` and `lt`, the label worded by
-  `pipeline/pricing.py` (`map_label`); plans in `data/plans.json` carry `label`
-  (`plan_label`). The browser only picks one. The map file grows by about 12%
-  before compression (6.5% gzipped, measured on the fixtures).
+  carries `low` (the lowest price per kWh, in pence), `lvat`, `lvar` and `lt`, the label
+  worded by `pipeline/pricing.py` (`map_label`); plans in `data/plans.json` carry `label`
+  (`plan_label`). The browser only picks one. The map file grows by about 17%
+  before compression (7% gzipped, measured on the fixtures).
 - **Readable at a glance.** Labels appear from zoom 11 (about a town). Where labels would
   overlap, the cheapest are placed first and the others left out; a label never covers
   a numbered circle's count, and the letters in the points are drawn over the labels.

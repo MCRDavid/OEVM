@@ -534,11 +534,23 @@ def test_the_label_says_from_when_the_lowest_price_applies_only_at_some_times():
     assert price(connector("N", "F"), night, flat).label == "30p"
 
 
-def test_prices_including_vat_come_before_those_whose_vat_is_not_stated():
+def test_the_lowest_figure_wins_whether_or_not_its_vat_is_stated():
     stated = tariff("S", [energy(0.50)])
     unstated = tariff("U", [energy(0.30, vat=None)])
-    assert price(connector("S", "U"), stated, unstated).label == "60p"
+    # 30p plus any VAT is still below 60p, so the price including VAT is not the cheapest.
+    # VAT is never added: the label says the published figure excludes it.
+    assert price(connector("S", "U"), stated, unstated).label == "30p excl. VAT"
     assert price(connector("U"), unstated).label == "30p excl. VAT"
+    # On a tie the price including VAT is used.
+    same = tariff("V", [energy(0.25)])
+    assert price(connector("V", "U"), same, unstated).label == "30p"
+    assert price(connector("U", "V"), unstated, same).label == "30p"
+
+
+def test_a_price_that_would_show_as_0p_gives_no_label():
+    tiny = tariff("T", [energy(0.0004, vat=None)])
+    assert price(connector("T"), tiny).label is None
+    assert price(connector("T", "T1"), tiny, tariff("T1")).label == "48p"
 
 
 def test_no_label_from_a_zero_price_unknown_price_or_another_currency():

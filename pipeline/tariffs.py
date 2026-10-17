@@ -48,6 +48,7 @@ from pipeline.pricing import (
     map_label,
     pence,
     readable_name,
+    shows_as_zero,
     tariff_kind,
     varies_text,
     varies_with,
@@ -95,22 +96,23 @@ def lowest_energy(tariffs: list[Tariff]) -> tuple[Decimal, bool, bool] | None:
     """The lowest price per kWh that any of these tariffs gives, whether it includes VAT,
     and whether it applies only at some times (every tariff giving it charges more at
     others), for the label above a point on the map (ADR 0026). Only priced GBP tariffs
-    count, and a tariff whose lowest price per kWh is zero is left out: a label could not
-    say what such a session costs, and only free_confirmed is ever called free. Prices
-    including VAT come first; the lowest whose VAT is not stated is used only when none
-    includes VAT, because the two cannot be compared fairly. None when no price is left."""
+    count, and a tariff whose lowest price per kWh would show as "0p" is left out: a label
+    could not say what such a session costs, and only free_confirmed is ever called free.
+    The lowest figure wins whether or not its VAT is stated: VAT is never added, and a
+    higher price including VAT could be the dearer one. On a tie, the price including VAT
+    is used. None when no price is left."""
     ranges = [
         found
         for found in (energy_range(t) for t in tariffs if t.price_state == "priced")
-        if found is not None and found[0] > 0
+        if found is not None and found[0] > 0 and not shows_as_zero(found[0])
     ]
     if not ranges:
         return None
-    with_vat = [r for r in ranges if r[2]]
-    group = with_vat or ranges
-    low = min(r[0] for r in group)
-    varies = all(r[1] != low for r in group if r[0] == low)
-    return low, bool(with_vat), varies
+    low = min(r[0] for r in ranges)
+    at_low = [r for r in ranges if r[0] == low]
+    with_vat = any(r[2] for r in at_low)
+    varies = all(r[1] != low for r in at_low if r[2] == with_vat)
+    return low, with_vat, varies
 
 
 def _candidates(tariffs: list[Tariff]) -> list[Tariff]:

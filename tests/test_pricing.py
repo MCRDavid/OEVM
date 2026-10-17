@@ -229,3 +229,12 @@ def test_a_plan_label_needs_a_fixed_price_including_vat():
     assert plan_label(Decimal("0.39"), None) is None
     assert plan_label(Decimal("0.39"), False) is None
     assert plan_label(None, True) is None
+    # A price that would show as 0p reads as free, which only free_confirmed may be.
+    assert plan_label(Decimal("0"), True) is None
+    assert plan_label(Decimal("0.0004"), True) is None
+    assert plan_label(Decimal("0.0005"), True) == "0.1p"
+
+
+def test_a_plan_label_says_from_when_the_plan_applies_only_at_some_times():
+    assert plan_label(Decimal("0.44"), True, only_at_some_times=True) == "from 44p"
+    assert plan_label(Decimal("0.44"), True, only_at_some_times=False) == "44p"

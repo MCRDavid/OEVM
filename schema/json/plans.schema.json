@@ -78,8 +78,14 @@
             }
           ],
           "default": null,
-          "description": "ppk as the short label the map draws when the visitor ticked the plan and it is the lowest price at a location (ADR 0026), worded by pipeline/pricing.py. Null when ppk is null.",
+          "description": "ppk as the short label the map draws when the visitor ticked the plan and it is the lowest price at a location (ADR 0026), worded by pipeline/pricing.py, such as '39p', or 'from 44p' for a plan that applies only at some times. Null when ppk is null or would show as '0p'.",
           "title": "Label"
+        },
+        "only_at_some_times": {
+          "default": false,
+          "description": "True when the plan's price applies only at some times of day or on some days, as conditions says.",
+          "title": "Only At Some Times",
+          "type": "boolean"
         },
         "discount_percent": {
           "anyOf": [
@@ -179,6 +185,7 @@
         "monthly_fee",
         "ppk",
         "label",
+        "only_at_some_times",
         "discount_percent",
         "networks",
         "operator_ids",

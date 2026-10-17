@@ -80,6 +80,19 @@
           "description": "Whether low includes VAT; null when low is null.",
           "title": "Lvat"
         },
+        "lvar": {
+          "anyOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Whether low applies only at some times (the label then says 'from'); null when low is null.",
+          "title": "Lvar"
+        },
         "lt": {
           "anyOf": [
             {
@@ -102,6 +115,7 @@
         "out",
         "low",
         "lvat",
+        "lvar",
         "lt"
       ],
       "title": "ConnectorSummary",
