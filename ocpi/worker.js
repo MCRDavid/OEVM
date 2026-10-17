@@ -243,8 +243,9 @@ const usedSetupToken = (ids) =>
     "Already registered: this setup token has been used. Use the token from the registration reply.",
   );
 
-function json(status, body, headers = {}) {
-  return new Response(JSON.stringify(body), {
+// The hand-out's answers. An answer to HEAD has the same status and headers and no body.
+function json(status, body, headers = {}, head = false) {
+  return new Response(head ? null : JSON.stringify(body), {
     status,
     headers: { "content-type": "application/json", "cache-control": "no-store", ...headers },
   });
@@ -276,7 +277,8 @@ async function readAtMost(reader, limit) {
 
 // An address this Worker will call with the other party's token: https on the default port, a
 // named host with a dot (no IP address, no localhost), no user name or password, and at most
-// 255 characters. Returns the address, or null.
+// 255 characters. Returns the address, or null. A host's one trailing dot is left out for the
+// checks, so "localhost." counts as localhost and "peer." as a name with no dot.
 function usableUrl(value) {
   if (typeof value !== "string" || value.length > MAX_URL_LENGTH) return null;
   let url;
@@ -285,7 +287,7 @@ function usableUrl(value) {
   } catch {
     return null;
   }
-  const host = url.hostname;
+  const host = url.hostname.replace(/\.$/, "");
   if (url.protocol !== "https:" || url.username !== "" || url.password !== "" || url.port !== "") return null;
   if (!host.includes(".") || host.startsWith("[") || IPV4.test(host)) return null;
   if (host === "localhost" || host.endsWith(".localhost")) return null;
@@ -511,7 +513,8 @@ export class OcpiConnection extends DurableObject {
     // W1. Cloudflare's output gate should hold the first call to the other party until this is
     // stored (needs checking for the synchronous API).
     this.save({ ...record, handshake: { id, kind, started_at: startedAt } });
-    job.held = { id, kind };
+    // Kept until the result is stored, so an unexpected error frees the flag (release).
+    job.held = { id, kind, ended: null };
     const forms = kind === "register" ? [job.caller.form, other(job.caller.form)] : [record.token_b_encoding];
     const result = await this.readPeer({
       id,
@@ -522,6 +525,7 @@ export class OcpiConnection extends DurableObject {
       lastCallEndedAt: record.last_call_ended_at,
       correlation: job.ids.correlation,
       signal: request.signal,
+      held: job.held,
     });
     if (result.stopped) {
       job.held = null;
@@ -555,9 +559,9 @@ export class OcpiConnection extends DurableObject {
       last_call_ended_at: outcome.lastCallEndedAt,
       last_handshake: lastHandshake,
     };
-    job.held = null;
     if (outcome.status_code !== 1000) {
       this.save(common); // W4
+      job.held = null;
       return ocpi(job.ids, 200, outcome.status_code, outcome.message);
     }
     const connection = {
@@ -588,6 +592,7 @@ export class OcpiConnection extends DurableObject {
         setup_retry: null,
       });
     }
+    job.held = null;
     const httpStatus = kind === "register" ? REGISTERED_HTTP_STATUS : 200;
     return ocpi(job.ids, httpStatus, 1000, "Success", { data: ourCredentials(job.origin, token) });
   }
@@ -598,7 +603,7 @@ export class OcpiConnection extends DurableObject {
     return signal?.aborted === true || this.now() - startedAt > HANDSHAKE_BUDGET_MS;
   }
 
-  async readPeer({ id, startedAt, token, url, forms, lastCallEndedAt, correlation, signal }) {
+  async readPeer({ id, startedAt, token, url, forms, lastCallEndedAt, correlation, signal, held }) {
     let ended = lastCallEndedAt;
     const tried = [];
     // Waits out the gap since this Worker's last answer from the other party, then checks that
@@ -616,6 +621,8 @@ export class OcpiConnection extends DurableObject {
         return await this.callPeer(target, token, form, correlation);
       } finally {
         ended = this.now();
+        // Also kept on the flag's holder, so the gap still holds after an unexpected error.
+        held.ended = ended;
       }
     };
     // On a registration, the first call refused with 401 or 403 is tried once more in the
@@ -834,14 +841,16 @@ export class OcpiConnection extends DurableObject {
     if (changed) this.save(next);
   }
 
-  // After an unexpected error, clears this request's handshake flag if it still holds it.
-  release({ id, kind }) {
+  // After an unexpected error, clears this request's handshake flag if it still holds it, and
+  // keeps the end of its last call to the other party, so the next handshake keeps the gap.
+  release({ id, kind, ended }) {
     try {
       const fresh = this.load();
       if (fresh.handshake?.id === id) {
         const message = "Unexpected server error.";
         const outcome = { at: iso(this.now()), kind, status_code: 3000, message, forms_tried: [], notes: [] };
-        this.save({ ...fresh, handshake: null, last_handshake: outcome });
+        const lastCallEndedAt = ended ?? fresh.last_call_ended_at;
+        this.save({ ...fresh, handshake: null, last_call_ended_at: lastCallEndedAt, last_handshake: outcome });
       }
     } catch {
       // The flag lapses by itself after HANDSHAKE_EXPIRY_MS.
@@ -855,7 +864,9 @@ export class OcpiConnection extends DurableObject {
       const now = this.now();
       const report = { last_handshake: record.last_handshake, last_contact: record.last_contact };
       if (busy(record, now)) {
-        const seconds = Math.max(1, Math.ceil((record.handshake.started_at + HANDSHAKE_EXPIRY_MS - now) / 1000));
+        // Seconds until the flag lapses: at least 1, and at most 60 even for a flag dated ahead.
+        const lapses = Math.ceil((record.handshake.started_at + HANDSHAKE_EXPIRY_MS - now) / 1000);
+        const seconds = Math.min(HANDSHAKE_EXPIRY_MS / 1000, Math.max(1, lapses));
         return json(
           409,
           { state: "handshake_in_progress", retry_after_seconds: seconds, handouts: record.handouts, ...report },
@@ -902,7 +913,9 @@ export default {
     const path = routePath(url.pathname);
     const ids = answerFor(request);
     if (path === PATHS.connection) {
-      if (request.method !== "GET") return json(405, { error: "Only GET is allowed." }, { allow: "GET" });
+      if (request.method !== "GET") {
+        return json(405, { error: "Only GET is allowed." }, { allow: "GET" }, ids.head);
+      }
       if (!(await pullAllowed(request, env))) return json(403, { error: "Not allowed." });
       return connection(env).fetch(request);
     }

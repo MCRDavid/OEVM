@@ -102,11 +102,13 @@ afterEach(() => {
   for (const name of LOGGING) console[name] = realConsole[name];
 });
 
-// Synchronous, like ctx.storage.kv on a SQLite-backed Durable Object.
+// Synchronous, like ctx.storage.kv on a SQLite-backed Durable Object. failNext makes the next get
+// throw, failNextPut the next put, and failAlways every get.
 function memoryStorage() {
   const storage = {
     store: new Map(),
     failNext: false,
+    failNextPut: false,
     failAlways: false,
     kv: {
       get(key) {
@@ -117,6 +119,10 @@ function memoryStorage() {
         return storage.store.get(key);
       },
       put(key, value) {
+        if (storage.failNextPut) {
+          storage.failNextPut = false;
+          throw new Error("storage failed for the test");
+        }
         storage.store.set(key, value);
       },
       delete(key) {
@@ -396,13 +402,16 @@ test("unknown paths answer 404 with the OCPI envelope and never reach the object
 
 test("one trailing slash is ignored", async () => {
   setup();
+  const envelope = (answer) => ({ ...answer, timestamp: null });
   for (const path of [PATHS.versions, PATHS.details, PATHS.credentials]) {
-    const plain = await read(await ask(path));
+    const without = await ask(path);
+    const plain = await read(without);
     const response = await ask(`${path}/`);
     assert.equal(response.status, 200, path);
+    assert.equal(response.headers.get("x-total-count"), without.headers.get("x-total-count"));
     const answer = await read(response);
     assert.equal(answer.status_code, 1000);
-    assert.deepEqual(answer.data, plain.data);
+    assert.deepEqual(envelope(answer), envelope(plain));
   }
   const versions = await read(await ask(`${PATHS.versions}/`));
   assert.equal(versions.data[0].url, `${WORKER}/ocpi/2.2.1`);
@@ -632,6 +641,11 @@ test("HEAD gets the GET answer without a body", async () => {
   assert.equal(peerHead.status, 405);
   assert.equal(peerHead.headers.get("allow"), "GET, PUT, DELETE");
   assert.equal(await peerHead.text(), "");
+  const handOutHead = await handOut({ method: "HEAD" });
+  assert.equal(handOutHead.status, 405);
+  assert.equal(handOutHead.headers.get("allow"), "GET");
+  assert.equal(handOutHead.headers.get("cache-control"), "no-store");
+  assert.equal(await handOutHead.text(), "");
 });
 
 test("no answer is ever marked for sharing with browsers", async () => {
@@ -943,8 +957,11 @@ test("unusable fields get OCPI 2001 over HTTP 200, naming the field but never a 
     [credentialsBody({ url: "https://[2001:db8::1]/ocpi/versions" }), URL_MESSAGE, "2001:db8"],
     [credentialsBody({ url: "https://localhost/ocpi/versions" }), URL_MESSAGE, "localhost/"],
     [credentialsBody({ url: "https://api.localhost/ocpi/versions" }), URL_MESSAGE, "api."],
+    [credentialsBody({ url: "https://localhost./ocpi/versions" }), URL_MESSAGE, "localhost./"],
+    [credentialsBody({ url: "https://api.localhost./ocpi/versions" }), URL_MESSAGE, "localhost./"],
     [credentialsBody({ url: "https://peer.example:8443/ocpi/versions" }), URL_MESSAGE, "8443"],
     [credentialsBody({ url: "https://peer/ocpi/versions" }), URL_MESSAGE, "https://peer/"],
+    [credentialsBody({ url: "https://peer./ocpi/versions" }), URL_MESSAGE, "https://peer./"],
   ];
   const refuse = async (method, token, kind) => {
     for (const [body, message, value] of cases) {
@@ -1634,6 +1651,18 @@ test("a stale handshake flag is ignored after a minute", async () => {
   assert.equal(answer.status_code, 3000);
   assert.equal(answer.status_message, BUSY);
   assert.equal(calls.length, 0);
+  // The hand-out says when the flag lapses: at least 1 second, and never more than 60.
+  for (const [age, seconds] of [
+    [30_000, 30],
+    [59_999, 1],
+    [-5_000, 60],
+  ]) {
+    rewrite({ handshake: { id: "a-recent-flag", kind: "register", started_at: t.clock.now - age } });
+    const out = await handOut();
+    assert.equal(out.status, 409, String(age));
+    assert.equal(out.headers.get("retry-after"), String(seconds));
+    assert.equal((await out.json()).retry_after_seconds, seconds);
+  }
 });
 
 test("an overtaken handshake stops without calling again or writing", async () => {
@@ -2079,8 +2108,49 @@ test("a storage error during a handshake answers 200 with 3000 and frees the fla
   assert.equal(saved.handshake, null);
   assert.equal(saved.state, "unregistered");
   assert.deepEqual(handshakeOf(saved), { kind: "register", status_code: 3000, message: UNEXPECTED });
+  // The end of the last call is kept, so a retry at once still waits out the gap.
+  assert.equal(saved.last_call_ended_at, t.clock.now);
+  assert.deepEqual(t.waits, [GAP_MS]);
   peer();
   assert.equal((await read(await post())).status_code, 1000);
+  assert.deepEqual(t.waits, [GAP_MS, GAP_MS, GAP_MS]);
+});
+
+test("a storage error while saving a handshake's result still frees the flag", async () => {
+  for (const outcome of ["failure", "success"]) {
+    const t = setup();
+    const failSave = () => {
+      t.storage.failNextPut = true;
+    };
+    const overrides =
+      outcome === "failure"
+        ? {
+            versions: () => {
+              failSave();
+              return new Response(null, { status: 500 });
+            },
+          }
+        : {
+            details: () => {
+              failSave();
+              return detailsAnswer();
+            },
+          };
+    peer(overrides);
+    const response = await post();
+    assert.equal(response.status, 200, outcome);
+    const answer = await read(response);
+    assert.equal(answer.status_code, 3000, outcome);
+    assert.equal(answer.status_message, UNEXPECTED);
+    const saved = record();
+    assert.equal(saved.handshake, null, outcome);
+    assert.equal(saved.state, "unregistered");
+    assert.equal(saved.token_c_sha256, null);
+    assert.equal(saved.last_call_ended_at, t.clock.now);
+    assert.deepEqual(handshakeOf(saved), { kind: "register", status_code: 3000, message: UNEXPECTED });
+    peer();
+    assert.equal((await read(await post())).status_code, 1000, outcome);
+  }
 });
 
 test("a storage error in the hand-out answers 500 and nothing more", async () => {
