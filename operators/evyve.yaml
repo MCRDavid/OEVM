@@ -71,7 +71,7 @@ sources:
       evyve's news post "evyve Selects Monta to Power Reliable Growth Across the UK's EV
       Charging Network", dated 19 January 2026 (read 2026-10-17). Monta provides its back
       end operations, payment and roaming. No open data link.
-  - url: https://monta.com/en/help-center/export-open-data-charge-points/
+  - url: https://monta.com/help/monta-hub-reporting-compliance-data-exports-third-party-publishing/export-open-data-charge-points
     note: >-
       Monta's help article on exporting open data (read 2026-10-17): a network exports a file
       for its whole operator from Monta Hub and publishes it itself. It names no file format,
