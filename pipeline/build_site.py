@@ -7,8 +7,8 @@
 copies the committed site/ pages into the build folder, adds MapLibre GL JS from
 node_modules (served from the site itself, so visitors contact no script host), its
 licence and the notices of the packages it bundles, and writes assets/config.json. It
-also publishes the disclaimer, data licences, security policy and "Report a mistake"
-pages (pipeline/documents.py), so the footer links stay on the site.
+also publishes the disclaimer, data licences, security policy, "Report a mistake" and
+findings pages (pipeline/documents.py), so the footer links stay on the site.
 
 --offline-style points the map at a plain local style instead of the OpenFreeMap
 basemap. Tests and CI use it, because the basemap's terms forbid automated collection
@@ -153,11 +153,15 @@ def build(out: Path, *, offline_style: bool = False) -> list[str]:
         json.dumps(config, indent=2) + "\n", encoding="utf-8"
     )
     pages = documents.write(out)
+    folders = [f"{path.parent.relative_to(out)}/" for path in pages if path.parent.parent == out]
+    posts = len(pages) - len(folders)
     return [
         f"copied site/ to {out}",
         f"added MapLibre GL JS {version} to {vendor.relative_to(out)}",
         f"map style: {config['style']}",
-        "published " + ", ".join(str(path.parent.relative_to(out)) + "/" for path in pages),
+        "published "
+        + ", ".join(folders)
+        + (f" and {posts} findings post{'s' if posts != 1 else ''}" if posts else ""),
     ]
 
 
