@@ -42,6 +42,7 @@ decisions are in docs/adr/.
 - pipeline/documents.py: disclaimer, data licences, security and report pages, written by build_site.
 - pipeline/project.py: repository URL (also in site/index.html, site/.well-known/security.txt and .github/ISSUE_TEMPLATE).
 - site/index.html, site/assets/: the map page. pipeline/build_site.py: build folder with MapLibre.
+  site/assets/js/labels.js: the cheapest price drawn above each map point (ADR 0026).
 - proxy/: Phase 3 live status Worker, not deployed (docs/PHASE3_PLAN.md). pipeline/live_snapshot.py, schema/live.py: its snapshots.
 - .github/workflows/: ci, fetch-daily (calls deploy), deploy (Pages from main), keepalive.
   The relay Worker's timer starts fetch-daily; GitHub's schedule is a backup, and
