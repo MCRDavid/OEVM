@@ -1,0 +1,466 @@
+{
+  "request": {
+    "method": "GET",
+    "url": "https://ocpi.hubeleon.net/ocpi/public/2.2.1/locations?offset=100"
+  },
+  "response": {
+    "status_code": 200,
+    "headers": {
+      "content-type": "application/json"
+    },
+    "body": {
+      "data": [
+        {
+          "country_code": "GB",
+          "party_id": "HUB",
+          "id": "3166",
+          "publish": true,
+          "address": "Office 2, Montpelier Farm, Margaretting Rd, W",
+          "city": "Chelmsford",
+          "country": "GBR",
+          "coordinates": {
+            "latitude": "51.718494",
+            "longitude": "0.416936"
+          },
+          "time_zone": "Europe/London",
+          "last_updated": "2026-10-17T04:35:17Z",
+          "name": "PR06767 H19 Test Unit",
+          "postal_code": "CM1 3PJ",
+          "parking_type": "PARKING_LOT",
+          "evses": [
+            {
+              "capabilities": [
+                "REMOTE_START_STOP_CAPABLE",
+                "RFID_READER",
+                "CONTACTLESS_CARD_SUPPORT"
+              ],
+              "connectors": [
+                {
+                  "id": "1",
+                  "standard": "IEC_62196_T2",
+                  "format": "SOCKET",
+                  "power_type": "AC_1_PHASE",
+                  "max_voltage": 230,
+                  "max_amperage": 32,
+                  "last_updated": "2026-10-17T04:35:17Z",
+                  "max_electric_power": 7200,
+                  "tariff_ids": [
+                    "3166"
+                  ]
+                }
+              ],
+              "evse_id": "GB*HUB*EUKHBNPAYTERTEST1",
+              "last_updated": "2026-10-17T04:35:17Z",
+              "physical_reference": "PAYTEST",
+              "status": "AVAILABLE",
+              "uid": "4282-1"
+            }
+          ],
+          "operator": {
+            "name": "Park&Recharge Limited"
+          },
+          "opening_times": {
+            "twentyfourseven": false,
+            "regular_hours": [
+              {
+                "period_begin": "09:00",
+                "period_end": "10:00",
+                "weekday": 1
+              },
+              {
+                "period_begin": "09:00",
+                "period_end": "10:00",
+                "weekday": 2
+              },
+              {
+                "period_begin": "09:00",
+                "period_end": "10:00",
+                "weekday": 3
+              },
+              {
+                "period_begin": "09:00",
+                "period_end": "10:00",
+                "weekday": 4
+              },
+              {
+                "period_begin": "09:00",
+                "period_end": "10:00",
+                "weekday": 5
+              }
+            ]
+          }
+        },
+        {
+          "country_code": "GB",
+          "party_id": "HUB",
+          "id": "3199",
+          "publish": true,
+          "address": "Parklands Car Park, White Hart Lane, Basingst",
+          "city": "Basingstoke",
+          "country": "GBR",
+          "coordinates": {
+            "latitude": "51.262005",
+            "longitude": "-1.081967"
+          },
+          "time_zone": "Europe/London",
+          "last_updated": "2026-10-17T06:27:13Z",
+          "name": "PR3031 - Parklands Car Park",
+          "postal_code": "RG21 4AE",
+          "parking_type": "PARKING_LOT",
+          "evses": [
+            {
+              "capabilities": [
+                "REMOTE_START_STOP_CAPABLE",
+                "RFID_READER",
+                "CONTACTLESS_CARD_SUPPORT"
+              ],
+              "connectors": [
+                {
+                  "id": "1",
+                  "standard": "CHADEMO",
+                  "format": "CABLE",
+                  "power_type": "DC",
+                  "max_voltage": 500,
+                  "max_amperage": 100,
+                  "last_updated": "2026-10-17T06:27:13Z",
+                  "max_electric_power": 50000,
+                  "tariff_ids": [
+                    "3199"
+                  ]
+                }
+              ],
+              "evse_id": "GB*HUB*EUKHBNPR30311",
+              "last_updated": "2026-10-17T06:27:13Z",
+              "physical_reference": "PR3031",
+              "status": "AVAILABLE",
+              "uid": "4318-1"
+            },
+            {
+              "capabilities": [
+                "REMOTE_START_STOP_CAPABLE",
+                "RFID_READER",
+                "CONTACTLESS_CARD_SUPPORT"
+              ],
+              "connectors": [
+                {
+                  "id": "2",
+                  "standard": "IEC_62196_T2_COMBO",
+                  "format": "CABLE",
+                  "power_type": "DC",
+                  "max_voltage": 500,
+                  "max_amperage": 100,
+                  "last_updated": "2026-10-17T06:27:13Z",
+                  "max_electric_power": 100000,
+                  "tariff_ids": [
+                    "3199"
+                  ]
+                }
+              ],
+              "evse_id": "GB*HUB*EUKHBNPR30312",
+              "last_updated": "2026-10-17T06:27:13Z",
+              "physical_reference": "PR3031",
+              "status": "AVAILABLE",
+              "uid": "4318-2"
+            }
+          ],
+          "operator": {
+            "name": "Park&Recharge Limited"
+          }
+        },
+        {
+          "country_code": "GB",
+          "party_id": "HUB",
+          "id": "3779",
+          "publish": true,
+          "address": "Churchill Way car park, Churchill Way West, B",
+          "city": "Basingstoke",
+          "country": "GBR",
+          "coordinates": {
+            "latitude": "51.265850",
+            "longitude": "-1.091380"
+          },
+          "time_zone": "Europe/London",
+          "last_updated": "2026-09-29T11:59:34Z",
+          "name": "(Archived) PR3160 - Churchill Way",
+          "postal_code": "RG21 7QU",
+          "parking_type": "PARKING_LOT",
+          "evses": [
+            {
+              "capabilities": [
+                "REMOTE_START_STOP_CAPABLE",
+                "RFID_READER"
+              ],
+              "connectors": [
+                {
+                  "id": "1",
+                  "standard": "IEC_62196_T2",
+                  "format": "SOCKET",
+                  "power_type": "AC_1_PHASE",
+                  "max_voltage": 230,
+                  "max_amperage": 32,
+                  "last_updated": "2026-08-10T07:36:23Z",
+                  "max_electric_power": 7000,
+                  "tariff_ids": [
+                    "3779"
+                  ]
+                }
+              ],
+              "evse_id": "GB*HUB*EUKHBNPR31601",
+              "last_updated": "2026-09-29T11:59:34Z",
+              "physical_reference": "PR3160",
+              "status": "AVAILABLE",
+              "uid": "4997-1"
+            },
+            {
+              "capabilities": [
+                "REMOTE_START_STOP_CAPABLE",
+                "RFID_READER"
+              ],
+              "connectors": [
+                {
+                  "id": "2",
+                  "standard": "IEC_62196_T2",
+                  "format": "SOCKET",
+                  "power_type": "AC_1_PHASE",
+                  "max_voltage": 230,
+                  "max_amperage": 32,
+                  "last_updated": "2026-08-10T07:36:23Z",
+                  "max_electric_power": 7000,
+                  "tariff_ids": [
+                    "3779"
+                  ]
+                }
+              ],
+              "evse_id": "GB*HUB*EUKHBNPR31602",
+              "last_updated": "2026-09-29T11:59:34Z",
+              "physical_reference": "PR3160",
+              "status": "AVAILABLE",
+              "uid": "4997-2"
+            }
+          ],
+          "operator": {
+            "name": "Park&Recharge Limited"
+          }
+        },
+        {
+          "country_code": "GB",
+          "party_id": "HUB",
+          "id": "3788",
+          "publish": true,
+          "address": "7 Park Prewett Rd, Basingstoke",
+          "city": "Basingstoke",
+          "country": "GBR",
+          "coordinates": {
+            "latitude": "51.282337",
+            "longitude": "-1.116192"
+          },
+          "time_zone": "Europe/London",
+          "last_updated": "2026-10-17T02:55:55Z",
+          "name": "PR3164 - Rooksdown Community Centre",
+          "postal_code": "RG24 9RG",
+          "parking_type": "PARKING_LOT",
+          "evses": [
+            {
+              "capabilities": [
+                "REMOTE_START_STOP_CAPABLE",
+                "RFID_READER"
+              ],
+              "connectors": [
+                {
+                  "id": "1",
+                  "standard": "IEC_62196_T2",
+                  "format": "SOCKET",
+                  "power_type": "AC_3_PHASE",
+                  "max_voltage": 415,
+                  "max_amperage": 32,
+                  "last_updated": "2026-10-17T02:55:55Z",
+                  "max_electric_power": 22000,
+                  "tariff_ids": [
+                    "3788"
+                  ]
+                }
+              ],
+              "evse_id": "GB*HUB*EUKHBNPR31641",
+              "last_updated": "2026-10-17T02:55:55Z",
+              "physical_reference": "PR3164",
+              "status": "AVAILABLE",
+              "uid": "5024-1"
+            },
+            {
+              "capabilities": [
+                "REMOTE_START_STOP_CAPABLE",
+                "RFID_READER"
+              ],
+              "connectors": [
+                {
+                  "id": "2",
+                  "standard": "IEC_62196_T2",
+                  "format": "SOCKET",
+                  "power_type": "AC_3_PHASE",
+                  "max_voltage": 415,
+                  "max_amperage": 32,
+                  "last_updated": "2026-10-17T02:55:55Z",
+                  "max_electric_power": 22000,
+                  "tariff_ids": [
+                    "3788"
+                  ]
+                }
+              ],
+              "evse_id": "GB*HUB*EUKHBNPR31642",
+              "last_updated": "2026-10-17T02:55:55Z",
+              "physical_reference": "PR3164",
+              "status": "OUTOFORDER",
+              "uid": "5024-2"
+            }
+          ],
+          "operator": {
+            "name": "Park&Recharge Limited"
+          }
+        },
+        {
+          "country_code": "GB",
+          "party_id": "HUB",
+          "id": "3827",
+          "publish": true,
+          "address": "Basingstoke RG21 4AW",
+          "city": "Basingstoke",
+          "country": "GBR",
+          "coordinates": {
+            "latitude": "51.262650",
+            "longitude": "-1.083111"
+          },
+          "time_zone": "Europe/London",
+          "last_updated": "2026-10-17T04:19:03Z",
+          "name": "PR3193 - Eastlands Forecourt - ACE0421969",
+          "postal_code": "RG21 4AW",
+          "parking_type": "PARKING_LOT",
+          "evses": [
+            {
+              "capabilities": [
+                "REMOTE_START_STOP_CAPABLE",
+                "RFID_READER"
+              ],
+              "connectors": [
+                {
+                  "id": "1",
+                  "standard": "IEC_62196_T2",
+                  "format": "SOCKET",
+                  "power_type": "AC_1_PHASE",
+                  "max_voltage": 230,
+                  "max_amperage": 32,
+                  "last_updated": "2026-10-17T04:19:03Z",
+                  "max_electric_power": 7000,
+                  "tariff_ids": [
+                    "3827"
+                  ]
+                }
+              ],
+              "evse_id": "GB*HUB*EUKHBNPR31931",
+              "last_updated": "2026-10-17T04:19:03Z",
+              "physical_reference": "PR3193",
+              "status": "AVAILABLE",
+              "uid": "5002-1"
+            },
+            {
+              "capabilities": [
+                "REMOTE_START_STOP_CAPABLE",
+                "RFID_READER"
+              ],
+              "connectors": [
+                {
+                  "id": "2",
+                  "standard": "IEC_62196_T2",
+                  "format": "SOCKET",
+                  "power_type": "AC_1_PHASE",
+                  "max_voltage": 230,
+                  "max_amperage": 32,
+                  "last_updated": "2026-10-17T04:19:03Z",
+                  "max_electric_power": 7000,
+                  "tariff_ids": [
+                    "3827"
+                  ]
+                }
+              ],
+              "evse_id": "GB*HUB*EUKHBNPR31932",
+              "last_updated": "2026-10-17T04:19:03Z",
+              "physical_reference": "PR3193",
+              "status": "AVAILABLE",
+              "uid": "5002-2"
+            }
+          ],
+          "operator": {
+            "name": "Park&Recharge Limited"
+          },
+          "opening_times": {
+            "twentyfourseven": false,
+            "regular_hours": [
+              {
+                "period_begin": "00:00",
+                "period_end": "08:00",
+                "weekday": 1
+              },
+              {
+                "period_begin": "19:00",
+                "period_end": "23:59",
+                "weekday": 1
+              },
+              {
+                "period_begin": "00:00",
+                "period_end": "08:00",
+                "weekday": 2
+              },
+              {
+                "period_begin": "19:00",
+                "period_end": "23:59",
+                "weekday": 2
+              },
+              {
+                "period_begin": "00:00",
+                "period_end": "08:00",
+                "weekday": 3
+              },
+              {
+                "period_begin": "19:00",
+                "period_end": "23:59",
+                "weekday": 3
+              },
+              {
+                "period_begin": "00:00",
+                "period_end": "08:00",
+                "weekday": 4
+              },
+              {
+                "period_begin": "19:00",
+                "period_end": "23:59",
+                "weekday": 4
+              },
+              {
+                "period_begin": "00:00",
+                "period_end": "08:00",
+                "weekday": 5
+              },
+              {
+                "period_begin": "19:00",
+                "period_end": "23:59",
+                "weekday": 5
+              },
+              {
+                "period_begin": "00:00",
+                "period_end": "23:59",
+                "weekday": 6
+              },
+              {
+                "period_begin": "00:00",
+                "period_end": "23:59",
+                "weekday": 7
+              }
+            ]
+          }
+        }
+      ],
+      "status_code": 1000,
+      "status_message": "Success",
+      "timestamp": "2026-10-17T07:37:05Z"
+    }
+  }
+}
