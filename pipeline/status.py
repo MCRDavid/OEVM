@@ -37,7 +37,7 @@ from pipeline.registry import ROOT, RegistryError, load_registry
 from pipeline.transparency import LINKS, STYLE, _e, _link, short_disclaimer
 from schema.operator import OperatorConfig
 from schema.published import HistoryPoint, MapLayer, OperatorStatus, StatusFile
-from schema.runlog import RunLog
+from schema.runlog import Health, RunLog
 
 HISTORY_DAYS = 30
 # A latest run older than this shows yellow, so a day the daily fetch missed is visible.
@@ -123,6 +123,9 @@ def history_point(run: RunLog) -> HistoryPoint:
         connectors_with_tariff_pct=(
             _pct(health.connectors_with_tariff, health.connectors) if health else None
         ),
+        connectors_with_tariff_from_related_pct=(
+            _pct(health.connectors_with_tariff_from_related, health.connectors) if health else None
+        ),
         evses_with_status_pct=_pct(health.evses_with_status, health.evses) if health else None,
     )
 
@@ -176,6 +179,18 @@ def _share(part: int, whole: int) -> str:
     if not whole:
         return "None received"
     return f"{part} of {whole} ({_pct(part, whole):g}%)"
+
+
+RELATED_FEED = "a related operator&rsquo;s feed"
+
+
+def _tariff_share(health: Health) -> str:
+    """Connectors with a tariff found in the operator's own feed, then any more priced from
+    a related operator's feed (ADR 0020), so a feed that names only those does not look as
+    if none was found."""
+    share = _share(health.connectors_with_tariff, health.connectors)
+    more = health.connectors_with_tariff_from_related
+    return f"{share} from its own feed<br>{more} more from {RELATED_FEED}" if more else share
 
 
 def result_label(status: OperatorStatus) -> str:
@@ -258,7 +273,7 @@ def _latest_table(data: StatusFile) -> str:
             cells = [
                 _share(health.locations_in_uk, health.locations),
                 _share(health.evses_with_status, health.evses),
-                _share(health.connectors_with_tariff, health.connectors),
+                _tariff_share(health),
                 "Not given" if age is None else f"{age:g} days",
                 "<br>".join(_e(issue) for issue in run.issues) or "None",
             ]
@@ -286,6 +301,30 @@ def _latest_table(data: StatusFile) -> str:
     )
 
 
+def _has_related(status: OperatorStatus) -> bool:
+    """True when the latest run or any day in the history has a second tariff figure."""
+    health = status.latest.health if status.latest else None
+    return bool(
+        (health and health.connectors_with_tariff_from_related)
+        or any(p.connectors_with_tariff_from_related_pct for p in status.history)
+    )
+
+
+def _related_note(data: StatusFile) -> str:
+    """Why some operators have a second tariff figure; empty when none has."""
+    if not any(_has_related(status) for status in data.operators.values()):
+        return ""
+    return (
+        "<p>Some connectors name a tariff that is not in their own operator&rsquo;s feed but "
+        "is in the feed of a related operator fetched in the same run. Where the repository "
+        "owner has decided the two operators are related, the map prices those connectors "
+        "from that exact tariff, never by its name, and the tables on this page count them "
+        "after the figure for the operator&rsquo;s own feed. The "
+        '<a href="../transparency/">transparency page</a> names the related operators and '
+        "gives the reasons.</p>"
+    )
+
+
 def _point_label(point: HistoryPoint) -> str:
     if point.failed:
         return "Fetch failed"
@@ -294,6 +333,13 @@ def _point_label(point: HistoryPoint) -> str:
 
 def _percent(value: float | None) -> str:
     return "" if value is None else f"{value:g}%"
+
+
+def _tariff_percent(point: HistoryPoint) -> str:
+    own, more = point.connectors_with_tariff_pct, point.connectors_with_tariff_from_related_pct
+    if not more:
+        return _percent(own)
+    return f"{_percent(own)} from its own feed, {more:g}% from {RELATED_FEED}"
 
 
 def _trend(status: OperatorStatus, now: datetime) -> str:
@@ -313,7 +359,7 @@ def _trend(status: OperatorStatus, now: datetime) -> str:
         f"<td>{_e(p.date)}</td>"
         f"<td>{_point_label(p)}</td>"
         f"<td>{_e(p.locations)}</td>"
-        f"<td>{_percent(p.connectors_with_tariff_pct)}</td>"
+        f"<td>{_tariff_percent(p)}</td>"
         f"<td>{_percent(p.evses_with_status_pct)}</td>"
         "</tr>"
         for p in reversed(points)
@@ -497,6 +543,7 @@ evidence are on the <a href="../transparency/">transparency page</a>.</p>
 {_at_a_glance(data, switched_off)}
 <h2>Latest runs</h2>
 <div class="table-wrap">{_latest_table(data)}</div>
+{_related_note(data)}
 {_switched_off(switched_off)}
 {"" if record is None else _daily_runs_section(record)}
 <h2>The last {HISTORY_DAYS} days</h2>

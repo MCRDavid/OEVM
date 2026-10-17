@@ -295,6 +295,13 @@ class HistoryPoint(_Model):
     complete: bool
     locations: int = Field(ge=0)
     connectors_with_tariff_pct: float | None = Field(default=None, ge=0, le=100)
+    connectors_with_tariff_from_related_pct: float | None = Field(
+        default=None,
+        ge=0,
+        le=100,
+        description="Connectors with a tariff found only in a related operator's feed, by the "
+        "owner's decision in the operator file (tariffs_from, ADR 0020).",
+    )
     evses_with_status_pct: float | None = Field(default=None, ge=0, le=100)
 
 
