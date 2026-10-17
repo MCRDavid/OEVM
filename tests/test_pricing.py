@@ -9,7 +9,14 @@ import pytest
 from adapters.http import PoliteClient
 from adapters.ocpi_221 import fetch
 from adapters.replay import ReplayTransport
-from pipeline.pricing import describe_tariff, location_summary, pence, pounds
+from pipeline.pricing import (
+    describe_tariff,
+    location_summary,
+    map_label,
+    pence,
+    plan_label,
+    pounds,
+)
 from pipeline.registry import load_registry
 from pipeline.tariffs import ConnectorPrice
 from schema.models import Tariff
@@ -194,3 +201,31 @@ def connector(state, low=None, high=None, vat=None):
 )
 def test_location_summary_never_calls_a_mixed_location_free(prices, expected):
     assert location_summary(prices) == expected
+
+
+# The label above a point on the map (ADR 0026)
+
+
+@pytest.mark.parametrize(
+    ("state", "lowest", "vat", "varies", "expected"),
+    [
+        ("free_confirmed", None, None, False, "Free"),
+        # Free comes from the price state only, never from a price that happens to be low.
+        ("priced", Decimal("0.56"), True, False, "56p"),
+        ("priced", Decimal("0.325"), False, True, "from 32.5p excl. VAT"),
+        ("priced", Decimal("0.4917"), True, True, "from 49.2p"),
+        ("priced", Decimal("0.35"), False, False, "35p excl. VAT"),
+        ("priced", None, None, False, None),
+        ("unknown", Decimal("0.828"), True, False, "82.8p"),
+        ("unknown", None, None, False, None),
+    ],
+)
+def test_map_labels_are_short_and_say_when_they_apply(state, lowest, vat, varies, expected):
+    assert map_label(state, lowest, vat, varies) == expected
+
+
+def test_a_plan_label_needs_a_fixed_price_including_vat():
+    assert plan_label(Decimal("0.39"), True) == "39p"
+    assert plan_label(Decimal("0.39"), None) is None
+    assert plan_label(Decimal("0.39"), False) is None
+    assert plan_label(None, True) is None

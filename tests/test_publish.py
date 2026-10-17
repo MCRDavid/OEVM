@@ -480,3 +480,30 @@ def test_taxi_only_locations_are_flagged_by_the_owners_decision(results, tmp_pat
     assert {tuple(e["parking_restrictions"]) for e in detail["location"]["evses"]} == {
         ("taxis_only",)
     }
+
+
+def test_each_kind_of_connector_carries_its_map_label(results, tmp_path):
+    labels = {}
+    for properties, detail in _layer_and_details(results, tmp_path):
+        for summary in properties["cons"]:
+            labels[(properties["name"], summary["kw"])] = summary["lt"]
+            # Free only from the price state; a lowest price always says its VAT basis.
+            assert (summary["lt"] == "Free") == (summary["price"] == "free")
+            assert (summary["lvat"] is None) == (summary["low"] is None)
+            if summary["low"] is not None and summary["lt"] != "Free":
+                assert summary["lt"].endswith("excl. VAT") != summary["lvat"]
+        lows = [s["low"] for s in properties["cons"] if s["low"] is not None]
+        listed = [
+            o["ppk_low"]
+            for o in detail["tariff_options"]
+            if o["state"] == "priced" and o["ppk_low"]
+        ]
+        if lows:
+            assert min(lows) >= min(listed), "the label never undercuts the listed tariffs"
+    # GeniePoint's app price, not only its contactless price (pay at the charger: 92.4p).
+    assert labels[("Premier Inn Dumbarton/ Loch Lomond", 60.0)] == "82.8p"
+    assert labels[("Premier Inn Alnwick", 7.0)] == "57.6p"
+    assert labels[("141 - 143 Seaford Road", 5.06)] == "from 32.5p excl. VAT"
+    assert labels[("Atlantic Quay", 22.0)] == "Free"
+    # ScottishPower's all-zero test tariff is withheld (ADR 0022), so it gives no label.
+    assert labels[("Glengarry", 30.0)] is None
