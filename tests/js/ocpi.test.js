@@ -388,13 +388,20 @@ const handshakeOf = (saved) => ({
 test("unknown paths answer 404 with the OCPI envelope and never reach the object", async () => {
   const t = setup();
   for (const path of ["/", "/ocpi", "/ocpi/2.2", "/ocpi/versions//", "/OCPI/versions", "/oevm", "/oevm/x"]) {
-    const response = await ask(path);
-    assert.equal(response.status, 404, path);
-    assert.equal(response.headers.get("cache-control"), "no-store");
-    const answer = await read(response);
-    assert.equal(answer.status_code, 2000);
-    assert.equal(answer.status_message, "Not found.");
-    assert.equal("data" in answer, false);
+    for (const [method, token] of [
+      ["GET", TOKEN_A],
+      ["GET", null],
+      ["POST", null],
+    ]) {
+      const response = await ask(path, { method, token });
+      assert.equal(response.status, 404, `${method} ${path} ${token}`);
+      assert.equal(response.headers.get("cache-control"), "no-store");
+      assert.equal(response.headers.get("www-authenticate"), null);
+      const answer = await read(response);
+      assert.equal(answer.status_code, 2000);
+      assert.equal(answer.status_message, "Not found.");
+      assert.equal("data" in answer, false);
+    }
   }
   assert.deepEqual(t.names, []);
   assert.equal(t.storage.store.size, 0);
@@ -424,18 +431,25 @@ test("one trailing slash is ignored", async () => {
   assert.equal((await out.json()).state, "unregistered");
 });
 
-test("versions and version details allow only GET and HEAD, before any token check", async () => {
+test("versions and version details allow only GET and HEAD, after the 401 for a missing token", async () => {
   const t = setup();
   for (const path of [PATHS.versions, PATHS.details, `${PATHS.details}/`]) {
     for (const method of ["POST", "PUT", "DELETE", "PATCH", "OPTIONS"]) {
-      for (const token of [TOKEN_A, null]) {
-        const response = await ask(path, { method, token });
-        assert.equal(response.status, 405, `${method} ${path}`);
-        assert.equal(response.headers.get("allow"), "GET, HEAD");
-        const answer = await read(response);
-        assert.equal(answer.status_code, 2000);
-        assert.equal(answer.status_message, "Only GET and HEAD are allowed.");
-      }
+      const response = await ask(path, { method });
+      assert.equal(response.status, 405, `${method} ${path}`);
+      assert.equal(response.headers.get("allow"), "GET, HEAD");
+      assert.equal(response.headers.get("www-authenticate"), null);
+      const answer = await read(response);
+      assert.equal(answer.status_code, 2000);
+      assert.equal(answer.status_message, "Only GET and HEAD are allowed.");
+      // OCPI: "If the header is missing ... the server SHALL respond with an HTTP 401".
+      const missing = await ask(path, { method, token: null });
+      assert.equal(missing.status, 401, `${method} ${path} without a token`);
+      assert.equal(missing.headers.get("www-authenticate"), "Token");
+      assert.equal(missing.headers.get("allow"), null);
+      const refusal = await read(missing);
+      assert.equal(refusal.status_code, 2000);
+      assert.equal(refusal.status_message, "Not allowed.");
     }
   }
   assert.deepEqual(t.names, []);
@@ -508,6 +522,66 @@ test("the front handler uses one object by a neutral name", async () => {
   assert.ok(t.names.length >= 5);
   assert.deepEqual(new Set(t.names), new Set(["connection"]));
   assert.equal(OBJECT_NAME, "connection");
+});
+
+test("when the object cannot be reached, the caller still gets the usual format and nothing about the error", async () => {
+  const reset = "Durable Object reset because its code was updated.";
+  const failures = {
+    // The object's fetch rejects, as Cloudflare's does while a new version is deployed.
+    rejects: () => ({
+      fetch: async () => {
+        throw new Error(reset);
+      },
+    }),
+    // Finding the object fails at once.
+    throws: () => {
+      throw new Error(reset);
+    },
+  };
+  for (const [name, failure] of Object.entries(failures)) {
+    const t = setup();
+    t.env.CONNECTION.get = failure;
+    const requests = [
+      [PATHS.versions, {}],
+      [PATHS.details, {}],
+      [PATHS.credentials, {}],
+      [PATHS.credentials, { method: "POST", body: credentialsBody() }],
+      [PATHS.credentials, { method: "PUT", body: credentialsBody() }],
+      [PATHS.credentials, { method: "DELETE" }],
+    ];
+    for (const [path, options] of requests) {
+      const label = `${name}: ${options.method ?? "GET"} ${path}`;
+      const response = await ask(path, options);
+      assert.equal(response.status, 500, label);
+      assert.match(response.headers.get("content-type"), /^application\/json/);
+      assert.equal(response.headers.get("cache-control"), "no-store");
+      assert.equal(response.headers.get("x-request-id"), "request-1", label);
+      assert.equal(response.headers.get("x-correlation-id"), "correlation-1", label);
+      const text = await response.text();
+      assert.ok(!text.includes(reset), label);
+      const answer = JSON.parse(text);
+      assert.deepEqual(Object.keys(answer).sort(), ["status_code", "status_message", "timestamp"]);
+      assert.equal(answer.status_code, 3000, label);
+      assert.equal(answer.status_message, UNEXPECTED);
+      assert.match(answer.timestamp, TIMESTAMP);
+    }
+    const head = await ask(PATHS.versions, { method: "HEAD" });
+    assert.equal(head.status, 500);
+    assert.equal(head.headers.get("x-request-id"), "request-1");
+    assert.equal(await head.text(), "");
+    const fresh = await ask(PATHS.versions, { ids: false });
+    assert.equal(fresh.status, 500);
+    assert.match(fresh.headers.get("x-request-id"), UUID);
+    assert.match(fresh.headers.get("x-correlation-id"), UUID);
+    assert.equal((await read(fresh)).status_code, 3000);
+    const out = await handOut();
+    assert.equal(out.status, 500, `${name}: hand-out`);
+    assert.match(out.headers.get("content-type"), /^application\/json/);
+    assert.equal(out.headers.get("cache-control"), "no-store");
+    assert.equal(await out.text(), '{"error":"Unexpected server error."}');
+    assert.equal(t.storage.store.size, 0);
+    assert.equal(calls.length, 0);
+  }
 });
 
 // Envelope, ids and HEAD
@@ -1116,28 +1190,59 @@ test("a Base64 POST is called back in Base64", async () => {
 });
 
 test("a refused versions call is tried once in the other form", async () => {
-  const t = setup();
-  peer({
-    versions: (url, init) =>
-      init.headers.authorization === `Token ${TOKEN_B}` ? new Response(null, { status: 401 }) : versionsAnswer(),
-  });
-  const answer = await read(await post());
-  assert.equal(answer.status_code, 1000);
-  assert.deepEqual(
-    calls.map((c) => [c.url, authorization(c)]),
-    [
-      [VERSIONS_URL, `Token ${TOKEN_B}`],
-      [VERSIONS_URL, `Token ${btoa(TOKEN_B)}`],
-      [DETAILS_URL, `Token ${btoa(TOKEN_B)}`],
-    ],
-  );
-  assert.deepEqual(t.waits, [2000, 2000]);
-  assert.deepEqual(record().last_handshake.forms_tried, ["plain", "base64", "base64"]);
-  assert.equal(record().token_b_encoding, "base64");
+  for (const status of [401, 403]) {
+    const t = setup();
+    peer({
+      versions: (url, init) =>
+        init.headers.authorization === `Token ${TOKEN_B}` ? new Response(null, { status }) : versionsAnswer(),
+    });
+    const answer = await read(await post());
+    assert.equal(answer.status_code, 1000, String(status));
+    assert.deepEqual(
+      calls.map((c) => [c.url, authorization(c)]),
+      [
+        [VERSIONS_URL, `Token ${TOKEN_B}`],
+        [VERSIONS_URL, `Token ${btoa(TOKEN_B)}`],
+        [DETAILS_URL, `Token ${btoa(TOKEN_B)}`],
+      ],
+    );
+    assert.deepEqual(t.waits, [2000, 2000]);
+    assert.deepEqual(record().last_handshake.forms_tried, ["plain", "base64", "base64"]);
+    assert.equal(record().token_b_encoding, "base64");
+  }
+});
+
+// A server that Base64-decodes the header strictly may answer 400 to a token that is not
+// Base64, such as one with "-" or "_" in it.
+test("a versions call answered HTTP 400 is tried once in the other form too", async () => {
+  for (const form of ["plain", "base64"]) {
+    const t = setup();
+    const refusedForm = form === "plain" ? `Token ${TOKEN_B}` : `Token ${btoa(TOKEN_B)}`;
+    const otherForm = form === "plain" ? `Token ${btoa(TOKEN_B)}` : `Token ${TOKEN_B}`;
+    peer({
+      versions: (url, init) =>
+        init.headers.authorization === refusedForm ? new Response(null, { status: 400 }) : versionsAnswer(),
+    });
+    const answer = await read(await post({ form }));
+    assert.equal(answer.status_code, 1000, form);
+    assert.deepEqual(
+      calls.map((c) => [c.url, authorization(c)]),
+      [
+        [VERSIONS_URL, refusedForm],
+        [VERSIONS_URL, otherForm],
+        [DETAILS_URL, otherForm],
+      ],
+    );
+    assert.deepEqual(t.waits, [GAP_MS, GAP_MS]);
+    const switched = form === "plain" ? "base64" : "plain";
+    assert.deepEqual(record().last_handshake.forms_tried, [form, switched, switched]);
+    assert.equal(record().token_b_encoding, switched);
+    assert.equal((await (await handOut()).json()).token_encoding, switched);
+  }
 });
 
 test("a refused details call is tried once in the other form", async () => {
-  for (const status of [401, 403]) {
+  for (const status of [400, 401, 403]) {
     setup();
     peer({
       details: (url, init) =>
@@ -1159,19 +1264,21 @@ test("a refused details call is tried once in the other form", async () => {
 });
 
 test("only one fallback per registration", async () => {
-  setup();
-  peer({
-    versions: (url, init) =>
-      init.headers.authorization === `Token ${TOKEN_B}` ? new Response(null, { status: 401 }) : versionsAnswer(),
-    details: (url, init) =>
-      init.headers.authorization === `Token ${btoa(TOKEN_B)}` ? new Response(null, { status: 401 }) : detailsAnswer(),
-  });
-  const answer = await read(await post());
-  const message = api("its 2.2.1 details endpoint answered HTTP 401");
-  assert.equal(answer.status_code, 3001);
-  assert.equal(answer.status_message, message);
-  assert.equal(calls.length, 3);
-  await failedRegistration(3001, message);
+  for (const status of [400, 401]) {
+    setup();
+    peer({
+      versions: (url, init) =>
+        init.headers.authorization === `Token ${TOKEN_B}` ? new Response(null, { status }) : versionsAnswer(),
+      details: (url, init) =>
+        init.headers.authorization === `Token ${btoa(TOKEN_B)}` ? new Response(null, { status }) : detailsAnswer(),
+    });
+    const answer = await read(await post());
+    const message = api(`its 2.2.1 details endpoint answered HTTP ${status}`);
+    assert.equal(answer.status_code, 3001, String(status));
+    assert.equal(answer.status_message, message);
+    assert.equal(calls.length, 3);
+    await failedRegistration(3001, message);
+  }
 });
 
 test("after TOKEN_C is used, TOKEN_A is refused, and a POST with it answers 405", async () => {
@@ -1519,6 +1626,38 @@ test("the setup token's grace ends after its time, or once TOKEN_C is used", asy
   assert.equal((await ask(PATHS.versions)).status, 401);
 });
 
+test("a retry with the setup token keeps the first deadline, even once the secret is deleted", async () => {
+  const minutes = (n) => n * 60_000;
+  for (const deleteSecret of [false, true]) {
+    const label = deleteSecret ? "deleted" : "kept";
+    const t = setup();
+    await register();
+    const first = record().setup_retry;
+    assert.deepEqual(first, { sha256: await sha256Hex(TOKEN_A), until: t.clock.now + SETUP_RETRY_GRACE_MS });
+    const registeredAt = first.until - SETUP_RETRY_GRACE_MS;
+    if (deleteSecret) delete t.env.OCPI_TOKEN_A;
+    // 9 minutes after the first registration, a retry is accepted and replaces the connection.
+    t.clock.now = registeredAt + minutes(9);
+    peer();
+    const retry = await read(await post());
+    assert.equal(retry.status_code, 1000, label);
+    const tokenC = retry.data.token;
+    assert.equal(record().token_c_sha256, await sha256Hex(tokenC));
+    assert.deepEqual(record().setup_retry, first, `${label}: the deadline is not moved`);
+    calls = [];
+    // 11 minutes after it, and 2 after the retry, the setup token counts as used.
+    t.clock.now = registeredAt + minutes(11);
+    const late = await post();
+    assert.equal(late.status, 405, label);
+    assert.equal(late.headers.get("allow"), "GET, PUT, DELETE");
+    assert.equal((await read(late)).status_message, USED);
+    assert.equal(calls.length, 0);
+    assert.equal((await ask(PATHS.versions)).status, 401);
+    assert.equal(record().token_c_sha256, await sha256Hex(tokenC));
+    assert.equal((await ask(PATHS.versions, { token: tokenC })).status, 200);
+  }
+});
+
 test("after a PUT the previous TOKEN_C still works until the new one is used", async () => {
   let t = setup();
   const first = (await register()).tokenC;
@@ -1751,19 +1890,21 @@ test("a PUT with TOKEN_C reads the peer again with the new TOKEN_B and answers a
 });
 
 test("a renewal has no second form", async () => {
-  const t = setup();
-  const { tokenC } = await register();
-  const waits = t.waits.length;
-  t.clock.now += 10_000;
-  peer({ versions: () => new Response(null, { status: 401 }) });
-  const answer = await read(await put(tokenC));
-  const message = api("its versions endpoint answered HTTP 401");
-  assert.equal(answer.status_code, 3001);
-  assert.equal(answer.status_message, message);
-  assert.equal(calls.length, 1);
-  assert.equal(t.waits.length, waits);
-  assert.equal(record().token_b, TOKEN_B);
-  assert.deepEqual(handshakeOf(record()), { kind: "update", status_code: 3001, message });
+  for (const status of [400, 401, 403]) {
+    const t = setup();
+    const { tokenC } = await register();
+    const waits = t.waits.length;
+    t.clock.now += 10_000;
+    peer({ versions: () => new Response(null, { status }) });
+    const answer = await read(await put(tokenC));
+    const message = api(`its versions endpoint answered HTTP ${status}`);
+    assert.equal(answer.status_code, 3001, String(status));
+    assert.equal(answer.status_message, message);
+    assert.equal(calls.length, 1);
+    assert.equal(t.waits.length, waits);
+    assert.equal(record().token_b, TOKEN_B);
+    assert.deepEqual(handshakeOf(record()), { kind: "update", status_code: 3001, message });
+  }
 });
 
 test("a failed renewal keeps the old tokens and addresses", async () => {
@@ -2175,6 +2316,23 @@ test("the object refuses on its own what the front handler refuses", async () =>
   assert.equal((await direct(request("/ocpi/2.2.1/locations"))).status, 404);
   assert.equal((await direct(request(PATHS.versions, { token: null }))).status, 401);
   assert.equal(calls.length, 0);
+});
+
+// Another Worker on the same Cloudflare account that binds to the class can call its public
+// methods over RPC, so fetch, which makes every check itself, must be the only one.
+test("fetch is the only method another Worker could call on the object", async () => {
+  assert.deepEqual(Object.getOwnPropertyNames(OcpiConnection.prototype).sort(), ["constructor", "fetch"]);
+  assert.deepEqual(Object.getOwnPropertySymbols(OcpiConnection.prototype), []);
+  assert.deepEqual(Object.getOwnPropertyNames(OcpiConnection).sort(), ["length", "name", "prototype"]);
+  const t = setup();
+  const object = t.instance();
+  assert.deepEqual(Object.keys(object).sort(), ["ctx", "env", "now", "sleep", "timeoutMs"]);
+  const internal = ["load", "save", "ocpiRoute", "credentials", "refuseBody", "handshake", "late"];
+  internal.push("readPeer", "callPeer", "unregister", "noteContact", "release", "handOut");
+  for (const name of internal) assert.equal(object[name], undefined, name);
+  // Called directly, as another Worker could, fetch still asks for the pull token.
+  const direct = await object.fetch(new Request(`${WORKER}${PATHS.connection}`));
+  assert.equal(direct.status, 403);
 });
 
 test("the limits fit together", () => {

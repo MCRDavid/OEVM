@@ -77,12 +77,14 @@ OCPI conformance and for security, on 17 October 2026.
   version details and credentials routes. Once a POST with it succeeds ("The
   `CREDENTIALS_TOKEN_A` can then be thrown away, it MAY no longer be used"), the Worker keeps
   its hash and refuses it from then on, even if the secret is still set, with one exception
-  (D7): for 10 minutes, and only until Tesla first uses TOKEN_C, the same TOKEN_A may register
-  again, replacing the connection, in case Tesla never received the answer. After that a POST
-  with it answers HTTP 405 while the connection stands, and any other request 401. The refusal
-  depends on the stored record, so the owner deletes the secret as soon as Tesla has
-  connected. Setting a different `OCPI_TOKEN_A` and submitting Tesla's form again starts a new
-  registration that replaces the old one (D6).
+  (D7): for 10 minutes after the first registration made with it, and only until Tesla first
+  uses TOKEN_C, the same TOKEN_A may register again, replacing the connection, in case Tesla
+  never received the answer. The exception works from the stored hash, so deleting the secret
+  does not end it, and a retry keeps the first deadline, so retrying never makes it longer.
+  After that a POST with it answers HTTP 405 while the connection stands, and any other
+  request 401. The refusal depends on the stored record, so the owner deletes the secret as
+  soon as Tesla has connected. Setting a different `OCPI_TOKEN_A` and submitting Tesla's form
+  again starts a new registration that replaces the old one (D6).
 - **TOKEN_B** arrives in Tesla's POST or PUT and is kept only in the Durable Object. It may be
   up to 255 printable characters; anything longer than OCPI's 64 is noted for the owner.
 - **TOKEN_C** is made in the object from 32 random bytes (`crypto.getRandomValues`), returned
@@ -95,23 +97,34 @@ OCPI conformance and for security, on 17 October 2026.
   it is treated like a key: the same length rules as TOKEN_A apply, it is compared by hash,
   and a wrong one gets HTTP 403. Nothing goes in the repository, and this Worker holds no
   GitHub token.
-- **The handshake keeps to OCPI 2.2.1.** A POST with TOKEN_C, and a PUT or DELETE with a setup
-  token, answer HTTP 405 with an `Allow` header ("This method MUST return a `HTTP status code
-  405: method not allowed` if the client has already been registered before"). Unknown tokens
-  get HTTP 401 with `WWW-Authenticate: Token`. A body that is not JSON gets HTTP 400; one over
-  16 KB, or a Credentials object the Worker cannot use, gets OCPI status 2001. Every OCPI
-  answer uses the OCPI response envelope and returns the caller's `X-Request-ID` and
-  `X-Correlation-ID` (or new ones if it sent none). The `Authorization: Token` header is
-  accepted Base64 encoded (padded or not, standard or URL-safe), as OCPI 2.2.1 asks, or plain,
-  as its own note says many implementations send it. Tokens are compared in constant time, by
-  comparing their SHA-256 hashes with the same function as the relay. If the Worker cannot use
+- **The handshake keeps to OCPI 2.2.1.** A POST with TOKEN_C answers HTTP 405 ("This method
+  MUST return a `HTTP status code 405: method not allowed` if the client has already been
+  registered before"), and so do a PUT or DELETE with a setup token ("... if the client has not
+  been registered yet" for PUT, "... if the client has not been registered before" for
+  DELETE), each with an `Allow` header. Unknown tokens get HTTP 401 with `WWW-Authenticate:
+  Token`, and so does a request with no usable `Authorization` header, before any 405. The
+  one exception: a method other than GET or HEAD on versions or details answers 405 without
+  the object being asked whether a token in a usable form is known, so such stray requests
+  use no Durable Object requests. A body that is not JSON gets HTTP 400; one over 16 KB, or a
+  Credentials object the Worker cannot use, gets OCPI status 2001. Every OCPI answer uses the
+  OCPI response envelope and returns the caller's `X-Request-ID` and `X-Correlation-ID` (or
+  new ones if it sent none). The `Authorization: Token` header is accepted Base64 encoded
+  (padded or not, standard or URL-safe), as OCPI 2.2.1 asks, or plain, as its own note says
+  many implementations send it. Tokens are compared in constant time, by comparing their
+  SHA-256 hashes with the same function as the relay. If the Worker cannot use
   Tesla's API the POST answers OCPI status 3001; if Tesla does not offer version 2.2.1, 3002;
   and if its details lack a locations endpoint, 3003. A missing tariffs or credentials
   endpoint is noted for the owner but does not stop the connection (D3), because role NSP is
   "probably only interested in Location information" (OCPI 2.2.1 `types.asciidoc`). A failed
   handshake changes nothing, so Tesla can try again. Any other error answers OCPI status 3000,
   with HTTP 200 once the caller's token is known, because OCPI says that to such a request "an
-  HTTP error status code MUST NOT be returned".
+  HTTP error status code MUST NOT be returned". Cloudflare passes "Any uncaught exceptions
+  thrown by a Durable Object or thrown by Durable Objects' infrastructure (such as overloads or
+  network errors)" back to the Worker that called it
+  (https://developers.cloudflare.com/durable-objects/best-practices/error-handling/, read 17
+  October 2026). So if the object cannot answer, the front handler answers OCPI status 3000
+  with HTTP 500 and the caller's ids (only the object can recognise the token), and the
+  handout answers a JSON HTTP 500. Nothing about the error is logged or returned.
 - **Its own calls keep the project's rules.** The Worker's calls to Tesla (its versions, then
   its 2.2.1 details) send the project's User-Agent,
   `OEVM/0.1 (+https://github.com/MCRDavid/OEVM)`, go only to an https address on a named host
@@ -119,7 +132,9 @@ OCPI conformance and for security, on 17 October 2026.
   including reading the answer, and keep the 2 seconds between requests set in
   `operators/tesla.yaml`, measured from the end of the last answer, also across handshakes. On
   a registration they send TOKEN_B in the form Tesla used for the setup token; the first call
-  Tesla refuses with HTTP 401 or 403 is tried once more in the other form, which is then used.
+  Tesla refuses with HTTP 400, 401 or 403 is tried once more in the other form, which is then
+  used (400 because a server that decodes the header strictly may answer it to a token that is
+  not Base64). There is still only one switch, so a registration makes at most three calls.
   A renewal uses the stored form only. The form that works is kept and given to the daily run.
   Waiting uses no CPU time.
 - **One handshake at a time, within a time budget.** Cloudflare warns that "Input gates only
@@ -244,6 +259,14 @@ OCPI conformance and for security, on 17 October 2026.
   Cloudflare accounts are what protect it. Keeping the Worker's address in a GitHub secret
   only cuts stray traffic; the address may be discoverable (needs checking), so it is not a
   protection. The handout count shows reads of TOKEN_B that the daily run did not make.
+  Another Worker on the same Cloudflare account could bind to the Durable Object (with
+  `script_name = "oevm-ocpi"`) and call its public methods over RPC, so `fetch` is the only
+  one: every other member is a JavaScript private method ("Private properties of classes are
+  not directly exposed over RPC", https://developers.cloudflare.com/workers/runtime-apis/rpc/,
+  read 17 October 2026). `fetch` itself checks the caller's token, and the pull token for the
+  handout, so a call through such a binding gets no more than a call to the public address,
+  and a handout through it is counted like any other. Tests check that `fetch` is the only
+  public method.
 - **Removed, not erased.** SQLite-backed Durable Objects can be restored "to any point in time in
   the past 30 days" (https://developers.cloudflare.com/durable-objects/api/sqlite-storage-api/),
   so a DELETE takes TOKEN_B out of use, but Cloudflare keeps it recoverable for 30 days. A
@@ -315,12 +338,14 @@ answered. D1 comes first because it relaxes a rule in `CLAUDE.md`.
   `OCPI_TOKEN_A` registers afresh and replaces the current connection. This is the recovery
   after a lost reply once D7's 10 minutes are over. If not: a new setup token works only when
   there is no connection, so that recovery needs a code change.
-- **D7. The 10-minute retry for a used setup token.** Proposed: yes. For 10 minutes after a
-  registration, and only until Tesla first uses TOKEN_C, the setup token that registered may
-  register again, replacing the connection. OCPI's text says TOKEN_A "MAY no longer be used",
-  which permits this; its registration diagram says the setup token "has now become invalid",
-  which does not. If not: `SETUP_RETRY_GRACE_MS` is set to 0, and a lost reply is then
-  recovered only with a new setup token and the form (D6).
+- **D7. The 10-minute retry for a used setup token.** Proposed: yes. For 10 minutes after the
+  first registration made with a setup token, and only until Tesla first uses TOKEN_C, that
+  setup token may register again, replacing the connection. A retry keeps the first deadline,
+  and deleting the secret does not end the 10 minutes, because the Worker uses the stored
+  hash. OCPI's text says TOKEN_A "MAY no longer be used", which permits this; its registration
+  diagram says the setup token "has now become invalid", which does not. If not:
+  `SETUP_RETRY_GRACE_MS` is set to 0, and a lost reply is then recovered only with a new setup
+  token and the form (D6).
 - **D8. Record Tesla's host.** Proposed: after the first registration, the owner records the
   host of Tesla's locations address (the host only, never the address) in
   `operators/tesla.yaml` with its date and source, and the daily run uses only addresses on
@@ -339,8 +364,10 @@ answered. D1 comes first because it relaxes a rule in `CLAUDE.md`.
   version details list only credentials, accepts HTTP 200 for a registration (OCPI suggests
   201), accepts a workers.dev address and country GB, and checks that the role and party ID in
   the reply match its form. If the handout shows that Tesla read the version details and never
-  posted, list the credentials endpoint a second time with role RECEIVER (OCPI's own example
-  does).
+  posted, try giving the one credentials entry the role RECEIVER (OCPI 2.2.1's second version
+  details example lists credentials once, with that role; the spec says the module "is not
+  defined twice"). If a later change lists it twice anyway, record that as a departure from
+  `version_information_endpoint.asciidoc`.
 - Whether Tesla refuses calls from Cloudflare's or GitHub's networks, and whether its servers
   answer HTTP 403 to automated calls, as its website did on 10 October 2026.
 - Whether Tesla's credentials address is on the same host as its locations and tariffs, and

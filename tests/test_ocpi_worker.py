@@ -80,6 +80,32 @@ def test_the_class_binding_and_storage_match_the_code():
         assert asynchronous not in CODE, asynchronous
 
 
+def test_fetch_is_the_only_public_method_of_the_durable_object():
+    # Another Worker on the same Cloudflare account that binds to the class can call its public
+    # methods over RPC, so every member but the constructor and fetch is private (#name).
+    found = re.search(
+        r"^export class OcpiConnection extends DurableObject \{\n(.*?)^\}$",
+        CODE,
+        re.MULTILINE | re.DOTALL,
+    )
+    assert found, "ocpi/worker.js must define OcpiConnection"
+    # Members start two spaces in, and the methods' bodies further in. Anything else at that
+    # depth (a field, a getter or setter, a static member, a computed name) fails here.
+    lines = [
+        line
+        for line in found.group(1).splitlines()
+        if re.match(r" {2}\S", line) and line.strip() != "}"
+    ]
+    member = re.compile(r" {2}(?:async )?(#?[A-Za-z_$][\w$]*)\(.*\) \{")
+    names = []
+    for line in lines:
+        matched = member.fullmatch(line)
+        assert matched, f"not a plain method: {line.strip()}"
+        names.append(matched.group(1))
+    assert [name for name in names if not name.startswith("#")] == ["constructor", "fetch"]
+    assert {"#load", "#save", "#handOut", "#readPeer", "#callPeer"} <= set(names)
+
+
 def test_the_worker_sends_the_project_user_agent():
     assert f'export const USER_AGENT = "{http.USER_AGENT}";' in WORKER
 

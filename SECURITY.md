@@ -69,7 +69,8 @@ research to anyone.
   ([ADR 0025](docs/adr/0025-ocpi-handshake-worker.md)).
 - The Workers have Cloudflare's logs switched off, compare tokens in constant time, and hold no
   GitHub token that can change code or secrets. The handshake Worker stops accepting a setup
-  token at the latest 10 minutes after it has been used.
+  token at the latest 10 minutes after the first registration made with it (a retry does not
+  extend this), and sooner once the operator uses the new token it was given.
 - A secret scanner runs in CI on every file, and before each commit for anyone who has
   installed the pre-commit hooks.
 - Keys are only sent over https, and are removed from anything saved or shown, in case a

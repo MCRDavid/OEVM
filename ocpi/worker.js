@@ -54,8 +54,8 @@ export const HANDSHAKE_BUDGET_MS = 25_000;
 // that has stopped, for example in a restart, can be overtaken.
 export const HANDSHAKE_EXPIRY_MS = 60_000;
 // How long a token whose replacement the other party may never have received still works:
-// the setup token after a registration (ADR 0025, D7) and the old token after a renewal.
-// Either ends early once the new token has been used.
+// the setup token after the first registration made with it (ADR 0025, D7; a retry keeps that
+// deadline) and the old token after a renewal. Either ends early once the new token has been used.
 export const SETUP_RETRY_GRACE_MS = 600_000;
 export const PREVIOUS_TOKEN_GRACE_MS = 600_000;
 // The operator's last calls are noted for the owner at most this often per route and method.
@@ -77,6 +77,8 @@ const MAX_PEER_TOKEN_LENGTH = 255;
 const MAX_URL_LENGTH = 255;
 const MAX_ROLES = 10;
 const CONTACT_METHODS = ["GET", "HEAD", "POST", "PUT", "DELETE"];
+// The answers to a registration's call back that try the other token form once (readPeer).
+const FALLBACK_STATUSES = [400, 401, 403];
 
 const PRINTABLE = /^[\x21-\x7e]+$/;
 const TOKEN_HEADER = /^token +(\S+) *$/i;
@@ -395,6 +397,9 @@ function identify(presented, record, setupHash, now) {
   return null;
 }
 
+// Another Worker on the same Cloudflare account that binds to this class can call its public
+// methods over RPC. So fetch is the only one, and it makes every check itself; every other
+// method is private (#), and instance properties are never exposed over RPC.
 export class OcpiConnection extends DurableObject {
   constructor(ctx, env) {
     super(ctx, env);
@@ -406,31 +411,31 @@ export class OcpiConnection extends DurableObject {
 
   // The synchronous storage API: with no await between reading and writing the record,
   // nothing else can run in between, whatever the runtime does.
-  load() {
+  #load() {
     const text = this.ctx.storage.kv.get(STORAGE_KEY);
     return { ...JSON.parse(BLANK), ...(typeof text === "string" ? JSON.parse(text) : {}) };
   }
 
-  save(record) {
+  #save(record) {
     this.ctx.storage.kv.put(STORAGE_KEY, JSON.stringify(record));
   }
 
   async fetch(request) {
     const url = new URL(request.url);
     const path = routePath(url.pathname);
-    if (path === PATHS.connection) return this.handOut(request);
+    if (path === PATHS.connection) return this.#handOut(request);
     const job = { ids: answerFor(request), origin: `https://${url.host}`, caller: null, held: null };
     try {
-      return await this.ocpiRoute(request, path, job);
+      return await this.#ocpiRoute(request, path, job);
     } catch {
       // Nothing about the error is logged or returned. A caller that has been recognised gets
       // HTTP 200, as OCPI asks for every authenticated request.
-      if (job.held !== null) this.release(job.held);
+      if (job.held !== null) this.#release(job.held);
       return ocpi(job.ids, job.caller === null ? 500 : 200, 3000, "Unexpected server error.");
     }
   }
 
-  async ocpiRoute(request, path, job) {
+  async #ocpiRoute(request, path, job) {
     const { ids, origin } = job;
     const method = request.method;
     // Hashing is the only wait before the record is read; from then on, nothing but storage is
@@ -442,11 +447,11 @@ export class OcpiConnection extends DurableObject {
       })),
     );
     const setupHash = setupSecret(this.env.OCPI_TOKEN_A) ? await sha256Hex(this.env.OCPI_TOKEN_A) : null;
-    const record = this.load();
+    const record = this.#load();
     const caller = identify(presented, record, setupHash, this.now());
     if (caller === null) return refused(ids);
     job.caller = caller;
-    this.noteContact(record, caller, method, path, ids);
+    this.#noteContact(record, caller, method, path, ids);
     if (caller.who === "retired") {
       const used = path === PATHS.credentials && method === "POST" && record.state === "registered";
       return used ? usedSetupToken(ids) : refused(ids);
@@ -460,10 +465,10 @@ export class OcpiConnection extends DurableObject {
         : ocpi(ids, 200, 1000, "Success", { data: versionDetails(origin) });
     }
     if (path !== PATHS.credentials) return ocpi(ids, 404, 2000, "Not found.");
-    return this.credentials(request, job, presented, setupHash);
+    return this.#credentials(request, job, presented, setupHash);
   }
 
-  async credentials(request, job, presented, setupHash) {
+  async #credentials(request, job, presented, setupHash) {
     const { ids, origin } = job;
     const method = request.method;
     const peer = job.caller.who === "peer";
@@ -480,43 +485,43 @@ export class OcpiConnection extends DurableObject {
     if ((method === "PUT" || method === "DELETE") && !peer) {
       return notAllowed(ids, "GET, POST", "This token can only register: use POST.");
     }
-    if (method === "DELETE") return this.unregister(job);
+    if (method === "DELETE") return this.#unregister(job);
     if (method !== "POST" && method !== "PUT") {
       return notAllowed(ids, peer ? "GET, PUT, DELETE" : "GET, POST", "This method is not allowed here.");
     }
     const body = await readCredentials(request);
     // Other requests may have run while the body arrived, so the record is read and the caller
     // recognised again before anything is decided.
-    const record = this.load();
+    const record = this.#load();
     const again = identify(presented, record, setupHash, this.now());
     if (again?.who !== job.caller.who) {
       return again?.who === "retired" && record.state === "registered" ? usedSetupToken(ids) : refused(ids);
     }
     job.caller = again;
     const kind = method === "POST" ? "register" : "update";
-    if (body.http === 400) return this.refuseBody(job, kind, 400, body.message);
+    if (body.http === 400) return this.#refuseBody(job, kind, 400, body.message);
     if (busy(record, this.now())) return ocpi(ids, 200, 3000, BUSY);
-    if (body.value === undefined) return this.refuseBody(job, kind, 200, body.message);
-    return this.handshake(kind, request, job, record, body);
+    if (body.value === undefined) return this.#refuseBody(job, kind, 200, body.message);
+    return this.#handshake(kind, request, job, record, body);
   }
 
-  refuseBody(job, kind, httpStatus, message) {
-    const record = this.load();
+  #refuseBody(job, kind, httpStatus, message) {
+    const record = this.#load();
     const outcome = { at: iso(this.now()), kind, status_code: 2001, message, forms_tried: [], notes: [] };
-    this.save({ ...record, last_handshake: outcome });
+    this.#save({ ...record, last_handshake: outcome });
     return ocpi(job.ids, httpStatus, 2001, message);
   }
 
-  async handshake(kind, request, job, record, body) {
+  async #handshake(kind, request, job, record, body) {
     const startedAt = this.now();
     const id = crypto.randomUUID();
     // W1. Cloudflare's output gate should hold the first call to the other party until this is
     // stored (needs checking for the synchronous API).
-    this.save({ ...record, handshake: { id, kind, started_at: startedAt } });
+    this.#save({ ...record, handshake: { id, kind, started_at: startedAt } });
     // Kept until the result is stored, so an unexpected error frees the flag (release).
     job.held = { id, kind, ended: null };
     const forms = kind === "register" ? [job.caller.form, other(job.caller.form)] : [record.token_b_encoding];
-    const result = await this.readPeer({
+    const result = await this.#readPeer({
       id,
       startedAt,
       token: body.value.token,
@@ -532,13 +537,13 @@ export class OcpiConnection extends DurableObject {
       return ocpi(job.ids, 200, 3000, STOPPED);
     }
     const outcome =
-      result.status_code === 1000 && this.late(request.signal, startedAt)
+      result.status_code === 1000 && this.#late(request.signal, startedAt)
         ? { ...result, status_code: 3001, message: LATE }
         : result;
     // Made before the record is read again, so nothing but storage runs from that read to the write.
     const token = outcome.status_code === 1000 ? newToken() : null;
     const tokenHash = token === null ? null : await sha256Hex(token);
-    const fresh = this.load();
+    const fresh = this.#load();
     if (fresh.handshake?.id !== id) {
       job.held = null;
       return ocpi(job.ids, 200, 3000, STOPPED);
@@ -560,7 +565,7 @@ export class OcpiConnection extends DurableObject {
       last_handshake: lastHandshake,
     };
     if (outcome.status_code !== 1000) {
-      this.save(common); // W4
+      this.#save(common); // W4
       job.held = null;
       return ocpi(job.ids, 200, outcome.status_code, outcome.message);
     }
@@ -572,20 +577,22 @@ export class OcpiConnection extends DurableObject {
       updated_at: at,
     };
     if (kind === "register") {
-      // W2
-      this.save({
+      // W2. A retry with the same setup token keeps the first deadline, so a used setup token
+      // never works for longer than SETUP_RETRY_GRACE_MS after its first registration.
+      const retried = fresh.setup_retry !== null && sameToken(fresh.setup_retry.sha256, job.caller.hash);
+      this.#save({
         ...common,
         ...connection,
         state: "registered",
         previous_token_c: null,
-        setup_retry: { sha256: job.caller.hash, until: now + SETUP_RETRY_GRACE_MS },
+        setup_retry: retried ? fresh.setup_retry : { sha256: job.caller.hash, until: now + SETUP_RETRY_GRACE_MS },
         retired_token_a_sha256: retire(fresh.retired_token_a_sha256, job.caller.hash),
         registered_at: at,
         ended_at: null,
       });
     } else {
       // W3
-      this.save({
+      this.#save({
         ...common,
         ...connection,
         previous_token_c: { sha256: job.caller.hash, until: now + PREVIOUS_TOKEN_GRACE_MS },
@@ -599,11 +606,11 @@ export class OcpiConnection extends DurableObject {
 
   // Whether the caller may no longer receive the answer: it has hung up (where the runtime
   // tells this Worker), or the handshake has used up its time budget.
-  late(signal, startedAt) {
+  #late(signal, startedAt) {
     return signal?.aborted === true || this.now() - startedAt > HANDSHAKE_BUDGET_MS;
   }
 
-  async readPeer({ id, startedAt, token, url, forms, lastCallEndedAt, correlation, signal, held }) {
+  async #readPeer({ id, startedAt, token, url, forms, lastCallEndedAt, correlation, signal, held }) {
     let ended = lastCallEndedAt;
     const tried = [];
     // Waits out the gap since this Worker's last answer from the other party, then checks that
@@ -614,24 +621,25 @@ export class OcpiConnection extends DurableObject {
         const ms = ended + GAP_MS - this.now();
         if (ms > 0) await this.sleep(ms);
       }
-      if (this.load().handshake?.id !== id) return { stopped: true };
-      if (this.late(signal, startedAt)) return { late: true };
+      if (this.#load().handshake?.id !== id) return { stopped: true };
+      if (this.#late(signal, startedAt)) return { late: true };
       tried.push(form);
       try {
-        return await this.callPeer(target, token, form, correlation);
+        return await this.#callPeer(target, token, form, correlation);
       } finally {
         ended = this.now();
         // Also kept on the flag's holder, so the gap still holds after an unexpected error.
         held.ended = ended;
       }
     };
-    // On a registration, the first call refused with 401 or 403 is tried once more in the
-    // other form, and that form is used from then on.
+    // On a registration, the first call refused with HTTP 400, 401 or 403 is tried once more in
+    // the other form, and that form is used from then on. 400 is included because a server that
+    // decodes the header strictly may answer it to a token that is not Base64.
     let form = forms[0];
     let canSwitch = forms.length > 1;
     const get = async (target) => {
       let answer = await call(target, form);
-      if (canSwitch && (answer.httpStatus === 401 || answer.httpStatus === 403)) {
+      if (canSwitch && FALLBACK_STATUSES.includes(answer.httpStatus)) {
         canSwitch = false;
         form = forms[1];
         answer = await call(target, form);
@@ -721,7 +729,7 @@ export class OcpiConnection extends DurableObject {
   // One GET to the other party, built fresh: none of its own request's headers are passed on,
   // no redirect is followed (a redirect would carry the Authorization header to another host),
   // and one timer ends both the request and the reading of the answer.
-  async callPeer(target, token, form, correlation) {
+  async #callPeer(target, token, form, correlation) {
     const controller = new AbortController();
     let reader = null;
     const timer = setTimeout(() => {
@@ -790,12 +798,12 @@ export class OcpiConnection extends DurableObject {
     }
   }
 
-  unregister(job) {
-    const record = this.load();
+  #unregister(job) {
+    const record = this.#load();
     if (busy(record, this.now())) return ocpi(job.ids, 200, 3000, BUSY);
     const at = iso(this.now());
     // W5. No call to the other party: "Both parties must end any automated communication."
-    this.save({
+    this.#save({
       ...record,
       state: "ended",
       handshake: null,
@@ -814,7 +822,7 @@ export class OcpiConnection extends DurableObject {
 
   // W0. Notes the operator's call for the owner (at most once a minute per route and method,
   // unless who, form or ids changed), and ends a grace period once the new token has been used.
-  noteContact(record, caller, method, path, ids) {
+  #noteContact(record, caller, method, path, ids) {
     const now = this.now();
     const next = { ...record, last_contact: { ...record.last_contact } };
     let changed = false;
@@ -838,29 +846,29 @@ export class OcpiConnection extends DurableObject {
         changed = true;
       }
     }
-    if (changed) this.save(next);
+    if (changed) this.#save(next);
   }
 
   // After an unexpected error, clears this request's handshake flag if it still holds it, and
   // keeps the end of its last call to the other party, so the next handshake keeps the gap.
-  release({ id, kind, ended }) {
+  #release({ id, kind, ended }) {
     try {
-      const fresh = this.load();
+      const fresh = this.#load();
       if (fresh.handshake?.id === id) {
         const message = "Unexpected server error.";
         const outcome = { at: iso(this.now()), kind, status_code: 3000, message, forms_tried: [], notes: [] };
         const lastCallEndedAt = ended ?? fresh.last_call_ended_at;
-        this.save({ ...fresh, handshake: null, last_call_ended_at: lastCallEndedAt, last_handshake: outcome });
+        this.#save({ ...fresh, handshake: null, last_call_ended_at: lastCallEndedAt, last_handshake: outcome });
       }
     } catch {
       // The flag lapses by itself after HANDSHAKE_EXPIRY_MS.
     }
   }
 
-  async handOut(request) {
+  async #handOut(request) {
     try {
       if (!(await pullAllowed(request, this.env))) return json(403, { error: "Not allowed." });
-      const record = this.load();
+      const record = this.#load();
       const now = this.now();
       const report = { last_handshake: record.last_handshake, last_contact: record.last_contact };
       if (busy(record, now)) {
@@ -880,7 +888,7 @@ export class OcpiConnection extends DurableObject {
         return json(200, { state: "unregistered", handouts: record.handouts, ...report });
       }
       const handouts = { count: record.handouts.count + 1, last_at: iso(now) };
-      this.save({ ...record, handouts }); // W7
+      this.#save({ ...record, handouts }); // W7
       return json(200, {
         state: "registered",
         token: record.token_b,
@@ -907,7 +915,14 @@ function connection(env) {
 
 export default {
   // Refuses what needs no stored state here, so stray requests do not use the free plan's
-  // Durable Object requests; everything else goes to the one object.
+  // Durable Object requests; everything else goes to the one object. An unknown path answers
+  // 404, then a request without a usable token 401 (OCPI requires 401 when the header is
+  // missing), and only then a method other than GET or HEAD on versions and details 405.
+  //
+  // The object, or Cloudflare between here and it, can fail: for example while a new version
+  // is deployed, or when the object is overloaded. The caller then still gets an answer in the
+  // usual format, with nothing about the error. HTTP 500, because whether the caller's token
+  // is known is decided only in the object.
   async fetch(request, env) {
     const url = new URL(request.url);
     const path = routePath(url.pathname);
@@ -917,16 +932,23 @@ export default {
         return json(405, { error: "Only GET is allowed." }, { allow: "GET" }, ids.head);
       }
       if (!(await pullAllowed(request, env))) return json(403, { error: "Not allowed." });
-      return connection(env).fetch(request);
-    }
-    if (path === PATHS.versions || path === PATHS.details) {
-      if (request.method !== "GET" && request.method !== "HEAD") {
-        return notAllowed(ids, "GET, HEAD", "Only GET and HEAD are allowed.");
+      try {
+        return await connection(env).fetch(request);
+      } catch {
+        return json(500, { error: "Unexpected server error." });
       }
-    } else if (path !== PATHS.credentials) {
+    }
+    if (path !== PATHS.versions && path !== PATHS.details && path !== PATHS.credentials) {
       return ocpi(ids, 404, 2000, "Not found.");
     }
     if (tokenForms(request.headers.get("authorization")).length === 0) return refused(ids);
-    return connection(env).fetch(request);
+    if (path !== PATHS.credentials && request.method !== "GET" && request.method !== "HEAD") {
+      return notAllowed(ids, "GET, HEAD", "Only GET and HEAD are allowed.");
+    }
+    try {
+      return await connection(env).fetch(request);
+    } catch {
+      return ocpi(ids, 500, 3000, "Unexpected server error.");
+    }
   },
 };

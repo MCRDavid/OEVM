@@ -414,9 +414,12 @@ merged into `main` is deployed without copying code by hand.
     - `"state"`: `"registered"` once Tesla has connected, `"handshake_in_progress"` while Tesla
       is connecting, or `"ended"` if Tesla ended the connection;
     - `"last_contact"`: when Tesla last called each address, with which kind of token
-      (`"setup"` is the connection token), in which form, and whether it sent request IDs. If it
-      shows Tesla reading `/ocpi/2.2.1` but never a `POST`, Tesla did not like the Worker's
-      answer; see "Needs testing" in ADR 0025;
+      (`"setup"` is the connection token), in which form, and whether it sent request IDs. Your
+      own check in step 9 with the connection token shows here too, as `"GET /ocpi/versions"`
+      with `"who": "setup"`, `"form": "plain"` and `"request_ids": false`, at the time you ran
+      it (times are in UTC), until Tesla calls that address. So only entries dated after you
+      submitted Tesla's form can be Tesla's. If it shows Tesla reading `/ocpi/2.2.1` but never
+      a `POST`, Tesla did not like the Worker's answer; see "Needs testing" in ADR 0025;
     - `"last_handshake"`: the result of Tesla's last attempt. `1000` is success, `2001` means
       Tesla's request was not usable, `3001` that the Worker could not use Tesla's addresses
       or ran out of time (the message says why), `3002` that Tesla offers no version 2.2.1,
@@ -425,18 +428,21 @@ merged into `main` is deployed without copying code by hand.
       token (your own checks count too).
 
     As soon as it says `"registered"`, delete `OCPI_TOKEN_A` in **Settings > Variables and
-    Secrets**. The Worker already refuses a used connection token, but only while its stored
-    record survives, so deleting the secret matters. Then, in a pull request, record the host
+    Secrets**. For 10 minutes after Tesla first registers with it, and until Tesla uses the new
+    token the Worker gave it, the connection token can still register again, even after you
+    delete the secret, so that Tesla can retry if it lost the answer (D7 in ADR 0025); a retry
+    does not add time. After that the Worker refuses it, but only while its stored record
+    survives, so deleting the secret still matters. Then, in a pull request, record the host
     of Tesla's `locations_url` (the host only, never the address or a token) in
     `operators/tesla.yaml` with the date and the source "the operator's credentials POST"; the
     daily run will use only addresses on that host (D8 in ADR 0025). If Tesla asks that its
     host not be published, stop and decide before recording anything.
 
 If Tesla says it never received an answer to its registration, it can simply try again within
-10 minutes (D7 in ADR 0025). After that, set a new connection token as `OCPI_TOKEN_A` (step 7)
-and fill in Tesla's form again with it; the Worker replaces the old connection when Tesla
-registers (D6). If Tesla ever ends the connection, connecting again also needs a new
-connection token and the form again.
+10 minutes of its first registration (D7 in ADR 0025). After that, set a new connection token
+as `OCPI_TOKEN_A` (step 7) and fill in Tesla's form again with it; the Worker replaces the old
+connection when Tesla registers (D6). If Tesla ever ends the connection, connecting again also
+needs a new connection token and the form again.
 
 Do not change the Worker's secrets while the command shows `"handshake_in_progress"`: each
 change is a new deployment and restarts the Worker.
