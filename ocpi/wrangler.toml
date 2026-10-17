@@ -1,0 +1,32 @@
+# Wrangler settings for the OEVM OCPI handshake Worker (ocpi/worker.js, ADR 0025).
+#
+# Cloudflare's Git integration deploys it from main by running "npx wrangler deploy" in
+# this folder (the root directory set in the Worker's build settings, docs/GITHUB_SETTINGS.md,
+# section 11). The name must match the Worker's name in the Cloudflare dashboard, and no name
+# here may contain an operator's name. Its two tokens, OCPI_TOKEN_A and OCPI_PULL_TOKEN, are
+# Worker secrets set in the dashboard; they are never in this file, and deploys keep them.
+# There are no plain variables: the project's details are constants in worker.js.
+name = "oevm-ocpi"
+main = "worker.js"
+compatibility_date = "2026-10-01"
+# Lets the Worker notice that the operator has stopped waiting for an answer, so it does not
+# save a registration nobody received (where the runtime passes this on; ADR 0025).
+compatibility_flags = ["enable_request_signal"]
+workers_dev = true
+# No extra addresses for uploaded versions: only the workers.dev address answers.
+preview_urls = false
+
+[observability]
+enabled = false
+
+# One Durable Object holds the connection's state. The free plan offers only objects
+# stored in SQLite.
+[[durable_objects.bindings]]
+name = "CONNECTION"
+class_name = "OcpiConnection"
+
+# Creates the object's storage on the first deploy. This is the long-supported migrations
+# form; Cloudflare's newer exports table needs a recent Wrangler and cannot be undone.
+[[migrations]]
+tag = "v1"
+new_sqlite_classes = ["OcpiConnection"]
