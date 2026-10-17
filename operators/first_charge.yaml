@@ -1,0 +1,65 @@
+# yaml-language-server: $schema=schema.json
+id: first_charge
+display_name: First Charge
+ocpi_country_code: unknown
+ocpi_party_id: unknown
+adapter: unknown
+base_url: unknown
+endpoints: {}
+auth:
+  method: unknown
+  name: null
+  secret_name: null
+rate_limit:
+  min_seconds_between_requests: 31
+  limits: []
+  limits_checked: unknown
+  notes: >-
+    No feed found yet. First Charge runs on Fuuse, whose open data host (api.fuuse.io) asks
+    for 30 seconds between requests, so any feed found there would use the same 31 second
+    gap as Arnold Clark Charge and ScottishPower Recharge.
+supports_single_location: unknown
+cors: unknown
+attribution: null
+licence: null
+engagement:
+  status: no_public_feed_found
+  evidence:
+    - date: 2026-10-17
+      url: https://www.firstbus.co.uk/about-us/ultra-rapid-electric-vehicle-charging
+      note: >-
+        First Bus's ultra-rapid charging page describes First Charge sites open to the public,
+        paid through the Fuuse app or contactless, and reports a reliability score under the
+        Public Charge Point Regulations 2023. It links no open data feed.
+  log:
+    - date: 2026-10-17
+      action: feed_searched
+      summary: >-
+        First Bus's ultra-rapid charging page and its First Charge site guide were read, and
+        no open data feed or route for requesting open data was found.
+      quote: >-
+        Public Charge Point Regulations 2023: First Charge B2C sites achieved a 97.5%
+        reliability score in 2025.
+      evidence_url: https://www.firstbus.co.uk/about-us/ultra-rapid-electric-vehicle-charging
+access_requested: null
+access_granted: null
+sources:
+  - url: https://www.firstbus.co.uk/about-us/ultra-rapid-electric-vehicle-charging
+    note: >-
+      First Bus's ultra-rapid electric vehicle charging page (read 2026-10-17). Describes the
+      Glasgow Superhub, payment through the Fuuse app, contactless and roaming cards, and a
+      reliability score. No open data link.
+  - url: https://www.firstbus.co.uk/about-us/ultra-rapid-electric-vehicle-charging/first-charge-site-guide
+    note: First Charge site guide (read 2026-10-17). No open data link.
+  - url: https://fuuse.io/blog/first-charge-and-fuuse-benefits-of-shared-infrastructure
+    note: >-
+      Fuuse's article on First Charge (read 2026-10-17): First Bus launched First Charge in
+      July 2025, sharing depot chargers with fleets and the public, with Fuuse as its
+      software partner.
+findings: []
+notes: >-
+  First Bus's shared charging scheme, run on Fuuse. No open data feed was found on First
+  Bus's own pages on 2026-10-17. Fuuse gives each customer a location and a tariff data link
+  to publish (Fuuse help article "Open Data Access (ODA) Links - Overview"). A written
+  request could ask First Bus where First Charge's open data is published.
+enabled: false
