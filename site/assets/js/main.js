@@ -603,6 +603,8 @@ function addChargerLayers() {
       "text-font": FONT,
       "text-size": 12,
       "text-allow-overlap": true,
+      // The letters never push a price label off the map; they are drawn over it instead.
+      "text-ignore-placement": true,
     },
     paint: { "text-color": "#ffffff", "text-opacity": faded(1) },
   });
@@ -657,8 +659,9 @@ function addPillImages(colours) {
 }
 
 // The cheapest price the visitor can pay at each point, in a box above it (labels.js).
-// Where labels would overlap, the cheapest are placed first (symbol-sort-key). The layer
-// sits under the letters in the circles, so a label never covers another point's letter.
+// Where labels would overlap, the cheapest are placed first (symbol-sort-key), and the
+// others are left out. The layer sits under the letters in the circles, so a letter stays
+// readable where a label reaches a neighbouring point; numbered circles keep labels off.
 function addPriceLabels(faded) {
   const colours = PILLS[effectiveTheme()];
   const boxed = addPillImages(colours);

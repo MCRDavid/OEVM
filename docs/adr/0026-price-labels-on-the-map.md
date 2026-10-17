@@ -44,8 +44,9 @@ otherwise through a free app or paying at the charger by contactless card.
   (`plan_label`). The browser only picks one. The map file grows by about a tenth
   before compression (about 6% gzipped, measured on the fixtures).
 - **Readable at a glance.** Labels appear from zoom 11 (about a town). Where labels would
-  overlap, the cheapest are placed first, and a label never covers another point's
-  letter. Grouped points (numbered circles) have no label. The list shows the same label
+  overlap, the cheapest are placed first and the others left out; a label never covers
+  a numbered circle's count, and the letters in the points are drawn over the labels.
+  Grouped points (numbered circles) have no label. The list shows the same label
   for each charger, so the information does not depend on seeing the map.
 
 ## Needs testing
