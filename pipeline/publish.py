@@ -38,6 +38,10 @@ Rules:
   carries those words in the map file, and one where every charge point is marked for
   taxis only (by the owner's decision in the operator file) is flagged, so the map can
   hide them unless the visitor asks. They are published unchanged otherwise.
+- Each kind of connector carries the label drawn above the location's point on the map:
+  the lowest price per kWh among every tariff it lists, worded by pipeline/pricing.py
+  (ADR 0026). The map picks the lowest among the connectors that match the visitor's
+  filters, and compares it with the plans they ticked.
 - Every file is validated against schema/published.py before it is written.
 - The committed site/ folder is never written to; the deploy step copies site/ and adds
   this output.
@@ -59,7 +63,7 @@ from pipeline.access import private_words
 from pipeline.geography import place_in_uk
 from pipeline.health import in_uk
 from pipeline.plans import load_providers
-from pipeline.pricing import location_summary, plan_fee_text, plan_price_text
+from pipeline.pricing import location_summary, plan_fee_text, plan_label, plan_price_text
 from pipeline.registry import ROOT
 from pipeline.tariffs import (
     ConnectorPrice,
@@ -212,6 +216,9 @@ def _connector_summary(
         price=MAP_PRICE[price.state],
         ppk=_pence(price.energy_high) if with_vat else None,
         out=status in OUT_OF_SERVICE,
+        low=None if price.lowest is None else _pence(price.lowest),
+        lvat=None if price.lowest is None else price.lowest_vat,
+        lt=price.label,
     )
 
 
@@ -225,7 +232,7 @@ def map_properties(location: Location, prices: list[ConnectorPrice], key: str) -
     powers = [c.max_kw for c in connectors if c.max_kw is not None]
     states = {p.state for p in prices}
     summaries = {
-        (s.std, _sortable(s.kw), s.price, _sortable(s.ppk), s.out): s
+        (s.std, _sortable(s.kw), s.price, _sortable(s.ppk), s.out, _sortable(s.low), s.lt or ""): s
         for s in (
             _connector_summary(c, p, st)
             for c, p, st in zip(connectors, prices, statuses, strict=True)
@@ -349,6 +356,7 @@ def plans_file(operators: dict[str, OperatorConfig], generated_at: datetime) -> 
                     ),
                     monthly_fee=None if plan.monthly_fee is None else float(plan.monthly_fee),
                     ppk=_pence(plan.price_per_kwh) if fixed else None,
+                    label=plan_label(plan.price_per_kwh, plan.includes_vat),
                     discount_percent=(
                         None if plan.discount_percent is None else float(plan.discount_percent)
                     ),

@@ -16,6 +16,9 @@ Blueprint task 6. For each connector:
 - The indicative price per kWh is the lowest and highest energy price that can apply,
   including VAT when the operator states it. It is a guide for filters and map labels;
   the text from pipeline.pricing is what explains the price.
+- The label above a point on the map (ADR 0026) uses the lowest price per kWh among every
+  tariff the connector lists, not only the preferred ones, because people can pay with
+  the operator's app or account as well as at the charger (see lowest_energy).
 
 For a site's details, site_tariffs lists every tariff its connectors refer to, not only
 the preferred ones, so people can compare them: each with how it is paid for, its price,
@@ -42,6 +45,7 @@ from pipeline.pricing import (
     comparison,
     describe_tariff,
     energy_range,
+    map_label,
     pence,
     readable_name,
     tariff_kind,
@@ -64,6 +68,15 @@ class ConnectorPrice:
     energy_low: Decimal | None = None
     energy_high: Decimal | None = None
     includes_vat: bool | None = None
+    # From lowest_energy over every tariff the connector lists, for the map's label.
+    lowest: Decimal | None = None
+    lowest_vat: bool | None = None
+    lowest_varies: bool = False
+
+    @property
+    def label(self) -> str | None:
+        """The short price drawn above the location's point on the map (ADR 0026)."""
+        return map_label(self.state, self.lowest, self.lowest_vat, self.lowest_varies)
 
     @property
     def indicative(self) -> str | None:
@@ -76,6 +89,28 @@ class ConnectorPrice:
 
 
 UNKNOWN: Literal["unknown"] = "unknown"
+
+
+def lowest_energy(tariffs: list[Tariff]) -> tuple[Decimal, bool, bool] | None:
+    """The lowest price per kWh that any of these tariffs gives, whether it includes VAT,
+    and whether it applies only at some times (every tariff giving it charges more at
+    others), for the label above a point on the map (ADR 0026). Only priced GBP tariffs
+    count, and a tariff whose lowest price per kWh is zero is left out: a label could not
+    say what such a session costs, and only free_confirmed is ever called free. Prices
+    including VAT come first; the lowest whose VAT is not stated is used only when none
+    includes VAT, because the two cannot be compared fairly. None when no price is left."""
+    ranges = [
+        found
+        for found in (energy_range(t) for t in tariffs if t.price_state == "priced")
+        if found is not None and found[0] > 0
+    ]
+    if not ranges:
+        return None
+    with_vat = [r for r in ranges if r[2]]
+    group = with_vat or ranges
+    low = min(r[0] for r in group)
+    varies = all(r[1] != low for r in group if r[0] == low)
+    return low, bool(with_vat), varies
 
 
 def _candidates(tariffs: list[Tariff]) -> list[Tariff]:
@@ -123,6 +158,10 @@ def price_connector(
             unresolved_ids=unresolved,
         )
 
+    cheapest = lowest_energy([t for t in found if t.id not in withheld])
+    lowest = {}
+    if cheapest:
+        lowest = dict(zip(("lowest", "lowest_vat", "lowest_varies"), cheapest, strict=True))
     chosen = _candidates(found)
     shown = [describe_tariff(t, zero_price_withheld=t.id in withheld) for t in chosen]
     ids = [t.id for t in chosen]
@@ -145,9 +184,10 @@ def price_connector(
                 reason="Some listed tariffs could not be read, so free cannot be confirmed.",
                 tariff_ids=ids,
                 unresolved_ids=unresolved,
+                **lowest,
             )
         return ConnectorPrice(
-            **where, state="free_confirmed", text="Free", tariff_ids=ids, **energy
+            **where, state="free_confirmed", text="Free", tariff_ids=ids, **energy, **lowest
         )
 
     priced = [d for d in shown if d.state == "priced"]
@@ -159,6 +199,7 @@ def price_connector(
             reason=shown[0].reason,
             tariff_ids=ids,
             unresolved_ids=unresolved,
+            **lowest,
         )
     texts = list(dict.fromkeys(d.text for d in priced))
     text = texts[0] if len(texts) == 1 else f"{len(texts)} tariffs: " + " | ".join(texts)
@@ -171,6 +212,7 @@ def price_connector(
         tariff_ids=ids,
         unresolved_ids=unresolved,
         **energy,
+        **lowest,
     )
 
 

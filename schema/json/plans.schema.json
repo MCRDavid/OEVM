@@ -68,6 +68,19 @@
           "description": "Fixed price in pence per kWh including VAT. Null for discounts, prices not published, or prices that exclude VAT.",
           "title": "Ppk"
         },
+        "label": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "ppk as the short label the map draws when the visitor ticked the plan and it is the lowest price at a location (ADR 0026), worded by pipeline/pricing.py. Null when ppk is null.",
+          "title": "Label"
+        },
         "discount_percent": {
           "anyOf": [
             {
@@ -165,6 +178,7 @@
         "price_text",
         "monthly_fee",
         "ppk",
+        "label",
         "discount_percent",
         "networks",
         "operator_ids",
