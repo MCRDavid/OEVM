@@ -133,6 +133,8 @@ pipeline/publish.py   writes the map files (GeoJSON layer, detail files, manifes
 pipeline/status.py    builds the feed health page from run logs
 pipeline/transparency.py  builds the transparency page
 pipeline/build_site.py  assembles the website in a build folder, with MapLibre
+relay/                the relay Worker for feeds that refuse GitHub's servers (ADR 0010)
+ocpi/                 the OCPI credentials handshake Worker (ADR 0025)
 site/                 files for the website (map, transparency and privacy pages, security.txt)
 site/assets/js/       the map page's scripts (filters, settings, details, map)
 package.json          front-end packages (MapLibre, and Lighthouse for tests)
@@ -168,6 +170,9 @@ every field.
   design, so the registry tests separately reject UUID-shaped values in operator files.
 - If the scanner flags something that is not a secret, add the comment
   `pragma: allowlist secret` to that line and explain why in the pull request.
+- Tokens for an operator that connects by the OCPI credentials handshake are not stored as
+  GitHub secrets by hand: the handshake Worker holds them (ADR 0025, and section 11 of
+  [docs/GITHUB_SETTINGS.md](docs/GITHUB_SETTINGS.md)).
 - To report a security problem, see [SECURITY.md](SECURITY.md). GitHub settings that
   protect the repository are listed in [docs/GITHUB_SETTINGS.md](docs/GITHUB_SETTINGS.md).
 - Privacy questions and data corrections go through GitHub issue forms. Issues are public,

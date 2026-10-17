@@ -62,6 +62,7 @@ Date: 2026-10-09. Status: proposed. The full plan is `docs/PHASE3_PLAN.md`.
 - Whether char.gy, GeniePoint and Jolt answer a request for one location by id.
 - Snapshot sizes and the CPU time of the first click after a new snapshot.
 - Whether Durable Objects are on the free plan (only matters for fetching on click later).
+  16 October 2026: they are, with SQLite storage only (ADR 0025).
 
 ## Not done
 

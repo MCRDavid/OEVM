@@ -38,7 +38,8 @@ Only the latest version on the `main` branch is supported.
 
 In scope:
 
-- this repository's code, GitHub Actions workflows and configuration;
+- this repository's code, GitHub Actions workflows and configuration, and the Cloudflare Workers
+  deployed from it;
 - the published website and its data files, once they exist;
 - anything that exposes a secret, a key or personal data.
 
@@ -53,13 +54,22 @@ Out of scope:
 
 Please act in good faith: avoid harming people's privacy, do not disrupt any service, only
 look at the data you need to show the problem, and allow reasonable time for a fix before
-telling anyone else. Never test against operators' feeds. If you follow these guidelines,
-the maintainer will not complain about your research to anyone.
+telling anyone else. Never test against operators' feeds. The project's Cloudflare Workers
+share one small daily allowance of requests, so please send them only the few requests needed
+to show a problem. If you follow these guidelines, the maintainer will not complain about your
+research to anyone.
 
 ## How the project protects itself
 
 - No keys, tokens or passwords are stored in the repository. Operator keys live in GitHub
-  Actions secrets and are referred to by name only.
+  Actions secrets and are referred to by name only. The exception is a connection that an
+  operator sets up by calling the project (the OCPI 2.2.1 credentials handshake): its tokens
+  are held by the project's own Cloudflare Worker, as Worker secrets and in the Worker's
+  storage, and the token the operator uses to reach the project is kept only as a hash
+  ([ADR 0025](docs/adr/0025-ocpi-handshake-worker.md)).
+- The Workers have Cloudflare's logs switched off, compare tokens in constant time, and hold no
+  GitHub token that can change code or secrets. The handshake Worker stops accepting a setup
+  token at the latest 10 minutes after it has been used.
 - A secret scanner runs in CI on every file, and before each commit for anyone who has
   installed the pre-commit hooks.
 - Keys are only sent over https, and are removed from anything saved or shown, in case a

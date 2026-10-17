@@ -24,7 +24,7 @@ decisions are in docs/adr/.
 - Dependency audit: see the pip-audit and npm audit steps in .github/workflows/ci.yml
 - Map page: npm ci, then uv run python -m pipeline.run --fixtures --publish build and
   uv run python -m pipeline.build_site --out build (add --offline-style for tests)
-- Front-end tests: npm test; browser tests and Lighthouse: CHROME_PATH=<chrome> uv run pytest -q -m e2e
+- Front-end and Worker tests: npm test; browser tests and Lighthouse: CHROME_PATH=<chrome> uv run pytest -q -m e2e
 
 ## Where things live
 - schema/models.py: Location, EVSE, Connector, Tariff, Provenance. schema/operator.py: registry file model.
@@ -40,9 +40,14 @@ decisions are in docs/adr/.
 - pipeline/status.py: feed health page, with a green, yellow, red or grey circle per operator.
   schema/runlog.py: run log format. pipeline/health.py: figures.
 - pipeline/documents.py: disclaimer, data licences, security and report pages, written by build_site.
-- pipeline/project.py: repository URL (also in site/index.html, site/.well-known/security.txt and .github/ISSUE_TEMPLATE).
+- pipeline/project.py: repository URL (also in site/index.html, site/.well-known/security.txt,
+  .github/ISSUE_TEMPLATE, relay/worker.js and ocpi/worker.js).
 - site/index.html, site/assets/: the map page. pipeline/build_site.py: build folder with MapLibre.
 - proxy/: Phase 3 live status Worker, not deployed (docs/PHASE3_PLAN.md). pipeline/live_snapshot.py, schema/live.py: its snapshots.
+- ocpi/: OCPI 2.2.1 credentials handshake Worker (oevm-ocpi, ADR 0025). One Durable Object holds
+  the connection's tokens; the daily run will read the operator's token from it. Cloudflare
+  deploys ocpi/ from main (ocpi/wrangler.toml; owner's steps in docs/GITHUB_SETTINGS.md, section 11).
+  Tests: tests/js/ocpi.test.js and tests/test_ocpi_worker.py.
 - .github/workflows/: ci, fetch-daily (calls deploy), deploy (Pages from main), keepalive.
   The relay Worker's timer starts fetch-daily; GitHub's schedule is a backup, and
   pipeline/daily_runs.py lets only the first each day fetch and records runs (ADR 0024).
@@ -64,6 +69,9 @@ decisions are in docs/adr/.
 - Never go below 1 second between requests to a host, or below any limit in an operator's
   rate_limit.limits plus a 1 second margin. Record each published limit with its publisher, an
   exact quote, source URL and date; tests enforce these rules. Never run two fetches that use the same host in parallel.
+- Proposed exception, awaiting the owner's confirmation (D1 in ADR 0025): in answer to an
+  operator's own credentials call, the OCPI handshake Worker may overlap the daily pull, closer
+  than the operator's gap, by up to three requests (two for a renewal). Nothing else may.
 - Record spec differences, data quirks and access issues as dated findings in the operator file,
   in neutral words, then regenerate the transparency page.
 - Record every access request, follow-up, reply and check as a dated step in engagement.log
@@ -92,6 +100,14 @@ decisions are in docs/adr/.
 - Fetch through the relay (relay/worker.js) only when the operator file records the owner's
   decision in relay; only feeds that need no key; same User-Agent and rate limits; never
   rotate addresses or disguise the project. Cloudflare deploys relay/ from main (relay/wrangler.toml).
+- The OCPI handshake Worker (ocpi/worker.js, ADR 0025) only answers an operator's credentials
+  handshake and hands its token to the daily run behind OCPI_PULL_TOKEN. It never fetches
+  locations, tariffs or statuses, never holds a GitHub token, never logs a token, retires each
+  setup token by hash once it has registered, and keeps the project User-Agent and the
+  operator's rate limits for its own calls, apart from the proposed D1 overlap above. The daily
+  run uses an address from it only if the host is recorded in the operator file. No operator's
+  name in a Worker, route, object or subdomain name. An operator connected this way stays
+  switched off until its terms are read.
 
 ## The site (docs/PRIVACY_AND_COOKIES.md)
 - No analytics, ads, tracking or third-party files that set cookies or use storage.
@@ -104,6 +120,9 @@ decisions are in docs/adr/.
 ## Security (SECURITY.md)
 - Vulnerabilities, leaked keys and personal data are reported privately, never in public issues.
 - Renew Expires in site/.well-known/security.txt before it lapses; a test fails 30 days ahead.
+- Keys live in GitHub Actions secrets. Only a handshake connection's tokens live with the ocpi
+  Worker, as Worker secrets and in its Durable Object (ADR 0025). Whoever can merge to ocpi/ on
+  main can read them, so every change there gets a careful review.
 
 ## Adding an operator
 Copy operators/_template.yaml to operators/<id>.yaml, pick an adapter, set secret_name, read the
