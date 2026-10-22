@@ -38,9 +38,12 @@ From https://developers.cloudflare.com/kv/platform/limits/:
 - "100,000 reads per day"; "1,000 writes per day" to different keys; writes to the same
   key "1 per second"; values up to "25 MiB".
 
-Not checked: whether Durable Objects are on the free plan, and whether Cloudflare adds
-Network Error Logging headers to `workers.dev` responses. Both **need checking** before
-the steps that depend on them.
+(16 October 2026) Durable Objects are on the free plan, with SQLite storage only: "Workers
+Free plan: Only Durable Objects with SQLite storage backend are available."
+(https://developers.cloudflare.com/durable-objects/platform/pricing/, read 15 and 16 October
+2026). ADR 0025 uses one for the OCPI handshake Worker. Not checked: whether Cloudflare adds
+Network Error Logging headers to `workers.dev` responses. That **needs checking** before the
+steps that depend on it.
 
 ### The operators switched on today
 
@@ -83,8 +86,8 @@ The Worker never contacts an operator. Visitors' requests never reach one either
 
 - **Rate limits.** The project never goes below an operator's gap and never runs two
   fetches to one host in parallel. Many Worker instances answering many visitors cannot
-  keep to that without extra machinery (a Durable Object per host), which is not checked
-  for the free plan.
+  keep to that without extra machinery (a Durable Object per host). Durable Objects are on
+  the free plan (16 October 2026), but whether one per host fits its limits is not checked.
 - **Subrequests.** A full char.gy fetch takes about 120 requests; the free plan allows 50
   per invocation.
 - **CPU.** Parsing a whole network's OCPI data in 10 ms is the blueprint's flagged risk.
@@ -292,7 +295,8 @@ Nothing in GitHub Pages or the relay changes.
   gap or disguise the requests.
 
 - Single-location fetching for char.gy, GeniePoint and Jolt: **needs testing**.
-- Durable Objects on the free plan, and Cloudflare headers on `workers.dev`: **need checking**.
+- Cloudflare headers on `workers.dev`: **need checking**. (Durable Objects are on the free plan,
+  SQLite-backed only: checked 16 October 2026, ADR 0025.)
 - Snapshot sizes and CPU per click: **estimates; need measuring**.
 - How often char.gy, GeniePoint and Jolt update statuses in their public feeds: **unknown**.
   Report the age we measure; never claim an operator breaks the 30-second rule in

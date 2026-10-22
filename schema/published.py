@@ -40,13 +40,43 @@ class ConnectorSummary(_Model):
     ppk: float | None = Field(
         default=None,
         ge=0,
-        description="Pence per kWh including VAT: the highest energy price that can apply. "
-        "Null when the tariff states no VAT or gives no energy price.",
+        description="Pence per kWh including VAT: the highest energy price that can apply, "
+        "with VAT added at the rate in the operator file's vat_not_stated where the feed "
+        "gives none. Null when the tariff states no VAT and no such decision is recorded, "
+        "or gives no energy price.",
     )
     out: bool = Field(
         description="True when the operator reported this connector's charge point as out of "
         "service (out_of_order, inoperative, planned or removed) in the fetch the file was "
         "built from. False for any other status, including unknown."
+    )
+    low: float | None = Field(
+        default=None,
+        ge=0,
+        description="Pence per kWh: the lowest energy price, to the tenth of a penny, that "
+        "the tariffs the connector lists give (the operator's app or account as well as "
+        "paying at the charger), for the label on the map (ADR 0026). Including VAT when "
+        "lvat is true. Tariffs that charge nothing per kWh at all, tariffs named in "
+        "zero_price_tariffs and tariffs outside their own dates are left out. Null when no "
+        "price above 0p is left, or when a tariff left in is free, or free per kWh only at "
+        "some times.",
+    )
+    lvat: bool | None = Field(
+        default=None,
+        description="Whether low includes VAT, including VAT added by the owner's "
+        "vat_not_stated decision; null when low is null.",
+    )
+    lvar: bool | None = Field(
+        default=None,
+        description="Whether low applies only in some cases, such as at some times (the label "
+        "then says 'from'); null when low is null.",
+    )
+    lt: str | None = Field(
+        default=None,
+        description="The label drawn above the location's point on the map for this "
+        "connector, worded by pipeline/pricing.py: 'Free' only when its price state is "
+        "free_confirmed, otherwise low as a price, such as '56p', 'from 32.5p' or "
+        "'49.2p excl. VAT'. Null when there is neither.",
     )
 
 
@@ -210,6 +240,18 @@ class PlanOut(_Model):
         ge=0,
         description="Fixed price in pence per kWh including VAT. Null for discounts, prices "
         "not published, or prices that exclude VAT.",
+    )
+    label: str | None = Field(
+        default=None,
+        description="ppk as the short label the map draws when the visitor ticked the plan "
+        "and it is the lowest price at a location (ADR 0026), worded by pipeline/pricing.py, "
+        "such as '39p', or 'from 44p' for a plan that applies only at some times. Null when "
+        "ppk is null or would show as '0p'.",
+    )
+    only_at_some_times: bool = Field(
+        default=False,
+        description="True when the plan's price applies only at some times of day or on some "
+        "days, as conditions says.",
     )
     discount_percent: float | None = Field(default=None, gt=0, lt=100)
     networks: list[str]

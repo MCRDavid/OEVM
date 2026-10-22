@@ -1,5 +1,5 @@
 {
-  "last_reviewed": "2026-10-17",
+  "last_reviewed": "2026-10-22",
   "disclaimer": "OEVM is a personal, experimental project for learning about AI tools. Much of its code and text was written with an AI assistant, and it will contain mistakes. Charger data comes from the operators and other sources credited on every record, and remains their work. Everything is provided \"as is\", with no warranty or guarantee of any kind. Always check prices and availability at the charger.",
   "regulation": {
     "summary": "The Public Charge Point Regulations 2023 set no limit on how often data users may request the data. Regulation 10(5) requires the data to be available free of charge without terms on its use. DfT's guidance allows terms covering the means of access, which is where operators' rate limits come from.",
@@ -10,6 +10,12 @@
         "url": "https://www.gov.uk/government/publications/the-public-charge-point-regulations-2023-guidance/public-charge-point-regulations-2023-guidance"
       }
     ]
+  },
+  "vat_rule": {
+    "decided": "2026-10-22",
+    "summary": "OCPI 2.2.1 prices exclude VAT, and each price can give the VAT rate that applies to it. Where every price in a tariff gives a rate, this project adds it and shows the price including VAT. A price with no rate is read by OCPI as having no VAT, but VAT on public charging in the UK is at the standard rate of 20%, so such a price is likely to be lower than what a driver pays.",
+    "observed": "In the daily run of 22 October 2026, 10 of the 12 operators fetched gave a VAT rate on their prices, and char.gy and Clenergy EV gave none. char.gy's own pricing page gives each of its prices 20% higher than its feed does. Clenergy EV's website gives no charging prices, but 120 of the 126 prices per kWh in its feed come to a whole penny once 20% is added. The details are in each operator's findings above.",
+    "decision": "The repository owner decided on 22 October 2026 that prices on the map should all include VAT, so they can be compared. For each operator listed here, VAT at the rate shown is added to every price that gives no rate, and the price says this project added it. A price with no rate from any other operator is shown as published and marked \"VAT not stated\". The tariffs themselves are published unchanged."
   },
   "private_rule": {
     "decided": "2026-10-11",
@@ -88,6 +94,7 @@
       "tariffs_from": null,
       "nonstandard_parking_restrictions": null,
       "zero_price_tariffs": null,
+      "vat_not_stated": null,
       "relay": null,
       "expired_certificate": null,
       "excluded_locations": null,
@@ -217,6 +224,12 @@
       "tariffs_from": null,
       "nonstandard_parking_restrictions": null,
       "zero_price_tariffs": null,
+      "vat_not_stated": {
+        "decided": "2026-10-22",
+        "basis": "char.gy's feed gives no VAT rate on any price. Its own pricing page (https://char.gy/pricing, checked 9 October 2026) gives 39p, 59p and 54p per kWh where the feed gives 0.325, 0.4917 and 0.45 pounds: each feed price is the page price less 20%, the UK standard rate of VAT on public charging. The repository owner decided that VAT at 20% is added, so prices on the map all include VAT and can be compared.",
+        "evidence_url": "https://char.gy/open-ocpi/tariffs",
+        "add_percent": 20.0
+      },
       "relay": null,
       "expired_certificate": null,
       "excluded_locations": null,
@@ -256,7 +269,7 @@
           "kind": "data_quality",
           "kind_label": "Data quirk",
           "summary": "Tariff price components give no VAT figure. OCPI 2.2.1 says an omitted VAT means no VAT is applicable.",
-          "handling": "VAT is not guessed. Prices are shown as published, which OCPI defines as excluding VAT, and marked \"excluding VAT, VAT not stated\".",
+          "handling": "Until 2026-10-22, VAT was not guessed: prices were shown as published, which OCPI defines as excluding VAT, and marked \"excluding VAT, VAT not stated\". Since then VAT at 20% is added, by the repository owner's decision recorded in vat_not_stated (see the finding of 2026-10-22).",
           "evidence_url": "https://char.gy/open-ocpi/tariffs",
           "status": "open",
           "resolved_date": null
@@ -298,6 +311,16 @@
           "summary": "In a daily run started by hand on 2026-10-09 at 17:51 UTC from a GitHub Actions runner, with the 4 second gap, the locations feed answered HTTP 403 for offset 2800, after 56 pages. Across the three refusals so far (offsets 2900, 2700 and 2800, with gaps of about 2.8 and 4 seconds, from two networks) the feed refused after 54 to 58 requests each time, while the run with a 6 second gap fetched all of about 120 pages. This suggests a limit on the number of requests in a period of some minutes rather than a block on GitHub's network. That is inferred from these runs; char.gy states no limit.",
           "handling": "char.gy was left out of that run's map. The gap went back to 6 seconds, as recorded under rate_limit. Since ADR 0018, a refusal part-way through a run is followed by a wait of 5 minutes and a wider gap before the page is asked for again, at most twice, and if the fetch still fails the map keeps showing the last good copy with its date.",
           "evidence_url": "https://github.com/MCRDavid/OEVM/actions/runs/37969231568",
+          "status": "open",
+          "resolved_date": null
+        },
+        {
+          "date": "2026-10-22",
+          "kind": "data_quality",
+          "kind_label": "Data quirk",
+          "summary": "Of the 12 operators fetched in the daily run of 22 October 2026, 10 give a VAT rate on their prices and 2, char.gy and Clenergy EV, give none. char.gy's own pricing page gives 39p, 59p and 54p per kWh where the feed gives 32.5p, 49.17p and 45p, so each feed price is the page price less 20%. The page itself does not say whether VAT is included.",
+          "handling": "By the repository owner's decision recorded in vat_not_stated, VAT at 20% is added to every price that gives no VAT rate, and the price says this project added it, so char.gy's prices on the map include VAT like other operators' prices. The tariffs are published unchanged.",
+          "evidence_url": "https://char.gy/pricing",
           "status": "open",
           "resolved_date": null
         }
@@ -393,6 +416,7 @@
       },
       "nonstandard_parking_restrictions": null,
       "zero_price_tariffs": null,
+      "vat_not_stated": null,
       "relay": null,
       "expired_certificate": null,
       "excluded_locations": null,
@@ -521,6 +545,12 @@
       "tariffs_from": null,
       "nonstandard_parking_restrictions": null,
       "zero_price_tariffs": null,
+      "vat_not_stated": {
+        "decided": "2026-10-22",
+        "basis": "Clenergy EV's feed gives no VAT rate on any price, and its website gives no charging prices to compare (read 22 October 2026). Of the 126 prices per kWh in pounds in its tariffs file of 22 October 2026, 120 come to a whole penny, to within 0.02p, once 20% is added (for example 0.4167 becomes 50p and 0.5417 becomes 65p), while only 23 are whole pence as published. This suggests prices with VAT at 20%, the UK standard rate on public charging, taken off; that is inferred from the figures, not stated by Clenergy EV. The repository owner decided that VAT at 20% is added, so prices on the map all include VAT and can be compared.",
+        "evidence_url": "https://api.clenergy.online/development/pcpr/tariffs",
+        "add_percent": 20.0
+      },
       "relay": null,
       "expired_certificate": null,
       "excluded_locations": null,
@@ -621,6 +651,16 @@
           "kind_label": "Data quirk",
           "summary": "5 of 129 tariffs are in a currency other than GBP (3 EUR, 1 USD, 1 CAD on 2026-10-09).",
           "handling": "Their connectors show \"Price unknown\". Currencies are never converted.",
+          "evidence_url": "https://api.clenergy.online/development/pcpr/tariffs",
+          "status": "open",
+          "resolved_date": null
+        },
+        {
+          "date": "2026-10-22",
+          "kind": "data_quality",
+          "kind_label": "Data quirk",
+          "summary": "Tariff price components give no VAT rate (142 components on 2026-10-22). OCPI 2.2.1 says an omitted VAT means no VAT is applicable. Clenergy EV's website gives no charging prices to compare. Of the 126 prices per kWh in pounds, 120 come to a whole penny, to within 0.02p, once 20% is added, against 23 as published. Of the 12 operators fetched in the daily run of 22 October 2026, 10 give a VAT rate on their prices and 2, char.gy and Clenergy EV, give none.",
+          "handling": "Until 2026-10-22 prices were shown as published and marked \"excluding VAT, VAT not stated\". Since then, by the repository owner's decision recorded in vat_not_stated, VAT at 20% is added to every price that gives no VAT rate, and the price says this project added it. Reading the prices as excluding VAT is inferred from the figures and needs confirming by Clenergy EV. The tariffs are published unchanged.",
           "evidence_url": "https://api.clenergy.online/development/pcpr/tariffs",
           "status": "open",
           "resolved_date": null
@@ -727,6 +767,7 @@
         }
       },
       "zero_price_tariffs": null,
+      "vat_not_stated": null,
       "relay": null,
       "expired_certificate": null,
       "excluded_locations": null,
@@ -875,6 +916,7 @@
       "tariffs_from": null,
       "nonstandard_parking_restrictions": null,
       "zero_price_tariffs": null,
+      "vat_not_stated": null,
       "relay": {
         "decided": "2026-10-08",
         "reason": "The files answered HTTP 403 to the first request from a GitHub Actions runner in the first daily run, while answering normally from another network. The repository owner decided to fetch them through the project's relay on Cloudflare Workers, with the project's User-Agent and the same rate limits.",
@@ -1034,6 +1076,7 @@
       "tariffs_from": null,
       "nonstandard_parking_restrictions": null,
       "zero_price_tariffs": null,
+      "vat_not_stated": null,
       "relay": null,
       "expired_certificate": null,
       "excluded_locations": null,
@@ -1231,6 +1274,7 @@
       "tariffs_from": null,
       "nonstandard_parking_restrictions": null,
       "zero_price_tariffs": null,
+      "vat_not_stated": null,
       "relay": null,
       "expired_certificate": null,
       "excluded_locations": null,
@@ -1336,6 +1380,7 @@
       "tariffs_from": null,
       "nonstandard_parking_restrictions": null,
       "zero_price_tariffs": null,
+      "vat_not_stated": null,
       "relay": null,
       "expired_certificate": null,
       "excluded_locations": null,
@@ -1467,6 +1512,7 @@
       "tariffs_from": null,
       "nonstandard_parking_restrictions": null,
       "zero_price_tariffs": null,
+      "vat_not_stated": null,
       "relay": null,
       "expired_certificate": null,
       "excluded_locations": {
@@ -1754,6 +1800,7 @@
         }
       },
       "zero_price_tariffs": null,
+      "vat_not_stated": null,
       "relay": null,
       "expired_certificate": null,
       "excluded_locations": null,
@@ -1887,6 +1934,7 @@
         "evidence_url": "https://api.fuuse.io/opendata/e11a667d-c56a-468f-b8d3-a50b41628292/tariff",
         "tariffs": 1
       },
+      "vat_not_stated": null,
       "relay": null,
       "expired_certificate": null,
       "excluded_locations": null,
@@ -2030,6 +2078,7 @@
       "tariffs_from": null,
       "nonstandard_parking_restrictions": null,
       "zero_price_tariffs": null,
+      "vat_not_stated": null,
       "relay": null,
       "expired_certificate": null,
       "excluded_locations": null,
@@ -2042,6 +2091,68 @@
         "comparison": "The operator's pages have not been checked for limits yet.",
         "difference_from_regulations": "Not known yet.",
         "notes": null
+      },
+      "findings": []
+    },
+    {
+      "id": "amey_ev_charging",
+      "name": "Amey EV Charging",
+      "enabled": false,
+      "adapter": "unknown",
+      "engagement": {
+        "status": "no_public_feed_found",
+        "label": "No public feed found",
+        "headline": "No public feed found (as of 2026-10-22)",
+        "as_of": "2026-10-22",
+        "last_request": null,
+        "last_response": null,
+        "last_response_text": "No request sent",
+        "evidence": [
+          {
+            "date": "2026-10-22",
+            "url": "https://evc.amey.co.uk/charging",
+            "file": null,
+            "note": "Amey's EV charging page, its sitemap and its charging terms have no open data page, feed link or route for requesting open data."
+          }
+        ],
+        "log": [
+          {
+            "date": "2026-10-22",
+            "action": "feed_searched",
+            "action_label": "Searched for a feed",
+            "channel": null,
+            "channel_label": null,
+            "summary": "Amey's EV charging page, its sitemap and its charging terms were read, and no open data feed or route for requesting open data was found.",
+            "quote": "Driving change nationwide, our journey begins in Trafford and the city of Manchester.",
+            "evidence_url": "https://evc.amey.co.uk/charging",
+            "evidence_file": null
+          }
+        ]
+      },
+      "access_requested": null,
+      "access_granted": null,
+      "feeds": [],
+      "licence": null,
+      "attribution": null,
+      "missing_publish_flag": null,
+      "swapped_coordinates": null,
+      "nonstandard_statuses": null,
+      "tariffs_from": null,
+      "nonstandard_parking_restrictions": null,
+      "zero_price_tariffs": null,
+      "vat_not_stated": null,
+      "relay": null,
+      "expired_certificate": null,
+      "excluded_locations": null,
+      "rate_limit": {
+        "our_gap_seconds": 31.0,
+        "our_max_per_hour": 117,
+        "ours": "At least 31 s between requests to the operator's host, measured from the end of the previous request (at most 117 in any hour), retries included.",
+        "published": [],
+        "limits_checked": "unknown",
+        "comparison": "The operator's pages have not been checked for limits yet.",
+        "difference_from_regulations": "Not known yet.",
+        "notes": "No feed found yet. Amey's network runs on Fuuse, whose open data host (api.fuuse.io) asks for 30 seconds between requests, so any feed found there would use the same 31 second gap as Arnold Clark Charge and ScottishPower Recharge."
       },
       "findings": []
     },
@@ -2091,6 +2202,7 @@
       "tariffs_from": null,
       "nonstandard_parking_restrictions": null,
       "zero_price_tariffs": null,
+      "vat_not_stated": null,
       "relay": null,
       "expired_certificate": null,
       "excluded_locations": null,
@@ -2152,6 +2264,7 @@
       "tariffs_from": null,
       "nonstandard_parking_restrictions": null,
       "zero_price_tariffs": null,
+      "vat_not_stated": null,
       "relay": null,
       "expired_certificate": null,
       "excluded_locations": null,
@@ -2206,6 +2319,7 @@
       "tariffs_from": null,
       "nonstandard_parking_restrictions": null,
       "zero_price_tariffs": null,
+      "vat_not_stated": null,
       "relay": null,
       "expired_certificate": null,
       "excluded_locations": null,
@@ -2278,6 +2392,7 @@
       "tariffs_from": null,
       "nonstandard_parking_restrictions": null,
       "zero_price_tariffs": null,
+      "vat_not_stated": null,
       "relay": null,
       "expired_certificate": null,
       "excluded_locations": null,
@@ -2339,6 +2454,7 @@
       "tariffs_from": null,
       "nonstandard_parking_restrictions": null,
       "zero_price_tariffs": null,
+      "vat_not_stated": null,
       "relay": null,
       "expired_certificate": null,
       "excluded_locations": null,
@@ -2406,6 +2522,7 @@
       "tariffs_from": null,
       "nonstandard_parking_restrictions": null,
       "zero_price_tariffs": null,
+      "vat_not_stated": null,
       "relay": null,
       "expired_certificate": null,
       "excluded_locations": null,
@@ -2483,6 +2600,7 @@
       "tariffs_from": null,
       "nonstandard_parking_restrictions": null,
       "zero_price_tariffs": null,
+      "vat_not_stated": null,
       "relay": null,
       "expired_certificate": null,
       "excluded_locations": null,
@@ -2605,6 +2723,7 @@
       "tariffs_from": null,
       "nonstandard_parking_restrictions": null,
       "zero_price_tariffs": null,
+      "vat_not_stated": null,
       "relay": null,
       "expired_certificate": null,
       "excluded_locations": null,
@@ -2694,6 +2813,7 @@
       "tariffs_from": null,
       "nonstandard_parking_restrictions": null,
       "zero_price_tariffs": null,
+      "vat_not_stated": null,
       "relay": null,
       "expired_certificate": null,
       "excluded_locations": null,
@@ -2755,6 +2875,7 @@
       "tariffs_from": null,
       "nonstandard_parking_restrictions": null,
       "zero_price_tariffs": null,
+      "vat_not_stated": null,
       "relay": null,
       "expired_certificate": null,
       "excluded_locations": null,
@@ -2825,6 +2946,7 @@
       "tariffs_from": null,
       "nonstandard_parking_restrictions": null,
       "zero_price_tariffs": null,
+      "vat_not_stated": null,
       "relay": null,
       "expired_certificate": null,
       "excluded_locations": null,
@@ -2929,6 +3051,7 @@
       "tariffs_from": null,
       "nonstandard_parking_restrictions": null,
       "zero_price_tariffs": null,
+      "vat_not_stated": null,
       "relay": null,
       "expired_certificate": null,
       "excluded_locations": null,
@@ -2990,6 +3113,69 @@
       "tariffs_from": null,
       "nonstandard_parking_restrictions": null,
       "zero_price_tariffs": null,
+      "vat_not_stated": null,
+      "relay": null,
+      "expired_certificate": null,
+      "excluded_locations": null,
+      "rate_limit": {
+        "our_gap_seconds": 2.0,
+        "our_max_per_hour": 1800,
+        "ours": "At least 2 s between requests to the operator's host, measured from the end of the previous request (at most 1800 in any hour), retries included.",
+        "published": [],
+        "limits_checked": "unknown",
+        "comparison": "The operator's pages have not been checked for limits yet.",
+        "difference_from_regulations": "Not known yet.",
+        "notes": null
+      },
+      "findings": []
+    },
+    {
+      "id": "e_on_drive",
+      "name": "E.ON Drive",
+      "enabled": false,
+      "adapter": "unknown",
+      "engagement": {
+        "status": "key_on_request",
+        "label": "Key issued on request",
+        "headline": "Key issued on request (as of 2026-10-22)",
+        "as_of": "2026-10-22",
+        "last_request": null,
+        "last_response": null,
+        "last_response_text": "No request sent",
+        "evidence": [
+          {
+            "date": "2026-10-22",
+            "url": "https://www.edri.com/en-uk/compliance",
+            "file": null,
+            "note": "E.ON Drive Infrastructure's UK network reliability page says live availability and reference data in a machine-readable format are available on request by email, with a reply within 14 working days."
+          }
+        ],
+        "log": [
+          {
+            "date": "2026-10-22",
+            "action": "page_checked",
+            "action_label": "Operator's page checked",
+            "channel": null,
+            "channel_label": null,
+            "summary": "E.ON Drive Infrastructure's UK network reliability page was read. It offers live availability and reference data on request by email and links GOV.UK's page about the former National Chargepoint Registry.",
+            "quote": "Live availability data and static reference data in a machine-readable format are available on request.",
+            "evidence_url": "https://www.edri.com/en-uk/compliance",
+            "evidence_file": null
+          }
+        ]
+      },
+      "access_requested": null,
+      "access_granted": null,
+      "feeds": [],
+      "licence": null,
+      "attribution": null,
+      "missing_publish_flag": null,
+      "swapped_coordinates": null,
+      "nonstandard_statuses": null,
+      "tariffs_from": null,
+      "nonstandard_parking_restrictions": null,
+      "zero_price_tariffs": null,
+      "vat_not_stated": null,
       "relay": null,
       "expired_certificate": null,
       "excluded_locations": null,
@@ -3044,6 +3230,69 @@
       "tariffs_from": null,
       "nonstandard_parking_restrictions": null,
       "zero_price_tariffs": null,
+      "vat_not_stated": null,
+      "relay": null,
+      "expired_certificate": null,
+      "excluded_locations": null,
+      "rate_limit": {
+        "our_gap_seconds": 2.0,
+        "our_max_per_hour": 1800,
+        "ours": "At least 2 s between requests to the operator's host, measured from the end of the previous request (at most 1800 in any hour), retries included.",
+        "published": [],
+        "limits_checked": "unknown",
+        "comparison": "The operator's pages have not been checked for limits yet.",
+        "difference_from_regulations": "Not known yet.",
+        "notes": null
+      },
+      "findings": []
+    },
+    {
+      "id": "electroad",
+      "name": "ElectRoad",
+      "enabled": false,
+      "adapter": "unknown",
+      "engagement": {
+        "status": "no_public_feed_found",
+        "label": "No public feed found",
+        "headline": "No public feed found (as of 2026-10-22)",
+        "as_of": "2026-10-22",
+        "last_request": null,
+        "last_response": null,
+        "last_response_text": "No request sent",
+        "evidence": [
+          {
+            "date": "2026-10-22",
+            "url": "https://electroad.uk/",
+            "file": null,
+            "note": "ElectRoad's website lists pages for drivers, site hosts, counties, a blog, contact and privacy, and none of them is an open data page or a route for requesting open data. The site has no sitemap."
+          }
+        ],
+        "log": [
+          {
+            "date": "2026-10-22",
+            "action": "feed_searched",
+            "action_label": "Searched for a feed",
+            "channel": null,
+            "channel_label": null,
+            "summary": "ElectRoad's website and its list of pages were read, and no open data feed or route for requesting open data was found.",
+            "quote": "Independent EV charging network providing fast, reliable public EV charging across Norfolk and Suffolk.",
+            "evidence_url": "https://electroad.uk/",
+            "evidence_file": null
+          }
+        ]
+      },
+      "access_requested": null,
+      "access_granted": null,
+      "feeds": [],
+      "licence": null,
+      "attribution": null,
+      "missing_publish_flag": null,
+      "swapped_coordinates": null,
+      "nonstandard_statuses": null,
+      "tariffs_from": null,
+      "nonstandard_parking_restrictions": null,
+      "zero_price_tariffs": null,
+      "vat_not_stated": null,
       "relay": null,
       "expired_certificate": null,
       "excluded_locations": null,
@@ -3098,6 +3347,7 @@
       "tariffs_from": null,
       "nonstandard_parking_restrictions": null,
       "zero_price_tariffs": null,
+      "vat_not_stated": null,
       "relay": null,
       "expired_certificate": null,
       "excluded_locations": null,
@@ -3152,6 +3402,7 @@
       "tariffs_from": null,
       "nonstandard_parking_restrictions": null,
       "zero_price_tariffs": null,
+      "vat_not_stated": null,
       "relay": null,
       "expired_certificate": null,
       "excluded_locations": null,
@@ -3164,6 +3415,68 @@
         "comparison": "The operator's pages have not been checked for limits yet.",
         "difference_from_regulations": "Not known yet.",
         "notes": "No feed read yet. The council's chargers run on Fuuse, whose open data host (api.fuuse.io) asks for 30 seconds between requests, so any feed there would use the same 31 second gap as Arnold Clark Charge and ScottishPower Recharge."
+      },
+      "findings": []
+    },
+    {
+      "id": "esb_ecars",
+      "name": "ESB ecars (Northern Ireland)",
+      "enabled": false,
+      "adapter": "unknown",
+      "engagement": {
+        "status": "no_public_feed_found",
+        "label": "No public feed found",
+        "headline": "No public feed found (as of 2026-10-22)",
+        "as_of": "2026-10-22",
+        "last_request": null,
+        "last_response": null,
+        "last_response_text": "No request sent",
+        "evidence": [
+          {
+            "date": "2026-10-22",
+            "url": "https://esb.ie/what-we-do/ecars/our-network",
+            "file": null,
+            "note": "ESB ecars' network page says ESB operates and maintains the public charge point network in Northern Ireland, and sends drivers in Great Britain to ESB Energy. Neither this page, the ecars FAQs, the essential driver information page nor ESB's sitemap links open data or a route for requesting it."
+          }
+        ],
+        "log": [
+          {
+            "date": "2026-10-22",
+            "action": "feed_searched",
+            "action_label": "Searched for a feed",
+            "channel": null,
+            "channel_label": null,
+            "summary": "ESB ecars' network page, FAQs and essential driver information page, and ESB's sitemap, were read, and no open data feed or route for requesting open data was found for Northern Ireland.",
+            "quote": "ESB also operates and maintains the public charge point network for electric vehicle drivers in Northern Ireland.",
+            "evidence_url": "https://esb.ie/what-we-do/ecars/our-network",
+            "evidence_file": null
+          }
+        ]
+      },
+      "access_requested": null,
+      "access_granted": null,
+      "feeds": [],
+      "licence": null,
+      "attribution": null,
+      "missing_publish_flag": null,
+      "swapped_coordinates": null,
+      "nonstandard_statuses": null,
+      "tariffs_from": null,
+      "nonstandard_parking_restrictions": null,
+      "zero_price_tariffs": null,
+      "vat_not_stated": null,
+      "relay": null,
+      "expired_certificate": null,
+      "excluded_locations": null,
+      "rate_limit": {
+        "our_gap_seconds": 2.0,
+        "our_max_per_hour": 1800,
+        "ours": "At least 2 s between requests to the operator's host, measured from the end of the previous request (at most 1800 in any hour), retries included.",
+        "published": [],
+        "limits_checked": "unknown",
+        "comparison": "The operator's pages have not been checked for limits yet.",
+        "difference_from_regulations": "Not known yet.",
+        "notes": null
       },
       "findings": []
     },
@@ -3224,6 +3537,7 @@
       "tariffs_from": null,
       "nonstandard_parking_restrictions": null,
       "zero_price_tariffs": null,
+      "vat_not_stated": null,
       "relay": null,
       "expired_certificate": null,
       "excluded_locations": null,
@@ -3285,6 +3599,131 @@
       "tariffs_from": null,
       "nonstandard_parking_restrictions": null,
       "zero_price_tariffs": null,
+      "vat_not_stated": null,
+      "relay": null,
+      "expired_certificate": null,
+      "excluded_locations": null,
+      "rate_limit": {
+        "our_gap_seconds": 2.0,
+        "our_max_per_hour": 1800,
+        "ours": "At least 2 s between requests to the operator's host, measured from the end of the previous request (at most 1800 in any hour), retries included.",
+        "published": [],
+        "limits_checked": "unknown",
+        "comparison": "The operator's pages have not been checked for limits yet.",
+        "difference_from_regulations": "Not known yet.",
+        "notes": null
+      },
+      "findings": []
+    },
+    {
+      "id": "evology_charging",
+      "name": "Evology Charging",
+      "enabled": false,
+      "adapter": "unknown",
+      "engagement": {
+        "status": "key_on_request",
+        "label": "Key issued on request",
+        "headline": "Key issued on request (as of 2026-10-22)",
+        "as_of": "2026-10-22",
+        "last_request": null,
+        "last_response": null,
+        "last_response_text": "No request sent",
+        "evidence": [
+          {
+            "date": "2026-10-22",
+            "url": "https://evologyparking.com/open-data/",
+            "file": null,
+            "note": "Evology's open data page has a form for requesting a key to the Evology Charging public API, asking for a name, email address, company name and purpose."
+          }
+        ],
+        "log": [
+          {
+            "date": "2026-10-22",
+            "action": "page_checked",
+            "action_label": "Operator's page checked",
+            "channel": null,
+            "channel_label": null,
+            "summary": "Evology's open data page was read. It offers a key to the Evology Charging public API through a request form; it gives no API address, licence or rate limit.",
+            "quote": "To request an API key to the Evology Charging public API, in line with Open Charge Point Regulations (2023), please fill in the form and we'll be in touch.",
+            "evidence_url": "https://evologyparking.com/open-data/",
+            "evidence_file": null
+          }
+        ]
+      },
+      "access_requested": null,
+      "access_granted": null,
+      "feeds": [],
+      "licence": null,
+      "attribution": null,
+      "missing_publish_flag": null,
+      "swapped_coordinates": null,
+      "nonstandard_statuses": null,
+      "tariffs_from": null,
+      "nonstandard_parking_restrictions": null,
+      "zero_price_tariffs": null,
+      "vat_not_stated": null,
+      "relay": null,
+      "expired_certificate": null,
+      "excluded_locations": null,
+      "rate_limit": {
+        "our_gap_seconds": 2.0,
+        "our_max_per_hour": 1800,
+        "ours": "At least 2 s between requests to the operator's host, measured from the end of the previous request (at most 1800 in any hour), retries included.",
+        "published": [],
+        "limits_checked": "unknown",
+        "comparison": "The operator's pages have not been checked for limits yet.",
+        "difference_from_regulations": "Not known yet.",
+        "notes": null
+      },
+      "findings": []
+    },
+    {
+      "id": "ev_point",
+      "name": "evpoint",
+      "enabled": false,
+      "adapter": "unknown",
+      "engagement": {
+        "status": "no_public_feed_found",
+        "label": "No public feed found",
+        "headline": "No public feed found (as of 2026-10-22)",
+        "as_of": "2026-10-22",
+        "last_request": null,
+        "last_response": null,
+        "last_response_text": "No request sent",
+        "evidence": [
+          {
+            "date": "2026-10-22",
+            "url": "https://www.ev-point.com/",
+            "file": null,
+            "note": "evpoint's home page, its customer help and about pages, and its sitemaps (80 pages, 68 of them location pages) have no open data page or route for requesting open data. The customer help page gives a support email address at eg.group."
+          }
+        ],
+        "log": [
+          {
+            "date": "2026-10-22",
+            "action": "feed_searched",
+            "action_label": "Searched for a feed",
+            "channel": null,
+            "channel_label": null,
+            "summary": "evpoint's home page, customer help page, about page and sitemaps were read, and no open data feed or route for requesting open data was found.",
+            "quote": "Our directly managed, owned and operated network provides us with complete control over quality, consistency and pricing for our consumers.",
+            "evidence_url": "https://www.ev-point.com/",
+            "evidence_file": null
+          }
+        ]
+      },
+      "access_requested": null,
+      "access_granted": null,
+      "feeds": [],
+      "licence": null,
+      "attribution": null,
+      "missing_publish_flag": null,
+      "swapped_coordinates": null,
+      "nonstandard_statuses": null,
+      "tariffs_from": null,
+      "nonstandard_parking_restrictions": null,
+      "zero_price_tariffs": null,
+      "vat_not_stated": null,
       "relay": null,
       "expired_certificate": null,
       "excluded_locations": null,
@@ -3357,6 +3796,7 @@
       "tariffs_from": null,
       "nonstandard_parking_restrictions": null,
       "zero_price_tariffs": null,
+      "vat_not_stated": null,
       "relay": null,
       "expired_certificate": null,
       "excluded_locations": null,
@@ -3418,6 +3858,69 @@
       "tariffs_from": null,
       "nonstandard_parking_restrictions": null,
       "zero_price_tariffs": null,
+      "vat_not_stated": null,
+      "relay": null,
+      "expired_certificate": null,
+      "excluded_locations": null,
+      "rate_limit": {
+        "our_gap_seconds": 2.0,
+        "our_max_per_hour": 1800,
+        "ours": "At least 2 s between requests to the operator's host, measured from the end of the previous request (at most 1800 in any hour), retries included.",
+        "published": [],
+        "limits_checked": "unknown",
+        "comparison": "The operator's pages have not been checked for limits yet.",
+        "difference_from_regulations": "Not known yet.",
+        "notes": null
+      },
+      "findings": []
+    },
+    {
+      "id": "ezo",
+      "name": "EZO",
+      "enabled": false,
+      "adapter": "unknown",
+      "engagement": {
+        "status": "key_on_request",
+        "label": "Key issued on request",
+        "headline": "Key issued on request (as of 2026-10-22)",
+        "as_of": "2026-10-22",
+        "last_request": null,
+        "last_response": null,
+        "last_response_text": "No request sent",
+        "evidence": [
+          {
+            "date": "2026-10-22",
+            "url": "https://ezo.co.uk/regulations-compliance/",
+            "file": null,
+            "note": "EZO's \"Regulations & Compliance\" page has a \"PCPR Data Requests\" section linking a Google form that asks for an email address, name, organisation and planned use of the data. The form says requests are shared with Eco-Movement and names no licence, terms, key or rate limit."
+          }
+        ],
+        "log": [
+          {
+            "date": "2026-10-22",
+            "action": "page_checked",
+            "action_label": "Operator's page checked",
+            "channel": null,
+            "channel_label": null,
+            "summary": "EZO's \"Regulations & Compliance\" page and the \"PCPR Data Request - EZO\" Google form it links were read, not submitted; the form says the request will be shared with Eco-Movement and an answer will come within 5 working days.",
+            "quote": "To request data, simply complete the PCPR Data Request form and our team will review your submission before providing the information.",
+            "evidence_url": "https://ezo.co.uk/regulations-compliance/",
+            "evidence_file": null
+          }
+        ]
+      },
+      "access_requested": null,
+      "access_granted": null,
+      "feeds": [],
+      "licence": null,
+      "attribution": null,
+      "missing_publish_flag": null,
+      "swapped_coordinates": null,
+      "nonstandard_statuses": null,
+      "tariffs_from": null,
+      "nonstandard_parking_restrictions": null,
+      "zero_price_tariffs": null,
+      "vat_not_stated": null,
       "relay": null,
       "expired_certificate": null,
       "excluded_locations": null,
@@ -3479,6 +3982,7 @@
       "tariffs_from": null,
       "nonstandard_parking_restrictions": null,
       "zero_price_tariffs": null,
+      "vat_not_stated": null,
       "relay": null,
       "expired_certificate": null,
       "excluded_locations": null,
@@ -3551,6 +4055,7 @@
       "tariffs_from": null,
       "nonstandard_parking_restrictions": null,
       "zero_price_tariffs": null,
+      "vat_not_stated": null,
       "relay": null,
       "expired_certificate": null,
       "excluded_locations": null,
@@ -3612,6 +4117,7 @@
       "tariffs_from": null,
       "nonstandard_parking_restrictions": null,
       "zero_price_tariffs": null,
+      "vat_not_stated": null,
       "relay": null,
       "expired_certificate": null,
       "excluded_locations": null,
@@ -3684,6 +4190,7 @@
       "tariffs_from": null,
       "nonstandard_parking_restrictions": null,
       "zero_price_tariffs": null,
+      "vat_not_stated": null,
       "relay": null,
       "expired_certificate": null,
       "excluded_locations": null,
@@ -3745,6 +4252,7 @@
       "tariffs_from": null,
       "nonstandard_parking_restrictions": null,
       "zero_price_tariffs": null,
+      "vat_not_stated": null,
       "relay": null,
       "expired_certificate": null,
       "excluded_locations": null,
@@ -3810,6 +4318,7 @@
       "tariffs_from": null,
       "nonstandard_parking_restrictions": null,
       "zero_price_tariffs": null,
+      "vat_not_stated": null,
       "relay": null,
       "expired_certificate": null,
       "excluded_locations": null,
@@ -3874,6 +4383,7 @@
       "tariffs_from": null,
       "nonstandard_parking_restrictions": null,
       "zero_price_tariffs": null,
+      "vat_not_stated": null,
       "relay": null,
       "expired_certificate": null,
       "excluded_locations": null,
@@ -3977,6 +4487,7 @@
       "tariffs_from": null,
       "nonstandard_parking_restrictions": null,
       "zero_price_tariffs": null,
+      "vat_not_stated": null,
       "relay": null,
       "expired_certificate": null,
       "excluded_locations": null,
@@ -4038,6 +4549,7 @@
       "tariffs_from": null,
       "nonstandard_parking_restrictions": null,
       "zero_price_tariffs": null,
+      "vat_not_stated": null,
       "relay": null,
       "expired_certificate": null,
       "excluded_locations": null,
@@ -4099,6 +4611,7 @@
       "tariffs_from": null,
       "nonstandard_parking_restrictions": null,
       "zero_price_tariffs": null,
+      "vat_not_stated": null,
       "relay": null,
       "expired_certificate": null,
       "excluded_locations": null,
@@ -4153,6 +4666,7 @@
       "tariffs_from": null,
       "nonstandard_parking_restrictions": null,
       "zero_price_tariffs": null,
+      "vat_not_stated": null,
       "relay": null,
       "expired_certificate": null,
       "excluded_locations": null,
@@ -4207,6 +4721,7 @@
       "tariffs_from": null,
       "nonstandard_parking_restrictions": null,
       "zero_price_tariffs": null,
+      "vat_not_stated": null,
       "relay": null,
       "expired_certificate": null,
       "excluded_locations": null,
@@ -4268,6 +4783,131 @@
       "tariffs_from": null,
       "nonstandard_parking_restrictions": null,
       "zero_price_tariffs": null,
+      "vat_not_stated": null,
+      "relay": null,
+      "expired_certificate": null,
+      "excluded_locations": null,
+      "rate_limit": {
+        "our_gap_seconds": 2.0,
+        "our_max_per_hour": 1800,
+        "ours": "At least 2 s between requests to the operator's host, measured from the end of the previous request (at most 1800 in any hour), retries included.",
+        "published": [],
+        "limits_checked": "unknown",
+        "comparison": "The operator's pages have not been checked for limits yet.",
+        "difference_from_regulations": "Not known yet.",
+        "notes": null
+      },
+      "findings": []
+    },
+    {
+      "id": "maxol",
+      "name": "Maxol (Northern Ireland)",
+      "enabled": false,
+      "adapter": "unknown",
+      "engagement": {
+        "status": "no_public_feed_found",
+        "label": "No public feed found",
+        "headline": "No public feed found (as of 2026-10-22)",
+        "as_of": "2026-10-22",
+        "last_request": null,
+        "last_response": null,
+        "last_response_text": "No request sent",
+        "evidence": [
+          {
+            "date": "2026-10-22",
+            "url": "https://www.maxol.ie/ev-recharge",
+            "file": null,
+            "note": "Maxol's EV charging page describes its charging hubs, including Kinnegar in Northern Ireland, and has no open data page or route for requesting open data."
+          }
+        ],
+        "log": [
+          {
+            "date": "2026-10-22",
+            "action": "feed_searched",
+            "action_label": "Searched for a feed",
+            "channel": null,
+            "channel_label": null,
+            "summary": "Maxol's EV charging page was read, and no open data feed or route for requesting open data was found.",
+            "quote": "The hub provides the highest charging speeds currently available to the public in Northern Ireland",
+            "evidence_url": "https://www.maxol.ie/ev-recharge",
+            "evidence_file": null
+          }
+        ]
+      },
+      "access_requested": null,
+      "access_granted": null,
+      "feeds": [],
+      "licence": null,
+      "attribution": null,
+      "missing_publish_flag": null,
+      "swapped_coordinates": null,
+      "nonstandard_statuses": null,
+      "tariffs_from": null,
+      "nonstandard_parking_restrictions": null,
+      "zero_price_tariffs": null,
+      "vat_not_stated": null,
+      "relay": null,
+      "expired_certificate": null,
+      "excluded_locations": null,
+      "rate_limit": {
+        "our_gap_seconds": 2.0,
+        "our_max_per_hour": 1800,
+        "ours": "At least 2 s between requests to the operator's host, measured from the end of the previous request (at most 1800 in any hour), retries included.",
+        "published": [],
+        "limits_checked": "unknown",
+        "comparison": "The operator's pages have not been checked for limits yet.",
+        "difference_from_regulations": "Not known yet.",
+        "notes": null
+      },
+      "findings": []
+    },
+    {
+      "id": "moto_charge",
+      "name": "Moto Charge",
+      "enabled": false,
+      "adapter": "unknown",
+      "engagement": {
+        "status": "no_public_feed_found",
+        "label": "No public feed found",
+        "headline": "No public feed found (as of 2026-10-22)",
+        "as_of": "2026-10-22",
+        "last_request": null,
+        "last_response": null,
+        "last_response_text": "No request sent",
+        "evidence": [
+          {
+            "date": "2026-10-22",
+            "url": "https://moto-way.com/moto-charge/",
+            "file": null,
+            "note": "Moto's Moto Charge page, its terms for Moto Charge charging services and its page sitemap have no open data page or route for requesting open data."
+          }
+        ],
+        "log": [
+          {
+            "date": "2026-10-22",
+            "action": "feed_searched",
+            "action_label": "Searched for a feed",
+            "channel": null,
+            "channel_label": null,
+            "summary": "Moto's Moto Charge page, its Moto Charge terms and its page sitemap were read, and no open data feed or route for requesting open data was found.",
+            "quote": "Charge your car with the newest EV charging brand on the motorway.",
+            "evidence_url": "https://moto-way.com/moto-charge/",
+            "evidence_file": null
+          }
+        ]
+      },
+      "access_requested": null,
+      "access_granted": null,
+      "feeds": [],
+      "licence": null,
+      "attribution": null,
+      "missing_publish_flag": null,
+      "swapped_coordinates": null,
+      "nonstandard_statuses": null,
+      "tariffs_from": null,
+      "nonstandard_parking_restrictions": null,
+      "zero_price_tariffs": null,
+      "vat_not_stated": null,
       "relay": null,
       "expired_certificate": null,
       "excluded_locations": null,
@@ -4329,6 +4969,7 @@
       "tariffs_from": null,
       "nonstandard_parking_restrictions": null,
       "zero_price_tariffs": null,
+      "vat_not_stated": null,
       "relay": null,
       "expired_certificate": null,
       "excluded_locations": null,
@@ -4407,6 +5048,7 @@
       "tariffs_from": null,
       "nonstandard_parking_restrictions": null,
       "zero_price_tariffs": null,
+      "vat_not_stated": null,
       "relay": null,
       "expired_certificate": null,
       "excluded_locations": null,
@@ -4432,6 +5074,86 @@
           "resolved_date": null
         }
       ]
+    },
+    {
+      "id": "plug_charging",
+      "name": "PLUG Charging",
+      "enabled": false,
+      "adapter": "ocpi_221",
+      "engagement": {
+        "status": "key_on_request",
+        "label": "Key issued on request",
+        "headline": "Key issued on request (as of 2026-10-22)",
+        "as_of": "2026-10-22",
+        "last_request": null,
+        "last_response": null,
+        "last_response_text": "No request sent",
+        "evidence": [
+          {
+            "date": "2026-10-22",
+            "url": "https://plugcharging.co.uk/open-data",
+            "file": null,
+            "note": "PLUG Charging's open data page offers an OCPI 2.2.1 API with locations, EVSEs, connectors, live availability and tariffs. A key is free and is emailed after registering with a name, email address and website and agreeing to the API access terms."
+          }
+        ],
+        "log": [
+          {
+            "date": "2026-10-22",
+            "action": "page_checked",
+            "action_label": "Operator's page checked",
+            "channel": null,
+            "channel_label": null,
+            "summary": "PLUG Charging's open data page was read. It offers a free key by email after registration, publishes the data under the Open Government Licence v3.0 and states a rate limit of 120 requests a minute per key.",
+            "quote": "We publish live data about our public charge points under the Public Charge Point Regulations 2023, in the OCPI 2.2.1 format. Access is free. Register below and we'll email you an API key straight away.",
+            "evidence_url": "https://plugcharging.co.uk/open-data",
+            "evidence_file": null
+          }
+        ]
+      },
+      "access_requested": null,
+      "access_granted": null,
+      "feeds": [
+        {
+          "kind": "versions",
+          "url": "https://plugcharging.co.uk/ocpi/versions",
+          "status": "documented"
+        }
+      ],
+      "licence": {
+        "name": "OGL-3.0",
+        "url": "https://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/",
+        "checked": "2026-10-22"
+      },
+      "attribution": "Contains data from PLUG Charging published under the Public Charge Point Regulations 2023, used in line with the Open Government Licence v3.0.",
+      "missing_publish_flag": null,
+      "swapped_coordinates": null,
+      "nonstandard_statuses": null,
+      "tariffs_from": null,
+      "nonstandard_parking_restrictions": null,
+      "zero_price_tariffs": null,
+      "vat_not_stated": null,
+      "relay": null,
+      "expired_certificate": null,
+      "excluded_locations": null,
+      "rate_limit": {
+        "our_gap_seconds": 2.0,
+        "our_max_per_hour": 1800,
+        "ours": "At least 2 s between requests to the operator's host, measured from the end of the previous request (at most 1800 in any hour), retries included.",
+        "published": [
+          {
+            "text": "120 per 1 minute for all requests",
+            "publisher": "PLUG Charging",
+            "quote": "Each key can make 120 requests a minute.",
+            "source_url": "https://plugcharging.co.uk/open-data",
+            "checked": "2026-10-22"
+          }
+        ],
+        "limits_checked": "2026-10-22",
+        "comparison": "Within every published limit. The strictest needs 0.5 s between requests; this project waits 2 s, which includes a safety margin.",
+        "difference_from_regulations": "The operator sets a limit; the regulations set none. DfT guidance allows such terms on access.",
+        "notes": "The API access terms on the same page also say requests \"must not exceed the published rate limit, currently 120 requests per minute per key\" and forbid registering several keys for one service. This project would use one key."
+      },
+      "findings": []
     },
     {
       "id": "plug_n_go",
@@ -4472,6 +5194,7 @@
       "tariffs_from": null,
       "nonstandard_parking_restrictions": null,
       "zero_price_tariffs": null,
+      "vat_not_stated": null,
       "relay": null,
       "expired_certificate": null,
       "excluded_locations": null,
@@ -4543,6 +5266,7 @@
       "tariffs_from": null,
       "nonstandard_parking_restrictions": null,
       "zero_price_tariffs": null,
+      "vat_not_stated": null,
       "relay": null,
       "expired_certificate": null,
       "excluded_locations": null,
@@ -4597,6 +5321,7 @@
       "tariffs_from": null,
       "nonstandard_parking_restrictions": null,
       "zero_price_tariffs": null,
+      "vat_not_stated": null,
       "relay": null,
       "expired_certificate": null,
       "excluded_locations": null,
@@ -4658,6 +5383,7 @@
       "tariffs_from": null,
       "nonstandard_parking_restrictions": null,
       "zero_price_tariffs": null,
+      "vat_not_stated": null,
       "relay": null,
       "expired_certificate": null,
       "excluded_locations": null,
@@ -4719,6 +5445,7 @@
       "tariffs_from": null,
       "nonstandard_parking_restrictions": null,
       "zero_price_tariffs": null,
+      "vat_not_stated": null,
       "relay": null,
       "expired_certificate": null,
       "excluded_locations": null,
@@ -4780,6 +5507,7 @@
       "tariffs_from": null,
       "nonstandard_parking_restrictions": null,
       "zero_price_tariffs": null,
+      "vat_not_stated": null,
       "relay": null,
       "expired_certificate": null,
       "excluded_locations": null,
@@ -4857,6 +5585,7 @@
       "tariffs_from": null,
       "nonstandard_parking_restrictions": null,
       "zero_price_tariffs": null,
+      "vat_not_stated": null,
       "relay": null,
       "expired_certificate": null,
       "excluded_locations": null,
@@ -4968,6 +5697,7 @@
       "tariffs_from": null,
       "nonstandard_parking_restrictions": null,
       "zero_price_tariffs": null,
+      "vat_not_stated": null,
       "relay": null,
       "expired_certificate": null,
       "excluded_locations": null,
@@ -5029,6 +5759,7 @@
       "tariffs_from": null,
       "nonstandard_parking_restrictions": null,
       "zero_price_tariffs": null,
+      "vat_not_stated": null,
       "relay": null,
       "expired_certificate": null,
       "excluded_locations": null,
@@ -5094,6 +5825,7 @@
       "tariffs_from": null,
       "nonstandard_parking_restrictions": null,
       "zero_price_tariffs": null,
+      "vat_not_stated": null,
       "relay": null,
       "expired_certificate": null,
       "excluded_locations": null,
@@ -5115,14 +5847,21 @@
       "enabled": false,
       "adapter": "unknown",
       "engagement": {
-        "status": "unknown",
-        "label": "Not yet established",
-        "headline": "Not yet established (as of 2026-10-10)",
-        "as_of": "2026-10-10",
+        "status": "key_on_request",
+        "label": "Key issued on request",
+        "headline": "Key issued on request (as of 2026-10-13)",
+        "as_of": "2026-10-13",
         "last_request": null,
         "last_response": null,
         "last_response_text": "No request sent",
-        "evidence": [],
+        "evidence": [
+          {
+            "date": "2026-10-13",
+            "url": "https://developer.tesla.com/en_GB/docs/charging/roaming",
+            "file": null,
+            "note": "Tesla's developer page for charging roaming says the Tesla Roaming Portal is available on a pilot and invitation basis only and gives an address to ask about timing and availability. Connecting needs a Tesla Account and a request that Tesla reviews. No account was created and no request was made."
+          }
+        ],
         "log": [
           {
             "date": "2026-10-10",
@@ -5133,6 +5872,39 @@
             "summary": "Tesla's website could not be read by this project's automated checks on 2026-10-10 (HTTP 403 for its UK home page and for an address tried for a Supercharger open data support page), so its open data route is not yet known; it needs checking in a browser.",
             "quote": null,
             "evidence_url": "https://www.tesla.com/en_gb",
+            "evidence_file": null
+          },
+          {
+            "date": "2026-10-11",
+            "action": "page_checked",
+            "action_label": "Operator's page checked",
+            "channel": null,
+            "channel_label": null,
+            "summary": "Tesla's UK Supercharger, Supercharging and EV roaming pages, its legal page and its site map were read in a browser. None of them describes open data, the Public Charge Point Regulations or OCPI, and two addresses tried for such pages did not exist.",
+            "quote": null,
+            "evidence_url": "https://www.tesla.com/en_gb/supercharger",
+            "evidence_file": null
+          },
+          {
+            "date": "2026-10-13",
+            "action": "page_checked",
+            "action_label": "Operator's page checked",
+            "channel": null,
+            "channel_label": null,
+            "summary": "Tesla's developer page for charging roaming was read. It describes an OCPI connection for which a party signs in with a Tesla Account and submits a connection scope, authentication token, role, URL and party ID for Tesla to review, and says the portal is currently open by invitation only.",
+            "quote": "The Tesla Roaming Portal is currently available on a pilot and invitation basis only",
+            "evidence_url": "https://developer.tesla.com/en_GB/docs/charging/roaming",
+            "evidence_file": null
+          },
+          {
+            "date": "2026-10-13",
+            "action": "page_checked",
+            "action_label": "Operator's page checked",
+            "channel": null,
+            "channel_label": null,
+            "summary": "The repository owner signed in to Tesla's developer portal and read its Charging API documentation and connection form, without submitting anything. They describe an OCPI 2.2.1 credentials handshake started from the form, then locations and tariffs shared by the scope chosen, US or UK, and state no terms, licence or rate limit.",
+            "quote": "Charging Location Data will be shared based on selected scope (i.e. UK sites).",
+            "evidence_url": "https://developer.tesla.com/en_GB/dashboard/charging/roaming",
             "evidence_file": null
           }
         ]
@@ -5148,6 +5920,7 @@
       "tariffs_from": null,
       "nonstandard_parking_restrictions": null,
       "zero_price_tariffs": null,
+      "vat_not_stated": null,
       "relay": null,
       "expired_certificate": null,
       "excluded_locations": null,
@@ -5161,7 +5934,28 @@
         "difference_from_regulations": "Not known yet.",
         "notes": null
       },
-      "findings": []
+      "findings": [
+        {
+          "date": "2026-10-13",
+          "kind": "access",
+          "kind_label": "Access",
+          "summary": "Tesla's developer page says the Tesla Roaming Portal, through which it offers an OCPI connection, is currently available on a pilot and invitation basis only. A connection needs a Tesla Account and a request that Tesla reviews. Neither the public page nor the signed-in documentation states terms, a licence or a rate limit for the data.",
+          "handling": "Recorded as a possible source of Tesla's data. Nothing has been requested. Under the OCPI 2.2.1 credentials handshake that the form starts, the requester supplies its own token and the address of its own OCPI versions endpoint, and must host versions and credentials endpoints that Tesla calls. The map is a static site, so on 2026-10-16 the repository owner decided to answer those calls from a separate Cloudflare Worker that only does the handshake (ADR 0025). The operator stays switched off until Tesla's terms are read.",
+          "evidence_url": "https://developer.tesla.com/en_GB/docs/charging/roaming",
+          "status": "open",
+          "resolved_date": null
+        },
+        {
+          "date": "2026-10-13",
+          "kind": "spec_conformance",
+          "kind_label": "Differs from OCPI 2.2.1",
+          "summary": "Tesla's signed-in documentation says it extends OCPI 2.2.1. Locations gain access_type and evse_count fields. Tariffs gain a CONGESTION_TIME price component and min_vehicle_soc and min_congestion_threshold restrictions, none of which are in OCPI 2.2.1. The documentation also spells the connector field \"tarrif_ids\" (OCPI 2.2.1: tariff_ids) and describes power_type and one status field in US terms (\"DCFC, AC Level 2\"; \"operational, under construction, planned, or decommissioned\") rather than OCPI 2.2.1 values.",
+          "handling": "Not fetched yet, so how the data really looks needs testing. Before Tesla prices are shown, the adapter work must make sure a price that depends on these extensions is never shown as if it had no condition; how such tariffs are shown is for the repository owner to decide. Values that are not OCPI 2.2.1 values are recorded as unknown, as for every operator.",
+          "evidence_url": "https://developer.tesla.com/en_GB/dashboard/charging/roaming",
+          "status": "open",
+          "resolved_date": null
+        }
+      ]
     },
     {
       "id": "totalenergies",
@@ -5202,6 +5996,7 @@
       "tariffs_from": null,
       "nonstandard_parking_restrictions": null,
       "zero_price_tariffs": null,
+      "vat_not_stated": null,
       "relay": null,
       "expired_certificate": null,
       "excluded_locations": null,
@@ -5256,6 +6051,7 @@
       "tariffs_from": null,
       "nonstandard_parking_restrictions": null,
       "zero_price_tariffs": null,
+      "vat_not_stated": null,
       "relay": null,
       "expired_certificate": null,
       "excluded_locations": null,
@@ -5333,6 +6129,7 @@
       "tariffs_from": null,
       "nonstandard_parking_restrictions": null,
       "zero_price_tariffs": null,
+      "vat_not_stated": null,
       "relay": null,
       "expired_certificate": null,
       "excluded_locations": null,
@@ -5437,6 +6234,7 @@
       "tariffs_from": null,
       "nonstandard_parking_restrictions": null,
       "zero_price_tariffs": null,
+      "vat_not_stated": null,
       "relay": null,
       "expired_certificate": null,
       "excluded_locations": null,
@@ -5498,6 +6296,7 @@
       "tariffs_from": null,
       "nonstandard_parking_restrictions": null,
       "zero_price_tariffs": null,
+      "vat_not_stated": null,
       "relay": null,
       "expired_certificate": null,
       "excluded_locations": null,
@@ -5559,6 +6358,7 @@
       "tariffs_from": null,
       "nonstandard_parking_restrictions": null,
       "zero_price_tariffs": null,
+      "vat_not_stated": null,
       "relay": null,
       "expired_certificate": null,
       "excluded_locations": null,
@@ -5631,6 +6431,7 @@
       "tariffs_from": null,
       "nonstandard_parking_restrictions": null,
       "zero_price_tariffs": null,
+      "vat_not_stated": null,
       "relay": null,
       "expired_certificate": null,
       "excluded_locations": null,
@@ -5703,6 +6504,7 @@
       "tariffs_from": null,
       "nonstandard_parking_restrictions": null,
       "zero_price_tariffs": null,
+      "vat_not_stated": null,
       "relay": null,
       "expired_certificate": null,
       "excluded_locations": null,
@@ -5764,6 +6566,69 @@
       "tariffs_from": null,
       "nonstandard_parking_restrictions": null,
       "zero_price_tariffs": null,
+      "vat_not_stated": null,
+      "relay": null,
+      "expired_certificate": null,
+      "excluded_locations": null,
+      "rate_limit": {
+        "our_gap_seconds": 2.0,
+        "our_max_per_hour": 1800,
+        "ours": "At least 2 s between requests to the operator's host, measured from the end of the previous request (at most 1800 in any hour), retries included.",
+        "published": [],
+        "limits_checked": "unknown",
+        "comparison": "The operator's pages have not been checked for limits yet.",
+        "difference_from_regulations": "Not known yet.",
+        "notes": null
+      },
+      "findings": []
+    },
+    {
+      "id": "zapgo",
+      "name": "Zapgo",
+      "enabled": false,
+      "adapter": "unknown",
+      "engagement": {
+        "status": "no_public_feed_found",
+        "label": "No public feed found",
+        "headline": "No public feed found (as of 2026-10-22)",
+        "as_of": "2026-10-22",
+        "last_request": null,
+        "last_response": null,
+        "last_response_text": "No request sent",
+        "evidence": [
+          {
+            "date": "2026-10-22",
+            "url": "https://www.zapgo.co.uk/",
+            "file": null,
+            "note": "Zapgo's home page, about page and sitemaps (post, page and client sitemaps) have no open data page or route for requesting open data."
+          }
+        ],
+        "log": [
+          {
+            "date": "2026-10-22",
+            "action": "feed_searched",
+            "action_label": "Searched for a feed",
+            "channel": null,
+            "channel_label": null,
+            "summary": "Zapgo's home page, about page and sitemaps were read, and no open data feed or route for requesting open data was found. A web search found none either.",
+            "quote": null,
+            "evidence_url": "https://www.zapgo.co.uk/sitemap_index.xml",
+            "evidence_file": null
+          }
+        ]
+      },
+      "access_requested": null,
+      "access_granted": null,
+      "feeds": [],
+      "licence": null,
+      "attribution": null,
+      "missing_publish_flag": null,
+      "swapped_coordinates": null,
+      "nonstandard_statuses": null,
+      "tariffs_from": null,
+      "nonstandard_parking_restrictions": null,
+      "zero_price_tariffs": null,
+      "vat_not_stated": null,
       "relay": null,
       "expired_certificate": null,
       "excluded_locations": null,
@@ -5825,6 +6690,7 @@
       "tariffs_from": null,
       "nonstandard_parking_restrictions": null,
       "zero_price_tariffs": null,
+      "vat_not_stated": null,
       "relay": null,
       "expired_certificate": null,
       "excluded_locations": null,

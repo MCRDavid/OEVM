@@ -9,7 +9,15 @@ import pytest
 from adapters.http import PoliteClient
 from adapters.ocpi_221 import fetch
 from adapters.replay import ReplayTransport
-from pipeline.pricing import describe_tariff, location_summary, pence, pounds
+from pipeline.pricing import (
+    describe_tariff,
+    energy_range,
+    location_summary,
+    map_label,
+    pence,
+    plan_label,
+    pounds,
+)
 from pipeline.registry import load_registry
 from pipeline.tariffs import ConnectorPrice
 from schema.models import Tariff
@@ -108,6 +116,54 @@ def test_minimum_charge_is_shown_after_the_vat_note():
     assert shown.text == "54p per kWh including VAT; minimum charge £2.00 excluding VAT"
 
 
+# VAT the owner decided to add where a feed gives none (vat_not_stated, ADR 0003 as
+# amended on 22 October 2026)
+
+ADDED = (
+    "including VAT, with VAT at 20% added by this project where the operator's feed does not "
+    "state it"
+)
+
+
+def test_vat_is_added_at_the_owners_rate_and_the_price_says_so():
+    shown = describe_tariff(tariff(components=[energy(0.325)]), added_vat=20)
+    assert shown.text == f"39p per kWh {ADDED}"
+    assert energy_range(tariff(components=[energy(0.4167)]), 20) == (
+        Decimal("0.50004"),
+        Decimal("0.50004"),
+        True,
+    )
+
+
+def test_a_rate_the_feed_gives_is_kept_and_only_missing_ones_are_added():
+    shown = describe_tariff(tariff(components=[energy(0.45, vat=5), energy(0.30)]), added_vat=20)
+    assert shown.text == f"36p to 47.3p per kWh {ADDED}"
+    # When every price gives its own rate, nothing is added, so nothing is said.
+    stated = describe_tariff(tariff(components=[energy(0.45, vat=20)]), added_vat=20)
+    assert stated.text == "54p per kWh including VAT"
+
+
+def test_added_vat_covers_other_charges_and_the_minimum_charge():
+    shown = describe_tariff(
+        tariff(
+            components=[energy(0.5), {"type": "flat", "price": 1.0, "vat": None, "step_size": 1}],
+            min_price=2,
+        ),
+        added_vat=20,
+    )
+    assert shown.text == (
+        f"60p per kWh, plus £1.20 per session {ADDED}; "
+        "minimum charge £2.40 including VAT added by this project"
+    )
+
+
+def test_without_a_decision_a_price_with_no_vat_is_shown_as_published():
+    assert describe_tariff(tariff(components=[energy(0.325)])).text == (
+        "32.5p per kWh (excluding VAT, VAT not stated)"
+    )
+    assert energy_range(tariff(components=[energy(0.325)]))[2] is False
+
+
 @pytest.mark.parametrize("currency", ["EUR", "USD"])
 def test_other_currencies_are_never_converted(currency):
     shown = describe_tariff(tariff(currency=currency))
@@ -194,3 +250,40 @@ def connector(state, low=None, high=None, vat=None):
 )
 def test_location_summary_never_calls_a_mixed_location_free(prices, expected):
     assert location_summary(prices) == expected
+
+
+# The label above a point on the map (ADR 0026)
+
+
+@pytest.mark.parametrize(
+    ("state", "lowest", "vat", "varies", "expected"),
+    [
+        ("free_confirmed", None, None, False, "Free"),
+        # Free comes from the price state only, never from a price that happens to be low.
+        ("priced", Decimal("0.56"), True, False, "56p"),
+        ("priced", Decimal("0.325"), False, True, "from 32.5p excl. VAT"),
+        ("priced", Decimal("0.4917"), True, True, "from 49.2p"),
+        ("priced", Decimal("0.35"), False, False, "35p excl. VAT"),
+        ("priced", None, None, False, None),
+        ("unknown", Decimal("0.828"), True, False, "82.8p"),
+        ("unknown", None, None, False, None),
+    ],
+)
+def test_map_labels_are_short_and_say_when_they_apply(state, lowest, vat, varies, expected):
+    assert map_label(state, lowest, vat, varies) == expected
+
+
+def test_a_plan_label_needs_a_fixed_price_including_vat():
+    assert plan_label(Decimal("0.39"), True) == "39p"
+    assert plan_label(Decimal("0.39"), None) is None
+    assert plan_label(Decimal("0.39"), False) is None
+    assert plan_label(None, True) is None
+    # A price that would show as 0p reads as free, which only free_confirmed may be.
+    assert plan_label(Decimal("0"), True) is None
+    assert plan_label(Decimal("0.0004"), True) is None
+    assert plan_label(Decimal("0.0005"), True) == "0.1p"
+
+
+def test_a_plan_label_says_from_when_the_plan_applies_only_at_some_times():
+    assert plan_label(Decimal("0.44"), True, only_at_some_times=True) == "from 44p"
+    assert plan_label(Decimal("0.44"), True, only_at_some_times=False) == "44p"

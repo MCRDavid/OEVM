@@ -1,0 +1,57 @@
+# yaml-language-server: $schema=schema.json
+id: zapgo
+display_name: Zapgo
+ocpi_country_code: unknown
+ocpi_party_id: unknown
+adapter: unknown
+base_url: unknown
+endpoints: {}
+auth:
+  method: unknown
+  name: null
+  secret_name: null
+rate_limit:
+  min_seconds_between_requests: 2
+  limits: []
+  limits_checked: unknown
+  notes: null
+supports_single_location: unknown
+cors: unknown
+attribution: null
+licence: null
+engagement:
+  status: no_public_feed_found
+  evidence:
+    - date: 2026-10-22
+      url: https://www.zapgo.co.uk/
+      note: >-
+        Zapgo's home page, about page and sitemaps (post, page and client sitemaps) have no
+        open data page or route for requesting open data.
+  log:
+    - date: 2026-10-22
+      action: feed_searched
+      summary: >-
+        Zapgo's home page, about page and sitemaps were read, and no open data feed or route
+        for requesting open data was found. A web search found none either.
+      evidence_url: https://www.zapgo.co.uk/sitemap_index.xml
+access_requested: null
+access_granted: null
+sources:
+  - url: https://www.zapgo.co.uk/
+    note: >-
+      Zapgo's home page (read 2026-10-22). Lists news of its sites, for example Klondyke
+      Garden Centre, Livingston, Sowerby Wood Business Park, Barrow-in-Furness, and Tesco
+      Express Lochmaben, and a post titled "Zapgo celebrates 1 year as a charge point
+      operator".
+  - url: https://www.zapgo.co.uk/about-us/
+    note: >-
+      Zapgo's about page (read 2026-10-22): founded in 2023, "building chargers where they're
+      needed"; registered in England and Wales.
+  - url: https://www.zapgo.co.uk/sitemap_index.xml
+    note: Zapgo's sitemaps (read 2026-10-22). No open data page.
+findings: []
+notes: >-
+  A charge point operator founded in 2023 that builds rapid chargers at local destinations
+  in England and Scotland. No open data route was found on its own site on 2026-10-22; a
+  written request through its contact page is the next step.
+enabled: false

@@ -1,0 +1,60 @@
+# yaml-language-server: $schema=schema.json
+id: e_on_drive
+display_name: E.ON Drive
+ocpi_country_code: unknown
+ocpi_party_id: unknown
+adapter: unknown
+base_url: unknown
+endpoints: {}
+auth:
+  method: unknown
+  name: null
+  secret_name: null
+rate_limit:
+  min_seconds_between_requests: 2
+  limits: []
+  limits_checked: unknown
+  notes: null
+supports_single_location: unknown
+cors: unknown
+attribution: null
+licence: null
+engagement:
+  status: key_on_request
+  evidence:
+    - date: 2026-10-22
+      url: https://www.edri.com/en-uk/compliance
+      note: >-
+        E.ON Drive Infrastructure's UK network reliability page says live availability and
+        reference data in a machine-readable format are available on request by email, with
+        a reply within 14 working days.
+  log:
+    - date: 2026-10-22
+      action: page_checked
+      summary: >-
+        E.ON Drive Infrastructure's UK network reliability page was read. It offers live
+        availability and reference data on request by email and links GOV.UK's page about
+        the former National Chargepoint Registry.
+      quote: >-
+        Live availability data and static reference data in a machine-readable format are
+        available on request.
+      evidence_url: https://www.edri.com/en-uk/compliance
+access_requested: null
+access_granted: null
+sources:
+  - url: https://www.edri.com/en-uk/compliance
+    note: >-
+      E.ON Drive Infrastructure GmbH's "UK Network Reliability Report" (read 2026-10-22).
+      Says its oldest UK charger was installed in October 2023 and that it keeps its stations
+      on the National Charge Point Registry up to date, linking GOV.UK's page for that
+      registry.
+  - url: https://www.gov.uk/guidance/find-and-use-data-on-public-electric-vehicle-chargepoints
+    note: >-
+      The GOV.UK page E.ON Drive links (read 2026-10-22 through GOV.UK's content data). It
+      says "The National Chargepoint Registry was decommissioned 28 November 2024", so it
+      offers no current data.
+findings: []
+notes: >-
+  E.ON Drive Infrastructure's public charging network in the UK. Its data is offered on
+  request by email; no request has been sent.
+enabled: false

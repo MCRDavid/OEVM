@@ -1,0 +1,58 @@
+# yaml-language-server: $schema=schema.json
+id: maxol
+display_name: Maxol (Northern Ireland)
+ocpi_country_code: unknown
+ocpi_party_id: unknown
+adapter: unknown
+base_url: unknown
+endpoints: {}
+auth:
+  method: unknown
+  name: null
+  secret_name: null
+rate_limit:
+  min_seconds_between_requests: 2
+  limits: []
+  limits_checked: unknown
+  notes: null
+supports_single_location: unknown
+cors: unknown
+attribution: null
+licence: null
+engagement:
+  status: no_public_feed_found
+  evidence:
+    - date: 2026-10-22
+      url: https://www.maxol.ie/ev-recharge
+      note: >-
+        Maxol's EV charging page describes its charging hubs, including Kinnegar in Northern
+        Ireland, and has no open data page or route for requesting open data.
+  log:
+    - date: 2026-10-22
+      action: feed_searched
+      summary: >-
+        Maxol's EV charging page was read, and no open data feed or route for requesting open
+        data was found.
+      quote: >-
+        The hub provides the highest charging speeds currently available to the public in
+        Northern Ireland
+      evidence_url: https://www.maxol.ie/ev-recharge
+access_requested: null
+access_granted: null
+sources:
+  - url: https://www.maxol.ie/ev-recharge
+    note: >-
+      Maxol's EV charging page (read 2026-10-22). Describes Maxol Kinnegar as the first
+      dedicated ultra-rapid charging hub on the island of Ireland and links its station
+      finder.
+  - url: https://www.legislation.gov.uk/uksi/2023/1168/regulation/1/made
+    note: >-
+      The Public Charge Point Regulations 2023, regulation 1(2) (read 2026-10-22, recorded in
+      esb_ecars.yaml): "These Regulations extend to England and Wales, Scotland and Northern
+      Ireland."
+findings: []
+notes: >-
+  A forecourt operator in Ireland with charging hubs at some of its Northern Ireland service
+  stations. Only its Northern Ireland sites are in the UK. No open data route was found on
+  its site on 2026-10-22.
+enabled: false

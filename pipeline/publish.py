@@ -34,10 +34,19 @@ Rules:
 - A tariff the owner names in zero_price_tariffs in the operator file (ADR 0022) shows
   "Price unknown" while its prices are all zero, instead of "Free". The tariff itself is
   published unchanged in the detail file.
+- Where the owner has recorded vat_not_stated in an operator file (ADR 0003, amended 22
+  October 2026), VAT at its rate is added to that operator's prices that give no VAT
+  figure, wherever its tariffs are used, and the price text says the project added it.
+  The tariffs themselves are published unchanged in the detail file. A kept copy written
+  before a decision keeps the prices it was written with until the next good fetch.
 - A location whose name marks it private or restricted (pipeline/access.py, ADR 0023)
   carries those words in the map file, and one where every charge point is marked for
   taxis only (by the owner's decision in the operator file) is flagged, so the map can
   hide them unless the visitor asks. They are published unchanged otherwise.
+- Each kind of connector carries the label drawn above the location's point on the map:
+  the lowest price per kWh among every tariff it lists, worded by pipeline/pricing.py
+  (ADR 0026). The map picks the lowest among the connectors that match the visitor's
+  filters, and compares it with the plans they ticked.
 - Every file is validated against schema/published.py before it is written.
 - The committed site/ folder is never written to; the deploy step copies site/ and adds
   this output.
@@ -59,7 +68,7 @@ from pipeline.access import private_words
 from pipeline.geography import place_in_uk
 from pipeline.health import in_uk
 from pipeline.plans import load_providers
-from pipeline.pricing import location_summary, plan_fee_text, plan_price_text
+from pipeline.pricing import location_summary, plan_fee_text, plan_label, plan_price_text
 from pipeline.registry import ROOT
 from pipeline.tariffs import (
     ConnectorPrice,
@@ -212,6 +221,10 @@ def _connector_summary(
         price=MAP_PRICE[price.state],
         ppk=_pence(price.energy_high) if with_vat else None,
         out=status in OUT_OF_SERVICE,
+        low=None if price.lowest is None else _pence(price.lowest),
+        lvat=None if price.lowest is None else price.lowest_vat,
+        lvar=None if price.lowest is None else price.lowest_varies,
+        lt=price.label,
     )
 
 
@@ -225,7 +238,7 @@ def map_properties(location: Location, prices: list[ConnectorPrice], key: str) -
     powers = [c.max_kw for c in connectors if c.max_kw is not None]
     states = {p.state for p in prices}
     summaries = {
-        (s.std, _sortable(s.kw), s.price, _sortable(s.ppk), s.out): s
+        (s.std, _sortable(s.kw), s.price, _sortable(s.ppk), s.out, _sortable(s.low), s.lt or ""): s
         for s in (
             _connector_summary(c, p, st)
             for c, p, st in zip(connectors, prices, statuses, strict=True)
@@ -349,6 +362,10 @@ def plans_file(operators: dict[str, OperatorConfig], generated_at: datetime) -> 
                     ),
                     monthly_fee=None if plan.monthly_fee is None else float(plan.monthly_fee),
                     ppk=_pence(plan.price_per_kwh) if fixed else None,
+                    label=plan_label(
+                        plan.price_per_kwh, plan.includes_vat, plan.only_at_some_times
+                    ),
+                    only_at_some_times=plan.only_at_some_times,
                     discount_percent=(
                         None if plan.discount_percent is None else float(plan.discount_percent)
                     ),
@@ -474,6 +491,11 @@ def publish(
     fresh = {r.operator_id for r in results}
     fresh_tariffs = {r.operator_id: r.tariffs for r in results}
     fetched = {r.operator_id: r.fetched_at for r in results}
+    added_vat = {
+        i: config.vat_not_stated.add_percent
+        for i, config in operators.items()
+        if config.vat_not_stated is not None
+    }
     for copy in sorted(kept, key=lambda c: c.operator_id):
         config = operators.get(copy.operator_id)
         if config is None or not config.enabled or config.licence is None:
@@ -498,7 +520,9 @@ def publish(
             withheld = withheld_free_tariffs(result.tariffs, ids)
         by_location: dict[str, list[ConnectorPrice]] = defaultdict(list)
         priced_from_related = 0
-        for price in price_locations(result.locations, result.tariffs, related, withheld):
+        for price in price_locations(
+            result.locations, result.tariffs, related, withheld, added_vat
+        ):
             by_location[price.location_id].append(price)
             own = f"{result.operator_id}:"
             priced_from_related += any(not i.startswith(own) for i in price.tariff_ids)
@@ -518,7 +542,7 @@ def publish(
             if key in details:
                 raise PublishError(f"two locations share the detail file name {key}")
             prices = by_location[location.id]
-            site = site_tariffs(location, tariffs, withheld)
+            site = site_tariffs(location, tariffs, withheld, added_vat)
             listed = sorted(o.tariff_id for o in site.options if o.tariff_id in tariffs)
             found = [tariffs[i] for i in listed]
             elsewhere = [t for t in found if t.provenance.source_id != result.operator_id]

@@ -2,10 +2,11 @@
 // browser can run it (MapLibre needs WebGL2). Nothing is saved on the device unless the
 // visitor turns on "Remember my settings" (see settings.js).
 
-import { renderDetail, detailUrl } from "./detail.js";
-import { activeCount, defaults, matches, parse, serialise } from "./filters.js";
+import { mapLabelLine, renderDetail, detailUrl } from "./detail.js";
+import { activeCount, connectorFilters as connectorFiltersOn, defaults, matches, parse, serialise } from "./filters.js";
 import { h } from "./dom.js";
 import { allOut, formatKw, plugsSummary, speedBand } from "./format.js";
+import { bestPlans, priceLabel } from "./labels.js";
 import { createSettings } from "./settings.js";
 
 const LIST_LIMIT = 200;
@@ -13,8 +14,18 @@ const LIST_LIMIT = 200;
 // at least 4.5:1 contrast with the white letter drawn on it.
 const SPEED_COLOURS = { ultra: "#9b2c74", rapid: "#b3460c", fast: "#0d6b62", slow: "#2f5d9e", unknown: "#5c5c5c" };
 const SPEED_RADIUS = { ultra: 13, rapid: 12, fast: 11, slow: 10, unknown: 10 };
-const CHARGER_LAYERS = ["clusters", "points", "cluster-count", "point-labels"];
+const CHARGER_LAYERS = ["clusters", "points", "price-labels", "cluster-count", "point-labels"];
+// What a press on the map opens a charger's details from.
+const CHARGER_TARGETS = ["points", "price-labels", "point-labels"];
 const FONT = ["Noto Sans Regular"];
+// The rounded box behind each price label: white with a dark edge, or dark with a light
+// edge in dark mode, and amber with a thicker edge when the price comes from a plan the
+// visitor ticked, so it is not told apart by colour alone. Text on each meets 4.5:1
+// contrast, and stays at full strength on the faded boxes of points out of service.
+const PILLS = {
+  light: { fill: "#ffffff", edge: "#24323f", plan: "#ffe08a", text: "#1b1b1b" },
+  dark: { fill: "#20252a", edge: "#e8eaed", plan: "#6b4a00", text: "#f4f6f8" },
+};
 const $ = (id) => document.getElementById(id);
 const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 const PREFERS_DARK = window.matchMedia("(prefers-color-scheme: dark)");
@@ -148,10 +159,32 @@ function stateChanged() {
 
 function applyFilters() {
   app.filtered = app.features.filter((f) => matches(f.properties, app.state));
+  labelPrices();
+  redrawDetailLabel();
   const source = app.map?.getSource("chargers");
   if (source) source.setData({ type: "FeatureCollection", features: app.filtered });
   applyGrouping();
   renderList();
+}
+
+// Each matching location's price label (labels.js) for the map and the list: lab is the
+// text, labk orders labels cheapest first and labplan marks a price from a ticked plan.
+// They follow the filters and the plans the visitor ticked, so they are worked out again
+// whenever either changes.
+function labelPrices() {
+  const plans = bestPlans(app.plans, app.mine);
+  for (const { properties } of app.filtered) {
+    const label = priceLabel(properties, app.state, plans.get(properties.op));
+    if (label) {
+      properties.lab = label.text;
+      properties.labk = label.key;
+      properties.labplan = Boolean(label.plan);
+    } else {
+      delete properties.lab;
+      delete properties.labk;
+      delete properties.labplan;
+    }
+  }
 }
 
 // Nearby points are drawn as numbered circles unless the visitor turns grouping off.
@@ -206,6 +239,7 @@ function buildPlanPicker() {
         if (box.checked) app.mine.add(plan.id);
         else app.mine.delete(plan.id);
         saveIfRemembered();
+        applyFilters(); // the price labels can change
         redrawDetail();
       });
       group.append(h("label", {}, box, ` ${plan.name}: ${plan.fee_text}; ${plan.price_text}`));
@@ -279,6 +313,15 @@ function renderList() {
           p.name || "Charger location",
         ),
         h("span", { className: "meta", text: `${app.operators.get(p.op) ?? p.op} · up to ${formatKw(p.kw)} · ${plugsSummary(p.plugs)}` }),
+        p.lab
+          ? h(
+              "span",
+              { className: "meta cheapest-here" },
+              "Cheapest here: ",
+              h("span", { className: `price-tag${p.labplan ? " with-plan" : ""}`, text: p.lab }),
+              p.labplan ? " with your plan" : "",
+            )
+          : null,
         h("span", { className: `meta price-${p.price}`, text: p.pt || "Price unknown" }),
         p.down ? h("span", { className: "meta out-note", text: "Reported out of service at the last daily fetch" }) : null,
         p.priv || p.taxi ? h("span", { className: "meta private-note", text: privateText(p) }) : null,
@@ -336,6 +379,8 @@ function detailOptions() {
     ...app.config,
     plans: app.plans,
     mine: app.mine,
+    label: props ? priceLabel(props, app.state, bestPlans(app.plans, app.mine).get(props.op)) : null,
+    filtered: connectorFiltersOn(app.state),
     hideOut: app.state.working,
     onHideOut: toggleHideOut,
     privateNote: hidden
@@ -349,6 +394,15 @@ function detailOptions() {
 function redrawDetail() {
   if ($("detail").hidden || !app.detail) return;
   $("detail-body").replaceChildren(...renderDetail(app.detail, detailOptions()));
+}
+
+// The details' line about the price label follows the filters and ticked plans too (on a
+// wide screen the filters stay usable beside the panel). Only that line is replaced, so
+// focus stays where it is, for example on the "out of service" button in the panel.
+function redrawDetailLabel() {
+  if ($("detail").hidden || !app.detail) return;
+  const { label, filtered } = detailOptions();
+  $("detail-label")?.replaceChildren(...[mapLabelLine(app.detail, label, filtered)].filter(Boolean));
 }
 
 async function openDetail(key, trigger) {
@@ -482,15 +536,21 @@ async function startMap() {
   });
   // Handlers named by layer stay in place when a new style (light or dark) replaces the
   // layers, so they are added once.
+  // A price label or a point's letter can lie over a numbered circle's edge; the
+  // charger drawn on top is opened instead of zooming in.
   app.map.on("click", "clusters", async (event) => {
+    if (app.map.queryRenderedFeatures(event.point, { layers: CHARGER_TARGETS }).length) return;
     const cluster = event.features[0];
     const zoom = await app.map.getSource("chargers").getClusterExpansionZoom(cluster.properties.cluster_id);
     app.map.easeTo({ center: cluster.geometry.coordinates, zoom, duration: reducedMotion ? 0 : 500 });
   });
-  app.map.on("click", "points", (event) => openDetail(event.features[0].properties.key, app.map.getCanvas()));
-  for (const layer of ["clusters", "points"]) {
-    app.map.on("mouseenter", layer, () => (app.map.getCanvas().style.cursor = "pointer"));
-    app.map.on("mouseleave", layer, () => (app.map.getCanvas().style.cursor = ""));
+  // A price label opens its own charger, even where it lies over a neighbouring point
+  // (but not on that point's letter, which is drawn over it): MapLibre gives the feature
+  // drawn on top first.
+  app.map.on("click", CHARGER_TARGETS, (event) => openDetail(event.features[0].properties.key, app.map.getCanvas()));
+  for (const layers of [["clusters"], CHARGER_TARGETS]) {
+    app.map.on("mouseenter", layers, () => (app.map.getCanvas().style.cursor = "pointer"));
+    app.map.on("mouseleave", layers, () => (app.map.getCanvas().style.cursor = ""));
   }
   app.map.on("load", renderList);
   app.map.on("moveend", renderList);
@@ -540,6 +600,7 @@ function addChargerLayers() {
       "circle-stroke-opacity": faded(1),
     },
   });
+  addPriceLabels(faded);
   app.map.addLayer({
     id: "cluster-count",
     type: "symbol",
@@ -558,10 +619,111 @@ function addChargerLayers() {
       "text-font": FONT,
       "text-size": 12,
       "text-allow-overlap": true,
+      // The letters never push a price label off the map; they are drawn over it instead.
+      "text-ignore-placement": true,
     },
     paint: { "text-color": "#ffffff", "text-opacity": faded(1) },
   });
   renderList();
+}
+
+// A rounded box, drawn once per theme, that MapLibre stretches to fit each price label.
+// Returns null where the browser cannot draw it; the labels then show without a box.
+const PILL = { size: 24, radius: 7, ratio: 2 };
+
+function pillImage(fill, edge, width) {
+  const { size, radius, ratio } = PILL;
+  const canvas = document.createElement("canvas");
+  canvas.width = canvas.height = size * ratio;
+  const context = canvas.getContext("2d");
+  if (!context?.roundRect) return null;
+  context.scale(ratio, ratio);
+  const inset = width / 2 + 0.25;
+  context.beginPath();
+  context.roundRect(inset, inset, size - 2 * inset, size - 2 * inset, radius);
+  context.fillStyle = fill;
+  context.fill();
+  context.lineWidth = width;
+  context.strokeStyle = edge;
+  context.stroke();
+  let image;
+  try {
+    image = context.getImageData(0, 0, size * ratio, size * ratio);
+  } catch {
+    return null; // some privacy settings block reading a canvas back
+  }
+  // Others give back made-up pixels instead (Tor Browser, or Firefox resisting
+  // fingerprinting), so the box is kept only if its corner is clear and its middle is the
+  // fill colour.
+  const side = size * ratio;
+  const middle = (side / 2) * (side + 1) * 4;
+  const rgb = [1, 3, 5].map((i) => parseInt(fill.slice(i, i + 2), 16));
+  const filled = rgb.every((value, i) => Math.abs(image.data[middle + i] - value) <= 2);
+  return image.data[3] === 0 && filled && image.data[middle + 3] === 255 ? image : null;
+}
+
+function addPillImages(colours) {
+  const { size, radius, ratio } = PILL;
+  const stretch = [[radius * ratio, (size - radius) * ratio]];
+  const options = {
+    pixelRatio: ratio,
+    stretchX: stretch,
+    stretchY: stretch,
+    content: [radius * ratio, (radius / 2) * ratio, (size - radius) * ratio, (size - radius / 2) * ratio],
+  };
+  let added = true;
+  for (const [id, fill, width] of [
+    ["price-pill", colours.fill, 1.5],
+    ["price-pill-plan", colours.plan, 3],
+  ]) {
+    if (app.map.hasImage(id)) app.map.removeImage(id);
+    const image = pillImage(fill, colours.edge, width);
+    if (image) app.map.addImage(id, image, options);
+    else added = false;
+  }
+  return added;
+}
+
+// The cheapest price the visitor can pay at each point, in a box above it (labels.js),
+// at any zoom, on every point that is not grouped into a numbered circle. Where labels
+// would overlap, the lowest figures are placed first (symbol-sort-key), and the others
+// are left out. The layer sits under the letters in the circles, so a letter stays
+// readable where a label reaches a neighbouring point; numbered circles keep labels off.
+function addPriceLabels(faded) {
+  const colours = PILLS[effectiveTheme()];
+  const boxed = addPillImages(colours);
+  app.map.addLayer({
+    id: "price-labels",
+    type: "symbol",
+    source: "chargers",
+    filter: ["all", ["!", ["has", "point_count"]], ["has", "lab"]],
+    layout: {
+      "text-field": ["get", "lab"],
+      "text-font": FONT,
+      "text-size": 12,
+      "text-anchor": "bottom",
+      // Clears the largest circle (13px radius and its 2px edge) with a small gap.
+      "text-offset": [0, -1.45],
+      "symbol-sort-key": ["get", "labk"],
+      ...(boxed
+        ? {
+            "icon-image": ["case", ["get", "labplan"], "price-pill-plan", "price-pill"],
+            "icon-text-fit": "both",
+            "icon-text-fit-padding": [2, 5, 1, 5],
+          }
+        : {}),
+    },
+    paint: {
+      "text-color": colours.text,
+      "icon-opacity": faded(1),
+      ...(boxed
+        ? {}
+        : {
+            "text-halo-color": ["case", ["get", "labplan"], colours.plan, colours.fill],
+            "text-halo-width": 2,
+          }),
+    },
+  });
 }
 
 // The "Group" button switches grouping on and off, the same as the box in the filters.

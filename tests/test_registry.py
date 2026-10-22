@@ -16,6 +16,7 @@ from tests.test_security_files import PUBLISHED_FEED_ADDRESSES, PUBLISHED_RECORD
 OPERATORS_DIR = Path(__file__).resolve().parent.parent / "operators"
 SEED_IDS = {
     "allego",
+    "amey_ev_charging",
     "apcoa",
     "applegreen_electric",
     "arnold_clark_charge",
@@ -33,14 +34,20 @@ SEED_IDS = {
     "community_by_shell_recharge",
     "connected_kerb",
     "connekt",
+    "e_on_drive",
     "electric_blue",
+    "electroad",
     "elmtronics",
     "enfield_council",
+    "esb_ecars",
     "esb_energy",
+    "ev_point",
     "ev_smart",
+    "evology_charging",
     "evolt",
     "evyve",
     "ez_charge",
+    "ezo",
     "fastned",
     "first_charge",
     "for_ev",
@@ -56,11 +63,14 @@ SEED_IDS = {
     "jolt",
     "liberty_charge",
     "lidl",
+    "maxol",
     "mer_uk",
     "mfg_ev_power",
+    "moto_charge",
     "ncp",
     "osprey",
     "parkrecharge",
+    "plug_charging",
     "plug_n_go",
     "pod",
     "pogo_charge",
@@ -83,6 +93,7 @@ SEED_IDS = {
     "wenea",
     "west_suffolk_council",
     "yourparkingspace",
+    "zapgo",
     "zest",
 }
 UUID_LIKE = re.compile(r"[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}", re.I)
@@ -158,7 +169,7 @@ def test_operator_files_contain_no_key_like_values():
 
 def test_cli_validate_succeeds_on_seed_registry(capsys):
     assert registry.main(["--validate"]) == 0
-    assert "Operator registry is valid: 69 operators" in capsys.readouterr().out
+    assert "Operator registry is valid: 80 operators" in capsys.readouterr().out
 
 
 def test_cli_without_validate_prints_help(capsys):
@@ -669,6 +680,32 @@ def test_a_zero_price_tariffs_decision_needs_ocpi_tariff_ids(tariff_ids):
         OperatorConfig.model_validate(
             enabled_open(zero_price_tariffs={**ZERO, "tariff_ids": tariff_ids})
         )
+
+
+# VAT added where a feed gives none (ADR 0003, amended 22 October 2026)
+
+VAT = {
+    "decided": "2026-10-22",
+    "basis": "Each feed price is the operator's own page price less 20%.",
+    "evidence_url": "https://example.invalid/tariffs",
+}
+
+
+@pytest.mark.parametrize("rate", [None, 0, -20, 120], ids=["missing", "zero", "negative", "over"])
+def test_a_vat_decision_needs_a_rate_above_zero_and_up_to_100(rate):
+    decision = {**VAT} if rate is None else {**VAT, "add_percent": rate}
+    with pytest.raises(ValidationError):
+        OperatorConfig.model_validate(enabled_open(vat_not_stated=decision))
+
+
+def test_only_chargy_and_clenergy_carry_a_vat_decision_at_20_percent():
+    operators = registry.load_registry(OPERATORS_DIR)
+    decisions = {
+        i: (str(c.vat_not_stated.decided), c.vat_not_stated.add_percent)
+        for i, c in operators.items()
+        if c.vat_not_stated
+    }
+    assert decisions == {"chargy": ("2026-10-22", 20), "clenergy_ev": ("2026-10-22", 20)}
 
 
 def test_only_scottishpower_recharge_carries_a_zero_price_tariffs_decision():

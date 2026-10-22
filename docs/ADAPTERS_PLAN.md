@@ -149,8 +149,17 @@ documentation only visible after login), Giga Power, EV Smart (says OCPI, no ter
 Blink and Ionity (all by request). Each gets an A-numbered task in this file once a real
 response shows it is not standard OCPI.
 
-**No feed found:** Be.EV, Go Zero (the documented address now returns 404), Tesla,
-Connected Kerb and Sainsbury's Smart Charge.
+**No feed found:** Be.EV, Go Zero (the documented address now returns 404), Connected Kerb
+and Sainsbury's Smart Charge.
+
+**OCPI connection by invitation (found 2026-10-13):** Tesla, through the Tesla Roaming Portal
+on its developer site. The connection form starts an OCPI 2.2.1 credentials handshake in which
+this project supplies the address of its own OCPI versions endpoint. On 2026-10-16 the owner
+decided to answer it from a separate free Cloudflare Worker, `oevm-ocpi` in `ocpi/`, which only
+does the handshake (ADR 0025). Two tasks remain, each its own pull request: the pipeline side
+(read Tesla's token from the Worker once per run, Base64 tokens, request ID headers), then the
+adapter (fixtures and Tesla's tariff extensions, see `operators/tesla.yaml`), the second only
+after Tesla grants access and its terms are read.
 
 No operator found publishes a CSV or other non-OCPI file, which supports deferring A3.
 

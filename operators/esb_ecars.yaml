@@ -1,0 +1,70 @@
+# yaml-language-server: $schema=schema.json
+id: esb_ecars
+display_name: ESB ecars (Northern Ireland)
+ocpi_country_code: unknown
+ocpi_party_id: unknown
+adapter: unknown
+base_url: unknown
+endpoints: {}
+auth:
+  method: unknown
+  name: null
+  secret_name: null
+rate_limit:
+  min_seconds_between_requests: 2
+  limits: []
+  limits_checked: unknown
+  notes: null
+supports_single_location: unknown
+cors: unknown
+attribution: null
+licence: null
+engagement:
+  status: no_public_feed_found
+  evidence:
+    - date: 2026-10-22
+      url: https://esb.ie/what-we-do/ecars/our-network
+      note: >-
+        ESB ecars' network page says ESB operates and maintains the public charge point
+        network in Northern Ireland, and sends drivers in Great Britain to ESB Energy. Neither
+        this page, the ecars FAQs, the essential driver information page nor ESB's sitemap
+        links open data or a route for requesting it.
+  log:
+    - date: 2026-10-22
+      action: feed_searched
+      summary: >-
+        ESB ecars' network page, FAQs and essential driver information page, and ESB's
+        sitemap, were read, and no open data feed or route for requesting open data was
+        found for Northern Ireland.
+      quote: >-
+        ESB also operates and maintains the public charge point network for electric vehicle
+        drivers in Northern Ireland.
+      evidence_url: https://esb.ie/what-we-do/ecars/our-network
+access_requested: null
+access_granted: null
+sources:
+  - url: https://esb.ie/what-we-do/ecars/our-network
+    note: >-
+      ESB ecars' network page (read 2026-10-22). Describes a Levelling Up Fund programme to
+      replace all existing fast and rapid chargers in Northern Ireland, and points drivers
+      in Great Britain to esbenergy.co.uk/EV.
+  - url: https://esb.ie/what-we-do/ecars/faqs
+    note: >-
+      ESB ecars' FAQs (read 2026-10-22). Gives VAT of 20% on charging in Northern Ireland. No
+      open data answer.
+  - url: https://esb.ie/what-we-do/ecars/essential-ev-driver-information
+    note: >-
+      ESB ecars' essential driver information page (read 2026-10-22). Has sections on its
+      networks in Northern Ireland and in Great Britain. No open data link.
+  - url: https://www.legislation.gov.uk/uksi/2023/1168/regulation/1/made
+    note: >-
+      Regulation 1(2) of the Public Charge Point Regulations 2023 (read 2026-10-22): "These
+      Regulations extend to England and Wales, Scotland and Northern Ireland."
+findings: []
+notes: >-
+  ESB's public network in Northern Ireland, separate from ESB Energy's network in Great
+  Britain (operators/esb_energy.yaml). ESB Energy's "PCPR Data Request" form asks about "the
+  ESB network in the United Kingdom"; whether that covers the Northern Ireland sites is not
+  stated, so a request through that form could ask. Otherwise a written request to ESB
+  ecars.
+enabled: false

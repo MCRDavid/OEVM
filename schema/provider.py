@@ -103,6 +103,11 @@ class Plan(_Model):
     conditions: NeutralText | None = Field(
         default=None, description="Times of day, charger speeds, caps or other fees."
     )
+    only_at_some_times: bool = Field(
+        default=False,
+        description="True when the plan's price applies only at some times of day or on some "
+        "days, as conditions says, so the map's label for it says 'from' (ADR 0026).",
+    )
     needs_testing: NeutralText | None = Field(
         default=None,
         description="Set when the provider's own pages disagree or something is unclear.",

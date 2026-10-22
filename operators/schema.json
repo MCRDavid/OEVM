@@ -960,6 +960,45 @@
       "title": "TariffsFrom",
       "type": "object"
     },
+    "VatNotStated": {
+      "additionalProperties": false,
+      "description": "The repository owner's recorded decision that this operator's prices exclude VAT\nalthough its feed gives no VAT figure, so VAT is added at add_percent (ADR 0003,\namended 22 October 2026).\n\nOCPI 2.2.1 prices exclude VAT, and each price component can give a VAT rate; an\nomitted rate means no VAT applies. Without this decision such prices are shown as\npublished and marked \"VAT not stated\". With it, every price component of this\noperator's tariffs that gives no VAT figure has add_percent added, and the price says\nthe project added it. A component that gives its own figure keeps it. The tariffs\nthemselves are published unchanged.",
+      "properties": {
+        "decided": {
+          "description": "Date the owner made the decision (YYYY-MM-DD).",
+          "format": "date",
+          "title": "Decided",
+          "type": "string"
+        },
+        "basis": {
+          "description": "Why the prices are read as excluding VAT, with the evidence checked.",
+          "minLength": 1,
+          "title": "Basis",
+          "type": "string"
+        },
+        "evidence_url": {
+          "description": "Where the prices with no VAT figure can be seen.",
+          "pattern": "^https?://\\S+$",
+          "title": "Evidence Url",
+          "type": "string"
+        },
+        "add_percent": {
+          "description": "The VAT rate added, in percent (UK standard rate: 20).",
+          "exclusiveMinimum": 0,
+          "maximum": 100,
+          "title": "Add Percent",
+          "type": "number"
+        }
+      },
+      "required": [
+        "decided",
+        "basis",
+        "evidence_url",
+        "add_percent"
+      ],
+      "title": "VatNotStated",
+      "type": "object"
+    },
     "ZeroPriceTariffs": {
       "additionalProperties": false,
       "description": "The repository owner's recorded decision that named tariffs whose prices are all zero\nshow \"Price unknown\" rather than \"Free\" (ADR 0022).\n\nWithout this decision a tariff with at least one price component, every component at\nzero and no minimum charge is confirmed free. A tariff is matched only by its exact OCPI\nid, never by name, and only while its prices are all zero: if the operator gives it a\nprice, that price is shown. The tariff itself is published unchanged.",
@@ -1212,6 +1251,18 @@
       ],
       "default": null,
       "description": "Only by the repository owner's decision: tariffs, by exact OCPI id, whose prices are all zero but which show 'Price unknown' rather than 'Free'. Null means a tariff whose prices are all zero shows as free."
+    },
+    "vat_not_stated": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/VatNotStated"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "description": "Only by the repository owner's decision: add VAT at a set rate to price components that give no VAT figure. Null means such prices are shown as published and marked 'VAT not stated'."
     },
     "expired_certificate": {
       "anyOf": [
