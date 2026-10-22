@@ -145,7 +145,7 @@ notes: >-
   invitation during a pilot, with a UK scope ("Charging Location Data will be shared based on
   selected scope (i.e. UK sites)"). On 2026-10-16 the repository owner decided to answer the
   handshake from a separate Cloudflare Worker, oevm-ocpi in ocpi/ (ADR 0025, proposed until
-  the owner confirms its defaults D1 to D8), which gives role NSP (navigation service
+  the owner confirms its defaults D2 to D8), which gives role NSP (navigation service
   provider) and a three-letter party ID; the daily run will fetch locations and tariffs
   itself with the token Tesla sends in its credentials POST. OCPI 2.2.1 also asks for the
   token to be Base64 encoded and for request ID headers, which the ocpi_221 adapter does not

@@ -69,7 +69,7 @@ decisions are in docs/adr/.
 - Never go below 1 second between requests to a host, or below any limit in an operator's
   rate_limit.limits plus a 1 second margin. Record each published limit with its publisher, an
   exact quote, source URL and date; tests enforce these rules. Never run two fetches that use the same host in parallel.
-- Proposed exception, awaiting the owner's confirmation (D1 in ADR 0025): in answer to an
+- Exception decided by the owner on 22 October 2026 (D1 in ADR 0025): in answer to an
   operator's own credentials call, the OCPI handshake Worker may overlap the daily pull, closer
   than the operator's gap, by up to three requests (two for a renewal). Nothing else may.
 - Record spec differences, data quirks and access issues as dated findings in the operator file,
@@ -104,7 +104,7 @@ decisions are in docs/adr/.
   handshake and hands its token to the daily run behind OCPI_PULL_TOKEN. It never fetches
   locations, tariffs or statuses, never holds a GitHub token, never logs a token, retires each
   setup token by hash once it has registered, and keeps the project User-Agent and the
-  operator's rate limits for its own calls, apart from the proposed D1 overlap above. The daily
+  operator's rate limits for its own calls, apart from the D1 overlap above. The daily
   run uses an address from it only if the host is recorded in the operator file. No operator's
   name in a Worker, route, object or subdomain name. An operator connected this way stays
   switched off until its terms are read.

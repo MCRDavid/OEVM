@@ -235,14 +235,13 @@ OCPI conformance and for security, on 17 October 2026.
   could allow, and every `fetch()` carries a `CF-Worker` header. The daily pull comes from
   GitHub's runners, which char.gy and GeniePoint refused on 8 October 2026. Whether Tesla
   refuses either network needs testing.
-- **Tesla's calls cannot be timed (proposed, D1).** Tesla chooses when to PUT, or to register
+- **Tesla's calls cannot be timed (D1, decided 22 October 2026).** Tesla chooses when to PUT, or to register
   again (D6, D7). The in-progress flag stops a daily pull starting during a handshake, but
   nothing stops Tesla starting one while a pull is running. The Worker's calls back, 2 seconds
   apart, could then reach Tesla while the run is also fetching, closer together than Tesla's
   gap. That would depart from the rules never to go below an operator's gap and never to run
   two fetches to one host at once, for at most three requests (two for a renewal), each
-  answering Tesla's own call. This ADR proposes accepting it because the alternatives are
-  worse: a lock taken by the daily run would either refuse Tesla's renewal, which might be
+  answering Tesla's own call. The owner accepted it because the alternatives are worse: a lock taken by the daily run would either refuse Tesla's renewal, which might be
   answering a suspected leak, or hold Tesla's PUT open for an unknown time, which could leave
   Tesla without the new TOKEN_C. The same PUT may also replace the TOKEN_B the run holds, so
   that day's Tesla fetch could fail and the next run would use the new token (needs testing).
@@ -278,9 +277,8 @@ OCPI conformance and for security, on 17 October 2026.
 
 - **A route on the relay, the Worker writing GitHub secrets, Workers KV:** rejected above.
 - **A lock for the daily run** (taken when it reads TOKEN_B, released when it finishes), so
-  that Tesla's PUT never overlaps a pull: not proposed (see D1). It is added in this pull
-  request if D1 is answered no, and could be added later if Tesla publishes a limit that needs
-  it.
+  that Tesla's PUT never overlaps a pull: not chosen (D1). It could be added later if Tesla
+  publishes a limit that needs it.
 - **Following a redirect on Tesla's own host:** not done, because each one is a further request
   to that host and Tesla's addresses are its own choice; a redirect fails the handshake with a
   message the owner can pass on.
@@ -297,28 +295,28 @@ OCPI conformance and for security, on 17 October 2026.
   after 9 October 2026. A computer at home is not always on, and its calls would reveal where it
   is.
 
-## Decided by the owner (16 October 2026)
+## Decided by the owner
 
-- After reading the hosting comparison of 15 and 16 October 2026, the repository owner chose
-  "Build it": a separate free Cloudflare Worker for Tesla's handshake, with this ADR. That
-  comparison planned role NSP ("Navigation Service Provider Role, role like an eMSP (probably
-  only interested in Location information)", OCPI 2.2.1 `types.asciidoc`) and a three-letter
-  party ID for Tesla's form, as `operators/tesla.yaml` already notes. Which three letters is
-  D2 below.
+- 16 October 2026: after reading the hosting comparison of 15 and 16 October 2026, the
+  repository owner chose "Build it": a separate free Cloudflare Worker for Tesla's handshake,
+  with this ADR. That comparison planned role NSP ("Navigation Service Provider Role, role like
+  an eMSP (probably only interested in Location information)", OCPI 2.2.1 `types.asciidoc`) and
+  a three-letter party ID for Tesla's form, as `operators/tesla.yaml` already notes. Which
+  three letters is D2 below.
+- 22 October 2026, **D1. Overlap with the daily run:** "Allow it". `CLAUDE.md` says "Never run
+  two fetches that use the same host in parallel", and never to go below an operator's gap. For
+  calls that Tesla itself starts, a PUT or a new registration (D6, D7) arriving while a daily
+  pull is running may overlap the pull, closer than Tesla's gap, by up to three requests (two
+  for a renewal), each made in answer to Tesla's own credentials call ("Risks accepted"
+  above). Nothing else may overlap, and `CLAUDE.md` records the exception. No lock for the
+  daily run is added.
 
 ## Proposed defaults awaiting the owner's confirmation
 
 The code follows these defaults, but the repository owner has not confirmed them. The pull
-request that adds `ocpi/` asks about each one, and this ADR stays proposed until all are
-answered. D1 comes first because it relaxes a rule in `CLAUDE.md`.
+request that adds `ocpi/` asks about them, and this ADR stays proposed until all are
+answered.
 
-- **D1. Overlap with the daily run.** `CLAUDE.md` says "Never run two fetches that use the same
-  host in parallel", and never to go below an operator's gap. Proposed: for calls that Tesla
-  itself starts, accept that a PUT or a new registration (D6, D7) arriving while a daily pull
-  is running may overlap the pull, closer than Tesla's gap, by up to three requests (two for a
-  renewal), each made in answer to Tesla's own credentials call ("Risks accepted" above).
-  Nothing else may overlap. If not: a lock for the daily run is added in this pull request,
-  which refuses Tesla's PUT while a pull runs.
 - **D2. Party ID.** Proposed: `OEV`, from OEVM (`party_id` in `PARTY` in `ocpi/worker.js`),
   typed into Tesla's form unchanged. Whether `GB*OEV` is already in use needs checking. If
   not: change `party_id` there; the tests check only that it is three capital letters or
