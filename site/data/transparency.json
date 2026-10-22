@@ -3430,6 +3430,68 @@
       "findings": []
     },
     {
+      "id": "ev_point",
+      "name": "evpoint",
+      "enabled": false,
+      "adapter": "unknown",
+      "engagement": {
+        "status": "no_public_feed_found",
+        "label": "No public feed found",
+        "headline": "No public feed found (as of 2026-10-22)",
+        "as_of": "2026-10-22",
+        "last_request": null,
+        "last_response": null,
+        "last_response_text": "No request sent",
+        "evidence": [
+          {
+            "date": "2026-10-22",
+            "url": "https://www.ev-point.com/",
+            "file": null,
+            "note": "evpoint's home page, its customer help and about pages, and its sitemaps (80 pages, 68 of them location pages) have no open data page or route for requesting open data. The customer help page gives a support email address at eg.group."
+          }
+        ],
+        "log": [
+          {
+            "date": "2026-10-22",
+            "action": "feed_searched",
+            "action_label": "Searched for a feed",
+            "channel": null,
+            "channel_label": null,
+            "summary": "evpoint's home page, customer help page, about page and sitemaps were read, and no open data feed or route for requesting open data was found.",
+            "quote": "Our directly managed, owned and operated network provides us with complete control over quality, consistency and pricing for our consumers.",
+            "evidence_url": "https://www.ev-point.com/",
+            "evidence_file": null
+          }
+        ]
+      },
+      "access_requested": null,
+      "access_granted": null,
+      "feeds": [],
+      "licence": null,
+      "attribution": null,
+      "missing_publish_flag": null,
+      "swapped_coordinates": null,
+      "nonstandard_statuses": null,
+      "tariffs_from": null,
+      "nonstandard_parking_restrictions": null,
+      "zero_price_tariffs": null,
+      "vat_not_stated": null,
+      "relay": null,
+      "expired_certificate": null,
+      "excluded_locations": null,
+      "rate_limit": {
+        "our_gap_seconds": 2.0,
+        "our_max_per_hour": 1800,
+        "ours": "At least 2 s between requests to the operator's host, measured from the end of the previous request (at most 1800 in any hour), retries included.",
+        "published": [],
+        "limits_checked": "unknown",
+        "comparison": "The operator's pages have not been checked for limits yet.",
+        "difference_from_regulations": "Not known yet.",
+        "notes": null
+      },
+      "findings": []
+    },
+    {
       "id": "evyve",
       "name": "evyve",
       "enabled": false,
