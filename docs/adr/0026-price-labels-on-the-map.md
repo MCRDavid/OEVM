@@ -50,8 +50,9 @@ otherwise through a free app or paying at the charger by contactless card.
   and status filters count, so a rapid charger is never labelled with a slow connector's
   price. No label shows a price above the "Maximum price per kWh" filter; a price whose
   VAT is not stated is held to it as published, since VAT could only raise it. The line
-  in a site's details ("Cheapest here") names the tariff only when one listed tariff
-  alone gives that price, and follows filter changes while the details are open.
+  in a site's details ("Cheapest here") says which tariff gives the price, and how it is
+  paid for, only where every listed tariff giving that price agrees, and follows filter
+  changes while the details are open.
 - **Wording stays in the pipeline.** Each kind of connector in `data/locations.geojson`
   carries `low` (the lowest price per kWh, in pence), `lvat`, `lvar` and `lt`, the label
   worded by `pipeline/pricing.py` (`map_label`); plans in `data/plans.json` carry `label`

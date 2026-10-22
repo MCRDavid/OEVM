@@ -378,8 +378,8 @@ export function plansSection(detail, allPlans, mine = new Set()) {
 // Where the price in the label above this location's point on the map, and next to it
 // in the list, comes from (labels.js, ADR 0026): the tariff or ticked plan that gives it.
 // label is what priceLabel returned for this location; filtered says whether the
-// visitor's filters leave out some connectors. The tariff is named only when one listed
-// tariff alone gives that price.
+// visitor's filters leave out some connectors. The tariff is named, and how it is paid
+// for given, only when every listed tariff that gives that price agrees on it.
 export function mapLabelLine(detail, label, filtered = false) {
   if (!label) return null;
   const fees = "Other charges, such as a fee per session or for staying longer, are not included.";
@@ -394,13 +394,15 @@ export function mapLabelLine(detail, label, filtered = false) {
     const options = (detail.tariff_options ?? []).filter(
       (o) => o.state === "priced" && o.ppk_low === label.low && Boolean(o.includes_vat) === label.lvat,
     );
-    const distinct = new Map(options.map((o) => [`${o.published_by}|${o.name}|${o.kind}`, o]));
-    const option = distinct.size === 1 ? [...distinct.values()][0] : null;
+    // Said only where every listed tariff that gives the price agrees on it.
+    const same = (field) => options.length > 0 && options.every((o) => o[field] === options[0][field]);
     let from = "";
-    if (option) {
+    if (same("published_by") && same("kind")) {
+      const [option] = options;
       const whose = option.published_by ? `${option.published_by}'s` : "the operator's";
-      const name = option.name ? ` "${option.name}"` : "";
-      from = `, from ${whose}${name} tariff: ${option.kind[0].toLowerCase()}${option.kind.slice(1)}`;
+      const name = same("name") && option.name ? ` "${option.name}"` : "";
+      const tariffs = options.length > 1 && !name ? "tariffs" : "tariff";
+      from = `, from ${whose}${name} ${tariffs}: ${option.kind[0].toLowerCase()}${option.kind.slice(1)}`;
     }
     source = `, the lowest price per kWh listed here${which}${from}`;
   }
