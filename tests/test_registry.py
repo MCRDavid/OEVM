@@ -671,6 +671,32 @@ def test_a_zero_price_tariffs_decision_needs_ocpi_tariff_ids(tariff_ids):
         )
 
 
+# VAT added where a feed gives none (ADR 0003, amended 22 October 2026)
+
+VAT = {
+    "decided": "2026-10-22",
+    "basis": "Each feed price is the operator's own page price less 20%.",
+    "evidence_url": "https://example.invalid/tariffs",
+}
+
+
+@pytest.mark.parametrize("rate", [None, 0, -20, 120], ids=["missing", "zero", "negative", "over"])
+def test_a_vat_decision_needs_a_rate_above_zero_and_up_to_100(rate):
+    decision = {**VAT} if rate is None else {**VAT, "add_percent": rate}
+    with pytest.raises(ValidationError):
+        OperatorConfig.model_validate(enabled_open(vat_not_stated=decision))
+
+
+def test_only_chargy_and_clenergy_carry_a_vat_decision_at_20_percent():
+    operators = registry.load_registry(OPERATORS_DIR)
+    decisions = {
+        i: (str(c.vat_not_stated.decided), c.vat_not_stated.add_percent)
+        for i, c in operators.items()
+        if c.vat_not_stated
+    }
+    assert decisions == {"chargy": ("2026-10-22", 20), "clenergy_ev": ("2026-10-22", 20)}
+
+
 def test_only_scottishpower_recharge_carries_a_zero_price_tariffs_decision():
     operators = registry.load_registry(OPERATORS_DIR)
     decisions = {

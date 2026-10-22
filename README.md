@@ -57,6 +57,11 @@ Also in place:
   than an operator's published limit. Tests check both.
 - **Prices in pounds and pence only.** Tariffs in other currencies show as "Price unknown"
   and are never converted.
+- **Price labels on the map:** when zoomed in, points show the lowest published price per
+  kWh a visitor can pay there, from the operator's app or account, paying at the
+  charger, or a ticked plan with a fixed price including VAT, for the connectors their
+  filters allow. Labels that would overlap are left out, lowest figures first, and the
+  list shows the same label for every charger (ADR 0026).
 
 The rules the site follows for privacy and cookies are in
 [docs/PRIVACY_AND_COOKIES.md](docs/PRIVACY_AND_COOKIES.md), and the notice is published
@@ -71,7 +76,8 @@ on the site at `privacy/` from the same file.
 - A charger is only ever shown as free when the tariff its connector names says every
   price is zero: the operator's own, or a related operator's where the owner has recorded
   that decision (ADR 0020). A missing tariff means "Price unknown"; missing VAT means "excluding VAT,
-  VAT not stated".
+  VAT not stated", unless the owner has recorded that an operator's prices exclude VAT: then
+  VAT is added at the recorded rate and the price says so (ADR 0003).
 - No secrets in the repository and no personal data.
 - Status pages use neutral, dated, evidenced wording.
 - Unknown facts are written as "unknown" or "needs_testing", never guessed.

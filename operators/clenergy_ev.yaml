@@ -54,6 +54,19 @@ swapped_coordinates:
     map, with the operator's own figures kept and the correction shown on the map and
     recorded in the findings below. On the same day the owner decided a longitude
     obviously missing its minus sign is corrected the same way.
+vat_not_stated:
+  decided: 2026-10-22
+  basis: >-
+    Clenergy EV's feed gives no VAT rate on any price, and its website gives no charging
+    prices to compare (read 22 October 2026). Of the 126 prices per kWh in pounds in its
+    tariffs file of 22 October 2026, 120 come to a whole penny, to within 0.02p, once 20%
+    is added (for example 0.4167 becomes 50p and 0.5417 becomes 65p), while only 23 are
+    whole pence as published. This suggests prices with VAT at 20%, the UK standard rate
+    on public charging, taken off; that is inferred from the figures, not stated by
+    Clenergy EV. The repository owner decided that VAT at 20% is added, so prices on the
+    map all include VAT and can be compared.
+  evidence_url: https://api.clenergy.online/development/pcpr/tariffs
+  add_percent: 20
 engagement:
   status: open_anonymous
   evidence:
@@ -157,6 +170,22 @@ findings:
       5 of 129 tariffs are in a currency other than GBP (3 EUR, 1 USD, 1 CAD on
       2026-10-09).
     handling: Their connectors show "Price unknown". Currencies are never converted.
+    evidence_url: https://api.clenergy.online/development/pcpr/tariffs
+  - date: 2026-10-22
+    kind: data_quality
+    summary: >-
+      Tariff price components give no VAT rate (142 components on 2026-10-22). OCPI 2.2.1
+      says an omitted VAT means no VAT is applicable. Clenergy EV's website gives no
+      charging prices to compare. Of the 126 prices per kWh in pounds, 120 come to a whole
+      penny, to within 0.02p, once 20% is added, against 23 as published. Of the 12
+      operators fetched in the daily run of 22 October 2026, 10 give a VAT rate on their
+      prices and 2, char.gy and Clenergy EV, give none.
+    handling: >-
+      Until 2026-10-22 prices were shown as published and marked "excluding VAT, VAT not
+      stated". Since then, by the repository owner's decision recorded in vat_not_stated,
+      VAT at 20% is added to every price that gives no VAT rate, and the price says this
+      project added it. Reading the prices as excluding VAT is inferred from the figures
+      and needs confirming by Clenergy EV. The tariffs are published unchanged.
     evidence_url: https://api.clenergy.online/development/pcpr/tariffs
 notes: >-
   Clenergy EV's files are OCPI 2.2.1 records inside a different wrapper, so the ocpi_221

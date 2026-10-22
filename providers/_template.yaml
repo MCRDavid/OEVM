@@ -25,6 +25,7 @@ plans:
     networks: [Example Network]
     operator_ids: [] # ids from operators/ for those networks
     conditions: null
+    only_at_some_times: false # true when the price applies only at some times or days
     needs_testing: null # when the provider's own pages disagree
     source:
       url: https://example.com/plus

@@ -18,6 +18,7 @@ uv run python -m pipeline.plans --validate
 - A plan gives a fixed price or a discount, never both, and must publish at least one of a fee, a price or a discount.
 - When the provider's own pages disagree, keep the figure from the main pricing page and explain in `needs_testing`; the map shows that note.
 - Set `operator_ids` only to ids that have a file in `operators/`, so the plan shows at those networks' chargers.
+- Set `only_at_some_times: true` when the plan's price applies only at some times of day or on some days (off-peak hours, weekends), so its label on the map says "from" ([ADR 0026](../docs/adr/0026-price-labels-on-the-map.md)).
 - British English, neutral wording, no em dashes. Never use a provider's logo or suggest it endorses the project.
 
 ## Adding a provider or plan

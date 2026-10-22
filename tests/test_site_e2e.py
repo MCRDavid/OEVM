@@ -1045,3 +1045,137 @@ def test_taxi_only_charge_points_are_labelled(visit):
     parking = page.locator("#detail-body .charge-points .parking")
     expect(parking).to_have_count(3)
     expect(parking.first).to_have_text("Parking: taxis only.")
+
+
+# Price labels (ADR 0026)
+
+
+def _item(page, name):
+    return page.locator("#list-items li", has_text=name)
+
+
+def test_the_list_shows_the_cheapest_price_for_the_connectors_the_filters_allow(visit):
+    v = visit()
+    page = v.open("?view=list", map_ready=False)
+    expect(page.locator("#list-items li")).to_have_count(LOCATIONS)
+    # GeniePoint's app price is lower than paying at the charger, which the summary shows.
+    dumbarton = _item(page, "Premier Inn Dumbarton")
+    expect(dumbarton).to_contain_text("Cheapest here: 82.8p")
+    expect(dumbarton).to_contain_text("Energy 92.4p per kWh including VAT")
+    expect(_item(page, "Premier Inn Alnwick")).to_contain_text("Cheapest here: 57.6p")
+    # char.gy's feed gives 32.5p with no VAT; the owner decided to add 20% (vat_not_stated).
+    seaford = _item(page, "141 - 143 Seaford Road")
+    expect(seaford).to_contain_text("Cheapest here: from 39p")
+    expect(seaford).not_to_contain_text("excl. VAT")
+    expect(_item(page, "Atlantic Quay")).to_contain_text("Cheapest here: Free")
+    expect(_item(page, "Glengarry")).not_to_contain_text("Cheapest here")
+    # With rapid chargers only, the 7 kW connector's price no longer counts.
+    page.click("#quick-rapid")
+    expect(_item(page, "Premier Inn Alnwick")).to_contain_text("Cheapest here: 82.8p")
+    assert v.errors == []
+
+
+def test_details_say_where_the_map_label_comes_from(visit):
+    page = visit().open("?view=list", map_ready=False)
+    expect(page.locator("#list-items li")).to_have_count(LOCATIONS)
+    _item(page, "Premier Inn Dumbarton").locator("button").click()
+    line = page.locator("#detail-body .map-label")
+    expect(line).to_contain_text("Cheapest here: 82.8p, the lowest price per kWh listed here")
+    expect(line).to_contain_text("with an account, app or card from a charging provider")
+    expect(line).to_contain_text("are not included")
+    page.keyboard.press("Escape")
+    _item(page, "Atlantic Quay").locator("button").click()
+    expect(page.locator("#detail-body .map-label")).to_contain_text(
+        "Cheapest here: Free, as at least one connector here has a tariff the operator confirms "
+        "is free"
+    )
+
+
+def test_the_details_line_follows_the_filters_while_the_details_are_open(visit):
+    v = visit(WIDE)
+    page = v.open("?view=list", map_ready=False)
+    expect(page.locator("#list-items li")).to_have_count(LOCATIONS)
+    _item(page, "Premier Inn Alnwick").locator("button").click()
+    line = page.locator("#detail-body .map-label")
+    expect(line).to_contain_text("Cheapest here: 57.6p, the lowest price per kWh listed here")
+    expect(line).not_to_contain_text("match your filters")
+    # On a wide screen the quick filters stay usable beside the panel.
+    page.click("#quick-rapid")
+    expect(line).to_contain_text(
+        "Cheapest here: 82.8p, the lowest price per kWh listed here for the connectors that "
+        "match your filters"
+    )
+    page.click("#quick-rapid")
+    expect(line).to_contain_text("Cheapest here: 57.6p")
+    assert v.errors == []
+
+
+# The colour of a price label from a ticked plan (PILLS in main.js), counted the same way.
+COUNT_AMBER_PIXELS = (
+    COUNT_CLUSTER_PIXELS.replace("0x24", "0xff").replace("0x32", "0xe0").replace("0x3f", "0x8a")
+)
+CHEAP_PLAN = {
+    "id": "test.cheap",
+    "provider": "Test",
+    "provider_kind": "roaming",
+    "name": "Cheap plan",
+    "pay_by": "Test app",
+    "fee_text": "£4.99 a month",
+    "price_text": "39p per kWh including VAT",
+    "monthly_fee": 4.99,
+    "ppk": 39,
+    "label": "39p",
+    "discount_percent": None,
+    "networks": ["GeniePoint"],
+    "operator_ids": ["geniepoint"],
+    "conditions": None,
+    "needs_testing": None,
+    "fee_note": None,
+    "attribution": None,
+    "source_url": "https://example.com/plan",
+    "checked": "2026-10-09",
+}
+
+
+def amber_pixels(page) -> int:
+    shot = base64.b64encode(page.locator("#map").screenshot()).decode()
+    return page.evaluate(COUNT_AMBER_PIXELS, f"data:image/png;base64,{shot}")
+
+
+def wait_for_amber(page, present: bool):
+    for _ in range(40):
+        if (amber_pixels(page) > 30) == present:
+            return
+        page.wait_for_timeout(250)
+    raise AssertionError(f"the plan's price label {'never appeared' if present else 'stayed'}")
+
+
+def test_a_ticked_plan_with_a_lower_price_labels_the_map_and_the_list(visit):
+    v = visit(WIDE)
+
+    def plans(route):
+        data = json.loads(route.fetch().text())
+        data["plans"].append(CHEAP_PLAN)
+        route.fulfill(content_type="application/json", body=json.dumps(data))
+
+    v.page.route("**/data/plans.json", plans)
+    # Premier Inn Dumbarton, a GeniePoint site, in the middle of the map.
+    page = v.open("#15/55.957027/-4.560159")
+    page.click("#legend summary")  # the key, open on wide screens, shows the colour too
+    item = _item(page, "Premier Inn Dumbarton")
+    expect(item).to_contain_text("Cheapest here: 82.8p")
+    wait_for_amber(page, False)
+    open_filters(page)
+    page.check("#my-plans input[value='test.cheap']")
+    page.click("#done")
+    expect(item).to_contain_text("Cheapest here: 39p with your plan")
+    wait_for_amber(page, True)
+    item.locator("button").click()
+    expect(page.locator("#detail-body .map-label")).to_contain_text(
+        "Cheapest here: 39p with your plan Cheap plan from Test (£4.99 a month)"
+    )
+    page.keyboard.press("Escape")
+    # Labels are left off below about the zoom of a town.
+    page.evaluate("window.location.hash = '#9/55.957027/-4.560159'")
+    wait_for_amber(page, False)
+    assert v.errors == [] and v.outside == []
