@@ -225,6 +225,9 @@ __marimo__/
 # Keys live in GitHub Actions secrets and are referenced by name only.
 # ---------------------------------------------------------------------------
 .env*
+# Local Wrangler state and secrets, if anyone runs the Workers locally.
+.wrangler/
+.dev.vars*
 *.key
 *.pem
 *.p12

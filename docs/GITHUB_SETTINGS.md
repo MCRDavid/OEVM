@@ -172,8 +172,9 @@ Cloudflare Worker that you own. The Worker only fetches the files listed in it, 
 requests carrying a secret token, and passes on the project's User-Agent unchanged. Each
 operator has its own path on it (for example `/geniepoint/...`), so a later operator only
 needs a new path in `relay/worker.js` and a decision in its file, not a new Worker or new
-secrets. The free plan allows up to 100 Workers, but one is enough. ADR 0010 explains the
-decision.
+secrets. The free plan allows up to 100 Workers, but one is enough for every relayed operator.
+(Section 11's Worker is separate on purpose, because it holds an operator's token.) ADR 0010
+explains the decision.
 
 **Make a token first.** Use your password manager's generator to make a random password of
 at least 40 letters and digits, with no spaces. You will paste the same value in two places
@@ -279,6 +280,188 @@ For the timer: https://developers.cloudflare.com/workers/configuration/cron-trig
 https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/managing-your-personal-access-tokens
 and https://docs.github.com/en/rest/actions/workflows#create-a-workflow-dispatch-event,
 read 12 October 2026.
+
+## 11. The OCPI handshake Worker (Cloudflare Workers)
+
+Tesla offers its data through an OCPI 2.2.1 connection that Tesla's servers start by calling
+this project: they read the project's OCPI versions, send Tesla's own token and wait for an
+answer (see `operators/tesla.yaml`). A second small Cloudflare Worker that you own answers
+those calls. It is separate from the relay, with its own folder (`ocpi/`), name, build
+settings and secrets, and it only does the handshake: the daily run will fetch Tesla's data
+itself, and Tesla stays switched off until its terms have been read. ADR 0025 explains the
+decision.
+
+**Do this only after** ADR 0025 is accepted and the pull request that adds `ocpi/` is merged.
+Tesla's form asks for the Worker's address, so the Worker must be working before you fill the
+form in.
+
+**Make two tokens first.** Use your password manager's generator to make two different random
+passwords of 40 to 64 letters and digits, with no spaces (OCPI tokens may be at most 64
+characters, and the Worker ignores a token shorter than 32). Save both in your password
+manager:
+
+- the **connection token**, which goes in step 7 and in Tesla's form in step 10;
+- the **pull token**, which goes in step 8, and later in a GitHub secret when the daily run
+  learns to read the Worker (that pull request adds its steps here).
+
+Do not reuse the relay's token. Do not put either token anywhere else, such as an issue, a
+commit or a chat.
+
+Cloudflare builds this Worker from the repository's `ocpi/` folder, so each change to `ocpi/`
+merged into `main` is deployed without copying code by hand.
+
+1. Check that two-factor authentication is on for your Cloudflare account: open **My
+   Profile**, then **Authentication**. Anyone who can sign in to the account, or merge a change
+   to `ocpi/` into `main`, could read the token Tesla sends.
+2. In the Cloudflare dashboard, open **Workers & Pages**, select **Create application**, then
+   **Get started** next to **Import a repository**, and choose this repository. The
+   **Cloudflare Workers and Pages** app already has access to it from section 10, step 3; if
+   GitHub asks again, keep **Only select repositories** with only this repository.
+3. On **Set up your application**, check that it shows this repository, then fill in:
+   - **Project name**: `oevm-ocpi` (it must match `name` in `ocpi/wrangler.toml`, or the build
+     fails). Never put an operator's name in it;
+   - **Build command**: leave empty;
+   - **Deploy command**: `npx wrangler deploy` (the default);
+   - **Preview command**: leave as it is (it only runs for preview builds);
+   - **Enable Preview builds**: switch off, so only `main` is ever deployed;
+   - **Protect with Cloudflare Access**: leave off (Tesla's servers could not get past a
+     sign-in page);
+   - under **Advanced settings**, **Path**: `/ocpi` (the folder the Worker is in);
+   - **API token**: leave as **Create new token**. Cloudflare makes this token itself so its
+     builds can deploy; it is neither of your tokens. Leave **API token name** empty unless
+     Cloudflare asks for one, then use `oevm-ocpi-build`;
+   - **Variable name** and **Variable value**: leave empty. These are build variables, and
+     neither token goes here.
+   If it asks for a branch, choose `main`. Then select **Deploy**. Note the Worker's address,
+   something like `https://oevm-ocpi.<your-subdomain>.workers.dev`. Keep the address out of
+   issues and commits too: anyone's requests to it count against the free plan's daily
+   allowance, which the relay shares.
+4. Open the Worker's **Settings > Build**. Under **Build watch paths**, set the include paths
+   to `ocpi/*`, so other changes to the repository do not start a build. Under **Branch
+   control**, check that preview builds are still off. Open the first build's log and check
+   that it created the `OcpiConnection` class and shows no warning about
+   `enable_request_signal`.
+5. Still in **Settings**, check that **Domains & Routes** lists only the `workers.dev` address
+   (no custom domain or route), that no Cron Trigger is listed, and that logs are off.
+   `ocpi/wrangler.toml` sets all three; if the dashboard shows logs on, find the nearest match
+   to **Observability** and turn them off.
+6. Still in **Settings**, open **Variables and Secrets**.
+7. Select **Add**, set **Type** to **Secret** and **Variable name** to `OCPI_TOKEN_A`, paste the
+   connection token as the **Value** and select **Deploy**.
+8. Select **Add** again, set **Type** to **Secret** and **Variable name** to `OCPI_PULL_TOKEN`,
+   paste the pull token as the **Value** and select **Deploy**. Until each secret is set, the
+   Worker refuses every request that would need it.
+9. Check the Worker from a terminal, with your subdomain in place of `<your-subdomain>`. First,
+   without a token:
+
+   ```bash
+   curl -sS -o /dev/null -w "%{http_code}\n" https://oevm-ocpi.<your-subdomain>.workers.dev/ocpi/versions
+   ```
+
+   It should print `401`. The same command for `/oevm/connection` should print `403`, and for
+   `/` it should print `404`. Then with the connection token. The command waits for you to
+   paste the token and press Enter; nothing shows, and the token goes to curl on its standard
+   input, not on the command line:
+
+   ```bash
+   read -rs T && printf 'Authorization: Token %s\n' "$T" | curl -sS -H @- https://oevm-ocpi.<your-subdomain>.workers.dev/ocpi/versions; unset T; echo
+   ```
+
+   It should print a reply containing `"version":"2.2.1"` and `"status_code":1000`. Then with
+   the pull token. This command never prints Tesla's token, even after Tesla has connected:
+
+   ```bash
+   read -rs T && printf 'X-Pull-Token: %s\n' "$T" | curl -sS -H @- https://oevm-ocpi.<your-subdomain>.workers.dev/oevm/connection | python3 -c 'import json, sys; d = json.load(sys.stdin); d.pop("token", None); print(json.dumps(d, indent=2))'; unset T
+   ```
+
+   It should show `"state": "unregistered"`. If any check shows something else, or `"Not
+   allowed."`, stop: set the secret again as typed, and do not fill in Tesla's form until every
+   check passes. Use **Disconnect** in the Worker's build settings if anything else is wrong.
+10. Only now, sign in to Tesla's developer portal and open its **Charging OCPI Connection** form
+    (https://developer.tesla.com/en_GB/dashboard/charging/roaming/connection). Fill in:
+    - **Connection Scope**: **UK**;
+    - **Token**: the connection token, pasted from your password manager;
+    - **Role**: **NSP**;
+    - **URL**: `https://oevm-ocpi.<your-subdomain>.workers.dev/ocpi/versions`, with no slash at
+      the end, so it matches the address in every reply the Worker sends;
+    - **Party ID**: exactly the `party_id` in `PARTY` in `ocpi/worker.js` (three capital
+      letters from the project's name). Not `TES`, the form's own example, and never your
+      initials.
+    Then select **Submit**. Tesla reviews each request and its portal is open by invitation
+    only, so it may refuse or not answer; that is a reply to record, not a fault. The form is
+    sent from your own Tesla Account, so Tesla will know who asked; nothing about the account
+    goes in the repository.
+11. The same day, record the request in `operators/tesla.yaml`, in a pull request like any
+    change: add this step at the end of `engagement.log`, set `access_requested` to the same
+    date and `engagement.status` to `requested_no_reply`, then run
+    `uv run python -m pipeline.registry --validate` and `uv run python -m pipeline.transparency`.
+    Never write the Worker's address or either token in the file.
+
+    ```yaml
+        - date: <YYYY-MM-DD>
+          action: request_sent
+          channel: web_form
+          summary: >-
+            The repository owner submitted Tesla's Charging OCPI Connection form with a UK
+            scope, the NSP role, a three-letter party ID and the address of the project's OCPI
+            versions endpoint, for Tesla to review.
+          evidence_url: https://developer.tesla.com/en_GB/dashboard/charging/roaming/connection
+    ```
+
+    Record Tesla's answer the same way when it comes (see `operators/_template.yaml`).
+12. To see whether Tesla has called, run the last command from step 9 again, with the pull
+    token. It shows:
+    - `"state"`: `"registered"` once Tesla has connected, `"handshake_in_progress"` while Tesla
+      is connecting, or `"ended"` if Tesla ended the connection;
+    - `"last_contact"`: when Tesla last called each address, with which kind of token
+      (`"setup"` is the connection token, `"retired"` a connection token already used and
+      `"peer"` the token the Worker gave Tesla), in which form, and whether it sent request
+      IDs. Your
+      own check in step 9 with the connection token shows here too, as `"GET /ocpi/versions"`
+      with `"who": "setup"`, `"form": "plain"` and `"request_ids": false`, at the time you ran
+      it (times are in UTC), until Tesla calls that address. So only entries dated after you
+      submitted Tesla's form can be Tesla's. If it shows Tesla reading `/ocpi/2.2.1` but never
+      a `POST`, Tesla did not like the Worker's answer; see "Needs testing" in ADR 0025;
+    - `"last_handshake"`: the result of Tesla's last attempt. `1000` is success, `2001` means
+      Tesla's request was not usable, `3001` that the Worker could not use Tesla's addresses
+      or ran out of time (the message says why), `3002` that Tesla offers no version 2.2.1,
+      `3003` that it offers no locations, and `3000` an unexpected error in the Worker;
+    - `"handouts"`: how many times the Worker has handed Tesla's token to anyone with the pull
+      token (once Tesla has connected, your own checks count too).
+
+    As soon as it says `"registered"`, delete `OCPI_TOKEN_A` in **Settings > Variables and
+    Secrets**. For 10 minutes after Tesla first registers with it, and until Tesla uses the new
+    token the Worker gave it, the connection token can still register again, even after you
+    delete the secret, so that Tesla can retry if it lost the answer (D7 in ADR 0025); a retry
+    does not add time. After that the Worker refuses it, but only while its stored record
+    survives, so deleting the secret still matters. Then, in a pull request, add a dated
+    `key_granted` step to `engagement.log` in `operators/tesla.yaml`, saying that Tesla
+    connected through its credentials handshake, with no address or token. Tesla's addresses
+    are never written down: the daily run reads the current ones from the Worker on each run,
+    so a change Tesla makes needs no update here (D8 in ADR 0025).
+
+If Tesla says it never received an answer to its registration, it can simply try again within
+10 minutes of its first registration (D7 in ADR 0025). After that, set a new connection token
+as `OCPI_TOKEN_A` (step 7) and fill in Tesla's form again with it; the Worker replaces the old
+connection when Tesla registers (D6). If Tesla ever ends the connection, connecting again also
+needs a new connection token and the form again.
+
+Do not change the Worker's secrets while the command shows `"handshake_in_progress"`: each
+change is a new deployment and restarts the Worker.
+
+To stop answering Tesla, use **Disconnect** in the Worker's build settings, then delete the
+Worker. Whether deleting the Worker also deletes the token Tesla sent at once, or Cloudflare
+keeps it for its 30-day recovery window, needs checking; ask Tesla to end the connection too.
+Menu names in Cloudflare's dashboard change from time to time; if a label differs, look for the
+nearest match.
+
+Sources: the relay's sources above (Cloudflare's builds and secrets pages, read 8 October 2026,
+and the **Set up your application** form as it appeared that day);
+https://developers.cloudflare.com/workers/platform/limits/ and
+https://developers.cloudflare.com/durable-objects/platform/pricing/, read 15, 16 and 17 October
+2026; https://developers.cloudflare.com/fundamentals/user-profiles/2fa/, read 16 October 2026;
+curl's `--header` option (`@-` reads headers from standard input, curl 7.55.0 or later); and
+Tesla's connection form as the repository owner read it on 13 October 2026.
 
 ## Later: security.txt on the website
 

@@ -5488,7 +5488,7 @@
           "kind": "access",
           "kind_label": "Access",
           "summary": "Tesla's developer page says the Tesla Roaming Portal, through which it offers an OCPI connection, is currently available on a pilot and invitation basis only. A connection needs a Tesla Account and a request that Tesla reviews. Neither the public page nor the signed-in documentation states terms, a licence or a rate limit for the data.",
-          "handling": "Recorded as a possible source of Tesla's data. Nothing has been requested. Under the OCPI 2.2.1 credentials handshake that the form starts, the requester supplies its own token and the address of its own OCPI versions endpoint, and must host versions and credentials endpoints that Tesla calls. This project is a static site and hosts none, so connecting needs a new hosted service and the repository owner's decision. The operator stays switched off.",
+          "handling": "Recorded as a possible source of Tesla's data. Nothing has been requested. Under the OCPI 2.2.1 credentials handshake that the form starts, the requester supplies its own token and the address of its own OCPI versions endpoint, and must host versions and credentials endpoints that Tesla calls. The map is a static site, so on 2026-10-16 the repository owner decided to answer those calls from a separate Cloudflare Worker that only does the handshake (ADR 0025). The operator stays switched off until Tesla's terms are read.",
           "evidence_url": "https://developer.tesla.com/en_GB/docs/charging/roaming",
           "status": "open",
           "resolved_date": null
