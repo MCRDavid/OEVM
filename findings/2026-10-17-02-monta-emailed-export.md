@@ -71,8 +71,10 @@ Monta's [Public API documentation](https://docs.public-api.monta.com/reference/g
 (updated 28 April 2026) lists an "Open Data" section, "List UK charge points in OCPI 2.2.1
 Location format", described as "Intended for AFIR-style aggregators and government open-data
 consumers". The documentation says it needs an access token from an application registered in
-Monta's portal, explains how a signed-in Monta user creates one, and gives a general limit for
-Monta's API of "10 requests per minute across all applications of a single user". It does not
+Monta's portal and explains how a signed-in Monta user creates one. Its
+[Integration Notes](https://docs.public-api.monta.com/reference/integration-notes) (updated
+9 September 2025) give a general limit for Monta's API of "10 requests per minute across all
+applications of a single user", without saying which endpoints it covers. It does not
 say whether someone who is not a Monta customer may use this endpoint, and sets out no terms or
 licence for the data. The help page above does not mention it. The project does not collect data
 from this feed; whether it can serve as a public source for Monta's UK chargers is, we think, a
