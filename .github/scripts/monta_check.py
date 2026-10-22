@@ -1,6 +1,6 @@
 """One-off check of Monta's UK open data feed with the project's own token. Counts only.
 
-Run once in GitHub Actions (.github/workflows/monta-check.yml), where the secrets
+Run in GitHub Actions (.github/workflows/monta-check.yml), where the secrets
 MONTA_CLIENT_ID and MONTA_CLIENT_SECRET exist, then removed. It asks whether a token from the
 owner's Monta application can read the feed for every UK charger Monta publishes, not just
 the owner's own account, and how many locations look like home or private chargers.
@@ -24,7 +24,7 @@ from pipeline.geography import place_in_uk
 
 API = "https://public-api.monta.com/api/v1"
 GAP_SECONDS = 7.0
-MAX_PAGES = 150
+MAX_PAGES = 600
 CODE = re.compile(r"[A-Za-z0-9_\-]{1,40}")
 SCOPES = {"all", "charge-points", "charge-transactions", "control-charging"}
 BUSINESS = re.compile(
@@ -137,22 +137,49 @@ def main() -> int:
         pages = 0
         complete = False
         rate_headers: dict = {}
-        while pages < MAX_PAGES:
-            params = {"per_page": "1000", "group_by_location": "true"}
-            if after:
-                params["after"] = after
+        # The first run (22 Oct 2026) got HTTP 500 for per_page 1000 with group_by_location.
+        # Try smaller pages, then without grouping, and keep the first that works.
+        variants = [
+            {"per_page": "100", "group_by_location": "true"},
+            {"per_page": "100"},
+            {"per_page": "10"},
+        ]
+        tried = []
+        base = None
+        for variant in variants:
             response = send(
                 client,
                 "GET",
                 f"{API}/open-data/locations",
-                params=params,
+                params=variant,
                 headers={"Authorization": f"Bearer {token}"},
             )
+            entry = {"params": variant, "http_status": response.status_code}
+            if response.status_code != 200:
+                entry["error"] = error_text(response)
+            tried.append(entry)
+            if response.status_code == 200:
+                base = variant
+                break
+        summary["first_page_attempts"] = tried
+        if base is None:
+            return report(summary, 0)
+        first = response
+        while pages < MAX_PAGES:
             if pages == 0:
-                summary["first_page_http_status"] = response.status_code
+                response = first
                 rate_headers = {
                     k: clean(v, 40) for k, v in response.headers.items() if "ratelimit" in k.lower()
                 }
+            else:
+                params = dict(base, after=after)
+                response = send(
+                    client,
+                    "GET",
+                    f"{API}/open-data/locations",
+                    params=params,
+                    headers={"Authorization": f"Bearer {token}"},
+                )
             if response.status_code != 200:
                 summary["stopped_at_page"] = pages + 1
                 summary["stop_http_status"] = response.status_code

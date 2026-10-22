@@ -19,7 +19,7 @@ jobs:
   check:
     name: Count Monta's open data with the project's token
     runs-on: ubuntu-latest
-    timeout-minutes: 30
+    timeout-minutes: 90
     steps:
       - uses: actions/checkout@v7
         with:
