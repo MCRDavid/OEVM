@@ -324,6 +324,21 @@ def test_a_decision_on_zero_price_tariffs_is_shown(page):
     assert "by the owner's decision of 2026-10-11" in text
 
 
+def test_a_decision_to_add_vat_is_shown_with_what_was_seen_across_operators(page):
+    data = json.loads(transparency.outputs()[transparency.JSON_PATH])
+    decisions = {op["id"]: op["vat_not_stated"] for op in data["operators"]}
+    assert {k: (v["decided"], v["add_percent"]) for k, v in decisions.items() if v} == {
+        "chargy": ("2026-10-22", 20),
+        "clenergy_ev": ("2026-10-22", 20),
+    }
+    text = " ".join(page.split())
+    assert "Prices that give no VAT rate have VAT at 20% added, by the owner's decision" in text
+    assert '<h2 id="vat">VAT in prices</h2>' in page
+    assert "10 of the 12 operators fetched gave a VAT rate" in text
+    assert "<li>char.gy: 20%, decided 2026-10-22" in text
+    assert "<li>Clenergy EV: 20%, decided 2026-10-22" in text
+
+
 def test_a_decision_to_use_a_related_operators_tariffs_is_shown(page):
     data = json.loads(transparency.outputs()[transparency.JSON_PATH])
     decisions = {op["id"]: op["tariffs_from"] for op in data["operators"]}

@@ -11,6 +11,7 @@ from adapters.ocpi_221 import fetch
 from adapters.replay import ReplayTransport
 from pipeline.pricing import (
     describe_tariff,
+    energy_range,
     location_summary,
     map_label,
     pence,
@@ -113,6 +114,51 @@ def test_other_charges_are_shown_in_pounds():
 def test_minimum_charge_is_shown_after_the_vat_note():
     shown = describe_tariff(tariff(components=[energy(0.45, vat=20)], min_price=2))
     assert shown.text == "54p per kWh including VAT; minimum charge £2.00 excluding VAT"
+
+
+# VAT the owner decided to add where a feed gives none (vat_not_stated, ADR 0003 as
+# amended on 22 October 2026)
+
+ADDED = "including VAT, with VAT at 20% added by this project where the operator's feed does not state it"
+
+
+def test_vat_is_added_at_the_owners_rate_and_the_price_says_so():
+    shown = describe_tariff(tariff(components=[energy(0.325)]), added_vat=20)
+    assert shown.text == f"39p per kWh {ADDED}"
+    assert energy_range(tariff(components=[energy(0.4167)]), 20) == (
+        Decimal("0.50004"),
+        Decimal("0.50004"),
+        True,
+    )
+
+
+def test_a_rate_the_feed_gives_is_kept_and_only_missing_ones_are_added():
+    shown = describe_tariff(tariff(components=[energy(0.45, vat=5), energy(0.30)]), added_vat=20)
+    assert shown.text == f"36p to 47.3p per kWh {ADDED}"
+    # When every price gives its own rate, nothing is added, so nothing is said.
+    stated = describe_tariff(tariff(components=[energy(0.45, vat=20)]), added_vat=20)
+    assert stated.text == "54p per kWh including VAT"
+
+
+def test_added_vat_covers_other_charges_and_the_minimum_charge():
+    shown = describe_tariff(
+        tariff(
+            components=[energy(0.5), {"type": "flat", "price": 1.0, "vat": None, "step_size": 1}],
+            min_price=2,
+        ),
+        added_vat=20,
+    )
+    assert shown.text == (
+        f"60p per kWh, plus £1.20 per session {ADDED}; "
+        "minimum charge £2.40 including VAT added by this project"
+    )
+
+
+def test_without_a_decision_a_price_with_no_vat_is_shown_as_published():
+    assert describe_tariff(tariff(components=[energy(0.325)])).text == (
+        "32.5p per kWh (excluding VAT, VAT not stated)"
+    )
+    assert energy_range(tariff(components=[energy(0.325)]))[2] is False
 
 
 @pytest.mark.parametrize("currency", ["EUR", "USD"])

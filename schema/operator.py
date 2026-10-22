@@ -479,6 +479,29 @@ class ZeroPriceTariffs(_Model):
         return self
 
 
+class VatNotStated(_Model):
+    """The repository owner's recorded decision that this operator's prices exclude VAT
+    although its feed gives no VAT figure, so VAT is added at add_percent (ADR 0003,
+    amended 22 October 2026).
+
+    OCPI 2.2.1 prices exclude VAT, and each price component can give a VAT rate; an
+    omitted rate means no VAT applies. Without this decision such prices are shown as
+    published and marked "VAT not stated". With it, every price component of this
+    operator's tariffs that gives no VAT figure has add_percent added, and the price says
+    the project added it. A component that gives its own figure keeps it. The tariffs
+    themselves are published unchanged.
+    """
+
+    decided: dt.date = Field(description="Date the owner made the decision (YYYY-MM-DD).")
+    basis: NeutralText = Field(
+        description="Why the prices are read as excluding VAT, with the evidence checked."
+    )
+    evidence_url: SafeUrl = Field(description="Where the prices with no VAT figure can be seen.")
+    add_percent: float = Field(
+        gt=0, le=100, description="The VAT rate added, in percent (UK standard rate: 20)."
+    )
+
+
 class Relay(_Model):
     """The repository owner's recorded decision to fetch this operator through a relay the
     project runs, because the operator's server refused requests from the daily run.
@@ -762,6 +785,12 @@ class OperatorConfig(_Model):
         description="Only by the repository owner's decision: tariffs, by exact OCPI id, "
         "whose prices are all zero but which show 'Price unknown' rather than 'Free'. Null "
         "means a tariff whose prices are all zero shows as free.",
+    )
+    vat_not_stated: VatNotStated | None = Field(
+        default=None,
+        description="Only by the repository owner's decision: add VAT at a set rate to "
+        "price components that give no VAT figure. Null means such prices are shown as "
+        "published and marked 'VAT not stated'.",
     )
     expired_certificate: ExpiredCertificate | None = Field(
         default=None,

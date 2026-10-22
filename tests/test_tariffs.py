@@ -639,3 +639,37 @@ def test_a_withheld_zero_price_tariff_gives_no_label():
         withheld=frozenset({zero.id}),
     )
     assert shown.label == "48p"
+
+
+# VAT the owner decided to add where a feed gives none (vat_not_stated)
+
+
+def test_vat_is_added_only_to_tariffs_from_an_operator_with_the_decision():
+    night = tariff("N", [energy(0.325, vat=None)])
+    named = connector("N")
+    added = price_connector(
+        named, {night.id: night}, location_id="L", evse_uid="E", added_vat={"example": 20}
+    )
+    assert (added.label, added.lowest_vat, added.includes_vat) == ("39p", True, True)
+    assert added.energy_low == Decimal("0.39")
+    assert "added by this project" in added.text
+    # Another operator's decision never changes this operator's prices.
+    other = price_connector(
+        named, {night.id: night}, location_id="L", evse_uid="E", added_vat={"sister": 20}
+    )
+    assert (other.label, other.includes_vat) == ("32.5p excl. VAT", False)
+
+
+def test_a_related_operators_tariff_follows_its_own_operators_decision():
+    named = uuid_like(3)
+    location = site(connector(named))
+    sister = feed_tariff(
+        "sister", named, elements=[{"price_components": [component("energy", 0.5)]}]
+    )
+    found = related_tariffs([location], [], {"sister": [sister]})
+    (shown,) = price_locations([location], [], found, added_vat={"sister": 20})
+    assert shown.label == "60p"
+    (unchanged,) = price_locations([location], [], found, added_vat={"example": 20})
+    assert unchanged.label == "50p excl. VAT"
+    options = site_tariffs(location, found, added_vat={"sister": 20}).options
+    assert [(o.energy_low, o.includes_vat) for o in options] == [(Decimal("0.60"), True)]

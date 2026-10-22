@@ -331,8 +331,8 @@ def test_the_committed_site_folder_is_never_written(results):
         published(results, ROOT / "site")
 
 
-def _layer_and_details(results, tmp_path):
-    published(results, tmp_path)
+def _layer_and_details(results, tmp_path, operators=None):
+    published(results, tmp_path, operators)
     layer = json.loads((tmp_path / "data" / "locations.geojson").read_text())
     for feature in layer["features"]:
         key = feature["properties"]["key"]
@@ -429,12 +429,41 @@ def test_connectors_reported_out_of_service_are_marked(results, tmp_path):
     assert "blocked" not in publish.OUT_OF_SERVICE and "unknown" not in publish.OUT_OF_SERVICE
 
 
-def test_price_per_kwh_is_only_given_with_vat(results, tmp_path):
+def _ppk_by_operator(results, tmp_path, operators=None):
     by_operator = {}
-    for properties, _ in _layer_and_details(results, tmp_path):
+    for properties, _ in _layer_and_details(results, tmp_path, operators):
         by_operator.setdefault(properties["op"], set()).update(c["ppk"] for c in properties["cons"])
-    assert by_operator["chargy"] == {None}  # char.gy states no VAT
+    return by_operator
+
+
+def test_price_per_kwh_is_only_given_with_vat(results, tmp_path):
+    by_operator = _ppk_by_operator(results, tmp_path)
+    # char.gy's feed states no VAT; the owner decided to add 20% (vat_not_stated).
+    assert by_operator["chargy"] == {59.0}
     assert 49.2 in by_operator["jolt"]
+
+
+def test_without_the_vat_decision_a_price_with_no_vat_has_no_price_per_kwh(results, tmp_path):
+    operators = load_registry()
+    operators["chargy"] = operators["chargy"].model_copy(update={"vat_not_stated": None})
+    assert _ppk_by_operator(results, tmp_path, operators)["chargy"] == {None}
+
+
+def test_vat_is_added_only_where_the_owner_decided_and_the_tariffs_stay_as_published(
+    results, tmp_path
+):
+    decided = {i for i, c in load_registry().items() if c.vat_not_stated}
+    assert decided == {"chargy", "clenergy_ev"}
+    for properties, detail in _layer_and_details(results, tmp_path):
+        texts = [o["text"] for o in detail["tariff_options"] if o["state"] == "priced"]
+        added = [t for t in texts if "added by this project" in t]
+        assert bool(added) == (properties["op"] in decided and bool(texts))
+        if properties["op"] in decided:
+            assert "VAT not stated" not in properties["pt"]
+            for tariff in detail["tariffs"]:
+                assert all(
+                    c["vat"] is None for e in tariff["elements"] for c in e["price_components"]
+                )
 
 
 def test_a_location_needs_a_price_for_each_connector(results):
@@ -535,7 +564,8 @@ def test_each_kind_of_connector_carries_its_map_label(results, tmp_path):
     # GeniePoint's app price, not only its contactless price (pay at the charger: 92.4p).
     assert labels[("Premier Inn Dumbarton/ Loch Lomond", 60.0)] == "82.8p"
     assert labels[("Premier Inn Alnwick", 7.0)] == "57.6p"
-    assert labels[("141 - 143 Seaford Road", 5.06)] == "from 32.5p excl. VAT"
+    # char.gy's weekday night price, with VAT at 20% added (vat_not_stated): 32.5p in the feed.
+    assert labels[("141 - 143 Seaford Road", 5.06)] == "from 39p"
     assert labels[("Atlantic Quay", 22.0)] == "Free"
     # ScottishPower's all-zero test tariff is withheld (ADR 0022), so it gives no label.
     assert labels[("Glengarry", 30.0)] is None

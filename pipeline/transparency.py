@@ -56,6 +56,33 @@ REGULATION = {
     ],
 }
 
+# Prices whose feed gives no VAT rate (pipeline/pricing.py, ADR 0003 amended 22 October 2026).
+VAT_RULE = {
+    "decided": "2026-10-22",
+    "summary": (
+        "OCPI 2.2.1 prices exclude VAT, and each price can give the VAT rate that applies to "
+        "it. Where every price in a tariff gives a rate, this project adds it and shows the "
+        "price including VAT. A price with no rate is read by OCPI as having no VAT, but VAT "
+        "on public charging in the UK is at the standard rate of 20%, so such a price is "
+        "likely to be lower than what a driver pays."
+    ),
+    "observed": (
+        "In the daily run of 22 October 2026, 10 of the 12 operators fetched gave a VAT rate "
+        "on their prices, and char.gy and Clenergy EV gave none. char.gy's own pricing page "
+        "gives each of its prices 20% higher than its feed does. Clenergy EV's website gives "
+        "no charging prices, but 120 of the 126 prices per kWh in its feed come to a whole "
+        "penny once 20% is added. The details are in each operator's findings above."
+    ),
+    "decision": (
+        "The repository owner decided on 22 October 2026 that prices on the map should all "
+        "include VAT, so they can be compared. For each operator listed here, VAT at the "
+        "rate shown is added to every price that gives no rate, and the price says this "
+        "project added it. A price with no rate from any other operator is shown as "
+        'published and marked "VAT not stated". The tariffs themselves are published '
+        "unchanged."
+    ),
+}
+
 # Chargers hidden unless a visitor asks to see them (pipeline/access.py, ADR 0023).
 PRIVATE_RULE = {
     "decided": "2026-10-11",
@@ -314,6 +341,16 @@ def operator_view(config: OperatorConfig) -> dict:
             if config.zero_price_tariffs
             else None
         ),
+        "vat_not_stated": (
+            {
+                "decided": str(config.vat_not_stated.decided),
+                "basis": config.vat_not_stated.basis,
+                "evidence_url": config.vat_not_stated.evidence_url,
+                "add_percent": config.vat_not_stated.add_percent,
+            }
+            if config.vat_not_stated
+            else None
+        ),
         "relay": (
             {
                 "decided": str(config.relay.decided),
@@ -390,6 +427,7 @@ def last_reviewed(operators: dict[str, OperatorConfig]) -> str:
             ),
             config.tariffs_from.decided if config.tariffs_from else None,
             config.zero_price_tariffs.decided if config.zero_price_tariffs else None,
+            config.vat_not_stated.decided if config.vat_not_stated else None,
             config.expired_certificate.decided if config.expired_certificate else None,
             config.excluded_locations.decided if config.excluded_locations else None,
         ]
@@ -403,6 +441,7 @@ def build(operators: dict[str, OperatorConfig]) -> dict:
         "last_reviewed": last_reviewed(operators),
         "disclaimer": short_disclaimer(),
         "regulation": REGULATION,
+        "vat_rule": VAT_RULE,
         "private_rule": PRIVATE_RULE,
         "operators": [operator_view(c) for c in ordered],
     }
@@ -509,6 +548,15 @@ def _sources_table(data: dict) -> str:
                 f"&quot;Price unknown&quot; rather than &quot;Free&quot;, by the owner's "
                 f"decision of {_e(zero['decided'])}: {_e(zero['basis'])} "
                 f"({_link(zero['evidence_url'], 'evidence')})"
+            )
+        vat = op["vat_not_stated"]
+        if op["enabled"] and vat:
+            fetched = fetched.rstrip(".")
+            rate = f"{vat['add_percent']:g}%"
+            fetched += (
+                f". Prices that give no VAT rate have VAT at {_e(rate)} "
+                f"added, by the owner's decision of {_e(vat['decided'])}: {_e(vat['basis'])} "
+                f"({_link(vat['evidence_url'], 'evidence')})"
             )
         certificate = op["expired_certificate"]
         if op["enabled"] and certificate:
@@ -701,6 +749,14 @@ footer ul { padding-left: 1.2rem; }
 
 def render_html(data: dict) -> str:
     links = "".join(f"<li>{_link(url, text)}</li>" for text, url in LINKS)
+    vat = data["vat_rule"]
+    vat_added = "".join(
+        f"<li>{_e(op['name'])}: {_e(format(op['vat_not_stated']['add_percent'], 'g'))}%, decided "
+        f"{_e(op['vat_not_stated']['decided'])} "
+        f"({_link(op['vat_not_stated']['evidence_url'], 'evidence')})</li>"
+        for op in data["operators"]
+        if op["enabled"] and op["vat_not_stated"]
+    )
     private = data["private_rule"]
     phrases = "".join(f"<li>{_e(p)}</li>" for p in private["phrases"])
     regulation_quotes = "".join(
@@ -756,6 +812,11 @@ rules.</p>
 with the date it was seen and what this project does about it. Values that are not valid
 are shown as unknown, never guessed. Only prices in pounds sterling are shown.</p>
 <div class="table-wrap">{_findings_section(data)}</div>
+<h2 id="vat">VAT in prices</h2>
+<p>{_e(vat["summary"])}</p>
+<p>{_e(vat["observed"])}</p>
+<p>{_e(vat["decision"])}</p>
+<ul>{vat_added or "<li>None</li>"}</ul>
 <h2 id="private">Private and restricted chargers</h2>
 <p>{_e(private["summary"])}</p>
 <ul>{phrases}</ul>
