@@ -1,0 +1,96 @@
+# yaml-language-server: $schema=schema.json
+id: plug_charging
+display_name: PLUG Charging
+ocpi_country_code: unknown
+ocpi_party_id: unknown
+adapter: ocpi_221
+base_url: unknown
+endpoints:
+  versions:
+    url: https://plugcharging.co.uk/ocpi/versions
+    status: documented
+    note: >-
+      Given on PLUG Charging's open data page as the place to start (read 2026-10-22). It
+      answered HTTP 401 to one request without a key on 2026-10-22, asking for a key from
+      the same page. The locations and tariffs addresses come from this endpoint once a key
+      is issued.
+auth:
+  method: header
+  name: Authorization
+  scheme: Token
+  secret_name: PLUG_CHARGING_TOKEN
+rate_limit:
+  min_seconds_between_requests: 2
+  limits:
+    - publisher: PLUG Charging
+      requests: 120
+      per_seconds: 60
+      endpoint: all
+      quote: Each key can make 120 requests a minute.
+      source_url: https://plugcharging.co.uk/open-data
+      checked: 2026-10-22
+  limits_checked: 2026-10-22
+  notes: >-
+    The API access terms on the same page also say requests "must not exceed the published
+    rate limit, currently 120 requests per minute per key" and forbid registering several
+    keys for one service. This project would use one key.
+supports_single_location: unknown
+cors: unknown
+attribution: >-
+  Contains data from PLUG Charging published under the Public Charge Point Regulations 2023,
+  used in line with the Open Government Licence v3.0.
+licence:
+  name: OGL-3.0
+  url: https://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/
+  basis: >-
+    PLUG Charging's open data page says "The data published through this API is made
+    available under the Open Government Licence v3.0". Its API access terms (version
+    2026-10-07) say "These terms govern access to the API only. They do not restrict how
+    you use the data." They ask that a key is kept confidential, that requests stay within
+    the published rate limit and that only the published endpoints are used.
+  checked: 2026-10-22
+engagement:
+  status: key_on_request
+  evidence:
+    - date: 2026-10-22
+      url: https://plugcharging.co.uk/open-data
+      note: >-
+        PLUG Charging's open data page offers an OCPI 2.2.1 API with locations, EVSEs,
+        connectors, live availability and tariffs. A key is free and is emailed after
+        registering with a name, email address and website and agreeing to the API access
+        terms.
+  log:
+    - date: 2026-10-22
+      action: page_checked
+      summary: >-
+        PLUG Charging's open data page was read. It offers a free key by email after
+        registration, publishes the data under the Open Government Licence v3.0 and states
+        a rate limit of 120 requests a minute per key.
+      quote: >-
+        We publish live data about our public charge points under the Public Charge Point
+        Regulations 2023, in the OCPI 2.2.1 format. Access is free. Register below and we'll
+        email you an API key straight away.
+      evidence_url: https://plugcharging.co.uk/open-data
+access_requested: null
+access_granted: null
+sources:
+  - url: https://plugcharging.co.uk/open-data
+    note: >-
+      PLUG Charging's open data page and API access terms, version 2026-10-07 (read
+      2026-10-22). Gives the versions endpoint, the Authorization header with the Token
+      scheme ("OCPI clients that send the token base64-encoded work too"), the rate limit and
+      the licence. Says a status change shows in the feed within 30 seconds.
+  - url: https://plugcharging.co.uk/about
+    note: >-
+      PLUG Charging's about page (read 2026-10-22): based in Cardiff; "We design, install, own
+      and operate charging solutions", including on-street and lamp column charging.
+  - url: https://plugcharging.co.uk/
+    note: >-
+      PLUG Charging's home page (read 2026-10-22), titled "PLUG Charging Wales". Links a live
+      map of its chargers across Wales and the open data page.
+findings: []
+notes: >-
+  A charge point operator based in Cardiff with public chargers across Wales. Its open data
+  needs a free key, issued by email at once after registering and agreeing to the API access
+  terms. The key would be stored as the GitHub Actions secret PLUG_CHARGING_TOKEN.
+enabled: false

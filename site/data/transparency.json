@@ -3123,6 +3123,68 @@
       "findings": []
     },
     {
+      "id": "electroad",
+      "name": "ElectRoad",
+      "enabled": false,
+      "adapter": "unknown",
+      "engagement": {
+        "status": "no_public_feed_found",
+        "label": "No public feed found",
+        "headline": "No public feed found (as of 2026-10-22)",
+        "as_of": "2026-10-22",
+        "last_request": null,
+        "last_response": null,
+        "last_response_text": "No request sent",
+        "evidence": [
+          {
+            "date": "2026-10-22",
+            "url": "https://electroad.uk/",
+            "file": null,
+            "note": "ElectRoad's website lists pages for drivers, site hosts, counties, a blog, contact and privacy, and none of them is an open data page or a route for requesting open data. The site has no sitemap."
+          }
+        ],
+        "log": [
+          {
+            "date": "2026-10-22",
+            "action": "feed_searched",
+            "action_label": "Searched for a feed",
+            "channel": null,
+            "channel_label": null,
+            "summary": "ElectRoad's website and its list of pages were read, and no open data feed or route for requesting open data was found.",
+            "quote": "Independent EV charging network providing fast, reliable public EV charging across Norfolk and Suffolk.",
+            "evidence_url": "https://electroad.uk/",
+            "evidence_file": null
+          }
+        ]
+      },
+      "access_requested": null,
+      "access_granted": null,
+      "feeds": [],
+      "licence": null,
+      "attribution": null,
+      "missing_publish_flag": null,
+      "swapped_coordinates": null,
+      "nonstandard_statuses": null,
+      "tariffs_from": null,
+      "nonstandard_parking_restrictions": null,
+      "zero_price_tariffs": null,
+      "vat_not_stated": null,
+      "relay": null,
+      "expired_certificate": null,
+      "excluded_locations": null,
+      "rate_limit": {
+        "our_gap_seconds": 2.0,
+        "our_max_per_hour": 1800,
+        "ours": "At least 2 s between requests to the operator's host, measured from the end of the previous request (at most 1800 in any hour), retries included.",
+        "published": [],
+        "limits_checked": "unknown",
+        "comparison": "The operator's pages have not been checked for limits yet.",
+        "difference_from_regulations": "Not known yet.",
+        "notes": null
+      },
+      "findings": []
+    },
+    {
       "id": "elmtronics",
       "name": "Elmtronics",
       "enabled": false,
@@ -3398,6 +3460,68 @@
             "summary": "EV Smart's open data page was read; it invites requests for direct access to its OCPI data feed through its support team and says no terms, fees or usage restrictions apply to the data.",
             "quote": "If you would like direct access to our OCPI data feed or further technical information on how our open data is structured and delivered, please contact us:",
             "evidence_url": "https://www.ev-smart.co.uk/opendataregulatorycompliance",
+            "evidence_file": null
+          }
+        ]
+      },
+      "access_requested": null,
+      "access_granted": null,
+      "feeds": [],
+      "licence": null,
+      "attribution": null,
+      "missing_publish_flag": null,
+      "swapped_coordinates": null,
+      "nonstandard_statuses": null,
+      "tariffs_from": null,
+      "nonstandard_parking_restrictions": null,
+      "zero_price_tariffs": null,
+      "vat_not_stated": null,
+      "relay": null,
+      "expired_certificate": null,
+      "excluded_locations": null,
+      "rate_limit": {
+        "our_gap_seconds": 2.0,
+        "our_max_per_hour": 1800,
+        "ours": "At least 2 s between requests to the operator's host, measured from the end of the previous request (at most 1800 in any hour), retries included.",
+        "published": [],
+        "limits_checked": "unknown",
+        "comparison": "The operator's pages have not been checked for limits yet.",
+        "difference_from_regulations": "Not known yet.",
+        "notes": null
+      },
+      "findings": []
+    },
+    {
+      "id": "evology_charging",
+      "name": "Evology Charging",
+      "enabled": false,
+      "adapter": "unknown",
+      "engagement": {
+        "status": "key_on_request",
+        "label": "Key issued on request",
+        "headline": "Key issued on request (as of 2026-10-22)",
+        "as_of": "2026-10-22",
+        "last_request": null,
+        "last_response": null,
+        "last_response_text": "No request sent",
+        "evidence": [
+          {
+            "date": "2026-10-22",
+            "url": "https://evologyparking.com/open-data/",
+            "file": null,
+            "note": "Evology's open data page has a form for requesting a key to the Evology Charging public API, asking for a name, email address, company name and purpose."
+          }
+        ],
+        "log": [
+          {
+            "date": "2026-10-22",
+            "action": "page_checked",
+            "action_label": "Operator's page checked",
+            "channel": null,
+            "channel_label": null,
+            "summary": "Evology's open data page was read. It offers a key to the Evology Charging public API through a request form; it gives no API address, licence or rate limit.",
+            "quote": "To request an API key to the Evology Charging public API, in line with Open Charge Point Regulations (2023), please fill in the form and we'll be in touch.",
+            "evidence_url": "https://evologyparking.com/open-data/",
             "evidence_file": null
           }
         ]
@@ -4702,6 +4826,86 @@
           "resolved_date": null
         }
       ]
+    },
+    {
+      "id": "plug_charging",
+      "name": "PLUG Charging",
+      "enabled": false,
+      "adapter": "ocpi_221",
+      "engagement": {
+        "status": "key_on_request",
+        "label": "Key issued on request",
+        "headline": "Key issued on request (as of 2026-10-22)",
+        "as_of": "2026-10-22",
+        "last_request": null,
+        "last_response": null,
+        "last_response_text": "No request sent",
+        "evidence": [
+          {
+            "date": "2026-10-22",
+            "url": "https://plugcharging.co.uk/open-data",
+            "file": null,
+            "note": "PLUG Charging's open data page offers an OCPI 2.2.1 API with locations, EVSEs, connectors, live availability and tariffs. A key is free and is emailed after registering with a name, email address and website and agreeing to the API access terms."
+          }
+        ],
+        "log": [
+          {
+            "date": "2026-10-22",
+            "action": "page_checked",
+            "action_label": "Operator's page checked",
+            "channel": null,
+            "channel_label": null,
+            "summary": "PLUG Charging's open data page was read. It offers a free key by email after registration, publishes the data under the Open Government Licence v3.0 and states a rate limit of 120 requests a minute per key.",
+            "quote": "We publish live data about our public charge points under the Public Charge Point Regulations 2023, in the OCPI 2.2.1 format. Access is free. Register below and we'll email you an API key straight away.",
+            "evidence_url": "https://plugcharging.co.uk/open-data",
+            "evidence_file": null
+          }
+        ]
+      },
+      "access_requested": null,
+      "access_granted": null,
+      "feeds": [
+        {
+          "kind": "versions",
+          "url": "https://plugcharging.co.uk/ocpi/versions",
+          "status": "documented"
+        }
+      ],
+      "licence": {
+        "name": "OGL-3.0",
+        "url": "https://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/",
+        "checked": "2026-10-22"
+      },
+      "attribution": "Contains data from PLUG Charging published under the Public Charge Point Regulations 2023, used in line with the Open Government Licence v3.0.",
+      "missing_publish_flag": null,
+      "swapped_coordinates": null,
+      "nonstandard_statuses": null,
+      "tariffs_from": null,
+      "nonstandard_parking_restrictions": null,
+      "zero_price_tariffs": null,
+      "vat_not_stated": null,
+      "relay": null,
+      "expired_certificate": null,
+      "excluded_locations": null,
+      "rate_limit": {
+        "our_gap_seconds": 2.0,
+        "our_max_per_hour": 1800,
+        "ours": "At least 2 s between requests to the operator's host, measured from the end of the previous request (at most 1800 in any hour), retries included.",
+        "published": [
+          {
+            "text": "120 per 1 minute for all requests",
+            "publisher": "PLUG Charging",
+            "quote": "Each key can make 120 requests a minute.",
+            "source_url": "https://plugcharging.co.uk/open-data",
+            "checked": "2026-10-22"
+          }
+        ],
+        "limits_checked": "2026-10-22",
+        "comparison": "Within every published limit. The strictest needs 0.5 s between requests; this project waits 2 s, which includes a safety margin.",
+        "difference_from_regulations": "The operator sets a limit; the regulations set none. DfT guidance allows such terms on access.",
+        "notes": "The API access terms on the same page also say requests \"must not exceed the published rate limit, currently 120 requests per minute per key\" and forbid registering several keys for one service. This project would use one key."
+      },
+      "findings": []
     },
     {
       "id": "plug_n_go",
@@ -6099,6 +6303,68 @@
             "summary": "YourParkingSpace's website and its site indexes were searched, and no open data feed or route for requesting open data was found.",
             "quote": "YourParkingSpace funds and installs charging station hardware on your property under a minimum fixed term contract so there is no capital outlay for your business.",
             "evidence_url": "https://www.yourparkingspace.co.uk/business/solutions/electric-charge-points",
+            "evidence_file": null
+          }
+        ]
+      },
+      "access_requested": null,
+      "access_granted": null,
+      "feeds": [],
+      "licence": null,
+      "attribution": null,
+      "missing_publish_flag": null,
+      "swapped_coordinates": null,
+      "nonstandard_statuses": null,
+      "tariffs_from": null,
+      "nonstandard_parking_restrictions": null,
+      "zero_price_tariffs": null,
+      "vat_not_stated": null,
+      "relay": null,
+      "expired_certificate": null,
+      "excluded_locations": null,
+      "rate_limit": {
+        "our_gap_seconds": 2.0,
+        "our_max_per_hour": 1800,
+        "ours": "At least 2 s between requests to the operator's host, measured from the end of the previous request (at most 1800 in any hour), retries included.",
+        "published": [],
+        "limits_checked": "unknown",
+        "comparison": "The operator's pages have not been checked for limits yet.",
+        "difference_from_regulations": "Not known yet.",
+        "notes": null
+      },
+      "findings": []
+    },
+    {
+      "id": "zapgo",
+      "name": "Zapgo",
+      "enabled": false,
+      "adapter": "unknown",
+      "engagement": {
+        "status": "no_public_feed_found",
+        "label": "No public feed found",
+        "headline": "No public feed found (as of 2026-10-22)",
+        "as_of": "2026-10-22",
+        "last_request": null,
+        "last_response": null,
+        "last_response_text": "No request sent",
+        "evidence": [
+          {
+            "date": "2026-10-22",
+            "url": "https://www.zapgo.co.uk/",
+            "file": null,
+            "note": "Zapgo's home page, about page and sitemaps (post, page and client sitemaps) have no open data page or route for requesting open data."
+          }
+        ],
+        "log": [
+          {
+            "date": "2026-10-22",
+            "action": "feed_searched",
+            "action_label": "Searched for a feed",
+            "channel": null,
+            "channel_label": null,
+            "summary": "Zapgo's home page, about page and sitemaps were read, and no open data feed or route for requesting open data was found. A web search found none either.",
+            "quote": null,
+            "evidence_url": "https://www.zapgo.co.uk/sitemap_index.xml",
             "evidence_file": null
           }
         ]

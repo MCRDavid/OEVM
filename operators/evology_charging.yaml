@@ -1,0 +1,58 @@
+# yaml-language-server: $schema=schema.json
+id: evology_charging
+display_name: Evology Charging
+ocpi_country_code: unknown
+ocpi_party_id: unknown
+adapter: unknown
+base_url: unknown
+endpoints: {}
+auth:
+  method: unknown
+  name: null
+  secret_name: null
+rate_limit:
+  min_seconds_between_requests: 2
+  limits: []
+  limits_checked: unknown
+  notes: null
+supports_single_location: unknown
+cors: unknown
+attribution: null
+licence: null
+engagement:
+  status: key_on_request
+  evidence:
+    - date: 2026-10-22
+      url: https://evologyparking.com/open-data/
+      note: >-
+        Evology's open data page has a form for requesting a key to the Evology Charging
+        public API, asking for a name, email address, company name and purpose.
+  log:
+    - date: 2026-10-22
+      action: page_checked
+      summary: >-
+        Evology's open data page was read. It offers a key to the Evology Charging public
+        API through a request form; it gives no API address, licence or rate limit.
+      quote: >-
+        To request an API key to the Evology Charging public API, in line with Open Charge
+        Point Regulations (2023), please fill in the form and we'll be in touch.
+      evidence_url: https://evologyparking.com/open-data/
+access_requested: null
+access_granted: null
+sources:
+  - url: https://evologyparking.com/open-data/
+    note: >-
+      Evology's open data page (read 2026-10-22). The form says submitting it accepts
+      Evology's privacy policy and general terms and conditions. Its footer says Evology is
+      a trading name of Parkingeye Ltd.
+  - url: https://evologyparking.com/charging/
+    note: >-
+      Evology Charging's page (read 2026-10-22). Describes its own chargers in car parks, AC
+      and DC, with tap-and-go card payment.
+findings: []
+notes: >-
+  Evology is a parking payments app and a trading name of Parkingeye Ltd; Evology Charging
+  is its network of chargers in car parks. A key is issued on request through its form. The
+  form's terms are the website's general terms, which do not appear to be written for the
+  open data.
+enabled: false

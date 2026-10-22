@@ -34,12 +34,14 @@ SEED_IDS = {
     "connected_kerb",
     "connekt",
     "electric_blue",
+    "electroad",
     "elmtronics",
     "enfield_council",
     "esb_ecars",
     "esb_energy",
     "ev_point",
     "ev_smart",
+    "evology_charging",
     "evolt",
     "evyve",
     "ez_charge",
@@ -64,6 +66,7 @@ SEED_IDS = {
     "ncp",
     "osprey",
     "parkrecharge",
+    "plug_charging",
     "plug_n_go",
     "pod",
     "pogo_charge",
@@ -86,6 +89,7 @@ SEED_IDS = {
     "wenea",
     "west_suffolk_council",
     "yourparkingspace",
+    "zapgo",
     "zest",
 }
 UUID_LIKE = re.compile(r"[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}", re.I)
@@ -161,7 +165,7 @@ def test_operator_files_contain_no_key_like_values():
 
 def test_cli_validate_succeeds_on_seed_registry(capsys):
     assert registry.main(["--validate"]) == 0
-    assert "Operator registry is valid: 72 operators" in capsys.readouterr().out
+    assert "Operator registry is valid: 76 operators" in capsys.readouterr().out
 
 
 def test_cli_without_validate_prints_help(capsys):
