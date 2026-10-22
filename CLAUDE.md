@@ -39,7 +39,8 @@ decisions are in docs/adr/.
 - pipeline/access.py: names that mark a location private or restricted, hidden unless asked (ADR 0023).
 - pipeline/status.py: feed health page, with a green, yellow, red or grey circle per operator.
   schema/runlog.py: run log format. pipeline/health.py: figures.
-- pipeline/documents.py: disclaimer, data licences, security and report pages, written by build_site.
+- pipeline/documents.py: disclaimer, data licences, security, report and findings pages, written by build_site.
+  findings/: blog-style findings posts, one dated Markdown file each (naming rules in pipeline/documents.py).
 - pipeline/project.py: repository URL (also in site/index.html, site/.well-known/security.txt,
   .github/ISSUE_TEMPLATE, relay/worker.js and ocpi/worker.js).
 - site/index.html, site/assets/: the map page. pipeline/build_site.py: build folder with MapLibre.

@@ -8,7 +8,7 @@ from urllib.parse import urlsplit
 
 import pytest
 
-from pipeline import build_site
+from pipeline import build_site, documents
 from pipeline.project import REPOSITORY_URL
 from pipeline.registry import ROOT
 from pipeline.transparency import short_disclaimer
@@ -69,6 +69,7 @@ def test_the_map_page_links_to_the_required_documents(page):
         "security/",
         "transparency/",
         "status/",
+        "findings/",
         "report/",
     ):
         assert path in page.hrefs
@@ -203,9 +204,11 @@ def test_build_copies_the_site_maplibre_and_notices(node_modules, tmp_path):
     }
     assert not (out / "assets" / "offline-style.json").exists()
     assert f"map style: {build_site.STYLE_URL}" in report
-    for folder in ("disclaimer", "data-licences", "security", "report"):
+    for folder in ("disclaimer", "data-licences", "security", "report", "findings"):
         assert "<h1>" in (out / folder / "index.html").read_text(encoding="utf-8")
-    assert "published disclaimer/, data-licences/, security/, report/" in report
+    published = report[-1]
+    assert published.startswith("published disclaimer/, data-licences/, security/, report/, ")
+    assert published.endswith(f"findings/ and {len(documents.posts())} findings posts")
 
 
 def test_every_link_between_pages_of_the_built_site_finds_a_page(node_modules, tmp_path):
