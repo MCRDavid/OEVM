@@ -2095,6 +2095,68 @@
       "findings": []
     },
     {
+      "id": "amey_ev_charging",
+      "name": "Amey EV Charging",
+      "enabled": false,
+      "adapter": "unknown",
+      "engagement": {
+        "status": "no_public_feed_found",
+        "label": "No public feed found",
+        "headline": "No public feed found (as of 2026-10-22)",
+        "as_of": "2026-10-22",
+        "last_request": null,
+        "last_response": null,
+        "last_response_text": "No request sent",
+        "evidence": [
+          {
+            "date": "2026-10-22",
+            "url": "https://evc.amey.co.uk/charging",
+            "file": null,
+            "note": "Amey's EV charging page, its sitemap and its charging terms have no open data page, feed link or route for requesting open data."
+          }
+        ],
+        "log": [
+          {
+            "date": "2026-10-22",
+            "action": "feed_searched",
+            "action_label": "Searched for a feed",
+            "channel": null,
+            "channel_label": null,
+            "summary": "Amey's EV charging page, its sitemap and its charging terms were read, and no open data feed or route for requesting open data was found.",
+            "quote": "Driving change nationwide, our journey begins in Trafford and the city of Manchester.",
+            "evidence_url": "https://evc.amey.co.uk/charging",
+            "evidence_file": null
+          }
+        ]
+      },
+      "access_requested": null,
+      "access_granted": null,
+      "feeds": [],
+      "licence": null,
+      "attribution": null,
+      "missing_publish_flag": null,
+      "swapped_coordinates": null,
+      "nonstandard_statuses": null,
+      "tariffs_from": null,
+      "nonstandard_parking_restrictions": null,
+      "zero_price_tariffs": null,
+      "vat_not_stated": null,
+      "relay": null,
+      "expired_certificate": null,
+      "excluded_locations": null,
+      "rate_limit": {
+        "our_gap_seconds": 31.0,
+        "our_max_per_hour": 117,
+        "ours": "At least 31 s between requests to the operator's host, measured from the end of the previous request (at most 117 in any hour), retries included.",
+        "published": [],
+        "limits_checked": "unknown",
+        "comparison": "The operator's pages have not been checked for limits yet.",
+        "difference_from_regulations": "Not known yet.",
+        "notes": "No feed found yet. Amey's network runs on Fuuse, whose open data host (api.fuuse.io) asks for 30 seconds between requests, so any feed found there would use the same 31 second gap as Arnold Clark Charge and ScottishPower Recharge."
+      },
+      "findings": []
+    },
+    {
       "id": "apcoa",
       "name": "APCOA",
       "enabled": false,
@@ -3036,6 +3098,68 @@
             "summary": "Connekt's home page, sitemap, driver support page and FAQ page were read, and no open data feed or route for requesting open data was found.",
             "quote": null,
             "evidence_url": "https://www.connektcharging.com/",
+            "evidence_file": null
+          }
+        ]
+      },
+      "access_requested": null,
+      "access_granted": null,
+      "feeds": [],
+      "licence": null,
+      "attribution": null,
+      "missing_publish_flag": null,
+      "swapped_coordinates": null,
+      "nonstandard_statuses": null,
+      "tariffs_from": null,
+      "nonstandard_parking_restrictions": null,
+      "zero_price_tariffs": null,
+      "vat_not_stated": null,
+      "relay": null,
+      "expired_certificate": null,
+      "excluded_locations": null,
+      "rate_limit": {
+        "our_gap_seconds": 2.0,
+        "our_max_per_hour": 1800,
+        "ours": "At least 2 s between requests to the operator's host, measured from the end of the previous request (at most 1800 in any hour), retries included.",
+        "published": [],
+        "limits_checked": "unknown",
+        "comparison": "The operator's pages have not been checked for limits yet.",
+        "difference_from_regulations": "Not known yet.",
+        "notes": null
+      },
+      "findings": []
+    },
+    {
+      "id": "e_on_drive",
+      "name": "E.ON Drive",
+      "enabled": false,
+      "adapter": "unknown",
+      "engagement": {
+        "status": "key_on_request",
+        "label": "Key issued on request",
+        "headline": "Key issued on request (as of 2026-10-22)",
+        "as_of": "2026-10-22",
+        "last_request": null,
+        "last_response": null,
+        "last_response_text": "No request sent",
+        "evidence": [
+          {
+            "date": "2026-10-22",
+            "url": "https://www.edri.com/en-uk/compliance",
+            "file": null,
+            "note": "E.ON Drive Infrastructure's UK network reliability page says live availability and reference data in a machine-readable format are available on request by email, with a reply within 14 working days."
+          }
+        ],
+        "log": [
+          {
+            "date": "2026-10-22",
+            "action": "page_checked",
+            "action_label": "Operator's page checked",
+            "channel": null,
+            "channel_label": null,
+            "summary": "E.ON Drive Infrastructure's UK network reliability page was read. It offers live availability and reference data on request by email and links GOV.UK's page about the former National Chargepoint Registry.",
+            "quote": "Live availability data and static reference data in a machine-readable format are available on request.",
+            "evidence_url": "https://www.edri.com/en-uk/compliance",
             "evidence_file": null
           }
         ]
@@ -4644,6 +4768,130 @@
             "summary": "Lidl's home page, its electric vehicle charging page and its page sitemap were read, and no open data feed or route for requesting open data was found.",
             "quote": "Lidl EV Charging network 2025 reliability results",
             "evidence_url": "https://www.lidl.co.uk/c/electric-vehicle-charging/s10049808",
+            "evidence_file": null
+          }
+        ]
+      },
+      "access_requested": null,
+      "access_granted": null,
+      "feeds": [],
+      "licence": null,
+      "attribution": null,
+      "missing_publish_flag": null,
+      "swapped_coordinates": null,
+      "nonstandard_statuses": null,
+      "tariffs_from": null,
+      "nonstandard_parking_restrictions": null,
+      "zero_price_tariffs": null,
+      "vat_not_stated": null,
+      "relay": null,
+      "expired_certificate": null,
+      "excluded_locations": null,
+      "rate_limit": {
+        "our_gap_seconds": 2.0,
+        "our_max_per_hour": 1800,
+        "ours": "At least 2 s between requests to the operator's host, measured from the end of the previous request (at most 1800 in any hour), retries included.",
+        "published": [],
+        "limits_checked": "unknown",
+        "comparison": "The operator's pages have not been checked for limits yet.",
+        "difference_from_regulations": "Not known yet.",
+        "notes": null
+      },
+      "findings": []
+    },
+    {
+      "id": "maxol",
+      "name": "Maxol (Northern Ireland)",
+      "enabled": false,
+      "adapter": "unknown",
+      "engagement": {
+        "status": "no_public_feed_found",
+        "label": "No public feed found",
+        "headline": "No public feed found (as of 2026-10-22)",
+        "as_of": "2026-10-22",
+        "last_request": null,
+        "last_response": null,
+        "last_response_text": "No request sent",
+        "evidence": [
+          {
+            "date": "2026-10-22",
+            "url": "https://www.maxol.ie/ev-recharge",
+            "file": null,
+            "note": "Maxol's EV charging page describes its charging hubs, including Kinnegar in Northern Ireland, and has no open data page or route for requesting open data."
+          }
+        ],
+        "log": [
+          {
+            "date": "2026-10-22",
+            "action": "feed_searched",
+            "action_label": "Searched for a feed",
+            "channel": null,
+            "channel_label": null,
+            "summary": "Maxol's EV charging page was read, and no open data feed or route for requesting open data was found.",
+            "quote": "The hub provides the highest charging speeds currently available to the public in Northern Ireland",
+            "evidence_url": "https://www.maxol.ie/ev-recharge",
+            "evidence_file": null
+          }
+        ]
+      },
+      "access_requested": null,
+      "access_granted": null,
+      "feeds": [],
+      "licence": null,
+      "attribution": null,
+      "missing_publish_flag": null,
+      "swapped_coordinates": null,
+      "nonstandard_statuses": null,
+      "tariffs_from": null,
+      "nonstandard_parking_restrictions": null,
+      "zero_price_tariffs": null,
+      "vat_not_stated": null,
+      "relay": null,
+      "expired_certificate": null,
+      "excluded_locations": null,
+      "rate_limit": {
+        "our_gap_seconds": 2.0,
+        "our_max_per_hour": 1800,
+        "ours": "At least 2 s between requests to the operator's host, measured from the end of the previous request (at most 1800 in any hour), retries included.",
+        "published": [],
+        "limits_checked": "unknown",
+        "comparison": "The operator's pages have not been checked for limits yet.",
+        "difference_from_regulations": "Not known yet.",
+        "notes": null
+      },
+      "findings": []
+    },
+    {
+      "id": "moto_charge",
+      "name": "Moto Charge",
+      "enabled": false,
+      "adapter": "unknown",
+      "engagement": {
+        "status": "no_public_feed_found",
+        "label": "No public feed found",
+        "headline": "No public feed found (as of 2026-10-22)",
+        "as_of": "2026-10-22",
+        "last_request": null,
+        "last_response": null,
+        "last_response_text": "No request sent",
+        "evidence": [
+          {
+            "date": "2026-10-22",
+            "url": "https://moto-way.com/moto-charge/",
+            "file": null,
+            "note": "Moto's Moto Charge page, its terms for Moto Charge charging services and its page sitemap have no open data page or route for requesting open data."
+          }
+        ],
+        "log": [
+          {
+            "date": "2026-10-22",
+            "action": "feed_searched",
+            "action_label": "Searched for a feed",
+            "channel": null,
+            "channel_label": null,
+            "summary": "Moto's Moto Charge page, its Moto Charge terms and its page sitemap were read, and no open data feed or route for requesting open data was found.",
+            "quote": "Charge your car with the newest EV charging brand on the motorway.",
+            "evidence_url": "https://moto-way.com/moto-charge/",
             "evidence_file": null
           }
         ]
