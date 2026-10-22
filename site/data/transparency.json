@@ -3233,6 +3233,68 @@
       "findings": []
     },
     {
+      "id": "esb_ecars",
+      "name": "ESB ecars (Northern Ireland)",
+      "enabled": false,
+      "adapter": "unknown",
+      "engagement": {
+        "status": "no_public_feed_found",
+        "label": "No public feed found",
+        "headline": "No public feed found (as of 2026-10-22)",
+        "as_of": "2026-10-22",
+        "last_request": null,
+        "last_response": null,
+        "last_response_text": "No request sent",
+        "evidence": [
+          {
+            "date": "2026-10-22",
+            "url": "https://esb.ie/what-we-do/ecars/our-network",
+            "file": null,
+            "note": "ESB ecars' network page says ESB operates and maintains the public charge point network in Northern Ireland, and sends drivers in Great Britain to ESB Energy. Neither this page, the ecars FAQs, the essential driver information page nor ESB's sitemap links open data or a route for requesting it."
+          }
+        ],
+        "log": [
+          {
+            "date": "2026-10-22",
+            "action": "feed_searched",
+            "action_label": "Searched for a feed",
+            "channel": null,
+            "channel_label": null,
+            "summary": "ESB ecars' network page, FAQs and essential driver information page, and ESB's sitemap, were read, and no open data feed or route for requesting open data was found for Northern Ireland.",
+            "quote": "ESB also operates and maintains the public charge point network for electric vehicle drivers in Northern Ireland.",
+            "evidence_url": "https://esb.ie/what-we-do/ecars/our-network",
+            "evidence_file": null
+          }
+        ]
+      },
+      "access_requested": null,
+      "access_granted": null,
+      "feeds": [],
+      "licence": null,
+      "attribution": null,
+      "missing_publish_flag": null,
+      "swapped_coordinates": null,
+      "nonstandard_statuses": null,
+      "tariffs_from": null,
+      "nonstandard_parking_restrictions": null,
+      "zero_price_tariffs": null,
+      "vat_not_stated": null,
+      "relay": null,
+      "expired_certificate": null,
+      "excluded_locations": null,
+      "rate_limit": {
+        "our_gap_seconds": 2.0,
+        "our_max_per_hour": 1800,
+        "ours": "At least 2 s between requests to the operator's host, measured from the end of the previous request (at most 1800 in any hour), retries included.",
+        "published": [],
+        "limits_checked": "unknown",
+        "comparison": "The operator's pages have not been checked for limits yet.",
+        "difference_from_regulations": "Not known yet.",
+        "notes": null
+      },
+      "findings": []
+    },
+    {
       "id": "esb_energy",
       "name": "ESB Energy",
       "enabled": false,
@@ -3471,6 +3533,68 @@
             "summary": "EZ-Charge's home page, sitemap and drivers page were read, and no open data feed or route for requesting open data was found.",
             "quote": null,
             "evidence_url": "https://ez-charge.co.uk/",
+            "evidence_file": null
+          }
+        ]
+      },
+      "access_requested": null,
+      "access_granted": null,
+      "feeds": [],
+      "licence": null,
+      "attribution": null,
+      "missing_publish_flag": null,
+      "swapped_coordinates": null,
+      "nonstandard_statuses": null,
+      "tariffs_from": null,
+      "nonstandard_parking_restrictions": null,
+      "zero_price_tariffs": null,
+      "vat_not_stated": null,
+      "relay": null,
+      "expired_certificate": null,
+      "excluded_locations": null,
+      "rate_limit": {
+        "our_gap_seconds": 2.0,
+        "our_max_per_hour": 1800,
+        "ours": "At least 2 s between requests to the operator's host, measured from the end of the previous request (at most 1800 in any hour), retries included.",
+        "published": [],
+        "limits_checked": "unknown",
+        "comparison": "The operator's pages have not been checked for limits yet.",
+        "difference_from_regulations": "Not known yet.",
+        "notes": null
+      },
+      "findings": []
+    },
+    {
+      "id": "ezo",
+      "name": "EZO",
+      "enabled": false,
+      "adapter": "unknown",
+      "engagement": {
+        "status": "key_on_request",
+        "label": "Key issued on request",
+        "headline": "Key issued on request (as of 2026-10-22)",
+        "as_of": "2026-10-22",
+        "last_request": null,
+        "last_response": null,
+        "last_response_text": "No request sent",
+        "evidence": [
+          {
+            "date": "2026-10-22",
+            "url": "https://ezo.co.uk/regulations-compliance/",
+            "file": null,
+            "note": "EZO's \"Regulations & Compliance\" page has a \"PCPR Data Requests\" section linking a Google form that asks for an email address, name, organisation and planned use of the data. The form says requests are shared with Eco-Movement and names no licence, terms, key or rate limit."
+          }
+        ],
+        "log": [
+          {
+            "date": "2026-10-22",
+            "action": "page_checked",
+            "action_label": "Operator's page checked",
+            "channel": null,
+            "channel_label": null,
+            "summary": "EZO's \"Regulations & Compliance\" page and the \"PCPR Data Request - EZO\" Google form it links were read, not submitted; the form says the request will be shared with Eco-Movement and an answer will come within 5 working days.",
+            "quote": "To request data, simply complete the PCPR Data Request form and our team will review your submission before providing the information.",
+            "evidence_url": "https://ezo.co.uk/regulations-compliance/",
             "evidence_file": null
           }
         ]
