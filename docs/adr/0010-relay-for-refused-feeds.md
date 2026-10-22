@@ -1,7 +1,10 @@
 # 0010: A relay for feeds that refuse the daily run
 
 Date: 2026-10-08. Status: accepted. (12 October 2026: ADR 0024 adds a timer to this
-Worker that starts the daily fetch on GitHub; the relay itself is unchanged.)
+Worker that starts the daily fetch on GitHub; the relay itself is unchanged. 16 October
+2026: ADR 0025, proposed, lets a separate Worker, not this relay, hold the tokens of an
+operator that connects by the OCPI credentials handshake; this relay still carries only
+feeds that need no key.)
 
 In the first daily run from GitHub Actions (8 October 2026), GeniePoint's open data files
 answered HTTP 403 to the first request, while the same files answered normally from
