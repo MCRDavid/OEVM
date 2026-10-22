@@ -1,8 +1,8 @@
-# Why there is no single open list of the UK's public chargers
+# Why there is no complete, official open list of the UK's public chargers
 
 Since November 2024 every UK charge point operator has had to publish data about its public
-chargers openly. There is still no public list of where each operator publishes it, and the
-government buys its own picture of the network from a commercial aggregator. This post sets out
+chargers openly. We have found no complete public list of where each operator publishes it, and
+the government buys its own picture of the network from a commercial aggregator. This post sets out
 what the rules say, what replaced the national register, and how far this project has got.
 
 ## What the rules say
@@ -31,13 +31,15 @@ anyone who wants the data has to find each one.
 
 ## What replaced the national register
 
-The National Chargepoint Registry, a public list of charge points run for the government, was
+The National Chargepoint Registry, a public database of charge points set up in 2011, was
 decommissioned on 28 November 2024. The government's
 [page about it](https://www.gov.uk/guidance/find-and-use-data-on-public-electric-vehicle-chargepoints),
 withdrawn on 2 December 2024, says "All public EV chargepoint operators are now required to share
-open data free of charge." It gives no list of where that data is.
+open data free of charge on elements such as location, real-time availability, connector types,
+and payment methods." It gives no list of where that data is.
 
-The Department for Transport had already said it would not build one for the public. Its
+The Department for Transport had already said it saw no current need to build a public platform
+for the data itself. Its
 pre-tender notice "EV Open Data - Open Data Provider" (25 October 2024, on Contracts Finder; we
 read the
 [copy on Stotles](https://www.stotles.com/tenders/2024/W43/ev-open-data-open-data-provider)
@@ -55,31 +57,32 @@ Zapmap
 that the Department for Transport had awarded it a contract under which "Zapmap will aggregate
 publicly available data from all public chargepoints in the UK" and provide it to the department
 "on a periodic basis". The same announcement says the data "is also available to the rest of the
-industry via the Zapmap Insights product suite", which is Zapmap's commercial offer.
+industry via the Zapmap Insights product suite".
 
 [Highways Magazine](https://www.highwaysmagazine.co.uk/news/dft/dft-appoints-zapmap-chargepoint-open-provider)
-(29 September 2025), reporting the award letter, says the agreement "initially commenced on
-8 December 2024", was "set to run until 8 December 2025", allows "two one-year extensions", and
-is worth "up to £1m" with an "initial commitment" of £240,000. We have not read the award notice
+(29 September 2025) says the agreement "initially commenced on 8 December 2024", was "set to run
+until 8 December 2025" and allows "two one-year extensions", and, citing the award letter, that
+it is worth "up to £1m" with an "initial commitment" of £240,000. We have not read the award notice
 itself.
 
 The department's
 [methodology note](https://www.gov.uk/government/publications/electric-vehicle-charging-device-statistics-information/electric-vehicle-public-charging-infrastructure-statistics-methodology-note)
 for its charging statistics (updated 21 May 2026) says the data is "collated by Zapmap" and that
 "Zapmap compile CPO data with coverage of over 95% of the public charging network". So, by the
-department's own account, the figures the government relies on do not include every public
-charger. The note does not say how that share is measured or which chargers make up the rest.
+department's own account, its source covers most of the public network rather than all of it.
+The note does not say how that coverage is measured or which chargers make up the rest.
 
 The project owner reports having asked Zapmap to add public chargers that were missing from its
 map, and says they have not been added. We have not checked this ourselves.
 
 ## How far this project has got
 
-The daily run on 17 October 2026 mapped 11,471 locations from 12 networks. Zapmap's
+The map published on 17 October 2026 showed 11,471 locations from 12 networks (ParkRecharge's
+from its last good copy, of 13 October). Zapmap's
 [statistics](https://www.zapmap.com/ev-stats/ev-charging-statistics) count 48,298 charging
 locations at the end of September 2026. The two are not counted the same way, so this is a rough
-comparison only, but most of the network is not yet in data that anyone can collect without
-asking first.
+comparison only, but it suggests that most of the network is not in any data we have so far found
+that anyone can collect without asking first.
 
 The project's register lists 65 networks. This is what getting each one's data takes, as shown
 on the [transparency page](transparency/) on 17 October 2026:
@@ -88,11 +91,11 @@ on the [transparency page](transparency/) on 17 October 2026:
 |---|---|
 | Nothing: published with no key | 11 |
 | A key printed on the operator's own page | 1 |
-| A key or login on request, by form, email or phone | 17 |
+| Access on request (form, email, phone or an account), sometimes only for named groups | 17 |
 | A signed agreement | 2 |
 | No route found on the operator's own website | 14 |
-| Not known yet: website unreadable, not found or not yet checked | 18 |
-| Possibly not public chargers | 2 |
+| Not known yet: website unreadable or not found, not yet checked, or a request form whose outcome is not known | 18 |
+| Possibly not the operator of any public chargers | 2 |
 
 ## Our view
 
@@ -110,5 +113,7 @@ Three things would help a great deal, at little cost:
 - a public register, kept by the government, of each operator's data address and how to reach it;
 - platforms that serve many small operators, such as Monta and Fuuse, publishing one list of
   their customers' data addresses (see [the post on Monta](findings/monta-emailed-export/));
-- published enforcement under regulation 10, in the way the enforcement authority says it
-  publishes other actions (see [the post on enforcement](findings/reports-and-enforcement/)).
+- published information from the enforcement authority on how it checks that operators meet
+  regulation 10. It already publishes any undertaking, compliance notice or civil penalty under
+  the 2023 Regulations, and we found none published by 17 October 2026 (see
+  [the post on enforcement](findings/reports-and-enforcement/)).
