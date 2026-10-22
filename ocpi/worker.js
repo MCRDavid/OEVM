@@ -65,9 +65,9 @@ export const MAX_PEER_BODY_BYTES = 65_536;
 export const OBJECT_NAME = "connection";
 export const STORAGE_KEY = "connection";
 export const PULL_HEADER = "x-pull-token";
-// OCPI suggests 201 for a newly created object. Many implementations answer 200 to everything,
-// and whether the operator accepts 201 needs testing (ADR 0025, D5).
-export const REGISTERED_HTTP_STATUS = 200;
+// A registration creates the connection, so it answers HTTP 201, as OCPI 2.2.1 asks for a newly
+// created object (ADR 0025, D5). Every other success answers 200.
+export const REGISTERED_HTTP_STATUS = 201;
 export const ROLES = ["CPO", "EMSP", "HUB", "NAP", "NSP", "OTHER", "SCSP"];
 const MIN_SECRET_LENGTH = 32;
 const MAX_TOKEN_LENGTH = 64;

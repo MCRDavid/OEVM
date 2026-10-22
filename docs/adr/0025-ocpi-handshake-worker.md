@@ -1,6 +1,6 @@
 # 0025: OCPI handshake Worker
 
-Date: 2026-10-16. Status: proposed.
+Date: 2026-10-16. Status: accepted (22 October 2026).
 
 Tesla offers its UK charger data through an OCPI 2.2.1 connection on its developer portal,
 which is "currently available on a pilot and invitation basis only"
@@ -51,10 +51,10 @@ OCPI conformance and for security, on 17 October 2026.
 - **One Durable Object holds the connection.** One SQLite-backed Durable Object keeps all of
   the Worker's state as one record under one key: TOKEN_B and the form Tesla accepts it in,
   Tesla's versions, details, credentials, locations and tariffs addresses, the hash of TOKEN_C,
-  the hashes of the last ten setup tokens used, whether a handshake is in progress, and what the
-  owner needs to see (below). Every change is one write, made with the synchronous storage API
-  with no wait between reading and writing: "SQLite storage operations are synchronous and do
-  not yield the event loop, so they execute atomically without it"
+  the hashes of the last ten setup tokens used, whether a handshake is in progress, and what
+  the owner needs to see (below). Every change is one write, made with the synchronous storage
+  API with no wait between reading and writing: "SQLite storage operations are synchronous and
+  do not yield the event loop, so they execute atomically without it"
   (https://developers.cloudflare.com/durable-objects/api/state/, read 16 October 2026). "Each
   Durable Object has its own durable, transactional, and strongly consistent storage"
   (https://developers.cloudflare.com/durable-objects/concepts/what-are-durable-objects/) and
@@ -162,10 +162,11 @@ OCPI conformance and for security, on 17 October 2026.
   above. It refuses while a handshake is in progress and says so when there is no connection. A
   later pull request will have the pipeline read it once per run inside the fetch step (keys
   reach that step only), keep TOKEN_B in memory, mask it and its Base64 form in the logs, and
-  fetch Tesla directly from GitHub with the polite client, at least 2 seconds apart. It will use
-  an address from the handout only if its host is the one recorded in `operators/tesla.yaml`
-  ("Only use feed URLs with a known source; record the source in the operator file",
-  `CLAUDE.md`), which the owner records after the first registration (D8).
+  fetch Tesla directly from GitHub with the polite client, at least 2 seconds apart. It will
+  use the addresses from Tesla's latest handshake, so a change Tesla makes is followed without
+  an update here, and `operators/tesla.yaml` names that handshake as their source ("Only use
+  feed URLs with a known source; record the source in the operator file", `CLAUDE.md`). No host
+  or address is fixed or recorded (D8).
 - **An exception to ADR 0010: a second key holder.** ADR 0010 says "Only feeds that need no key
   may be relayed, so no key ever passes through a third party." That stays true of the relay.
   Here no key passes through on its way somewhere else: OCPI requires the Receiver to store the
@@ -219,12 +220,12 @@ OCPI conformance and for security, on 17 October 2026.
   only an outage. The Worker refuses requests without a usable token before they reach the
   Durable Object, but a refused request still counts. A separate free account would keep this
   Worker apart (not done).
-- **The address can change.** "Cloudflare may change Cloudflare Workers/Pages subdomain names of
-  projects hosted at workers.dev or pages.dev for any or no reason. Cloudflare will attempt to
-  provide you with at least one week prior notice for such change" (Developer Platform terms,
-  above). Tesla would then hold an old versions address. The fix is a credentials PUT from this
-  project to Tesla with the new address (see "Not done"). Cloudflare recommends "a Workers
-  route or custom domain" for production Workers
+- **The address can change.** "Cloudflare may change Cloudflare Workers/Pages subdomain names
+  of projects hosted at workers.dev or pages.dev for any or no reason. Cloudflare will attempt
+  to provide you with at least one week prior notice for such change" (Developer Platform
+  terms, above). Tesla would then hold an old versions address. The fix is a credentials PUT
+  from this project to Tesla with the new address (see "Not done"). Cloudflare recommends "a
+  Workers route or custom domain" for production Workers
   (https://developers.cloudflare.com/workers/configuration/routing/workers-dev/), and custom
   domains are not renamed, but a domain costs money (price not checked).
 - **Free services can end.** Cloudflare's free services last until, among other things,
@@ -235,23 +236,25 @@ OCPI conformance and for security, on 17 October 2026.
   could allow, and every `fetch()` carries a `CF-Worker` header. The daily pull comes from
   GitHub's runners, which char.gy and GeniePoint refused on 8 October 2026. Whether Tesla
   refuses either network needs testing.
-- **Tesla's calls cannot be timed (D1, decided 22 October 2026).** Tesla chooses when to PUT, or to register
-  again (D6, D7). The in-progress flag stops a daily pull starting during a handshake, but
-  nothing stops Tesla starting one while a pull is running. The Worker's calls back, 2 seconds
-  apart, could then reach Tesla while the run is also fetching, closer together than Tesla's
-  gap. That would depart from the rules never to go below an operator's gap and never to run
-  two fetches to one host at once, for at most three requests (two for a renewal), each
-  answering Tesla's own call. The owner accepted it because the alternatives are worse: a lock taken by the daily run would either refuse Tesla's renewal, which might be
-  answering a suspected leak, or hold Tesla's PUT open for an unknown time, which could leave
-  Tesla without the new TOKEN_C. The same PUT may also replace the TOKEN_B the run holds, so
-  that day's Tesla fetch could fail and the next run would use the new token (needs testing).
+- **Tesla's calls cannot be timed (D1, decided 22 October 2026).** Tesla chooses when to PUT,
+  or to register again (D6, D7). The in-progress flag stops a daily pull starting during a
+  handshake, but nothing stops Tesla starting one while a pull is running. The Worker's calls
+  back, 2 seconds apart, could then reach Tesla while the run is also fetching, closer together
+  than Tesla's gap. That would depart from the rules never to go below an operator's gap and
+  never to run two fetches to one host at once, for at most three requests (two for a renewal),
+  each answering Tesla's own call. The owner accepted it because the alternatives are worse: a
+  lock taken by the daily run would either refuse Tesla's renewal, which might be answering a
+  suspected leak, or hold Tesla's PUT open for an unknown time, which could leave Tesla without
+  the new TOKEN_C. The same PUT may also replace the TOKEN_B the run holds, so that day's Tesla
+  fetch could fail and the next run would use the new token (needs testing).
 - **Whoever holds a token chooses the addresses.** Before registration anyone holding TOKEN_A,
   and afterwards anyone holding TOKEN_C, can give the Worker any https address on a named host
   (D4). The Worker would then call it with that party's token and the project's User-Agent, up
   to three times, and might so reach another operator's host outside that operator's own gap.
-  And the handout would give the daily run the addresses that party chose. The daily run's host
-  check (D8) stops the second; pinning the Worker's own calls to the recorded host is a
-  follow-up once Tesla's host is known.
+  And the handout would give the daily run the addresses that party chose, which the run
+  follows because no host is fixed (D8). Keeping TOKEN_A secret, deleting it once Tesla has
+  connected, and TOKEN_C being known only to Tesla are what stop this. The owner can see the
+  addresses in use in the handout (`docs/GITHUB_SETTINGS.md`, section 11, step 12).
 - **Deploy access is the real control.** Anyone who can merge a change to `ocpi/` on `main`, or
   edit the Worker in Cloudflare's dashboard, can deploy code that reads TOKEN_B. Branch
   protection with pull requests and passing checks (`docs/GITHUB_SETTINGS.md`, section 6), a
@@ -267,11 +270,12 @@ OCPI conformance and for security, on 17 October 2026.
   handout, so a call through such a binding gets no more than a call to the public address,
   and a handout through it is counted like any other. Tests check that `fetch` is the only
   public method.
-- **Removed, not erased.** SQLite-backed Durable Objects can be restored "to any point in time in
-  the past 30 days" (https://developers.cloudflare.com/durable-objects/api/sqlite-storage-api/),
-  so a DELETE takes TOKEN_B out of use, but Cloudflare keeps it recoverable for 30 days. A
-  restore would also bring back the record from before a setup token was used, which is why the
-  owner deletes `OCPI_TOKEN_A` once Tesla has connected.
+- **Removed, not erased.** SQLite-backed Durable Objects can be restored "to any point in time
+  in the past 30 days"
+  (https://developers.cloudflare.com/durable-objects/api/sqlite-storage-api/), so a DELETE
+  takes TOKEN_B out of use, but Cloudflare keeps it recoverable for 30 days. A restore would
+  also bring back the record from before a setup token was used, which is why the owner deletes
+  `OCPI_TOKEN_A` once Tesla has connected.
 
 ## Alternatives considered
 
@@ -285,15 +289,15 @@ OCPI conformance and for security, on 17 October 2026.
 - **The Worker fetching Tesla's data for the daily run** (a pass-through). Not chosen: it would
   contradict ADR 0010 and the registry's rule, so it would need its own decision. It is the
   fallback if Tesla refuses GitHub's network.
-- **Other hosts**, read on their own pages on 15 and 16 October 2026. Vercel Hobby was next best
-  (free, but a new vendor, its card rule not stated, and going over a Hobby limit can lock a
-  feature for 30 days). Supabase Free pauses projects after a week of low activity. Netlify Free
-  charges credits per production deploy, which this repository's merge rate would use up. The
-  no-card AWS Free plan account closes after 6 months. Google Cloud Run needs a billing account.
-  Render Free sleeps after 15 minutes and has no free token store. Oracle Always Free needs a
-  card and a whole server. Fly.io has no free allowance. Deno Deploy is closing about six months
-  after 9 October 2026. A computer at home is not always on, and its calls would reveal where it
-  is.
+- **Other hosts**, read on their own pages on 15 and 16 October 2026. Vercel Hobby was next
+  best (free, but a new vendor, its card rule not stated, and going over a Hobby limit can lock
+  a feature for 30 days). Supabase Free pauses projects after a week of low activity. Netlify
+  Free charges credits per production deploy, which this repository's merge rate would use up.
+  The no-card AWS Free plan account closes after 6 months. Google Cloud Run needs a billing
+  account. Render Free sleeps after 15 minutes and has no free token store. Oracle Always Free
+  needs a card and a whole server. Fly.io has no free allowance. Deno Deploy is closing about
+  six months after 9 October 2026. A computer at home is not always on, and its calls would
+  reveal where it is.
 
 ## Decided by the owner
 
@@ -310,46 +314,35 @@ OCPI conformance and for security, on 17 October 2026.
   for a renewal), each made in answer to Tesla's own credentials call ("Risks accepted"
   above). Nothing else may overlap, and `CLAUDE.md` records the exception. No lock for the
   daily run is added.
-
-## Proposed defaults awaiting the owner's confirmation
-
-The code follows these defaults, but the repository owner has not confirmed them. The pull
-request that adds `ocpi/` asks about them, and this ADR stays proposed until all are
-answered.
-
-- **D2. Party ID.** Proposed: `OEV`, from OEVM (`party_id` in `PARTY` in `ocpi/worker.js`),
-  typed into Tesla's form unchanged. Whether `GB*OEV` is already in use needs checking. If
-  not: change `party_id` there; the tests check only that it is three capital letters or
-  digits and not Tesla's example `TES`.
-- **D3. Only a locations endpoint is required.** Proposed: yes. Tariffs and credentials
-  endpoints may be missing, and a missing one is noted for the owner. If not: a missing
-  tariffs endpoint also answers OCPI status 3003.
-- **D4. Any https address on a named host, for now.** Proposed: the Worker calls any https
-  address on a named host with no port, user name, password or IP address, and pinning its
-  calls to Tesla's recorded host follows once that host is known (D8). If not: pin now to a
-  host Tesla tells the owner in advance.
-- **D5. HTTP 200 for a registration.** Proposed: 200 (`REGISTERED_HTTP_STATUS` in
-  `ocpi/worker.js`), as for every other successful answer. OCPI says a server SHOULD answer
-  "HTTP `201 - Created` when the object has been newly created in the server system"
-  (`status_codes.asciidoc`); whether Tesla accepts either needs testing. If not: set the
-  constant to 201.
-- **D6. A new setup token replaces a registration.** Proposed: yes. A POST with a different
-  `OCPI_TOKEN_A` registers afresh and replaces the current connection. This is the recovery
-  after a lost reply once D7's 10 minutes are over. If not: a new setup token works only when
-  there is no connection, so that recovery needs a code change.
-- **D7. The 10-minute retry for a used setup token.** Proposed: yes. For 10 minutes after the
-  first registration made with a setup token, and only until Tesla first uses TOKEN_C, that
-  setup token may register again, replacing the connection. A retry keeps the first deadline,
-  and deleting the secret does not end the 10 minutes, because the Worker uses the stored
-  hash. OCPI's text says TOKEN_A "MAY no longer be used", which permits this; its registration
-  diagram says the setup token "has now become invalid", which does not. If not:
-  `SETUP_RETRY_GRACE_MS` is set to 0, and a lost reply is then recovered only with a new setup
-  token and the form (D6).
-- **D8. Record Tesla's host.** Proposed: after the first registration, the owner records the
-  host of Tesla's locations address (the host only, never the address) in
-  `operators/tesla.yaml` with its date and source, and the daily run uses only addresses on
-  that host. If Tesla objects to its host being published, the owner decides how the rule
-  "Only use feed URLs with a known source" is met before Tesla is switched on.
+- 22 October 2026, **D2 to D8.** The owner kept D2, D3, D4, D6 and D7 as built and changed D5
+  and D8:
+  - **D2. Party ID** `OEV`, from OEVM (`party_id` in `PARTY` in `ocpi/worker.js`), typed into
+    Tesla's form unchanged. Whether `GB*OEV` is already in use needs checking; if it is,
+    `party_id` changes there, and the tests check only that it is three capital letters or
+    digits and not Tesla's example `TES`.
+  - **D3. Only a locations endpoint is required.** Tariffs and credentials endpoints may be
+    missing, and a missing one is noted for the owner.
+  - **D4. Any https address on a named host.** The Worker calls any https address on a named
+    host with no port, user name, password or IP address. It is not pinned to one host,
+    in line with D8.
+  - **D5. HTTP 201 for a registration**, as OCPI 2.2.1 asks: a server SHOULD answer "HTTP
+    `201 - Created` when the object has been newly created in the server system"
+    (`status_codes.asciidoc`). `REGISTERED_HTTP_STATUS` in `ocpi/worker.js` is 201; every
+    other successful answer, a renewal included, is 200.
+  - **D6. A new setup token replaces a registration.** A POST with a different `OCPI_TOKEN_A`
+    registers afresh and replaces the current connection. This is the recovery after a lost
+    reply once D7's 10 minutes are over.
+  - **D7. The 10-minute retry for a used setup token.** For 10 minutes after the first
+    registration made with a setup token, and only until Tesla first uses TOKEN_C, that setup
+    token may register again, replacing the connection. A retry keeps the first deadline, and
+    deleting the secret does not end the 10 minutes, because the Worker uses the stored hash.
+    OCPI's text says TOKEN_A "MAY no longer be used", which permits this; its registration
+    diagram says the setup token "has now become invalid", which does not.
+  - **D8. Tesla's addresses are not fixed.** The owner: "if it updates we need to update our
+    list. Don't stay fixed". The daily run uses the addresses from Tesla's latest handshake,
+    whatever their host, and `operators/tesla.yaml` names the handshake as their source. No
+    host or address is recorded in the repository, so none needs updating when Tesla changes
+    one.
 
 ## Needs testing
 
@@ -360,20 +353,19 @@ answered.
   when Tesla hangs up, and whether Tesla retries a registration whose answer it lost within 10
   minutes.
 - Whether Tesla sends and expects Base64 tokens and request ID headers, accepts a peer whose
-  version details list only credentials, accepts HTTP 200 for a registration (OCPI suggests
-  201), accepts a workers.dev address and country GB, and checks that the role and party ID in
-  the reply match its form. If the handout shows that Tesla read the version details and never
-  posted, try giving the one credentials entry the role RECEIVER (OCPI 2.2.1's second version
-  details example lists credentials once, with that role; the spec says the module "is not
-  defined twice"). If a later change lists it twice anyway, record that as a departure from
-  `version_information_endpoint.asciidoc`.
+  version details list only credentials, accepts HTTP 201 for a registration (D5; many
+  implementations answer 200 to everything), accepts a workers.dev address and country GB, and
+  checks that the role and party ID in the reply match its form. If the handout shows that
+  Tesla read the version details and never posted, try giving the one credentials entry the
+  role RECEIVER (OCPI 2.2.1's second version details example lists credentials once, with that
+  role; the spec says the module "is not defined twice"). If a later change lists it twice
+  anyway, record that as a departure from `version_information_endpoint.asciidoc`.
 - Whether Tesla refuses calls from Cloudflare's or GitHub's networks, and whether its servers
   answer HTTP 403 to automated calls, as its website did on 10 October 2026.
 - Whether Tesla's credentials address is on the same host as its locations and tariffs, and
   whether any of them uses a port, a redirect or an IP address.
 - Who renews tokens, and how often. OCPI says "It is advisable to renew the credentials tokens
   at least once a month".
-- Whether Tesla's host and endpoint addresses may be published in the public operator file.
 - Tesla's terms, licence and rate limits: none are stated anywhere.
 - Cloudflare's pages disagree on a Durable Object's CPU limit on the free plan (30 seconds or
   the Workers 10 ms); the handlers should stay well under 10 ms.
@@ -386,9 +378,9 @@ answered.
 
 - **The pipeline side**, in its own pull request: an owner decision section in
   `schema/operator.py` for an operator reached this way, modelled on `relay` and naming two
-  GitHub secrets (the Worker's address and the pull token) and the operator's recorded host;
-  reading TOKEN_B once per run; the token's form; the Base64 form in the scrubber; request ID
-  headers; the host check; noting handouts it did not make; workflow and test changes.
+  GitHub secrets (the Worker's address and the pull token); reading TOKEN_B and Tesla's
+  current addresses once per run; the token's form; the Base64 form in the scrubber; request
+  ID headers; noting handouts it did not make; workflow and test changes.
 - **The adapter**, in its own pull request and only after Tesla's terms are read: real
   fixtures, Tesla's tariff extensions (`CONGESTION_TIME`, `min_vehicle_soc`,
   `min_congestion_threshold`), findings and a `DATA_LICENCES.md` row.
@@ -398,8 +390,8 @@ answered.
   client for Tesla's credentials endpoint and an owner-started route or a third Cron Trigger.
   Until then, a leak is handled by asking Tesla to end the connection and starting again with
   a new TOKEN_A.
-- Pinning the Worker's calls to Tesla's recorded host, a separate Cloudflare account, a custom
-  domain, the pass-through fallback, and encrypting TOKEN_B with a key held as a Worker secret.
+- A separate Cloudflare account, a custom domain, the pass-through fallback, and encrypting
+  TOKEN_B with a key held as a Worker secret.
 
 ## Owner setup
 

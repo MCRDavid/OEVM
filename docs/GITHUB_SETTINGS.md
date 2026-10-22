@@ -434,11 +434,11 @@ merged into `main` is deployed without copying code by hand.
     token the Worker gave it, the connection token can still register again, even after you
     delete the secret, so that Tesla can retry if it lost the answer (D7 in ADR 0025); a retry
     does not add time. After that the Worker refuses it, but only while its stored record
-    survives, so deleting the secret still matters. Then, in a pull request, record the host
-    of Tesla's `locations_url` (the host only, never the address or a token) in
-    `operators/tesla.yaml` with the date and the source "the operator's credentials POST"; the
-    daily run will use only addresses on that host (D8 in ADR 0025). If Tesla asks that its
-    host not be published, stop and decide before recording anything.
+    survives, so deleting the secret still matters. Then, in a pull request, add a dated
+    `key_granted` step to `engagement.log` in `operators/tesla.yaml`, saying that Tesla
+    connected through its credentials handshake, with no address or token. Tesla's addresses
+    are never written down: the daily run reads the current ones from the Worker on each run,
+    so a change Tesla makes needs no update here (D8 in ADR 0025).
 
 If Tesla says it never received an answer to its registration, it can simply try again within
 10 minutes of its first registration (D7 in ADR 0025). After that, set a new connection token

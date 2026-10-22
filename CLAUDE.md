@@ -105,8 +105,9 @@ decisions are in docs/adr/.
   locations, tariffs or statuses, never holds a GitHub token, never logs a token, retires each
   setup token by hash once it has registered, and keeps the project User-Agent and the
   operator's rate limits for its own calls, apart from the D1 overlap above. The daily
-  run uses an address from it only if the host is recorded in the operator file. No operator's
-  name in a Worker, route, object or subdomain name. An operator connected this way stays
+  run uses the addresses from the operator's latest handshake, never a fixed copy, and the
+  operator file names that handshake as their source (D8). No operator's name in a Worker,
+  route, object or subdomain name. An operator connected this way stays
   switched off until its terms are read.
 
 ## The site (docs/PRIVACY_AND_COOKIES.md)

@@ -144,14 +144,15 @@ notes: >-
   Tesla offers its data through an OCPI 2.2.1 connection on its developer portal, open by
   invitation during a pilot, with a UK scope ("Charging Location Data will be shared based on
   selected scope (i.e. UK sites)"). On 2026-10-16 the repository owner decided to answer the
-  handshake from a separate Cloudflare Worker, oevm-ocpi in ocpi/ (ADR 0025, proposed until
-  the owner confirms its defaults D2 to D8), which gives role NSP (navigation service
-  provider) and a three-letter party ID; the daily run will fetch locations and tariffs
+  handshake from a separate Cloudflare Worker, oevm-ocpi in ocpi/ (ADR 0025, accepted on
+  2026-10-22), which gives role NSP (navigation service provider) and a three-letter party
+  ID; the daily run will fetch locations and tariffs
   itself with the token Tesla sends in its credentials POST. OCPI 2.2.1 also asks for the
   token to be Base64 encoded and for request ID headers, which the ocpi_221 adapter does not
   do yet. Next steps: the owner sets up the Worker (docs/GITHUB_SETTINGS.md, section 11) and
   only then submits Tesla's form, recording a request_sent step the same day; after the first
-  registration the owner records Tesla's host here, never a full address or a token (D8); ask
+  registration the owner records a dated step here, never an address or a token, and the
+  daily run uses the addresses from Tesla's latest handshake, never a fixed copy (D8); ask
   Tesla, at the address on its developer page, about an invitation, terms and rate limits;
   the pipeline side and the adapter follow in later pull requests. The operator stays
   switched off until Tesla's terms are read.

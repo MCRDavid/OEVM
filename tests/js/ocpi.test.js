@@ -636,7 +636,7 @@ test("every OCPI answer has the envelope and a UTC timestamp", async () => {
     "200 3002",
     "200 3003",
     "200 3000",
-    "200 1000",
+    "201 1000",
     "500 3000",
   ]);
 });
@@ -1101,7 +1101,7 @@ test("a POST with TOKEN_A reads the peer's versions then its 2.2.1 details with 
   peer();
   const response = await post();
   assert.equal(response.status, REGISTERED_HTTP_STATUS);
-  assert.equal(response.status, 200);
+  assert.equal(response.status, 201, "a registration is a newly created object");
   const answer = await read(response);
   assert.equal(answer.status_code, 1000);
   assert.equal(answer.status_message, "Success");
