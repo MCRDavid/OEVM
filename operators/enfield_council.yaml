@@ -1,0 +1,54 @@
+# yaml-language-server: $schema=schema.json
+id: enfield_council
+display_name: Enfield Council
+ocpi_country_code: unknown
+ocpi_party_id: unknown
+adapter: unknown
+base_url: unknown
+endpoints: {}
+auth:
+  method: unknown
+  name: null
+  secret_name: null
+rate_limit:
+  min_seconds_between_requests: 31
+  limits: []
+  limits_checked: unknown
+  notes: >-
+    No feed read yet. The council's chargers run on Fuuse, whose open data host
+    (api.fuuse.io) asks for 30 seconds between requests, so any feed there would use the
+    same 31 second gap as Arnold Clark Charge and ScottishPower Recharge.
+supports_single_location: unknown
+cors: unknown
+attribution: null
+licence: null
+engagement:
+  status: unknown
+  evidence: []
+  log:
+    - date: 2026-10-17
+      action: page_checked
+      summary: >-
+        The council's electric vehicle charging page answered 403 to this project's
+        automated requests, so its content could not be read. Web search summaries of the
+        page say it links location data and tariff data for the chargers it runs on Fuuse.
+        It needs reading in a browser.
+      evidence_url: https://www.enfield.gov.uk/services/roads-and-transport/electric-vehicle-charging
+access_requested: null
+access_granted: null
+sources:
+  - url: https://www.enfield.gov.uk/services/roads-and-transport/electric-vehicle-charging
+    note: >-
+      Enfield Council's electric vehicle charging page. Answered 403 to automated requests
+      on 2026-10-17. Not yet read in a browser.
+  - url: https://support.fuuse.io/hc/en-gb/articles/4696535102239-Open-Data-Access-ODA-Links-Overview
+    note: >-
+      Fuuse's help article "Open Data Access (ODA) Links - Overview" (updated 2026-09-07,
+      read 2026-10-17). Each Fuuse customer has a "Location Data Link" and a "Tariff Data
+      Link" and is expected to publish them on its own website.
+findings: []
+notes: >-
+  Lead: the only Fuuse customer seen linking its open data, apart from Arnold Clark Charge
+  and ScottishPower Recharge. The page blocks automated reads, so the links need reading in
+  a browser before anything is recorded or fetched. Status unknown until then.
+enabled: false

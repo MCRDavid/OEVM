@@ -2281,8 +2281,8 @@
       "engagement": {
         "status": "no_public_feed_found",
         "label": "No public feed found",
-        "headline": "No public feed found (as of 2026-10-10)",
-        "as_of": "2026-10-10",
+        "headline": "No public feed found (as of 2026-10-17)",
+        "as_of": "2026-10-17",
         "last_request": null,
         "last_response": null,
         "last_response_text": "No request sent",
@@ -2304,6 +2304,17 @@
             "summary": "Be.EV's home page, its Public Charge Point Regulations page, its sitemap and its help centre's front page were read, and no open data feed or route for requesting open data was found.",
             "quote": "In 2025, our rapid and ultra-rapid network achieved an average reliability score of 99% across more than 600 public DC charge points (50kW+).",
             "evidence_url": "https://be-ev.co.uk/public-charge-point-regulations/",
+            "evidence_file": null
+          },
+          {
+            "date": "2026-10-17",
+            "action": "feed_searched",
+            "action_label": "Searched for a feed",
+            "channel": null,
+            "channel_label": null,
+            "summary": "Be.EV's home page, its Public Charge Point Regulations page, its sitemap and its help centre's sitemap were read again, and no open data feed or route for requesting open data was found. Fuuse's case study says Be.EV moved its network to Fuuse, whose customers each have location and tariff data links to publish.",
+            "quote": null,
+            "evidence_url": "https://fuuse.io/be-ev",
             "evidence_file": null
           }
         ]
@@ -2601,8 +2612,8 @@
       "engagement": {
         "status": "no_public_feed_found",
         "label": "No public feed found",
-        "headline": "No public feed found (as of 2026-10-10)",
-        "as_of": "2026-10-10",
+        "headline": "No public feed found (as of 2026-10-17)",
+        "as_of": "2026-10-17",
         "last_request": null,
         "last_response": null,
         "last_response_text": "No request sent",
@@ -2624,6 +2635,17 @@
             "summary": "Charge My Street's home page and charge page were read and its sitemap address was tried, and no open data feed or route for requesting open data was found.",
             "quote": null,
             "evidence_url": "https://chargemystreet.co.uk/",
+            "evidence_file": null
+          },
+          {
+            "date": "2026-10-17",
+            "action": "feed_searched",
+            "action_label": "Searched for a feed",
+            "channel": null,
+            "channel_label": null,
+            "summary": "Charge My Street's home page was read again and no open data feed was found. Fuuse's case study says Fuuse has run Charge My Street's network from the start; Fuuse customers each have location and tariff data links to publish.",
+            "quote": null,
+            "evidence_url": "https://fuuse.io/charge-my-street",
             "evidence_file": null
           }
         ]
@@ -3156,6 +3178,61 @@
       "findings": []
     },
     {
+      "id": "enfield_council",
+      "name": "Enfield Council",
+      "enabled": false,
+      "adapter": "unknown",
+      "engagement": {
+        "status": "unknown",
+        "label": "Not yet established",
+        "headline": "Not yet established (as of 2026-10-17)",
+        "as_of": "2026-10-17",
+        "last_request": null,
+        "last_response": null,
+        "last_response_text": "No request sent",
+        "evidence": [],
+        "log": [
+          {
+            "date": "2026-10-17",
+            "action": "page_checked",
+            "action_label": "Operator's page checked",
+            "channel": null,
+            "channel_label": null,
+            "summary": "The council's electric vehicle charging page answered 403 to this project's automated requests, so its content could not be read. Web search summaries of the page say it links location data and tariff data for the chargers it runs on Fuuse. It needs reading in a browser.",
+            "quote": null,
+            "evidence_url": "https://www.enfield.gov.uk/services/roads-and-transport/electric-vehicle-charging",
+            "evidence_file": null
+          }
+        ]
+      },
+      "access_requested": null,
+      "access_granted": null,
+      "feeds": [],
+      "licence": null,
+      "attribution": null,
+      "missing_publish_flag": null,
+      "swapped_coordinates": null,
+      "nonstandard_statuses": null,
+      "tariffs_from": null,
+      "nonstandard_parking_restrictions": null,
+      "zero_price_tariffs": null,
+      "vat_not_stated": null,
+      "relay": null,
+      "expired_certificate": null,
+      "excluded_locations": null,
+      "rate_limit": {
+        "our_gap_seconds": 31.0,
+        "our_max_per_hour": 117,
+        "ours": "At least 31 s between requests to the operator's host, measured from the end of the previous request (at most 117 in any hour), retries included.",
+        "published": [],
+        "limits_checked": "unknown",
+        "comparison": "The operator's pages have not been checked for limits yet.",
+        "difference_from_regulations": "Not known yet.",
+        "notes": "No feed read yet. The council's chargers run on Fuuse, whose open data host (api.fuuse.io) asks for 30 seconds between requests, so any feed there would use the same 31 second gap as Arnold Clark Charge and ScottishPower Recharge."
+      },
+      "findings": []
+    },
+    {
       "id": "esb_energy",
       "name": "ESB Energy",
       "enabled": false,
@@ -3298,8 +3375,8 @@
       "engagement": {
         "status": "key_on_request",
         "label": "Key issued on request",
-        "headline": "Key issued on request (as of 2026-10-10)",
-        "as_of": "2026-10-10",
+        "headline": "Key issued on request (as of 2026-10-17)",
+        "as_of": "2026-10-17",
         "last_request": null,
         "last_response": null,
         "last_response_text": "No request sent",
@@ -3321,6 +3398,17 @@
             "summary": "The \"PCPR - Open Data Request\" FAQ on evyve's home page and the Google form it links were read; the form asks for an email address, name, organisation and planned use of the data, and says the request will be shared with Eco-Movement.",
             "quote": "If you are interested in accessing our Open Data please complete the form from the link below:",
             "evidence_url": "https://evyve.co.uk/",
+            "evidence_file": null
+          },
+          {
+            "date": "2026-10-17",
+            "action": "page_checked",
+            "action_label": "Operator's page checked",
+            "channel": null,
+            "channel_label": null,
+            "summary": "The \"PCPR - Open Data Request\" FAQ on evyve's home page still links the same Google form. evyve's own news post of 19 January 2026 says its network now runs on Monta's charge point management software; no open data link was found on Monta's pages for evyve, so the form remains the route.",
+            "quote": "evyve, an electric vehicle charging network owner and operator, has selected EV charging platform Monta to deploy its intelligent end-to-end charging management system across evyve's network of 350 rapid and ultra-rapid charge points across the UK.",
+            "evidence_url": "https://evyve.co.uk/news/evyve-selects-monta-to-power-reliable-growth-across-the-uk-s-ev-charging-network/",
             "evidence_file": null
           }
         ]
@@ -3486,6 +3574,68 @@
           "resolved_date": null
         }
       ]
+    },
+    {
+      "id": "first_charge",
+      "name": "First Charge",
+      "enabled": false,
+      "adapter": "unknown",
+      "engagement": {
+        "status": "no_public_feed_found",
+        "label": "No public feed found",
+        "headline": "No public feed found (as of 2026-10-17)",
+        "as_of": "2026-10-17",
+        "last_request": null,
+        "last_response": null,
+        "last_response_text": "No request sent",
+        "evidence": [
+          {
+            "date": "2026-10-17",
+            "url": "https://www.firstbus.co.uk/about-us/ultra-rapid-electric-vehicle-charging",
+            "file": null,
+            "note": "First Bus's ultra-rapid charging page describes First Charge sites open to the public, paid through the Fuuse app or contactless, and reports a reliability score under the Public Charge Point Regulations 2023. It links no open data feed."
+          }
+        ],
+        "log": [
+          {
+            "date": "2026-10-17",
+            "action": "feed_searched",
+            "action_label": "Searched for a feed",
+            "channel": null,
+            "channel_label": null,
+            "summary": "First Bus's ultra-rapid charging page and its First Charge site guide were read, and no open data feed or route for requesting open data was found.",
+            "quote": "Public Charge Point Regulations 2023: First Charge B2C sites achieved a 97.5% reliability score in 2025.",
+            "evidence_url": "https://www.firstbus.co.uk/about-us/ultra-rapid-electric-vehicle-charging",
+            "evidence_file": null
+          }
+        ]
+      },
+      "access_requested": null,
+      "access_granted": null,
+      "feeds": [],
+      "licence": null,
+      "attribution": null,
+      "missing_publish_flag": null,
+      "swapped_coordinates": null,
+      "nonstandard_statuses": null,
+      "tariffs_from": null,
+      "nonstandard_parking_restrictions": null,
+      "zero_price_tariffs": null,
+      "vat_not_stated": null,
+      "relay": null,
+      "expired_certificate": null,
+      "excluded_locations": null,
+      "rate_limit": {
+        "our_gap_seconds": 31.0,
+        "our_max_per_hour": 117,
+        "ours": "At least 31 s between requests to the operator's host, measured from the end of the previous request (at most 117 in any hour), retries included.",
+        "published": [],
+        "limits_checked": "unknown",
+        "comparison": "The operator's pages have not been checked for limits yet.",
+        "difference_from_regulations": "Not known yet.",
+        "notes": "No feed found yet. First Charge runs on Fuuse, whose open data host (api.fuuse.io) asks for 30 seconds between requests, so any feed found there would use the same 31 second gap as Arnold Clark Charge and ScottishPower Recharge."
+      },
+      "findings": []
     },
     {
       "id": "for_ev",
@@ -5059,14 +5209,21 @@
       "enabled": false,
       "adapter": "unknown",
       "engagement": {
-        "status": "unknown",
-        "label": "Not yet established",
-        "headline": "Not yet established (as of 2026-10-10)",
-        "as_of": "2026-10-10",
+        "status": "key_on_request",
+        "label": "Key issued on request",
+        "headline": "Key issued on request (as of 2026-10-13)",
+        "as_of": "2026-10-13",
         "last_request": null,
         "last_response": null,
         "last_response_text": "No request sent",
-        "evidence": [],
+        "evidence": [
+          {
+            "date": "2026-10-13",
+            "url": "https://developer.tesla.com/en_GB/docs/charging/roaming",
+            "file": null,
+            "note": "Tesla's developer page for charging roaming says the Tesla Roaming Portal is available on a pilot and invitation basis only and gives an address to ask about timing and availability. Connecting needs a Tesla Account and a request that Tesla reviews. No account was created and no request was made."
+          }
+        ],
         "log": [
           {
             "date": "2026-10-10",
@@ -5077,6 +5234,39 @@
             "summary": "Tesla's website could not be read by this project's automated checks on 2026-10-10 (HTTP 403 for its UK home page and for an address tried for a Supercharger open data support page), so its open data route is not yet known; it needs checking in a browser.",
             "quote": null,
             "evidence_url": "https://www.tesla.com/en_gb",
+            "evidence_file": null
+          },
+          {
+            "date": "2026-10-11",
+            "action": "page_checked",
+            "action_label": "Operator's page checked",
+            "channel": null,
+            "channel_label": null,
+            "summary": "Tesla's UK Supercharger, Supercharging and EV roaming pages, its legal page and its site map were read in a browser. None of them describes open data, the Public Charge Point Regulations or OCPI, and two addresses tried for such pages did not exist.",
+            "quote": null,
+            "evidence_url": "https://www.tesla.com/en_gb/supercharger",
+            "evidence_file": null
+          },
+          {
+            "date": "2026-10-13",
+            "action": "page_checked",
+            "action_label": "Operator's page checked",
+            "channel": null,
+            "channel_label": null,
+            "summary": "Tesla's developer page for charging roaming was read. It describes an OCPI connection for which a party signs in with a Tesla Account and submits a connection scope, authentication token, role, URL and party ID for Tesla to review, and says the portal is currently open by invitation only.",
+            "quote": "The Tesla Roaming Portal is currently available on a pilot and invitation basis only",
+            "evidence_url": "https://developer.tesla.com/en_GB/docs/charging/roaming",
+            "evidence_file": null
+          },
+          {
+            "date": "2026-10-13",
+            "action": "page_checked",
+            "action_label": "Operator's page checked",
+            "channel": null,
+            "channel_label": null,
+            "summary": "The repository owner signed in to Tesla's developer portal and read its Charging API documentation and connection form, without submitting anything. They describe an OCPI 2.2.1 credentials handshake started from the form, then locations and tariffs shared by the scope chosen, US or UK, and state no terms, licence or rate limit.",
+            "quote": "Charging Location Data will be shared based on selected scope (i.e. UK sites).",
+            "evidence_url": "https://developer.tesla.com/en_GB/dashboard/charging/roaming",
             "evidence_file": null
           }
         ]
@@ -5106,7 +5296,28 @@
         "difference_from_regulations": "Not known yet.",
         "notes": null
       },
-      "findings": []
+      "findings": [
+        {
+          "date": "2026-10-13",
+          "kind": "access",
+          "kind_label": "Access",
+          "summary": "Tesla's developer page says the Tesla Roaming Portal, through which it offers an OCPI connection, is currently available on a pilot and invitation basis only. A connection needs a Tesla Account and a request that Tesla reviews. Neither the public page nor the signed-in documentation states terms, a licence or a rate limit for the data.",
+          "handling": "Recorded as a possible source of Tesla's data. Nothing has been requested. Under the OCPI 2.2.1 credentials handshake that the form starts, the requester supplies its own token and the address of its own OCPI versions endpoint, and must host versions and credentials endpoints that Tesla calls. This project is a static site and hosts none, so connecting needs a new hosted service and the repository owner's decision. The operator stays switched off.",
+          "evidence_url": "https://developer.tesla.com/en_GB/docs/charging/roaming",
+          "status": "open",
+          "resolved_date": null
+        },
+        {
+          "date": "2026-10-13",
+          "kind": "spec_conformance",
+          "kind_label": "Differs from OCPI 2.2.1",
+          "summary": "Tesla's signed-in documentation says it extends OCPI 2.2.1. Locations gain access_type and evse_count fields. Tariffs gain a CONGESTION_TIME price component and min_vehicle_soc and min_congestion_threshold restrictions, none of which are in OCPI 2.2.1. The documentation also spells the connector field \"tarrif_ids\" (OCPI 2.2.1: tariff_ids) and describes power_type and one status field in US terms (\"DCFC, AC Level 2\"; \"operational, under construction, planned, or decommissioned\") rather than OCPI 2.2.1 values.",
+          "handling": "Not fetched yet, so how the data really looks needs testing. Before Tesla prices are shown, the adapter work must make sure a price that depends on these extensions is never shown as if it had no condition; how such tariffs are shown is for the repository owner to decide. Values that are not OCPI 2.2.1 values are recorded as unknown, as for every operator.",
+          "evidence_url": "https://developer.tesla.com/en_GB/dashboard/charging/roaming",
+          "status": "open",
+          "resolved_date": null
+        }
+      ]
     },
     {
       "id": "totalenergies",
@@ -5402,6 +5613,68 @@
       "findings": []
     },
     {
+      "id": "wattstop",
+      "name": "WattStop",
+      "enabled": false,
+      "adapter": "unknown",
+      "engagement": {
+        "status": "no_public_feed_found",
+        "label": "No public feed found",
+        "headline": "No public feed found (as of 2026-10-17)",
+        "as_of": "2026-10-17",
+        "last_request": null,
+        "last_response": null,
+        "last_response_text": "No request sent",
+        "evidence": [
+          {
+            "date": "2026-10-17",
+            "url": "https://www.wattstop.co.uk/charge-point-owners",
+            "file": null,
+            "note": "WattStop's page for charge point owners lists \"Open data feed\" under legal compliance and calls WattStop \"a UK-based virtual charge point operator (CPO)\". Neither this page nor the rest of WattStop's site links a feed."
+          }
+        ],
+        "log": [
+          {
+            "date": "2026-10-17",
+            "action": "feed_searched",
+            "action_label": "Searched for a feed",
+            "channel": null,
+            "channel_label": null,
+            "summary": "WattStop's home page, its page for charge point owners, its driver terms and its sitemap were read, and no open data feed or route for requesting open data was found.",
+            "quote": "WattStop is a UK-based virtual charge point operator (CPO) and your one-stop solution for maximising the potential of your EV chargers.",
+            "evidence_url": "https://www.wattstop.co.uk/charge-point-owners",
+            "evidence_file": null
+          }
+        ]
+      },
+      "access_requested": null,
+      "access_granted": null,
+      "feeds": [],
+      "licence": null,
+      "attribution": null,
+      "missing_publish_flag": null,
+      "swapped_coordinates": null,
+      "nonstandard_statuses": null,
+      "tariffs_from": null,
+      "nonstandard_parking_restrictions": null,
+      "zero_price_tariffs": null,
+      "vat_not_stated": null,
+      "relay": null,
+      "expired_certificate": null,
+      "excluded_locations": null,
+      "rate_limit": {
+        "our_gap_seconds": 31.0,
+        "our_max_per_hour": 117,
+        "ours": "At least 31 s between requests to the operator's host, measured from the end of the previous request (at most 117 in any hour), retries included.",
+        "published": [],
+        "limits_checked": "unknown",
+        "comparison": "The operator's pages have not been checked for limits yet.",
+        "difference_from_regulations": "Not known yet.",
+        "notes": "No feed found yet. WattStop is run by Fuuse, whose open data host (api.fuuse.io) asks for 30 seconds between requests, so any feed found there would use the same 31 second gap as Arnold Clark Charge and ScottishPower Recharge."
+      },
+      "findings": []
+    },
+    {
       "id": "weev",
       "name": "Weev",
       "enabled": false,
@@ -5546,6 +5819,68 @@
           "resolved_date": null
         }
       ]
+    },
+    {
+      "id": "west_suffolk_council",
+      "name": "West Suffolk Council",
+      "enabled": false,
+      "adapter": "unknown",
+      "engagement": {
+        "status": "no_public_feed_found",
+        "label": "No public feed found",
+        "headline": "No public feed found (as of 2026-10-17)",
+        "as_of": "2026-10-17",
+        "last_request": null,
+        "last_response": null,
+        "last_response_text": "No request sent",
+        "evidence": [
+          {
+            "date": "2026-10-17",
+            "url": "https://www.westsuffolk.gov.uk/environment/reduce-your-impact/electric-vehicles.cfm",
+            "file": null,
+            "note": "The council's electric vehicles page lists 13 car parks with charge points, 9 of them used through the Fuuse app or roaming services and others through Evolt, and gives a Fuuse driver support line. It links no open data feed."
+          }
+        ],
+        "log": [
+          {
+            "date": "2026-10-17",
+            "action": "feed_searched",
+            "action_label": "Searched for a feed",
+            "channel": null,
+            "channel_label": null,
+            "summary": "West Suffolk Council's electric vehicles page was read, and no open data feed or route for requesting open data was found.",
+            "quote": null,
+            "evidence_url": "https://www.westsuffolk.gov.uk/environment/reduce-your-impact/electric-vehicles.cfm",
+            "evidence_file": null
+          }
+        ]
+      },
+      "access_requested": null,
+      "access_granted": null,
+      "feeds": [],
+      "licence": null,
+      "attribution": null,
+      "missing_publish_flag": null,
+      "swapped_coordinates": null,
+      "nonstandard_statuses": null,
+      "tariffs_from": null,
+      "nonstandard_parking_restrictions": null,
+      "zero_price_tariffs": null,
+      "vat_not_stated": null,
+      "relay": null,
+      "expired_certificate": null,
+      "excluded_locations": null,
+      "rate_limit": {
+        "our_gap_seconds": 31.0,
+        "our_max_per_hour": 117,
+        "ours": "At least 31 s between requests to the operator's host, measured from the end of the previous request (at most 117 in any hour), retries included.",
+        "published": [],
+        "limits_checked": "unknown",
+        "comparison": "The operator's pages have not been checked for limits yet.",
+        "difference_from_regulations": "Not known yet.",
+        "notes": "No feed found yet. The council's Fuuse chargers would publish on Fuuse's open data host (api.fuuse.io), which asks for 30 seconds between requests, so any feed found there would use the same 31 second gap as Arnold Clark Charge and ScottishPower Recharge."
+      },
+      "findings": []
     },
     {
       "id": "yourparkingspace",

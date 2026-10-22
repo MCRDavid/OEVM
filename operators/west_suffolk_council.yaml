@@ -1,0 +1,61 @@
+# yaml-language-server: $schema=schema.json
+id: west_suffolk_council
+display_name: West Suffolk Council
+ocpi_country_code: unknown
+ocpi_party_id: unknown
+adapter: unknown
+base_url: unknown
+endpoints: {}
+auth:
+  method: unknown
+  name: null
+  secret_name: null
+rate_limit:
+  min_seconds_between_requests: 31
+  limits: []
+  limits_checked: unknown
+  notes: >-
+    No feed found yet. The council's Fuuse chargers would publish on Fuuse's open data host
+    (api.fuuse.io), which asks for 30 seconds between requests, so any feed found there
+    would use the same 31 second gap as Arnold Clark Charge and ScottishPower Recharge.
+supports_single_location: unknown
+cors: unknown
+attribution: null
+licence: null
+engagement:
+  status: no_public_feed_found
+  evidence:
+    - date: 2026-10-17
+      url: https://www.westsuffolk.gov.uk/environment/reduce-your-impact/electric-vehicles.cfm
+      note: >-
+        The council's electric vehicles page lists 13 car parks with charge points, 9 of them
+        used through the Fuuse app or roaming services and others through Evolt, and gives a
+        Fuuse driver support line. It links no open data feed.
+  log:
+    - date: 2026-10-17
+      action: feed_searched
+      summary: >-
+        West Suffolk Council's electric vehicles page was read, and no open data feed or
+        route for requesting open data was found.
+      evidence_url: https://www.westsuffolk.gov.uk/environment/reduce-your-impact/electric-vehicles.cfm
+access_requested: null
+access_granted: null
+sources:
+  - url: https://www.westsuffolk.gov.uk/environment/reduce-your-impact/electric-vehicles.cfm
+    note: >-
+      West Suffolk Council's electric vehicles page (read 2026-10-17). Lists its car park
+      charge points: Fuuse app at Arts Centre, Corn Exchange and Jubilee Walk (Haverhill),
+      George Street (Brandon), James Carter Road and Mildenhall Hub (Mildenhall), Ram
+      Meadow and St Andrews (Bury St Edmunds); Evolt at All Saints (Newmarket), Olding
+      Road and School Yard East (Bury St Edmunds). No open data link.
+  - url: https://support.fuuse.io/hc/en-gb/articles/4696535102239-Open-Data-Access-ODA-Links-Overview
+    note: >-
+      Fuuse's help article "Open Data Access (ODA) Links - Overview" (updated 2026-09-07,
+      read 2026-10-17). Each Fuuse customer has a "Location Data Link" and a "Tariff Data
+      Link" and is expected to publish them on its own website.
+findings: []
+notes: >-
+  The council's Fuuse chargers are not in any feed this project reads. Its Evolt chargers may
+  already be in Evolt Network's feed (not checked). A written request could ask the council
+  where the open data for its Fuuse chargers is published.
+enabled: false
