@@ -46,3 +46,11 @@ the owner decided: "Let's leave off the test ones".
   changed.
 - If the host's certificate is replaced by another expired one, the fetch fails and the
   map keeps the last good copy (ADR 0018) until the owner decides again.
+
+## Update, 17 October 2026
+
+ParkRecharge's page now links its data on ocpi.hubeleon.net, whose certificate is in date;
+the old host, ocpi-pcpr.hubeleon.net, no longer resolves. The `expired_certificate`
+decision was removed from ParkRecharge's operator file, and the finding about the
+certificate is marked resolved. The mechanism stays for any later case. The test sites are
+still in the new feed, by the same ids, and stay off the map under `excluded_locations`.

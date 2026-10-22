@@ -38,6 +38,14 @@ engagement:
         In 2025, our rapid and ultra-rapid network achieved an average reliability score of
         99% across more than 600 public DC charge points (50kW+).
       evidence_url: https://be-ev.co.uk/public-charge-point-regulations/
+    - date: 2026-10-17
+      action: feed_searched
+      summary: >-
+        Be.EV's home page, its Public Charge Point Regulations page, its sitemap and its help
+        centre's sitemap were read again, and no open data feed or route for requesting open
+        data was found. Fuuse's case study says Be.EV moved its network to Fuuse, whose
+        customers each have location and tariff data links to publish.
+      evidence_url: https://fuuse.io/be-ev
 access_requested: null
 access_granted: null
 sources:
@@ -52,11 +60,28 @@ sources:
       Be.EV's sitemap (read 2026-10-10). No open data, OCPI or data request page is listed.
   - url: https://help.be-ev.co.uk/
     note: Be.EV's help centre front page (read 2026-10-10). No open data article is listed.
+  - url: https://help.be-ev.co.uk/sitemap.xml
+    note: >-
+      Be.EV's help centre sitemap (read 2026-10-17). 32 articles; none is about open data.
+  - url: https://fuuse.io/be-ev
+    note: >-
+      Fuuse's case study "Transitioning Be.EV's Charging Network to Fuuse" (read
+      2026-10-17): Be.EV moved its charge point management to Fuuse.
+  - url: https://support.fuuse.io/hc/en-gb/articles/4696535102239-Open-Data-Access-ODA-Links-Overview
+    note: >-
+      Fuuse's help article "Open Data Access (ODA) Links - Overview" (updated 2026-09-07,
+      read 2026-10-17). Each Fuuse customer has a "Location Data Link" and a "Tariff Data
+      Link" and is expected to publish them on its own website.
+  - url: https://be-ev.co.uk/about-us/news/beev-triples-footprint-with-acquisition-of-mer-s-uk-public-charging-network/
+    note: >-
+      Be.EV's news item of 10 February 2026 (read 2026-10-17): it acquired Mer's UK public
+      charging network, "more than 1,600 charging bays across 450+ sites", for a total of
+      "over 2,500 bays and over 680 sites".
 findings: []
 notes: >-
-  No open data feed or request route was found on Be.EV's own website on 2026-10-10. A
-  written request could ask Be.EV where its open data under regulation 10 is published. Its
-  home page links a news item whose address mentions its acquisition of Mer's UK public
-  charging network; that item was not read, and whether Mer UK's feed covers Be.EV charge
-  points is unknown.
+  No open data feed or request route was found on Be.EV's own website on 2026-10-10 or
+  2026-10-17. Be.EV runs on Fuuse, which gives each customer location and tariff data links
+  to publish, so a written request could ask Be.EV where those are published. Be.EV
+  acquired Mer's UK public network in February 2026; Mer UK's own feed is read separately,
+  and whether it covers any Be.EV charge points is unknown.
 enabled: false

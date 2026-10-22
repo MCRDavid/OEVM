@@ -39,6 +39,7 @@ from adapters.replay import ReplayTransport
 from pipeline import health, publish, tariffs
 from pipeline.progress import RunProgress
 from pipeline.registry import ROOT, RegistryError, load_registry
+from schema.models import Tariff
 from schema.operator import OperatorConfig
 from schema.runlog import MAX_ISSUE_LENGTH, RunLog
 
@@ -162,8 +163,9 @@ def _module_summaries(modules: dict) -> dict:
     }
 
 
-def run_log(result: AdapterResult, mode: str) -> dict:
-    """A summary of one run for the transparency page: counts and issues, never records."""
+def run_log(result: AdapterResult, mode: str, related: dict[str, Tariff] | None = None) -> dict:
+    """A summary of one run for the transparency page: counts and issues, never records.
+    `related` holds the tariffs found in related operators' feeds (publish.related_for)."""
     log = {
         "operator": result.operator_id,
         "mode": mode,
@@ -174,7 +176,7 @@ def run_log(result: AdapterResult, mode: str) -> dict:
         "error": None,
         "modules": _module_summaries(result.modules),
         "kept": {"locations": len(result.locations), "tariffs": len(result.tariffs)},
-        "health": health.health(result).model_dump(),
+        "health": health.health(result, related).model_dump(),
         "issues": [_shorten(issue) for issue in result.issues],
     }
     return RunLog.model_validate(log).model_dump(mode="json")
@@ -388,6 +390,8 @@ def main(argv: list[str] | None = None) -> int:
         print(f"Error: {exc}", file=sys.stderr)
         return 1
 
+    # Tariffs fetched in this run, by operator, for prices from a related operator's feed.
+    fetched_tariffs = {result.operator_id: result.tariffs for result in results}
     for result in results:
         print(report(result))
         if args.save_raw:
@@ -395,7 +399,9 @@ def main(argv: list[str] | None = None) -> int:
         if args.out:
             save_output(result, args.out / result.operator_id)
         if args.log_dir:
-            write_log(args.log_dir, run_log(result, mode))
+            config = operators[result.operator_id]
+            related = publish.related_for(config, result, fetched_tariffs)
+            write_log(args.log_dir, run_log(result, mode, related))
     kept: dict[str, datetime] = {}
     if not results:
         print("No fixture sets found.")

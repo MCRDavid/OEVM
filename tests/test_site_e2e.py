@@ -43,10 +43,10 @@ BROWSER_ARGS = [
 # In the recorded fixtures, without the two hidden unless asked for (ADR 0023): Evolt
 # Network's "Arthur House - Private Use Only" and PoGo Charge's taxi-only "Swales Central
 # Avenue".
-LOCATIONS = 65
+LOCATIONS = 66
 PRIVATE = "Arthur House - Private Use Only"
 TAXIS = "Swales Central Avenue"
-OUT_OF_SERVICE = 3  # fixture locations with every charger reported out of service
+OUT_OF_SERVICE = 4  # fixture locations with every charger reported out of service
 SERVED: list[str] = []  # every path the test server was asked for
 # MapLibre writes the map position after the # a moment after the map settles, starting
 # from 0/0/0.

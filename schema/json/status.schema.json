@@ -38,6 +38,13 @@
           "title": "Connectors With Tariff",
           "type": "integer"
         },
+        "connectors_with_tariff_from_related": {
+          "default": 0,
+          "description": "No listed tariff was found in the operator's tariffs, but one was found in a related operator's feed fetched in the same run, by the owner's decision in the operator file (tariffs_from, ADR 0020). The map prices these from that tariff.",
+          "minimum": 0,
+          "title": "Connectors With Tariff From Related",
+          "type": "integer"
+        },
         "median_last_updated_days": {
           "anyOf": [
             {
@@ -105,6 +112,21 @@
           "default": null,
           "title": "Connectors With Tariff Pct"
         },
+        "connectors_with_tariff_from_related_pct": {
+          "anyOf": [
+            {
+              "maximum": 100,
+              "minimum": 0,
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Connectors with a tariff found only in a related operator's feed, by the owner's decision in the operator file (tariffs_from, ADR 0020).",
+          "title": "Connectors With Tariff From Related Pct"
+        },
         "evses_with_status_pct": {
           "anyOf": [
             {
@@ -127,6 +149,7 @@
         "complete",
         "locations",
         "connectors_with_tariff_pct",
+        "connectors_with_tariff_from_related_pct",
         "evses_with_status_pct"
       ],
       "title": "HistoryPoint",
