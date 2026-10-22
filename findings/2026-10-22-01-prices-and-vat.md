@@ -1,8 +1,8 @@
 # Prices and VAT: ten networks state it, two do not
 
 Ten of the twelve networks whose data the map uses give a VAT rate with their prices. char.gy and
-Clenergy EV give none, so their prices could not be compared directly with anyone else's. From 22
-October 2026 the map adds VAT at 20% to those two networks' prices, by the project owner's decision,
+Clenergy EV give none, so their prices could not be compared directly with anyone else's. By the
+project owner's decision of 22 October 2026, the map adds VAT at 20% to those two networks' prices,
 so that every price on the map includes VAT. This post sets out what the feeds say and how the map
 shows it.
 
@@ -62,9 +62,9 @@ The project owner decided on 22 October 2026 that, for char.gy and Clenergy EV, 
 to every price that gives no VAT rate. The decision and its evidence are recorded in each network's
 operator file and on the [transparency page](transparency/). The same char.gy charger now reads
 "from 39p", and its details say "including VAT, with VAT at 20% added by this project where the
-operator's feed does not state it". The operator's own figures are kept unchanged in the data. Any
-other network whose prices give no VAT rate keeps the "excl. VAT" mark until a decision is recorded
-for it.
+operator's feed does not state it". The operator's own tariffs are published unchanged in each
+location's data file; only the prices shown are worked out with VAT added. Any other network whose
+prices give no VAT rate keeps the "excl. VAT" mark until a decision is recorded for it.
 
 ## Other ways prices differ
 
