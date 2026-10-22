@@ -2,7 +2,7 @@
 // browser can run it (MapLibre needs WebGL2). Nothing is saved on the device unless the
 // visitor turns on "Remember my settings" (see settings.js).
 
-import { renderDetail, detailUrl } from "./detail.js";
+import { mapLabelLine, renderDetail, detailUrl } from "./detail.js";
 import { activeCount, connectorFilters as connectorFiltersOn, defaults, matches, parse, serialise } from "./filters.js";
 import { h } from "./dom.js";
 import { allOut, formatKw, plugsSummary, speedBand } from "./format.js";
@@ -15,6 +15,8 @@ const LIST_LIMIT = 200;
 const SPEED_COLOURS = { ultra: "#9b2c74", rapid: "#b3460c", fast: "#0d6b62", slow: "#2f5d9e", unknown: "#5c5c5c" };
 const SPEED_RADIUS = { ultra: 13, rapid: 12, fast: 11, slow: 10, unknown: 10 };
 const CHARGER_LAYERS = ["clusters", "points", "price-labels", "cluster-count", "point-labels"];
+// What a press on the map opens a charger's details from.
+const CHARGER_TARGETS = ["points", "price-labels", "point-labels"];
 const FONT = ["Noto Sans Regular"];
 // Price labels above the points (labels.js, ADR 0026) appear from about the zoom of a
 // town, where they can be read. Below that there are too many points for labels to help.
@@ -160,6 +162,7 @@ function stateChanged() {
 function applyFilters() {
   app.filtered = app.features.filter((f) => matches(f.properties, app.state));
   labelPrices();
+  redrawDetailLabel();
   const source = app.map?.getSource("chargers");
   if (source) source.setData({ type: "FeatureCollection", features: app.filtered });
   applyGrouping();
@@ -395,6 +398,15 @@ function redrawDetail() {
   $("detail-body").replaceChildren(...renderDetail(app.detail, detailOptions()));
 }
 
+// The details' line about the price label follows the filters and ticked plans too (on a
+// wide screen the filters stay usable beside the panel). Only that line is replaced, so
+// focus stays where it is, for example on the "out of service" button in the panel.
+function redrawDetailLabel() {
+  if ($("detail").hidden || !app.detail) return;
+  const { label, filtered } = detailOptions();
+  $("detail-label")?.replaceChildren(...[mapLabelLine(app.detail, label, filtered)].filter(Boolean));
+}
+
 async function openDetail(key, trigger) {
   const request = ++app.detailRequest;
   app.lastTrigger = trigger ?? listButton(key) ?? document.activeElement;
@@ -526,15 +538,20 @@ async function startMap() {
   });
   // Handlers named by layer stay in place when a new style (light or dark) replaces the
   // layers, so they are added once.
+  // A price label or a point's letter can lie over a numbered circle's edge; the
+  // charger drawn on top is opened instead of zooming in.
   app.map.on("click", "clusters", async (event) => {
+    if (app.map.queryRenderedFeatures(event.point, { layers: CHARGER_TARGETS }).length) return;
     const cluster = event.features[0];
     const zoom = await app.map.getSource("chargers").getClusterExpansionZoom(cluster.properties.cluster_id);
     app.map.easeTo({ center: cluster.geometry.coordinates, zoom, duration: reducedMotion ? 0 : 500 });
   });
-  app.map.on("click", "points", (event) => openDetail(event.features[0].properties.key, app.map.getCanvas()));
-  for (const layer of ["clusters", "points"]) {
-    app.map.on("mouseenter", layer, () => (app.map.getCanvas().style.cursor = "pointer"));
-    app.map.on("mouseleave", layer, () => (app.map.getCanvas().style.cursor = ""));
+  // A price label opens its own charger, even where it lies over a neighbouring point:
+  // MapLibre gives the feature drawn on top first.
+  app.map.on("click", CHARGER_TARGETS, (event) => openDetail(event.features[0].properties.key, app.map.getCanvas()));
+  for (const layers of [["clusters"], CHARGER_TARGETS]) {
+    app.map.on("mouseenter", layers, () => (app.map.getCanvas().style.cursor = "pointer"));
+    app.map.on("mouseleave", layers, () => (app.map.getCanvas().style.cursor = ""));
   }
   app.map.on("load", renderList);
   app.map.on("moveend", renderList);
@@ -629,11 +646,20 @@ function pillImage(fill, edge) {
   context.lineWidth = 1.5;
   context.strokeStyle = edge;
   context.stroke();
+  let image;
   try {
-    return context.getImageData(0, 0, size * ratio, size * ratio);
+    image = context.getImageData(0, 0, size * ratio, size * ratio);
   } catch {
     return null; // some privacy settings block reading a canvas back
   }
+  // Others give back made-up pixels instead (Tor Browser, or Firefox resisting
+  // fingerprinting), so the box is kept only if its corner is clear and its middle is the
+  // fill colour.
+  const side = size * ratio;
+  const middle = (side / 2) * (side + 1) * 4;
+  const rgb = [1, 3, 5].map((i) => parseInt(fill.slice(i, i + 2), 16));
+  const filled = rgb.every((value, i) => Math.abs(image.data[middle + i] - value) <= 2);
+  return image.data[3] === 0 && filled && image.data[middle + 3] === 255 ? image : null;
 }
 
 function addPillImages(colours) {

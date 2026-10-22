@@ -37,7 +37,7 @@ Prices are only ever worded by pipeline.pricing.
 import re
 from collections import defaultdict
 from dataclasses import dataclass, field
-from decimal import Decimal
+from decimal import ROUND_HALF_UP, Decimal
 from typing import Literal
 
 from pipeline.pricing import (
@@ -48,7 +48,6 @@ from pipeline.pricing import (
     map_label,
     pence,
     readable_name,
-    shows_as_zero,
     tariff_kind,
     varies_text,
     varies_with,
@@ -92,20 +91,43 @@ class ConnectorPrice:
 UNKNOWN: Literal["unknown"] = "unknown"
 
 
+def _in_force(tariff: Tariff) -> bool:
+    # Within its own validity dates when it was fetched (OCPI 2.2.1 lets a connector list
+    # an old and a new tariff side by side).
+    when = tariff.provenance.fetched_at
+    started = tariff.start_date_time is None or tariff.start_date_time <= when
+    return started and (tariff.end_date_time is None or tariff.end_date_time > when)
+
+
+def _as_shown(amount: Decimal) -> Decimal:
+    # To the tenth of a penny a label shows, so ties are judged on what people see.
+    return amount.quantize(Decimal("0.001"), rounding=ROUND_HALF_UP)
+
+
 def lowest_energy(tariffs: list[Tariff]) -> tuple[Decimal, bool, bool] | None:
-    """The lowest price per kWh that any of these tariffs gives, whether it includes VAT,
-    and whether it applies only at some times (every tariff giving it charges more at
-    others), for the label above a point on the map (ADR 0026). Only priced GBP tariffs
-    count, and a tariff whose lowest price per kWh would show as "0p" is left out: a label
-    could not say what such a session costs, and only free_confirmed is ever called free.
-    The lowest figure wins whether or not its VAT is stated: VAT is never added, and a
-    higher price including VAT could be the dearer one. On a tie, the price including VAT
-    is used. None when no price is left."""
-    ranges = [
-        found
-        for found in (energy_range(t) for t in tariffs if t.price_state == "priced")
-        if found is not None and found[0] > 0 and not shows_as_zero(found[0])
-    ]
+    """The lowest price per kWh that any of these tariffs gives, to the tenth of a penny,
+    whether it includes VAT, and whether it applies only in some cases (every tariff giving
+    it charges more per kWh at other times, speeds or amounts), for the label above a
+    point on the map (ADR 0026). Only priced GBP tariffs within their validity dates count.
+    A tariff that charges nothing per kWh at all (only by time or per session) is left
+    out. When a tariff is free, or free per kWh only at some times, there is no label,
+    because "0p" reads as free and only free_confirmed is ever called free. The lowest
+    figure wins whether or not its VAT is stated: VAT is never added, and a higher price
+    including VAT could be the dearer one. On a tie, the price including VAT is used."""
+    ranges = []
+    for tariff in tariffs:
+        if not _in_force(tariff):
+            continue
+        if tariff.price_state == "free_confirmed":
+            return None
+        found = energy_range(tariff) if tariff.price_state == "priced" else None
+        if found is None:
+            continue
+        low, high, vat = _as_shown(found[0]), _as_shown(found[1]), found[2]
+        if low == 0 and high > 0:
+            return None
+        if low > 0:
+            ranges.append((low, high, vat))
     if not ranges:
         return None
     low = min(r[0] for r in ranges)

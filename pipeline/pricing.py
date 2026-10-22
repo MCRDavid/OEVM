@@ -23,7 +23,7 @@ regulations describe the price in reference data as "the price in pence per kilo
   VAT basis, which listed tariff has the lowest energy price. Other charges are never
   folded into that comparison, so it says so.
 - The label above a point on the map (ADR 0026) is the lowest price per kWh a connector's
-  tariffs give, marked "from" when it applies only at some times and "excl. VAT" when VAT
+  tariffs give, marked "from" when it applies only in some cases and "excl. VAT" when VAT
   is not stated, or "Free" when the connector is confirmed free. A price that would show
   as "0p" is never a label.
 """
@@ -397,7 +397,7 @@ def map_label(
     """The short price drawn above a point on the map for one connector (ADR 0026): "Free"
     only for a connector whose price state is free_confirmed, otherwise the lowest price per
     kWh any of its tariffs gives, such as "56p", "from 32.5p" when that price applies only
-    at some times, and "excl. VAT" when VAT is not stated. None when there is no such
+    in some cases, and "excl. VAT" when VAT is not stated. None when there is no such
     price. Other charges are left out: the details show them."""
     if state == "free_confirmed":
         return "Free"

@@ -550,7 +550,36 @@ def test_the_lowest_figure_wins_whether_or_not_its_vat_is_stated():
 def test_a_price_that_would_show_as_0p_gives_no_label():
     tiny = tariff("T", [energy(0.0004, vat=None)])
     assert price(connector("T"), tiny).label is None
-    assert price(connector("T", "T1"), tiny, tariff("T1")).label == "48p"
+
+
+def test_a_tariff_free_per_kwh_at_some_times_or_free_altogether_means_no_label():
+    # 0p at night is cheaper than anything else listed, and "0p" would read as free.
+    night_free = tariff("C", [energy(0, start_time="00:00", end_time="07:00"), energy(0.50)])
+    day = tariff("D", [energy(0.55)], type_="regular")
+    shown = price(connector("C", "D"), night_free, day)
+    assert shown.state == "priced" and shown.label is None
+    # A free tariff next to a priced one, on a connector that is not confirmed free.
+    free = tariff("F", [{"price_components": [component("energy", 0), component("flat", 0)]}])
+    paid = tariff("P", [energy(0.50)], type_="ad_hoc_payment")
+    shown = price(connector("P", "F"), paid, free)
+    assert shown.state == "priced" and shown.label is None
+
+
+def test_ties_are_judged_on_the_tenth_of_a_penny_the_label_shows():
+    stated = tariff("S", [energy(0.40975)])  # 49.17p including VAT
+    unstated = tariff("U", [energy(0.4916, vat=None)])
+    shown = price(connector("S", "U"), stated, unstated)
+    assert (shown.lowest, shown.lowest_vat, shown.label) == (Decimal("0.492"), True, "49.2p")
+    night = tariff("N", [energy(0.40972, start_time="00:00", end_time="07:00"), energy(0.5)])
+    assert price(connector("N", "S"), night, stated).label == "49.2p"
+
+
+def test_tariffs_outside_their_validity_dates_give_no_label():
+    # The fixture tariffs were fetched in October 2026.
+    ended = tariff("OLD", [energy(0.30)], end_date_time="2026-01-01T00:00:00Z")
+    future = tariff("NEW", [energy(0.25)], start_date_time="2030-01-01T00:00:00Z")
+    current = tariff("NOW", [energy(0.40)], start_date_time="2026-01-01T00:00:00Z")
+    assert price(connector("OLD", "NEW", "NOW"), ended, future, current).label == "48p"
 
 
 def test_no_label_from_a_zero_price_unknown_price_or_another_currency():

@@ -122,3 +122,33 @@ test("only ticked plans with a fixed price including VAT count, the lowest per n
   assert.equal(bestPlans(plans, new Set()).size, 0);
   assert.equal(bestPlans(undefined, new Set(["a.dear"])).size, 0);
 });
+
+test("no label shows a price above the visitor's maximum price per kWh", () => {
+  // Both have no highest price including VAT (ppk), so the filter itself lets them through.
+  const appOnly = { ...unknown, low: 82.8, lvat: true, lt: "82.8p" };
+  assert.equal(priceLabel(site(appOnly), { ...defaults(), maxp: 50 }), null);
+  assert.equal(priceLabel(site(noVat), { ...defaults(), maxp: 30 }), null);
+  // A price whose VAT is not stated at the limit or under it can still be shown.
+  assert.equal(priceLabel(site(noVat), { ...defaults(), maxp: 32.5 }).text, "from 32.5p excl. VAT");
+  // Free and a plan under the limit still count; a plan above it does not.
+  assert.equal(priceLabel(site(free), { ...defaults(), maxp: 0 }).text, "Free");
+  assert.equal(priceLabel(site(slow), { ...defaults(), maxp: 60 }, plan("p.cheap", 39)).text, "39p");
+  assert.equal(priceLabel(site(appOnly, slow), { ...defaults(), maxp: 30 }, plan("p.dear", 45)), null);
+});
+
+test("a plan wins a tie on VAT or on applying all the time, and loses a full tie", () => {
+  const forty = plan("p.forty", 40);
+  const noVat40 = { ...noVat, low: 40, lvar: false, lt: "40p excl. VAT" };
+  assert.equal(priceLabel(site(noVat40), defaults(), forty).text, "40p");
+  const some40 = { ...slow, low: 40, lvar: true, lt: "from 40p" };
+  assert.equal(priceLabel(site(some40), defaults(), forty).text, "40p");
+  const always40 = { ...slow, low: 40, lt: "40p" };
+  assert.equal(priceLabel(site(always40), defaults(), forty).plan, null);
+});
+
+test("of two ticked plans at the same price, the one that applies all the time is used", () => {
+  const night = { ...plan("a.night", 40, "from 40p"), only_at_some_times: true };
+  const always = plan("b.always", 40);
+  assert.equal(bestPlans([night, always], new Set(["a.night", "b.always"])).get("geniepoint").id, "b.always");
+  assert.equal(bestPlans([always, night], new Set(["a.night", "b.always"])).get("geniepoint").id, "b.always");
+});

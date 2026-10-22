@@ -1079,14 +1079,34 @@ def test_details_say_where_the_map_label_comes_from(visit):
     expect(page.locator("#list-items li")).to_have_count(LOCATIONS)
     _item(page, "Premier Inn Dumbarton").locator("button").click()
     line = page.locator("#detail-body .map-label")
-    expect(line).to_contain_text("On the map: 82.8p, the lowest price per kWh listed here")
+    expect(line).to_contain_text("Cheapest here: 82.8p, the lowest price per kWh listed here")
     expect(line).to_contain_text("with an account, app or card from a charging provider")
-    expect(line).to_contain_text("are not in the label")
+    expect(line).to_contain_text("are not included")
     page.keyboard.press("Escape")
     _item(page, "Atlantic Quay").locator("button").click()
     expect(page.locator("#detail-body .map-label")).to_contain_text(
-        "On the map: Free, at least one connector here has a tariff the operator confirms is free"
+        "Cheapest here: Free, as at least one connector here has a tariff the operator confirms "
+        "is free"
     )
+
+
+def test_the_details_line_follows_the_filters_while_the_details_are_open(visit):
+    v = visit(WIDE)
+    page = v.open("?view=list", map_ready=False)
+    expect(page.locator("#list-items li")).to_have_count(LOCATIONS)
+    _item(page, "Premier Inn Alnwick").locator("button").click()
+    line = page.locator("#detail-body .map-label")
+    expect(line).to_contain_text("Cheapest here: 57.6p, the lowest price per kWh listed here")
+    expect(line).not_to_contain_text("match your filters")
+    # On a wide screen the quick filters stay usable beside the panel.
+    page.click("#quick-rapid")
+    expect(line).to_contain_text(
+        "Cheapest here: 82.8p, the lowest price per kWh listed here for the connectors that "
+        "match your filters"
+    )
+    page.click("#quick-rapid")
+    expect(line).to_contain_text("Cheapest here: 57.6p")
+    assert v.errors == []
 
 
 # The colour of a price label from a ticked plan (PILLS in main.js), counted the same way.
@@ -1151,7 +1171,7 @@ def test_a_ticked_plan_with_a_lower_price_labels_the_map_and_the_list(visit):
     wait_for_amber(page, True)
     item.locator("button").click()
     expect(page.locator("#detail-body .map-label")).to_contain_text(
-        "On the map: 39p, with your plan Cheap plan from Test (£4.99 a month)"
+        "Cheapest here: 39p with your plan Cheap plan from Test (£4.99 a month)"
     )
     page.keyboard.press("Escape")
     # Labels are left off below about the zoom of a town.
