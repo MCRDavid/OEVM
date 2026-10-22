@@ -24,6 +24,7 @@ plans:
     networks: [Be.EV]
     operator_ids: []
     conditions: "Off-Peak 7pm to 7am only. The same 49p/kWh is listed for ultra-rapid (75kW+), rapid (26 - 74kW) and fast (0 - 25kW) chargers. The page says pricing can vary between locations, so check the app or charger. VAT inclusion is from terms clause 9.2.2 (website prices inclusive of VAT unless stated otherwise)."
+    only_at_some_times: true
     needs_testing: null
     source:
       url: https://be-ev.co.uk/pricing

@@ -42,6 +42,7 @@ decisions are in docs/adr/.
 - pipeline/documents.py: disclaimer, data licences, security and report pages, written by build_site.
 - pipeline/project.py: repository URL (also in site/index.html, site/.well-known/security.txt and .github/ISSUE_TEMPLATE).
 - site/index.html, site/assets/: the map page. pipeline/build_site.py: build folder with MapLibre.
+  site/assets/js/labels.js: the cheapest price drawn above each map point (ADR 0026).
 - proxy/: Phase 3 live status Worker, not deployed (docs/PHASE3_PLAN.md). pipeline/live_snapshot.py, schema/live.py: its snapshots.
 - .github/workflows/: ci, fetch-daily (calls deploy), deploy (Pages from main), keepalive.
   The relay Worker's timer starts fetch-daily; GitHub's schedule is a backup, and
@@ -61,6 +62,8 @@ decisions are in docs/adr/.
 ## Prices and rate limits
 - Show prices only through pipeline/pricing.py: pounds and pence, GBP tariffs only. Never convert
   currencies; other currencies show as "Price unknown".
+- Add VAT to a price whose feed gives no VAT rate only where the operator file records the
+  owner's decision in vat_not_stated, at its rate, saying so in the price (ADR 0003); never add one yourself.
 - Never go below 1 second between requests to a host, or below any limit in an operator's
   rate_limit.limits plus a 1 second margin. Record each published limit with its publisher, an
   exact quote, source URL and date; tests enforce these rules. Never run two fetches that use the same host in parallel.

@@ -147,6 +147,12 @@
           "description": "Times of day, charger speeds, caps or other fees.",
           "title": "Conditions"
         },
+        "only_at_some_times": {
+          "default": false,
+          "description": "True when the plan's price applies only at some times of day or on some days, as conditions says, so the map's label for it says 'from' (ADR 0026).",
+          "title": "Only At Some Times",
+          "type": "boolean"
+        },
         "needs_testing": {
           "anyOf": [
             {

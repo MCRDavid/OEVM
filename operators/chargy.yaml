@@ -54,6 +54,16 @@ nonstandard_statuses:
   statuses:
     WORKING: working
     FAULTED: out_of_order
+vat_not_stated:
+  decided: 2026-10-22
+  basis: >-
+    char.gy's feed gives no VAT rate on any price. Its own pricing page
+    (https://char.gy/pricing, checked 9 October 2026) gives 39p, 59p and 54p per kWh where
+    the feed gives 0.325, 0.4917 and 0.45 pounds: each feed price is the page price less
+    20%, the UK standard rate of VAT on public charging. The repository owner decided that
+    VAT at 20% is added, so prices on the map all include VAT and can be compared.
+  evidence_url: https://char.gy/open-ocpi/tariffs
+  add_percent: 20
 engagement:
   status: open_anonymous
   evidence:
@@ -99,8 +109,10 @@ findings:
       Tariff price components give no VAT figure. OCPI 2.2.1 says an omitted VAT means no
       VAT is applicable.
     handling: >-
-      VAT is not guessed. Prices are shown as published, which OCPI defines as excluding
-      VAT, and marked "excluding VAT, VAT not stated".
+      Until 2026-10-22, VAT was not guessed: prices were shown as published, which OCPI
+      defines as excluding VAT, and marked "excluding VAT, VAT not stated". Since then VAT
+      at 20% is added, by the repository owner's decision recorded in vat_not_stated (see
+      the finding of 2026-10-22).
     evidence_url: https://char.gy/open-ocpi/tariffs
   - date: 2026-10-07
     kind: access
@@ -154,6 +166,20 @@ findings:
       wait of 5 minutes and a wider gap before the page is asked for again, at most twice,
       and if the fetch still fails the map keeps showing the last good copy with its date.
     evidence_url: https://github.com/MCRDavid/OEVM/actions/runs/37969231568
+  - date: 2026-10-22
+    kind: data_quality
+    summary: >-
+      Of the 12 operators fetched in the daily run of 22 October 2026, 10 give a VAT rate
+      on their prices and 2, char.gy and Clenergy EV, give none. char.gy's own pricing page
+      gives 39p, 59p and 54p per kWh where the feed gives 32.5p, 49.17p and 45p, so each
+      feed price is the page price less 20%. The page itself does not say whether VAT is
+      included.
+    handling: >-
+      By the repository owner's decision recorded in vat_not_stated, VAT at 20% is added to
+      every price that gives no VAT rate, and the price says this project added it, so
+      char.gy's prices on the map include VAT like other operators' prices. The tariffs are
+      published unchanged.
+    evidence_url: https://char.gy/pricing
 notes: >-
   Paging uses the OCPI 2.2.1 Link, X-Total-Count and X-Limit headers. Fetching a single
   location by id needs testing.

@@ -13,9 +13,16 @@ Blueprint task 6. For each connector:
 - A tariff the owner names in zero_price_tariffs (ADR 0022) shows "Price unknown" while
   its prices are all zero, and gives no indicative price. withheld_free_tariffs finds them
   among the operator's own tariffs by exact OCPI id.
+- A tariff from an operator whose file records vat_not_stated (ADR 0003, amended 22
+  October 2026) has that rate of VAT added to each price with no VAT figure. `added_vat`
+  maps each such operator's id to its rate, and a tariff is matched by the operator whose
+  feed published it, so a related operator's tariff follows its own operator's file.
 - The indicative price per kWh is the lowest and highest energy price that can apply,
   including VAT when the operator states it. It is a guide for filters and map labels;
   the text from pipeline.pricing is what explains the price.
+- The label above a point on the map (ADR 0026) uses the lowest price per kWh among every
+  tariff the connector lists, not only the preferred ones, because people can pay with
+  the operator's app or account as well as at the charger (see lowest_energy).
 
 For a site's details, site_tariffs lists every tariff its connectors refer to, not only
 the preferred ones, so people can compare them: each with how it is paid for, its price,
@@ -33,15 +40,19 @@ Prices are only ever worded by pipeline.pricing.
 
 import re
 from collections import defaultdict
+from collections.abc import Mapping
 from dataclasses import dataclass, field
-from decimal import Decimal
+from decimal import ROUND_HALF_UP, Decimal
+from types import MappingProxyType
 from typing import Literal
 
 from pipeline.pricing import (
     UNSTATED_KIND,
     comparison,
     describe_tariff,
+    energy_always,
     energy_range,
+    map_label,
     pence,
     readable_name,
     tariff_kind,
@@ -64,6 +75,15 @@ class ConnectorPrice:
     energy_low: Decimal | None = None
     energy_high: Decimal | None = None
     includes_vat: bool | None = None
+    # From lowest_energy over every tariff the connector lists, for the map's label.
+    lowest: Decimal | None = None
+    lowest_vat: bool | None = None
+    lowest_varies: bool = False
+
+    @property
+    def label(self) -> str | None:
+        """The short price drawn above the location's point on the map (ADR 0026)."""
+        return map_label(self.state, self.lowest, self.lowest_vat, self.lowest_varies)
 
     @property
     def indicative(self) -> str | None:
@@ -76,6 +96,62 @@ class ConnectorPrice:
 
 
 UNKNOWN: Literal["unknown"] = "unknown"
+NO_VAT_ADDED: Mapping[str, float] = MappingProxyType({})
+
+
+def _added(tariff: Tariff, added_vat: Mapping[str, float]) -> float | None:
+    # The VAT rate the owner decided to add to the publishing operator's prices, if any.
+    return added_vat.get(tariff.provenance.source_id)
+
+
+def _in_force(tariff: Tariff) -> bool:
+    # Within its own validity dates when it was fetched (OCPI 2.2.1 lets a connector list
+    # an old and a new tariff side by side).
+    when = tariff.provenance.fetched_at
+    started = tariff.start_date_time is None or tariff.start_date_time <= when
+    return started and (tariff.end_date_time is None or tariff.end_date_time > when)
+
+
+def _as_shown(amount: Decimal) -> Decimal:
+    # To the tenth of a penny a label shows, so ties are judged on what people see.
+    return amount.quantize(Decimal("0.001"), rounding=ROUND_HALF_UP)
+
+
+def lowest_energy(
+    tariffs: list[Tariff], added_vat: Mapping[str, float] = NO_VAT_ADDED
+) -> tuple[Decimal, bool, bool] | None:
+    """The lowest price per kWh that any of these tariffs gives, to the tenth of a penny,
+    whether it includes VAT, and whether it applies only in some cases (every tariff giving
+    it charges more per kWh, or not per kWh, at other times, speeds or amounts), for the
+    label above a point on the map (ADR 0026). Only priced GBP tariffs within their
+    validity dates count. A tariff that charges nothing per kWh at all (only by time or
+    per session) is left out. When a tariff is free, or free per kWh only at some times,
+    there is no label, because "0p" reads as free and only free_confirmed is ever called
+    free. The lowest figure wins whether or not its VAT is stated: VAT is added only by the
+    owner's vat_not_stated decision (`added_vat`), and a higher price including VAT could
+    be the dearer one. On a tie, the price including VAT is used."""
+    ranges = []
+    for tariff in tariffs:
+        if not _in_force(tariff):
+            continue
+        if tariff.price_state == "free_confirmed":
+            return None
+        priced = tariff.price_state == "priced"
+        found = energy_range(tariff, _added(tariff, added_vat)) if priced else None
+        if found is None:
+            continue
+        low, high, vat = _as_shown(found[0]), _as_shown(found[1]), found[2]
+        if low == 0 and high > 0:
+            return None
+        if low > 0:
+            ranges.append((low, vat, high != low or not energy_always(tariff)))
+    if not ranges:
+        return None
+    low = min(r[0] for r in ranges)
+    at_low = [r for r in ranges if r[0] == low]
+    with_vat = any(r[1] for r in at_low)
+    varies = all(r[2] for r in at_low if r[1] == with_vat)
+    return low, with_vat, varies
 
 
 def _candidates(tariffs: list[Tariff]) -> list[Tariff]:
@@ -104,9 +180,11 @@ def price_connector(
     location_id: str,
     evse_uid: str,
     withheld: frozenset[str] = frozenset(),
+    added_vat: Mapping[str, float] = NO_VAT_ADDED,
 ) -> ConnectorPrice:
     """The price for one connector, using a dictionary of the operator's tariffs by id.
-    `withheld` holds the ids from withheld_free_tariffs."""
+    `withheld` holds the ids from withheld_free_tariffs; `added_vat` the VAT rates from
+    vat_not_stated decisions, by operator id."""
     where = {"location_id": location_id, "evse_uid": evse_uid, "connector_id": connector.id}
     if not connector.tariff_ids:
         return ConnectorPrice(
@@ -123,11 +201,18 @@ def price_connector(
             unresolved_ids=unresolved,
         )
 
+    cheapest = lowest_energy([t for t in found if t.id not in withheld], added_vat)
+    lowest = {}
+    if cheapest:
+        lowest = dict(zip(("lowest", "lowest_vat", "lowest_varies"), cheapest, strict=True))
     chosen = _candidates(found)
-    shown = [describe_tariff(t, zero_price_withheld=t.id in withheld) for t in chosen]
+    shown = [
+        describe_tariff(t, zero_price_withheld=t.id in withheld, added_vat=_added(t, added_vat))
+        for t in chosen
+    ]
     ids = [t.id for t in chosen]
     priceable = [t for t in chosen if t.id not in withheld]
-    ranges = [r for r in (energy_range(t) for t in priceable) if r is not None]
+    ranges = [r for r in (energy_range(t, _added(t, added_vat)) for t in priceable) if r]
     energy = {}
     if ranges:
         energy = {
@@ -147,7 +232,7 @@ def price_connector(
                 unresolved_ids=unresolved,
             )
         return ConnectorPrice(
-            **where, state="free_confirmed", text="Free", tariff_ids=ids, **energy
+            **where, state="free_confirmed", text="Free", tariff_ids=ids, **energy, **lowest
         )
 
     priced = [d for d in shown if d.state == "priced"]
@@ -171,6 +256,7 @@ def price_connector(
         tariff_ids=ids,
         unresolved_ids=unresolved,
         **energy,
+        **lowest,
     )
 
 
@@ -199,9 +285,12 @@ class SiteTariffs:
     connectors: int
 
 
-def _option(tariff: Tariff, count: int, withheld: frozenset[str]) -> TariffOption:
-    shown = describe_tariff(tariff, zero_price_withheld=tariff.id in withheld)
-    energy = None if tariff.id in withheld else energy_range(tariff)
+def _option(
+    tariff: Tariff, count: int, withheld: frozenset[str], added_vat: Mapping[str, float]
+) -> TariffOption:
+    vat = _added(tariff, added_vat)
+    shown = describe_tariff(tariff, zero_price_withheld=tariff.id in withheld, added_vat=vat)
+    energy = None if tariff.id in withheld else energy_range(tariff, vat)
     return TariffOption(
         tariff_id=tariff.id,
         name=readable_name(tariff.alt_text),
@@ -233,18 +322,22 @@ def _cheapest_first(option: TariffOption) -> tuple:
 
 
 def site_tariffs(
-    location: Location, tariffs: dict[str, Tariff], withheld: frozenset[str] = frozenset()
+    location: Location,
+    tariffs: dict[str, Tariff],
+    withheld: frozenset[str] = frozenset(),
+    added_vat: Mapping[str, float] = NO_VAT_ADDED,
 ) -> SiteTariffs:
     """Every tariff the location's connectors list, cheapest first (see _cheapest_first);
     tariffs that sort the same keep the order they are first listed in. `withheld` holds
-    the ids from withheld_free_tariffs."""
+    the ids from withheld_free_tariffs; `added_vat` the VAT rates from vat_not_stated
+    decisions, by operator id."""
     connectors = [c for evse in location.evses for c in evse.connectors]
     counts: dict[str, int] = {}
     for connector in connectors:
         for tariff_id in dict.fromkeys(connector.tariff_ids):
             counts[tariff_id] = counts.get(tariff_id, 0) + 1
     options = [
-        _option(tariffs[i], n, withheld)
+        _option(tariffs[i], n, withheld, added_vat)
         if i in tariffs
         else TariffOption(
             tariff_id=i,
@@ -309,14 +402,21 @@ def price_locations(
     tariffs: list[Tariff],
     related: dict[str, Tariff] | None = None,
     withheld: frozenset[str] = frozenset(),
+    added_vat: Mapping[str, float] = NO_VAT_ADDED,
 ) -> list[ConnectorPrice]:
     """The price for every connector at every location, in order. `related` adds tariffs
     from related_tariffs, keyed by the id the connector names; `withheld` holds the ids
-    from withheld_free_tariffs."""
+    from withheld_free_tariffs; `added_vat` the VAT rates from vat_not_stated decisions,
+    by operator id."""
     index = {tariff.id: tariff for tariff in tariffs} | (related or {})
     return [
         price_connector(
-            connector, index, location_id=location.id, evse_uid=evse.uid, withheld=withheld
+            connector,
+            index,
+            location_id=location.id,
+            evse_uid=evse.uid,
+            withheld=withheld,
+            added_vat=added_vat,
         )
         for location in locations
         for evse in location.evses

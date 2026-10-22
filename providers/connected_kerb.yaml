@@ -24,6 +24,7 @@ plans:
     networks: [Connected Kerb network (locations with smart charging)]
     operator_ids: []
     conditions: "Midnight to 7am, with smart charging switched on in the app. A typical rate that may vary by location. VAT inclusion is taken from clause 5.2 of the app terms: \"These tariffs include VAT.\""
+    only_at_some_times: true
     needs_testing: "The provider's own pages disagree, checked 2026-10-09: a nationwide launch blog post gives the night period as midnight to 6am, and the find a charging point FAQ gives £0.45 per kWh at night."
     source:
       url: https://connectedkerb.com/charge-your-car/drivers/
@@ -41,6 +42,7 @@ plans:
     networks: [Connected Kerb network (locations with smart charging)]
     operator_ids: []
     conditions: "7am to midnight, with smart charging switched on in the app. A typical rate that may vary by location. VAT inclusion is taken from clause 5.2 of the app terms: \"These tariffs include VAT.\""
+    only_at_some_times: true
     needs_testing: "The provider's own pages disagree, checked 2026-10-09: a nationwide launch blog post gives the day period as 6am to midnight, and the find a charging point FAQ gives £0.52 per kWh in the day."
     source:
       url: https://connectedkerb.com/charge-your-car/drivers/
@@ -58,6 +60,7 @@ plans:
     networks: [West Sussex Chargepoint Network]
     operator_ids: []
     conditions: "Midnight to 7am with smart charging. The page says to check the app for detailed pricing and non-smart charging rates. VAT inclusion is taken from clause 5.2 of the app terms."
+    only_at_some_times: true
     needs_testing: null
     source:
       url: https://connectedkerb.com/charge-your-car/community-pages/west-sussex-chargepoint-network-residents/
@@ -75,6 +78,7 @@ plans:
     networks: [West Sussex Chargepoint Network]
     operator_ids: []
     conditions: "7am to midnight with smart charging. The page says to check the app for detailed pricing and non-smart charging rates. VAT inclusion is taken from clause 5.2 of the app terms."
+    only_at_some_times: true
     needs_testing: null
     source:
       url: https://connectedkerb.com/charge-your-car/community-pages/west-sussex-chargepoint-network-residents/

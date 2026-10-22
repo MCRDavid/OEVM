@@ -510,3 +510,166 @@ def test_anything_but_one_exact_match_stays_unresolved(named, own, related):
     assert related_tariffs([location], own, related) == {}
     (shown,) = price_locations([location], own, related_tariffs([location], own, related))
     assert shown.state == "unknown"
+
+
+# The lowest price per kWh for the label above a point on the map (ADR 0026)
+
+
+def test_the_label_uses_the_cheapest_tariff_not_only_the_preferred_one():
+    contactless = tariff("A", [energy(0.77)], type_="ad_hoc_payment")
+    app = tariff("R", [energy(0.69)], type_="regular")
+    shown = price(connector("A", "R"), contactless, app)
+    # The price shown for the connector is still the pay-at-the-charger one...
+    assert shown.text == "92.4p per kWh including VAT"
+    # ...but the label is the lowest price any listed tariff gives.
+    assert (shown.lowest, shown.lowest_vat, shown.lowest_varies) == (Decimal("0.828"), True, False)
+    assert shown.label == "82.8p"
+
+
+def test_the_label_says_from_when_the_lowest_price_applies_only_at_some_times():
+    night = tariff("N", [energy(0.25, start_time="00:00", end_time="07:00"), energy(0.5)])
+    assert price(connector("N"), night).label == "from 30p"
+    # Another tariff that always charges that price means it is not only at some times.
+    flat = tariff("F", [energy(0.25)])
+    assert price(connector("N", "F"), night, flat).label == "30p"
+    # A price per kWh only at night, and by the hour otherwise, is "from" too.
+    hourly = tariff(
+        "H",
+        [
+            energy(0.25, start_time="00:00", end_time="07:00"),
+            {"price_components": [component("time", 3.0, 20)]},
+        ],
+    )
+    assert price(connector("H"), hourly).label == "from 30p"
+
+
+def test_a_connector_whose_price_is_unknown_has_no_label():
+    # Its pay-at-the-charger tariff is in euros, so it shows "Price unknown"; a label from
+    # its other tariff would sit on a point marked "?".
+    euro = tariff("E", currency="EUR", type_="ad_hoc_payment")
+    app = tariff("R", [energy(0.40)], type_="regular")
+    shown = price(connector("E", "R"), euro, app)
+    assert shown.state == "unknown" and shown.label is None
+
+
+def test_the_lowest_figure_wins_whether_or_not_its_vat_is_stated():
+    stated = tariff("S", [energy(0.50)])
+    unstated = tariff("U", [energy(0.30, vat=None)])
+    # 30p plus any VAT is still below 60p, so the price including VAT is not the cheapest.
+    # VAT is never added: the label says the published figure excludes it.
+    assert price(connector("S", "U"), stated, unstated).label == "30p excl. VAT"
+    assert price(connector("U"), unstated).label == "30p excl. VAT"
+    # On a tie the price including VAT is used.
+    same = tariff("V", [energy(0.25)])
+    assert price(connector("V", "U"), same, unstated).label == "30p"
+    assert price(connector("U", "V"), unstated, same).label == "30p"
+
+
+def test_a_price_that_would_show_as_0p_gives_no_label():
+    tiny = tariff("T", [energy(0.0004, vat=None)])
+    assert price(connector("T"), tiny).label is None
+
+
+def test_a_tariff_free_per_kwh_at_some_times_or_free_altogether_means_no_label():
+    # 0p at night is cheaper than anything else listed, and "0p" would read as free.
+    night_free = tariff("C", [energy(0, start_time="00:00", end_time="07:00"), energy(0.50)])
+    day = tariff("D", [energy(0.55)], type_="regular")
+    shown = price(connector("C", "D"), night_free, day)
+    assert shown.state == "priced" and shown.label is None
+    # A free tariff next to a priced one, on a connector that is not confirmed free.
+    free = tariff("F", [{"price_components": [component("energy", 0), component("flat", 0)]}])
+    paid = tariff("P", [energy(0.50)], type_="ad_hoc_payment")
+    shown = price(connector("P", "F"), paid, free)
+    assert shown.state == "priced" and shown.label is None
+
+
+def test_ties_are_judged_on_the_tenth_of_a_penny_the_label_shows():
+    stated = tariff("S", [energy(0.40975)])  # 49.17p including VAT
+    unstated = tariff("U", [energy(0.4916, vat=None)])
+    shown = price(connector("S", "U"), stated, unstated)
+    assert (shown.lowest, shown.lowest_vat, shown.label) == (Decimal("0.492"), True, "49.2p")
+    night = tariff("N", [energy(0.40972, start_time="00:00", end_time="07:00"), energy(0.5)])
+    assert price(connector("N", "S"), night, stated).label == "49.2p"
+
+
+def test_tariffs_outside_their_validity_dates_give_no_label():
+    # The fixture tariffs were fetched in October 2026.
+    ended = tariff("OLD", [energy(0.30)], end_date_time="2026-01-01T00:00:00Z")
+    future = tariff("NEW", [energy(0.25)], start_date_time="2030-01-01T00:00:00Z")
+    current = tariff("NOW", [energy(0.40)], start_date_time="2026-01-01T00:00:00Z")
+    assert price(connector("OLD", "NEW", "NOW"), ended, future, current).label == "48p"
+
+
+def test_no_label_from_a_zero_price_unknown_price_or_another_currency():
+    zero_energy = tariff(
+        "Z", [{"price_components": [component("energy", 0, 20), component("time", 2.0, 20)]}]
+    )
+    euro = tariff("E", currency="EUR")
+    for listed in (zero_energy, euro):
+        assert price(connector(listed.id.rsplit(":", 1)[1]), listed).label is None
+    assert price(connector("GONE")).label is None
+    # A priced tariff next to one of those still gives the label.
+    assert price(connector("Z", "T1"), zero_energy, tariff("T1")).label == "48p"
+
+
+def test_free_only_for_a_confirmed_free_connector():
+    free = tariff("F", [{"price_components": [component("energy", 0), component("flat", 0)]}])
+    assert price(connector("F"), free).label == "Free"
+    # Free cannot be confirmed when another listed tariff could not be read.
+    assert price(connector("F", "GONE"), free).label is None
+
+
+def test_a_withheld_zero_price_tariff_gives_no_label():
+    zero = _zero()
+    shown = price_connector(
+        connector("Z"),
+        {zero.id: zero},
+        location_id="L",
+        evse_uid="E",
+        withheld=frozenset({zero.id}),
+    )
+    assert shown.text == "Price unknown" and shown.label is None
+    # A priced tariff next to it still gives the label: the withheld one is left out.
+    paid = tariff("P", [energy(0.40)])
+    shown = price_connector(
+        connector("Z", "P"),
+        {zero.id: zero, paid.id: paid},
+        location_id="L",
+        evse_uid="E",
+        withheld=frozenset({zero.id}),
+    )
+    assert shown.label == "48p"
+
+
+# VAT the owner decided to add where a feed gives none (vat_not_stated)
+
+
+def test_vat_is_added_only_to_tariffs_from_an_operator_with_the_decision():
+    night = tariff("N", [energy(0.325, vat=None)])
+    named = connector("N")
+    added = price_connector(
+        named, {night.id: night}, location_id="L", evse_uid="E", added_vat={"example": 20}
+    )
+    assert (added.label, added.lowest_vat, added.includes_vat) == ("39p", True, True)
+    assert added.energy_low == Decimal("0.39")
+    assert "added by this project" in added.text
+    # Another operator's decision never changes this operator's prices.
+    other = price_connector(
+        named, {night.id: night}, location_id="L", evse_uid="E", added_vat={"sister": 20}
+    )
+    assert (other.label, other.includes_vat) == ("32.5p excl. VAT", False)
+
+
+def test_a_related_operators_tariff_follows_its_own_operators_decision():
+    named = uuid_like(3)
+    location = site(connector(named))
+    sister = feed_tariff(
+        "sister", named, elements=[{"price_components": [component("energy", 0.5)]}]
+    )
+    found = related_tariffs([location], [], {"sister": [sister]})
+    (shown,) = price_locations([location], [], found, added_vat={"sister": 20})
+    assert shown.label == "60p"
+    (unchanged,) = price_locations([location], [], found, added_vat={"example": 20})
+    assert unchanged.label == "50p excl. VAT"
+    options = site_tariffs(location, found, added_vat={"sister": 20}).options
+    assert [(o.energy_low, o.includes_vat) for o in options] == [(Decimal("0.60"), True)]
