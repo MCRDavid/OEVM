@@ -1,0 +1,74 @@
+# yaml-language-server: $schema=schema.json
+id: wattstop
+display_name: WattStop
+ocpi_country_code: unknown
+ocpi_party_id: unknown
+adapter: unknown
+base_url: unknown
+endpoints: {}
+auth:
+  method: unknown
+  name: null
+  secret_name: null
+rate_limit:
+  min_seconds_between_requests: 31
+  limits: []
+  limits_checked: unknown
+  notes: >-
+    No feed found yet. WattStop is run by Fuuse, whose open data host (api.fuuse.io) asks
+    for 30 seconds between requests, so any feed found there would use the same 31 second
+    gap as Arnold Clark Charge and ScottishPower Recharge.
+supports_single_location: unknown
+cors: unknown
+attribution: null
+licence: null
+engagement:
+  status: no_public_feed_found
+  evidence:
+    - date: 2026-10-17
+      url: https://www.wattstop.co.uk/charge-point-owners
+      note: >-
+        WattStop's page for charge point owners lists "Open data feed" under legal compliance
+        and calls WattStop "a UK-based virtual charge point operator (CPO)". Neither this
+        page nor the rest of WattStop's site links a feed.
+  log:
+    - date: 2026-10-17
+      action: feed_searched
+      summary: >-
+        WattStop's home page, its page for charge point owners, its driver terms and its
+        sitemap were read, and no open data feed or route for requesting open data was found.
+      quote: >-
+        WattStop is a UK-based virtual charge point operator (CPO) and your one-stop solution
+        for maximising the potential of your EV chargers.
+      evidence_url: https://www.wattstop.co.uk/charge-point-owners
+access_requested: null
+access_granted: null
+sources:
+  - url: https://www.wattstop.co.uk/
+    note: >-
+      WattStop's home page (read 2026-10-17). Its footer says "Wattstop is a trading name of
+      Fuuse Limited". No open data link.
+  - url: https://www.wattstop.co.uk/charge-point-owners
+    note: >-
+      WattStop's page for charge point owners (read 2026-10-17). Lists "Open data feed" as a
+      legal requirement it covers. No link to a feed.
+  - url: https://www.wattstop.co.uk/sitemap.xml
+    note: >-
+      WattStop's sitemap (read 2026-10-17). Lists six pages; none is an open data page.
+  - url: https://www.edinburgh.gov.uk/electricvehicles
+    note: >-
+      The City of Edinburgh Council's electric vehicles page (read 2026-10-17) says its
+      public charging points are "moving to the WattStop network - provided by Fuuse".
+  - url: https://support.fuuse.io/hc/en-gb/articles/4696535102239-Open-Data-Access-ODA-Links-Overview
+    note: >-
+      Fuuse's help article "Open Data Access (ODA) Links - Overview" (updated 2026-09-07,
+      read 2026-10-17). Each Fuuse customer has a "Location Data Link" and a "Tariff Data
+      Link" and is expected to publish them on its own website; "Fuuse has no obligation
+      to provide ODA data to members of the public".
+findings: []
+notes: >-
+  A network run by Fuuse. The City of Edinburgh Council's public chargers moved to it from
+  ChargePlace Scotland in 2026. No open data feed was found on WattStop's own website on
+  2026-10-17. A written request could ask WattStop where the open data feed its page
+  mentions is published.
+enabled: false
