@@ -414,7 +414,9 @@ merged into `main` is deployed without copying code by hand.
     - `"state"`: `"registered"` once Tesla has connected, `"handshake_in_progress"` while Tesla
       is connecting, or `"ended"` if Tesla ended the connection;
     - `"last_contact"`: when Tesla last called each address, with which kind of token
-      (`"setup"` is the connection token), in which form, and whether it sent request IDs. Your
+      (`"setup"` is the connection token, `"retired"` a connection token already used and
+      `"peer"` the token the Worker gave Tesla), in which form, and whether it sent request
+      IDs. Your
       own check in step 9 with the connection token shows here too, as `"GET /ocpi/versions"`
       with `"who": "setup"`, `"form": "plain"` and `"request_ids": false`, at the time you ran
       it (times are in UTC), until Tesla calls that address. So only entries dated after you
@@ -425,7 +427,7 @@ merged into `main` is deployed without copying code by hand.
       or ran out of time (the message says why), `3002` that Tesla offers no version 2.2.1,
       `3003` that it offers no locations, and `3000` an unexpected error in the Worker;
     - `"handouts"`: how many times the Worker has handed Tesla's token to anyone with the pull
-      token (your own checks count too).
+      token (once Tesla has connected, your own checks count too).
 
     As soon as it says `"registered"`, delete `OCPI_TOKEN_A` in **Settings > Variables and
     Secrets**. For 10 minutes after Tesla first registers with it, and until Tesla uses the new

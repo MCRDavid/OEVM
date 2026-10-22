@@ -103,10 +103,11 @@ OCPI conformance and for security, on 17 October 2026.
   been registered yet" for PUT, "... if the client has not been registered before" for
   DELETE), each with an `Allow` header. Unknown tokens get HTTP 401 with `WWW-Authenticate:
   Token`, and so does a request with no usable `Authorization` header, before any 405. The
-  one exception: a method other than GET or HEAD on versions or details answers 405 without
-  the object being asked whether a token in a usable form is known, so such stray requests
-  use no Durable Object requests. A body that is not JSON gets HTTP 400; one over 16 KB, or a
-  Credentials object the Worker cannot use, gets OCPI status 2001. Every OCPI answer uses the
+  one exception: a method other than GET or HEAD on versions or details answers 405 once its
+  token is in a usable form, without asking the object whether that token is known, so such
+  stray requests use no Durable Object requests. A body that is not JSON gets HTTP 400, and one
+  over 16 KB, or a Credentials object the Worker cannot use, HTTP 200; all three carry OCPI
+  status 2001. Every OCPI answer uses the
   OCPI response envelope and returns the caller's `X-Request-ID` and `X-Correlation-ID` (or
   new ones if it sent none). The `Authorization: Token` header is accepted Base64 encoded
   (padded or not, standard or URL-safe), as OCPI 2.2.1 asks, or plain, as its own note says

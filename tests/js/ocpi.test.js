@@ -1822,6 +1822,40 @@ test("an overtaken handshake stops without calling again or writing", async () =
   assert.equal(record().token_c_sha256, await sha256Hex(second.data.token));
 });
 
+// The flag cannot lapse within the budget, so the record is changed by hand here, as if another
+// handshake held the flag, to check each guard on its own.
+test("a handshake whose flag is taken within its budget stops before its next call and before saving", async () => {
+  let t = setup();
+  const held = gatedPeer();
+  let first = post();
+  await until(() => calls.length === 1);
+  const taken = { handshake: { id: "another-handshake", kind: "register", started_at: t.clock.now } };
+  rewrite(taken);
+  let after = stored();
+  held.open();
+  let answer = await read(await first);
+  assert.equal(answer.status_message, STOPPED);
+  assert.equal(calls.length, 1, "no call after the flag was taken");
+  assert.equal(stored(), after);
+
+  t = setup();
+  const details = gate();
+  peer({
+    details: async () => {
+      await details.promise;
+      return detailsAnswer();
+    },
+  });
+  first = post();
+  await until(() => calls.length === 2);
+  rewrite({ handshake: { ...taken.handshake, started_at: t.clock.now } });
+  after = stored();
+  details.open();
+  answer = await read(await first);
+  assert.equal(answer.status_message, STOPPED);
+  assert.equal(stored(), after, "nothing saved after the flag was taken");
+});
+
 test("DELETE during a renewal is refused", async () => {
   setup();
   const { tokenC } = await register();
