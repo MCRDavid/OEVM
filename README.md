@@ -57,9 +57,11 @@ Also in place:
   than an operator's published limit. Tests check both.
 - **Prices in pounds and pence only.** Tariffs in other currencies show as "Price unknown"
   and are never converted.
-- **Price labels on the map:** each point shows the cheapest price per kWh a visitor can
-  pay there, from the operator's app or account, paying at the charger, or a charging
-  plan they ticked, for the connectors their filters allow (ADR 0026).
+- **Price labels on the map:** when zoomed in, points show the lowest published price per
+  kWh a visitor can pay there, from the operator's app or account, paying at the
+  charger, or a ticked plan with a fixed price including VAT, for the connectors their
+  filters allow. Labels that would overlap are left out, lowest figures first, and the
+  list shows the same label for every charger (ADR 0026).
 
 The rules the site follows for privacy and cookies are in
 [docs/PRIVACY_AND_COOKIES.md](docs/PRIVACY_AND_COOKIES.md), and the notice is published

@@ -532,6 +532,24 @@ def test_the_label_says_from_when_the_lowest_price_applies_only_at_some_times():
     # Another tariff that always charges that price means it is not only at some times.
     flat = tariff("F", [energy(0.25)])
     assert price(connector("N", "F"), night, flat).label == "30p"
+    # A price per kWh only at night, and by the hour otherwise, is "from" too.
+    hourly = tariff(
+        "H",
+        [
+            energy(0.25, start_time="00:00", end_time="07:00"),
+            {"price_components": [component("time", 3.0, 20)]},
+        ],
+    )
+    assert price(connector("H"), hourly).label == "from 30p"
+
+
+def test_a_connector_whose_price_is_unknown_has_no_label():
+    # Its pay-at-the-charger tariff is in euros, so it shows "Price unknown"; a label from
+    # its other tariff would sit on a point marked "?".
+    euro = tariff("E", currency="EUR", type_="ad_hoc_payment")
+    app = tariff("R", [energy(0.40)], type_="regular")
+    shown = price(connector("E", "R"), euro, app)
+    assert shown.state == "unknown" and shown.label is None
 
 
 def test_the_lowest_figure_wins_whether_or_not_its_vat_is_stated():
@@ -611,3 +629,13 @@ def test_a_withheld_zero_price_tariff_gives_no_label():
         withheld=frozenset({zero.id}),
     )
     assert shown.text == "Price unknown" and shown.label is None
+    # A priced tariff next to it still gives the label: the withheld one is left out.
+    paid = tariff("P", [energy(0.40)])
+    shown = price_connector(
+        connector("Z", "P"),
+        {zero.id: zero, paid.id: paid},
+        location_id="L",
+        evse_uid="E",
+        withheld=frozenset({zero.id}),
+    )
+    assert shown.label == "48p"

@@ -44,6 +44,7 @@ from pipeline.pricing import (
     UNSTATED_KIND,
     comparison,
     describe_tariff,
+    energy_always,
     energy_range,
     map_label,
     pence,
@@ -107,13 +108,14 @@ def _as_shown(amount: Decimal) -> Decimal:
 def lowest_energy(tariffs: list[Tariff]) -> tuple[Decimal, bool, bool] | None:
     """The lowest price per kWh that any of these tariffs gives, to the tenth of a penny,
     whether it includes VAT, and whether it applies only in some cases (every tariff giving
-    it charges more per kWh at other times, speeds or amounts), for the label above a
-    point on the map (ADR 0026). Only priced GBP tariffs within their validity dates count.
-    A tariff that charges nothing per kWh at all (only by time or per session) is left
-    out. When a tariff is free, or free per kWh only at some times, there is no label,
-    because "0p" reads as free and only free_confirmed is ever called free. The lowest
-    figure wins whether or not its VAT is stated: VAT is never added, and a higher price
-    including VAT could be the dearer one. On a tie, the price including VAT is used."""
+    it charges more per kWh, or not per kWh, at other times, speeds or amounts), for the
+    label above a point on the map (ADR 0026). Only priced GBP tariffs within their
+    validity dates count. A tariff that charges nothing per kWh at all (only by time or
+    per session) is left out. When a tariff is free, or free per kWh only at some times,
+    there is no label, because "0p" reads as free and only free_confirmed is ever called
+    free. The lowest figure wins whether or not its VAT is stated: VAT is never added, and
+    a higher price including VAT could be the dearer one. On a tie, the price including
+    VAT is used."""
     ranges = []
     for tariff in tariffs:
         if not _in_force(tariff):
@@ -127,13 +129,13 @@ def lowest_energy(tariffs: list[Tariff]) -> tuple[Decimal, bool, bool] | None:
         if low == 0 and high > 0:
             return None
         if low > 0:
-            ranges.append((low, high, vat))
+            ranges.append((low, vat, high != low or not energy_always(tariff)))
     if not ranges:
         return None
     low = min(r[0] for r in ranges)
     at_low = [r for r in ranges if r[0] == low]
-    with_vat = any(r[2] for r in at_low)
-    varies = all(r[1] != low for r in at_low if r[2] == with_vat)
+    with_vat = any(r[1] for r in at_low)
+    varies = all(r[2] for r in at_low if r[1] == with_vat)
     return low, with_vat, varies
 
 
@@ -208,7 +210,6 @@ def price_connector(
                 reason="Some listed tariffs could not be read, so free cannot be confirmed.",
                 tariff_ids=ids,
                 unresolved_ids=unresolved,
-                **lowest,
             )
         return ConnectorPrice(
             **where, state="free_confirmed", text="Free", tariff_ids=ids, **energy, **lowest
@@ -223,7 +224,6 @@ def price_connector(
             reason=shown[0].reason,
             tariff_ids=ids,
             unresolved_ids=unresolved,
-            **lowest,
         )
     texts = list(dict.fromkeys(d.text for d in priced))
     text = texts[0] if len(texts) == 1 else f"{len(texts)} tariffs: " + " | ".join(texts)

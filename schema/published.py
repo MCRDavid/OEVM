@@ -51,11 +51,13 @@ class ConnectorSummary(_Model):
     low: float | None = Field(
         default=None,
         ge=0,
-        description="Pence per kWh: the lowest energy price that any tariff the connector "
-        "lists gives (the operator's app or account as well as paying at the charger), for "
-        "the label on the map (ADR 0026), to the tenth of a penny. Including VAT when lvat "
-        "is true. Null when there is no such price above 0p, or a listed tariff is free per "
-        "kWh at some times.",
+        description="Pence per kWh: the lowest energy price, to the tenth of a penny, that "
+        "the tariffs the connector lists give (the operator's app or account as well as "
+        "paying at the charger), for the label on the map (ADR 0026). Including VAT when "
+        "lvat is true. Tariffs that charge nothing per kWh at all, tariffs named in "
+        "zero_price_tariffs and tariffs outside their own dates are left out. Null when no "
+        "price above 0p is left, or when a tariff left in is free, or free per kWh only at "
+        "some times.",
     )
     lvat: bool | None = Field(
         default=None, description="Whether low includes VAT; null when low is null."

@@ -50,7 +50,8 @@ they already have, and for a calculator showing when a paid plan pays for itself
   subscription (OCPI 2.2.1 has no field for it), so the split applies to plans only.
 - **Price labels on the map (amended 17 October 2026, at the owner's request).** A plan
   the visitor ticked can also give the label above a charger's point on the map, when it
-  has a fixed price including VAT that is lower than the operator's own (ADR 0026).
+  has a fixed price including VAT and no lower price is published there; on a full tie
+  the operator's own price is kept (ADR 0026).
 
 ## Needs testing
 

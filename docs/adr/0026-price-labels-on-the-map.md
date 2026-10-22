@@ -28,15 +28,19 @@ otherwise through a free app or paying at the charger by contactless card.
   left out, because it is not priced per kWh. When a connector that is not confirmed free
   lists a free tariff, or one that is free per kWh only at some times, it has no label:
   its lowest price per kWh is 0p, which a label could not say. Tariffs the owner named in
-  zero_price_tariffs (ADR 0022) give no label.
+  zero_price_tariffs (ADR 0022) are left out. A connector whose price is unknown (drawn
+  with "?") has no label, even if another of its tariffs can be read.
 - **The lowest figure, with its VAT basis.** A price whose VAT is not stated is marked
   "excl. VAT" (char.gy and Clenergy publish no VAT) and VAT is never added. The lowest
   figure wins whether or not its VAT is stated, because a higher price including VAT
   could be the dearer one: 30p plus any VAT is still less than 60p. Prices are compared
   to the tenth of a penny the label shows. On a tie, a price including VAT comes first,
-  then a price that applies all the time. A price that applies only in some cases (at
-  some times, or at some speeds or amounts of energy, as the tariff's restrictions say)
-  is marked "from", for example "from 32.5p excl. VAT" for char.gy's weekday night price.
+  then a price that applies all the time. A price that applies only in some cases (the
+  tariff charges more per kWh, or not per kWh, at other times, speeds or amounts of
+  energy) is marked "from", for example "from 32.5p excl. VAT" for char.gy's weekday
+  night price. The details add that a price whose VAT is not stated may be higher:
+  char.gy's own page gives that night price as 39p (providers/chargy.yaml, checked 9
+  October 2026), which is 32.5p plus 20%.
 - **Plans count only once ticked.** A plan from `providers/` counts at a location only
   when the visitor ticked it under "Your charging plans", its provider publishes a fixed
   price including VAT, and it names the location's network. Plans nobody ticked are left
@@ -45,7 +49,8 @@ otherwise through a free app or paying at the charger by contactless card.
   some times (`only_at_some_times` in its provider file, such as off-peak plans) is
   marked "from". A plan is compared like any other price including VAT; on a full tie
   the operator's own price is kept, as it needs no plan. A label from a plan is drawn in
-  amber and the list and details say "with your plan".
+  amber with a thicker edge, so it is not told apart by colour alone, and the list and
+  details say "with your plan".
 - **Labels follow the filters.** Only connectors that match the power, connector, price
   and status filters count, so a rapid charger is never labelled with a slow connector's
   price. No label shows a price above the "Maximum price per kWh" filter; a price whose
@@ -59,13 +64,20 @@ otherwise through a free app or paying at the charger by contactless card.
   (`plan_label`). The browser only picks one. The map file grows by about 17%
   before compression (7% gzipped, measured on the fixtures).
 - **Readable at a glance.** Labels appear from zoom 11 (about a town). Where labels would
-  overlap, the cheapest are placed first and the others left out; a label never covers
-  a numbered circle's count, and the letters in the points are drawn over the labels.
-  Grouped points (numbered circles) have no label. Pressing a label opens its own
-  charger, even where it lies over a neighbouring point. The list shows the same label
+  overlap, the lowest figures are placed first and the others left out (the key says
+  "lowest figures", as a price whose VAT is not stated may be higher); a label never
+  covers a numbered circle's count, and the letters in the points are drawn over the
+  labels. Grouped points (numbered circles) have no label. Pressing a label opens its own
+  charger, even where it lies over a neighbouring point, except on that point's letter.
+  The text of a point out of service keeps full contrast; only its box fades. The list
+  shows the same label
   for each charger, so the information does not depend on seeing the map. Where a
   browser hands back made-up pixels from a canvas (Tor Browser, for example), labels are
-  drawn with a halo instead of a box.
+  drawn with a halo instead of a box, amber for a plan.
+- **Files kept from before this change.** A kept copy of an operator's files (up to 7
+  days, when its fetch fails) written before this change has no labels until the
+  operator's next good fetch. No published plan names a network yet, so no plan label
+  can show at such a site meanwhile.
 
 ## Needs testing
 

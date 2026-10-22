@@ -124,8 +124,9 @@ test("only ticked plans with a fixed price including VAT count, the lowest per n
 });
 
 test("no label shows a price above the visitor's maximum price per kWh", () => {
-  // Both have no highest price including VAT (ppk), so the filter itself lets them through.
-  const appOnly = { ...unknown, low: 82.8, lvat: true, lt: "82.8p" };
+  // Neither has a highest price including VAT (ppk): the pay-at-the-charger price states
+  // no VAT. So the filter itself lets them through.
+  const appOnly = { ...noVat, low: 82.8, lvat: true, lvar: false, lt: "82.8p" };
   assert.equal(priceLabel(site(appOnly), { ...defaults(), maxp: 50 }), null);
   assert.equal(priceLabel(site(noVat), { ...defaults(), maxp: 30 }), null);
   // A price whose VAT is not stated at the limit or under it can still be shown.

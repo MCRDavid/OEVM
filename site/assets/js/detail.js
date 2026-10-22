@@ -406,13 +406,20 @@ export function mapLabelLine(detail, label, filtered = false) {
     }
     source = `, the lowest price per kWh listed here${which}${from}`;
   }
+  // A confirmed free tariff has no other charges, so the note about them is left off.
+  const notes = [
+    label.low !== null && label.lvat === false
+      ? "The operator does not say whether VAT is added to this price, so it may be higher."
+      : null,
+    label.low === null ? null : fees,
+  ].filter(Boolean);
   return h(
     "p",
     { className: "map-label" },
     "Cheapest here: ",
     h("span", { className: `price-tag${label.plan ? " with-plan" : ""}`, text: label.text }),
     `${source}. `,
-    h("span", { className: "hint", text: fees }),
+    notes.length ? h("span", { className: "hint", text: notes.join(" ") }) : null,
   );
 }
 

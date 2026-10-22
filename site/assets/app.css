@@ -481,6 +481,7 @@ button.status-chip {
 }
 
 .price-tag.with-plan {
+  border-width: 2px;
   background: var(--tag-plan);
 }
 

@@ -22,8 +22,9 @@ const FONT = ["Noto Sans Regular"];
 // town, where they can be read. Below that there are too many points for labels to help.
 const LABEL_MIN_ZOOM = 11;
 // The rounded box behind each price label: white with a dark edge, or dark with a light
-// edge in dark mode, and amber when the price comes from a plan the visitor ticked. Text
-// on each meets 4.5:1 contrast.
+// edge in dark mode, and amber with a thicker edge when the price comes from a plan the
+// visitor ticked, so it is not told apart by colour alone. Text on each meets 4.5:1
+// contrast, and stays at full strength on the faded boxes of points out of service.
 const PILLS = {
   light: { fill: "#ffffff", edge: "#24323f", plan: "#ffe08a", text: "#1b1b1b" },
   dark: { fill: "#20252a", edge: "#e8eaed", plan: "#6b4a00", text: "#f4f6f8" },
@@ -546,8 +547,9 @@ async function startMap() {
     const zoom = await app.map.getSource("chargers").getClusterExpansionZoom(cluster.properties.cluster_id);
     app.map.easeTo({ center: cluster.geometry.coordinates, zoom, duration: reducedMotion ? 0 : 500 });
   });
-  // A price label opens its own charger, even where it lies over a neighbouring point:
-  // MapLibre gives the feature drawn on top first.
+  // A price label opens its own charger, even where it lies over a neighbouring point
+  // (but not on that point's letter, which is drawn over it): MapLibre gives the feature
+  // drawn on top first.
   app.map.on("click", CHARGER_TARGETS, (event) => openDetail(event.features[0].properties.key, app.map.getCanvas()));
   for (const layers of [["clusters"], CHARGER_TARGETS]) {
     app.map.on("mouseenter", layers, () => (app.map.getCanvas().style.cursor = "pointer"));
@@ -632,18 +634,19 @@ function addChargerLayers() {
 // Returns null where the browser cannot draw it; the labels then show without a box.
 const PILL = { size: 24, radius: 7, ratio: 2 };
 
-function pillImage(fill, edge) {
+function pillImage(fill, edge, width) {
   const { size, radius, ratio } = PILL;
   const canvas = document.createElement("canvas");
   canvas.width = canvas.height = size * ratio;
   const context = canvas.getContext("2d");
   if (!context?.roundRect) return null;
   context.scale(ratio, ratio);
+  const inset = width / 2 + 0.25;
   context.beginPath();
-  context.roundRect(1, 1, size - 2, size - 2, radius);
+  context.roundRect(inset, inset, size - 2 * inset, size - 2 * inset, radius);
   context.fillStyle = fill;
   context.fill();
-  context.lineWidth = 1.5;
+  context.lineWidth = width;
   context.strokeStyle = edge;
   context.stroke();
   let image;
@@ -672,12 +675,12 @@ function addPillImages(colours) {
     content: [radius * ratio, (radius / 2) * ratio, (size - radius) * ratio, (size - radius / 2) * ratio],
   };
   let added = true;
-  for (const [id, fill] of [
-    ["price-pill", colours.fill],
-    ["price-pill-plan", colours.plan],
+  for (const [id, fill, width] of [
+    ["price-pill", colours.fill, 1.5],
+    ["price-pill-plan", colours.plan, 3],
   ]) {
     if (app.map.hasImage(id)) app.map.removeImage(id);
-    const image = pillImage(fill, colours.edge);
+    const image = pillImage(fill, colours.edge, width);
     if (image) app.map.addImage(id, image, options);
     else added = false;
   }
@@ -685,9 +688,10 @@ function addPillImages(colours) {
 }
 
 // The cheapest price the visitor can pay at each point, in a box above it (labels.js).
-// Where labels would overlap, the cheapest are placed first (symbol-sort-key), and the
-// others are left out. The layer sits under the letters in the circles, so a letter stays
-// readable where a label reaches a neighbouring point; numbered circles keep labels off.
+// Where labels would overlap, the lowest figures are placed first (symbol-sort-key), and
+// the others are left out. The layer sits under the letters in the circles, so a letter
+// stays readable where a label reaches a neighbouring point; numbered circles keep labels
+// off.
 function addPriceLabels(faded) {
   const colours = PILLS[effectiveTheme()];
   const boxed = addPillImages(colours);
@@ -715,9 +719,13 @@ function addPriceLabels(faded) {
     },
     paint: {
       "text-color": colours.text,
-      "text-opacity": faded(1),
       "icon-opacity": faded(1),
-      ...(boxed ? {} : { "text-halo-color": colours.fill, "text-halo-width": 2 }),
+      ...(boxed
+        ? {}
+        : {
+            "text-halo-color": ["case", ["get", "labplan"], colours.plan, colours.fill],
+            "text-halo-width": 2,
+          }),
     },
   });
 }

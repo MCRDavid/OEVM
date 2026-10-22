@@ -195,6 +195,12 @@ def energy_range(tariff: Tariff) -> tuple[Decimal, Decimal, bool] | None:
     return min(energy), max(energy), vat_stated
 
 
+def energy_always(tariff: Tariff) -> bool:
+    """Whether the tariff gives a price per kWh whatever the time, speed or amount: an
+    element with no conditions has one."""
+    return any(not when for _, when in _reachable(_charging_elements(tariff), "energy"))
+
+
 ZERO_PRICE_WITHHELD = (
     "Every price in this tariff is zero, but the repository owner decided not to show it as "
     "free (zero_price_tariffs in the operator file)."

@@ -384,6 +384,36 @@ def test_each_kind_of_connector_is_listed_once_with_its_power_and_price(results,
         assert {c["max_kw"] for c in connectors} == {c["kw"] for c in properties["cons"]}
 
 
+def test_connectors_alike_but_for_their_lowest_price_are_both_listed(results):
+    location = next(
+        loc
+        for result in results
+        for loc in result.locations
+        if sum(len(e.connectors) for e in loc.evses) >= 2
+    ).model_copy(deep=True)
+    connectors = [(e, c) for e in location.evses for c in e.connectors]
+    for _, c in connectors:  # the same kind of connector everywhere
+        c.standard, c.max_kw = "IEC_62196_T2_COMBO", 50.0
+    prices = [
+        ConnectorPrice(
+            location_id=location.id,
+            evse_uid=evse.uid,
+            connector_id=c.id,
+            state="priced",
+            text="",
+            energy_low=Decimal("0.924"),
+            energy_high=Decimal("0.924"),
+            includes_vat=True,
+            # Only the first also lists the operator's cheaper app tariff.
+            lowest=Decimal("0.828") if i == 0 else Decimal("0.924"),
+            lowest_vat=True,
+        )
+        for i, (evse, c) in enumerate(connectors)
+    ]
+    properties = publish.map_properties(location, prices, "0" * 16)
+    assert sorted(c.lt for c in properties.cons) == ["82.8p", "92.4p"]
+
+
 def test_connectors_reported_out_of_service_are_marked(results, tmp_path):
     seen = set()
     for properties, detail in _layer_and_details(results, tmp_path):
