@@ -1,0 +1,38 @@
+name: Monta token check (one-off)
+
+# Temporary. Runs once on this branch to see whether the project's Monta token reads Monta's
+# UK open data feed, printing counts only, then is removed before the branch is merged.
+
+on:
+  push:
+    branches: [claude/project-thread-yma71t]
+    paths: [.github/workflows/monta-check.yml, .github/scripts/monta_check.py]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: monta-check
+  cancel-in-progress: false
+
+jobs:
+  check:
+    name: Count Monta's open data with the project's token
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+
+      - uses: astral-sh/setup-uv@v7
+
+      - name: Install dependencies from the lock file
+        run: uv sync --locked
+
+      - name: Count what the feed returns (counts and codes only)
+        env:
+          MONTA_CLIENT_ID: ${{ secrets.MONTA_CLIENT_ID }}
+          MONTA_CLIENT_SECRET: ${{ secrets.MONTA_CLIENT_SECRET }}
+          PYTHONPATH: ${{ github.workspace }}
+        run: uv run python .github/scripts/monta_check.py
