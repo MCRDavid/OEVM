@@ -1,0 +1,59 @@
+# yaml-language-server: $schema=schema.json
+id: electroad
+display_name: ElectRoad
+ocpi_country_code: unknown
+ocpi_party_id: unknown
+adapter: unknown
+base_url: unknown
+endpoints: {}
+auth:
+  method: unknown
+  name: null
+  secret_name: null
+rate_limit:
+  min_seconds_between_requests: 2
+  limits: []
+  limits_checked: unknown
+  notes: null
+supports_single_location: unknown
+cors: unknown
+attribution: null
+licence: null
+engagement:
+  status: no_public_feed_found
+  evidence:
+    - date: 2026-10-22
+      url: https://electroad.uk/
+      note: >-
+        ElectRoad's website lists pages for drivers, site hosts, counties, a blog, contact
+        and privacy, and none of them is an open data page or a route for requesting open
+        data. The site has no sitemap.
+  log:
+    - date: 2026-10-22
+      action: feed_searched
+      summary: >-
+        ElectRoad's website and its list of pages were read, and no open data feed or route
+        for requesting open data was found.
+      quote: >-
+        Independent EV charging network providing fast, reliable public EV charging across
+        Norfolk and Suffolk.
+      evidence_url: https://electroad.uk/
+access_requested: null
+access_granted: null
+sources:
+  - url: https://electroad.uk/
+    note: >-
+      ElectRoad's website (read 2026-10-22). Describes "500+ charge points at forecourts,
+      farm shops and retail sites" and names Norfolk County Council, North Norfolk District
+      Council and South Norfolk Council. Its pages include Norfolk, Suffolk, Norwich, Essex
+      and Cambridgeshire.
+  - url: https://www.southnorfolkandbroadland.gov.uk/roads-and-parking/sustainable-ev-driving/electric-charging-points
+    note: >-
+      South Norfolk and Broadland councils' charging page (read 2026-10-22): "South Norfolk
+      Networks has now transferred to ElectRoad as the CPO provider."
+findings: []
+notes: >-
+  An independent charge point network in Norfolk and Suffolk, including council car parks.
+  No open data route was found on its own site on 2026-10-22; a written request through its
+  contact page is the next step.
+enabled: false

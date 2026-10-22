@@ -1,0 +1,63 @@
+# yaml-language-server: $schema=schema.json
+id: amey_ev_charging
+display_name: Amey EV Charging
+ocpi_country_code: unknown
+ocpi_party_id: unknown
+adapter: unknown
+base_url: unknown
+endpoints: {}
+auth:
+  method: unknown
+  name: null
+  secret_name: null
+rate_limit:
+  min_seconds_between_requests: 31
+  limits: []
+  limits_checked: unknown
+  notes: >-
+    No feed found yet. Amey's network runs on Fuuse, whose open data host (api.fuuse.io) asks
+    for 30 seconds between requests, so any feed found there would use the same 31 second
+    gap as Arnold Clark Charge and ScottishPower Recharge.
+supports_single_location: unknown
+cors: unknown
+attribution: null
+licence: null
+engagement:
+  status: no_public_feed_found
+  evidence:
+    - date: 2026-10-22
+      url: https://evc.amey.co.uk/charging
+      note: >-
+        Amey's EV charging page, its sitemap and its charging terms have no open data page,
+        feed link or route for requesting open data.
+  log:
+    - date: 2026-10-22
+      action: feed_searched
+      summary: >-
+        Amey's EV charging page, its sitemap and its charging terms were read, and no open
+        data feed or route for requesting open data was found.
+      quote: >-
+        Driving change nationwide, our journey begins in Trafford and the city of Manchester.
+      evidence_url: https://evc.amey.co.uk/charging
+access_requested: null
+access_granted: null
+sources:
+  - url: https://evc.amey.co.uk/charging
+    note: >-
+      Amey's EV charging page (read 2026-10-22). Says Amey is installing charge points in
+      Trafford and Manchester, paid by card or the Amey EVC app.
+  - url: https://evc.amey.co.uk/terms?hsLang=en-gb
+    note: >-
+      Amey's charging terms (read 2026-10-22). Name Amey Highways Limited and say the app,
+      customer accounts and point of sale system are run by Fuuse.
+  - url: https://support.fuuse.io/hc/en-gb/articles/4696535102239-Open-Data-Access-ODA-Links-Overview
+    note: >-
+      Fuuse's help article on Open Data Access links (read 2026-10-17, recorded in
+      wattstop.yaml). Each Fuuse customer is expected to publish its own location and tariff
+      data links on its own website.
+findings: []
+notes: >-
+  Amey's public charging network, starting in Trafford and Manchester, on Fuuse's back
+  office. Like other Fuuse customers it would publish its own open data links; none were
+  found on 2026-10-22.
+enabled: false

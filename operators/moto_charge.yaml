@@ -1,0 +1,60 @@
+# yaml-language-server: $schema=schema.json
+id: moto_charge
+display_name: Moto Charge
+ocpi_country_code: unknown
+ocpi_party_id: unknown
+adapter: unknown
+base_url: unknown
+endpoints: {}
+auth:
+  method: unknown
+  name: null
+  secret_name: null
+rate_limit:
+  min_seconds_between_requests: 2
+  limits: []
+  limits_checked: unknown
+  notes: null
+supports_single_location: unknown
+cors: unknown
+attribution: null
+licence: null
+engagement:
+  status: no_public_feed_found
+  evidence:
+    - date: 2026-10-22
+      url: https://moto-way.com/moto-charge/
+      note: >-
+        Moto's Moto Charge page, its terms for Moto Charge charging services and its page
+        sitemap have no open data page or route for requesting open data.
+  log:
+    - date: 2026-10-22
+      action: feed_searched
+      summary: >-
+        Moto's Moto Charge page, its Moto Charge terms and its page sitemap were read, and no
+        open data feed or route for requesting open data was found.
+      quote: Charge your car with the newest EV charging brand on the motorway.
+      evidence_url: https://moto-way.com/moto-charge/
+access_requested: null
+access_granted: null
+sources:
+  - url: https://moto-way.com/moto-charge/
+    note: >-
+      Moto's Moto Charge page (read 2026-10-22). Describes its own 400kW capable charging
+      bays at Moto services.
+  - url: https://moto-way.com/2025/12/moto-charge-has-arrived-at-toddington-north/
+    note: >-
+      Moto's news post on Moto Charge at Toddington North, listed in its post sitemap on
+      2026-10-22 (not read). Later posts in the sitemap cover Reading East, Tamworth and
+      Doncaster North.
+  - url: https://moto-way.com/terms-and-conditions-for-use-of-moto-charge-ev-charging-services/
+    note: Moto Charge's terms for charging services (read 2026-10-22). No open data section.
+  - url: https://moto-way.com/page-sitemap.xml
+    note: Moto's page sitemap (read 2026-10-22). No open data page.
+findings: []
+notes: >-
+  Moto's own charging network at its motorway services; its first news post about it is
+  dated December 2025. Other
+  operators' chargers at Moto services, such as GRIDSERVE's, are separate networks. No open
+  data route was found on Moto's site on 2026-10-22.
+enabled: false

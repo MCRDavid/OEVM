@@ -16,6 +16,7 @@ from tests.test_security_files import PUBLISHED_FEED_ADDRESSES, PUBLISHED_RECORD
 OPERATORS_DIR = Path(__file__).resolve().parent.parent / "operators"
 SEED_IDS = {
     "allego",
+    "amey_ev_charging",
     "apcoa",
     "applegreen_electric",
     "arnold_clark_charge",
@@ -33,14 +34,20 @@ SEED_IDS = {
     "community_by_shell_recharge",
     "connected_kerb",
     "connekt",
+    "e_on_drive",
     "electric_blue",
+    "electroad",
     "elmtronics",
     "enfield_council",
+    "esb_ecars",
     "esb_energy",
+    "ev_point",
     "ev_smart",
+    "evology_charging",
     "evolt",
     "evyve",
     "ez_charge",
+    "ezo",
     "fastned",
     "first_charge",
     "for_ev",
@@ -56,11 +63,14 @@ SEED_IDS = {
     "jolt",
     "liberty_charge",
     "lidl",
+    "maxol",
     "mer_uk",
     "mfg_ev_power",
+    "moto_charge",
     "ncp",
     "osprey",
     "parkrecharge",
+    "plug_charging",
     "plug_n_go",
     "pod",
     "pogo_charge",
@@ -83,6 +93,7 @@ SEED_IDS = {
     "wenea",
     "west_suffolk_council",
     "yourparkingspace",
+    "zapgo",
     "zest",
 }
 UUID_LIKE = re.compile(r"[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}", re.I)
@@ -158,7 +169,7 @@ def test_operator_files_contain_no_key_like_values():
 
 def test_cli_validate_succeeds_on_seed_registry(capsys):
     assert registry.main(["--validate"]) == 0
-    assert "Operator registry is valid: 69 operators" in capsys.readouterr().out
+    assert "Operator registry is valid: 80 operators" in capsys.readouterr().out
 
 
 def test_cli_without_validate_prints_help(capsys):

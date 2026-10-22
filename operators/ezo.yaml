@@ -1,0 +1,88 @@
+# yaml-language-server: $schema=schema.json
+id: ezo
+display_name: EZO
+ocpi_country_code: unknown
+ocpi_party_id: unknown
+adapter: unknown
+base_url: unknown
+endpoints: {}
+auth:
+  method: unknown
+  name: null
+  secret_name: null
+rate_limit:
+  min_seconds_between_requests: 2
+  limits: []
+  limits_checked: unknown
+  notes: null
+supports_single_location: unknown
+cors: unknown
+attribution: null
+licence: null
+engagement:
+  status: key_on_request
+  evidence:
+    - date: 2026-10-22
+      url: https://ezo.co.uk/regulations-compliance/
+      note: >-
+        EZO's "Regulations & Compliance" page has a "PCPR Data Requests" section linking a
+        Google form that asks for an email address, name, organisation and planned use of the
+        data. The form says requests are shared with Eco-Movement and names no licence, terms,
+        key or rate limit.
+  log:
+    - date: 2026-10-22
+      action: page_checked
+      summary: >-
+        EZO's "Regulations & Compliance" page and the "PCPR Data Request - EZO" Google form it
+        links were read, not submitted; the form says the request will be shared with
+        Eco-Movement and an answer will come within 5 working days.
+      quote: >-
+        To request data, simply complete the PCPR Data Request form and our team will review
+        your submission before providing the information.
+      evidence_url: https://ezo.co.uk/regulations-compliance/
+access_requested: null
+access_granted: null
+sources:
+  - url: https://ezo.co.uk/
+    note: >-
+      EZO's home page (read 2026-10-22). It says EZO is "The new name for EasyGo", a network
+      in Ireland since 2018. No open data link on the home page.
+  - url: https://ezo.co.uk/terms-and-conditions/
+    note: >-
+      EZO's terms and conditions (effective 19 August 2025, read 2026-10-22): "We operate as a
+      CPO (Charge Point Operator) of the EZO Charging Network across Ireland and Northern
+      Ireland." These are terms for drivers and say nothing about open data.
+  - url: https://scotlandchargers.ezo.co.uk/ezo-scotland-ev-charging-roadmap
+    note: >-
+      EZO's "North of Scotland" roadmap page (read 2026-10-22): "As part of our 20 year
+      partnership with Aberdeen City, Aberdeenshire, Highland and Moray councils, EZO is
+      delivering a major expansion of public EV charging infrastructure across the North of
+      Scotland", with "over 880 new chargers" planned.
+  - url: https://ezo.co.uk/news/rapid-ev-charger-for-brand-new-lidl-store-in-belfast/
+    note: >-
+      EZO's news post (under its former name EasyGo, read 2026-10-22) on its first DC charger
+      in Northern Ireland, at a Lidl store in Belfast.
+  - url: https://ezo.co.uk/regulations-compliance/
+    note: >-
+      EZO's "Regulations & Compliance" page (read 2026-10-22). Its "PCPR Data Requests"
+      section links the request form.
+  - url: https://docs.google.com/forms/d/e/1FAIpQLSepF9L_17D1xBib2vG3KTekh95PFWQQhr6QTA9E9T87pjr4dQ/viewform
+    note: >-
+      The "PCPR Data Request - EZO" Google form (read 2026-10-22, not submitted): "Request data
+      on the location, status, and properties of EZO's stations in the United Kingdom, in
+      accordance with the UK Public Charge Point Regulations." Its disclaimer says "Your
+      request will be shared with Eco-Movement".
+  - url: https://chargeplacescotland.org/charger-network-updates-across-scotland/
+    note: >-
+      ChargePlace Scotland's table of charge points moving to new back offices (last updated
+      5 October 2026, read 2026-10-22). It lists Aberdeen City, Aberdeenshire, Moray and The
+      Highland councils as moving to EZO.
+findings: []
+notes: >-
+  Formerly EasyGo. Runs public chargers in Northern Ireland and, from 2026, takes over and
+  expands the public networks of four councils in the north of Scotland that are leaving
+  ChargePlace Scotland. Access could be requested through the "PCPR Data Request" form on
+  EZO's "Regulations & Compliance" page. Requests are passed to Eco-Movement, so the
+  eco_movement_pcpr adapter may apply once access is given, but the form does not say how
+  the data is delivered; this needs testing.
+enabled: false
