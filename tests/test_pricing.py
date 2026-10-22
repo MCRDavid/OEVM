@@ -119,7 +119,10 @@ def test_minimum_charge_is_shown_after_the_vat_note():
 # VAT the owner decided to add where a feed gives none (vat_not_stated, ADR 0003 as
 # amended on 22 October 2026)
 
-ADDED = "including VAT, with VAT at 20% added by this project where the operator's feed does not state it"
+ADDED = (
+    "including VAT, with VAT at 20% added by this project where the operator's feed does not "
+    "state it"
+)
 
 
 def test_vat_is_added_at_the_owners_rate_and_the_price_says_so():

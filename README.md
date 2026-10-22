@@ -76,7 +76,8 @@ on the site at `privacy/` from the same file.
 - A charger is only ever shown as free when the tariff its connector names says every
   price is zero: the operator's own, or a related operator's where the owner has recorded
   that decision (ADR 0020). A missing tariff means "Price unknown"; missing VAT means "excluding VAT,
-  VAT not stated".
+  VAT not stated", unless the owner has recorded that an operator's prices exclude VAT: then
+  VAT is added at the recorded rate and the price says so (ADR 0003).
 - No secrets in the repository and no personal data.
 - Status pages use neutral, dated, evidenced wording.
 - Unknown facts are written as "unknown" or "needs_testing", never guessed.

@@ -13,10 +13,11 @@
 // Only connectors that match the visitor's filters count, so a rapid charger's label is
 // never a slow connector's price, and no price above the visitor's maximum price per kWh
 // is shown (a price whose VAT is not stated could only be higher with VAT). Free comes
-// first, then the lowest figure, whether or not its VAT is stated: VAT is never added,
-// and a higher price including VAT could be the dearer one. On a tie, a price including
-// VAT comes before one whose VAT is not stated, and a price that applies all the time
-// before one that applies only in some cases.
+// first, then the lowest figure, whether or not its VAT is stated: the pipeline adds VAT
+// only where the owner decided so for an operator (vat_not_stated), and a higher price
+// including VAT could be the dearer one. On a tie, a price including VAT comes before one
+// whose VAT is not stated, and a price that applies all the time before one that applies
+// only in some cases.
 
 import { connectorMatches } from "./filters.js";
 

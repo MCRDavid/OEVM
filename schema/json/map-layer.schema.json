@@ -45,7 +45,7 @@
             }
           ],
           "default": null,
-          "description": "Pence per kWh including VAT: the highest energy price that can apply. Null when the tariff states no VAT or gives no energy price.",
+          "description": "Pence per kWh including VAT: the highest energy price that can apply, with VAT added at the rate in the operator file's vat_not_stated where the feed gives none. Null when the tariff states no VAT and no such decision is recorded, or gives no energy price.",
           "title": "Ppk"
         },
         "out": {
@@ -77,7 +77,7 @@
             }
           ],
           "default": null,
-          "description": "Whether low includes VAT; null when low is null.",
+          "description": "Whether low includes VAT, including VAT added by the owner's vat_not_stated decision; null when low is null.",
           "title": "Lvat"
         },
         "lvar": {

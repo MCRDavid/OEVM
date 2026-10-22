@@ -1063,9 +1063,10 @@ def test_the_list_shows_the_cheapest_price_for_the_connectors_the_filters_allow(
     expect(dumbarton).to_contain_text("Cheapest here: 82.8p")
     expect(dumbarton).to_contain_text("Energy 92.4p per kWh including VAT")
     expect(_item(page, "Premier Inn Alnwick")).to_contain_text("Cheapest here: 57.6p")
-    expect(_item(page, "141 - 143 Seaford Road")).to_contain_text(
-        "Cheapest here: from 32.5p excl. VAT"
-    )
+    # char.gy's feed gives 32.5p with no VAT; the owner decided to add 20% (vat_not_stated).
+    seaford = _item(page, "141 - 143 Seaford Road")
+    expect(seaford).to_contain_text("Cheapest here: from 39p")
+    expect(seaford).not_to_contain_text("excl. VAT")
     expect(_item(page, "Atlantic Quay")).to_contain_text("Cheapest here: Free")
     expect(_item(page, "Glengarry")).not_to_contain_text("Cheapest here")
     # With rapid chargers only, the 7 kW connector's price no longer counts.

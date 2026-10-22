@@ -40,8 +40,10 @@ class ConnectorSummary(_Model):
     ppk: float | None = Field(
         default=None,
         ge=0,
-        description="Pence per kWh including VAT: the highest energy price that can apply. "
-        "Null when the tariff states no VAT or gives no energy price.",
+        description="Pence per kWh including VAT: the highest energy price that can apply, "
+        "with VAT added at the rate in the operator file's vat_not_stated where the feed "
+        "gives none. Null when the tariff states no VAT and no such decision is recorded, "
+        "or gives no energy price.",
     )
     out: bool = Field(
         description="True when the operator reported this connector's charge point as out of "
@@ -60,7 +62,9 @@ class ConnectorSummary(_Model):
         "some times.",
     )
     lvat: bool | None = Field(
-        default=None, description="Whether low includes VAT; null when low is null."
+        default=None,
+        description="Whether low includes VAT, including VAT added by the owner's "
+        "vat_not_stated decision; null when low is null.",
     )
     lvar: bool | None = Field(
         default=None,

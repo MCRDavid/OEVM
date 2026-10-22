@@ -64,6 +64,30 @@ Date: 2026-10-07. Status: accepted.
   "excluding VAT, VAT not stated". Sums use exact decimal arithmetic, so half pennies
   round up. Reservation fees are not shown as charging prices.
 
+### Amendment, 22 October 2026: VAT added where a feed gives none
+
+- The owner asked for every price on the map to include VAT, so prices can be compared.
+  OCPI 2.2.1 reads a price with no VAT rate as having no VAT, but VAT on public charging
+  in the UK is at the standard rate of 20%. In the daily run of 22 October 2026, 10 of the
+  12 operators fetched gave a rate on their prices; char.gy and Clenergy EV gave none.
+- char.gy's own pricing page gives each price 20% above its feed (39p against 32.5p).
+  Clenergy EV's website gives no charging prices, but 120 of the 126 prices per kWh in
+  its feed come to a whole penny, to within 0.02p, once 20% is added (0.4167 becomes 50p);
+  only 23 are whole pence as published. That reading is inferred and needs confirming.
+- So the owner's decision is recorded per operator in `vat_not_stated` (decided, basis,
+  evidence and `add_percent`). Where it is recorded, `pipeline/pricing.py` adds that rate
+  to every price component that gives no VAT rate; a component with its own rate keeps
+  it. The price says "including VAT, with VAT at 20% added by this project where the
+  operator's feed does not state it", and a minimum charge has the rate added too. A
+  tariff follows the decision of the operator whose feed published it, so a related
+  operator's tariff (ADR 0020) follows its own file. The tariffs are published unchanged.
+- Without a decision nothing changes: such prices are shown as published and marked
+  "excluding VAT, VAT not stated". Only the owner adds a decision.
+- The transparency page shows each decision in the operator's row, dated findings in
+  both operator files, and a "VAT in prices" section on what was seen across operators.
+- A last good copy kept from before the decision (ADR 0018) keeps its prices until the
+  operator's next good fetch.
+
 ## Security
 
 - `SECURITY.md` asks for private reports through GitHub's private vulnerability

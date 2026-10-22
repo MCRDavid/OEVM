@@ -1,6 +1,6 @@
 # 0026: Price labels on the map
 
-Date: 2026-10-17. Status: proposed.
+Date: 2026-10-17, VAT added 2026-10-22. Status: proposed.
 
 The owner asked for the price of each charger to be shown above its point on the map, so
 people can see the cheapest place to charge nearby without opening every charger: the
@@ -30,17 +30,18 @@ otherwise through a free app or paying at the charger by contactless card.
   its lowest price per kWh is 0p, which a label could not say. Tariffs the owner named in
   zero_price_tariffs (ADR 0022) are left out. A connector whose price is unknown (drawn
   with "?") has no label, even if another of its tariffs can be read.
-- **The lowest figure, with its VAT basis.** A price whose VAT is not stated is marked
-  "excl. VAT" (char.gy and Clenergy publish no VAT) and VAT is never added. The lowest
-  figure wins whether or not its VAT is stated, because a higher price including VAT
-  could be the dearer one: 30p plus any VAT is still less than 60p. Prices are compared
-  to the tenth of a penny the label shows. On a tie, a price including VAT comes first,
-  then a price that applies all the time. A price that applies only in some cases (the
-  tariff charges more per kWh, or not per kWh, at other times, speeds or amounts of
-  energy) is marked "from", for example "from 32.5p excl. VAT" for char.gy's weekday
-  night price. The details add that a price whose VAT is not stated may be higher:
-  char.gy's own page gives that night price as 39p (providers/chargy.yaml, checked 9
-  October 2026), which is 32.5p plus 20%.
+- **The lowest figure, with its VAT basis.** Labels use the same prices as the details,
+  so where the owner has recorded vat_not_stated for an operator (char.gy and Clenergy
+  EV since 22 October 2026, ADR 0003), VAT at 20% is already added and the label is a
+  price including VAT: char.gy's weekday night price is "from 39p", which is what its
+  own page gives, not the feed's 32.5p. A price whose VAT is not stated and that no
+  decision covers is marked "excl. VAT", and the details add that it may be higher. The
+  lowest figure wins whether or not its VAT is stated, because a higher price including
+  VAT could be the dearer one: 30p plus any VAT is still less than 60p. Prices are
+  compared to the tenth of a penny the label shows. On a tie, a price including VAT
+  comes first, then a price that applies all the time. A price that applies only in
+  some cases (the tariff charges more per kWh, or not per kWh, at other times, speeds
+  or amounts of energy) is marked "from".
 - **Plans count only once ticked.** A plan from `providers/` counts at a location only
   when the visitor ticked it under "Your charging plans", its provider publishes a fixed
   price including VAT, and it names the location's network. Plans nobody ticked are left
@@ -54,7 +55,8 @@ otherwise through a free app or paying at the charger by contactless card.
 - **Labels follow the filters.** Only connectors that match the power, connector, price
   and status filters count, so a rapid charger is never labelled with a slow connector's
   price. No label shows a price above the "Maximum price per kWh" filter; a price whose
-  VAT is not stated is held to it as published, since VAT could only raise it. The line
+  VAT is not stated and not added is held to it as published, since VAT could only raise
+  it. The line
   in a site's details ("Cheapest here") says which tariff gives the price, and how it is
   paid for, only where every listed tariff giving that price agrees, and follows filter
   changes while the details are open.

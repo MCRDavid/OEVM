@@ -62,6 +62,8 @@ decisions are in docs/adr/.
 ## Prices and rate limits
 - Show prices only through pipeline/pricing.py: pounds and pence, GBP tariffs only. Never convert
   currencies; other currencies show as "Price unknown".
+- Add VAT to a price whose feed gives no VAT rate only where the operator file records the
+  owner's decision in vat_not_stated, at its rate, saying so in the price (ADR 0003); never add one yourself.
 - Never go below 1 second between requests to a host, or below any limit in an operator's
   rate_limit.limits plus a 1 second margin. Record each published limit with its publisher, an
   exact quote, source URL and date; tests enforce these rules. Never run two fetches that use the same host in parallel.
