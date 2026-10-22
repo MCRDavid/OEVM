@@ -35,6 +35,13 @@ engagement:
         Charge My Street's home page and charge page were read and its sitemap address was
         tried, and no open data feed or route for requesting open data was found.
       evidence_url: https://chargemystreet.co.uk/
+    - date: 2026-10-17
+      action: feed_searched
+      summary: >-
+        Charge My Street's home page was read again and no open data feed was found. Fuuse's
+        case study says Fuuse has run Charge My Street's network from the start; Fuuse
+        customers each have location and tariff data links to publish.
+      evidence_url: https://fuuse.io/charge-my-street
 access_requested: null
 access_granted: null
 sources:
@@ -44,10 +51,18 @@ sources:
       links Fuuse's driver terms; no open data link.
   - url: https://chargemystreet.co.uk/charge
     note: Charge My Street's charge page (read 2026-10-10). No open data link.
+  - url: https://fuuse.io/charge-my-street
+    note: >-
+      Fuuse's Charge My Street case study (read 2026-10-17): "Fuuse have been powering
+      Charge My Street's network from the very beginning."
+  - url: https://support.fuuse.io/hc/en-gb/articles/4696535102239-Open-Data-Access-ODA-Links-Overview
+    note: >-
+      Fuuse's help article "Open Data Access (ODA) Links - Overview" (updated 2026-09-07,
+      read 2026-10-17). Each Fuuse customer has a "Location Data Link" and a "Tariff Data
+      Link" and is expected to publish them on its own website.
 findings: []
 notes: >-
   No open data feed or request route was found on Charge My Street's own website on
-  2026-10-10. Its site names Fuuse as its partnered app; whether Fuuse hosts a feed for this
-  network is unknown. A written request could ask where its open data under regulation 10 is
-  published.
+  2026-10-10 or 2026-10-17. Its network runs on Fuuse, which gives each customer location and
+  tariff data links to publish, so a written request could ask where those are published.
 enabled: false
