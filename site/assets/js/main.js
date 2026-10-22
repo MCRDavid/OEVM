@@ -18,9 +18,6 @@ const CHARGER_LAYERS = ["clusters", "points", "price-labels", "cluster-count", "
 // What a press on the map opens a charger's details from.
 const CHARGER_TARGETS = ["points", "price-labels", "point-labels"];
 const FONT = ["Noto Sans Regular"];
-// Price labels above the points (labels.js, ADR 0026) appear from about the zoom of a
-// town, where they can be read. Below that there are too many points for labels to help.
-const LABEL_MIN_ZOOM = 11;
 // The rounded box behind each price label: white with a dark edge, or dark with a light
 // edge in dark mode, and amber with a thicker edge when the price comes from a plan the
 // visitor ticked, so it is not told apart by colour alone. Text on each meets 4.5:1
@@ -687,11 +684,11 @@ function addPillImages(colours) {
   return added;
 }
 
-// The cheapest price the visitor can pay at each point, in a box above it (labels.js).
-// Where labels would overlap, the lowest figures are placed first (symbol-sort-key), and
-// the others are left out. The layer sits under the letters in the circles, so a letter
-// stays readable where a label reaches a neighbouring point; numbered circles keep labels
-// off.
+// The cheapest price the visitor can pay at each point, in a box above it (labels.js),
+// at any zoom, on every point that is not grouped into a numbered circle. Where labels
+// would overlap, the lowest figures are placed first (symbol-sort-key), and the others
+// are left out. The layer sits under the letters in the circles, so a letter stays
+// readable where a label reaches a neighbouring point; numbered circles keep labels off.
 function addPriceLabels(faded) {
   const colours = PILLS[effectiveTheme()];
   const boxed = addPillImages(colours);
@@ -699,7 +696,6 @@ function addPriceLabels(faded) {
     id: "price-labels",
     type: "symbol",
     source: "chargers",
-    minzoom: LABEL_MIN_ZOOM,
     filter: ["all", ["!", ["has", "point_count"]], ["has", "lab"]],
     layout: {
       "text-field": ["get", "lab"],

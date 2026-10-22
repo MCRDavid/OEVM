@@ -65,7 +65,9 @@ otherwise through a free app or paying at the charger by contactless card.
   worded by `pipeline/pricing.py` (`map_label`); plans in `data/plans.json` carry `label`
   (`plan_label`). The browser only picks one. The map file grows by about 17%
   before compression (7% gzipped, measured on the fixtures).
-- **Readable at a glance.** Labels appear from zoom 11 (about a town). Where labels would
+- **Readable at a glance.** Labels appear at any zoom on every point that is not grouped
+  into a numbered circle, as the owner asked on 22 October 2026 (until then they appeared
+  only from zoom 11, about a town, which meant zooming in far). Where labels would
   overlap, the lowest figures are placed first and the others left out (the key says
   "lowest figures", as a price whose VAT is not stated may be higher); a label never
   covers a numbered circle's count, and the letters in the points are drawn over the

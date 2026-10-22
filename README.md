@@ -57,7 +57,7 @@ Also in place:
   than an operator's published limit. Tests check both.
 - **Prices in pounds and pence only.** Tariffs in other currencies show as "Price unknown"
   and are never converted.
-- **Price labels on the map:** when zoomed in, points show the lowest published price per
+- **Price labels on the map:** points not grouped into a numbered circle show, at any zoom, the lowest published price per
   kWh a visitor can pay there, from the operator's app or account, paying at the
   charger, or a ticked plan with a fixed price including VAT, for the connectors their
   filters allow. Labels that would overlap are left out, lowest figures first, and the

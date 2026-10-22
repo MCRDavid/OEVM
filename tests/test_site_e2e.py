@@ -913,11 +913,21 @@ COUNT_CLUSTER_PIXELS = """async (src) => {
   canvas.height = img.height;
   const context = canvas.getContext("2d");
   context.drawImage(img, 0, 0);
-  const data = context.getImageData(0, 0, img.width, img.height).data;
-  let count = 0;
+  const { width, height } = canvas;
+  const data = context.getImageData(0, 0, width, height).data;
   const near = (value, target) => Math.abs(value - target) < 6;
-  for (let i = 0; i < data.length; i += 4) {
-    if (near(data[i], 0x24) && near(data[i + 1], 0x32) && near(data[i + 2], 0x3f)) count++;
+  const is = (x, y) => {
+    if (x < 0 || y < 0 || x >= width || y >= height) return false;
+    const i = (y * width + x) * 4;
+    return near(data[i], 0x24) && near(data[i + 1], 0x32) && near(data[i + 2], 0x3f);
+  };
+  // Only pixels well inside a filled shape count, so a thin outline in the same colour,
+  // such as a price label's edge, does not.
+  let count = 0;
+  for (let y = 0; y < height; y++) {
+    for (let x = 0; x < width; x++) {
+      if (is(x, y) && is(x - 3, y) && is(x + 3, y) && is(x, y - 3) && is(x, y + 3)) count++;
+    }
   }
   return count;
 }"""
@@ -1175,7 +1185,7 @@ def test_a_ticked_plan_with_a_lower_price_labels_the_map_and_the_list(visit):
         "Cheapest here: 39p with your plan Cheap plan from Test (£4.99 a month)"
     )
     page.keyboard.press("Escape")
-    # Labels are left off below about the zoom of a town.
+    # A point not grouped into a numbered circle keeps its label at any zoom.
     page.evaluate("window.location.hash = '#9/55.957027/-4.560159'")
-    wait_for_amber(page, False)
+    wait_for_amber(page, True)
     assert v.errors == [] and v.outside == []
