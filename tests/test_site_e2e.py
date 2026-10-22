@@ -1175,7 +1175,10 @@ def test_a_ticked_plan_with_a_lower_price_labels_the_map_and_the_list(visit):
         "Cheapest here: 39p with your plan Cheap plan from Test (£4.99 a month)"
     )
     page.keyboard.press("Escape")
-    # Labels are left off below about the zoom of a town.
+    # A point not grouped into a numbered circle keeps its label at any zoom...
     page.evaluate("window.location.hash = '#9/55.957027/-4.560159'")
+    wait_for_amber(page, True)
+    # ...and a point grouped with Glasgow's into a numbered circle has none.
+    page.evaluate("window.location.hash = '#6/55.957027/-4.560159'")
     wait_for_amber(page, False)
     assert v.errors == [] and v.outside == []
