@@ -61,6 +61,9 @@ map. Sites outside the UK are left off.
   (9 October 2026). The map shows prices in pounds only.
 - char.gy gives no VAT figure (7 October 2026). OCPI 2.2.1 reads a missing VAT figure as no VAT
   applying, but the map marks these prices "excluding VAT, VAT not stated" rather than assume.
+  Update, 22 October 2026: Clenergy EV gives none either, and the map now adds VAT at 20% to both
+  networks' prices by the owner's decision; see [the post on prices and
+  VAT](findings/prices-and-vat/).
 
 ## Not quite OCPI 2.2.1
 
