@@ -129,6 +129,8 @@ def main() -> int:
                 "evse_status",
                 "connector_standard",
                 "power_type",
+                "party_id_of_active_locations",
+                "year_last_updated_of_evses_not_removed",
             )
         }
         totals = Counter()
@@ -172,14 +174,26 @@ def main() -> int:
                     k: clean(v, 40) for k, v in response.headers.items() if "ratelimit" in k.lower()
                 }
             else:
-                params = dict(base, after=after)
-                response = send(
-                    client,
-                    "GET",
-                    f"{API}/open-data/locations",
-                    params=params,
-                    headers={"Authorization": f"Bearer {token}"},
-                )
+                # Run 2 got HTTP 500 at page 17. Retry that page once after 30 seconds,
+                # then once with 10 per page, before giving up.
+                for attempt, size in enumerate((None, None, "10")):
+                    if attempt == 1:
+                        time.sleep(30)
+                    params = dict(base, after=after)
+                    if size:
+                        params["per_page"] = size
+                    response = send(
+                        client,
+                        "GET",
+                        f"{API}/open-data/locations",
+                        params=params,
+                        headers={"Authorization": f"Bearer {token}"},
+                    )
+                    if response.status_code == 200:
+                        if attempt:
+                            totals[f"pages_that_worked_on_try_{attempt + 1}"] += 1
+                        break
+                    totals[f"http_{response.status_code}_answers"] += 1
             if response.status_code != 200:
                 summary["stopped_at_page"] = pages + 1
                 summary["stop_http_status"] = response.status_code
@@ -205,6 +219,10 @@ def main() -> int:
         summary["totals"] = dict(sorted(totals.items()))
         summary["distinct_operator_names"] = len(operators)
         summary["locations_whose_operator_is_Monta_ApS"] = operators.get("monta aps", 0)
+        # Operator names are businesses' names; print only those on 5 or more locations.
+        summary["operator_names_on_5_or_more"] = {
+            clean(n, 60): c for n, c in operators.most_common() if c >= 5
+        }
         summary["counts"] = {name: dict(c.most_common()) for name, c in counts.items()}
     return report(summary, 0)
 
@@ -258,8 +276,13 @@ def count(location: object, counts: dict, totals: Counter, operators: Counter) -
     active = [e for e in evses if isinstance(e, dict) and e.get("status") != "REMOVED"]
     totals["evses"] += len(evses)
     totals["evses_not_removed"] += len(active)
+    for evse in active:
+        updated = evse.get("last_updated")
+        year = updated[:4] if isinstance(updated, str) and updated[:4].isdigit() else None
+        counts["year_last_updated_of_evses_not_removed"][code(year)] += 1
     if active:
         totals["locations_with_an_evse_not_removed"] += 1
+        counts["party_id_of_active_locations"][code(location.get("party_id"))] += 1
         if published and in_uk:
             totals["mappable_publish_true_in_uk_with_an_evse_not_removed"] += 1
             if location.get("parking_type") == "ON_DRIVEWAY":
