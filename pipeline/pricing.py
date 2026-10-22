@@ -28,8 +28,7 @@ regulations describe the price in reference data as "the price in pence per kilo
 - The label above a point on the map (ADR 0026) is the lowest price per kWh a connector's
   tariffs give, marked "from" when it applies only in some cases and "excl. VAT" when VAT
   is not stated (and not added by the owner's decision), or "Free" when the connector is
-  confirmed free. A price that would show
-  as "0p" is never a label.
+  confirmed free. A price that would show as "0p" is never a label.
 """
 
 import re
