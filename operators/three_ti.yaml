@@ -1,0 +1,75 @@
+# yaml-language-server: $schema=schema.json
+id: three_ti
+display_name: 3ti
+ocpi_country_code: unknown # The one record read carries no country_code or party_id (2026-10-23).
+ocpi_party_id: unknown
+adapter: unknown
+base_url: unknown
+endpoints: {}
+auth:
+  method: none
+  name: null
+  secret_name: null
+rate_limit:
+  min_seconds_between_requests: 31
+  limits: []
+  limits_checked: 2026-10-23
+  notes: >-
+    3ti's page states no rate limit. Its own script keeps 31 seconds between any two calls
+    to Fuuse, with the comment "its limit is ~1-2 per 30 s per IP", and Arnold Clark Charge
+    and ScottishPower Recharge use the same 31 second gap on the same host. Six sites, each
+    with a location and a tariff file, would make 12 requests a run.
+supports_single_location: unknown
+cors: unknown
+attribution: null
+licence: null
+engagement:
+  status: open_anonymous
+  evidence:
+    - date: 2026-10-23
+      url: https://3ti.co.uk/3ti-public-charge-points/
+      note: >-
+        3ti's public charge points page shows "live availability and pricing for the public
+        charge points we operate" for six sites, says "Data supplied by Fuuse", and its
+        script reads each site from api.fuuse.io/opendata/<site id>/location and /tariff.
+  log:
+    - date: 2026-10-23
+      action: page_checked
+      summary: >-
+        3ti's public charge points page was read; it reads six sites' location and tariff
+        data from Fuuse's open data host with no key.
+      evidence_url: https://3ti.co.uk/3ti-public-charge-points/
+access_requested: null
+access_granted: null
+sources:
+  - url: https://3ti.co.uk/3ti-public-charge-points/
+    note: >-
+      Read on 2026-10-23. Lists six sites with their Fuuse ids: Raigmore Hospital, Inverness
+      (c3947832-9352-41fa-96c1-831215eea8e0); Riverbridge House, Surrey
+      (4a5b700e-6a15-40f3-92cc-dcc8732a92e0); Segen, Medway
+      (6cd94287-a370-48ae-8079-a514a8ac2c7b); University of Surrey, Surrey
+      (36bd06f3-5184-4939-a7a1-4c0c1dec5583); East Staffordshire Borough Council
+      (542c7548-899e-43e8-854c-05fd0f76dc70); Salford Royal Hospital
+      (6922c10c-4f17-4929-bf7a-32c4a6075277). The site's only policy page is its privacy
+      policy.
+  - url: https://www.evroam.org.uk/id-register
+    note: >-
+      EV Roam's ID register lists 3ti Energy Hubs with operator ID GB*3TI, which is how this
+      network was found (read 2026-10-23).
+findings:
+  - date: 2026-10-23
+    kind: documentation
+    summary: >-
+      3ti publishes its data per site rather than as one feed: each of six sites has its
+      own location and tariff address on Fuuse's open data host. One request on 2026-10-23
+      to the first site's location address answered with one location, Raigmore Hospital,
+      with 12 EVSEs, the operator name "Raigmore Hospital" and no country_code or party_id.
+    handling: >-
+      Recorded, not switched on: the ocpi_221 adapter reads one location address per
+      operator. Reading several is a separate change.
+    evidence_url: https://api.fuuse.io/opendata/c3947832-9352-41fa-96c1-831215eea8e0/location
+notes: >-
+  Found through EV Roam's ID register on 2026-10-23. The page is a live status page rather
+  than a page about the regulations; it names no licence or terms for the data. The licence
+  section is filled in when the adapter can read several addresses.
+enabled: false

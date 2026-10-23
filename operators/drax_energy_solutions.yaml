@@ -1,0 +1,58 @@
+# yaml-language-server: $schema=schema.json
+id: drax_energy_solutions
+display_name: Drax Energy Solutions
+ocpi_country_code: unknown
+ocpi_party_id: unknown
+adapter: unknown
+base_url: unknown
+endpoints: {}
+auth:
+  method: unknown
+  name: null
+  secret_name: null
+rate_limit:
+  min_seconds_between_requests: 2
+  limits: []
+  limits_checked: unknown
+  notes: null
+supports_single_location: unknown
+cors: unknown
+attribution: null
+licence: null
+engagement:
+  status: key_on_request
+  evidence:
+    - date: 2026-10-23
+      url: https://energy.drax.com/drax-network-of-public-chargers/
+      note: >-
+        Drax's "Public Charge Point Regulations (PCPR) RFI Files" page offers a form to
+        request reference data for "the Drax managed Public Charge Point Network within the
+        United Kingdom" and says requests are shared with Eco-Movement.
+  log:
+    - date: 2026-10-23
+      action: page_checked
+      summary: >-
+        Drax's PCPR page was read; the form asks for a name, email address, organisation and
+        planned use of the data, and promises a reply within five working days.
+      quote: >-
+        Your request will be shared with Eco-Movement, and in submitting the email you are
+        consenting to the processing of their data for the purpose of providing you with the
+        requested information.
+      evidence_url: https://energy.drax.com/drax-network-of-public-chargers/
+access_requested: null
+access_granted: null
+sources:
+  - url: https://energy.drax.com/drax-network-of-public-chargers/
+    note: >-
+      Drax's PCPR request page, read on 2026-10-23. Names no licence, terms, key or rate
+      limit.
+  - url: https://www.evroam.org.uk/id-register
+    note: >-
+      EV Roam's ID register lists Drax Energy Solutions Limited with operator ID GB*DRX,
+      which is how this network was found (read 2026-10-23).
+findings: []
+notes: >-
+  Requests go through Eco-Movement, as for bp pulse, Shell Recharge, ubitricity, Ionity and
+  others, so the planned eco_movement_pcpr adapter (task A1 in docs/ADAPTERS_PLAN.md) would
+  read it once a token is granted.
+enabled: false

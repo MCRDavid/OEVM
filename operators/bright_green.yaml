@@ -1,0 +1,126 @@
+# yaml-language-server: $schema=schema.json
+id: bright_green
+display_name: BrightGreen
+ocpi_country_code: GB # From the feed's own country_code on 2026-10-23; it sends no party_id.
+ocpi_party_id: unknown
+adapter: ocpi_221
+base_url: unknown
+endpoints:
+  locations:
+    url: https://connect.bright.green/ocpp/locations
+    status: documented
+    note: Linked as "Locations Data" from BrightGreen's open data page (read 2026-10-23).
+  tariffs:
+    url: https://connect.bright.green/ocpp/tariffs
+    status: documented
+    note: Linked as "Tariffs Data" from BrightGreen's open data page (read 2026-10-23).
+auth:
+  method: none
+  name: null
+  secret_name: null
+rate_limit:
+  min_seconds_between_requests: 2
+  limits: []
+  limits_checked: 2026-10-23
+  notes: >-
+    BrightGreen's open data page states no rate limit, and responses carry no rate limit
+    headers. The 2 second gap is this project's own choice. Each file holds every record,
+    so a full run makes two requests (about 38 KB on 2026-10-23).
+supports_single_location: needs_testing
+cors: needs_testing
+attribution: >-
+  Contains data from BrightGreen published under the Public Charge Point Regulations 2023,
+  used in line with the Open Government Licence v3.0.
+licence:
+  name: OGL-3.0
+  url: https://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/
+  basis: >-
+    BrightGreen's open data page, headed "Public Charge Point Regulation Data", says "In
+    accordance with the UK Public Charge Point Regulations (PCPR) Open Data requirement,
+    please find reference data below" and links "Locations Data" and "Tariffs Data". It
+    states no licence or terms for the data. The site has no terms of use page: none of
+    the 25 pages in its sitemap is one, and the footer links none (read 2026-10-23).
+    Regulation 10(5) of the Public Charge Point Regulations 2023 requires the data to be
+    available without terms on its use, and DfT's guidance says "Data must be open in line
+    with the Open Government Licence". On 2026-10-10 the repository owner decided, as a
+    standing rule for operators whose data has no terms of its own, that such operators
+    can be switched on without asking again, and on 2026-10-23 asked for the new feeds
+    whose terms allow use to be switched on.
+  checked: 2026-10-23
+engagement:
+  status: open_anonymous
+  evidence:
+    - date: 2026-10-23
+      url: https://bright.green/open-data/
+      note: >-
+        Links "Locations Data" and "Tariffs Data" on connect.bright.green and states no
+        licence, terms or rate limit.
+  log:
+    - date: 2026-10-23
+      action: page_checked
+      summary: >-
+        BrightGreen's open data page and site were read; the page links two no-key files and
+        the site has no terms of use.
+      evidence_url: https://bright.green/open-data/
+access_requested: null
+access_granted: null
+sources:
+  - url: https://bright.green/open-data/
+    note: >-
+      BrightGreen's open data page, read on 2026-10-23. Gives the two links. Answers
+      automated requests normally.
+  - url: https://www.evroam.org.uk/id-register
+    note: >-
+      EV Roam's ID register lists Bright.Green Energy Limited with operator ID GB*BB1 and
+      the website bright.green, which is how this network was found (read 2026-10-23).
+findings:
+  - date: 2026-10-23
+    kind: spec_conformance
+    summary: >-
+      Locations and tariffs carry country_code GB but no party_id, which OCPI 2.2.1
+      requires.
+    handling: >-
+      Record ids use "unknown" for the party, from this file, until the operator's own data
+      gives one.
+    evidence_url: https://connect.bright.green/ocpp/locations
+  - date: 2026-10-23
+    kind: spec_conformance
+    summary: >-
+      Every EVSE status is "idle" (52 EVSEs on 2026-10-23), which is not one of the OCPI
+      2.2.1 EVSE status values.
+    handling: Shown as status unknown, as for any value outside OCPI 2.2.1.
+    evidence_url: https://connect.bright.green/ocpp/locations
+  - date: 2026-10-23
+    kind: spec_conformance
+    summary: >-
+      Tariff prices are sent as text, for example "0.59", where OCPI 2.2.1 uses a number.
+      Each states its VAT rate (20 for the GBP tariffs).
+    handling: Read as the number written. Prices include the stated VAT.
+    evidence_url: https://connect.bright.green/ocpp/tariffs
+  - date: 2026-10-23
+    kind: data_quality
+    summary: >-
+      15 locations on 2026-10-23: 13 in the UK and 2 in Slovakia, with one EUR tariff. 5 of
+      the UK locations are marked publish false. Of the rest, three ("Archived Station",
+      "Canalside Farm Stafford" and "Aston Marina", in Stafford and Stone) share the same
+      rounded coordinates, 52.81 and -2.01.
+    handling: >-
+      Locations marked publish false are not kept. The Slovak locations are left off the map,
+      and the EUR tariff shows "Price unknown". The three locations sharing coordinates are
+      kept as published.
+    evidence_url: https://connect.bright.green/ocpp/locations
+  - date: 2026-10-23
+    kind: data_quality
+    summary: >-
+      "Kiln Farm Station" has a Milton Keynes postcode (MK11 3LW) and coordinates 52.04 and
+      .82. Milton Keynes is at about longitude -0.82, west of the Greenwich meridian, so the
+      minus sign appears to be missing; as published the point is in Suffolk.
+    handling: >-
+      Shown where the feed puts it unless the repository owner decides otherwise; the
+      decision has been asked for.
+    evidence_url: https://connect.bright.green/ocpp/locations
+notes: >-
+  One location in the feed is named "EZ charge HQ" (Bicester). EZ-Charge has its own file in
+  the registry (operators/ez_charge.yaml), with no public feed found; whether BrightGreen's
+  feed covers EZ-Charge's network is not known.
+enabled: false
