@@ -326,7 +326,8 @@ def test_a_decision_on_zero_price_tariffs_is_shown(page):
     data = json.loads(transparency.outputs()[transparency.JSON_PATH])
     decisions = {op["id"]: op["zero_price_tariffs"] for op in data["operators"]}
     assert {k: (v["decided"], v["tariffs"]) for k, v in decisions.items() if v} == {
-        "scottishpower_recharge": ("2026-10-11", 1)
+        "scottishpower_recharge": ("2026-10-11", 1),
+        "urban_fox": ("2026-10-23", 8),
     }
     text = " ".join(page.split())
     assert "1 tariff whose prices are all zero, named by exact id, shows" in text

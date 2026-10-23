@@ -15,6 +15,7 @@ from tests.test_security_files import (
     PUBLISHED_FEED_ADDRESSES,
     PUBLISHED_LOCATION_IDS,
     PUBLISHED_RECORD_IDS,
+    URBAN_FOX_ZERO_TARIFFS,
 )
 
 OPERATORS_DIR = Path(__file__).resolve().parent.parent / "operators"
@@ -180,9 +181,10 @@ def test_template_is_valid_and_disabled():
 
 
 def test_operator_files_contain_no_key_like_values():
+    allowed = PUBLISHED_FEED_ADDRESSES | PUBLISHED_RECORD_IDS | PUBLISHED_LOCATION_IDS
     for path in sorted(OPERATORS_DIR.glob("*.yaml")):
         text = path.read_text(encoding="utf-8")
-        for published in PUBLISHED_FEED_ADDRESSES | PUBLISHED_RECORD_IDS | PUBLISHED_LOCATION_IDS:
+        for published in allowed | URBAN_FOX_ZERO_TARIFFS:
             text = text.replace(published, "")
         assert not UUID_LIKE.search(text), path.name
 
@@ -796,9 +798,12 @@ def test_a_named_missing_minus_sign_needs_a_uk_postcode_and_each_location_once()
             )
 
 
-def test_only_scottishpower_recharge_carries_a_zero_price_tariffs_decision():
+def test_only_scottishpower_recharge_and_urban_fox_carry_a_zero_price_tariffs_decision():
     operators = registry.load_registry(OPERATORS_DIR)
     decisions = {
         i: c.zero_price_tariffs.tariff_ids for i, c in operators.items() if c.zero_price_tariffs
     }
-    assert decisions == {"scottishpower_recharge": sorted(PUBLISHED_RECORD_IDS)}
+    assert decisions == {
+        "scottishpower_recharge": sorted(PUBLISHED_RECORD_IDS),
+        "urban_fox": sorted(URBAN_FOX_ZERO_TARIFFS),
+    }

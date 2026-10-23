@@ -2744,7 +2744,12 @@
       "nonstandard_statuses": null,
       "tariffs_from": null,
       "nonstandard_parking_restrictions": null,
-      "zero_price_tariffs": null,
+      "zero_price_tariffs": {
+        "decided": "2026-10-23",
+        "basis": "8 of the 22 tariffs give an energy price of 0.0 and no other price, and they cover 127 of the 138 locations (mostly in Newport and Plymouth) on 2026-10-23; the other tariffs charge 30p to 50p per kWh. A web search on 2026-10-23 found third-party listings giving prices of about 38p to 50p per kWh for some of these sites; they were not checked further and are not used as data. Monta's copies of these sites showed \"Price unknown\". On 2026-10-23 the repository owner decided these tariffs show \"Price unknown\" rather than \"Free\".",
+        "evidence_url": "https://api.urbanfox.network/api/opendata/tariffs",
+        "tariffs": 8
+      },
       "vat_not_stated": null,
       "vat_in_price": null,
       "own_feed_over_copies": {
@@ -2775,6 +2780,16 @@
           "kind_label": "Data quirk",
           "summary": "Every tariff price component states VAT 0 (22 tariffs on 2026-10-23), so the feed says no VAT applies. Public charging in the UK normally carries VAT at 20%; whether the prices already include it is not stated.",
           "handling": "Shown as published, with the VAT the feed states, so the prices read as the full price. Not checked against Urban Fox's app.",
+          "evidence_url": "https://api.urbanfox.network/api/opendata/tariffs",
+          "status": "open",
+          "resolved_date": null
+        },
+        {
+          "date": "2026-10-23",
+          "kind": "data_quality",
+          "kind_label": "Data quirk",
+          "summary": "8 of the 22 tariffs give an energy price of 0.0 and no other price, and 127 of the 138 locations (116 with the city Newport, 1 with Gwent, 9 in Plymouth and 1 in Brighton) name only these tariffs. The same 8 tariff ids were sent again about four hours later. As published, these sites would read as free to use.",
+          "handling": "Shown as \"Price unknown\" rather than \"Free\", by the repository owner's decision of 2026-10-23 (zero_price_tariffs above), matched by exact tariff id while their prices stay zero. The tariffs are published unchanged.",
           "evidence_url": "https://api.urbanfox.network/api/opendata/tariffs",
           "status": "open",
           "resolved_date": null

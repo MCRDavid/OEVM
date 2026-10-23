@@ -65,6 +65,26 @@ own_feed_over_copies:
   evidence_url: https://api.urbanfox.network/api/opendata/locations
   operators:
     - monta
+zero_price_tariffs:
+  decided: 2026-10-23
+  basis: >-
+    8 of the 22 tariffs give an energy price of 0.0 and no other price, and they cover 127
+    of the 138 locations (mostly in Newport and Plymouth) on 2026-10-23; the other
+    tariffs charge 30p to 50p per kWh. A web search on 2026-10-23 found third-party
+    listings giving prices of about 38p to 50p per kWh for some of these sites; they were
+    not checked further and are not used as data. Monta's copies of these sites showed
+    "Price unknown". On 2026-10-23 the repository owner decided these tariffs show "Price
+    unknown" rather than "Free".
+  evidence_url: https://api.urbanfox.network/api/opendata/tariffs
+  tariff_ids:
+    - 0ae8884b-6a09-4e85-be2f-be25d078fe76
+    - 11a3a07a-7203-4b3c-8012-09fbae3d6df9
+    - 26ce229c-f5e0-4ac1-9cdf-275b8a95961e
+    - 381fff54-3687-4aa3-b328-bfcdd76ced11
+    - 417d44eb-f56a-469d-a556-168acdce5a51
+    - 4c7f1ebc-142b-4bd9-a206-06851db03e0f
+    - 7346e3f9-4af4-45de-91ca-e9b0bec04ac0
+    - 74aa4c53-3e50-44d1-9a3b-eb3c796f72aa
 engagement:
   status: open_anonymous
   evidence:
@@ -109,6 +129,18 @@ findings:
     handling: >-
       Shown as published, with the VAT the feed states, so the prices read as the full
       price. Not checked against Urban Fox's app.
+    evidence_url: https://api.urbanfox.network/api/opendata/tariffs
+  - date: 2026-10-23
+    kind: data_quality
+    summary: >-
+      8 of the 22 tariffs give an energy price of 0.0 and no other price, and 127 of the
+      138 locations (116 with the city Newport, 1 with Gwent, 9 in Plymouth and 1 in Brighton) name
+      only these tariffs. The same 8 tariff ids were sent again about four hours later. As
+      published, these sites would read as free to use.
+    handling: >-
+      Shown as "Price unknown" rather than "Free", by the repository owner's decision of
+      2026-10-23 (zero_price_tariffs above), matched by exact tariff id while their prices
+      stay zero. The tariffs are published unchanged.
     evidence_url: https://api.urbanfox.network/api/opendata/tariffs
   - date: 2026-10-23
     kind: data_quality

@@ -10,6 +10,7 @@ from adapters.replay import ReplayTransport
 from pipeline.health import in_uk
 from pipeline.pricing import describe_tariff
 from pipeline.registry import load_registry
+from pipeline.tariffs import price_locations, withheld_free_tariffs
 
 FIXTURES = Path(__file__).parent / "fixtures" / "urban_fox"
 FEED = "https://api.urbanfox.network/api/opendata"
@@ -60,6 +61,19 @@ def test_prices_state_vat_0_and_show_as_including_vat():
         "50p per kWh including VAT",
     }
     assert all(c.vat == 0 for t in result.tariffs for e in t.elements for c in e.price_components)
+
+
+def test_tariffs_priced_at_zero_show_price_unknown_by_the_owners_decision():
+    config = load_registry()["urban_fox"]
+    result, _ = replay()
+    ids = config.zero_price_tariffs.tariff_ids
+    withheld = withheld_free_tariffs(result.tariffs, ids)
+    zero = [t for t in result.tariffs if t.price_state == "free_confirmed"]
+    assert len(zero) == 3 and {t.id for t in zero} == withheld
+    for tariff in zero:
+        assert describe_tariff(tariff, zero_price_withheld=True).text == "Price unknown"
+    prices = price_locations(result.locations, result.tariffs, {}, withheld)
+    assert "free_confirmed" not in {p.state for p in prices}
 
 
 def test_urban_fox_records_its_terms_and_its_own_feed_decision():

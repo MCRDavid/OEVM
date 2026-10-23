@@ -42,6 +42,18 @@ PUBLISHED_FEED_ADDRESSES = {
 PUBLISHED_RECORD_IDS = {
     "2bf0030b-e446-473f-96ef-76de022b87e9",
 }
+# Urban Fox's tariffs whose prices are all zero, named in zero_price_tariffs in
+# operators/urban_fox.yaml (ADR 0022).
+URBAN_FOX_ZERO_TARIFFS = {
+    "0ae8884b-6a09-4e85-be2f-be25d078fe76",
+    "11a3a07a-7203-4b3c-8012-09fbae3d6df9",
+    "26ce229c-f5e0-4ac1-9cdf-275b8a95961e",
+    "381fff54-3687-4aa3-b328-bfcdd76ced11",
+    "417d44eb-f56a-469d-a556-168acdce5a51",
+    "4c7f1ebc-142b-4bd9-a206-06851db03e0f",
+    "7346e3f9-4af4-45de-91ca-e9b0bec04ac0",
+    "74aa4c53-3e50-44d1-9a3b-eb3c796f72aa",
+}
 # Location ids an operator publishes, named in swapped_coordinates.sign_missing (ADR 0013,
 # amended 23 October 2026): Kiln Farm Station in operators/bright_green.yaml.
 PUBLISHED_LOCATION_IDS = {
@@ -53,6 +65,7 @@ KEY_LIKE_ALLOWED = {
     *PUBLISHED_FEED_ADDRESSES,
     *PUBLISHED_RECORD_IDS,
     *PUBLISHED_LOCATION_IDS,
+    *URBAN_FOX_ZERO_TARIFFS,
 }
 # RFC 9116 fields, plus CSAF and Bug-Bounty, which IANA's registry added later.
 RFC_9116_FIELDS = {
