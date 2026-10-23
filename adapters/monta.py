@@ -39,9 +39,10 @@ from schema.operator import OperatorConfig
 PAGE_SIZES = (100, 10, 1)
 # Pages that work in a row before asking for bigger pages again.
 BACK_UP_AFTER = 5
-# Requests for one run, the token request included, and sites skipped, at most. At 7
-# seconds apart, 450 requests take under an hour.
-MAX_REQUESTS = 450
+# Requests for one run, the token request included, and skips, at most. A full read took
+# 81 requests on 23 October 2026; at 7 seconds apart, 300 take 35 minutes, well inside the
+# daily fetch job's 60.
+MAX_REQUESTS = 300
 MAX_SKIPS = 30
 SERVER_ERROR = 500
 # Charge point ids are 64-bit numbers.
