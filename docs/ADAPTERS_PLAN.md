@@ -19,6 +19,7 @@ section filled in.
 | A4 | None yet | MFG on `ocpi_221`; Fastned, Believ and others once their format is known | Nothing for MFG; access for the rest | 1 |
 | A6 | Plain wrapper option for `ocpi_221` | Clenergy EV | Nothing | Built: `response_envelope: data_list` |
 | A7 | One-response option for `ocpi_221` | Mer UK | Nothing | Built: `response_envelope: by_module` |
+| A8 | Several files option for `ocpi_221` | 3ti | Nothing | Built: `more_endpoints` |
 | A5 | Basic auth for `ocpi_221` | Osprey | Osprey confirming the method and granting credentials | When credentials arrive |
 
 Operators that need no new adapter, so are not tasks here: Pod (`ocpi_221` once a token
@@ -223,6 +224,26 @@ applies, and a run makes one request.
 **Licence:** the data page states no terms. Mer's general terms and conditions grant
 personal, non-commercial use of website content, so the owner decides whether they cover
 the open data before the operator is switched on.
+
+## A8: several location and tariff files for one operator in `ocpi_221` (3ti)
+
+Added 2026-10-23.
+
+**Unlocks:** 3ti (party GB*3TI in EV Roam's register), six sites.
+
+**Feed format:** 3ti's public charge points page,
+https://3ti.co.uk/3ti-public-charge-points/, reads each site from its own pair of Fuuse
+open data files, `https://api.fuuse.io/opendata/<site id>/location` and `.../tariff`. Each
+file is a standard OCPI 2.2.1 response holding one site's records.
+
+**Change:** an operator file setting, `more_endpoints`, listing further location and
+tariff pairs after the pair in `endpoints`. The adapter reads every file in turn, adds the
+records together and keeps the URL each record came from as its source. The files share
+one host, so the host's gap applies between all of them. If any file fails, the operator's
+fetch fails as it would for a single feed, and the map keeps the last good copy.
+
+**Access:** none needed. **Rate limits:** 31 seconds between requests on Fuuse's host,
+as for Arnold Clark Charge and ScottishPower Recharge; 12 requests a run.
 
 ## Suggested order
 
