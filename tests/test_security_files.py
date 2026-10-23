@@ -36,6 +36,8 @@ PUBLISHED_FEED_ADDRESSES = {
     "https://api.fuuse.io/opendata/36bd06f3-5184-4939-a7a1-4c0c1dec5583/",
     "https://api.fuuse.io/opendata/542c7548-899e-43e8-854c-05fd0f76dc70/",
     "https://api.fuuse.io/opendata/6922c10c-4f17-4929-bf7a-32c4a6075277/",
+    # Enfield Council's Fuuse feed, as its electric vehicle charging page links it.
+    "https://api.fuuse.io/opendata/d73a73f9-d063-456c-9f25-b51765e5747f/",
 }
 # Record ids an operator publishes in its open data, named in an owner's decision in its
 # operator file (zero_price_tariffs in operators/scottishpower_recharge.yaml, ADR 0022).

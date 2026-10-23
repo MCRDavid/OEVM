@@ -1,30 +1,69 @@
 # yaml-language-server: $schema=schema.json
 id: enfield_council
 display_name: Enfield Council
-ocpi_country_code: unknown
+ocpi_country_code: unknown # The feed's records carry no country_code or party_id (2026-10-23).
 ocpi_party_id: unknown
-adapter: unknown
+adapter: ocpi_221
 base_url: unknown
-endpoints: {}
+endpoints:
+  locations:
+    url: https://api.fuuse.io/opendata/d73a73f9-d063-456c-9f25-b51765e5747f/location
+    status: documented
+    note: >-
+      Linked as location data on the council's electric vehicle charging page (read in a
+      browser on 2026-10-23). Hosted by Fuuse, the back office provider for the chargers the
+      council runs, as for Arnold Clark Charge and ScottishPower Recharge.
+  tariffs:
+    url: https://api.fuuse.io/opendata/d73a73f9-d063-456c-9f25-b51765e5747f/tariff
+    status: documented
+    note: >-
+      Linked as tariff data on the same page (read in a browser on 2026-10-23).
 auth:
-  method: unknown
+  method: none
   name: null
   secret_name: null
 rate_limit:
   min_seconds_between_requests: 31
   limits: []
-  limits_checked: unknown
+  limits_checked: 2026-10-23
   notes: >-
-    No feed read yet. The council's chargers run on Fuuse, whose open data host
-    (api.fuuse.io) asks for 30 seconds between requests, so any feed there would use the
-    same 31 second gap as Arnold Clark Charge and ScottishPower Recharge.
+    The council's page states no rate limit. The host answers quick repeat requests with
+    HTTP 429 ("The Fuuse API is currently being rate limited"), and asked for 30 seconds
+    when ScottishPower Recharge's files were recorded on 2026-10-11. The 31 second gap is
+    this project's own choice, the same as for the other operators on this host. Each
+    response holds every record, so a full run makes two requests.
 supports_single_location: unknown
-cors: unknown
-attribution: null
-licence: null
+cors: needs_testing
+attribution: >-
+  Contains data from Enfield Council published under the Public Charge Point Regulations
+  2023, used in line with the Open Government Licence v3.0.
+licence:
+  name: OGL-3.0
+  url: https://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/
+  basis: >-
+    The council's electric vehicle charging page says "In accordance with The Public Charge
+    Point Regulations 2023 the following links will provide up-to-date information for the
+    chargers supported by Fuuse and operated by the council", then links the location and
+    tariff data. Read in a browser on 2026-10-23, neither the page nor the two files state a
+    licence, terms, conditions or rate limit for the data. The council's site-wide terms of
+    use (https://www.enfield.gov.uk/terms-of-use) say "You must not use any part of the
+    content on our site for commercial purposes without obtaining a licence to do so from
+    us or our licensors"; this project is not commercial, and on 2026-10-10 the repository
+    owner decided, as a standing rule for operators whose data has no terms of its own, to
+    read general website terms as not covering the open data, which regulation 10(5)
+    requires to be available without terms on its use. DfT's guidance (updated 21 October
+    2024) says "Data must be open in line with the Open Government Licence".
+  checked: 2026-10-23
 engagement:
-  status: unknown
-  evidence: []
+  status: open_anonymous
+  evidence:
+    - date: 2026-10-23
+      url: https://www.enfield.gov.uk/services/roads-and-transport/electric-vehicle-charging
+      note: >-
+        The page links location data and tariff data on api.fuuse.io for "the chargers
+        supported by Fuuse and operated by the council", under a sentence citing the Public
+        Charge Point Regulations 2023. Read in a browser; the page answers HTTP 403 to this
+        project's automated requests.
   log:
     - date: 2026-10-17
       action: page_checked
@@ -34,13 +73,25 @@ engagement:
         page say it links location data and tariff data for the chargers it runs on Fuuse.
         It needs reading in a browser.
       evidence_url: https://www.enfield.gov.uk/services/roads-and-transport/electric-vehicle-charging
+    - date: 2026-10-23
+      action: page_checked
+      summary: >-
+        The page was read in a browser. It links location and tariff data on Fuuse's open
+        data host for the chargers the council runs on Fuuse, which need no key.
+      quote: >-
+        In accordance with The Public Charge Point Regulations 2023 the following links will
+        provide up-to-date information for the chargers supported by Fuuse and operated by
+        the council
+      evidence_url: https://www.enfield.gov.uk/services/roads-and-transport/electric-vehicle-charging
 access_requested: null
 access_granted: null
 sources:
   - url: https://www.enfield.gov.uk/services/roads-and-transport/electric-vehicle-charging
     note: >-
-      Enfield Council's electric vehicle charging page. Answered 403 to automated requests
-      on 2026-10-17. Not yet read in a browser.
+      Enfield Council's electric vehicle charging page. Answered 403 to automated requests on
+      2026-10-17; read in a browser on 2026-10-23. It names the charge point providers in the
+      borough (Ubitricity, BP Pulse, Char.gy and the chargers supported by Fuuse) and gives
+      the two data links for the Fuuse ones.
   - url: https://support.fuuse.io/hc/en-gb/articles/4696535102239-Open-Data-Access-ODA-Links-Overview
     note: >-
       Fuuse's help article "Open Data Access (ODA) Links - Overview" (updated 2026-09-07,
@@ -48,7 +99,7 @@ sources:
       Link" and is expected to publish them on its own website.
 findings: []
 notes: >-
-  Lead: the only Fuuse customer seen linking its open data, apart from Arnold Clark Charge
-  and ScottishPower Recharge. The page blocks automated reads, so the links need reading in
-  a browser before anything is recorded or fetched. Status unknown until then.
-enabled: false
+  The London Borough of Enfield runs some of the borough's public chargers itself on Fuuse's
+  platform; the others belong to Ubitricity, BP Pulse and Char.gy. On 2026-10-23 the feed
+  held 7 council car parks with 32 charge points and one tariff.
+enabled: true
