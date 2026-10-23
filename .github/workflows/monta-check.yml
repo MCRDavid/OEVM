@@ -1,6 +1,6 @@
 name: Monta price check (one-off)
 
-# Temporary. Tries Monta's AFIR price endpoints on several UK EVSEs, printing status codes, field
+# Temporary. Tries Monta's AFIR price endpoints with Danish EVSEs as a control, printing status codes, field
 # names and prices only, then is removed before the branch is merged.
 
 on:
