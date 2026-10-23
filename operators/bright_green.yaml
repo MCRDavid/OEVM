@@ -98,16 +98,28 @@ findings:
     handling: Read as the number written. Prices include the stated VAT.
     evidence_url: https://connect.bright.green/ocpp/tariffs
   - date: 2026-10-23
+    kind: spec_conformance
+    summary: >-
+      Connectors give power_type "fast" (48 connectors) or "ultrarapid" (3) and no standard
+      (51), and locations give the two-letter country codes "GB" and "SK" in country. OCPI
+      2.2.1 uses AC_1_PHASE, AC_3_PHASE or DC for power_type, a ConnectorType for standard
+      and a three-letter ISO 3166-1 code for country.
+    handling: >-
+      Each is recorded as unknown, as for any value outside OCPI 2.2.1. Whether a location is
+      in the UK is decided from its coordinates, not from country.
+    evidence_url: https://connect.bright.green/ocpp/locations
+  - date: 2026-10-23
     kind: data_quality
     summary: >-
       15 locations on 2026-10-23: 13 in the UK and 2 in Slovakia, with one EUR tariff. 5 of
-      the UK locations are marked publish false. Of the rest, three ("Archived Station",
-      "Canalside Farm Stafford" and "Aston Marina", in Stafford and Stone) share the same
-      rounded coordinates, 52.81 and -2.01.
+      the UK locations are marked publish false. One location in Slovakia, "Nabito Lab", has
+      no coordinates. Of the rest, three ("Archived Station", "Canalside Farm Stafford" and
+      "Aston Marina", in Stafford and Stone) share the same rounded coordinates, 52.81 and
+      -2.01.
     handling: >-
-      Locations marked publish false are not kept. The Slovak locations are left off the map,
-      and the EUR tariff shows "Price unknown". The three locations sharing coordinates are
-      kept as published.
+      Locations marked publish false are not kept, and the one with no coordinates is
+      skipped. The other Slovak location is left off the map, and the EUR tariff shows
+      "Price unknown". The three locations sharing coordinates are kept as published.
     evidence_url: https://connect.bright.green/ocpp/locations
   - date: 2026-10-23
     kind: data_quality
@@ -123,4 +135,4 @@ notes: >-
   One location in the feed is named "EZ charge HQ" (Bicester). EZ-Charge has its own file in
   the registry (operators/ez_charge.yaml), with no public feed found; whether BrightGreen's
   feed covers EZ-Charge's network is not known.
-enabled: false
+enabled: true

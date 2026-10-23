@@ -1,0 +1,343 @@
+{
+  "request": {
+    "method": "GET",
+    "url": "https://connect.bright.green/ocpp/tariffs"
+  },
+  "response": {
+    "status_code": 200,
+    "headers": {
+      "content-type": "application/json; charset=utf-8"
+    },
+    "body": {
+      "data": [
+        {
+          "id": "74e963d2-cadf-4f50-b243-6d8a4d2b4084",
+          "country_code": "GB",
+          "currency": "GBP",
+          "tariff_alt_text": [
+            {
+              "language": "en",
+              "text": "Default"
+            }
+          ],
+          "price_display": "£0.59",
+          "start_date_time": "2026-06-12T08:45:42.076Z",
+          "last_updated": "2026-06-12T08:46:28.009Z",
+          "elements": [
+            {
+              "price_components": [
+                {
+                  "type": "ENERGY",
+                  "price": "0.59",
+                  "vat": 20,
+                  "step_size": 1,
+                  "unit": "kWh"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "af8eb6c5-399e-4558-ba7b-738490b2d02b",
+          "country_code": "GB",
+          "currency": "GBP",
+          "tariff_alt_text": [
+            {
+              "language": "en",
+              "text": "Fast"
+            }
+          ],
+          "price_display": "£0.37",
+          "start_date_time": "2026-03-16T16:15:27.538Z",
+          "last_updated": "2026-03-16T16:15:27.879Z",
+          "elements": [
+            {
+              "price_components": [
+                {
+                  "type": "ENERGY",
+                  "price": "0.37",
+                  "vat": 20,
+                  "step_size": 1,
+                  "unit": "kWh"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "4b18841f-a725-4628-9dc1-59c377dd8d77",
+          "country_code": "GB",
+          "currency": "GBP",
+          "tariff_alt_text": [
+            {
+              "language": "en",
+              "text": "Fast"
+            }
+          ],
+          "price_display": "£0.59",
+          "start_date_time": "2026-02-06T09:44:02.857Z",
+          "last_updated": "2026-02-06T09:44:03.007Z",
+          "elements": [
+            {
+              "price_components": [
+                {
+                  "type": "ENERGY",
+                  "price": "0.59",
+                  "vat": 20,
+                  "step_size": 1,
+                  "unit": "kWh"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "8079a67f-731c-4df5-8acc-8961d435532a",
+          "country_code": "GB",
+          "currency": "GBP",
+          "tariff_alt_text": [
+            {
+              "language": "en",
+              "text": "Fast"
+            }
+          ],
+          "price_display": "£0.55",
+          "start_date_time": "2025-11-21T13:01:47.124Z",
+          "last_updated": "2025-11-21T13:01:47.246Z",
+          "elements": [
+            {
+              "price_components": [
+                {
+                  "type": "ENERGY",
+                  "price": "0.55",
+                  "vat": 20,
+                  "step_size": 1,
+                  "unit": "kWh"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "48cd1352-d05e-49e9-a30a-5c891f060280",
+          "country_code": "GB",
+          "currency": "GBP",
+          "tariff_alt_text": [
+            {
+              "language": "en",
+              "text": "Fast"
+            }
+          ],
+          "price_display": "£0.60",
+          "start_date_time": "2024-11-19T06:56:11.485Z",
+          "last_updated": "2025-09-01T15:45:08.809Z",
+          "elements": [
+            {
+              "price_components": [
+                {
+                  "type": "ENERGY",
+                  "price": "0.60",
+                  "vat": 20,
+                  "step_size": 1,
+                  "unit": "kWh"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "fbd794b2-cf88-4158-b007-939794b04890",
+          "country_code": "SK",
+          "currency": "EUR",
+          "tariff_alt_text": [
+            {
+              "language": "en",
+              "text": "Fast"
+            }
+          ],
+          "price_display": "€0.28",
+          "start_date_time": "2025-07-29T22:15:30.792Z",
+          "last_updated": "2025-08-13T06:35:45.752Z",
+          "elements": [
+            {
+              "price_components": [
+                {
+                  "type": "ENERGY",
+                  "price": "0.28",
+                  "vat": 19,
+                  "step_size": 1,
+                  "unit": "kWh"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "45504de5-7051-4ed3-9d27-c77d1afc51c8",
+          "country_code": "GB",
+          "currency": "GBP",
+          "tariff_alt_text": [
+            {
+              "language": "en",
+              "text": "Fast"
+            }
+          ],
+          "price_display": "£0.48",
+          "start_date_time": "2025-07-03T11:27:28.744Z",
+          "last_updated": "2025-07-03T11:27:28.218Z",
+          "elements": [
+            {
+              "price_components": [
+                {
+                  "type": "ENERGY",
+                  "price": "0.48",
+                  "vat": 20,
+                  "step_size": 1,
+                  "unit": "kWh"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "7ff2ce14-cb22-4831-ac9e-1ca6a9f6fd77",
+          "country_code": "GB",
+          "currency": "GBP",
+          "tariff_alt_text": [
+            {
+              "language": "en",
+              "text": "Fast"
+            }
+          ],
+          "price_display": "£0.39",
+          "start_date_time": "2024-02-29T14:06:23.794Z",
+          "last_updated": "2025-05-30T09:57:39.375Z",
+          "elements": [
+            {
+              "price_components": [
+                {
+                  "type": "ENERGY",
+                  "price": "0.39",
+                  "vat": 20,
+                  "step_size": 1,
+                  "unit": "kWh"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "55c566a2-d965-4ec9-b264-0a0e7ea765b9",
+          "country_code": "GB",
+          "currency": "GBP",
+          "tariff_alt_text": [
+            {
+              "language": "en",
+              "text": "Fast"
+            }
+          ],
+          "price_display": "£0.55",
+          "start_date_time": "2025-03-03T16:20:02.518Z",
+          "last_updated": "2025-03-03T16:20:00.896Z",
+          "elements": [
+            {
+              "price_components": [
+                {
+                  "type": "ENERGY",
+                  "price": "0.55",
+                  "vat": 20,
+                  "step_size": 1,
+                  "unit": "kWh"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "ad1d7cc8-00d1-4cdc-8cb3-16b4d7c29580",
+          "country_code": "GB",
+          "currency": "GBP",
+          "tariff_alt_text": [
+            {
+              "language": "en",
+              "text": "Fast"
+            }
+          ],
+          "price_display": "£0.70",
+          "start_date_time": "2024-10-29T01:38:59.412Z",
+          "last_updated": "2024-11-04T14:57:18.207Z",
+          "elements": [
+            {
+              "price_components": [
+                {
+                  "type": "ENERGY",
+                  "price": "0.70",
+                  "vat": 20,
+                  "step_size": 1,
+                  "unit": "kWh"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "91a35f21-69bc-4476-87bb-cbf496ab5255",
+          "country_code": "GB",
+          "currency": "GBP",
+          "tariff_alt_text": [
+            {
+              "language": "en",
+              "text": "Fast"
+            }
+          ],
+          "price_display": "£0.35",
+          "start_date_time": "2024-02-28T17:07:35.070Z",
+          "last_updated": "2024-06-27T11:34:43.835Z",
+          "elements": [
+            {
+              "price_components": [
+                {
+                  "type": "ENERGY",
+                  "price": "0.35",
+                  "vat": 20,
+                  "step_size": 1,
+                  "unit": "kWh"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "a18753a2-bb81-439f-92ea-d91af41aaafc",
+          "country_code": "GB",
+          "currency": "GBP",
+          "tariff_alt_text": [
+            {
+              "language": "en",
+              "text": "Ultra Rapid"
+            }
+          ],
+          "price_display": "£0.65",
+          "start_date_time": "2024-06-21T13:40:30.969Z",
+          "last_updated": "2024-06-21T14:06:13.910Z",
+          "elements": [
+            {
+              "price_components": [
+                {
+                  "type": "ENERGY",
+                  "price": "0.65",
+                  "vat": 20,
+                  "step_size": 1,
+                  "unit": "kWh"
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "status_code": 1000,
+      "status_message": "Success",
+      "timestamp": "2026-10-23T13:01:59.106Z"
+    }
+  }
+}

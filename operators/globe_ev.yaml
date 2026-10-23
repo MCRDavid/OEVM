@@ -140,4 +140,4 @@ notes: >-
   Globe EV's files are OCPI 2.2.1 records inside Clenergy's wrapper, so the ocpi_221 adapter
   reads them with response_envelope set to data_list, as for Clenergy EV. The host name
   "evdot" matches the EV-Dot brand, whose own website looked parked on 2026-10-22.
-enabled: false
+enabled: true
