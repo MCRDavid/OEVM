@@ -3419,11 +3419,14 @@
       "engagement": {
         "status": "key_on_request",
         "label": "Key issued on request",
-        "headline": "Key issued on request (as of 2026-10-10)",
-        "as_of": "2026-10-10",
-        "last_request": null,
-        "last_response": null,
-        "last_response_text": "No request sent",
+        "headline": "Key issued on request (as of 2026-10-23)",
+        "as_of": "2026-10-23",
+        "last_request": "2026-10-23",
+        "last_response": {
+          "date": "2026-10-23",
+          "action": "key_granted"
+        },
+        "last_response_text": "2026-10-23 (Key issued)",
         "evidence": [
           {
             "date": "2026-10-10",
@@ -3443,11 +3446,44 @@
             "quote": "This API provides machine readable access to EVSE data for the Believ network. After creating your FREE account you'll be able to view the documentation and generate credentials to call our service.",
             "evidence_url": "https://api.believ.com/",
             "evidence_file": null
+          },
+          {
+            "date": "2026-10-23",
+            "action": "request_sent",
+            "action_label": "Access requested",
+            "channel": "web_form",
+            "channel_label": "Web form",
+            "summary": "Registered for a free account on Believ's API portal and generated API credentials in its dashboard.",
+            "quote": null,
+            "evidence_url": "https://api.believ.com/register",
+            "evidence_file": null
+          },
+          {
+            "date": "2026-10-23",
+            "action": "key_granted",
+            "action_label": "Key issued",
+            "channel": null,
+            "channel_label": null,
+            "summary": "Believ's portal showed a client id and secret at once, with the API documentation. The credentials are kept outside the repository.",
+            "quote": "Store your client secret securely. It cannot be retrieved after generation and will need to be regenerated if lost.",
+            "evidence_url": null,
+            "evidence_file": "evidence/believ/2026-10-23-api-documentation.md"
+          },
+          {
+            "date": "2026-10-23",
+            "action": "page_checked",
+            "action_label": "Operator's page checked",
+            "channel": null,
+            "channel_label": null,
+            "summary": "The API documentation was read. It describes one endpoint, which returns a single EVSE by the label printed on the charger, and a limit of 100 calls per 24 hours. Believ's open data page was read again; it offers a separate form for a larger data set.",
+            "quote": "If you would like access to a larger data set please fill in the form linked below",
+            "evidence_url": "https://www.believ.com/open-data/",
+            "evidence_file": null
           }
         ]
       },
-      "access_requested": null,
-      "access_granted": null,
+      "access_requested": "2026-10-23",
+      "access_granted": "2026-10-23",
       "feeds": [],
       "licence": null,
       "attribution": null,
@@ -3464,16 +3500,52 @@
       "expired_certificate": null,
       "excluded_locations": null,
       "rate_limit": {
-        "our_gap_seconds": 2.0,
-        "our_max_per_hour": 1800,
-        "ours": "At least 2 s between requests to the operator's host, measured from the end of the previous request (at most 1800 in any hour), retries included.",
-        "published": [],
-        "limits_checked": "unknown",
-        "comparison": "The operator's pages have not been checked for limits yet.",
-        "difference_from_regulations": "Not known yet.",
-        "notes": "Believ's API documentation is shown only after registering, so any published limits have not been read."
+        "our_gap_seconds": 865.0,
+        "our_max_per_hour": 5,
+        "ours": "At least 865 s between requests to the operator's host, measured from the end of the previous request (at most 5 in any hour), retries included.",
+        "published": [
+          {
+            "text": "100 per 1 day for all requests",
+            "publisher": "Believ",
+            "quote": "Requests are limited to 100 calls per 24hrs, with a maximum of one request per second.",
+            "source_url": "https://api.believ.com/",
+            "checked": "2026-10-23"
+          },
+          {
+            "text": "1 per 1 second for all requests",
+            "publisher": "Believ",
+            "quote": "Requests are limited to 100 calls per 24hrs, with a maximum of one request per second.",
+            "source_url": "https://api.believ.com/",
+            "checked": "2026-10-23"
+          }
+        ],
+        "limits_checked": "2026-10-23",
+        "comparison": "Within every published limit. The strictest needs 864 s between requests; this project waits 865 s, which includes a safety margin.",
+        "difference_from_regulations": "The operator sets a limit; the regulations set none. DfT guidance allows such terms on access.",
+        "notes": "The limits are in the API documentation, shown only after signing in (copy in evidence/believ/2026-10-23-api-documentation.md). 100 calls a day, with this project's 1 second margin, means one request every 865 seconds. A documented call on 2026-10-23 answered with x-ratelimit-limit 1 and x-ratelimit-remaining 1, which match the one-a-second limit; no header gave the daily limit."
       },
-      "findings": []
+      "findings": [
+        {
+          "date": "2026-10-23",
+          "kind": "access",
+          "kind_label": "Access",
+          "summary": "Believ's API documentation describes one endpoint, which returns a single EVSE by the label printed on the charger, limited to 100 calls per 24 hours. It documents no way to list locations or chargers.",
+          "handling": "Believ stays off the map, because its chargers cannot be found without their labels. Its open data page offers a form for a larger data set; no request has been sent.",
+          "evidence_url": "https://api.believ.com/",
+          "status": "open",
+          "resolved_date": null
+        },
+        {
+          "date": "2026-10-23",
+          "kind": "data_quality",
+          "kind_label": "Data quirk",
+          "summary": "In the one EVSE read on 2026-10-23, and in the documentation's example, the location's address field holds the country code \"GB\" rather than a street address.",
+          "handling": "Recorded only; no Believ data is on the map.",
+          "evidence_url": "https://api.believ.com/1.0/evses/A1190",
+          "status": "open",
+          "resolved_date": null
+        }
+      ]
     },
     {
       "id": "blink_charging_uk",
