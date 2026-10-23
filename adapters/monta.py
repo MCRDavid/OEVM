@@ -21,7 +21,10 @@ findings in operators/monta.yaml on 2026-10-22 and 2026-10-23, are:
 - Most sites listed have every charger marked REMOVED. OCPI 2.2.1 says "A Location
   without any valid EVSE object can be considered expired and should no longer be
   displayed" (Locations module, Flow and Lifecycle), so those sites are not kept.
-- No tariffs are given (every EVSE's tariffs list is empty), so prices are unknown.
+- There is no tariffs module. Monta puts OCPI 2.2.1 Tariff objects in each EVSE's own
+  tariffs list (a Monta extension), "empty when no OCPI tariff is available for the charge
+  point"; few are filled (5 of 4,775 locations on 23 October 2026). The adapter takes the
+  tariffs from the sites it keeps, one copy of each, and converts them like any feed's.
 
 Records are then converted by adapters.ocpi_221.convert_records, so the publish rule and
 every model rule apply as for any other feed.
@@ -55,6 +58,36 @@ def _expired(record: object) -> bool:
     if not isinstance(record, dict) or not isinstance(record.get("evses"), list):
         return False
     return all(isinstance(e, dict) and e.get("status") == "REMOVED" for e in record["evses"])
+
+
+def _tariff_lists(record: dict):
+    """The tariffs lists of a site and of each of its EVSEs."""
+    yield record.get("tariffs")
+    for evse in record.get("evses") or []:
+        if isinstance(evse, dict):
+            yield evse.get("tariffs")
+
+
+def _inline_tariffs(records: list[dict], issues: IssueLog) -> list[dict]:
+    """One copy of each tariff the sites carry. Where two copies with the same id differ,
+    the one updated last is kept."""
+    found: dict[tuple, dict] = {}
+    for record in records:
+        for tariffs in _tariff_lists(record):
+            for tariff in tariffs if isinstance(tariffs, list) else []:
+                if not isinstance(tariff, dict):
+                    issues.add("tariff in an EVSE's tariffs list is not an object; ignored")
+                    continue
+                key = (tariff.get("country_code"), tariff.get("party_id"), tariff.get("id"))
+                kept = found.get(key)
+                if kept is not None and kept != tariff:
+                    issues.add(
+                        "tariff given differently at two chargers; kept the copy updated last"
+                    )
+                    if str(tariff.get("last_updated")) < str(kept.get("last_updated")):
+                        continue
+                found[key] = tariff
+    return list(found.values())
 
 
 def _without_owner(record: object) -> object:
@@ -216,7 +249,7 @@ def fetch(
         records=len(locations.records),
         complete=locations.complete,
     )
-    # Monta's open data has no tariffs; every EVSE's tariffs list is empty.
+    # No tariffs module: the tariffs come from the EVSEs of the sites kept, below.
     tariffs = ModuleFetch("tariffs", url, complete=True)
     result = AdapterResult(config.id, fetched_at, {"locations": locations, "tariffs": tariffs})
     current = []
@@ -230,6 +263,7 @@ def fetch(
                 result.dropped_location_ids.append(record_id)
         else:
             current.append(record)
-    convert_records(config, result, locations=current, tariffs=[], issues=issues)
+    tariffs.records = _inline_tariffs(current, issues)
+    convert_records(config, result, locations=current, tariffs=tariffs.records, issues=issues)
     result.issues = [client.redact(line) for line in issues.lines()]
     return result
