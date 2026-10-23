@@ -30,6 +30,23 @@ engagement:
         failed secure connection, then HTTP 503), so its open data route is not yet known; it
         needs checking in a browser.
       evidence_url: https://jojucharging.com/
+    - date: 2026-10-11
+      action: page_checked
+      summary: >-
+        Read in a browser: jojucharging.com failed to connect securely and joju.co.uk redirects to
+        Joju Solar. A Joju Solar post says "Our Joju installed charge points, running on the Mer
+        network, have hit a 10 million kWh milestone". No open data page was found in its sitemap.
+      evidence_url: https://www.jojusolar.co.uk/a-10-million-kwh-milestone-joju-and-mer-ev-charging/
+    - date: 2026-10-23
+      action: feed_searched
+      summary: >-
+        Checked Mer UK's open data feed (https://uk.mer.eco/wp-json/ozev/v1/data) for Joju sites.
+        It held 175 locations, all with operator "Mer" and suboperator "Mer Fleet Services Ltd".
+        No owner, operator, name or other field mentions Joju, and only 2 locations have London
+        postcodes. It has no Portsmouth or Eastleigh (Hampshire) locations, where a browser check
+        the same day found Joju runs public chargers. So Joju's own Hampshire network is not in
+        Mer UK's feed; whether any other Joju-installed chargers are in it is unknown.
+      evidence_url: https://uk.mer.eco/live-charge-point-data/
 access_requested: null
 access_granted: null
 sources:
@@ -39,6 +56,8 @@ sources:
       secure connection and a second answered HTTP 503, so it was not read.
 findings: []
 notes: >-
-  Joju's website could not be read on 2026-10-10. The next step is to read it in a browser
-  and look for an open data or regulations link.
+  Joju says its installed chargers run on the Mer network. Mer UK's feed checked on 2026-10-23
+  names no Joju sites and has none of Joju's Hampshire sites (Portsmouth, Eastleigh). Next
+  step: a written request to Joju (https://www.jojusolar.co.uk/) for its network's open data,
+  once the request wording is agreed.
 enabled: false
