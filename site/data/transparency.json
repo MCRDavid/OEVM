@@ -1556,7 +1556,7 @@
           "kind": "data_quality",
           "kind_label": "Data quirk",
           "summary": "Almost no prices: in the 4,775 locations read on 23 October 2026, 17,391 of 17,675 connectors name a tariff id, but only 5 locations carry any tariff object (in an EVSE's or the location's tariffs list).",
-          "handling": "Monta's documentation describes each EVSE's tariffs list as a Monta extension, \"empty when no OCPI tariff is available for the charge point\". Since 2026-10-23 the adapter reads the tariffs in the EVSEs of the locations it keeps, one copy of each; a connector whose tariff is not given shows \"Price unknown\".",
+          "handling": "Monta's documentation describes each EVSE's tariffs list as a Monta extension, \"empty when no OCPI tariff is available for the charge point\". Since 2026-10-23 the adapter reads the tariffs in the EVSEs of the locations it keeps, one copy of each; a connector whose tariff is not given shows \"Price unknown\". In a run on 2026-10-23 that gave 2 tariffs, pricing 54 of the 2,785 connectors at the 730 locations kept.",
           "evidence_url": "https://docs.public-api.monta.com/reference/get-open-data-locations",
           "status": "open",
           "resolved_date": null
