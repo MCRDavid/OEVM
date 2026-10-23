@@ -15,7 +15,7 @@ from pathlib import Path
 import yaml
 from pydantic import ValidationError
 
-from pipeline.registry import ROOT, load_registry
+from pipeline.registry import ROOT, load_registry, load_yaml
 from schema.provider import ProviderFile
 
 PROVIDERS_DIR = ROOT / "providers"
@@ -38,7 +38,7 @@ def load_providers(
         problems.append(f"{path.name}: rename to .yaml so it is picked up")
     for path in sorted(p for p in directory.glob("*.yaml") if not p.name.startswith("_")):
         try:
-            provider = ProviderFile.model_validate(yaml.safe_load(path.read_text("utf-8")))
+            provider = ProviderFile.model_validate(load_yaml(path.read_text("utf-8")))
         except ValidationError as exc:
             for err in exc.errors():
                 where = ".".join(str(part) for part in err["loc"])
