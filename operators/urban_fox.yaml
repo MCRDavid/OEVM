@@ -53,6 +53,18 @@ licence:
     general website or charging terms as not covering the open data, and on 2026-10-23
     asked for the new feeds whose terms allow use to be switched on.
   checked: 2026-10-23
+own_feed_over_copies:
+  decided: 2026-10-23
+  basis: >-
+    Monta's open data feed also carries Urban Fox locations under Urban Fox's own party, GB
+    UFX, with different location ids: 95 of them were on the map on 23 October 2026, and
+    39 of the first 50 locations in Urban Fox's own feed are within about 30 metres of one
+    of them. The repository owner decided that Urban Fox's own feed is shown in their
+    place, and that Monta's GB UFX locations are left off while Urban Fox's own locations,
+    from the latest run or its last good copy, are on the map.
+  evidence_url: https://api.urbanfox.network/api/opendata/locations
+  operators:
+    - monta
 engagement:
   status: open_anonymous
   evidence:
@@ -105,10 +117,11 @@ findings:
       different location ids (95 of them were on the map on 2026-10-23). Of the first 50
       locations in Urban Fox's own feed, 39 are within about 30 metres of one of those.
     handling: >-
-      Urban Fox's own feed is recorded but not yet switched on, so the map shows Monta's
-      copy. How to avoid showing these sites twice has been put to the repository owner.
+      Urban Fox's own feed is shown, and Monta's GB UFX locations are left off while it is
+      on the map, by the repository owner's decision of 2026-10-23 (own_feed_over_copies
+      above). The feed health page lists how many were left off.
     evidence_url: https://api.urbanfox.network/api/opendata/locations
 notes: >-
   Found through EV Roam's ID register on 2026-10-23. Urban Fox's feed is standard OCPI 2.2.1
   with offset paging, read by the ocpi_221 adapter.
-enabled: false
+enabled: true

@@ -1,0 +1,228 @@
+{
+  "request": {
+    "method": "GET",
+    "url": "https://api.urbanfox.network/api/opendata/locations"
+  },
+  "response": {
+    "status_code": 200,
+    "headers": {
+      "content-type": "application/json; charset=utf-8",
+      "link": "<https://api.urbanfox.network/api/opendata/locations?limit=50&offset=50>; rel=\"next\"",
+      "x-total-count": "6",
+      "x-limit": "50"
+    },
+    "body": {
+      "data": [
+        {
+          "country_code": "GB",
+          "party_id": "UFX",
+          "id": "a3fd8158-a28a-4e2e-b5f4-713935d53f64",
+          "publish": true,
+          "name": "Roseangle Car Park",
+          "address": "Roseangle Car Park",
+          "city": "Dundee",
+          "country": "GBR",
+          "coordinates": {
+            "latitude": "56.4527444",
+            "longitude": "-2.986393"
+          },
+          "time_zone": "Europe/London",
+          "evses": [
+            {
+              "uid": "2fbad902-f5d0-42e9-ba85-cd92f8e8d3a7",
+              "status": "AVAILABLE",
+              "connectors": [
+                {
+                  "id": "f66abb00-1d45-4d63-a1db-4cc8e7669c69",
+                  "standard": "IEC_62196_T2",
+                  "format": "SOCKET",
+                  "power_type": "AC_1_PHASE",
+                  "max_voltage": 230,
+                  "max_amperage": 30,
+                  "tariff_ids": [
+                    "75815db4-5234-4650-b766-b373f116e7fd"
+                  ],
+                  "last_updated": "2026-05-04T12:00:12Z"
+                }
+              ],
+              "last_updated": "2026-10-23T13:30:13Z"
+            },
+            {
+              "uid": "4ab9e3da-ef81-49a4-80bb-3661b997ab26",
+              "status": "CHARGING",
+              "connectors": [
+                {
+                  "id": "831415a6-6ba2-47e6-ae5b-597465283cf5",
+                  "standard": "IEC_62196_T2",
+                  "format": "SOCKET",
+                  "power_type": "AC_1_PHASE",
+                  "max_voltage": 230,
+                  "max_amperage": 30,
+                  "tariff_ids": [
+                    "75815db4-5234-4650-b766-b373f116e7fd"
+                  ],
+                  "last_updated": "2026-05-04T12:00:12Z"
+                }
+              ],
+              "last_updated": "2026-10-23T13:30:13Z"
+            },
+            {
+              "uid": "78efd112-c4a3-4028-92aa-607d42647519",
+              "status": "AVAILABLE",
+              "connectors": [
+                {
+                  "id": "42a315f6-8596-4046-8e63-bb2b2c46972b",
+                  "standard": "IEC_62196_T2",
+                  "format": "SOCKET",
+                  "power_type": "AC_1_PHASE",
+                  "max_voltage": 230,
+                  "max_amperage": 30,
+                  "tariff_ids": [
+                    "75815db4-5234-4650-b766-b373f116e7fd"
+                  ],
+                  "last_updated": "2026-05-04T12:00:12Z"
+                }
+              ],
+              "last_updated": "2026-10-23T13:30:13Z"
+            },
+            {
+              "uid": "b345cbe1-e8ab-4527-ac59-45f79ee46f9a",
+              "status": "AVAILABLE",
+              "connectors": [
+                {
+                  "id": "d7903340-d415-446b-9a4a-530d03267a1a",
+                  "standard": "IEC_62196_T2",
+                  "format": "SOCKET",
+                  "power_type": "AC_1_PHASE",
+                  "max_voltage": 230,
+                  "max_amperage": 30,
+                  "tariff_ids": [
+                    "75815db4-5234-4650-b766-b373f116e7fd"
+                  ],
+                  "last_updated": "2026-05-04T12:00:12Z"
+                }
+              ],
+              "last_updated": "2026-10-23T13:30:13Z"
+            },
+            {
+              "uid": "d25ab8ab-aa38-40e1-9847-5f0ea3818549",
+              "status": "AVAILABLE",
+              "connectors": [
+                {
+                  "id": "478f44ee-c419-4df4-8227-1e2cc6417368",
+                  "standard": "IEC_62196_T2",
+                  "format": "SOCKET",
+                  "power_type": "AC_1_PHASE",
+                  "max_voltage": 230,
+                  "max_amperage": 30,
+                  "tariff_ids": [
+                    "75815db4-5234-4650-b766-b373f116e7fd"
+                  ],
+                  "last_updated": "2026-05-04T12:00:12Z"
+                }
+              ],
+              "last_updated": "2026-10-23T13:30:12Z"
+            },
+            {
+              "uid": "fe679b54-65af-4c5f-a64c-1891c65a9dc6",
+              "status": "AVAILABLE",
+              "connectors": [
+                {
+                  "id": "79c40aeb-8432-4577-9eb0-6da5d50bac27",
+                  "standard": "IEC_62196_T2",
+                  "format": "SOCKET",
+                  "power_type": "AC_1_PHASE",
+                  "max_voltage": 230,
+                  "max_amperage": 30,
+                  "tariff_ids": [
+                    "75815db4-5234-4650-b766-b373f116e7fd"
+                  ],
+                  "last_updated": "2026-05-04T12:00:12Z"
+                }
+              ],
+              "last_updated": "2026-10-23T13:30:13Z"
+            }
+          ],
+          "last_updated": "2026-10-23T13:30:08Z"
+        },
+        {
+          "country_code": "GB",
+          "party_id": "UFX",
+          "id": "519343af-9cd1-45e1-85ab-c843007ad995",
+          "publish": true,
+          "name": "13 Alexandra Road",
+          "address": "13 Alexandra Rd",
+          "city": "Newport",
+          "country": "GBR",
+          "coordinates": {
+            "latitude": "51.574678796756",
+            "longitude": "-2.988423427001"
+          },
+          "time_zone": "Europe/London",
+          "evses": [
+            {
+              "uid": "0256204c-89e5-4e5b-8350-7dba0b3503df",
+              "status": "CHARGING",
+              "connectors": [
+                {
+                  "id": "ff3da3e8-f569-48f8-b2f9-848477daf313",
+                  "standard": "IEC_62196_T2",
+                  "format": "SOCKET",
+                  "power_type": "AC_1_PHASE",
+                  "max_voltage": 230,
+                  "max_amperage": 22,
+                  "tariff_ids": [
+                    "4c7f1ebc-142b-4bd9-a206-06851db03e0f"
+                  ],
+                  "last_updated": "2026-05-04T12:00:12Z"
+                }
+              ],
+              "last_updated": "2026-10-23T13:30:13Z"
+            }
+          ],
+          "last_updated": "2026-10-23T13:30:10Z"
+        },
+        {
+          "country_code": "GB",
+          "party_id": "UFX",
+          "id": "3fa2f810-bbfa-4eac-8397-563ffed7cde8",
+          "publish": true,
+          "name": "109 Brynglas Avenue",
+          "address": "109 Brynglas Ave",
+          "city": "Newport",
+          "country": "GBR",
+          "coordinates": {
+            "latitude": "51.603978936392",
+            "longitude": "-2.9958587895493"
+          },
+          "time_zone": "Europe/London",
+          "evses": [
+            {
+              "uid": "3b6832cd-d74e-4cbe-90cf-8c8fe86d89cc",
+              "status": "OUTOFORDER",
+              "connectors": [
+                {
+                  "id": "03f20997-8bd3-4816-b61c-414d48a53770",
+                  "standard": "IEC_62196_T2",
+                  "format": "SOCKET",
+                  "power_type": "AC_1_PHASE",
+                  "max_voltage": 230,
+                  "max_amperage": 22,
+                  "tariff_ids": [
+                    "4c7f1ebc-142b-4bd9-a206-06851db03e0f"
+                  ],
+                  "last_updated": "2026-05-04T12:00:12Z"
+                }
+              ],
+              "last_updated": "2026-10-23T13:30:13Z"
+            }
+          ],
+          "last_updated": "2026-10-23T13:30:10Z"
+        }
+      ],
+      "status_code": 1000,
+      "status_message": "Success",
+      "timestamp": "2026-10-23T13:33:31Z"
+    }
+  }
+}

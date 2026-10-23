@@ -1,0 +1,189 @@
+{
+  "request": {
+    "method": "GET",
+    "url": "https://api.urbanfox.network/api/opendata/locations?limit=50&offset=50"
+  },
+  "response": {
+    "status_code": 200,
+    "headers": {
+      "content-type": "application/json; charset=utf-8",
+      "x-total-count": "6",
+      "x-limit": "50"
+    },
+    "body": {
+      "data": [
+        {
+          "country_code": "GB",
+          "party_id": "UFX",
+          "id": "9fe3e0e0-258c-4e1d-b326-a277f0da330b",
+          "publish": true,
+          "name": "Prospect Place",
+          "address": "Prospect Pl",
+          "city": "Plymouth",
+          "country": "GBR",
+          "coordinates": {
+            "latitude": "50.366256454279",
+            "longitude": "-4.1487873920654"
+          },
+          "time_zone": "Europe/London",
+          "evses": [
+            {
+              "uid": "097f5800-d8c0-4865-9100-f11103fd84a2",
+              "status": "AVAILABLE",
+              "connectors": [
+                {
+                  "id": "d0fb31bf-f807-4418-9674-1fb7b622ce49",
+                  "standard": "IEC_62196_T2",
+                  "format": "SOCKET",
+                  "power_type": "AC_1_PHASE",
+                  "max_voltage": 230,
+                  "max_amperage": 30,
+                  "tariff_ids": [
+                    "26ce229c-f5e0-4ac1-9cdf-275b8a95961e"
+                  ],
+                  "last_updated": "2026-05-04T12:00:21Z"
+                }
+              ],
+              "last_updated": "2026-10-23T13:30:19Z"
+            },
+            {
+              "uid": "3e0ea0d8-e08c-47ee-a730-696289d67461",
+              "status": "AVAILABLE",
+              "connectors": [
+                {
+                  "id": "fa8376f3-bc2d-4239-a607-724eb7f180e2",
+                  "standard": "IEC_62196_T2",
+                  "format": "SOCKET",
+                  "power_type": "AC_1_PHASE",
+                  "max_voltage": 230,
+                  "max_amperage": 30,
+                  "tariff_ids": [
+                    "26ce229c-f5e0-4ac1-9cdf-275b8a95961e"
+                  ],
+                  "last_updated": "2026-05-04T12:00:20Z"
+                }
+              ],
+              "last_updated": "2026-10-23T13:30:18Z"
+            },
+            {
+              "uid": "cfb17edd-f043-4ed2-ba80-8263b93870b8",
+              "status": "AVAILABLE",
+              "connectors": [
+                {
+                  "id": "1ab519b5-26e0-4a69-8af9-f677e2c6ed38",
+                  "standard": "IEC_62196_T2",
+                  "format": "SOCKET",
+                  "power_type": "AC_1_PHASE",
+                  "max_voltage": 230,
+                  "max_amperage": 30,
+                  "tariff_ids": [
+                    "26ce229c-f5e0-4ac1-9cdf-275b8a95961e"
+                  ],
+                  "last_updated": "2026-05-04T12:00:20Z"
+                }
+              ],
+              "last_updated": "2026-10-23T13:30:19Z"
+            },
+            {
+              "uid": "d272f71e-e88b-45c4-9f5d-c82054062dfc",
+              "status": "AVAILABLE",
+              "connectors": [
+                {
+                  "id": "03b7ce0a-f950-4e34-a203-b21069c55d47",
+                  "standard": "IEC_62196_T2",
+                  "format": "SOCKET",
+                  "power_type": "AC_1_PHASE",
+                  "max_voltage": 230,
+                  "max_amperage": 30,
+                  "tariff_ids": [
+                    "26ce229c-f5e0-4ac1-9cdf-275b8a95961e"
+                  ],
+                  "last_updated": "2026-05-04T12:00:20Z"
+                }
+              ],
+              "last_updated": "2026-10-23T13:30:18Z"
+            }
+          ],
+          "last_updated": "2026-10-23T13:30:16Z"
+        },
+        {
+          "country_code": "GB",
+          "party_id": "UFX",
+          "id": "d6a29a2a-c20a-4b70-b33a-52433eebb51a",
+          "publish": true,
+          "name": "East Slope Residencies (Sussex Uni)",
+          "address": "BN1 9RP",
+          "city": "Brighton",
+          "country": "GBR",
+          "coordinates": {
+            "latitude": "50.8697662",
+            "longitude": "-0.0881388"
+          },
+          "time_zone": "Europe/London",
+          "evses": [
+            {
+              "uid": "c58c8c3a-8f75-42f8-a38a-00fae120957b",
+              "status": "CHARGING",
+              "connectors": [
+                {
+                  "id": "b2d3f389-eec5-4b15-8edf-80f59cc6b4da",
+                  "standard": "IEC_62196_T2",
+                  "format": "SOCKET",
+                  "power_type": "AC_3_PHASE",
+                  "max_voltage": 230,
+                  "max_amperage": 16,
+                  "tariff_ids": [
+                    "11a3a07a-7203-4b3c-8012-09fbae3d6df9"
+                  ],
+                  "last_updated": "2026-05-04T12:00:20Z"
+                }
+              ],
+              "last_updated": "2026-10-23T13:30:19Z"
+            }
+          ],
+          "last_updated": "2026-10-23T13:30:17Z"
+        },
+        {
+          "country_code": "GB",
+          "party_id": "UFX",
+          "id": "b569d300-5f9d-41ef-9654-e8959f4800a6",
+          "publish": true,
+          "name": "M25 Connect Plus, Dartford",
+          "address": "S Orbital Rd",
+          "city": "Dartford",
+          "country": "GBR",
+          "coordinates": {
+            "latitude": "51.455334",
+            "longitude": "0.244498"
+          },
+          "time_zone": "Europe/London",
+          "evses": [
+            {
+              "uid": "b6f5c716-0e1c-42ad-8b7f-a6bb602c8270",
+              "status": "AVAILABLE",
+              "connectors": [
+                {
+                  "id": "04f38bef-b529-4c85-8b19-67b2ec05dc0a",
+                  "standard": "IEC_62196_T2",
+                  "format": "SOCKET",
+                  "power_type": "AC_3_PHASE",
+                  "max_voltage": 230,
+                  "max_amperage": 32,
+                  "tariff_ids": [
+                    "9cdeb967-b9b1-42b7-92bd-574c80579dd3"
+                  ],
+                  "last_updated": "2026-08-12T13:00:16Z"
+                }
+              ],
+              "last_updated": "2026-10-23T13:30:19Z"
+            }
+          ],
+          "last_updated": "2026-10-23T13:30:17Z"
+        }
+      ],
+      "status_code": 1000,
+      "status_message": "Success",
+      "timestamp": "2026-10-23T13:33:33Z"
+    }
+  }
+}

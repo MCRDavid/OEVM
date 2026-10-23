@@ -105,6 +105,9 @@ decisions are in docs/adr/.
   feed health page.
 - Show a tariff whose prices are all zero as "Price unknown" rather than "Free" only where the
   operator file records the owner's decision in zero_price_tariffs, by exact tariff id (ADR 0022); never add one yourself.
+- Leave off another operator's copies of a network's locations (records under the network's own
+  country and party codes) only where the network's operator file records the owner's decision in
+  own_feed_over_copies, and only while its own locations are on the map (ADR 0027); never add one yourself.
 - Fetch through the relay (relay/worker.js) only when the operator file records the owner's
   decision in relay; only feeds that need no key; same User-Agent and rate limits; never
   rotate addresses or disguise the project. Cloudflare deploys relay/ from main (relay/wrangler.toml).

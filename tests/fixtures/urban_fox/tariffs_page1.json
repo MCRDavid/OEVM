@@ -1,0 +1,116 @@
+{
+  "request": {
+    "method": "GET",
+    "url": "https://api.urbanfox.network/api/opendata/tariffs"
+  },
+  "response": {
+    "status_code": 200,
+    "headers": {
+      "content-type": "application/json; charset=utf-8",
+      "x-total-count": "5",
+      "x-limit": "50"
+    },
+    "body": {
+      "data": [
+        {
+          "country_code": "GB",
+          "party_id": "UFX",
+          "id": "11a3a07a-7203-4b3c-8012-09fbae3d6df9",
+          "currency": "GBP",
+          "elements": [
+            {
+              "price_components": [
+                {
+                  "type": "ENERGY",
+                  "price": 0.0,
+                  "vat": 0.0,
+                  "step_size": 1
+                }
+              ]
+            }
+          ],
+          "last_updated": "2026-10-23T13:30:08Z"
+        },
+        {
+          "country_code": "GB",
+          "party_id": "UFX",
+          "id": "75815db4-5234-4650-b766-b373f116e7fd",
+          "currency": "GBP",
+          "elements": [
+            {
+              "price_components": [
+                {
+                  "type": "ENERGY",
+                  "price": 0.5,
+                  "vat": 0.0,
+                  "step_size": 1
+                }
+              ]
+            }
+          ],
+          "last_updated": "2026-10-23T13:30:08Z"
+        },
+        {
+          "country_code": "GB",
+          "party_id": "UFX",
+          "id": "26ce229c-f5e0-4ac1-9cdf-275b8a95961e",
+          "currency": "GBP",
+          "elements": [
+            {
+              "price_components": [
+                {
+                  "type": "ENERGY",
+                  "price": 0.0,
+                  "vat": 0.0,
+                  "step_size": 1
+                }
+              ]
+            }
+          ],
+          "last_updated": "2026-10-23T13:30:08Z"
+        },
+        {
+          "country_code": "GB",
+          "party_id": "UFX",
+          "id": "9cdeb967-b9b1-42b7-92bd-574c80579dd3",
+          "currency": "GBP",
+          "elements": [
+            {
+              "price_components": [
+                {
+                  "type": "ENERGY",
+                  "price": 0.36,
+                  "vat": 0.0,
+                  "step_size": 1
+                }
+              ]
+            }
+          ],
+          "last_updated": "2026-10-23T13:30:08Z"
+        },
+        {
+          "country_code": "GB",
+          "party_id": "UFX",
+          "id": "4c7f1ebc-142b-4bd9-a206-06851db03e0f",
+          "currency": "GBP",
+          "elements": [
+            {
+              "price_components": [
+                {
+                  "type": "ENERGY",
+                  "price": 0.0,
+                  "vat": 0.0,
+                  "step_size": 1
+                }
+              ]
+            }
+          ],
+          "last_updated": "2026-10-23T13:30:08Z"
+        }
+      ],
+      "status_code": 1000,
+      "status_message": "Success",
+      "timestamp": "2026-10-23T13:33:37Z"
+    }
+  }
+}
