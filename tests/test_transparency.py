@@ -307,17 +307,27 @@ def test_a_declined_request_shows_the_operators_words_and_saved_copy():
 def test_a_decision_to_swap_back_coordinates_is_shown(page):
     data = json.loads(transparency.outputs()[transparency.JSON_PATH])
     decisions = {op["id"]: op["swapped_coordinates"] for op in data["operators"]}
-    decided = {"clenergy_ev": "2026-10-09", "evolt": "2026-10-10", "geniepoint": "2026-10-09"}
+    decided = {
+        "bright_green": "2026-10-23",
+        "clenergy_ev": "2026-10-09",
+        "evolt": "2026-10-10",
+        "geniepoint": "2026-10-09",
+    }
     assert all(decisions[k]["decided"] == date for k, date in decided.items())
     assert all(v is None for k, v in decisions.items() if k not in decided)
-    assert "obviously missing a minus sign, are corrected and marked" in " ".join(page.split())
+    text = " ".join(page.split())
+    assert "obviously missing a minus sign, are corrected and marked" in text
+    named = [k for k, v in decisions.items() if v and v["sign_missing"]]
+    assert named == ["bright_green"]
+    assert "although the point as published is inside the UK: Kiln Farm Station (MK11 3LW" in text
 
 
 def test_a_decision_on_zero_price_tariffs_is_shown(page):
     data = json.loads(transparency.outputs()[transparency.JSON_PATH])
     decisions = {op["id"]: op["zero_price_tariffs"] for op in data["operators"]}
     assert {k: (v["decided"], v["tariffs"]) for k, v in decisions.items() if v} == {
-        "scottishpower_recharge": ("2026-10-11", 1)
+        "scottishpower_recharge": ("2026-10-11", 1),
+        "urban_fox": ("2026-10-23", 8),
     }
     text = " ".join(page.split())
     assert "1 tariff whose prices are all zero, named by exact id, shows" in text
@@ -330,6 +340,7 @@ def test_a_decision_to_add_vat_is_shown_with_what_was_seen_across_operators(page
     assert {k: (v["decided"], v["add_percent"]) for k, v in decisions.items() if v} == {
         "chargy": ("2026-10-22", 20),
         "clenergy_ev": ("2026-10-22", 20),
+        "globe_ev": ("2026-10-23", 20),
     }
     text = " ".join(page.split())
     assert "Prices that give no VAT rate have VAT at 20% added, by the owner's decision" in text
@@ -337,6 +348,16 @@ def test_a_decision_to_add_vat_is_shown_with_what_was_seen_across_operators(page
     assert "10 of the 12 operators fetched gave a VAT rate" in text
     assert "<li>char.gy: 20%, decided 2026-10-22" in text
     assert "<li>Clenergy EV: 20%, decided 2026-10-22" in text
+    assert "<li>Globe EV: 20%, decided 2026-10-23" in text
+
+
+def test_a_decision_to_read_stated_vat_as_in_the_price_is_shown(page):
+    data = json.loads(transparency.outputs()[transparency.JSON_PATH])
+    decisions = {op["id"]: op["vat_in_price"] for op in data["operators"]}
+    assert {k: v["decided"] for k, v in decisions.items() if v} == {"bright_green": "2026-10-23"}
+    text = " ".join(page.split())
+    assert "The VAT each price states is read as already in the price, so it is not" in text
+    assert "<li>BrightGreen: decided 2026-10-23" in text
 
 
 def test_a_decision_to_use_a_related_operators_tariffs_is_shown(page):

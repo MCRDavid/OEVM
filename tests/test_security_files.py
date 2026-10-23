@@ -29,17 +29,43 @@ KEY_SCAN_SKIPPED = ("tests/fixtures/", "uv.lock")
 PUBLISHED_FEED_ADDRESSES = {
     "https://api.fuuse.io/opendata/e6397b95-1624-49cd-824d-ab2f9dfe7294/",
     "https://api.fuuse.io/opendata/e11a667d-c56a-468f-b8d3-a50b41628292/",
+    # 3ti's six sites, as its own public charge points page reads them (operators/three_ti.yaml).
+    "https://api.fuuse.io/opendata/c3947832-9352-41fa-96c1-831215eea8e0/",
+    "https://api.fuuse.io/opendata/4a5b700e-6a15-40f3-92cc-dcc8732a92e0/",
+    "https://api.fuuse.io/opendata/6cd94287-a370-48ae-8079-a514a8ac2c7b/",
+    "https://api.fuuse.io/opendata/36bd06f3-5184-4939-a7a1-4c0c1dec5583/",
+    "https://api.fuuse.io/opendata/542c7548-899e-43e8-854c-05fd0f76dc70/",
+    "https://api.fuuse.io/opendata/6922c10c-4f17-4929-bf7a-32c4a6075277/",
 }
 # Record ids an operator publishes in its open data, named in an owner's decision in its
 # operator file (zero_price_tariffs in operators/scottishpower_recharge.yaml, ADR 0022).
 PUBLISHED_RECORD_IDS = {
     "2bf0030b-e446-473f-96ef-76de022b87e9",
 }
+# Urban Fox's tariffs whose prices are all zero, named in zero_price_tariffs in
+# operators/urban_fox.yaml (ADR 0022).
+URBAN_FOX_ZERO_TARIFFS = {
+    "0ae8884b-6a09-4e85-be2f-be25d078fe76",
+    "11a3a07a-7203-4b3c-8012-09fbae3d6df9",
+    "26ce229c-f5e0-4ac1-9cdf-275b8a95961e",
+    "381fff54-3687-4aa3-b328-bfcdd76ced11",
+    "417d44eb-f56a-469d-a556-168acdce5a51",
+    "4c7f1ebc-142b-4bd9-a206-06851db03e0f",
+    "7346e3f9-4af4-45de-91ca-e9b0bec04ac0",
+    "74aa4c53-3e50-44d1-9a3b-eb3c796f72aa",
+}
+# Location ids an operator publishes, named in swapped_coordinates.sign_missing (ADR 0013,
+# amended 23 October 2026): Kiln Farm Station in operators/bright_green.yaml.
+PUBLISHED_LOCATION_IDS = {
+    "4cbfa56a-07da-4cf1-90be-8277667b4158",
+}
 KEY_LIKE_ALLOWED = {
     "https://www.contractsfinder.service.gov.uk/Notice/9b22d88e-38ba-4055-8e0e-84c58a196aa0",
     "https://www.contractsfinder.service.gov.uk/Notice/Attachment/3f6da4fd-2533-4289-a49e-ebad9a25c086",
     *PUBLISHED_FEED_ADDRESSES,
     *PUBLISHED_RECORD_IDS,
+    *PUBLISHED_LOCATION_IDS,
+    *URBAN_FOX_ZERO_TARIFFS,
 }
 # RFC 9116 fields, plus CSAF and Bug-Bounty, which IANA's registry added later.
 RFC_9116_FIELDS = {

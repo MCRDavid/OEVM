@@ -11,7 +11,12 @@ from pydantic import ValidationError
 
 from pipeline import registry
 from schema.operator import ENGAGEMENT_LABELS, EngagementStatus, OperatorConfig
-from tests.test_security_files import PUBLISHED_FEED_ADDRESSES, PUBLISHED_RECORD_IDS
+from tests.test_security_files import (
+    PUBLISHED_FEED_ADDRESSES,
+    PUBLISHED_LOCATION_IDS,
+    PUBLISHED_RECORD_IDS,
+    URBAN_FOX_ZERO_TARIFFS,
+)
 
 OPERATORS_DIR = Path(__file__).resolve().parent.parent / "operators"
 SEED_IDS = {
@@ -25,6 +30,7 @@ SEED_IDS = {
     "believ",
     "blink_charging_uk",
     "bp_pulse",
+    "bright_green",
     "charge_my_street",
     "chargeplace_scotland",
     "chargepoint",
@@ -34,6 +40,7 @@ SEED_IDS = {
     "community_by_shell_recharge",
     "connected_kerb",
     "connekt",
+    "drax_energy_solutions",
     "e_on_drive",
     "electric_blue",
     "electroad",
@@ -54,6 +61,7 @@ SEED_IDS = {
     "forward_ev",
     "geniepoint",
     "giga_power",
+    "globe_ev",
     "go_zero",
     "gridserve",
     "hubsta",
@@ -85,9 +93,11 @@ SEED_IDS = {
     "source_ev",
     "sprint",
     "tesla",
+    "three_ti",
     "totalenergies",
     "trojan_energy",
     "ubitricity",
+    "urban_fox",
     "wattif",
     "wattstop",
     "weev",
@@ -171,16 +181,17 @@ def test_template_is_valid_and_disabled():
 
 
 def test_operator_files_contain_no_key_like_values():
+    allowed = PUBLISHED_FEED_ADDRESSES | PUBLISHED_RECORD_IDS | PUBLISHED_LOCATION_IDS
     for path in sorted(OPERATORS_DIR.glob("*.yaml")):
         text = path.read_text(encoding="utf-8")
-        for published in PUBLISHED_FEED_ADDRESSES | PUBLISHED_RECORD_IDS:
+        for published in allowed | URBAN_FOX_ZERO_TARIFFS:
             text = text.replace(published, "")
         assert not UUID_LIKE.search(text), path.name
 
 
 def test_cli_validate_succeeds_on_seed_registry(capsys):
     assert registry.main(["--validate"]) == 0
-    assert "Operator registry is valid: 81 operators" in capsys.readouterr().out
+    assert "Operator registry is valid: 86 operators" in capsys.readouterr().out
 
 
 def test_cli_without_validate_prints_help(capsys):
@@ -737,19 +748,62 @@ def test_a_vat_decision_needs_a_rate_above_zero_and_up_to_100(rate):
         OperatorConfig.model_validate(enabled_open(vat_not_stated=decision))
 
 
-def test_only_chargy_and_clenergy_carry_a_vat_decision_at_20_percent():
+def test_only_chargy_clenergy_and_globe_ev_carry_a_vat_decision_at_20_percent():
     operators = registry.load_registry(OPERATORS_DIR)
     decisions = {
         i: (str(c.vat_not_stated.decided), c.vat_not_stated.add_percent)
         for i, c in operators.items()
         if c.vat_not_stated
     }
-    assert decisions == {"chargy": ("2026-10-22", 20), "clenergy_ev": ("2026-10-22", 20)}
+    assert decisions == {
+        "chargy": ("2026-10-22", 20),
+        "clenergy_ev": ("2026-10-22", 20),
+        "globe_ev": ("2026-10-23", 20),
+    }
 
 
-def test_only_scottishpower_recharge_carries_a_zero_price_tariffs_decision():
+def test_only_bright_green_reads_its_stated_vat_as_in_its_prices():
+    operators = registry.load_registry(OPERATORS_DIR)
+    decided = {i: str(c.vat_in_price.decided) for i, c in operators.items() if c.vat_in_price}
+    assert decided == {"bright_green": "2026-10-23"}
+
+
+def test_vat_in_price_and_vat_not_stated_cannot_both_be_recorded():
+    feed = "https://example.invalid/tariffs"
+    in_price = {"decided": "2026-10-23", "basis": "Display prices.", "evidence_url": feed}
+    not_stated = {
+        "decided": "2026-10-23",
+        "basis": "No rate given.",
+        "evidence_url": feed,
+        "add_percent": 20,
+    }
+    OperatorConfig.model_validate(enabled_open(vat_in_price=in_price))
+    with pytest.raises(ValidationError, match="cannot both be recorded"):
+        OperatorConfig.model_validate(
+            enabled_open(vat_in_price=in_price, vat_not_stated=not_stated)
+        )
+
+
+def test_a_named_missing_minus_sign_needs_a_uk_postcode_and_each_location_once():
+    named = {"id": "loc-1", "name": "Somewhere", "postal_code": "MK11 3LW"}
+    decision = {"decided": "2026-10-23", "basis": "Obvious mistakes.", "sign_missing": [named]}
+    OperatorConfig.model_validate(enabled_open(swapped_coordinates=decision))
+    for bad in (
+        [{**named, "postal_code": "962 12"}],
+        [named, {**named, "name": "Again"}],
+    ):
+        with pytest.raises(ValidationError):
+            OperatorConfig.model_validate(
+                enabled_open(swapped_coordinates={**decision, "sign_missing": bad})
+            )
+
+
+def test_only_scottishpower_recharge_and_urban_fox_carry_a_zero_price_tariffs_decision():
     operators = registry.load_registry(OPERATORS_DIR)
     decisions = {
         i: c.zero_price_tariffs.tariff_ids for i, c in operators.items() if c.zero_price_tariffs
     }
-    assert decisions == {"scottishpower_recharge": sorted(PUBLISHED_RECORD_IDS)}
+    assert decisions == {
+        "scottishpower_recharge": sorted(PUBLISHED_RECORD_IDS),
+        "urban_fox": sorted(URBAN_FOX_ZERO_TARIFFS),
+    }

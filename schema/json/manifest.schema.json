@@ -116,6 +116,36 @@
           "title": "Priced From Related",
           "type": "integer"
         },
+        "replaced": {
+          "default": 0,
+          "description": "Locations left off because this feed sends them under another operator's country and party codes, and that operator's own feed is on the map, by the owner's decision in that operator's file (own_feed_over_copies, ADR 0027).",
+          "minimum": 0,
+          "title": "Replaced",
+          "type": "integer"
+        },
+        "replaced_ids": {
+          "description": "Ids of the locations left off as copies.",
+          "items": {
+            "description": "'{source}:{country}:{party}:{id}', for example 'chargy:GB:CGY:1234'. Use 'unknown' for a country or party that is not known.",
+            "pattern": "^[a-z0-9_]+:[^:]+:[^:]+:.+$",
+            "type": "string"
+          },
+          "title": "Replaced Ids",
+          "type": "array"
+        },
+        "replaced_by": {
+          "description": "How many were left off for each operator whose own feed is shown instead.",
+          "patternProperties": {
+            "^[a-z0-9_]+$": {
+              "type": "integer"
+            }
+          },
+          "propertyNames": {
+            "description": "Operator id from the registry (for example 'chargy'), or a gap-filler source such as 'osm', 'ocm' or 'reports'."
+          },
+          "title": "Replaced By",
+          "type": "object"
+        },
         "attribution": {
           "title": "Attribution",
           "type": "string"
@@ -156,6 +186,9 @@
         "tariffs",
         "private",
         "priced_from_related",
+        "replaced",
+        "replaced_ids",
+        "replaced_by",
         "attribution",
         "licence",
         "licence_url",

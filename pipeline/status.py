@@ -8,7 +8,9 @@ writes build/status/index.html and build/data/status.json. Each run is added to 
 history from --previous (the status.json last published), keeping one entry per day for
 30 days, so the daily fetch (blueprint task 10) builds up a trend. With --map (the map
 file just published), the page also lists every location the map hides unless a visitor
-asks, because its name marks it private or restricted (pipeline/access.py, ADR 0023).
+asks, because its name marks it private or restricted (pipeline/access.py, ADR 0023), and,
+from the manifest beside it, the locations left off as copies of another network's own
+feed (own_feed_over_copies, ADR 0027).
 With --daily-runs (written by pipeline.daily_runs record), it also shows how the daily
 fetch started each day, and how often GitHub's own schedule started it on time (ADR 0024).
 
@@ -36,7 +38,7 @@ from pipeline import daily_runs
 from pipeline.registry import ROOT, RegistryError, load_registry
 from pipeline.transparency import LINKS, STYLE, _e, _link, short_disclaimer
 from schema.operator import OperatorConfig
-from schema.published import HistoryPoint, MapLayer, OperatorStatus, StatusFile
+from schema.published import HistoryPoint, Manifest, MapLayer, OperatorStatus, StatusFile
 from schema.runlog import Health, RunLog
 
 HISTORY_DAYS = 30
@@ -431,6 +433,57 @@ def _private_section(rows: list[PrivateRow] | None) -> str:
     )
 
 
+# The feed carrying copies, the network whose own feed is shown instead, the ids left off.
+CopyRow = tuple[str, str, list[str]]
+
+
+def copy_rows(manifest: Manifest, operators: dict[str, OperatorConfig]) -> list[CopyRow]:
+    """Each feed's locations left off as copies of another network's own feed (ADR 0027)."""
+
+    def name(i: str) -> str:
+        return operators[i].display_name if i in operators else i
+
+    rows = []
+    for feed, entry in manifest.operators.items():
+        for owner in sorted(entry.replaced_by):
+            prefix = f"{feed}:"
+            if owner in operators:
+                config = operators[owner]
+                prefix += f"{config.ocpi_country_code}:{config.ocpi_party_id}:"
+            ids = [i for i in entry.replaced_ids if i.startswith(prefix)]
+            rows.append((name(feed), name(owner), ids))
+    return sorted(rows, key=lambda row: (row[0].lower(), row[1].lower()))
+
+
+def _copies_section(rows: list[CopyRow] | None) -> str:
+    intro = (
+        '<h2 id="copies">Shown from the network&rsquo;s own feed</h2>'
+        "<p>Some feeds also carry another network&rsquo;s locations, under that "
+        "network&rsquo;s own country and party codes. Where the repository owner has "
+        "decided so for a network, those copies are left off the map while the "
+        "network&rsquo;s own feed is on it, so each site is shown once, from its own "
+        'operator. The decisions are on the <a href="../transparency/">transparency '
+        "page</a>.</p>"
+    )
+    if rows is None:
+        return intro + "<p>The map files were not available when this page was built.</p>"
+    if not rows:
+        return intro + "<p>No location in the latest map files was left off this way.</p>"
+    body = "".join(
+        f"<tr><td>{_e(feed)}</td><td>{_e(owner)}</td><td>{len(ids)}"
+        "<details><summary>Location ids</summary><ul>"
+        + "".join(f"<li>{_e(i)}</li>" for i in ids)
+        + "</ul></details></td></tr>"
+        for feed, owner, ids in rows
+    )
+    return (
+        f'{intro}<div class="table-wrap"><table><caption>Locations left off as copies'
+        '</caption><thead><tr><th scope="col">Feed</th><th scope="col">Network whose own '
+        'feed is shown</th><th scope="col">Locations left off</th></tr></thead>'
+        f"<tbody>{body}</tbody></table></div>"
+    )
+
+
 def _day(value) -> str:
     return f"{value.day} {value:%B %Y}"
 
@@ -517,9 +570,11 @@ def render_html(
     private: list[PrivateRow] | None = None,
     switched_off: Sequence[str] = (),
     record: "daily_runs.Record | str | None" = None,
+    copies: list[CopyRow] | None = None,
 ) -> str:
     """The page. switched_off is the display names of registry operators not switched on;
-    record is the daily run record, or why it is missing (None leaves the section out)."""
+    record is the daily run record, or why it is missing (None leaves the section out);
+    copies is from copy_rows, or None when the map files were not given."""
     links = "".join(f"<li>{_link(url, text)}</li>" for text, url in LINKS)
     trends = "".join(_trend(status, data.generated_at) for status in data.operators.values())
     return f"""<!doctype html>
@@ -549,6 +604,7 @@ evidence are on the <a href="../transparency/">transparency page</a>.</p>
 <h2>The last {HISTORY_DAYS} days</h2>
 {trends}
 {_private_section(private)}
+{_copies_section(copies)}
 </main>
 <footer>
 <p class="note">{_e(short_disclaimer())}</p>
@@ -583,7 +639,7 @@ def outputs(
             raise StatusError(f"{previous} is not a valid status file: {problem}") from None
     operators = load_registry()
     data = build(operators, load_runs(runs_dir), before, now)
-    private = None
+    private = copies = None
     if map_layer is not None:
         try:
             layer = MapLayer.model_validate_json(map_layer.read_bytes())
@@ -593,6 +649,15 @@ def outputs(
             problem = exc.errors()[0]["msg"]
             raise StatusError(f"{map_layer} is not a valid map file: {problem}") from None
         private = private_rows(layer, operators)
+        manifest_path = map_layer.parent / "manifest.json"
+        try:
+            manifest = Manifest.model_validate_json(manifest_path.read_bytes())
+        except FileNotFoundError:
+            raise StatusError(f"{manifest_path} does not exist") from None
+        except ValidationError as exc:
+            problem = exc.errors()[0]["msg"]
+            raise StatusError(f"{manifest_path} is not a valid manifest: {problem}") from None
+        copies = copy_rows(manifest, operators)
     off = sorted((c.display_name for c in operators.values() if not c.enabled), key=str.casefold)
     record = None
     if daily_runs_file is not None:
@@ -601,7 +666,7 @@ def outputs(
         except daily_runs.DailyRunsError:
             # The fetch still publishes; the page says the record is missing today.
             record = "The record of runs could not be read from GitHub when this page was built."
-    page, json_text = render_html(data, private, off, record), render_json(data)
+    page, json_text = render_html(data, private, off, record, copies), render_json(data)
     StatusFile.model_validate_json(json_text)
     return {out_dir / "status" / "index.html": page, out_dir / "data" / "status.json": json_text}
 

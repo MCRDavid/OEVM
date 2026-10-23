@@ -1,0 +1,157 @@
+# yaml-language-server: $schema=schema.json
+id: globe_ev
+display_name: Globe EV
+ocpi_country_code: GB
+ocpi_party_id: CEV # Confirmed from the feed's own country_code and party_id on 2026-10-23.
+adapter: ocpi_221
+base_url: unknown
+endpoints:
+  locations:
+    url: https://api.evdot.clenergy.online/development/pcpr/locations
+    status: documented
+    note: Linked from Globe EV's open data page as the locations data (read 2026-10-23).
+  tariffs:
+    url: https://api.evdot.clenergy.online/development/pcpr/tariffs
+    status: documented
+    note: Linked from Globe EV's open data page as the tariffs data (read 2026-10-23).
+response_envelope: data_list
+auth:
+  method: none
+  name: null
+  secret_name: null
+rate_limit:
+  min_seconds_between_requests: 11
+  limits: []
+  limits_checked: 2026-10-23
+  notes: >-
+    Globe EV's open data page states no rate limit. Responses carry X-RateLimit-Limit 6 with
+    no window stated, as Clenergy EV's do (see findings). The 11 second gap is this
+    project's own choice, the same as for Clenergy EV, whose files are on the same platform
+    under another host name: it would stay within 6 requests a minute, plus a 1 second
+    margin, if that is what the header means. Each file holds every record, so a full run
+    makes two requests (about 0.2 MB on 2026-10-23).
+supports_single_location: needs_testing
+cors: supported # access-control-allow-origin "*" on 2026-10-23
+attribution: >-
+  Contains data from Globe EV published under the Public Charge Point Regulations 2023,
+  used in line with the Open Government Licence v3.0.
+licence:
+  name: OGL-3.0
+  url: https://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/
+  basis: >-
+    Globe EV's open data page says its "charge point data can be found here to meet UK
+    Government Public Charge Point Regulations. The links below provide accessible data on
+    charge points in a machine-readable OCPI format", and links the locations and tariffs
+    files. It states no licence or terms for the data. The site has no terms of use page:
+    its sitemap lists four pages and none is a terms page, and the footer links none (read
+    2026-10-23). Regulation 10(5) of the Public Charge Point Regulations 2023 requires the
+    data to be available without terms on its use, and DfT's guidance says "Data must be
+    open in line with the Open Government Licence". On 2026-10-10 the repository owner
+    decided, as a standing rule for operators whose data has no terms of its own, that such
+    operators can be switched on without asking again, and on 2026-10-23 asked for the new
+    feeds whose terms allow use to be switched on.
+  checked: 2026-10-23
+vat_not_stated:
+  decided: 2026-10-23
+  basis: >-
+    Globe EV's feed gives no VAT rate on any price, and its website gives no charging prices
+    to compare (read 23 October 2026). Of the 10 prices per kWh in pounds in its tariffs
+    file of 23 October 2026, 9 come to a whole penny, to within 0.02p, once 20% is added
+    (for example 0.4334 becomes 52p), while only 3 are whole pence as published, the same
+    pattern as Clenergy EV's prices on the same platform. This suggests prices with VAT at
+    20%, the UK standard rate on public charging, taken off; that is inferred from the
+    figures, not stated by Globe EV. The repository owner decided that VAT at 20% is added,
+    so prices on the map all include VAT and can be compared.
+  evidence_url: https://api.evdot.clenergy.online/development/pcpr/tariffs
+  add_percent: 20
+engagement:
+  status: open_anonymous
+  evidence:
+    - date: 2026-10-23
+      url: https://globeev.co.uk/open-data/
+      note: >-
+        Links locations and tariffs on api.evdot.clenergy.online in "a machine-readable OCPI
+        format" and states no licence, terms or rate limit.
+  log:
+    - date: 2026-10-23
+      action: page_checked
+      summary: >-
+        Globe EV's open data page and site were read; the page links two no-key files and
+        the site has no terms of use.
+      evidence_url: https://globeev.co.uk/open-data/
+access_requested: null
+access_granted: null
+sources:
+  - url: https://globeev.co.uk/open-data/
+    note: >-
+      Globe EV's open data page, read on 2026-10-23. Gives the two links. Answers automated
+      requests normally.
+  - url: https://www.evroam.org.uk/id-register
+    note: >-
+      EV Roam's ID register lists Globe EV Ltd with operator ID GB*GEV and the website
+      bmmnetworks.co.uk, which is how this network was found (read 2026-10-23). The feed's
+      own records use the party GB CEV instead.
+findings:
+  - date: 2026-10-23
+    kind: spec_conformance
+    summary: >-
+      Responses wrap the records as {"name": "OK", "message": "ok", "data": [...], "error":
+      null, "forcelogout": false}, with no status_code or timestamp, the same wrapper as
+      Clenergy EV's files on the same platform. The records themselves follow OCPI 2.2.1.
+    handling: >-
+      The operator file sets response_envelope to data_list, as for Clenergy EV, so the
+      adapter accepts a list in data with no status_code and stops if error is set.
+    evidence_url: https://api.evdot.clenergy.online/development/pcpr/locations
+  - date: 2026-10-23
+    kind: data_quality
+    summary: >-
+      Every location and EVSE carries party GB CEV, which is also the party in Clenergy EV's
+      own feed. EV Roam's register lists Globe EV under its own operator ID, GB*GEV. None of
+      Globe EV's 109 locations has the same id or coordinates as a location in Clenergy EV's
+      feed (checked 2026-10-23).
+    handling: >-
+      Kept as published. Record ids start with the operator id, so they cannot clash with
+      Clenergy EV's.
+    evidence_url: https://api.evdot.clenergy.online/development/pcpr/locations
+  - date: 2026-10-23
+    kind: documentation
+    summary: >-
+      Responses carry X-RateLimit-Limit 6, X-RateLimit-Remaining and X-RateLimit-Reset
+      headers. No page states the window or whether the limit is per path.
+    handling: >-
+      Treated as unknown. The project leaves 11 seconds between requests and makes two
+      requests a run.
+    evidence_url: https://api.evdot.clenergy.online/development/pcpr/tariffs
+  - date: 2026-10-23
+    kind: documentation
+    summary: The feed address contains the word "development".
+    handling: >-
+      Used as published, since the operator's open data page links it. The feed health
+      page will show any change.
+    evidence_url: https://globeev.co.uk/open-data/
+  - date: 2026-10-23
+    kind: data_quality
+    summary: >-
+      The operator field is null on every location (109 on 2026-10-23), and tariffs have no
+      country_code or party_id.
+    handling: >-
+      Locations show Globe EV, the name of the operator publishing the feed. Tariff ids use
+      the party GB CEV from the operator file.
+    evidence_url: https://api.evdot.clenergy.online/development/pcpr/locations
+  - date: 2026-10-23
+    kind: data_quality
+    summary: >-
+      Tariff price components give no VAT rate (12 components on 2026-10-23). OCPI 2.2.1
+      says an omitted VAT means no VAT is applicable. Of the 10 prices per kWh in pounds, 9
+      come to a whole penny, to within 0.02p, once 20% is added (for example 0.4334 becomes
+      52p), against 3 as published, the same pattern as Clenergy EV's prices.
+    handling: >-
+      VAT at 20% is added to each price that gives no rate, by the repository owner's
+      decision of 2026-10-23 (vat_not_stated above), and each such price says the VAT was
+      added by this project. The tariffs are published unchanged.
+    evidence_url: https://api.evdot.clenergy.online/development/pcpr/tariffs
+notes: >-
+  Globe EV's files are OCPI 2.2.1 records inside Clenergy's wrapper, so the ocpi_221 adapter
+  reads them with response_envelope set to data_list, as for Clenergy EV. The host name
+  "evdot" matches the EV-Dot brand, whose own website looked parked on 2026-10-22.
+enabled: true

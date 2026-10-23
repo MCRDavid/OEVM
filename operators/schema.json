@@ -797,6 +797,47 @@
       "title": "NonstandardStatuses",
       "type": "object"
     },
+    "OwnFeedOverCopies": {
+      "additionalProperties": false,
+      "description": "The repository owner's recorded decision that this operator's own feed is shown in\nplace of copies of its locations in other operators' feeds (ADR 0027).\n\nA platform's feed can carry a network's locations under the network's own OCPI country\nand party codes, while the network publishes them itself too. While this operator's own\nlocations are on the map, from this run or its last good copy, every location that a\nnamed operator's feed sends under this operator's ocpi_country_code and ocpi_party_id\nis left off the map. Each is counted and listed on the feed health page; nothing in\neither feed is changed. When this operator has nothing on the map, the copies are shown.",
+      "properties": {
+        "decided": {
+          "description": "Date the owner made the decision (YYYY-MM-DD).",
+          "format": "date",
+          "title": "Decided",
+          "type": "string"
+        },
+        "basis": {
+          "description": "Why the other feeds' records are copies of this operator's, with the evidence checked.",
+          "minLength": 1,
+          "title": "Basis",
+          "type": "string"
+        },
+        "evidence_url": {
+          "description": "Where the copies can be seen.",
+          "pattern": "^https?://\\S+$",
+          "title": "Evidence Url",
+          "type": "string"
+        },
+        "operators": {
+          "description": "Ids of the operators whose feeds carry the copies. Each must be in the registry.",
+          "items": {
+            "type": "string"
+          },
+          "minItems": 1,
+          "title": "Operators",
+          "type": "array"
+        }
+      },
+      "required": [
+        "decided",
+        "basis",
+        "evidence_url",
+        "operators"
+      ],
+      "title": "OwnFeedOverCopies",
+      "type": "object"
+    },
     "RateLimit": {
       "additionalProperties": false,
       "properties": {
@@ -899,6 +940,37 @@
       "title": "Relay",
       "type": "object"
     },
+    "SignMissingLocation": {
+      "additionalProperties": false,
+      "description": "A location the owner found to be missing its longitude's minus sign by its postcode.\n\nIts minus sign is added only while the feed still sends this postcode and a positive\nlongitude, and the point west of the Greenwich meridian is on the UK's land or within\n2 km of its coast.",
+      "properties": {
+        "id": {
+          "description": "The location's OCPI id, exactly as sent.",
+          "minLength": 1,
+          "title": "Id",
+          "type": "string"
+        },
+        "name": {
+          "description": "The location's name as the feed sends it.",
+          "minLength": 1,
+          "title": "Name",
+          "type": "string"
+        },
+        "postal_code": {
+          "description": "The UK postcode the feed sends, which shows where it is.",
+          "minLength": 1,
+          "title": "Postal Code",
+          "type": "string"
+        }
+      },
+      "required": [
+        "id",
+        "name",
+        "postal_code"
+      ],
+      "title": "SignMissingLocation",
+      "type": "object"
+    },
     "Source": {
       "additionalProperties": false,
       "properties": {
@@ -928,7 +1000,7 @@
     },
     "SwappedCoordinates": {
       "additionalProperties": false,
-      "description": "The repository owner's recorded decision to correct obviously wrong coordinates.\n\nTwo mistakes are corrected (ADR 0013). A swap: the published point is outside the UK,\nthe same numbers the other way round fall inside the UK, the country is GBR and the\npostcode is a UK postcode. A missing minus sign: the published longitude is positive\nand outside the UK, the same point west of the Greenwich meridian is on the UK's land\nor within 2 km of its coast, the country is GBR and the postcode is a UK postcode or\nnone is given. The published point is kept with the location, the map says it was\ncorrected, and the operator's findings record it. Without this decision such locations\nare left off the map.",
+      "description": "The repository owner's recorded decision to correct obviously wrong coordinates.\n\nTwo mistakes are corrected (ADR 0013). A swap: the published point is outside the UK,\nthe same numbers the other way round fall inside the UK, the country is GBR and the\npostcode is a UK postcode. A missing minus sign: the published longitude is positive\nand outside the UK, the same point west of the Greenwich meridian is on the UK's land\nor within 2 km of its coast, the country is GBR and the postcode is a UK postcode or\nnone is given. The published point is kept with the location, the map says it was\ncorrected, and the operator's findings record it. Without this decision such locations\nare left off the map.\n\nA longitude missing its minus sign can also leave the point inside the UK, far from the\nplace its postcode names. No check can see that, so such a location is corrected only\nwhen the owner names it in sign_missing (ADR 0013, amended 23 October 2026).",
       "properties": {
         "decided": {
           "description": "Date the owner made the decision (YYYY-MM-DD).",
@@ -941,6 +1013,14 @@
           "minLength": 1,
           "title": "Basis",
           "type": "string"
+        },
+        "sign_missing": {
+          "description": "Locations whose longitude is missing its minus sign although the point as published is inside the UK, each named by the owner by exact OCPI id.",
+          "items": {
+            "$ref": "#/$defs/SignMissingLocation"
+          },
+          "title": "Sign Missing",
+          "type": "array"
         }
       },
       "required": [
@@ -989,6 +1069,37 @@
         "operators"
       ],
       "title": "TariffsFrom",
+      "type": "object"
+    },
+    "VatInPrice": {
+      "additionalProperties": false,
+      "description": "The repository owner's recorded decision that the VAT this operator's feed states is\nalready in its prices, so it is not added again (ADR 0003, amended 23 October 2026).\n\nOCPI 2.2.1 prices exclude VAT, and each price component can give the VAT rate to add.\nSome feeds also show the price drivers see, and it can equal the price with no VAT\nadded. Without this decision VAT at the stated rate is added, as OCPI says. With it,\neach price is shown as published, marked as read from the operator's display price.\nThe tariffs themselves are published unchanged.",
+      "properties": {
+        "decided": {
+          "description": "Date the owner made the decision (YYYY-MM-DD).",
+          "format": "date",
+          "title": "Decided",
+          "type": "string"
+        },
+        "basis": {
+          "description": "Why the prices are read as including VAT, with the evidence checked.",
+          "minLength": 1,
+          "title": "Basis",
+          "type": "string"
+        },
+        "evidence_url": {
+          "description": "Where the prices and their VAT can be seen.",
+          "pattern": "^https?://\\S+$",
+          "title": "Evidence Url",
+          "type": "string"
+        }
+      },
+      "required": [
+        "decided",
+        "basis",
+        "evidence_url"
+      ],
+      "title": "VatInPrice",
       "type": "object"
     },
     "VatNotStated": {
@@ -1294,6 +1405,30 @@
       ],
       "default": null,
       "description": "Only by the repository owner's decision: add VAT at a set rate to price components that give no VAT figure. Null means such prices are shown as published and marked 'VAT not stated'."
+    },
+    "vat_in_price": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/VatInPrice"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "description": "Only by the repository owner's decision: read the VAT the feed states as already in its prices. Null means the stated VAT is added, as OCPI 2.2.1 says."
+    },
+    "own_feed_over_copies": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/OwnFeedOverCopies"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "description": "Only by the repository owner's decision: leave off the map the locations other operators' feeds send under this operator's country and party codes, while this operator's own are on it. Null means both are shown."
     },
     "expired_certificate": {
       "anyOf": [

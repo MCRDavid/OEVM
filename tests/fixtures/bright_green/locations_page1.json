@@ -1,0 +1,1876 @@
+{
+  "request": {
+    "method": "GET",
+    "url": "https://connect.bright.green/ocpp/locations"
+  },
+  "response": {
+    "status_code": 200,
+    "headers": {
+      "content-type": "application/json; charset=utf-8"
+    },
+    "body": {
+      "data": [
+        {
+          "id": "00a19591-b7b8-435b-8103-5bd7384920b9",
+          "name": "Software Room",
+          "publish": false,
+          "address": "1 Pitfield",
+          "city": "Milton Keynes",
+          "postal_code": "MK11 3LW",
+          "coordinates": {
+            "latitude": "90",
+            "longitude": "90"
+          },
+          "owner": {
+            "name": "Bright.Green Energy"
+          },
+          "time_zone": "Etc/GMT",
+          "last_updated": "2024-02-28T17:01:06.407Z",
+          "country_code": "GB",
+          "country": "GB",
+          "evses": [
+            {
+              "uid": "9fe756e4-7fa2-48f6-a9b7-5f891aeb7b38",
+              "evse_id": "123456200",
+              "status": "idle",
+              "physical_reference": "123456200",
+              "coordinates": {
+                "latitude": "90",
+                "longitude": "90"
+              },
+              "last_updated": "2024-07-30T16:40:04.675Z",
+              "connectors": [
+                {
+                  "id": "1",
+                  "status": "Available",
+                  "last_updated": "2024-04-30T09:30:31.757Z",
+                  "nick_name": "Socket 1",
+                  "socket_type": "Type 2",
+                  "power_type": "fast",
+                  "max_electric_power": 22000,
+                  "tariff_ids": [
+                    "91a35f21-69bc-4476-87bb-cbf496ab5255"
+                  ]
+                }
+              ]
+            },
+            {
+              "uid": "2cf1fce3-821a-4157-8e01-b92e19375b8b",
+              "evse_id": "EC2MLESU",
+              "status": "idle",
+              "physical_reference": "EC2MLESU",
+              "coordinates": {
+                "latitude": "90",
+                "longitude": "90"
+              },
+              "last_updated": "2025-03-07T13:11:40.049Z",
+              "connectors": [
+                {
+                  "id": "1",
+                  "status": "Available",
+                  "last_updated": "2025-07-14T07:12:01.938Z",
+                  "nick_name": "Socket 1",
+                  "socket_type": "Type 2",
+                  "power_type": "fast",
+                  "max_electric_power": 22000,
+                  "tariff_ids": [
+                    "91a35f21-69bc-4476-87bb-cbf496ab5255"
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "8e93fc4b-ad32-41b0-ae13-24656935064a",
+          "name": "IBIS Derby",
+          "publish": true,
+          "address": "IBIS Derby",
+          "city": "Derby",
+          "postal_code": "DE65 6DX",
+          "coordinates": {
+            "latitude": "52.8642784",
+            "longitude": "-1.5649961"
+          },
+          "owner": {
+            "name": "EVC Solutions"
+          },
+          "time_zone": "Europe/London",
+          "last_updated": "2025-07-15T16:32:58.896Z",
+          "country_code": "GB",
+          "country": "GB",
+          "evses": [
+            {
+              "uid": "800065f1-8248-462d-96c6-9def4c2c75c6",
+              "evse_id": "26183114",
+              "status": "idle",
+              "physical_reference": "26183114",
+              "coordinates": {
+                "latitude": "52.8642784",
+                "longitude": "-1.5649961"
+              },
+              "last_updated": "2024-02-29T13:59:49.733Z",
+              "connectors": [
+                {
+                  "id": "1",
+                  "status": "Charging",
+                  "last_updated": "2026-10-22T15:56:48.127Z",
+                  "nick_name": "Socket 1",
+                  "socket_type": "Type 2",
+                  "power_type": "fast",
+                  "max_electric_power": 22000,
+                  "tariff_ids": [
+                    "7ff2ce14-cb22-4831-ac9e-1ca6a9f6fd77"
+                  ]
+                },
+                {
+                  "id": "8",
+                  "status": "Available",
+                  "last_updated": "2026-10-21T13:24:49.701Z",
+                  "nick_name": "Socket 8",
+                  "socket_type": "Type 2",
+                  "power_type": "fast",
+                  "max_electric_power": 22000,
+                  "tariff_ids": [
+                    "7ff2ce14-cb22-4831-ac9e-1ca6a9f6fd77"
+                  ]
+                },
+                {
+                  "id": "2",
+                  "status": "Available",
+                  "last_updated": "2026-10-20T16:32:41.417Z",
+                  "nick_name": "Socket 2",
+                  "socket_type": "Type 2",
+                  "power_type": "fast",
+                  "max_electric_power": 22000,
+                  "tariff_ids": [
+                    "7ff2ce14-cb22-4831-ac9e-1ca6a9f6fd77"
+                  ]
+                },
+                {
+                  "id": "7",
+                  "status": "Available",
+                  "last_updated": "2026-10-14T22:49:00.065Z",
+                  "nick_name": "Socket 7",
+                  "socket_type": "Type 2",
+                  "power_type": "fast",
+                  "max_electric_power": 22000,
+                  "tariff_ids": [
+                    "7ff2ce14-cb22-4831-ac9e-1ca6a9f6fd77"
+                  ]
+                },
+                {
+                  "id": "4",
+                  "status": "Available",
+                  "last_updated": "2026-10-22T06:43:11.970Z",
+                  "nick_name": "Socket 4",
+                  "socket_type": "Type 2",
+                  "power_type": "fast",
+                  "max_electric_power": 22000,
+                  "tariff_ids": [
+                    "7ff2ce14-cb22-4831-ac9e-1ca6a9f6fd77"
+                  ]
+                },
+                {
+                  "id": "6",
+                  "status": "Unavailable",
+                  "last_updated": "2026-09-22T07:16:09.569Z",
+                  "nick_name": "Socket 6",
+                  "socket_type": "Type 2",
+                  "power_type": "fast",
+                  "max_electric_power": 22000,
+                  "tariff_ids": [
+                    "7ff2ce14-cb22-4831-ac9e-1ca6a9f6fd77"
+                  ]
+                },
+                {
+                  "id": "3",
+                  "status": "Available",
+                  "last_updated": "2026-10-17T09:23:58.436Z",
+                  "nick_name": "Socket 3",
+                  "socket_type": "Type 2",
+                  "power_type": "fast",
+                  "max_electric_power": 22000,
+                  "tariff_ids": [
+                    "7ff2ce14-cb22-4831-ac9e-1ca6a9f6fd77"
+                  ]
+                },
+                {
+                  "id": "5",
+                  "status": "Available",
+                  "last_updated": "2026-10-20T18:23:15.598Z",
+                  "nick_name": "Socket 5",
+                  "socket_type": "Type 2",
+                  "power_type": "fast",
+                  "max_electric_power": 22000,
+                  "tariff_ids": [
+                    "7ff2ce14-cb22-4831-ac9e-1ca6a9f6fd77"
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "7d5bb737-9025-4330-9e89-b9ee5067410b",
+          "name": "IBIS Leicester",
+          "publish": true,
+          "address": "Leicester North Services",
+          "city": "Leicester",
+          "postal_code": "LE4 3BT",
+          "coordinates": {
+            "latitude": "52.6909826",
+            "longitude": "-1.1294797"
+          },
+          "owner": {
+            "name": "EVC Solutions"
+          },
+          "time_zone": "Europe/London",
+          "last_updated": "2025-07-15T16:28:15.170Z",
+          "country_code": "GB",
+          "country": "GB",
+          "evses": [
+            {
+              "uid": "e26fa6a1-df1f-4ab0-8094-d6ad966a98cf",
+              "evse_id": "26992168",
+              "status": "idle",
+              "physical_reference": "26992168-M20",
+              "coordinates": {
+                "latitude": "52.6909826",
+                "longitude": "-1.1294797"
+              },
+              "last_updated": "2024-03-13T06:57:10.643Z",
+              "connectors": [
+                {
+                  "id": "7",
+                  "status": "Available",
+                  "last_updated": "2026-10-21T11:38:58.799Z",
+                  "nick_name": "Socket 7",
+                  "socket_type": "Type 2",
+                  "power_type": "fast",
+                  "max_electric_power": 22000,
+                  "tariff_ids": [
+                    "7ff2ce14-cb22-4831-ac9e-1ca6a9f6fd77"
+                  ]
+                },
+                {
+                  "id": "2",
+                  "status": "Available",
+                  "last_updated": "2026-10-21T07:29:08.105Z",
+                  "nick_name": "Socket 2",
+                  "socket_type": "Type 2",
+                  "power_type": "fast",
+                  "max_electric_power": 22000,
+                  "tariff_ids": [
+                    "7ff2ce14-cb22-4831-ac9e-1ca6a9f6fd77"
+                  ]
+                },
+                {
+                  "id": "5",
+                  "status": "Available",
+                  "last_updated": "2026-10-18T16:33:20.879Z",
+                  "nick_name": "Socket 5",
+                  "socket_type": "Type 2",
+                  "power_type": "fast",
+                  "max_electric_power": 22000,
+                  "tariff_ids": [
+                    "7ff2ce14-cb22-4831-ac9e-1ca6a9f6fd77"
+                  ]
+                },
+                {
+                  "id": "4",
+                  "status": "Available",
+                  "last_updated": "2026-10-14T07:19:22.281Z",
+                  "nick_name": "Socket 4",
+                  "socket_type": "Type 2",
+                  "power_type": "fast",
+                  "max_electric_power": 22000,
+                  "tariff_ids": [
+                    "7ff2ce14-cb22-4831-ac9e-1ca6a9f6fd77"
+                  ]
+                },
+                {
+                  "id": "6",
+                  "status": "Available",
+                  "last_updated": "2026-10-20T16:09:53.348Z",
+                  "nick_name": "Socket 6",
+                  "socket_type": "Type 2",
+                  "power_type": "fast",
+                  "max_electric_power": 22000,
+                  "tariff_ids": [
+                    "7ff2ce14-cb22-4831-ac9e-1ca6a9f6fd77"
+                  ]
+                },
+                {
+                  "id": "1",
+                  "status": "Available",
+                  "last_updated": "2026-10-21T06:54:35.303Z",
+                  "nick_name": "Socket 1",
+                  "socket_type": "Type 2",
+                  "power_type": "fast",
+                  "max_electric_power": 22000,
+                  "tariff_ids": [
+                    "7ff2ce14-cb22-4831-ac9e-1ca6a9f6fd77"
+                  ]
+                },
+                {
+                  "id": "3",
+                  "status": "Available",
+                  "last_updated": "2026-10-21T17:16:48.947Z",
+                  "nick_name": "Socket 3",
+                  "socket_type": "Type 2",
+                  "power_type": "fast",
+                  "max_electric_power": 22000,
+                  "tariff_ids": [
+                    "7ff2ce14-cb22-4831-ac9e-1ca6a9f6fd77"
+                  ]
+                },
+                {
+                  "id": "8",
+                  "status": "Available",
+                  "last_updated": "2026-10-18T06:07:30.232Z",
+                  "nick_name": "Socket 8",
+                  "socket_type": "Type 2",
+                  "power_type": "fast",
+                  "max_electric_power": 22000,
+                  "tariff_ids": [
+                    "7ff2ce14-cb22-4831-ac9e-1ca6a9f6fd77"
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "837dfebe-b729-44d0-89bf-87a5c4df5c6f",
+          "name": "EZ charge HQ",
+          "publish": true,
+          "address": "Telford Road",
+          "city": "Bicester",
+          "postal_code": "OX26 4LB",
+          "coordinates": {
+            "latitude": "51.9043536",
+            "longitude": "-1.1309721"
+          },
+          "owner": {
+            "name": "EZ charge"
+          },
+          "time_zone": "Europe/London",
+          "last_updated": "2024-06-21T11:57:06.109Z",
+          "country_code": "GB",
+          "country": "GB",
+          "evses": [
+            {
+              "uid": "1ec68581-ec09-4407-b4c3-ef21d5fdee56",
+              "evse_id": "OX264LB-ID-002",
+              "status": "idle",
+              "physical_reference": "Ezy Chargepoint 1",
+              "coordinates": {
+                "latitude": "51.9043536",
+                "longitude": "-1.1309721"
+              },
+              "last_updated": "2024-06-24T14:23:37.759Z",
+              "connectors": [
+                {
+                  "id": "3",
+                  "status": "Charging",
+                  "last_updated": "2024-07-12T08:03:54.281Z",
+                  "nick_name": "3",
+                  "socket_type": "CCS 2",
+                  "power_type": "ultrarapid",
+                  "max_electric_power": 150000,
+                  "tariff_ids": [
+                    "a18753a2-bb81-439f-92ea-d91af41aaafc"
+                  ]
+                },
+                {
+                  "id": "1",
+                  "status": "Available",
+                  "last_updated": "2024-07-10T15:14:14.490Z",
+                  "nick_name": "1",
+                  "socket_type": "CCS 2",
+                  "power_type": "ultrarapid",
+                  "max_electric_power": 150000,
+                  "tariff_ids": [
+                    "a18753a2-bb81-439f-92ea-d91af41aaafc"
+                  ]
+                },
+                {
+                  "id": "2",
+                  "status": "Available",
+                  "last_updated": "2024-06-21T11:59:15.735Z",
+                  "nick_name": "2",
+                  "socket_type": "Type 2",
+                  "power_type": "ultrarapid",
+                  "max_electric_power": 150000,
+                  "tariff_ids": [
+                    "a18753a2-bb81-439f-92ea-d91af41aaafc"
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "aa499d4c-07ab-4c38-9b35-588149eb2a96",
+          "name": "St Philomena's Front Staff Car Park",
+          "publish": false,
+          "address": "Shorts Road",
+          "city": "Surrey",
+          "postal_code": "SM5 3PS   ",
+          "coordinates": {
+            "latitude": "51.2253031",
+            "longitude": "1.3377162"
+          },
+          "owner": {
+            "name": "St Philomena’s Catholic High School for Girls"
+          },
+          "time_zone": "Europe/London",
+          "last_updated": "2025-06-24T22:43:04.087Z",
+          "country_code": "GB",
+          "country": "GB",
+          "evses": [
+            {
+              "uid": "bd2be7b6-bf08-44a4-b090-261b41984181",
+              "evse_id": "EC477YU8",
+              "status": "idle",
+              "physical_reference": "Charger 1",
+              "coordinates": {
+                "latitude": "51.2253031",
+                "longitude": "1.3377162"
+              },
+              "last_updated": "2025-03-03T16:09:26.396Z",
+              "connectors": [
+                {
+                  "id": "1",
+                  "status": "Available",
+                  "last_updated": "2026-03-26T19:07:04.267Z",
+                  "nick_name": "Socket 1",
+                  "socket_type": "Type 2",
+                  "power_type": "fast",
+                  "max_electric_power": 22000,
+                  "tariff_ids": [
+                    "55c566a2-d965-4ec9-b264-0a0e7ea765b9"
+                  ]
+                }
+              ]
+            },
+            {
+              "uid": "494348d0-e5a0-47a8-a2e7-1eb71399e8a8",
+              "evse_id": "ECR5YRDE",
+              "status": "idle",
+              "physical_reference": "Charger 6",
+              "coordinates": {
+                "latitude": "51.2253031",
+                "longitude": "1.3377162"
+              },
+              "last_updated": "2025-03-03T16:11:49.877Z",
+              "connectors": [
+                {
+                  "id": "1",
+                  "status": "Available",
+                  "last_updated": "2026-05-20T07:49:54.880Z",
+                  "nick_name": "Socket 6",
+                  "socket_type": "Type 2",
+                  "power_type": "fast",
+                  "max_electric_power": 22000,
+                  "tariff_ids": [
+                    "55c566a2-d965-4ec9-b264-0a0e7ea765b9"
+                  ]
+                }
+              ]
+            },
+            {
+              "uid": "8b30e767-3e0d-4ef7-a238-5082b4a5632b",
+              "evse_id": "ECXNQ4RT",
+              "status": "idle",
+              "physical_reference": "Charger 8",
+              "coordinates": {
+                "latitude": "51.2253031",
+                "longitude": "1.3377162"
+              },
+              "last_updated": "2025-06-25T12:59:08.855Z",
+              "connectors": [
+                {
+                  "id": "1",
+                  "status": "Available",
+                  "last_updated": "2025-03-03T16:13:29.800Z",
+                  "nick_name": "Socket 8",
+                  "socket_type": "Type 2",
+                  "power_type": "fast",
+                  "max_electric_power": 22000,
+                  "tariff_ids": [
+                    "55c566a2-d965-4ec9-b264-0a0e7ea765b9"
+                  ]
+                }
+              ]
+            },
+            {
+              "uid": "2c7ef094-4131-45b3-88f7-88f93b1960e9",
+              "evse_id": "ECP2LFNS",
+              "status": "idle",
+              "physical_reference": "Charger 7",
+              "coordinates": {
+                "latitude": "51.2253031",
+                "longitude": "1.3377162"
+              },
+              "last_updated": "2025-06-25T12:58:39.871Z",
+              "connectors": [
+                {
+                  "id": "1",
+                  "status": "Available",
+                  "last_updated": "2026-07-10T08:00:40.410Z",
+                  "nick_name": "Socket 7",
+                  "socket_type": "Type 2",
+                  "power_type": "fast",
+                  "max_electric_power": 22000,
+                  "tariff_ids": [
+                    "55c566a2-d965-4ec9-b264-0a0e7ea765b9"
+                  ]
+                }
+              ]
+            },
+            {
+              "uid": "096407a3-6f39-44fe-b7de-67b711cc046b",
+              "evse_id": "ECTMCN8Y",
+              "status": "idle",
+              "physical_reference": "Charger 5",
+              "coordinates": {
+                "latitude": "51.2253031",
+                "longitude": "1.3377162"
+              },
+              "last_updated": "2025-03-03T16:11:05.782Z",
+              "connectors": [
+                {
+                  "id": "1",
+                  "status": "Available",
+                  "last_updated": "2026-09-07T06:46:11.105Z",
+                  "nick_name": "Socket 5",
+                  "socket_type": "Type 2",
+                  "power_type": "fast",
+                  "max_electric_power": 22000,
+                  "tariff_ids": [
+                    "55c566a2-d965-4ec9-b264-0a0e7ea765b9"
+                  ]
+                }
+              ]
+            },
+            {
+              "uid": "a3483874-9ca3-4e61-bebe-6132d795abe4",
+              "evse_id": "ECVQ6AP8",
+              "status": "idle",
+              "physical_reference": "Charger 3",
+              "coordinates": {
+                "latitude": "51.2253031",
+                "longitude": "1.3377162"
+              },
+              "last_updated": "2025-03-03T16:09:34.961Z",
+              "connectors": [
+                {
+                  "id": "1",
+                  "status": "Available",
+                  "last_updated": "2026-09-09T07:04:09.674Z",
+                  "nick_name": "Socket 3",
+                  "socket_type": "Type 2",
+                  "power_type": "fast",
+                  "max_electric_power": 22000,
+                  "tariff_ids": [
+                    "55c566a2-d965-4ec9-b264-0a0e7ea765b9"
+                  ]
+                }
+              ]
+            },
+            {
+              "uid": "be768a19-4147-4abf-ac8c-831c9b51f0ec",
+              "evse_id": "EC9DNEGZ",
+              "status": "idle",
+              "physical_reference": "Charger 4",
+              "coordinates": {
+                "latitude": "51.2253031",
+                "longitude": "1.3377162"
+              },
+              "last_updated": "2025-03-03T16:10:11.410Z",
+              "connectors": [
+                {
+                  "id": "1",
+                  "status": "Available",
+                  "last_updated": "2026-10-06T07:12:39.604Z",
+                  "nick_name": "Socket 4",
+                  "socket_type": "Type 2",
+                  "power_type": "fast",
+                  "max_electric_power": 22000,
+                  "tariff_ids": [
+                    "55c566a2-d965-4ec9-b264-0a0e7ea765b9"
+                  ]
+                }
+              ]
+            },
+            {
+              "uid": "d7106102-929d-436b-96d3-abaa64a7b1fc",
+              "evse_id": "ECK4T653",
+              "status": "idle",
+              "physical_reference": "Charger 2",
+              "coordinates": {
+                "latitude": "51.2253031",
+                "longitude": "1.3377162"
+              },
+              "last_updated": "2025-03-17T17:40:22.455Z",
+              "connectors": [
+                {
+                  "id": "1",
+                  "status": "Available",
+                  "last_updated": "2026-04-27T07:05:56.417Z",
+                  "nick_name": "Socket 2",
+                  "socket_type": "Type 2",
+                  "power_type": "fast",
+                  "max_electric_power": 22000,
+                  "tariff_ids": [
+                    "55c566a2-d965-4ec9-b264-0a0e7ea765b9"
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "4cbfa56a-07da-4cf1-90be-8277667b4158",
+          "name": "Kiln Farm Station",
+          "publish": true,
+          "address": "1 Pitfield ",
+          "city": "Milton Keynes",
+          "postal_code": "MK11 3LW",
+          "coordinates": {
+            "latitude": "52.04",
+            "longitude": ".82"
+          },
+          "owner": {
+            "name": "Bright.Green Energy"
+          },
+          "time_zone": "Europe/London",
+          "last_updated": "2026-05-26T12:28:50.275Z",
+          "country_code": "GB",
+          "country": "GB",
+          "evses": [
+            {
+              "uid": "95bbaa21-37f6-410a-bbef-e33d27d2a125",
+              "evse_id": "27013525",
+              "status": "idle",
+              "physical_reference": "1",
+              "coordinates": {
+                "latitude": "52.04",
+                "longitude": ".82"
+              },
+              "last_updated": "2024-04-12T13:27:48.408Z",
+              "connectors": [
+                {
+                  "id": "1",
+                  "status": "Charging",
+                  "last_updated": "2025-12-04T09:51:40.841Z",
+                  "nick_name": "Socket 1",
+                  "socket_type": "Type 2",
+                  "power_type": "fast",
+                  "max_electric_power": 22000,
+                  "tariff_ids": [
+                    "91a35f21-69bc-4476-87bb-cbf496ab5255"
+                  ]
+                }
+              ]
+            },
+            {
+              "uid": "f3d67404-d858-4af0-b477-bfc274069964",
+              "evse_id": "AE0007A1GMCC009530",
+              "status": "idle",
+              "physical_reference": "6",
+              "coordinates": {
+                "latitude": "52.04",
+                "longitude": ".82"
+              },
+              "last_updated": "2024-04-12T13:29:54.154Z",
+              "connectors": [
+                {
+                  "id": "1",
+                  "status": "Available",
+                  "last_updated": "2025-01-22T09:11:08.252Z",
+                  "nick_name": "Socket 6",
+                  "socket_type": "Type 2",
+                  "power_type": "fast",
+                  "max_electric_power": 22000,
+                  "tariff_ids": [
+                    "91a35f21-69bc-4476-87bb-cbf496ab5255"
+                  ]
+                }
+              ]
+            },
+            {
+              "uid": "344e5ab0-8bf9-42fa-8734-54950951dca0",
+              "evse_id": "AE0007A1GMCC009620",
+              "status": "idle",
+              "physical_reference": "5",
+              "coordinates": {
+                "latitude": "52.04",
+                "longitude": ".82"
+              },
+              "last_updated": "2024-04-12T13:29:46.438Z",
+              "connectors": [
+                {
+                  "id": "1",
+                  "status": "Available",
+                  "last_updated": "2025-01-22T11:39:05.139Z",
+                  "nick_name": "Socket 5",
+                  "socket_type": "Type 2",
+                  "power_type": "fast",
+                  "max_electric_power": 22000,
+                  "tariff_ids": [
+                    "91a35f21-69bc-4476-87bb-cbf496ab5255"
+                  ]
+                }
+              ]
+            },
+            {
+              "uid": "656a584a-b2fc-4a92-bb22-340e6597ec37",
+              "evse_id": "ECHTYQ27",
+              "status": "idle",
+              "physical_reference": "4",
+              "coordinates": {
+                "latitude": "52.04",
+                "longitude": ".82"
+              },
+              "last_updated": "2024-08-05T13:23:58.494Z",
+              "connectors": [
+                {
+                  "id": "1",
+                  "status": "Available",
+                  "last_updated": "2026-10-21T12:17:05.633Z",
+                  "nick_name": "Socket 4",
+                  "socket_type": "Type 2",
+                  "power_type": "fast",
+                  "max_electric_power": 22000,
+                  "tariff_ids": [
+                    "91a35f21-69bc-4476-87bb-cbf496ab5255"
+                  ]
+                }
+              ]
+            },
+            {
+              "uid": "81eb0d92-f0e6-44dd-a250-4bb946050618",
+              "evse_id": "27013534",
+              "status": "idle",
+              "physical_reference": "2",
+              "coordinates": {
+                "latitude": "52.04",
+                "longitude": ".82"
+              },
+              "last_updated": "2024-04-12T13:27:59.314Z",
+              "connectors": [
+                {
+                  "id": "1",
+                  "status": "Available",
+                  "last_updated": "2026-10-22T11:48:59.236Z",
+                  "nick_name": "Socket 2",
+                  "socket_type": "Type 2",
+                  "power_type": "fast",
+                  "max_electric_power": 22000,
+                  "tariff_ids": [
+                    "91a35f21-69bc-4476-87bb-cbf496ab5255"
+                  ]
+                }
+              ]
+            },
+            {
+              "uid": "3bf804eb-fd02-47f9-b283-5180b9ec37d7",
+              "evse_id": "ECNRKKY6",
+              "status": "idle",
+              "physical_reference": "3",
+              "coordinates": {
+                "latitude": "52.04",
+                "longitude": ".82"
+              },
+              "last_updated": "2024-08-05T13:23:11.611Z",
+              "connectors": [
+                {
+                  "id": "1",
+                  "status": "Available",
+                  "last_updated": "2026-10-22T05:59:28.380Z",
+                  "nick_name": "Socket 3",
+                  "socket_type": "Type 2",
+                  "power_type": "fast",
+                  "max_electric_power": 22000,
+                  "tariff_ids": [
+                    "91a35f21-69bc-4476-87bb-cbf496ab5255"
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "9b7f10e6-6a5a-4e37-9923-cc876fa9310e",
+          "name": "Southgate Hotel London",
+          "publish": false,
+          "address": "Southgate Hotel London",
+          "city": "London",
+          "postal_code": "N14 5AJ",
+          "coordinates": {
+            "latitude": "51.6316902",
+            "longitude": "-0.1292595"
+          },
+          "owner": {
+            "name": "Property Hotel Limited"
+          },
+          "time_zone": "Europe/London",
+          "last_updated": "2024-10-29T01:09:18.322Z",
+          "country_code": "GB",
+          "country": "GB",
+          "evses": [
+            {
+              "uid": "b0d44e15-8bbb-415a-bad6-f299b08c083a",
+              "evse_id": "ECNAA5KT",
+              "status": "idle",
+              "physical_reference": "Charger 2",
+              "coordinates": {
+                "latitude": "51.6316902",
+                "longitude": "-0.1292595"
+              },
+              "last_updated": "2024-12-03T16:29:17.972Z",
+              "connectors": [
+                {
+                  "id": "1",
+                  "status": "Available",
+                  "last_updated": "2026-10-17T16:44:38.767Z",
+                  "nick_name": "Socket 2",
+                  "socket_type": "Type 2",
+                  "power_type": "fast",
+                  "max_electric_power": 22000,
+                  "tariff_ids": [
+                    "ad1d7cc8-00d1-4cdc-8cb3-16b4d7c29580"
+                  ]
+                }
+              ]
+            },
+            {
+              "uid": "e65d0f7f-dd6c-4c15-83de-7a93731a61cb",
+              "evse_id": "ECELXJH8",
+              "status": "idle",
+              "physical_reference": "Charger 3",
+              "coordinates": {
+                "latitude": "51.6316902",
+                "longitude": "-0.1292595"
+              },
+              "last_updated": "2024-11-12T17:29:30.031Z",
+              "connectors": [
+                {
+                  "id": "1",
+                  "status": "Available",
+                  "last_updated": "2026-10-21T18:59:59.667Z",
+                  "nick_name": "Socket 3",
+                  "socket_type": "Type 2",
+                  "power_type": "fast",
+                  "max_electric_power": 22000,
+                  "tariff_ids": [
+                    "ad1d7cc8-00d1-4cdc-8cb3-16b4d7c29580"
+                  ]
+                }
+              ]
+            },
+            {
+              "uid": "539c86bf-a2f1-4789-b5c6-8780446e08c3",
+              "evse_id": "ECZHMZVA",
+              "status": "idle",
+              "physical_reference": "Charger 4",
+              "coordinates": {
+                "latitude": "51.6316902",
+                "longitude": "-0.1292595"
+              },
+              "last_updated": "2024-11-12T17:29:37.449Z",
+              "connectors": [
+                {
+                  "id": "1",
+                  "status": "SuspendedEV",
+                  "last_updated": "2026-10-21T19:01:06.888Z",
+                  "nick_name": "Socket 4",
+                  "socket_type": "Type 2",
+                  "power_type": "fast",
+                  "max_electric_power": 22000,
+                  "tariff_ids": [
+                    "ad1d7cc8-00d1-4cdc-8cb3-16b4d7c29580"
+                  ]
+                }
+              ]
+            },
+            {
+              "uid": "a3c14f77-4bb1-401a-bc43-78606ba31f53",
+              "evse_id": "ECGNMNP4",
+              "status": "idle",
+              "physical_reference": "Charger 1",
+              "coordinates": {
+                "latitude": "51.6316902",
+                "longitude": "-0.1292595"
+              },
+              "last_updated": "2024-11-12T17:29:02.984Z",
+              "connectors": [
+                {
+                  "id": "1",
+                  "status": "Available",
+                  "last_updated": "2026-08-24T08:21:24.389Z",
+                  "nick_name": "Socket 1",
+                  "socket_type": "Type 2",
+                  "power_type": "fast",
+                  "max_electric_power": 22000,
+                  "tariff_ids": [
+                    "ad1d7cc8-00d1-4cdc-8cb3-16b4d7c29580"
+                  ]
+                }
+              ]
+            },
+            {
+              "uid": "d1aecd15-d867-4a85-a62b-c1f21dace84a",
+              "evse_id": "ECHU3L8F",
+              "status": "idle",
+              "physical_reference": "Charger 6",
+              "coordinates": {
+                "latitude": "51.6316902",
+                "longitude": "-0.1292595"
+              },
+              "last_updated": "2024-11-12T17:29:52.516Z",
+              "connectors": [
+                {
+                  "id": "1",
+                  "status": "Available",
+                  "last_updated": "2026-10-19T13:12:43.703Z",
+                  "nick_name": "Socket 6",
+                  "socket_type": "Type 2",
+                  "power_type": "fast",
+                  "max_electric_power": 22000,
+                  "tariff_ids": [
+                    "ad1d7cc8-00d1-4cdc-8cb3-16b4d7c29580"
+                  ]
+                }
+              ]
+            },
+            {
+              "uid": "3d04d366-2651-465a-b809-508220a77518",
+              "evse_id": "EC6TPK96",
+              "status": "idle",
+              "physical_reference": "Charger 5",
+              "coordinates": {
+                "latitude": "51.6316902",
+                "longitude": "-0.1292595"
+              },
+              "last_updated": "2024-11-12T17:29:44.478Z",
+              "connectors": [
+                {
+                  "id": "1",
+                  "status": "Available",
+                  "last_updated": "2026-10-20T17:24:06.474Z",
+                  "nick_name": "Socket 5",
+                  "socket_type": "Type 2",
+                  "power_type": "fast",
+                  "max_electric_power": 22000,
+                  "tariff_ids": [
+                    "ad1d7cc8-00d1-4cdc-8cb3-16b4d7c29580"
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "5be1098b-733f-4c21-9659-ed1495100d1b",
+          "name": "Testbourne Community School",
+          "publish": false,
+          "address": "Testbourne Community School",
+          "city": "Whitchurch",
+          "postal_code": "RG28 7JF",
+          "coordinates": {
+            "latitude": "51.2253031",
+            "longitude": "1.3377162"
+          },
+          "owner": {
+            "name": "Testbourne Community School"
+          },
+          "time_zone": "Europe/London",
+          "last_updated": "2025-06-24T22:43:01.666Z",
+          "country_code": "GB",
+          "country": "GB",
+          "evses": [
+            {
+              "uid": "fe58be6e-a836-422e-8cd7-3bfaf5774050",
+              "evse_id": "EC96GAXX",
+              "status": "idle",
+              "physical_reference": "Charger 2",
+              "coordinates": {
+                "latitude": "51.2253031",
+                "longitude": "1.3377162"
+              },
+              "last_updated": "2024-11-19T06:43:12.991Z",
+              "connectors": [
+                {
+                  "id": "1",
+                  "status": "Available",
+                  "last_updated": "2026-10-19T18:24:51.335Z",
+                  "nick_name": "Socket 2",
+                  "socket_type": "Type 2",
+                  "power_type": "fast",
+                  "max_electric_power": 22000,
+                  "tariff_ids": [
+                    "48cd1352-d05e-49e9-a30a-5c891f060280"
+                  ]
+                }
+              ]
+            },
+            {
+              "uid": "2d1cb8d7-7fc5-41d4-b559-00fb32ea1524",
+              "evse_id": "ECQYVQQG",
+              "status": "idle",
+              "physical_reference": "Charger 3",
+              "coordinates": {
+                "latitude": "51.2253031",
+                "longitude": "1.3377162"
+              },
+              "last_updated": "2024-11-19T06:44:38.262Z",
+              "connectors": [
+                {
+                  "id": "1",
+                  "status": "Available",
+                  "last_updated": "2026-10-19T06:49:26.131Z",
+                  "nick_name": "Socket 3",
+                  "socket_type": "Type 2",
+                  "power_type": "fast",
+                  "max_electric_power": 22000,
+                  "tariff_ids": [
+                    "48cd1352-d05e-49e9-a30a-5c891f060280"
+                  ]
+                }
+              ]
+            },
+            {
+              "uid": "15b32014-2d77-4694-9429-2e2d9b30ff0a",
+              "evse_id": "ECWJK74V",
+              "status": "idle",
+              "physical_reference": "Charger 4",
+              "coordinates": {
+                "latitude": "51.2253031",
+                "longitude": "1.3377162"
+              },
+              "last_updated": "2024-11-19T06:45:37.675Z",
+              "connectors": [
+                {
+                  "id": "1",
+                  "status": "Available",
+                  "last_updated": "2026-10-21T16:00:43.024Z",
+                  "nick_name": "Socket 4",
+                  "socket_type": "Type 2",
+                  "power_type": "fast",
+                  "max_electric_power": 22000,
+                  "tariff_ids": [
+                    "48cd1352-d05e-49e9-a30a-5c891f060280"
+                  ]
+                }
+              ]
+            },
+            {
+              "uid": "c166b47d-8e6a-4165-9994-a24f94aa247f",
+              "evse_id": "ECKRHAU5",
+              "status": "idle",
+              "physical_reference": "Charger 1",
+              "coordinates": {
+                "latitude": "51.2253031",
+                "longitude": "1.3377162"
+              },
+              "last_updated": "2025-05-01T08:53:26.412Z",
+              "connectors": [
+                {
+                  "id": "1",
+                  "status": "Available",
+                  "last_updated": "2026-10-19T18:41:11.816Z",
+                  "nick_name": "Socket 1",
+                  "socket_type": "Type 2",
+                  "power_type": "fast",
+                  "max_electric_power": 22000,
+                  "tariff_ids": [
+                    "48cd1352-d05e-49e9-a30a-5c891f060280"
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "71d4407a-ea81-400a-8aa0-f29397f90287",
+          "name": "St Philomena's Rear Car Park",
+          "publish": false,
+          "address": "Shorts Road",
+          "city": "Surrey",
+          "postal_code": "SM5 3PS",
+          "owner": {
+            "name": "St Philomena’s Catholic High School for Girls"
+          },
+          "last_updated": "2025-03-07T05:42:04.643Z",
+          "country_code": "GB",
+          "country": "GB",
+          "evses": [
+            {
+              "uid": "27c82ea7-94cb-4162-afbc-744a3c68cdbb",
+              "evse_id": "EC2CKU9V",
+              "status": "idle",
+              "physical_reference": "Charger 1",
+              "last_updated": "2025-08-13T14:09:29.202Z",
+              "connectors": [
+                {
+                  "id": "1",
+                  "status": "Available",
+                  "last_updated": "2026-07-10T06:53:40.411Z",
+                  "nick_name": "Socket 1",
+                  "socket_type": "Type 2",
+                  "power_type": "fast",
+                  "max_electric_power": 22000,
+                  "tariff_ids": [
+                    "55c566a2-d965-4ec9-b264-0a0e7ea765b9"
+                  ]
+                }
+              ]
+            },
+            {
+              "uid": "14cd4760-e4ac-4314-a8d8-1291d8c8bd11",
+              "evse_id": "ECVKP82L",
+              "status": "idle",
+              "physical_reference": "Charger 2",
+              "last_updated": "2025-03-03T16:16:00.517Z",
+              "connectors": [
+                {
+                  "id": "1",
+                  "status": "Available",
+                  "last_updated": "2025-07-07T15:02:21.304Z",
+                  "nick_name": "Socket 2",
+                  "socket_type": "Type 2",
+                  "power_type": "fast",
+                  "max_electric_power": 22000,
+                  "tariff_ids": [
+                    "55c566a2-d965-4ec9-b264-0a0e7ea765b9"
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "21b13b7a-a3f6-4e6f-aa41-3ecd96830775",
+          "name": "Nabito Chropynska",
+          "publish": true,
+          "address": "Dúbravy 579",
+          "city": "Dúbravy",
+          "postal_code": "962 12",
+          "coordinates": {
+            "latitude": "48.6644",
+            "longitude": "19.3376"
+          },
+          "owner": {
+            "name": "Nabito"
+          },
+          "time_zone": "Europe/Bratislava",
+          "last_updated": "2025-08-08T11:28:51.616Z",
+          "country_code": "SK",
+          "country": "SK",
+          "evses": [
+            {
+              "uid": "d1712d94-5d9b-408d-85ef-952d61ddd561",
+              "evse_id": "AE0022A1GRAC00054L",
+              "status": "idle",
+              "physical_reference": "NS3",
+              "coordinates": {
+                "latitude": "48.6644",
+                "longitude": "19.3376"
+              },
+              "last_updated": "2025-07-29T22:11:56.385Z",
+              "connectors": [
+                {
+                  "id": "1",
+                  "status": "Available",
+                  "last_updated": "2025-10-15T13:11:41.431Z",
+                  "nick_name": "Zásuvka 3",
+                  "socket_type": "Type 2",
+                  "power_type": "fast",
+                  "max_electric_power": 22000,
+                  "tariff_ids": [
+                    "fbd794b2-cf88-4158-b007-939794b04890"
+                  ]
+                }
+              ]
+            },
+            {
+              "uid": "c8a9efbf-cb8c-4525-a56d-c82261c2f89b",
+              "evse_id": "AE0022A1GRAC00385V",
+              "status": "idle",
+              "physical_reference": "NS2",
+              "coordinates": {
+                "latitude": "48.6644",
+                "longitude": "19.3376"
+              },
+              "last_updated": "2025-07-29T22:10:07.224Z",
+              "connectors": [
+                {
+                  "id": "1",
+                  "status": "Available",
+                  "last_updated": "2026-01-14T07:05:29.879Z",
+                  "nick_name": "Zásuvka 2",
+                  "socket_type": "Type 2",
+                  "power_type": "fast",
+                  "max_electric_power": 22000,
+                  "tariff_ids": [
+                    "fbd794b2-cf88-4158-b007-939794b04890"
+                  ]
+                }
+              ]
+            },
+            {
+              "uid": "3024c7c7-73cc-4e84-a0ff-1901a0fb773c",
+              "evse_id": "AE0022A1GRAC00157R",
+              "status": "idle",
+              "physical_reference": "NS4",
+              "coordinates": {
+                "latitude": "48.6644",
+                "longitude": "19.3376"
+              },
+              "last_updated": "2025-07-29T22:12:31.784Z",
+              "connectors": [
+                {
+                  "id": "1",
+                  "status": "Available",
+                  "last_updated": "2025-08-28T09:02:29.356Z",
+                  "nick_name": "Zásuvka 4",
+                  "socket_type": "Type 2",
+                  "power_type": "fast",
+                  "max_electric_power": 22000,
+                  "tariff_ids": [
+                    "fbd794b2-cf88-4158-b007-939794b04890"
+                  ]
+                }
+              ]
+            },
+            {
+              "uid": "8e755acb-a0fc-4e04-91a9-20b4eab6aa22",
+              "evse_id": "AE0022A1GRAC00126L",
+              "status": "idle",
+              "physical_reference": "NS1",
+              "coordinates": {
+                "latitude": "48.6644",
+                "longitude": "19.3376"
+              },
+              "last_updated": "2025-07-29T22:08:47.929Z",
+              "connectors": [
+                {
+                  "id": "1",
+                  "status": "Available",
+                  "last_updated": "2025-12-09T08:25:33.388Z",
+                  "nick_name": "Zásuvka 1",
+                  "socket_type": "Type 2",
+                  "power_type": "fast",
+                  "max_electric_power": 22000,
+                  "tariff_ids": [
+                    "fbd794b2-cf88-4158-b007-939794b04890"
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "8bab1610-d9fd-4541-bbee-c794010ac091",
+          "name": "Nabito Lab",
+          "publish": true,
+          "address": "Okružná 5",
+          "city": "Hrubá Borša",
+          "postal_code": "900 50",
+          "owner": {
+            "name": "Nabito"
+          },
+          "last_updated": "2025-08-06T10:37:13.356Z",
+          "country_code": "SK",
+          "country": "SK",
+          "evses": [
+            {
+              "uid": "b13cd7b8-1762-459e-9161-d8a518eceed8",
+              "evse_id": "AE0022A1GN5C03320C",
+              "status": "idle",
+              "physical_reference": "AE0022A1GN5C03320C",
+              "last_updated": "2025-10-22T09:17:39.110Z",
+              "connectors": [
+                {
+                  "id": "1",
+                  "status": "Available",
+                  "last_updated": "2026-06-25T11:19:41.690Z",
+                  "nick_name": "Zásuvka 1",
+                  "socket_type": "Type 2",
+                  "power_type": "fast",
+                  "max_electric_power": 22000,
+                  "tariff_ids": [
+                    "fbd794b2-cf88-4158-b007-939794b04890"
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "22bf779a-b693-43bd-a1d0-aa386d466fc0",
+          "name": "Archived Station",
+          "publish": true,
+          "address": "Canalside Farm",
+          "city": "Stafford",
+          "postal_code": "ST18 0RQ",
+          "coordinates": {
+            "latitude": "52.81",
+            "longitude": "-2.01"
+          },
+          "owner": {
+            "name": "EVC Solutions"
+          },
+          "time_zone": "Europe/London",
+          "last_updated": "2026-04-30T14:02:24.900Z",
+          "country_code": "GB",
+          "country": "GB",
+          "evses": [
+            {
+              "uid": "d60c01ab-ed21-46a6-bd4c-a56dda33c21b",
+              "evse_id": "ARCHIVED_7001455",
+              "status": "idle",
+              "physical_reference": "Charger 1",
+              "coordinates": {
+                "latitude": "52.81",
+                "longitude": "-2.01"
+              },
+              "last_updated": "2025-11-21T11:16:07.518Z",
+              "connectors": [
+                {
+                  "id": "2",
+                  "status": "Unknown",
+                  "last_updated": "2025-11-12T09:54:21.066Z",
+                  "nick_name": "Socket 2",
+                  "socket_type": "Type 2",
+                  "power_type": "fast",
+                  "max_electric_power": 22000,
+                  "tariff_ids": [
+                    "7ff2ce14-cb22-4831-ac9e-1ca6a9f6fd77"
+                  ]
+                },
+                {
+                  "id": "1",
+                  "status": "Unknown",
+                  "last_updated": "2025-11-12T09:57:33.600Z",
+                  "nick_name": "Socket 1",
+                  "socket_type": "Type 2",
+                  "power_type": "fast",
+                  "max_electric_power": 22000,
+                  "tariff_ids": [
+                    "7ff2ce14-cb22-4831-ac9e-1ca6a9f6fd77"
+                  ]
+                }
+              ]
+            },
+            {
+              "uid": "57937b7b-e8b6-4919-af2c-f2e253243cfd",
+              "evse_id": "ARCHIVED_7001458",
+              "status": "idle",
+              "physical_reference": "Charger 2",
+              "coordinates": {
+                "latitude": "52.81",
+                "longitude": "-2.01"
+              },
+              "last_updated": "2025-11-21T11:15:52.577Z",
+              "connectors": [
+                {
+                  "id": "2",
+                  "status": "Unknown",
+                  "last_updated": "2025-11-12T09:55:49.368Z",
+                  "nick_name": "Socket 4",
+                  "socket_type": "Type 2",
+                  "power_type": "fast",
+                  "max_electric_power": 22000,
+                  "tariff_ids": [
+                    "7ff2ce14-cb22-4831-ac9e-1ca6a9f6fd77"
+                  ]
+                },
+                {
+                  "id": "1",
+                  "status": "Unknown",
+                  "last_updated": "2025-11-12T09:57:51.021Z",
+                  "nick_name": "Socket 3",
+                  "socket_type": "Type 2",
+                  "power_type": "fast",
+                  "max_electric_power": 22000,
+                  "tariff_ids": [
+                    "7ff2ce14-cb22-4831-ac9e-1ca6a9f6fd77"
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "22a75e7b-afe8-4e79-9105-99db8cc16dc2",
+          "name": "Canalside Farm Stafford",
+          "publish": true,
+          "address": "Canalside Farm",
+          "city": "Stafford",
+          "postal_code": "ST18 0RQ",
+          "coordinates": {
+            "latitude": "52.81",
+            "longitude": "-2.01"
+          },
+          "owner": {
+            "name": "Canalside Farm Shop & Cafe"
+          },
+          "time_zone": "Europe/London",
+          "last_updated": "2025-11-21T10:40:18.177Z",
+          "country_code": "GB",
+          "country": "GB",
+          "evses": [
+            {
+              "uid": "1c203847-989c-4bc4-8ed2-8466f0af7b73",
+              "evse_id": "RATIOIO77001455",
+              "status": "idle",
+              "physical_reference": "Charger 1",
+              "coordinates": {
+                "latitude": "52.81",
+                "longitude": "-2.01"
+              },
+              "last_updated": "2025-11-21T12:50:37.235Z",
+              "connectors": [
+                {
+                  "id": "1",
+                  "status": "Available",
+                  "last_updated": "2026-10-19T07:50:32.311Z",
+                  "nick_name": "Socket 1",
+                  "socket_type": "Type 2",
+                  "power_type": "fast",
+                  "max_electric_power": 22000,
+                  "tariff_ids": [
+                    "8079a67f-731c-4df5-8acc-8961d435532a"
+                  ]
+                },
+                {
+                  "id": "2",
+                  "status": "Available",
+                  "last_updated": "2026-10-22T14:47:55.168Z",
+                  "nick_name": "Socket 2",
+                  "socket_type": "Type 2",
+                  "power_type": "fast",
+                  "max_electric_power": 22000,
+                  "tariff_ids": [
+                    "8079a67f-731c-4df5-8acc-8961d435532a"
+                  ]
+                }
+              ]
+            },
+            {
+              "uid": "55d91073-1fa9-45d4-9b3c-37acc2eb9f10",
+              "evse_id": "RATIOIO77001458",
+              "status": "idle",
+              "physical_reference": "Charger 2",
+              "coordinates": {
+                "latitude": "52.81",
+                "longitude": "-2.01"
+              },
+              "last_updated": "2025-11-21T12:50:22.908Z",
+              "connectors": [
+                {
+                  "id": "1",
+                  "status": "Available",
+                  "last_updated": "2026-10-18T12:32:21.504Z",
+                  "nick_name": "Socket 3",
+                  "socket_type": "Type 2",
+                  "power_type": "fast",
+                  "max_electric_power": 22000,
+                  "tariff_ids": [
+                    "8079a67f-731c-4df5-8acc-8961d435532a"
+                  ]
+                },
+                {
+                  "id": "2",
+                  "status": "Available",
+                  "last_updated": "2026-10-19T10:41:51.288Z",
+                  "nick_name": "Socket 4",
+                  "socket_type": "Type 2",
+                  "power_type": "fast",
+                  "max_electric_power": 22000,
+                  "tariff_ids": [
+                    "8079a67f-731c-4df5-8acc-8961d435532a"
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "e0375347-1e1c-404b-8f59-3a6647ad976e",
+          "name": "Aston Marina",
+          "publish": true,
+          "address": "Aston Marina",
+          "city": "Stone",
+          "postal_code": "ST15 8QU",
+          "coordinates": {
+            "latitude": "52.81",
+            "longitude": "-2.01"
+          },
+          "owner": {
+            "name": "Aston Marina"
+          },
+          "time_zone": "Europe/London",
+          "last_updated": "2026-02-04T15:56:00.831Z",
+          "country_code": "GB",
+          "country": "GB",
+          "evses": [
+            {
+              "uid": "4c509ef5-5ab8-439a-8520-2f57536e4f98",
+              "evse_id": "RATIOIO77001882",
+              "status": "idle",
+              "physical_reference": "Charger 1",
+              "coordinates": {
+                "latitude": "52.81",
+                "longitude": "-2.01"
+              },
+              "last_updated": "2026-02-13T14:43:51.038Z",
+              "connectors": [
+                {
+                  "id": "2",
+                  "status": "Available",
+                  "last_updated": "2026-10-14T06:33:36.732Z",
+                  "nick_name": "Socket 2",
+                  "socket_type": "Type 2",
+                  "power_type": "fast",
+                  "max_electric_power": 22000,
+                  "tariff_ids": [
+                    "4b18841f-a725-4628-9dc1-59c377dd8d77"
+                  ]
+                },
+                {
+                  "id": "1",
+                  "status": "Available",
+                  "last_updated": "2026-10-22T08:18:16.218Z",
+                  "nick_name": "Socket 1",
+                  "socket_type": "Type 2",
+                  "power_type": "fast",
+                  "max_electric_power": 22000,
+                  "tariff_ids": [
+                    "4b18841f-a725-4628-9dc1-59c377dd8d77"
+                  ]
+                }
+              ]
+            },
+            {
+              "uid": "3059d1a6-4620-45af-976f-60099294ddda",
+              "evse_id": "RATIOIO77001668",
+              "status": "idle",
+              "physical_reference": "Charger 2",
+              "coordinates": {
+                "latitude": "52.81",
+                "longitude": "-2.01"
+              },
+              "last_updated": "2026-02-13T14:42:58.227Z",
+              "connectors": [
+                {
+                  "id": "1",
+                  "status": "Available",
+                  "last_updated": "2026-10-18T12:22:34.515Z",
+                  "nick_name": "Socket 3",
+                  "socket_type": "Type 2",
+                  "power_type": "fast",
+                  "max_electric_power": 22000,
+                  "tariff_ids": [
+                    "4b18841f-a725-4628-9dc1-59c377dd8d77"
+                  ]
+                },
+                {
+                  "id": "2",
+                  "status": "Available",
+                  "last_updated": "2026-10-14T08:36:01.145Z",
+                  "nick_name": "Socket 4",
+                  "socket_type": "Type 2",
+                  "power_type": "fast",
+                  "max_electric_power": 22000,
+                  "tariff_ids": [
+                    "4b18841f-a725-4628-9dc1-59c377dd8d77"
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "53aa6764-3470-4ec8-9d03-c705b183b6dc",
+          "name": "Nash Estates",
+          "publish": true,
+          "address": "Scala House  ",
+          "city": "Burton On Trent",
+          "postal_code": "DE14 3US",
+          "coordinates": {
+            "latitude": "52.8016",
+            "longitude": "-1.6358"
+          },
+          "owner": {
+            "name": "Nash Estates Limited"
+          },
+          "time_zone": "Europe/London",
+          "last_updated": "2026-03-09T17:46:40.099Z",
+          "country_code": "GB",
+          "country": "GB",
+          "evses": [
+            {
+              "uid": "796df05b-3a8e-4cf6-bd3c-5c9b21bcf0d1",
+              "evse_id": "UKSB6662",
+              "status": "idle",
+              "physical_reference": "Charger 05",
+              "coordinates": {
+                "latitude": "52.8016",
+                "longitude": "-1.6358"
+              },
+              "last_updated": "2026-03-25T10:36:47.870Z",
+              "connectors": [
+                {
+                  "id": "1",
+                  "status": "Available",
+                  "last_updated": "2026-03-25T10:34:18.762Z",
+                  "nick_name": "Socket 5",
+                  "socket_type": "Type 2",
+                  "power_type": "fast",
+                  "max_electric_power": 22000,
+                  "tariff_ids": [
+                    "af8eb6c5-399e-4558-ba7b-738490b2d02b"
+                  ]
+                }
+              ]
+            },
+            {
+              "uid": "aefa30cd-9bc5-4457-803c-af160f20b47d",
+              "evse_id": "UKASRVNT",
+              "status": "idle",
+              "physical_reference": "Charger 01",
+              "coordinates": {
+                "latitude": "52.8016",
+                "longitude": "-1.6358"
+              },
+              "last_updated": "2026-03-25T10:35:41.481Z",
+              "connectors": [
+                {
+                  "id": "1",
+                  "status": "Available",
+                  "last_updated": "2026-10-17T21:22:30.265Z",
+                  "nick_name": "Socket 1",
+                  "socket_type": "Type 2",
+                  "power_type": "fast",
+                  "max_electric_power": 22000,
+                  "tariff_ids": [
+                    "af8eb6c5-399e-4558-ba7b-738490b2d02b"
+                  ]
+                }
+              ]
+            },
+            {
+              "uid": "83252e30-534c-456e-998a-6d1dd2c5b40c",
+              "evse_id": "UK4F6V6Y",
+              "status": "idle",
+              "physical_reference": "Charger 07",
+              "coordinates": {
+                "latitude": "52.8016",
+                "longitude": "-1.6358"
+              },
+              "last_updated": "2026-03-25T10:37:04.590Z",
+              "connectors": [
+                {
+                  "id": "1",
+                  "status": "Available",
+                  "last_updated": "2026-03-09T16:52:36.716Z",
+                  "nick_name": "Socket 7",
+                  "socket_type": "Type 2",
+                  "power_type": "fast",
+                  "max_electric_power": 22000,
+                  "tariff_ids": [
+                    "af8eb6c5-399e-4558-ba7b-738490b2d02b"
+                  ]
+                }
+              ]
+            },
+            {
+              "uid": "aa6d624d-0c0b-40dc-9a65-169ffeb9723a",
+              "evse_id": "UKXEYCDL",
+              "status": "idle",
+              "physical_reference": "Charger 03",
+              "coordinates": {
+                "latitude": "52.8016",
+                "longitude": "-1.6358"
+              },
+              "last_updated": "2026-03-25T10:36:30.353Z",
+              "connectors": [
+                {
+                  "id": "1",
+                  "status": "Available",
+                  "last_updated": "2026-03-25T10:34:27.267Z",
+                  "nick_name": "Socket 3",
+                  "socket_type": "Type 2",
+                  "power_type": "fast",
+                  "max_electric_power": 22000,
+                  "tariff_ids": [
+                    "af8eb6c5-399e-4558-ba7b-738490b2d02b"
+                  ]
+                }
+              ]
+            },
+            {
+              "uid": "ce75c531-b84e-47bd-82c8-23f85f54ef99",
+              "evse_id": "UK68MN32",
+              "status": "idle",
+              "physical_reference": "Charger 06",
+              "coordinates": {
+                "latitude": "52.8016",
+                "longitude": "-1.6358"
+              },
+              "last_updated": "2026-03-25T10:36:55.906Z",
+              "connectors": [
+                {
+                  "id": "1",
+                  "status": "Available",
+                  "last_updated": "2026-03-25T10:34:04.346Z",
+                  "nick_name": "Socket 6",
+                  "socket_type": "Type 2",
+                  "power_type": "fast",
+                  "max_electric_power": 22000,
+                  "tariff_ids": [
+                    "af8eb6c5-399e-4558-ba7b-738490b2d02b"
+                  ]
+                }
+              ]
+            },
+            {
+              "uid": "8c822410-b1b8-4378-97b2-f7b2e8c08919",
+              "evse_id": "UK4LQN36",
+              "status": "idle",
+              "physical_reference": "Charger 08",
+              "coordinates": {
+                "latitude": "52.8016",
+                "longitude": "-1.6358"
+              },
+              "last_updated": "2026-03-25T10:37:12.236Z",
+              "connectors": [
+                {
+                  "id": "1",
+                  "status": "Available",
+                  "last_updated": "2026-03-09T16:52:51.395Z",
+                  "nick_name": "Socket 8",
+                  "socket_type": "Type 2",
+                  "power_type": "fast",
+                  "max_electric_power": 22000,
+                  "tariff_ids": [
+                    "af8eb6c5-399e-4558-ba7b-738490b2d02b"
+                  ]
+                }
+              ]
+            },
+            {
+              "uid": "a6565808-75cd-42b8-a4d5-164f4c7fc4c3",
+              "evse_id": "UKZKBK4Q",
+              "status": "idle",
+              "physical_reference": "Charger 04",
+              "coordinates": {
+                "latitude": "52.8016",
+                "longitude": "-1.6358"
+              },
+              "last_updated": "2026-03-25T10:36:40.038Z",
+              "connectors": [
+                {
+                  "id": "1",
+                  "status": "Available",
+                  "last_updated": "2026-03-25T10:34:43.669Z",
+                  "nick_name": "Socket 4",
+                  "socket_type": "Type 2",
+                  "power_type": "fast",
+                  "max_electric_power": 22000,
+                  "tariff_ids": [
+                    "af8eb6c5-399e-4558-ba7b-738490b2d02b"
+                  ]
+                }
+              ]
+            },
+            {
+              "uid": "f84dd4c1-68a4-4f04-9975-36a1a58dfa4e",
+              "evse_id": "UKNRQ7P9",
+              "status": "idle",
+              "physical_reference": "Charger 10",
+              "coordinates": {
+                "latitude": "52.8016",
+                "longitude": "-1.6358"
+              },
+              "last_updated": "2026-03-24T19:40:40.888Z",
+              "connectors": [
+                {
+                  "id": "1",
+                  "status": "Available",
+                  "last_updated": "2026-03-09T16:53:37.397Z",
+                  "nick_name": "Socket 10",
+                  "socket_type": "Type 2",
+                  "power_type": "fast",
+                  "max_electric_power": 22000,
+                  "tariff_ids": [
+                    "af8eb6c5-399e-4558-ba7b-738490b2d02b"
+                  ]
+                }
+              ]
+            },
+            {
+              "uid": "e96df30e-1e70-4e34-9a83-81f54d9e28e9",
+              "evse_id": "UKNXCBLE",
+              "status": "idle",
+              "physical_reference": "Charger 02",
+              "coordinates": {
+                "latitude": "52.8016",
+                "longitude": "-1.6358"
+              },
+              "last_updated": "2026-03-25T10:36:21.594Z",
+              "connectors": [
+                {
+                  "id": "1",
+                  "status": "Available",
+                  "last_updated": "2026-03-25T10:35:16.570Z",
+                  "nick_name": "Socket 2",
+                  "socket_type": "Type 2",
+                  "power_type": "fast",
+                  "max_electric_power": 22000,
+                  "tariff_ids": [
+                    "af8eb6c5-399e-4558-ba7b-738490b2d02b"
+                  ]
+                }
+              ]
+            },
+            {
+              "uid": "6151b52f-f891-418b-9156-636b71ade89a",
+              "evse_id": "UK8TDN7Y",
+              "status": "idle",
+              "physical_reference": "Charger 09",
+              "coordinates": {
+                "latitude": "52.8016",
+                "longitude": "-1.6358"
+              },
+              "last_updated": "2026-03-25T10:37:19.929Z",
+              "connectors": [
+                {
+                  "id": "1",
+                  "status": "Available",
+                  "last_updated": "2026-03-09T16:53:08.791Z",
+                  "nick_name": "Socket 9",
+                  "socket_type": "Type 2",
+                  "power_type": "fast",
+                  "max_electric_power": 22000,
+                  "tariff_ids": [
+                    "af8eb6c5-399e-4558-ba7b-738490b2d02b"
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "status_code": 1000,
+      "status_message": "Success",
+      "timestamp": "2026-10-23T13:01:56.892Z"
+    }
+  }
+}

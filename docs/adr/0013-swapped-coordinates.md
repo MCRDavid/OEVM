@@ -54,3 +54,22 @@ are corrected the same way as swaps, shown on the map and recorded against the o
   moved. A swap is tried first.
 - The map's note says the minus sign was added and gives the operator's own figures; the
   manifest counts the location as corrected.
+
+## Amendment, 23 October 2026: a missing minus sign that stays in the UK
+
+BrightGreen's "Kiln Farm Station" has a Milton Keynes postcode (MK11 3LW) and longitude
+.82 (23 October 2026). Milton Keynes is at about -0.82, so the minus sign appears to be
+missing, but as published the point is in Suffolk: inside the UK, so the checks above
+never see it. The owner decided it is corrected too.
+
+- No automatic check is added: telling a wrong UK point from a right one would need a
+  postcode lookup, and positions are never taken from another source.
+- Instead the owner names each such location in `swapped_coordinates.sign_missing`, by
+  its exact OCPI id, with its name and the UK postcode the feed sends. The minus sign is
+  added only while the feed still sends that postcode and a positive longitude, and the
+  point west of the Greenwich meridian is on the UK's land or within 2 km of its coast.
+  If the operator corrects the record, or changes its postcode, nothing is moved.
+- The map's note says the minus sign was added by the owner's decision for this location,
+  because the published point was away from the place its postcode names, and gives the
+  operator's own figures. The manifest counts it as corrected, the transparency page
+  lists each named location, and the operator file records a dated finding.

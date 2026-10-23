@@ -39,6 +39,12 @@ Rules:
   figure, wherever its tariffs are used, and the price text says the project added it.
   The tariffs themselves are published unchanged in the detail file. A kept copy written
   before a decision keeps the prices it was written with until the next good fetch.
+  Where the owner has recorded vat_in_price instead (ADR 0003, amended 23 October 2026),
+  the VAT that operator's feed states is read as already in its prices.
+- Where the owner has recorded own_feed_over_copies in an operator's file (ADR 0027) and
+  that operator's own locations are on the map, the locations a named operator's feed
+  sends under its country and party codes are left off, counted in the manifest and
+  listed on the feed health page. Nothing in either feed is changed.
 - A location whose name marks it private or restricted (pipeline/access.py, ADR 0023)
   carries those words in the map file, and one where every charge point is marked for
   taxis only (by the owner's decision in the operator file) is flagged, so the map can
@@ -55,7 +61,6 @@ Rules:
 import gzip
 import hashlib
 import json
-import re
 import shutil
 from collections import defaultdict
 from dataclasses import dataclass, field
@@ -68,7 +73,14 @@ from pipeline.access import private_words
 from pipeline.geography import place_in_uk
 from pipeline.health import in_uk
 from pipeline.plans import load_providers
-from pipeline.pricing import location_summary, plan_fee_text, plan_label, plan_price_text
+from pipeline.pricing import (
+    VAT_IN_PRICE,
+    VatReading,
+    location_summary,
+    plan_fee_text,
+    plan_label,
+    plan_price_text,
+)
 from pipeline.registry import ROOT
 from pipeline.tariffs import (
     ConnectorPrice,
@@ -79,7 +91,7 @@ from pipeline.tariffs import (
     withheld_free_tariffs,
 )
 from schema.models import Connector, Coordinates, Location, Tariff
-from schema.operator import OperatorConfig
+from schema.operator import UK_POSTCODE, OperatorConfig
 from schema.published import (
     ConnectorPriceOut,
     ConnectorSummary,
@@ -98,10 +110,6 @@ from schema.published import (
     TariffSource,
 )
 
-# A UK postcode, with or without its space (the BFPO and overseas territory forms are not
-# needed here). Used only to decide whether swapped coordinates are obviously a UK place.
-UK_POSTCODE = re.compile(r"^[A-Z]{1,2}[0-9][A-Z0-9]? ?[0-9][A-Z]{2}$", re.IGNORECASE)
-
 SWAP_NOTE = (
     "The operator published this location's latitude and longitude the wrong way round, "
     "which put it outside the UK. This map shows it with the two swapped back; the "
@@ -112,6 +120,13 @@ SIGN_NOTE = (
     "The operator published this location's longitude without its minus sign, which put it "
     "outside the UK. This map shows it with the minus sign added; the operator's own "
     "figures are latitude {lat} and longitude {lon}."
+)
+
+NAMED_SIGN_NOTE = (
+    "The operator published this location's longitude without its minus sign, which put it "
+    "east of the Greenwich meridian, away from the place its postcode names. This map shows "
+    "it with the minus sign added, by the repository owner's decision for this location; "
+    "the operator's own figures are latitude {lat} and longitude {lon}."
 )
 
 RELATED_NOTE = (
@@ -444,18 +459,87 @@ def sign_restored(location: Location, config: OperatorConfig) -> Location | None
     return location.model_copy(update={"coordinates": flipped})
 
 
+def named_sign_restored(location: Location, config: OperatorConfig) -> Location | None:
+    """The location with a minus sign added to its longitude, if the owner names it in
+    swapped_coordinates.sign_missing: its point as published is inside the UK, so no check
+    can see the mistake. Only while the feed still sends the postcode the owner recorded
+    and a positive longitude, and the point west of the Greenwich meridian is on the UK's
+    land or within 2 km of its coast."""
+    decision = config.swapped_coordinates
+    if decision is None or not decision.sign_missing:
+        return None
+    ocpi_id = location.id.split(":", 3)[-1]
+    named = next((n for n in decision.sign_missing if n.id == ocpi_id), None)
+    if named is None:
+        return None
+    postcode = (location.address.postal_code or "").strip()
+    if postcode.replace(" ", "").upper() != named.postal_code.replace(" ", "").upper():
+        return None
+    published = location.coordinates
+    if published.longitude <= 0 or not place_in_uk(published.latitude, -published.longitude):
+        return None
+    flipped = Coordinates(latitude=published.latitude, longitude=-published.longitude)
+    return location.model_copy(update={"coordinates": flipped})
+
+
 def corrected_coordinates(
     location: Location, config: OperatorConfig
 ) -> tuple[Location, CoordinatesCorrection] | None:
     """The location moved back into the UK and a note saying how, or None if neither an
-    obvious swap nor an obviously missing minus sign explains why it is outside."""
+    obvious swap nor an obviously missing minus sign explains why it is outside. A location
+    inside the UK is moved only if the owner named it (named_sign_restored)."""
     published = location.coordinates
     figures = {"lat": published.latitude, "lon": published.longitude}
-    for correct, note in ((swapped_back, SWAP_NOTE), (sign_restored, SIGN_NOTE)):
+    if in_uk(location):
+        corrections = ((named_sign_restored, NAMED_SIGN_NOTE),)
+    else:
+        corrections = ((swapped_back, SWAP_NOTE), (sign_restored, SIGN_NOTE))
+    for correct, note in corrections:
         moved = correct(location, config)
         if moved is not None:
             return moved, CoordinatesCorrection(published=published, note=note.format(**figures))
     return None
+
+
+def _own_feeds_over_copies(
+    features: list[MapFeature],
+    details: dict[str, bytes],
+    entries: dict[str, OperatorEntry],
+    operators: dict[str, OperatorConfig],
+) -> list[MapFeature]:
+    """The features without the copies another operator's feed sends of an operator whose
+    own locations are on the map, where that operator's file records own_feed_over_copies
+    (ADR 0027). A copy is a location the named operator sends under the owner's country
+    and party codes. Their detail files are dropped and each is counted in its entry."""
+    on_map = {f.properties.op for f in features}
+    for owner_id, config in sorted(operators.items()):
+        decision = config.own_feed_over_copies
+        if decision is None or not config.enabled or owner_id not in on_map:
+            continue
+        for other in decision.operators:
+            prefix = f"{other}:{config.ocpi_country_code}:{config.ocpi_party_id}:"
+            copies = [
+                f
+                for f in features
+                if f.properties.op == other and f.properties.id.startswith(prefix)
+            ]
+            if not copies:
+                continue
+            ids = {f.properties.id for f in copies}
+            features = [f for f in features if f.properties.id not in ids]
+            for feature in copies:
+                details.pop(feature.properties.key, None)
+            entry = entries[other]
+            entries[other] = entry.model_copy(
+                update={
+                    "mapped": entry.mapped - len(copies),
+                    "replaced": entry.replaced + len(copies),
+                    "replaced_ids": sorted({*entry.replaced_ids, *ids}),
+                    "replaced_by": entry.replaced_by
+                    | {owner_id: entry.replaced_by.get(owner_id, 0) + len(copies)},
+                }
+            )
+    return features
 
 
 def related_for(
@@ -491,11 +575,12 @@ def publish(
     fresh = {r.operator_id for r in results}
     fresh_tariffs = {r.operator_id: r.tariffs for r in results}
     fetched = {r.operator_id: r.fetched_at for r in results}
-    added_vat = {
+    added_vat: dict[str, VatReading] = {
         i: config.vat_not_stated.add_percent
         for i, config in operators.items()
         if config.vat_not_stated is not None
     }
+    added_vat |= {i: VAT_IN_PRICE for i, config in operators.items() if config.vat_in_price}
     for copy in sorted(kept, key=lambda c: c.operator_id):
         config = operators.get(copy.operator_id)
         if config is None or not config.enabled or config.licence is None:
@@ -531,11 +616,11 @@ def publish(
         mapped, not_mapped, corrected = 0, [], []
         for location in sorted(result.locations, key=lambda loc: loc.id):
             correction = None
-            if not in_uk(location):
-                fixed = corrected_coordinates(location, config)
-                if fixed is None:
-                    not_mapped.append(location.id)
-                    continue
+            fixed = corrected_coordinates(location, config)
+            if fixed is None and not in_uk(location):
+                not_mapped.append(location.id)
+                continue
+            if fixed is not None:
                 location, correction = fixed
                 corrected.append(location.id)
             key = location_key(location.id)
@@ -590,6 +675,8 @@ def publish(
             licence=config.licence.name,
             licence_url=config.licence.url,
         )
+
+    features = _own_feeds_over_copies(features, details, entries, operators)
 
     # Kept copies too, so every location is checked against today's phrases (ADR 0023).
     private: dict[str, int] = defaultdict(int)
@@ -648,9 +735,15 @@ def publish(
             if entry.kept_from_previous
             else ""
         )
+        copies = (
+            f", {entry.replaced} left off as copies of {', '.join(sorted(entry.replaced_by))}'s "
+            "own feed"
+            if entry.replaced
+            else ""
+        )
         report.append(
             f"  {operator_id}: {entry.mapped} locations mapped{left_off}{swapped}{related}"
-            f"{hidden}{last_good}"
+            f"{hidden}{copies}{last_good}"
         )
     kept_at = {c.operator_id: c.entry.fetched_at for c in kept}
     return Published(manifest=manifest, report=report, kept=kept_at)

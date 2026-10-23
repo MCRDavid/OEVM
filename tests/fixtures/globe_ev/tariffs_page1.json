@@ -1,0 +1,77 @@
+{
+  "request": {
+    "method": "GET",
+    "url": "https://api.evdot.clenergy.online/development/pcpr/tariffs"
+  },
+  "response": {
+    "status_code": 200,
+    "headers": {
+      "content-type": "application/json; charset=utf-8",
+      "access-control-allow-origin": "*"
+    },
+    "body": {
+      "name": "OK",
+      "message": "ok",
+      "data": [
+        {
+          "id": "5f401936e03939062adc6dff",
+          "currency": "GBP",
+          "tariff_alt_text": [],
+          "elements": [
+            {
+              "price_components": [
+                {
+                  "type": "ENERGY",
+                  "price": 0.5,
+                  "step_size": 1
+                }
+              ]
+            }
+          ],
+          "last_updated": "2024-09-02T08:36:20.294Z"
+        },
+        {
+          "id": "629f0f13cc609ac9b6052308",
+          "currency": "GBP",
+          "tariff_alt_text": [],
+          "elements": [
+            {
+              "price_components": [
+                {
+                  "type": "ENERGY",
+                  "price": 0.5,
+                  "step_size": 1
+                }
+              ]
+            }
+          ],
+          "last_updated": "2025-01-27T14:34:05.687Z"
+        },
+        {
+          "id": "62bd8c3db00a541d676eeb94",
+          "currency": "GBP",
+          "tariff_alt_text": [],
+          "elements": [
+            {
+              "price_components": [
+                {
+                  "type": "ENERGY",
+                  "price": 0.5667,
+                  "step_size": 1
+                },
+                {
+                  "type": "FLAT",
+                  "price": 0.8334,
+                  "step_size": 1
+                }
+              ]
+            }
+          ],
+          "last_updated": "2022-12-09T11:52:03.086Z"
+        }
+      ],
+      "error": null,
+      "forcelogout": false
+    }
+  }
+}

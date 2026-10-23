@@ -10,6 +10,7 @@ from adapters.http import PoliteClient
 from adapters.ocpi_221 import fetch
 from adapters.replay import ReplayTransport
 from pipeline.pricing import (
+    VAT_IN_PRICE,
     describe_tariff,
     energy_range,
     location_summary,
@@ -155,6 +156,32 @@ def test_added_vat_covers_other_charges_and_the_minimum_charge():
         f"60p per kWh, plus £1.20 per session {ADDED}; "
         "minimum charge £2.40 including VAT added by this project"
     )
+
+
+IN_PRICE = "including VAT, read as the operator's display price shows it"
+
+
+def test_stated_vat_read_as_in_the_price_is_not_added_and_the_price_says_so():
+    # vat_in_price (ADR 0003, amended 23 October 2026): 0.59 with VAT 20 shows as 59p.
+    shown = describe_tariff(tariff(components=[energy(0.59, vat=20)]), added_vat=VAT_IN_PRICE)
+    assert shown.text == f"59p per kWh {IN_PRICE}"
+    assert energy_range(tariff(components=[energy(0.59, vat=20)]), VAT_IN_PRICE) == (
+        Decimal("0.59"),
+        Decimal("0.59"),
+        True,
+    )
+    with_minimum = describe_tariff(
+        tariff(components=[energy(0.59, vat=20)], min_price=2), added_vat=VAT_IN_PRICE
+    )
+    assert with_minimum.text.endswith(f"; minimum charge £2.00 {IN_PRICE}")
+
+
+def test_reading_vat_as_in_the_price_never_supplies_a_missing_rate():
+    shown = describe_tariff(
+        tariff(components=[energy(0.59, vat=20), energy(0.30)]), added_vat=VAT_IN_PRICE
+    )
+    assert shown.text == "30p to 59p per kWh (excluding VAT, VAT not stated)"
+    assert energy_range(tariff(components=[energy(0.30)]), VAT_IN_PRICE)[2] is False
 
 
 def test_without_a_decision_a_price_with_no_vat_is_shown_as_published():
