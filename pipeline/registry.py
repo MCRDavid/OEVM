@@ -103,10 +103,7 @@ def load_registry(directory: Path = OPERATORS_DIR) -> dict[str, OperatorConfig]:
 
 def feed_hosts(config: OperatorConfig) -> set[str]:
     """The hosts this operator's feeds are published on, from its own URLs."""
-    urls = [endpoint.url for endpoint in config.endpoints.values()]
-    if config.base_url != "unknown":
-        urls.append(config.base_url)
-    return {urlsplit(url).hostname for url in urls} - {None}
+    return {urlsplit(url).hostname for url in config.feed_urls()} - {None}
 
 
 def _related_problems(operators: dict[str, OperatorConfig]) -> list[str]:

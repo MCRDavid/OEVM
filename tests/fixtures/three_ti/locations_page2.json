@@ -1,0 +1,256 @@
+{
+  "request": {
+    "method": "GET",
+    "url": "https://api.fuuse.io/opendata/4a5b700e-6a15-40f3-92cc-dcc8732a92e0/location"
+  },
+  "response": {
+    "status_code": 200,
+    "headers": {
+      "content-type": "application/json; charset=utf-8",
+      "x-total-count": "1",
+      "x-limit": "1000"
+    },
+    "body": {
+      "status_code": 1000,
+      "data": [
+        {
+          "id": "95eb3216-f118-41d3-bcb2-88dda53752e4",
+          "publish": true,
+          "name": "3ti - Riverbridge House",
+          "address": "Riverbridge House, Guildford Road",
+          "city": "Leatherhead",
+          "postal_code": "KT22 9AD",
+          "state": "Surrey",
+          "country": "GBR",
+          "coordinates": {
+            "latitude": "51.293500",
+            "longitude": "-0.333800"
+          },
+          "parking_type": "PARKING_LOT",
+          "evses": [
+            {
+              "uid": "1b7f99d4-b3a7-43ea-bc67-30cb3c689652",
+              "evse_id": "8c22c5*d7b5f6",
+              "status": "AVAILABLE",
+              "capabilities": [
+                "REMOTE_START_STOP_CAPABLE"
+              ],
+              "connectors": [
+                {
+                  "id": "83732417-be20-4753-adcd-5c7e68c6821f",
+                  "standard": "IEC_62196_T2",
+                  "format": "SOCKET",
+                  "power_type": "AC_3_PHASE",
+                  "max_voltage": 240,
+                  "max_amperage": 32,
+                  "max_electric_power": 22000,
+                  "tariff_ids": [
+                    "b1f68687-acc6-465a-9a99-00212a2793d5"
+                  ],
+                  "terms_and_conditions": "https://3ti.co.uk/ev-charging-terms-conditions/",
+                  "last_updated": "2026-10-23T07:08:00.931Z"
+                }
+              ],
+              "coordinates": {
+                "latitude": "51.293500",
+                "longitude": "-0.333800"
+              },
+              "physical_reference": "3ti-RBH1-06",
+              "last_updated": "2026-10-23T10:07:18.817Z"
+            },
+            {
+              "uid": "226dc6b2-e5d8-4d53-b93d-ddbd6174cefb",
+              "evse_id": "bda719*21648d",
+              "status": "AVAILABLE",
+              "capabilities": [
+                "REMOTE_START_STOP_CAPABLE"
+              ],
+              "connectors": [
+                {
+                  "id": "a03bee62-77b4-4fac-914a-6339813b5e2c",
+                  "standard": "IEC_62196_T2",
+                  "format": "SOCKET",
+                  "power_type": "AC_3_PHASE",
+                  "max_voltage": 415,
+                  "max_amperage": 31,
+                  "max_electric_power": 22000,
+                  "tariff_ids": [
+                    "b1f68687-acc6-465a-9a99-00212a2793d5"
+                  ],
+                  "terms_and_conditions": "https://3ti.co.uk/ev-charging-terms-conditions/",
+                  "last_updated": "2026-10-23T15:17:12.453Z"
+                }
+              ],
+              "coordinates": {
+                "latitude": "51.293500",
+                "longitude": "-0.333800"
+              },
+              "physical_reference": "3ti-RBH1-05",
+              "last_updated": "2026-10-23T15:17:12.453Z"
+            },
+            {
+              "uid": "45d0aafb-d92a-44a8-8058-bd604e198620",
+              "evse_id": "a951be*72611d",
+              "status": "AVAILABLE",
+              "capabilities": [
+                "REMOTE_START_STOP_CAPABLE"
+              ],
+              "connectors": [
+                {
+                  "id": "4c24d50a-fd2f-4642-8bcd-454f26f71e50",
+                  "standard": "IEC_62196_T2",
+                  "format": "SOCKET",
+                  "power_type": "AC_3_PHASE",
+                  "max_voltage": 240,
+                  "max_amperage": 32,
+                  "max_electric_power": 22000,
+                  "tariff_ids": [
+                    "b1f68687-acc6-465a-9a99-00212a2793d5"
+                  ],
+                  "terms_and_conditions": "https://3ti.co.uk/ev-charging-terms-conditions/",
+                  "last_updated": "2026-10-23T08:00:43.743Z"
+                }
+              ],
+              "coordinates": {
+                "latitude": "51.293500",
+                "longitude": "-0.333800"
+              },
+              "physical_reference": "3ti-RBH1-04",
+              "last_updated": "2026-10-23T10:05:51.756Z"
+            },
+            {
+              "uid": "49f195e6-14d9-4cfc-84a8-01333d2f0807",
+              "evse_id": "AE0022G1GS5C00063N*1",
+              "status": "AVAILABLE",
+              "capabilities": [
+                "REMOTE_START_STOP_CAPABLE"
+              ],
+              "connectors": [
+                {
+                  "id": "6cf1fb4b-56c3-4b51-b173-7ec58ecaeff2",
+                  "standard": "IEC_62196_T2",
+                  "format": "SOCKET",
+                  "power_type": "AC_3_PHASE",
+                  "max_voltage": 240,
+                  "max_amperage": 32,
+                  "max_electric_power": 22000,
+                  "tariff_ids": [
+                    "b1f68687-acc6-465a-9a99-00212a2793d5"
+                  ],
+                  "terms_and_conditions": "https://3ti.co.uk/ev-charging-terms-conditions/",
+                  "last_updated": "2026-10-23T09:02:42.220Z"
+                }
+              ],
+              "coordinates": {
+                "latitude": "51.293500",
+                "longitude": "-0.333800"
+              },
+              "physical_reference": "3ti-RBH1-01",
+              "last_updated": "2026-10-23T10:05:50.512Z"
+            },
+            {
+              "uid": "65127de6-c5ed-4716-8a38-3295187bac8a",
+              "evse_id": "f3d9df*11f866",
+              "status": "AVAILABLE",
+              "capabilities": [
+                "REMOTE_START_STOP_CAPABLE"
+              ],
+              "connectors": [
+                {
+                  "id": "84fda6cc-04ac-476f-a177-fa233db9bc5d",
+                  "standard": "IEC_62196_T2",
+                  "format": "SOCKET",
+                  "power_type": "AC_3_PHASE",
+                  "max_voltage": 240,
+                  "max_amperage": 32,
+                  "max_electric_power": 22000,
+                  "tariff_ids": [
+                    "b1f68687-acc6-465a-9a99-00212a2793d5"
+                  ],
+                  "terms_and_conditions": "https://3ti.co.uk/ev-charging-terms-conditions/",
+                  "last_updated": "2026-10-23T17:47:03.663Z"
+                }
+              ],
+              "coordinates": {
+                "latitude": "51.293500",
+                "longitude": "-0.333800"
+              },
+              "physical_reference": "3ti-RBH1-03",
+              "last_updated": "2026-10-23T17:47:03.663Z"
+            },
+            {
+              "uid": "cef35713-d528-48a4-80f9-0cbc2c1c4bba",
+              "evse_id": "AE0022G1GS5C00148T*1",
+              "status": "AVAILABLE",
+              "capabilities": [
+                "REMOTE_START_STOP_CAPABLE"
+              ],
+              "connectors": [
+                {
+                  "id": "0b4eb8bf-7b16-4238-b584-2bce951d1c2e",
+                  "standard": "IEC_62196_T2",
+                  "format": "SOCKET",
+                  "power_type": "AC_3_PHASE",
+                  "max_voltage": 415,
+                  "max_amperage": 31,
+                  "max_electric_power": 22000,
+                  "tariff_ids": [
+                    "b1f68687-acc6-465a-9a99-00212a2793d5"
+                  ],
+                  "terms_and_conditions": "https://3ti.co.uk/ev-charging-terms-conditions/",
+                  "last_updated": "2026-10-19T19:21:04.612Z"
+                }
+              ],
+              "coordinates": {
+                "latitude": "51.293500",
+                "longitude": "-0.333800"
+              },
+              "physical_reference": "3ti-RBH1-02",
+              "last_updated": "2026-10-23T10:05:51.756Z"
+            },
+            {
+              "uid": "fea91bde-386f-4a4f-8ec5-b4caa06693ba",
+              "evse_id": "46bc11*26d550",
+              "status": "AVAILABLE",
+              "capabilities": [
+                "REMOTE_START_STOP_CAPABLE"
+              ],
+              "connectors": [
+                {
+                  "id": "5a0408c8-cc08-44b6-81b4-634489caf607",
+                  "standard": "IEC_62196_T2",
+                  "format": "SOCKET",
+                  "power_type": "AC_3_PHASE",
+                  "max_voltage": 415,
+                  "max_amperage": 31,
+                  "max_electric_power": 22000,
+                  "tariff_ids": [
+                    "b1f68687-acc6-465a-9a99-00212a2793d5"
+                  ],
+                  "terms_and_conditions": "https://3ti.co.uk/ev-charging-terms-conditions/",
+                  "last_updated": "2026-10-22T14:22:09.961Z"
+                }
+              ],
+              "coordinates": {
+                "latitude": "51.293500",
+                "longitude": "-0.333800"
+              },
+              "physical_reference": "3ti-RBH1-07",
+              "last_updated": "2026-10-23T10:05:51.756Z"
+            }
+          ],
+          "operator": {
+            "name": "Riverbridge House"
+          },
+          "time_zone": "Europe/London",
+          "opening_times": {
+            "twentyfourseven": true
+          },
+          "charging_when_closed": false,
+          "last_updated": "2026-10-23T17:47:03.663Z"
+        }
+      ],
+      "timestamp": "2026-10-23T21:52:42.673Z"
+    }
+  }
+}

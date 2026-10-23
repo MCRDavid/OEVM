@@ -3,26 +3,103 @@ id: three_ti
 display_name: 3ti
 ocpi_country_code: unknown # The one record read carries no country_code or party_id (2026-10-23).
 ocpi_party_id: unknown
-adapter: unknown
+adapter: ocpi_221
 base_url: unknown
-endpoints: {}
+endpoints:
+  locations:
+    url: https://api.fuuse.io/opendata/c3947832-9352-41fa-96c1-831215eea8e0/location
+    status: documented
+    note: >-
+      Raigmore Hospital, Inverness. 3ti's public charge points page lists this site's Fuuse
+      id and its script reads the site from this address (read 2026-10-23).
+  tariffs:
+    url: https://api.fuuse.io/opendata/c3947832-9352-41fa-96c1-831215eea8e0/tariff
+    status: documented
+    note: Raigmore Hospital, Inverness, from the same page and script (read 2026-10-23).
+more_endpoints:
+  - locations:
+      url: https://api.fuuse.io/opendata/4a5b700e-6a15-40f3-92cc-dcc8732a92e0/location
+      status: documented
+      note: Riverbridge House, Surrey, from 3ti's public charge points page (read 2026-10-23).
+    tariffs:
+      url: https://api.fuuse.io/opendata/4a5b700e-6a15-40f3-92cc-dcc8732a92e0/tariff
+      status: documented
+      note: Riverbridge House, Surrey.
+  - locations:
+      url: https://api.fuuse.io/opendata/36bd06f3-5184-4939-a7a1-4c0c1dec5583/location
+      status: documented
+      note: >-
+        University of Surrey, Surrey, from 3ti's public charge points page (read
+        2026-10-23).
+    tariffs:
+      url: https://api.fuuse.io/opendata/36bd06f3-5184-4939-a7a1-4c0c1dec5583/tariff
+      status: documented
+      note: University of Surrey, Surrey.
+  - locations:
+      url: https://api.fuuse.io/opendata/542c7548-899e-43e8-854c-05fd0f76dc70/location
+      status: documented
+      note: >-
+        East Staffordshire Borough Council, from 3ti's public charge points page (read
+        2026-10-23).
+    tariffs:
+      url: https://api.fuuse.io/opendata/542c7548-899e-43e8-854c-05fd0f76dc70/tariff
+      status: documented
+      note: East Staffordshire Borough Council.
+  - locations:
+      url: https://api.fuuse.io/opendata/6922c10c-4f17-4929-bf7a-32c4a6075277/location
+      status: documented
+      note: Salford Royal Hospital, from 3ti's public charge points page (read 2026-10-23).
+    tariffs:
+      url: https://api.fuuse.io/opendata/6922c10c-4f17-4929-bf7a-32c4a6075277/tariff
+      status: documented
+      note: Salford Royal Hospital.
 auth:
   method: none
   name: null
   secret_name: null
 rate_limit:
   min_seconds_between_requests: 31
-  limits: []
+  limits:
+    - publisher: 3ti
+      requests: 1
+      per_seconds: 30
+      endpoint: all
+      quote: >-
+        Fuuse allows roughly 1-2 requests per 30 seconds per IP (shared across sites and
+        endpoints), so this script makes ONE request at a time, at least 31 s apart
+      source_url: https://3ti.co.uk/3ti-public-charge-points/
+      checked: 2026-10-23
   limits_checked: 2026-10-23
   notes: >-
-    3ti's page states no rate limit. Its own script keeps 31 seconds between any two calls
-    to Fuuse, with the comment "its limit is ~1-2 per 30 s per IP", and Arnold Clark Charge
-    and ScottishPower Recharge use the same 31 second gap on the same host. Six sites, each
-    with a location and a tariff file, would make 12 requests a run.
+    The limit is quoted from a comment in the script on 3ti's public charge points page,
+    read as its lower figure, 1 request per 30 seconds. Arnold Clark Charge and ScottishPower
+    Recharge use the same 31 second gap on the same host, and the client keeps one timer
+    for it. Five sites are read, each with a location and a tariff file, so a run makes 10
+    requests and takes about 5 minutes.
 supports_single_location: unknown
 cors: unknown
-attribution: null
-licence: null
+attribution: >-
+  Contains data from 3ti published under the Public Charge Point Regulations 2023, used in
+  line with the Open Government Licence v3.0.
+licence:
+  name: OGL-3.0
+  url: https://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/
+  basis: >-
+    3ti's public charge points page shows "live availability and pricing for the public
+    charge points we operate", says "Data supplied by Fuuse", and reads each site from
+    Fuuse's open data host with no key. It states no licence or terms for the data. Fuuse
+    describes these as "Open Data Access" links that each of its customers publishes on its
+    own website. DfT's guidance (updated 21 October 2024) says "Data must be open in line
+    with the Open Government Licence". 3ti's website "Terms of Service" page (read
+    2026-10-23, not linked from the charge points page) says "Permission is granted to
+    temporarily download one copy of the materials (information or software) on 3ti's
+    website for personal, non-commercial transitory viewing only". The files are served
+    from Fuuse's host, not from 3ti's website. On 2026-10-10 the repository owner decided,
+    as a standing rule for operators whose data has no terms of its own, to read general
+    website or charging terms as not covering the open data, which regulation 10(5)
+    requires to be available without terms on its use. The same reading applies to Arnold
+    Clark Charge, whose files are on the same host.
+  checked: 2026-10-23
 engagement:
   status: open_anonymous
   evidence:
@@ -39,22 +116,38 @@ engagement:
         3ti's public charge points page was read; it reads six sites' location and tariff
         data from Fuuse's open data host with no key.
       evidence_url: https://3ti.co.uk/3ti-public-charge-points/
+    - date: 2026-10-23
+      action: page_checked
+      summary: >-
+        3ti's website pages were listed and its terms read: a general website Terms of
+        Service page and a privacy policy (last updated July 2026); two "EV Charging" terms
+        pages have no text. None mentions the charge point data.
+      evidence_url: https://3ti.co.uk/hfh-equipment-maintenance-tcs-2-2/
 access_requested: null
 access_granted: null
 sources:
   - url: https://3ti.co.uk/3ti-public-charge-points/
     note: >-
       Read on 2026-10-23. Lists six sites, each read from its own Fuuse open data address
-      (with "location" or "tariff" added): Raigmore Hospital, Inverness,
-      https://api.fuuse.io/opendata/c3947832-9352-41fa-96c1-831215eea8e0/; Riverbridge
-      House, Surrey, https://api.fuuse.io/opendata/4a5b700e-6a15-40f3-92cc-dcc8732a92e0/;
-      Segen, Medway, https://api.fuuse.io/opendata/6cd94287-a370-48ae-8079-a514a8ac2c7b/;
-      University of Surrey, Surrey,
-      https://api.fuuse.io/opendata/36bd06f3-5184-4939-a7a1-4c0c1dec5583/; East
-      Staffordshire Borough Council,
-      https://api.fuuse.io/opendata/542c7548-899e-43e8-854c-05fd0f76dc70/; Salford Royal
-      Hospital, https://api.fuuse.io/opendata/6922c10c-4f17-4929-bf7a-32c4a6075277/. The
-      site's only policy page is its privacy policy.
+      (with "location" or "tariff" added): Raigmore Hospital, Inverness; Riverbridge House,
+      Surrey; Segen, Medway; University of Surrey, Surrey; East Staffordshire Borough
+      Council; Salford Royal Hospital. The addresses are in endpoints and more_endpoints,
+      apart from Segen's, which are
+      https://api.fuuse.io/opendata/6cd94287-a370-48ae-8079-a514a8ac2c7b/location and
+      .../tariff (see findings).
+      The page says "Prices include VAT" and its script multiplies each energy price by
+      1.2.
+  - url: https://3ti.co.uk/hfh-equipment-maintenance-tcs-2-2/
+    note: >-
+      3ti's website "Terms of Service", read 2026-10-23. General website terms; they do not
+      mention the charge point data.
+  - url: https://3ti.co.uk/privacy-policy/
+    note: 3ti's privacy policy, last updated July 2026, read 2026-10-23.
+  - url: https://support.fuuse.io/hc/en-gb/articles/4696535102239-Open-Data-Access-ODA-Links-Overview
+    note: >-
+      Fuuse's help article "Open Data Access (ODA) Links - Overview" (read 2026-10-17). Each
+      Fuuse customer has a "Location Data Link" and a "Tariff Data Link" and is expected to
+      publish them on its own website.
   - url: https://www.evroam.org.uk/id-register
     note: >-
       EV Roam's ID register lists 3ti Energy Hubs with operator ID GB*3TI, which is how this
@@ -63,16 +156,41 @@ findings:
   - date: 2026-10-23
     kind: documentation
     summary: >-
-      3ti publishes its data per site rather than as one feed: each of six sites has its
-      own location and tariff address on Fuuse's open data host. One request on 2026-10-23
-      to the first site's location address answered with one location, Raigmore Hospital,
-      with 12 EVSEs, the operator name "Raigmore Hospital" and no country_code or party_id.
+      3ti publishes its data per site rather than as one feed: each of six sites listed on
+      its page has its own location and tariff address on Fuuse's open data host.
     handling: >-
-      Recorded, not switched on: the ocpi_221 adapter reads one location address per
-      operator. Reading several is a separate change.
+      The pairs of addresses are read in turn and their records added together; each record
+      keeps the address it came from.
+    evidence_url: https://3ti.co.uk/3ti-public-charge-points/
+  - date: 2026-10-23
+    kind: access
+    summary: >-
+      On 2026-10-23 the location and tariff addresses for Segen, Medway answered HTTP 204
+      with no content (the location address twice, about 8 minutes apart). The other five
+      sites answered with OCPI responses.
+    handling: >-
+      Segen's two addresses are not read, so its site is not on the map. They are listed in
+      sources and will be checked again.
+    evidence_url: https://api.fuuse.io/opendata/6cd94287-a370-48ae-8079-a514a8ac2c7b/location
+  - date: 2026-10-23
+    kind: spec_conformance
+    summary: >-
+      Locations and tariffs carry no country_code or party_id, which OCPI 2.2.1 requires.
+      EV Roam's register lists 3ti Energy Hubs as GB*3TI.
+    handling: >-
+      Record ids use "unknown" for the country and party, from this file, until the
+      operator's own data gives them.
     evidence_url: https://api.fuuse.io/opendata/c3947832-9352-41fa-96c1-831215eea8e0/location
+  - date: 2026-10-23
+    kind: spec_conformance
+    summary: >-
+      Tariff prices and VAT rates are sent as strings (for example "0.2917" and "20.0000")
+      rather than numbers.
+    handling: >-
+      Read as the numbers they spell; the stated 20% VAT is added, so the map's prices match
+      the VAT-inclusive prices on 3ti's page.
+    evidence_url: https://api.fuuse.io/opendata/c3947832-9352-41fa-96c1-831215eea8e0/tariff
 notes: >-
   Found through EV Roam's ID register on 2026-10-23. The page is a live status page rather
-  than a page about the regulations; it names no licence or terms for the data. The licence
-  section is filled in when the adapter can read several addresses.
-enabled: false
+  than a page about the regulations.
+enabled: true

@@ -1,0 +1,60 @@
+{
+  "request": {
+    "method": "GET",
+    "url": "https://api.fuuse.io/opendata/6922c10c-4f17-4929-bf7a-32c4a6075277/tariff"
+  },
+  "response": {
+    "status_code": 200,
+    "headers": {
+      "content-type": "application/json; charset=utf-8",
+      "x-total-count": "1",
+      "x-limit": "1000"
+    },
+    "body": {
+      "status_code": 1000,
+      "data": [
+        {
+          "id": "f7c18999-715f-4bde-ab1f-fc11ff0be4ce",
+          "currency": "GBP",
+          "type": "AD_HOC_PAYMENT",
+          "tariff_alt_text": [
+            {
+              "language": "en",
+              "text": "Salford Royal Hospital Tariff"
+            }
+          ],
+          "elements": [
+            {
+              "price_components": [
+                {
+                  "type": "ENERGY",
+                  "price": "0.3333",
+                  "vat": "20.0000",
+                  "step_size": 1
+                },
+                {
+                  "type": "FLAT",
+                  "price": "0.0000",
+                  "vat": "20.0000",
+                  "step_size": 1
+                },
+                {
+                  "type": "TIME",
+                  "price": "0.0000",
+                  "vat": "20.0000",
+                  "step_size": 1
+                }
+              ],
+              "restrictions": {
+                "min_kwh": "0.1000",
+                "min_duration": 60
+              }
+            }
+          ],
+          "last_updated": "2026-07-08T15:20:39.090Z"
+        }
+      ],
+      "timestamp": "2026-10-23T21:49:08.533Z"
+    }
+  }
+}
