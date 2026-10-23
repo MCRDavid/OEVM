@@ -41,6 +41,9 @@ requester's own OCPI versions endpoint, which under OCPI 2.2.1 the other side ca
 like this one has no such service, so even with an invitation it could not connect without building
 one. We found no terms, licence or rate limits on these pages, signed in or not.
 
+**Update, 23 October 2026:** the project has since added a small service of its own that can answer
+that exchange. It has not yet asked Tesla for an invitation.
+
 ## Forms, phone lines and agreements
 
 - **Request forms.** 17 networks in our register are recorded as offering access on request: their
@@ -114,3 +117,7 @@ of data addresses to update.
 As of 17 October 2026 the project has not yet sent an access request to any operator; the texts are
 drafted. Each request and reply will be listed with its date on the [transparency
 page](transparency/).
+
+**Update, 23 October 2026:** the project registered for PLUG Charging's free key, which arrived
+straight away (see [the post on small networks](findings/small-networks/)), and for an access token
+for Monta's UK feed. The other request texts are still drafts.
