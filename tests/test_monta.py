@@ -15,7 +15,7 @@ import pytest
 from adapters import monta
 from adapters.http import FeedError, PoliteClient
 from adapters.replay import ReplayTransport
-from pipeline import run
+from pipeline import run, tariffs
 from pipeline.registry import load_registry
 from schema.operator import OperatorConfig
 
@@ -198,6 +198,51 @@ def test_reads_every_page_and_removes_owner_names():
     assert "A Private Person" not in json.dumps([p.body for p in locations.pages])
     assert result.locations[0].id == "monta:DK:MON:s1"
     assert result.locations[0].operator.name == "Monta ApS"
+
+
+def tariff(price: float, updated: str = "2026-10-21T08:30:00Z", tariff_id: str = "1") -> dict:
+    """A made-up OCPI 2.2.1 tariff, as Monta puts it in an EVSE's tariffs list."""
+    component = {"type": "ENERGY", "price": price, "vat": 20.0, "step_size": 1}
+    return {
+        "country_code": "DK",
+        "party_id": "MON",
+        "id": tariff_id,
+        "currency": "GBP",
+        "elements": [{"price_components": [component]}],
+        "last_updated": updated,
+    }
+
+
+def test_tariffs_inside_evses_price_the_connectors_that_name_them():
+    server = Server([1, 2, 3, 4])
+    server.sites[1]["evses"][0]["tariffs"] = [tariff(0.45)]
+    server.sites[2]["evses"][0]["tariffs"] = [tariff(0.45)]  # the same tariff again
+    server.sites[4] = site(4, status="REMOVED")
+    server.sites[4]["evses"][0]["tariffs"] = [tariff(0.99, tariff_id="9")]
+    result = run_with(server)
+    # One copy of tariff 1; site 4 is not kept, so its tariff is not either.
+    assert [t.id for t in result.tariffs] == ["monta:DK:MON:1"]
+    assert result.modules["tariffs"].complete and len(result.modules["tariffs"].records) == 1
+    # Every connector names tariff 1, so all three kept sites are priced.
+    summary = tariffs.summary(tariffs.price_locations(result.locations, result.tariffs))
+    assert summary.startswith("prices: 3 priced")
+    assert not any("tariff" in issue for issue in result.issues)
+
+
+def test_two_different_copies_of_a_tariff_keep_the_one_updated_last():
+    server = Server([1, 2, 3])
+    server.sites[1]["evses"][0]["tariffs"] = [tariff(0.50, "2026-10-22T00:00:00Z")]
+    server.sites[2]["evses"][0]["tariffs"] = [tariff(0.40, "2026-10-20T00:00:00Z")]
+    server.sites[3]["evses"][0]["tariffs"] = ["not a tariff"]
+    result = run_with(server)
+    assert len(result.tariffs) == 1
+    assert len(result.modules["tariffs"].records) == 1
+    assert (
+        result.modules["tariffs"].records[0]["elements"][0]["price_components"][0]["price"] == 0.50
+    )
+    issues = " ".join(result.issues)
+    assert "tariff given differently at two chargers; kept the copy updated last" in issues
+    assert "not an object; ignored" in issues
 
 
 def test_sites_with_every_charger_removed_are_not_kept():

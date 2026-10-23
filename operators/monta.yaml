@@ -150,8 +150,10 @@ findings:
       connectors name a tariff id, but only 5 locations carry any tariff object (in an EVSE's
       or the location's tariffs list).
     handling: >-
-      The adapter does not read those tariff objects yet, so every Monta location shows
-      "Price unknown".
+      Monta's documentation describes each EVSE's tariffs list as a Monta extension, "empty
+      when no OCPI tariff is available for the charge point". Since 2026-10-23 the adapter
+      reads the tariffs in the EVSEs of the locations it keeps, one copy of each; a
+      connector whose tariff is not given shows "Price unknown".
     evidence_url: https://docs.public-api.monta.com/reference/get-open-data-locations
   - date: 2026-10-22
     kind: data_quality
