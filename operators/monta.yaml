@@ -1,0 +1,186 @@
+# yaml-language-server: $schema=schema.json
+id: monta
+display_name: Monta
+ocpi_country_code: DK
+ocpi_party_id: MON
+adapter: custom
+base_url: https://public-api.monta.com/api/v1
+endpoints:
+  locations:
+    url: https://public-api.monta.com/api/v1/open-data/locations
+    status: documented
+    note: >-
+      "List UK charge points in OCPI 2.2.1 Location format" in Monta's Public API
+      documentation (updated 2026-04-28). Cursor paging: each page is {data, meta} with
+      meta.pagination.after and has_more. With group_by_location=true each site is one
+      Location (id s<siteId>). No tariffs endpoint is documented for open data.
+auth:
+  method: client_credentials
+  name: Authorization
+  scheme: Bearer
+  secret_name: MONTA_CLIENT_SECRET
+  client_id_secret_name: MONTA_CLIENT_ID
+  token_url: https://public-api.monta.com/api/v1/auth/token
+rate_limit:
+  min_seconds_between_requests: 7
+  limits:
+    - publisher: Monta
+      requests: 10
+      per_seconds: 60
+      endpoint: all
+      quote: >-
+        Our APIs are rate-limited. Currently we have a rate-limit of 10 requests per minute
+        across all applications of a single user in place
+      source_url: https://docs.public-api.monta.com/reference/integration-notes
+      checked: 2026-10-23
+  limits_checked: 2026-10-23
+  notes: >-
+    The token request counts towards the same limit. The same page says "Rate limits might
+    change in the future."
+supports_single_location: unknown
+cors: unknown
+attribution: >-
+  Contains data from Monta published under the Public Charge Point Regulations 2023, used in
+  line with the Open Government Licence v3.0.
+licence:
+  name: OGL-3.0
+  url: https://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/
+  basis: >-
+    Monta's Public API pages describe the open data endpoint as "Intended for AFIR-style
+    aggregators and government open-data consumers" and state no licence or terms for the
+    data; the Public API's index of pages lists none (read 2026-10-23). Monta's Fair Use
+    Policy for its partner API asks callers to keep to its rate limits, cache and "avoid
+    unnecessary polling"; this project reads the list once a day within the published rate
+    limit. DfT's guidance says "Data must be open in line with the Open Government Licence",
+    and regulation 10(5) requires the data to be available without terms on its use. On
+    2026-10-23 the repository owner decided to switch the feed on, reading it as open data
+    published under the regulations for the networks on Monta's platform.
+  checked: 2026-10-23
+engagement:
+  status: key_on_request
+  evidence:
+    - date: 2026-10-23
+      url: https://docs.public-api.monta.com/reference/get-open-data-locations
+      note: >-
+        Monta's Public API documents an open data endpoint that "Returns a cursor-paginated
+        list of publicly accessible (or roaming-enabled) charge points in the United Kingdom
+        in OCPI 2.2.1 Location format. Intended for AFIR-style aggregators and government
+        open-data consumers." It needs an access token. No licence or terms for the data are
+        given on this page or in the Public API's index of pages.
+  log:
+    - date: 2026-10-17
+      action: page_checked
+      summary: >-
+        Monta's Public API documentation was read. It lists an open data endpoint for UK
+        charge points in OCPI 2.2.1 Location format, protected by an access token.
+      quote: >-
+        Returns a cursor-paginated list of publicly accessible (or roaming-enabled) charge
+        points in the United Kingdom in OCPI 2.2.1 Location format.
+      evidence_url: https://docs.public-api.monta.com/reference/get-open-data-locations
+    - date: 2026-10-22
+      action: page_checked
+      summary: >-
+        The Public API's authentication pages were read. An access token, valid for one
+        hour, is requested with the client id and secret of an application registered in
+        the Monta portal.
+      evidence_url: https://docs.public-api.monta.com/reference/authentication
+    - date: 2026-10-22
+      action: key_granted
+      summary: >-
+        The repository owner registered an application in the Monta portal, which issued a
+        client id and secret at once, with no request to Monta. They are stored as the
+        GitHub Actions secrets MONTA_CLIENT_ID and MONTA_CLIENT_SECRET.
+      evidence_url: https://docs.public-api.monta.com/reference/authentication
+access_requested: null
+access_granted: 2026-10-22
+sources:
+  - url: https://docs.public-api.monta.com/reference/get-open-data-locations
+    note: >-
+      The open data endpoint (read 2026-10-17 and 2026-10-23): parameters party_id, per_page
+      ("Page size (max 1000)", default 100), after, before and group_by_location.
+  - url: https://docs.public-api.monta.com/reference/authentication
+    note: >-
+      How to register an application and obtain an access token (read 2026-10-22). The token
+      request is POST https://public-api.monta.com/api/v1/auth/token with clientId and
+      clientSecret; the token lasts 1 hour and the refresh token 30 days.
+  - url: https://docs.public-api.monta.com/reference/integration-notes
+    note: >-
+      Integration notes, updated 2025-09-09 (read 2026-10-23): the rate limit quoted above.
+  - url: https://developer.monta.com/docs/fair-use-policy
+    note: >-
+      Fair Use Policy for Monta's partner API, updated 2025-09-08 (read 2026-10-22). It
+      applies to "a select few endpoints" that it does not name, and asks callers to cache
+      and "avoid unnecessary polling".
+findings:
+  - date: 2026-10-22
+    kind: access
+    summary: >-
+      Reading the open data needs an access token, which is requested with the client id and
+      secret of an application registered in the Monta portal and lasts one hour.
+    handling: >-
+      The client id and secret are kept in the GitHub Actions secrets MONTA_CLIENT_ID and
+      MONTA_CLIENT_SECRET and are never committed. The adapter requests one token per run
+      (auth method client_credentials).
+    evidence_url: https://docs.public-api.monta.com/reference/authentication
+  - date: 2026-10-22
+    kind: spec_conformance
+    summary: >-
+      Monta documents each page as a {data, meta} object with a cursor in meta.pagination,
+      not the OCPI 2.2.1 response format with Link headers. A page of 1,000 locations, the
+      documented maximum, answered HTTP 500; pages of 100 worked.
+    handling: The adapter reads pages of 100, and of 10 or 1 where a page fails.
+    evidence_url: https://docs.public-api.monta.com/reference/get-open-data-locations
+  - date: 2026-10-22
+    kind: access
+    summary: >-
+      The list could not be read to the end. At the same point each time, after its 1,675th
+      location, the next request answered HTTP 500 ("An unexpected error occurred"), with
+      pages of 100, 10 or 1 location, on 22 and 23 October 2026. Skipping past that point,
+      the rest of the list was read on 23 October 2026: 4,775 locations in 81 requests, with
+      one skip.
+    handling: >-
+      The cursor is the lowest charge point id in a site, so the adapter skips each site the
+      server cannot send by finding the smallest cursor past it that answers. The number of
+      skips is logged with each run, and a run that skips any is marked incomplete.
+    evidence_url: https://docs.public-api.monta.com/reference/get-open-data-locations
+  - date: 2026-10-22
+    kind: data_quality
+    summary: >-
+      Almost no prices: in the 4,775 locations read on 23 October 2026, 17,391 of 17,675
+      connectors name a tariff id, but only 5 locations carry any tariff object (in an EVSE's
+      or the location's tariffs list).
+    handling: >-
+      The adapter does not read those tariff objects yet, so every Monta location shows
+      "Price unknown".
+    evidence_url: https://docs.public-api.monta.com/reference/get-open-data-locations
+  - date: 2026-10-22
+    kind: data_quality
+    summary: >-
+      Most chargers listed are marked removed: 14,997 of the 17,681 EVSEs in the 4,775
+      locations read on 23 October 2026 had status REMOVED, and 739 locations had at least
+      one EVSE that was not. 3,922 locations had publish true.
+    handling: >-
+      Locations with publish false are not kept, as for every feed. A location with no EVSE
+      that is not REMOVED is not kept either: OCPI 2.2.1 says "A Location without any valid
+      EVSE object can be considered expired and should no longer be displayed" (Locations
+      module, Flow and Lifecycle). Its id is listed as dropped in the run log.
+    evidence_url: https://docs.public-api.monta.com/reference/get-open-data-locations
+  - date: 2026-10-22
+    kind: data_quality
+    summary: >-
+      Every location read on 22 October 2026 gave country GBR. Of the 4,775 read on 23
+      October 2026, 4,391 carry party_id MON and operator Monta ApS; the rest carry other
+      party ids (EVY 225, UFX 152, MOT 5, CAG 2) and their own operator names, among them
+      evyve charging network, Urban Fox and Moto Hospitality.
+    handling: >-
+      Each location also names its site owner in owner. The adapter removes that field from
+      every record as it is read, so owner names are never kept or shown.
+    evidence_url: https://docs.public-api.monta.com/reference/get-open-data-locations
+notes: >-
+  Monta runs charge point management software used by many UK charge point owners, and
+  publishes their open data through one endpoint of its Public API. It is separate from
+  Monta's partner API (developer.monta.com). Monta's help pages also describe each network
+  exporting its own open data file from Monta Hub. The client id and secret are stored as
+  the GitHub Actions secrets MONTA_CLIENT_ID and MONTA_CLIENT_SECRET. Switched on by the
+  repository owner on 2026-10-23 (adapters/monta.py).
+enabled: true

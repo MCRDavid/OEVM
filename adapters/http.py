@@ -20,6 +20,11 @@
 - Adds the operator's key from the environment variable named by `auth.secret_name`,
   and only ever sends it over https. Keys never appear in URLs this module returns, logs
   or raises, and `PoliteClient.redact` removes the key from anything a server sends back.
+- For an operator whose auth method is client_credentials, `PoliteClient.request_token`
+  posts the client id and secret (from the variables named by `auth.client_id_secret_name`
+  and `auth.secret_name`) to `auth.token_url` and sends the access token it gets back with
+  every later request. The token request keeps the same gap and retries, and the id,
+  secret and token are all removed from anything shown.
 - Does not follow redirects, so a key can never be sent on to another site.
 - Sends an operator's requests through the project's relay when the operator file
   records that decision and the relay's address and token are set in the environment.
@@ -127,12 +132,34 @@ def secret_value(config: OperatorConfig, key: str | None = None) -> str | None:
     return value
 
 
+def client_id_value(config: OperatorConfig, key: str | None = None) -> str | None:
+    """The client id for an operator whose auth method is client_credentials, else None.
+
+    Read from the environment variable named by auth.client_id_secret_name, unless `key` is
+    given (fixture replays and tests only).
+    """
+    name = config.auth.client_id_secret_name
+    if config.auth.method != "client_credentials" or not name:
+        return None
+    value = key or os.environ.get(name)
+    if not value:
+        raise FeedError(
+            f"{config.id}: the environment variable {name} is not set. "
+            "In GitHub Actions, add it as a repository secret with that name."
+        )
+    return value
+
+
 def credentials_for(
     config: OperatorConfig, key: str | None = None
 ) -> tuple[dict[str, str], dict[str, str]]:
-    """Headers and query parameters that carry the operator's key."""
+    """Headers and query parameters that carry the operator's key.
+
+    None for client_credentials: its header carries an access token, added once
+    PoliteClient.request_token has one.
+    """
     value = secret_value(config, key)
-    if value is None:
+    if value is None or config.auth.method == "client_credentials":
         return {}, {}
     auth = config.auth
     if auth.method == "header":
@@ -290,6 +317,8 @@ def operator_hosts(config: OperatorConfig) -> frozenset[str]:
     urls = [endpoint.url for endpoint in config.endpoints.values()]
     if config.base_url != "unknown":
         urls.append(config.base_url)
+    if config.auth.token_url:
+        urls.append(config.auth.token_url)
     hosts = {urlsplit(url).netloc.lower() for url in urls if url != "unknown"}
     if config.relay is not None:
         hosts.add(RELAY_HOST)
@@ -411,7 +440,7 @@ def required_gap(config: OperatorConfig) -> float:
 
 
 class PoliteClient:
-    """GET requests to one operator, spaced out and retried. Use as a context manager."""
+    """Requests to one operator, spaced out and retried. Use as a context manager."""
 
     def __init__(
         self,
@@ -429,9 +458,14 @@ class PoliteClient:
     ):
         headers, self._auth_params = credentials_for(config, key)
         secret = secret_value(config, key)
+        client_id = client_id_value(config, key)
+        self._auth = config.auth
+        self._client_credentials = (client_id, secret) if client_id else None
         self._relay = relay_route(config)
         self._secrets = tuple(
-            value for value in (secret, self._relay.token if self._relay else None) if value
+            value
+            for value in (client_id, secret, self._relay.token if self._relay else None)
+            if value
         )
         # The owner's decision to read past one expired certificate (ADR 0021). The
         # validator keeps every URL of such an operator on that one host.
@@ -517,16 +551,58 @@ class PoliteClient:
                 self.events.append(event)
                 self._notice(event)
 
-    def _send(self, url: str, headers: dict[str, str]) -> httpx.Response:
+    def _send(
+        self, method: str, url: str, headers: dict[str, str], body: dict | None
+    ) -> httpx.Response:
         if self._expired_certificate is None:
-            return self._client.get(url, headers=headers)
-        with self._client.stream("GET", url, headers=headers) as response:
+            return self._client.request(method, url, headers=headers, json=body)
+        with self._client.stream(method, url, headers=headers, json=body) as response:
             self._check_certificate(response, url)
             response.read()
         return response
 
-    def get(self, url: str) -> httpx.Response:
-        """GET url, retrying temporary failures. Raises FeedError when retries run out."""
+    def get(self, url: str, *, return_at_once: frozenset[int] = frozenset()) -> httpx.Response:
+        """GET url, retrying temporary failures. Raises FeedError when retries run out.
+
+        An answer whose status is in return_at_once is returned without retrying, for an
+        adapter that handles that error itself.
+        """
+        return self._request("GET", url, return_at_once=return_at_once)
+
+    def request_token(self, *, id_field: str, secret_field: str, token_field: str) -> None:
+        """Exchange the client id and secret for an access token (client_credentials).
+
+        POSTs {id_field: id, secret_field: secret} as JSON to auth.token_url and sends the
+        reply's token_field, after auth.scheme, in the header auth.name with every later
+        request. Raises FeedError if there is no token.
+        """
+        if self._client_credentials is None or not self._auth.token_url:
+            raise FeedError("this operator's auth method is not client_credentials")
+        url = self._auth.token_url
+        client_id, secret = self._client_credentials
+        response = self._request("POST", url, body={id_field: client_id, secret_field: secret})
+        if response.status_code not in (200, 201):
+            raise FeedError(
+                f"the token request to {redact_url(url)} answered HTTP {response.status_code}"
+            )
+        try:
+            token = response.json().get(token_field)
+        except (AttributeError, ValueError):
+            token = None
+        if not isinstance(token, str) or not token.strip():
+            raise FeedError(f"the token request to {redact_url(url)} returned no {token_field}")
+        self._secrets = (*self._secrets, token)
+        scheme = self._auth.scheme
+        self._client.headers[self._auth.name] = f"{scheme} {token}" if scheme else token
+
+    def _request(
+        self,
+        method: str,
+        url: str,
+        *,
+        body: dict | None = None,
+        return_at_once: frozenset[int] = frozenset(),
+    ) -> httpx.Response:
         if self._secrets and urlsplit(url).scheme != "https":
             raise FeedError(f"not sending a key over plain http: {redact_url(url)}")
         timer = host_timer(url)
@@ -544,7 +620,7 @@ class PoliteClient:
             self.requests_made += 1
             response = None
             try:
-                response = self._send(request_url, headers)
+                response = self._send(method, request_url, headers, body)
             except httpx.TransportError as exc:
                 problem, retry_after = type(exc).__name__, None
             finally:
@@ -572,7 +648,7 @@ class PoliteClient:
                     self.events.append(event)
                     self._notice(event)
                     continue
-                if status not in RETRY_STATUSES:
+                if status not in RETRY_STATUSES or status in return_at_once:
                     if status < 400:
                         timer.answered = True
                     return response

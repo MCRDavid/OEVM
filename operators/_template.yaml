@@ -37,7 +37,10 @@ base_url: unknown
 endpoints: {}
 
 auth:
-  # One of: none, header, query_param, unknown.
+  # One of: none, header, query_param, client_credentials, unknown. client_credentials
+  # requests an access token once per run with a client id and secret (see
+  # operators/monta.yaml): it also needs scheme, client_id_secret_name and an https
+  # token_url, and only works with an adapter that asks for the token.
   method: unknown
   # Header or query parameter that carries the key, or "unknown". Null if method is none.
   name: null

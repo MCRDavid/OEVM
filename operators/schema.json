@@ -9,6 +9,7 @@
             "none",
             "header",
             "query_param",
+            "client_credentials",
             "unknown"
           ],
           "title": "Method",
@@ -39,6 +40,7 @@
             }
           ],
           "default": null,
+          "description": "NAME of the GitHub Actions secret that holds the key, or, with client_credentials, the client secret. Never the key itself.",
           "title": "Secret Name"
         },
         "scheme": {
@@ -54,6 +56,35 @@
           "default": null,
           "description": "Word sent before the key in a header, such as 'Token' for 'Authorization: Token <key>'. Null if the header holds only the key.",
           "title": "Scheme"
+        },
+        "client_id_secret_name": {
+          "anyOf": [
+            {
+              "description": "NAME of the GitHub Actions secret that holds the key, for example 'JOLT_API_KEY'. Never the key itself.",
+              "pattern": "^[A-Z][A-Z0-9_]*$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "With client_credentials only: NAME of the GitHub Actions secret that holds the client id.",
+          "title": "Client Id Secret Name"
+        },
+        "token_url": {
+          "anyOf": [
+            {
+              "pattern": "^https?://\\S+$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "With client_credentials only: the https address where the client id and secret are exchanged for an access token, which is then sent in the header `name`, after `scheme`.",
+          "title": "Token Url"
         }
       },
       "required": [

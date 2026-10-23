@@ -66,6 +66,7 @@ SEED_IDS = {
     "maxol",
     "mer_uk",
     "mfg_ev_power",
+    "monta",
     "moto_charge",
     "ncp",
     "osprey",
@@ -104,6 +105,16 @@ RESERVED_NAME = "GITHUB_TOKEN"
 
 
 CHECKED_LICENCE = {"name": "OGL-3.0", "basis": "Checked for this test.", "checked": "2026-10-07"}
+
+
+CLIENT_CREDENTIALS = {
+    "method": "client_credentials",
+    "name": "Authorization",
+    "scheme": "Bearer",
+    "secret_name": "EXAMPLE_CLIENT_SECRET",  # pragma: allowlist secret
+    "client_id_secret_name": "EXAMPLE_CLIENT_ID",
+    "token_url": "https://example.invalid/auth/token",
+}
 
 
 def minimal(**overrides) -> dict:
@@ -169,7 +180,7 @@ def test_operator_files_contain_no_key_like_values():
 
 def test_cli_validate_succeeds_on_seed_registry(capsys):
     assert registry.main(["--validate"]) == 0
-    assert "Operator registry is valid: 80 operators" in capsys.readouterr().out
+    assert "Operator registry is valid: 81 operators" in capsys.readouterr().out
 
 
 def test_cli_without_validate_prints_help(capsys):
@@ -290,6 +301,19 @@ def test_minimal_and_enabled_examples_are_valid():
                 "locations": {"url": "http://example.invalid/locations", "status": "documented"}
             },
         ),
+        minimal(auth={**CLIENT_CREDENTIALS, "token_url": None}),
+        minimal(auth={**CLIENT_CREDENTIALS, "client_id_secret_name": None}),
+        minimal(auth={**CLIENT_CREDENTIALS, "token_url": "http://example.invalid/token"}),
+        minimal(auth={**CLIENT_CREDENTIALS, "client_id_secret_name": "EXAMPLE_CLIENT_SECRET"}),
+        minimal(
+            auth={
+                "method": "header",
+                "name": "x-key",
+                "secret_name": EXAMPLE_NAME,
+                "token_url": "https://example.invalid/token",
+            }
+        ),
+        minimal(auth={**CLIENT_CREDENTIALS, "client_id_secret_name": RESERVED_NAME}),
     ],
     ids=[
         "key-in-base-url",
@@ -332,11 +356,26 @@ def test_minimal_and_enabled_examples_are_valid():
         "limit-without-publisher",
         "key-over-plain-http-base-url",
         "key-over-plain-http-endpoint",
+        "client-credentials-without-token-url",
+        "client-credentials-without-client-id",
+        "client-credentials-token-over-plain-http",
+        "client-id-and-secret-in-one-secret",
+        "token-url-without-client-credentials",
+        "client-id-with-reserved-prefix",
     ],
 )
 def test_invalid_operator_configs_are_rejected(data):
     with pytest.raises(ValidationError):
         OperatorConfig.model_validate(data)
+
+
+def test_client_credentials_name_both_secrets():
+    config = OperatorConfig.model_validate(minimal(auth=CLIENT_CREDENTIALS))
+    assert config.auth.secret_names == ("EXAMPLE_CLIENT_ID", "EXAMPLE_CLIENT_SECRET")
+    header = OperatorConfig.model_validate(
+        minimal(auth={"method": "header", "name": "x-key", "secret_name": EXAMPLE_NAME})
+    )
+    assert header.auth.secret_names == (EXAMPLE_NAME,)
 
 
 # Loader

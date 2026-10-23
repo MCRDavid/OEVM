@@ -96,6 +96,8 @@ jobs:
         # project's one relay Worker, which these two secrets address.
         env:
           JOLT_API_KEY: ${{ secrets.JOLT_API_KEY }}
+          MONTA_CLIENT_ID: ${{ secrets.MONTA_CLIENT_ID }}
+          MONTA_CLIENT_SECRET: ${{ secrets.MONTA_CLIENT_SECRET }}
           OEVM_RELAY_URL: ${{ secrets.OEVM_RELAY_URL }}
           OEVM_RELAY_TOKEN: ${{ secrets.OEVM_RELAY_TOKEN }}
         run: |
