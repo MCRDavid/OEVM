@@ -100,7 +100,8 @@ def test_plug_charging_records_its_licence_key_and_rate_limit():
     assert config.adapter == "ocpi_221" and config.enabled
     assert config.licence.name == "OGL-3.0"
     assert "do not restrict how you use the data" in " ".join(config.licence.basis.split())
-    assert config.auth.secret_name == "PLUG_CHARGING_TOKEN" and config.auth.scheme == "Token"
+    assert config.auth.scheme == "Token"
+    assert config.auth.secret_name == "PLUG_CHARGING_TOKEN"  # pragma: allowlist secret
     (limit,) = config.rate_limit.limits
     assert (limit.requests, limit.per_seconds) == (120, 60)
     assert config.rate_limit.min_seconds_between_requests >= limit.min_interval + 1
