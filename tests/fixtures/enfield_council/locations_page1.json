@@ -1,0 +1,1038 @@
+{
+  "request": {
+    "method": "GET",
+    "url": "https://api.fuuse.io/opendata/d73a73f9-d063-456c-9f25-b51765e5747f/location"
+  },
+  "response": {
+    "status_code": 200,
+    "headers": {
+      "content-type": "application/json; charset=utf-8",
+      "x-total-count": "7",
+      "x-limit": "1000"
+    },
+    "body": {
+      "status_code": 1000,
+      "data": [
+        {
+          "id": "1ad94af9-189b-45ac-8324-9098ece9f29a",
+          "publish": true,
+          "name": "Palace Gardens - Multi-storey",
+          "address": "Cecil Road",
+          "city": "Enfield",
+          "postal_code": "EN2 6TG",
+          "state": "Middlesex",
+          "country": "GBR",
+          "coordinates": {
+            "latitude": "51.651300",
+            "longitude": "-0.085500"
+          },
+          "parking_type": "PARKING_LOT",
+          "evses": [
+            {
+              "uid": "77bcb24b-e5d9-476f-b527-68e9ac9ddb82",
+              "evse_id": "10965*1",
+              "status": "INOPERATIVE",
+              "capabilities": [
+                "REMOTE_START_STOP_CAPABLE"
+              ],
+              "connectors": [
+                {
+                  "id": "0bc1e24b-ef36-4c87-8d4a-940f4b0b5bca",
+                  "standard": "IEC_62196_T2",
+                  "format": "SOCKET",
+                  "power_type": "AC_1_PHASE",
+                  "max_voltage": 240,
+                  "max_amperage": 32,
+                  "max_electric_power": 7360,
+                  "tariff_ids": [
+                    "b0b39659-31d6-405f-9176-e2c3a6a9b27a"
+                  ],
+                  "last_updated": "2026-07-20T09:24:25.284Z"
+                }
+              ],
+              "coordinates": {
+                "latitude": "51.651300",
+                "longitude": "-0.085500"
+              },
+              "physical_reference": "10965-A",
+              "last_updated": "2026-10-23T10:17:00.692Z"
+            },
+            {
+              "uid": "ea5a5f25-9c69-4270-a452-f524a9c4a82d",
+              "evse_id": "10964*1",
+              "status": "INOPERATIVE",
+              "capabilities": [
+                "REMOTE_START_STOP_CAPABLE"
+              ],
+              "connectors": [
+                {
+                  "id": "bffd77d3-67ba-4fd2-89f6-e0601f004f74",
+                  "standard": "IEC_62196_T2",
+                  "format": "SOCKET",
+                  "power_type": "AC_1_PHASE",
+                  "max_voltage": 240,
+                  "max_amperage": 32,
+                  "max_electric_power": 7360,
+                  "tariff_ids": [
+                    "b0b39659-31d6-405f-9176-e2c3a6a9b27a"
+                  ],
+                  "last_updated": "2026-06-20T11:01:31.005Z"
+                }
+              ],
+              "coordinates": {
+                "latitude": "51.651300",
+                "longitude": "-0.085500"
+              },
+              "physical_reference": "10964-A",
+              "last_updated": "2026-06-20T11:01:31.005Z"
+            }
+          ],
+          "operator": {
+            "name": "London Borough of Enfield"
+          },
+          "time_zone": "Europe/London",
+          "opening_times": {
+            "twentyfourseven": true
+          },
+          "charging_when_closed": false,
+          "last_updated": "2026-07-20T09:24:25.284Z"
+        },
+        {
+          "id": "dce68fab-db0e-45d4-885d-453d4121154a",
+          "publish": true,
+          "name": "Angel Corner",
+          "address": "Angel Corner",
+          "city": "London",
+          "postal_code": "N18 2QH",
+          "state": "London",
+          "country": "GBR",
+          "coordinates": {
+            "latitude": "51.614900",
+            "longitude": "-0.063800"
+          },
+          "parking_type": "PARKING_LOT",
+          "evses": [
+            {
+              "uid": "bf5fcef0-b804-420f-a171-562ad9835f6a",
+              "evse_id": "RATIOIO77002870*2",
+              "status": "INOPERATIVE",
+              "capabilities": [
+                "REMOTE_START_STOP_CAPABLE"
+              ],
+              "connectors": [
+                {
+                  "id": "24a0add6-2356-407c-b036-9b428acec229",
+                  "standard": "IEC_62196_T2",
+                  "format": "SOCKET",
+                  "power_type": "AC_1_PHASE",
+                  "max_voltage": 230,
+                  "max_amperage": 30,
+                  "max_electric_power": 7000,
+                  "last_updated": "2026-10-06T13:49:21.421Z"
+                }
+              ],
+              "coordinates": {
+                "latitude": "51.614900",
+                "longitude": "-0.063800"
+              },
+              "physical_reference": "AngelCorner-2",
+              "last_updated": "2026-10-06T13:49:21.421Z"
+            },
+            {
+              "uid": "dbde6279-d77e-48d5-bf79-d98098f9cb99",
+              "evse_id": "RATIOIO77002870*1",
+              "status": "INOPERATIVE",
+              "capabilities": [
+                "REMOTE_START_STOP_CAPABLE"
+              ],
+              "connectors": [
+                {
+                  "id": "4d7fcfc9-12af-4c53-99f9-52c1517d8909",
+                  "standard": "IEC_62196_T2",
+                  "format": "SOCKET",
+                  "power_type": "AC_1_PHASE",
+                  "max_voltage": 230,
+                  "max_amperage": 30,
+                  "max_electric_power": 7000,
+                  "last_updated": "2026-10-06T13:49:07.476Z"
+                }
+              ],
+              "coordinates": {
+                "latitude": "51.614900",
+                "longitude": "-0.063800"
+              },
+              "physical_reference": "AngelCorner-1",
+              "last_updated": "2026-10-06T13:49:07.476Z"
+            }
+          ],
+          "operator": {
+            "name": "London Borough of Enfield"
+          },
+          "time_zone": "Europe/London",
+          "opening_times": {
+            "twentyfourseven": true
+          },
+          "charging_when_closed": false,
+          "last_updated": "2026-10-06T13:49:21.421Z"
+        },
+        {
+          "id": "1ce8a6c3-f8f6-4931-aa85-945be63f1770",
+          "publish": true,
+          "name": "Sydney Road",
+          "address": "Sydney Road",
+          "city": "Enfield",
+          "postal_code": "EN2 6TS",
+          "state": "Middlesex",
+          "country": "GBR",
+          "coordinates": {
+            "latitude": "51.649400",
+            "longitude": "-0.081800"
+          },
+          "parking_type": "PARKING_LOT",
+          "evses": [
+            {
+              "uid": "436e008d-7e2a-4c64-aa2a-a323e27bb86a",
+              "evse_id": "RATIOIO77002872*2",
+              "status": "AVAILABLE",
+              "capabilities": [
+                "REMOTE_START_STOP_CAPABLE"
+              ],
+              "connectors": [
+                {
+                  "id": "7f85282b-d3e3-416a-a189-1bb0af8477ec",
+                  "standard": "IEC_62196_T2",
+                  "format": "SOCKET",
+                  "power_type": "AC_1_PHASE",
+                  "max_voltage": 240,
+                  "max_amperage": 32,
+                  "max_electric_power": 7000,
+                  "last_updated": "2026-10-23T13:16:34.614Z"
+                }
+              ],
+              "coordinates": {
+                "latitude": "51.649400",
+                "longitude": "-0.081800"
+              },
+              "physical_reference": "SydneyRoad-2",
+              "last_updated": "2026-10-23T20:32:25.048Z"
+            },
+            {
+              "uid": "4b1431ea-0661-4b47-abc7-eb754b0312b4",
+              "evse_id": "RATIOIO77002872*1",
+              "status": "AVAILABLE",
+              "capabilities": [
+                "REMOTE_START_STOP_CAPABLE"
+              ],
+              "connectors": [
+                {
+                  "id": "b204acd8-cc6c-4130-9f66-27891fb43877",
+                  "standard": "IEC_62196_T2",
+                  "format": "SOCKET",
+                  "power_type": "AC_1_PHASE",
+                  "max_voltage": 230,
+                  "max_amperage": 30,
+                  "max_electric_power": 7000,
+                  "last_updated": "2026-10-23T06:13:49.121Z"
+                }
+              ],
+              "coordinates": {
+                "latitude": "51.649400",
+                "longitude": "-0.081800"
+              },
+              "physical_reference": "SydneyRoad-1",
+              "last_updated": "2026-10-23T20:32:25.048Z"
+            }
+          ],
+          "operator": {
+            "name": "London Borough of Enfield"
+          },
+          "time_zone": "Europe/London",
+          "opening_times": {
+            "twentyfourseven": true
+          },
+          "charging_when_closed": false,
+          "last_updated": "2026-10-23T13:16:34.614Z"
+        },
+        {
+          "id": "6bb4e4b5-eb92-42e4-9a5a-0bc2e09470ae",
+          "publish": true,
+          "name": "Leigh Hunt Drive",
+          "address": "Leigh Hunt Drive",
+          "city": "London",
+          "postal_code": "N14 6BP",
+          "state": "London",
+          "country": "GBR",
+          "coordinates": {
+            "latitude": "51.630700",
+            "longitude": "-0.127700"
+          },
+          "parking_type": "PARKING_LOT",
+          "evses": [
+            {
+              "uid": "440c515b-5d30-45a6-ac38-14f222b97c9c",
+              "evse_id": "RATIOIO77002871*2",
+              "status": "AVAILABLE",
+              "capabilities": [
+                "REMOTE_START_STOP_CAPABLE"
+              ],
+              "connectors": [
+                {
+                  "id": "c7468499-e171-4869-9ca2-49d498b83af0",
+                  "standard": "IEC_62196_T2",
+                  "format": "SOCKET",
+                  "power_type": "AC_1_PHASE",
+                  "max_voltage": 240,
+                  "max_amperage": 32,
+                  "max_electric_power": 7000,
+                  "last_updated": "2026-10-23T13:37:16.610Z"
+                }
+              ],
+              "coordinates": {
+                "latitude": "51.630700",
+                "longitude": "-0.127700"
+              },
+              "physical_reference": "LeighHuntDrive-2",
+              "last_updated": "2026-10-23T21:05:19.835Z"
+            },
+            {
+              "uid": "f144c209-3c99-43a6-a3f6-6583fe76b847",
+              "evse_id": "RATIOIO77002871*1",
+              "status": "AVAILABLE",
+              "capabilities": [
+                "REMOTE_START_STOP_CAPABLE"
+              ],
+              "connectors": [
+                {
+                  "id": "9f2a084c-954b-4ac8-b6d4-4cf9e485e22b",
+                  "standard": "IEC_62196_T2",
+                  "format": "SOCKET",
+                  "power_type": "AC_1_PHASE",
+                  "max_voltage": 230,
+                  "max_amperage": 30,
+                  "max_electric_power": 7000,
+                  "last_updated": "2026-10-23T13:21:42.729Z"
+                }
+              ],
+              "coordinates": {
+                "latitude": "51.630700",
+                "longitude": "-0.127700"
+              },
+              "physical_reference": "LeighHuntDrive-1",
+              "last_updated": "2026-10-23T21:05:19.835Z"
+            }
+          ],
+          "operator": {
+            "name": "London Borough of Enfield"
+          },
+          "time_zone": "Europe/London",
+          "opening_times": {
+            "twentyfourseven": true
+          },
+          "charging_when_closed": false,
+          "last_updated": "2026-10-23T13:37:16.610Z"
+        },
+        {
+          "id": "0cdbb851-467d-48ad-a898-1827541388e3",
+          "publish": true,
+          "name": "Genotin Road Car Park",
+          "address": "Genotin Road",
+          "city": "Enfield",
+          "postal_code": "EN1 2AG",
+          "state": "Middlesex",
+          "country": "GBR",
+          "coordinates": {
+            "latitude": "51.650900",
+            "longitude": "-0.079300"
+          },
+          "parking_type": "PARKING_LOT",
+          "evses": [
+            {
+              "uid": "0097f5f0-04fe-47ed-82a9-b55c62c44462",
+              "evse_id": "13995*2",
+              "status": "AVAILABLE",
+              "capabilities": [
+                "REMOTE_START_STOP_CAPABLE"
+              ],
+              "connectors": [
+                {
+                  "id": "93a45f9a-b722-4960-b99a-2563066c2170",
+                  "standard": "IEC_62196_T2",
+                  "format": "SOCKET",
+                  "power_type": "AC_1_PHASE",
+                  "max_voltage": 230,
+                  "max_amperage": 32,
+                  "max_electric_power": 7360,
+                  "last_updated": "2026-10-23T10:08:06.806Z"
+                }
+              ],
+              "coordinates": {
+                "latitude": "51.650900",
+                "longitude": "-0.079300"
+              },
+              "physical_reference": "13995-B",
+              "last_updated": "2026-10-23T10:09:24.677Z"
+            },
+            {
+              "uid": "09392682-ea30-458e-9395-6662bdd0bc4b",
+              "evse_id": "13992*1",
+              "status": "INOPERATIVE",
+              "capabilities": [
+                "REMOTE_START_STOP_CAPABLE"
+              ],
+              "connectors": [
+                {
+                  "id": "c6bab0ac-50a4-449e-b20b-924755f938f6",
+                  "standard": "IEC_62196_T2",
+                  "format": "SOCKET",
+                  "power_type": "AC_1_PHASE",
+                  "max_voltage": 230,
+                  "max_amperage": 32,
+                  "max_electric_power": 7360,
+                  "last_updated": "2026-06-30T09:43:22.651Z"
+                }
+              ],
+              "coordinates": {
+                "latitude": "51.650900",
+                "longitude": "-0.079300"
+              },
+              "physical_reference": "13992-A",
+              "last_updated": "2026-06-30T09:43:22.651Z"
+            },
+            {
+              "uid": "0b4c2bc9-45c6-4a34-bae1-99fd9136b247",
+              "evse_id": "13991*1",
+              "status": "AVAILABLE",
+              "capabilities": [
+                "REMOTE_START_STOP_CAPABLE"
+              ],
+              "connectors": [
+                {
+                  "id": "33d844ee-5f26-4aa2-899c-5f63d0d8d470",
+                  "standard": "IEC_62196_T2",
+                  "format": "SOCKET",
+                  "power_type": "AC_1_PHASE",
+                  "max_voltage": 230,
+                  "max_amperage": 32,
+                  "max_electric_power": 7360,
+                  "last_updated": "2026-10-23T10:06:48.078Z"
+                }
+              ],
+              "coordinates": {
+                "latitude": "51.650900",
+                "longitude": "-0.079300"
+              },
+              "physical_reference": "13991-A",
+              "last_updated": "2026-10-23T20:08:31.533Z"
+            },
+            {
+              "uid": "100d9b50-56b8-4e5b-8856-38936928e732",
+              "evse_id": "13989*1",
+              "status": "CHARGING",
+              "capabilities": [
+                "REMOTE_START_STOP_CAPABLE"
+              ],
+              "connectors": [
+                {
+                  "id": "3480d38d-d551-4e61-8e9c-45cd6a753604",
+                  "standard": "IEC_62196_T2",
+                  "format": "SOCKET",
+                  "power_type": "AC_1_PHASE",
+                  "max_voltage": 240,
+                  "max_amperage": 32,
+                  "max_electric_power": 7360,
+                  "last_updated": "2026-10-23T18:13:23.300Z"
+                }
+              ],
+              "coordinates": {
+                "latitude": "51.650900",
+                "longitude": "-0.079300"
+              },
+              "physical_reference": "13989-A",
+              "last_updated": "2026-10-23T18:13:23.300Z"
+            },
+            {
+              "uid": "1abc7e93-33cd-4e40-9c51-a9300b9095f8",
+              "evse_id": "13994*1",
+              "status": "CHARGING",
+              "capabilities": [
+                "REMOTE_START_STOP_CAPABLE"
+              ],
+              "connectors": [
+                {
+                  "id": "26c6e0ed-502b-429f-909d-b90318b700ed",
+                  "standard": "IEC_62196_T2",
+                  "format": "SOCKET",
+                  "power_type": "AC_1_PHASE",
+                  "max_voltage": 230,
+                  "max_amperage": 32,
+                  "max_electric_power": 7360,
+                  "last_updated": "2026-10-23T18:02:19.244Z"
+                }
+              ],
+              "coordinates": {
+                "latitude": "51.650900",
+                "longitude": "-0.079300"
+              },
+              "physical_reference": "13994-A",
+              "last_updated": "2026-10-23T18:50:12.750Z"
+            },
+            {
+              "uid": "23026059-96c5-4a2b-aba2-1c3060eba2de",
+              "evse_id": "13991*2",
+              "status": "AVAILABLE",
+              "capabilities": [
+                "REMOTE_START_STOP_CAPABLE"
+              ],
+              "connectors": [
+                {
+                  "id": "bcea5372-745a-40a1-8fe8-27eb3deda924",
+                  "standard": "IEC_62196_T2",
+                  "format": "SOCKET",
+                  "power_type": "AC_1_PHASE",
+                  "max_voltage": 230,
+                  "max_amperage": 32,
+                  "max_electric_power": 7360,
+                  "last_updated": "2026-10-23T10:07:01.379Z"
+                }
+              ],
+              "coordinates": {
+                "latitude": "51.650900",
+                "longitude": "-0.079300"
+              },
+              "physical_reference": "13991-B",
+              "last_updated": "2026-10-23T20:08:31.533Z"
+            },
+            {
+              "uid": "432cd071-4206-463f-8033-a6f20a5f3f5c",
+              "evse_id": "13990*1",
+              "status": "INOPERATIVE",
+              "capabilities": [
+                "REMOTE_START_STOP_CAPABLE"
+              ],
+              "connectors": [
+                {
+                  "id": "90a4f11a-772e-4789-8591-d046bad7a7e1",
+                  "standard": "IEC_62196_T2",
+                  "format": "SOCKET",
+                  "power_type": "AC_1_PHASE",
+                  "max_voltage": 230,
+                  "max_amperage": 32,
+                  "max_electric_power": 7360,
+                  "last_updated": "2026-06-30T09:53:21.293Z"
+                }
+              ],
+              "coordinates": {
+                "latitude": "51.650900",
+                "longitude": "-0.079300"
+              },
+              "physical_reference": "13990-A",
+              "last_updated": "2026-06-30T09:53:21.293Z"
+            },
+            {
+              "uid": "459aa35a-e299-4f68-b127-f08554bed1b3",
+              "evse_id": "13988*2",
+              "status": "AVAILABLE",
+              "capabilities": [
+                "REMOTE_START_STOP_CAPABLE"
+              ],
+              "connectors": [
+                {
+                  "id": "c0d3845a-9b8d-4281-8cc9-40cf973b2572",
+                  "standard": "IEC_62196_T2",
+                  "format": "SOCKET",
+                  "power_type": "AC_1_PHASE",
+                  "max_voltage": 230,
+                  "max_amperage": 32,
+                  "max_electric_power": 7360,
+                  "last_updated": "2026-10-23T10:12:29.623Z"
+                }
+              ],
+              "coordinates": {
+                "latitude": "51.650900",
+                "longitude": "-0.079300"
+              },
+              "physical_reference": "13988-B",
+              "last_updated": "2026-10-23T20:08:58.915Z"
+            },
+            {
+              "uid": "56300eb8-cbfd-4eaf-9e5b-7ae843110f35",
+              "evse_id": "13997*1",
+              "status": "AVAILABLE",
+              "capabilities": [
+                "REMOTE_START_STOP_CAPABLE"
+              ],
+              "connectors": [
+                {
+                  "id": "852890d1-f6a1-4faa-9776-064db1ea828a",
+                  "standard": "IEC_62196_T2",
+                  "format": "SOCKET",
+                  "power_type": "AC_1_PHASE",
+                  "max_voltage": 230,
+                  "max_amperage": 32,
+                  "max_electric_power": 7360,
+                  "last_updated": "2026-10-23T18:07:55.625Z"
+                }
+              ],
+              "coordinates": {
+                "latitude": "51.650900",
+                "longitude": "-0.079300"
+              },
+              "physical_reference": "13997-A",
+              "last_updated": "2026-10-23T18:07:55.625Z"
+            },
+            {
+              "uid": "68dee9bb-f1ce-4606-a667-6489858d0806",
+              "evse_id": "13993*1",
+              "status": "INOPERATIVE",
+              "capabilities": [
+                "REMOTE_START_STOP_CAPABLE"
+              ],
+              "connectors": [
+                {
+                  "id": "773cd21e-3dbd-4cc3-ae51-5c67474e0896",
+                  "standard": "IEC_62196_T2",
+                  "format": "SOCKET",
+                  "power_type": "AC_1_PHASE",
+                  "max_voltage": 230,
+                  "max_amperage": 32,
+                  "max_electric_power": 7360,
+                  "last_updated": "2026-06-09T01:34:38.870Z"
+                }
+              ],
+              "coordinates": {
+                "latitude": "51.650900",
+                "longitude": "-0.079300"
+              },
+              "physical_reference": "13993-A",
+              "last_updated": "2026-06-09T05:53:14.466Z"
+            },
+            {
+              "uid": "7369d8e1-bb7a-4271-97e5-388edcae6aea",
+              "evse_id": "13997*2",
+              "status": "AVAILABLE",
+              "capabilities": [
+                "REMOTE_START_STOP_CAPABLE"
+              ],
+              "connectors": [
+                {
+                  "id": "6a5aa1ab-01e7-4eef-b449-244bede64180",
+                  "standard": "IEC_62196_T2",
+                  "format": "SOCKET",
+                  "power_type": "AC_1_PHASE",
+                  "max_voltage": 230,
+                  "max_amperage": 32,
+                  "max_electric_power": 7360,
+                  "last_updated": "2026-10-23T10:08:22.226Z"
+                }
+              ],
+              "coordinates": {
+                "latitude": "51.650900",
+                "longitude": "-0.079300"
+              },
+              "physical_reference": "13997-B",
+              "last_updated": "2026-10-23T18:07:55.625Z"
+            },
+            {
+              "uid": "85f945ca-25ee-4c29-8bd1-9d1dad6de1f2",
+              "evse_id": "13990*2",
+              "status": "INOPERATIVE",
+              "capabilities": [
+                "REMOTE_START_STOP_CAPABLE"
+              ],
+              "connectors": [
+                {
+                  "id": "e95505b8-72ed-49f4-a448-d7bab7ddc269",
+                  "standard": "IEC_62196_T2",
+                  "format": "SOCKET",
+                  "power_type": "AC_1_PHASE",
+                  "max_voltage": 230,
+                  "max_amperage": 32,
+                  "max_electric_power": 7360,
+                  "last_updated": "2026-06-30T09:53:08.600Z"
+                }
+              ],
+              "coordinates": {
+                "latitude": "51.650900",
+                "longitude": "-0.079300"
+              },
+              "physical_reference": "13990-B",
+              "last_updated": "2026-06-30T09:53:21.293Z"
+            },
+            {
+              "uid": "8fd2f0e6-ace0-422f-83f6-031e65e3272a",
+              "evse_id": "13993*2",
+              "status": "INOPERATIVE",
+              "capabilities": [
+                "REMOTE_START_STOP_CAPABLE"
+              ],
+              "connectors": [
+                {
+                  "id": "0f91a750-b1cb-4d1c-bc03-31dbbdf9844d",
+                  "standard": "IEC_62196_T2",
+                  "format": "SOCKET",
+                  "power_type": "AC_1_PHASE",
+                  "max_voltage": 230,
+                  "max_amperage": 32,
+                  "max_electric_power": 7360,
+                  "last_updated": "2026-06-09T00:57:11.125Z"
+                }
+              ],
+              "coordinates": {
+                "latitude": "51.650900",
+                "longitude": "-0.079300"
+              },
+              "physical_reference": "13993-B",
+              "last_updated": "2026-06-09T05:53:14.466Z"
+            },
+            {
+              "uid": "951aa522-4dda-4721-8a82-4e414b26736c",
+              "evse_id": "13996*1",
+              "status": "AVAILABLE",
+              "capabilities": [
+                "REMOTE_START_STOP_CAPABLE"
+              ],
+              "connectors": [
+                {
+                  "id": "502f64d6-3cfa-4b8b-a591-a02ee94c2f0e",
+                  "standard": "IEC_62196_T2",
+                  "format": "SOCKET",
+                  "power_type": "AC_1_PHASE",
+                  "max_voltage": 230,
+                  "max_amperage": 32,
+                  "max_electric_power": 7360,
+                  "last_updated": "2026-10-23T10:07:34.164Z"
+                }
+              ],
+              "coordinates": {
+                "latitude": "51.650900",
+                "longitude": "-0.079300"
+              },
+              "physical_reference": "13996-A",
+              "last_updated": "2026-10-23T10:09:05.612Z"
+            },
+            {
+              "uid": "b65fc1b6-541c-45f5-9e64-215c03d4ff06",
+              "evse_id": "13994*2",
+              "status": "AVAILABLE",
+              "capabilities": [
+                "REMOTE_START_STOP_CAPABLE"
+              ],
+              "connectors": [
+                {
+                  "id": "31d0107c-06ea-4f2f-84ea-3eed7c3e2c2b",
+                  "standard": "IEC_62196_T2",
+                  "format": "SOCKET",
+                  "power_type": "AC_1_PHASE",
+                  "max_voltage": 230,
+                  "max_amperage": 32,
+                  "max_electric_power": 7360,
+                  "last_updated": "2026-10-23T18:50:12.750Z"
+                }
+              ],
+              "coordinates": {
+                "latitude": "51.650900",
+                "longitude": "-0.079300"
+              },
+              "physical_reference": "13994-B",
+              "last_updated": "2026-10-23T18:50:12.750Z"
+            },
+            {
+              "uid": "c3abc36d-d821-46b4-9501-03e98c96c932",
+              "evse_id": "13988*1",
+              "status": "AVAILABLE",
+              "capabilities": [
+                "REMOTE_START_STOP_CAPABLE"
+              ],
+              "connectors": [
+                {
+                  "id": "e21fcaf0-20d7-46e8-9094-141ecca3c07e",
+                  "standard": "IEC_62196_T2",
+                  "format": "SOCKET",
+                  "power_type": "AC_1_PHASE",
+                  "max_voltage": 230,
+                  "max_amperage": 32,
+                  "max_electric_power": 7360,
+                  "last_updated": "2026-10-23T10:12:43.514Z"
+                }
+              ],
+              "coordinates": {
+                "latitude": "51.650900",
+                "longitude": "-0.079300"
+              },
+              "physical_reference": "13988-A",
+              "last_updated": "2026-10-23T20:08:58.915Z"
+            },
+            {
+              "uid": "cc88600c-d6b4-4cd6-b584-3c26c692bc3f",
+              "evse_id": "13996*2",
+              "status": "AVAILABLE",
+              "capabilities": [
+                "REMOTE_START_STOP_CAPABLE"
+              ],
+              "connectors": [
+                {
+                  "id": "9537d168-3d9a-41c3-a980-bee177771b86",
+                  "standard": "IEC_62196_T2",
+                  "format": "SOCKET",
+                  "power_type": "AC_1_PHASE",
+                  "max_voltage": 230,
+                  "max_amperage": 32,
+                  "max_electric_power": 7360,
+                  "last_updated": "2026-10-23T10:07:59.635Z"
+                }
+              ],
+              "coordinates": {
+                "latitude": "51.650900",
+                "longitude": "-0.079300"
+              },
+              "physical_reference": "13996-B",
+              "last_updated": "2026-10-23T10:09:05.612Z"
+            },
+            {
+              "uid": "d71423e9-04c3-4843-914d-63f8c58b9153",
+              "evse_id": "13989*2",
+              "status": "AVAILABLE",
+              "capabilities": [
+                "REMOTE_START_STOP_CAPABLE"
+              ],
+              "connectors": [
+                {
+                  "id": "3d598e9f-0a51-466e-afee-d3073a901e4f",
+                  "standard": "IEC_62196_T2",
+                  "format": "SOCKET",
+                  "power_type": "AC_1_PHASE",
+                  "max_voltage": 230,
+                  "max_amperage": 32,
+                  "max_electric_power": 7360,
+                  "last_updated": "2026-10-23T10:08:28.104Z"
+                }
+              ],
+              "coordinates": {
+                "latitude": "51.650900",
+                "longitude": "-0.079300"
+              },
+              "physical_reference": "13989-B",
+              "last_updated": "2026-10-23T18:13:23.300Z"
+            },
+            {
+              "uid": "f5d05630-9517-4b3a-9f2f-07ba0b7126af",
+              "evse_id": "13995*1",
+              "status": "AVAILABLE",
+              "capabilities": [
+                "REMOTE_START_STOP_CAPABLE"
+              ],
+              "connectors": [
+                {
+                  "id": "0dc16653-9ca8-4c6a-ae8d-cf3db2427d33",
+                  "standard": "IEC_62196_T2",
+                  "format": "SOCKET",
+                  "power_type": "AC_1_PHASE",
+                  "max_voltage": 230,
+                  "max_amperage": 32,
+                  "max_electric_power": 7360,
+                  "last_updated": "2026-10-23T10:08:41.411Z"
+                }
+              ],
+              "coordinates": {
+                "latitude": "51.650900",
+                "longitude": "-0.079300"
+              },
+              "physical_reference": "13995-A",
+              "last_updated": "2026-10-23T10:09:24.677Z"
+            },
+            {
+              "uid": "ff2c1e24-6f5d-402c-9148-2c0cf8815fb7",
+              "evse_id": "13992*2",
+              "status": "INOPERATIVE",
+              "capabilities": [
+                "REMOTE_START_STOP_CAPABLE"
+              ],
+              "connectors": [
+                {
+                  "id": "037ddf1b-35ee-4dfb-a844-83d191364f33",
+                  "standard": "IEC_62196_T2",
+                  "format": "SOCKET",
+                  "power_type": "AC_1_PHASE",
+                  "max_voltage": 230,
+                  "max_amperage": 32,
+                  "max_electric_power": 7360,
+                  "last_updated": "2026-06-07T22:18:08.646Z"
+                }
+              ],
+              "coordinates": {
+                "latitude": "51.650900",
+                "longitude": "-0.079300"
+              },
+              "physical_reference": "13992-B",
+              "last_updated": "2026-06-30T09:43:22.651Z"
+            }
+          ],
+          "operator": {
+            "name": "London Borough of Enfield"
+          },
+          "time_zone": "Europe/London",
+          "opening_times": {
+            "twentyfourseven": true
+          },
+          "charging_when_closed": false,
+          "last_updated": "2026-10-23T18:50:12.750Z"
+        },
+        {
+          "id": "5ad75b40-01d7-4666-9e7c-7d51d62f4585",
+          "publish": true,
+          "name": "Westpole Avenue",
+          "address": "Westpole Avenue",
+          "city": "Enfield",
+          "postal_code": "EN4 0AS",
+          "country": "GBR",
+          "coordinates": {
+            "latitude": "51.650300",
+            "longitude": "-0.147400"
+          },
+          "parking_type": "PARKING_LOT",
+          "evses": [
+            {
+              "uid": "09c2502f-af2a-4c1f-afcb-a497d5380e47",
+              "evse_id": "RATIOIO77002873*2",
+              "status": "CHARGING",
+              "capabilities": [
+                "REMOTE_START_STOP_CAPABLE"
+              ],
+              "connectors": [
+                {
+                  "id": "d33892a1-86f5-4570-83e9-98e430803f79",
+                  "standard": "IEC_62196_T2",
+                  "format": "SOCKET",
+                  "power_type": "AC_1_PHASE",
+                  "max_voltage": 230,
+                  "max_amperage": 30,
+                  "max_electric_power": 7000,
+                  "last_updated": "2026-10-23T19:36:52.261Z"
+                }
+              ],
+              "coordinates": {
+                "latitude": "51.650300",
+                "longitude": "-0.147400"
+              },
+              "physical_reference": "WestpoleAvenue-2",
+              "last_updated": "2026-10-23T20:55:25.762Z"
+            },
+            {
+              "uid": "54378200-1eb2-4abf-9330-07c62681c07b",
+              "evse_id": "RATIOIO77002873*1",
+              "status": "CHARGING",
+              "capabilities": [
+                "REMOTE_START_STOP_CAPABLE"
+              ],
+              "connectors": [
+                {
+                  "id": "5aa52b15-8e19-4c4a-89e5-397b105d7d9d",
+                  "standard": "IEC_62196_T2",
+                  "format": "SOCKET",
+                  "power_type": "AC_1_PHASE",
+                  "max_voltage": 230,
+                  "max_amperage": 30,
+                  "max_electric_power": 7000,
+                  "last_updated": "2026-10-23T18:33:42.220Z"
+                }
+              ],
+              "coordinates": {
+                "latitude": "51.650300",
+                "longitude": "-0.147400"
+              },
+              "physical_reference": "WestpoleAvenue-1",
+              "last_updated": "2026-10-23T20:55:25.762Z"
+            }
+          ],
+          "operator": {
+            "name": "London Borough of Enfield"
+          },
+          "time_zone": "Europe/London",
+          "opening_times": {
+            "twentyfourseven": true
+          },
+          "charging_when_closed": false,
+          "last_updated": "2026-10-23T19:36:52.261Z"
+        },
+        {
+          "id": "362503d0-39ad-4618-ab16-8e88ee2432b5",
+          "publish": true,
+          "name": "Aldermans Hill",
+          "address": "Aldermans Hill",
+          "city": "London",
+          "postal_code": "N13 4PN",
+          "country": "GBR",
+          "coordinates": {
+            "latitude": "51.618200",
+            "longitude": "-0.110400"
+          },
+          "parking_type": "PARKING_LOT",
+          "evses": [
+            {
+              "uid": "26b5c31c-284b-455f-b85d-fba2c85465da",
+              "evse_id": "RATIOIO77002869*1",
+              "status": "AVAILABLE",
+              "capabilities": [
+                "REMOTE_START_STOP_CAPABLE"
+              ],
+              "connectors": [
+                {
+                  "id": "9042a7eb-0a5a-49ab-9c74-aeba8af53e97",
+                  "standard": "IEC_62196_T2",
+                  "format": "SOCKET",
+                  "power_type": "AC_1_PHASE",
+                  "max_voltage": 240,
+                  "max_amperage": 29,
+                  "max_electric_power": 7000,
+                  "last_updated": "2026-10-23T19:15:31.128Z"
+                }
+              ],
+              "coordinates": {
+                "latitude": "51.618200",
+                "longitude": "-0.110400"
+              },
+              "physical_reference": "AldermansHill-1",
+              "last_updated": "2026-10-23T20:32:27.706Z"
+            },
+            {
+              "uid": "6d3a22b8-6630-41f3-935c-a7ca0b8436cd",
+              "evse_id": "RATIOIO77002869*2",
+              "status": "CHARGING",
+              "capabilities": [
+                "REMOTE_START_STOP_CAPABLE"
+              ],
+              "connectors": [
+                {
+                  "id": "e79faec6-8e9c-457d-849a-009531280a18",
+                  "standard": "IEC_62196_T2",
+                  "format": "SOCKET",
+                  "power_type": "AC_1_PHASE",
+                  "max_voltage": 240,
+                  "max_amperage": 32,
+                  "max_electric_power": 7360,
+                  "last_updated": "2026-10-23T19:57:26.705Z"
+                }
+              ],
+              "coordinates": {
+                "latitude": "51.618200",
+                "longitude": "-0.110400"
+              },
+              "physical_reference": "AldermansHill-2",
+              "last_updated": "2026-10-23T20:32:27.706Z"
+            }
+          ],
+          "operator": {
+            "name": "London Borough of Enfield"
+          },
+          "time_zone": "Europe/London",
+          "opening_times": {
+            "twentyfourseven": true
+          },
+          "charging_when_closed": false,
+          "last_updated": "2026-10-23T19:57:26.705Z"
+        }
+      ],
+      "timestamp": "2026-10-23T21:09:05.486Z"
+    }
+  }
+}
