@@ -29,6 +29,13 @@ KEY_SCAN_SKIPPED = ("tests/fixtures/", "uv.lock")
 PUBLISHED_FEED_ADDRESSES = {
     "https://api.fuuse.io/opendata/e6397b95-1624-49cd-824d-ab2f9dfe7294/",
     "https://api.fuuse.io/opendata/e11a667d-c56a-468f-b8d3-a50b41628292/",
+    # 3ti's six sites, as its own public charge points page reads them (operators/three_ti.yaml).
+    "https://api.fuuse.io/opendata/c3947832-9352-41fa-96c1-831215eea8e0/",
+    "https://api.fuuse.io/opendata/4a5b700e-6a15-40f3-92cc-dcc8732a92e0/",
+    "https://api.fuuse.io/opendata/6cd94287-a370-48ae-8079-a514a8ac2c7b/",
+    "https://api.fuuse.io/opendata/36bd06f3-5184-4939-a7a1-4c0c1dec5583/",
+    "https://api.fuuse.io/opendata/542c7548-899e-43e8-854c-05fd0f76dc70/",
+    "https://api.fuuse.io/opendata/6922c10c-4f17-4929-bf7a-32c4a6075277/",
 }
 # Record ids an operator publishes in its open data, named in an owner's decision in its
 # operator file (zero_price_tariffs in operators/scottishpower_recharge.yaml, ADR 0022).

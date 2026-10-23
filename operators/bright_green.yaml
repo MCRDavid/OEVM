@@ -95,7 +95,19 @@ findings:
     summary: >-
       Tariff prices are sent as text, for example "0.59", where OCPI 2.2.1 uses a number.
       Each states its VAT rate (20 for the GBP tariffs).
-    handling: Read as the number written. Prices include the stated VAT.
+    handling: Read as the number written.
+    evidence_url: https://connect.bright.green/ocpp/tariffs
+  - date: 2026-10-23
+    kind: data_quality
+    summary: >-
+      Every tariff also carries a "price_display" field, which is not in OCPI 2.2.1, equal to
+      its price as written: for example price "0.59" with VAT 20 and price_display "£0.59"
+      (12 of 12 tariffs on 2026-10-23). OCPI 2.2.1 gives prices excluding VAT, so read that
+      way the price is 70.8p per kWh including VAT, while the display price suggests 59p.
+      Which one drivers pay is not stated.
+    handling: >-
+      Not switched on while this is open, so no BrightGreen price is shown. The repository
+      owner has been asked how to show these prices.
     evidence_url: https://connect.bright.green/ocpp/tariffs
   - date: 2026-10-23
     kind: spec_conformance
@@ -135,4 +147,4 @@ notes: >-
   One location in the feed is named "EZ charge HQ" (Bicester). EZ-Charge has its own file in
   the registry (operators/ez_charge.yaml), with no public feed found; whether BrightGreen's
   feed covers EZ-Charge's network is not known.
-enabled: true
+enabled: false

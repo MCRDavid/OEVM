@@ -25,6 +25,7 @@ SEED_IDS = {
     "believ",
     "blink_charging_uk",
     "bp_pulse",
+    "bright_green",
     "charge_my_street",
     "chargeplace_scotland",
     "chargepoint",
@@ -34,6 +35,7 @@ SEED_IDS = {
     "community_by_shell_recharge",
     "connected_kerb",
     "connekt",
+    "drax_energy_solutions",
     "e_on_drive",
     "electric_blue",
     "electroad",
@@ -54,6 +56,7 @@ SEED_IDS = {
     "forward_ev",
     "geniepoint",
     "giga_power",
+    "globe_ev",
     "go_zero",
     "gridserve",
     "hubsta",
@@ -85,9 +88,11 @@ SEED_IDS = {
     "source_ev",
     "sprint",
     "tesla",
+    "three_ti",
     "totalenergies",
     "trojan_energy",
     "ubitricity",
+    "urban_fox",
     "wattif",
     "wattstop",
     "weev",
@@ -180,7 +185,7 @@ def test_operator_files_contain_no_key_like_values():
 
 def test_cli_validate_succeeds_on_seed_registry(capsys):
     assert registry.main(["--validate"]) == 0
-    assert "Operator registry is valid: 81 operators" in capsys.readouterr().out
+    assert "Operator registry is valid: 86 operators" in capsys.readouterr().out
 
 
 def test_cli_without_validate_prints_help(capsys):

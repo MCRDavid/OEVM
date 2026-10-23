@@ -44,14 +44,17 @@ access_granted: null
 sources:
   - url: https://3ti.co.uk/3ti-public-charge-points/
     note: >-
-      Read on 2026-10-23. Lists six sites with their Fuuse ids: Raigmore Hospital, Inverness
-      (c3947832-9352-41fa-96c1-831215eea8e0); Riverbridge House, Surrey
-      (4a5b700e-6a15-40f3-92cc-dcc8732a92e0); Segen, Medway
-      (6cd94287-a370-48ae-8079-a514a8ac2c7b); University of Surrey, Surrey
-      (36bd06f3-5184-4939-a7a1-4c0c1dec5583); East Staffordshire Borough Council
-      (542c7548-899e-43e8-854c-05fd0f76dc70); Salford Royal Hospital
-      (6922c10c-4f17-4929-bf7a-32c4a6075277). The site's only policy page is its privacy
-      policy.
+      Read on 2026-10-23. Lists six sites, each read from its own Fuuse open data address
+      (with "location" or "tariff" added): Raigmore Hospital, Inverness,
+      https://api.fuuse.io/opendata/c3947832-9352-41fa-96c1-831215eea8e0/; Riverbridge
+      House, Surrey, https://api.fuuse.io/opendata/4a5b700e-6a15-40f3-92cc-dcc8732a92e0/;
+      Segen, Medway, https://api.fuuse.io/opendata/6cd94287-a370-48ae-8079-a514a8ac2c7b/;
+      University of Surrey, Surrey,
+      https://api.fuuse.io/opendata/36bd06f3-5184-4939-a7a1-4c0c1dec5583/; East
+      Staffordshire Borough Council,
+      https://api.fuuse.io/opendata/542c7548-899e-43e8-854c-05fd0f76dc70/; Salford Royal
+      Hospital, https://api.fuuse.io/opendata/6922c10c-4f17-4929-bf7a-32c4a6075277/. The
+      site's only policy page is its privacy policy.
   - url: https://www.evroam.org.uk/id-register
     note: >-
       EV Roam's ID register lists 3ti Energy Hubs with operator ID GB*3TI, which is how this
