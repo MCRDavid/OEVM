@@ -5,7 +5,8 @@ knows about getting access to it. Anything not yet known is written as
 "unknown" or "needs_testing" rather than guessed.
 
 Never put a key, token or password in a registry file. Keys live in GitHub
-Actions secrets, and the file gives only the secret's name in auth.secret_name.
+Actions secrets, and the file gives only the secret's name in auth.secret_name (and,
+for a feed that exchanges a client id and secret for a token, auth.client_id_secret_name).
 URLs that carry credentials are rejected.
 """
 
@@ -21,7 +22,7 @@ Support = Literal["supported", "not_supported", "needs_testing", "unknown"]
 AdapterName = Literal[
     "ocpi_221", "eco_movement_pcpr", "gridserve", "static_file", "custom", "unknown"
 ]
-AuthMethod = Literal["none", "header", "query_param", "unknown"]
+AuthMethod = Literal["none", "header", "query_param", "client_credentials", "unknown"]
 EndpointKind = Literal["versions", "locations", "tariffs", "statuses", "download"]
 EndpointStatus = Literal["documented", "needs_testing"]
 ResponseEnvelope = Literal["ocpi", "data_list", "by_module"]
@@ -200,26 +201,60 @@ class Auth(_Model):
         description="Header or query parameter that carries the key, for example "
         "'ec-subscription-key' or 'apiKey'. Write 'unknown' if not yet known.",
     )
-    secret_name: SecretName | None = None
+    secret_name: SecretName | None = Field(
+        default=None,
+        description="NAME of the GitHub Actions secret that holds the key, or, with "
+        "client_credentials, the client secret. Never the key itself.",
+    )
     scheme: str | None = Field(
         default=None,
         pattern=r"^[A-Za-z][A-Za-z0-9-]*$",
         description="Word sent before the key in a header, such as 'Token' for "
         "'Authorization: Token <key>'. Null if the header holds only the key.",
     )
+    client_id_secret_name: SecretName | None = Field(
+        default=None,
+        description="With client_credentials only: NAME of the GitHub Actions secret that "
+        "holds the client id.",
+    )
+    token_url: SafeUrl | None = Field(
+        default=None,
+        description="With client_credentials only: the https address where the client id "
+        "and secret are exchanged for an access token, which is then sent in the header "
+        "`name`, after `scheme`.",
+    )
+
+    @property
+    def secret_names(self) -> tuple[str, ...]:
+        """Every GitHub Actions secret this operator's requests need."""
+        return tuple(n for n in (self.client_id_secret_name, self.secret_name) if n)
 
     @model_validator(mode="after")
     def _check(self) -> "Auth":
-        if self.scheme is not None and self.method != "header":
-            raise ValueError("scheme only applies when method is 'header'")
+        if self.scheme is not None and self.method not in ("header", "client_credentials"):
+            raise ValueError("scheme only applies when method is 'header' or 'client_credentials'")
         if self.method == "none":
             if self.name is not None or self.secret_name is not None:
                 raise ValueError("name and secret_name must be null when method is 'none'")
-        elif self.method in ("header", "query_param"):
+        elif self.method in ("header", "query_param", "client_credentials"):
             if not self.name:
                 raise ValueError(f"name is required when method is {self.method!r}")
             if not self.secret_name:
                 raise ValueError(f"secret_name is required when method is {self.method!r}")
+        if self.method == "client_credentials":
+            if not self.client_id_secret_name or not self.token_url:
+                raise ValueError(
+                    "client_id_secret_name and token_url are required when method is "
+                    "'client_credentials'"
+                )
+            if self.client_id_secret_name == self.secret_name:
+                raise ValueError("client_id_secret_name and secret_name must differ")
+            if not self.token_url.startswith("https://"):
+                raise ValueError("token_url must use https, because the request carries a key")
+        elif self.client_id_secret_name is not None or self.token_url is not None:
+            raise ValueError(
+                "client_id_secret_name and token_url only apply when method is 'client_credentials'"
+            )
         return self
 
 
@@ -888,7 +923,7 @@ class OperatorConfig(_Model):
             ]
             if not urls:
                 problems.append("expired_certificate needs the feed URLs on its host")
-        if self.auth.method in ("header", "query_param"):
+        if self.auth.method in ("header", "query_param", "client_credentials"):
             urls = [endpoint.url for endpoint in self.endpoints.values()]
             if self.base_url != "unknown":
                 urls.append(self.base_url)

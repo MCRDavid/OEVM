@@ -31,6 +31,7 @@ from pathlib import Path
 import httpx
 
 import adapters.jolt
+import adapters.monta
 import adapters.ocpi_221
 from adapters.http import FeedError, PoliteClient, operator_hosts
 from adapters.ocpi_221 import AdapterResult
@@ -46,7 +47,7 @@ from schema.runlog import MAX_ISSUE_LENGTH, RunLog
 FIXTURES_DIR = ROOT / "tests" / "fixtures"
 ADAPTERS = {"ocpi_221": adapters.ocpi_221.fetch}
 # Operators whose registry adapter is "custom", by operator id.
-CUSTOM_ADAPTERS = {"jolt": adapters.jolt.fetch}
+CUSTOM_ADAPTERS = {"jolt": adapters.jolt.fetch, "monta": adapters.monta.fetch}
 # Sent in place of a real key when replaying fixtures, which never reach the network.
 FIXTURE_KEY = "fixture-replay-not-a-real-key"
 # --live ALL_ENABLED fetches every operator that is enabled in the registry.

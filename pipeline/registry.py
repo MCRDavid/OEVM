@@ -166,9 +166,9 @@ def summary(operators: dict[str, OperatorConfig], today: dt.date | None = None) 
         )
 
     needs_secret = [
-        f"{c.id} ({c.auth.secret_name})"
+        f"{c.id} ({' and '.join(c.auth.secret_names)})"
         for c in operators.values()
-        if c.enabled and c.auth.secret_name
+        if c.enabled and c.auth.secret_names
     ]
     if needs_secret:
         lines += [

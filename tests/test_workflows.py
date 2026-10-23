@@ -19,8 +19,7 @@ def _fetch_step() -> dict:
 def test_the_daily_fetch_passes_every_key_an_enabled_operator_needs():
     env = _fetch_step().get("env", {})
     for config in load_registry().values():
-        name = config.auth.secret_name
-        if config.enabled and name:
+        for name in config.auth.secret_names if config.enabled else ():
             assert env.get(name) == f"${{{{ secrets.{name} }}}}", f"{config.id} needs {name}"
 
 
@@ -38,7 +37,7 @@ def test_the_daily_fetch_passes_no_other_secrets():
     needed = set()
     for config in load_registry().values():
         if config.enabled:
-            needed.add(config.auth.secret_name)
+            needed |= set(config.auth.secret_names)
             if config.relay:
                 needed |= {config.relay.url_variable, config.relay.secret_name}
     assert set(_fetch_step().get("env", {})) <= needed
