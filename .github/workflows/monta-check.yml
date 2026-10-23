@@ -1,12 +1,12 @@
-name: Monta price check (one-off)
+name: Monta adapter check (one-off)
 
-# Temporary. Tries Monta's single-EVSE AFIR endpoint once, printing status codes, field
-# names and prices only, then is removed before the branch is merged.
+# Temporary. Runs Monta's adapter once on this branch, printing the run report (counts and
+# issue lines only, no records), then is removed before the branch is merged.
 
 on:
   push:
     branches: [claude/project-thread-yma71t]
-    paths: [.github/workflows/monta-check.yml, .github/scripts/monta_afir_check.py]
+    paths: [.github/workflows/monta-check.yml]
 
 permissions:
   contents: read
@@ -17,9 +17,9 @@ concurrency:
 
 jobs:
   check:
-    name: Try Monta's per-charger price endpoint once
+    name: Run Monta's adapter once with the project's token
     runs-on: ubuntu-latest
-    timeout-minutes: 10
+    timeout-minutes: 60
     steps:
       - uses: actions/checkout@v7
         with:
@@ -30,9 +30,8 @@ jobs:
       - name: Install dependencies from the lock file
         run: uv sync --locked
 
-      - name: Ask for one EVSE's status and price (field names and prices only)
+      - name: Run Monta's adapter and build map files (report only)
         env:
           MONTA_CLIENT_ID: ${{ secrets.MONTA_CLIENT_ID }}
           MONTA_CLIENT_SECRET: ${{ secrets.MONTA_CLIENT_SECRET }}
-          PYTHONPATH: ${{ github.workspace }}
-        run: uv run python .github/scripts/monta_afir_check.py
+        run: uv run python -m pipeline.run --live monta --publish build
