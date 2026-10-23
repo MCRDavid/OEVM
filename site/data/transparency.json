@@ -5707,8 +5707,8 @@
       "engagement": {
         "status": "unknown",
         "label": "Not yet established",
-        "headline": "Not yet established (as of 2026-10-10)",
-        "as_of": "2026-10-10",
+        "headline": "Not yet established (as of 2026-10-23)",
+        "as_of": "2026-10-23",
         "last_request": null,
         "last_response": null,
         "last_response_text": "No request sent",
@@ -5723,6 +5723,28 @@
             "summary": "Joju's website could not be read by this project's automated checks on 2026-10-10 (a failed secure connection, then HTTP 503), so its open data route is not yet known; it needs checking in a browser.",
             "quote": null,
             "evidence_url": "https://jojucharging.com/",
+            "evidence_file": null
+          },
+          {
+            "date": "2026-10-11",
+            "action": "page_checked",
+            "action_label": "Operator's page checked",
+            "channel": null,
+            "channel_label": null,
+            "summary": "Read in a browser: jojucharging.com failed to connect securely and joju.co.uk redirects to Joju Solar. A Joju Solar post says \"Our Joju installed charge points, running on the Mer network, have hit a 10 million kWh milestone\". No open data page was found in its sitemap.",
+            "quote": null,
+            "evidence_url": "https://www.jojusolar.co.uk/a-10-million-kwh-milestone-joju-and-mer-ev-charging/",
+            "evidence_file": null
+          },
+          {
+            "date": "2026-10-23",
+            "action": "feed_searched",
+            "action_label": "Searched for a feed",
+            "channel": null,
+            "channel_label": null,
+            "summary": "Checked Mer UK's open data feed (https://uk.mer.eco/wp-json/ozev/v1/data) for Joju sites. It held 175 locations, all with operator \"Mer\" and suboperator \"Mer Fleet Services Ltd\". No owner, operator, name or other field mentions Joju, and only 2 locations have London postcodes. It has no Portsmouth or Eastleigh (Hampshire) locations, where a browser check the same day found Joju runs public chargers. So Joju's own Hampshire network is not in Mer UK's feed; whether any other Joju-installed chargers are in it is unknown.",
+            "quote": null,
+            "evidence_url": "https://uk.mer.eco/live-charge-point-data/",
             "evidence_file": null
           }
         ]
