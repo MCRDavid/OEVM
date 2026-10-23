@@ -72,7 +72,7 @@ Fill in, from step 1 only:
 
 | Adapter | State | Used for |
 |---|---|---|
-| `ocpi_221` | built | Standard OCPI 2.2.1 feeds: paged, or one file holding every record. If the records are OCPI but the wrapper has no `status_code`, set `response_envelope: data_list`; if one URL answers every module under `data.locations` and `data.tariffs`, set `response_envelope: by_module` and give both endpoints that URL. Record a finding either way |
+| `ocpi_221` | built | Standard OCPI 2.2.1 feeds: paged, or one file holding every record. If the records are OCPI but the wrapper has no `status_code`, set `response_envelope: data_list`; if one URL answers every module under `data.locations` and `data.tariffs`, set `response_envelope: by_module` and give both endpoints that URL. If the operator publishes one location and tariff file per site, put the first pair in `endpoints` and the rest in `more_endpoints`. Record a finding in each case |
 | `custom` | built | Non-standard feeds, one module per operator id in `pipeline/run.py` `CUSTOM_ADAPTERS` |
 | `eco_movement_pcpr` | not built yet | bp pulse, Shell Recharge, ubitricity and others hosted by Eco-Movement |
 | `gridserve` | not built yet | Gridserve's API |

@@ -1,0 +1,876 @@
+{
+  "request": {
+    "method": "GET",
+    "url": "https://api.fuuse.io/opendata/6922c10c-4f17-4929-bf7a-32c4a6075277/location"
+  },
+  "response": {
+    "status_code": 200,
+    "headers": {
+      "content-type": "application/json; charset=utf-8",
+      "x-total-count": "2",
+      "x-limit": "1000"
+    },
+    "body": {
+      "status_code": 1000,
+      "data": [
+        {
+          "id": "fb0328ac-f5cc-4cb7-85bd-68d1d5884966",
+          "publish": true,
+          "name": "Salford Royal Hospital (East 18)",
+          "address": "M6 8HD, Stott Lane",
+          "city": "Salford",
+          "postal_code": "M6 8HD",
+          "state": "Lancashire",
+          "country": "GBR",
+          "coordinates": {
+            "latitude": "53.489000",
+            "longitude": "-2.322100"
+          },
+          "parking_type": "PARKING_LOT",
+          "evses": [
+            {
+              "uid": "03843be4-e274-4ad1-a73e-50d6fcf197fa",
+              "evse_id": "AE0022G1GS5C00217P*1",
+              "status": "AVAILABLE",
+              "capabilities": [
+                "CHARGING_PROFILE_CAPABLE",
+                "CHIP_CARD_SUPPORT",
+                "CONTACTLESS_CARD_SUPPORT",
+                "PED_TERMINAL",
+                "RFID_READER",
+                "REMOTE_START_STOP_CAPABLE"
+              ],
+              "connectors": [
+                {
+                  "id": "db2e06a1-7ae9-4a04-847f-76ff8911a40e",
+                  "standard": "IEC_62196_T2",
+                  "format": "SOCKET",
+                  "power_type": "AC_3_PHASE",
+                  "max_voltage": 415,
+                  "max_amperage": 31,
+                  "max_electric_power": 22000,
+                  "tariff_ids": [
+                    "f7c18999-715f-4bde-ab1f-fc11ff0be4ce"
+                  ],
+                  "last_updated": "2026-10-22T12:41:43.030Z"
+                }
+              ],
+              "coordinates": {
+                "latitude": "53.489000",
+                "longitude": "-2.322100"
+              },
+              "physical_reference": "3ti-0018-09",
+              "last_updated": "2026-10-23T21:21:29.432Z"
+            },
+            {
+              "uid": "12abf9a8-aa07-4680-bf07-cb7db9714032",
+              "evse_id": "AE0022G1GS5C00209R*1",
+              "status": "AVAILABLE",
+              "capabilities": [
+                "CHARGING_PROFILE_CAPABLE",
+                "CHIP_CARD_SUPPORT",
+                "CONTACTLESS_CARD_SUPPORT",
+                "PED_TERMINAL",
+                "RFID_READER",
+                "REMOTE_START_STOP_CAPABLE"
+              ],
+              "connectors": [
+                {
+                  "id": "df9bd703-5194-4e59-8bd4-666f9cea447e",
+                  "standard": "IEC_62196_T2",
+                  "format": "SOCKET",
+                  "power_type": "AC_3_PHASE",
+                  "max_voltage": 240,
+                  "max_amperage": 32,
+                  "max_electric_power": 22000,
+                  "tariff_ids": [
+                    "f7c18999-715f-4bde-ab1f-fc11ff0be4ce"
+                  ],
+                  "last_updated": "2026-10-21T15:11:29.722Z"
+                }
+              ],
+              "coordinates": {
+                "latitude": "53.489000",
+                "longitude": "-2.322100"
+              },
+              "physical_reference": "3ti-0018-08",
+              "last_updated": "2026-10-23T10:09:06.499Z"
+            },
+            {
+              "uid": "51cf72b6-3d9a-4de1-85fc-9e028502a9ee",
+              "evse_id": "AE0022G1GS5C00022H*1",
+              "status": "AVAILABLE",
+              "capabilities": [
+                "CHARGING_PROFILE_CAPABLE",
+                "CHIP_CARD_SUPPORT",
+                "CONTACTLESS_CARD_SUPPORT",
+                "PED_TERMINAL",
+                "RFID_READER",
+                "REMOTE_START_STOP_CAPABLE"
+              ],
+              "connectors": [
+                {
+                  "id": "4de35196-1728-4a63-bcb0-339dce7b57fe",
+                  "standard": "IEC_62196_T2",
+                  "format": "SOCKET",
+                  "power_type": "AC_3_PHASE",
+                  "max_voltage": 415,
+                  "max_amperage": 31,
+                  "max_electric_power": 22000,
+                  "tariff_ids": [
+                    "f7c18999-715f-4bde-ab1f-fc11ff0be4ce"
+                  ],
+                  "last_updated": "2026-10-21T09:00:29.459Z"
+                }
+              ],
+              "coordinates": {
+                "latitude": "53.489000",
+                "longitude": "-2.322100"
+              },
+              "physical_reference": "3ti-0018-04",
+              "last_updated": "2026-10-23T10:05:51.861Z"
+            },
+            {
+              "uid": "65def2c3-69e3-47a4-81d1-afdb53d67c8e",
+              "evse_id": "AE0022G1GS5C00015K*1",
+              "status": "AVAILABLE",
+              "capabilities": [
+                "CHARGING_PROFILE_CAPABLE",
+                "CHIP_CARD_SUPPORT",
+                "CONTACTLESS_CARD_SUPPORT",
+                "PED_TERMINAL",
+                "RFID_READER",
+                "REMOTE_START_STOP_CAPABLE"
+              ],
+              "connectors": [
+                {
+                  "id": "110cdfa4-b52d-4994-980c-84774b5054ce",
+                  "standard": "IEC_62196_T2",
+                  "format": "SOCKET",
+                  "power_type": "AC_3_PHASE",
+                  "max_voltage": 415,
+                  "max_amperage": 31,
+                  "max_electric_power": 22000,
+                  "tariff_ids": [
+                    "f7c18999-715f-4bde-ab1f-fc11ff0be4ce"
+                  ],
+                  "last_updated": "2026-10-21T09:00:31.137Z"
+                }
+              ],
+              "coordinates": {
+                "latitude": "53.489000",
+                "longitude": "-2.322100"
+              },
+              "physical_reference": "3ti-0018-02",
+              "last_updated": "2026-10-23T10:05:51.861Z"
+            },
+            {
+              "uid": "694e7d2f-fbd5-454f-ba83-7d9497fe3c99",
+              "evse_id": "AE0022G1GS5C00042K*1",
+              "status": "AVAILABLE",
+              "capabilities": [
+                "CHARGING_PROFILE_CAPABLE",
+                "CHIP_CARD_SUPPORT",
+                "CONTACTLESS_CARD_SUPPORT",
+                "PED_TERMINAL",
+                "RFID_READER",
+                "REMOTE_START_STOP_CAPABLE"
+              ],
+              "connectors": [
+                {
+                  "id": "7f5dfa5c-015d-4afe-a716-3dea81a4226e",
+                  "standard": "IEC_62196_T2",
+                  "format": "SOCKET",
+                  "power_type": "AC_3_PHASE",
+                  "max_voltage": 415,
+                  "max_amperage": 31,
+                  "max_electric_power": 22000,
+                  "tariff_ids": [
+                    "f7c18999-715f-4bde-ab1f-fc11ff0be4ce"
+                  ],
+                  "last_updated": "2026-10-21T12:50:00.900Z"
+                }
+              ],
+              "coordinates": {
+                "latitude": "53.489000",
+                "longitude": "-2.322100"
+              },
+              "physical_reference": "3ti-0018-05",
+              "last_updated": "2026-10-23T13:25:44.893Z"
+            },
+            {
+              "uid": "8102a091-50b7-4fb7-b7ae-3fc14b00ecf4",
+              "evse_id": "AE0022G1GS5C00020F*1",
+              "status": "AVAILABLE",
+              "capabilities": [
+                "CHARGING_PROFILE_CAPABLE",
+                "CHIP_CARD_SUPPORT",
+                "CONTACTLESS_CARD_SUPPORT",
+                "PED_TERMINAL",
+                "RFID_READER",
+                "REMOTE_START_STOP_CAPABLE"
+              ],
+              "connectors": [
+                {
+                  "id": "a0d62ef6-6a48-4c38-9a44-39652aa9d991",
+                  "standard": "IEC_62196_T2",
+                  "format": "SOCKET",
+                  "power_type": "AC_3_PHASE",
+                  "max_voltage": 415,
+                  "max_amperage": 31,
+                  "max_electric_power": 22000,
+                  "tariff_ids": [
+                    "f7c18999-715f-4bde-ab1f-fc11ff0be4ce"
+                  ],
+                  "last_updated": "2026-10-23T10:48:27.384Z"
+                }
+              ],
+              "coordinates": {
+                "latitude": "53.489000",
+                "longitude": "-2.322100"
+              },
+              "physical_reference": "3ti-0018-03",
+              "last_updated": "2026-10-23T20:01:08.342Z"
+            },
+            {
+              "uid": "8debcce8-3fe0-4a30-a809-2e184b2c6a39",
+              "evse_id": "AE0022G1GS5C00218R*1",
+              "status": "AVAILABLE",
+              "capabilities": [
+                "CHARGING_PROFILE_CAPABLE",
+                "CHIP_CARD_SUPPORT",
+                "CONTACTLESS_CARD_SUPPORT",
+                "PED_TERMINAL",
+                "RFID_READER",
+                "REMOTE_START_STOP_CAPABLE"
+              ],
+              "connectors": [
+                {
+                  "id": "746d08e6-086e-4a10-9dab-b22be04f032e",
+                  "standard": "IEC_62196_T2",
+                  "format": "SOCKET",
+                  "power_type": "AC_3_PHASE",
+                  "max_voltage": 415,
+                  "max_amperage": 31,
+                  "max_electric_power": 22000,
+                  "tariff_ids": [
+                    "f7c18999-715f-4bde-ab1f-fc11ff0be4ce"
+                  ],
+                  "last_updated": "2026-10-19T09:00:20.928Z"
+                }
+              ],
+              "coordinates": {
+                "latitude": "53.489000",
+                "longitude": "-2.322100"
+              },
+              "physical_reference": "3ti-0018-10",
+              "last_updated": "2026-10-23T10:05:56.364Z"
+            },
+            {
+              "uid": "a56a8a45-252e-4f63-9e94-edca25368835",
+              "evse_id": "AE0022G1GS5C00231K*1",
+              "status": "AVAILABLE",
+              "capabilities": [
+                "CHARGING_PROFILE_CAPABLE",
+                "CHIP_CARD_SUPPORT",
+                "CONTACTLESS_CARD_SUPPORT",
+                "PED_TERMINAL",
+                "RFID_READER",
+                "REMOTE_START_STOP_CAPABLE"
+              ],
+              "connectors": [
+                {
+                  "id": "07b55360-79c6-4091-a189-97504ee56f1d",
+                  "standard": "IEC_62196_T2",
+                  "format": "SOCKET",
+                  "power_type": "AC_3_PHASE",
+                  "max_voltage": 415,
+                  "max_amperage": 31,
+                  "max_electric_power": 22000,
+                  "tariff_ids": [
+                    "f7c18999-715f-4bde-ab1f-fc11ff0be4ce"
+                  ],
+                  "last_updated": "2026-10-20T13:18:59.166Z"
+                }
+              ],
+              "coordinates": {
+                "latitude": "53.489000",
+                "longitude": "-2.322100"
+              },
+              "physical_reference": "3ti-0018-12",
+              "last_updated": "2026-10-23T10:22:12.741Z"
+            },
+            {
+              "uid": "bcad1327-6bac-4bd6-beda-fb7baa41144d",
+              "evse_id": "AE0022G1GS5C00012G*1",
+              "status": "AVAILABLE",
+              "capabilities": [
+                "CHARGING_PROFILE_CAPABLE",
+                "CHIP_CARD_SUPPORT",
+                "CONTACTLESS_CARD_SUPPORT",
+                "PED_TERMINAL",
+                "RFID_READER",
+                "REMOTE_START_STOP_CAPABLE"
+              ],
+              "connectors": [
+                {
+                  "id": "640d1458-251d-406e-a28c-b2c9625cdc50",
+                  "standard": "IEC_62196_T2",
+                  "format": "SOCKET",
+                  "power_type": "AC_3_PHASE",
+                  "max_voltage": 415,
+                  "max_amperage": 31,
+                  "max_electric_power": 22000,
+                  "tariff_ids": [
+                    "f7c18999-715f-4bde-ab1f-fc11ff0be4ce"
+                  ],
+                  "last_updated": "2026-10-22T10:11:46.930Z"
+                }
+              ],
+              "coordinates": {
+                "latitude": "53.489000",
+                "longitude": "-2.322100"
+              },
+              "physical_reference": "3ti-0018-01",
+              "last_updated": "2026-10-23T20:01:16.670Z"
+            },
+            {
+              "uid": "cb651274-b3a9-4efa-a4ae-6a1fdfa7aca6",
+              "evse_id": "AE0022G1GS5C00220H*1",
+              "status": "AVAILABLE",
+              "capabilities": [
+                "CHARGING_PROFILE_CAPABLE",
+                "CHIP_CARD_SUPPORT",
+                "CONTACTLESS_CARD_SUPPORT",
+                "PED_TERMINAL",
+                "RFID_READER",
+                "REMOTE_START_STOP_CAPABLE"
+              ],
+              "connectors": [
+                {
+                  "id": "c1b2bb17-e165-4bcf-a930-16c47a2ef41c",
+                  "standard": "IEC_62196_T2",
+                  "format": "SOCKET",
+                  "power_type": "AC_3_PHASE",
+                  "max_voltage": 240,
+                  "max_amperage": 32,
+                  "max_electric_power": 22000,
+                  "tariff_ids": [
+                    "f7c18999-715f-4bde-ab1f-fc11ff0be4ce"
+                  ],
+                  "last_updated": "2026-10-23T10:07:37.543Z"
+                }
+              ],
+              "coordinates": {
+                "latitude": "53.489000",
+                "longitude": "-2.322100"
+              },
+              "physical_reference": "3ti-0018-11",
+              "last_updated": "2026-10-23T10:07:37.543Z"
+            },
+            {
+              "uid": "d17cf9d1-bf74-4f32-948e-16974e1ab0a8",
+              "evse_id": "AE0022G1GS5C00054N*1",
+              "status": "AVAILABLE",
+              "capabilities": [
+                "CHARGING_PROFILE_CAPABLE",
+                "CHIP_CARD_SUPPORT",
+                "CONTACTLESS_CARD_SUPPORT",
+                "PED_TERMINAL",
+                "RFID_READER",
+                "REMOTE_START_STOP_CAPABLE"
+              ],
+              "connectors": [
+                {
+                  "id": "11665e6e-d16c-4a70-a1f5-32f5e28944c8",
+                  "standard": "IEC_62196_T2",
+                  "format": "SOCKET",
+                  "power_type": "AC_3_PHASE",
+                  "max_voltage": 415,
+                  "max_amperage": 31,
+                  "max_electric_power": 22000,
+                  "tariff_ids": [
+                    "f7c18999-715f-4bde-ab1f-fc11ff0be4ce"
+                  ],
+                  "last_updated": "2026-10-23T09:02:37.958Z"
+                }
+              ],
+              "coordinates": {
+                "latitude": "53.489000",
+                "longitude": "-2.322100"
+              },
+              "physical_reference": "3ti-0018-06",
+              "last_updated": "2026-10-23T20:01:13.785Z"
+            },
+            {
+              "uid": "e3176287-3e92-4705-83e8-da5aba70cba9",
+              "evse_id": "AE0022G1GS5C00087W*1",
+              "status": "AVAILABLE",
+              "capabilities": [
+                "CHARGING_PROFILE_CAPABLE",
+                "CHIP_CARD_SUPPORT",
+                "CONTACTLESS_CARD_SUPPORT",
+                "PED_TERMINAL",
+                "RFID_READER",
+                "REMOTE_START_STOP_CAPABLE"
+              ],
+              "connectors": [
+                {
+                  "id": "ed323f51-5ec8-49ad-84e7-7ad97c0b79bd",
+                  "standard": "IEC_62196_T2",
+                  "format": "SOCKET",
+                  "power_type": "AC_3_PHASE",
+                  "max_voltage": 415,
+                  "max_amperage": 31,
+                  "max_electric_power": 22000,
+                  "tariff_ids": [
+                    "f7c18999-715f-4bde-ab1f-fc11ff0be4ce"
+                  ],
+                  "last_updated": "2026-10-19T21:47:10.987Z"
+                }
+              ],
+              "coordinates": {
+                "latitude": "53.489000",
+                "longitude": "-2.322100"
+              },
+              "physical_reference": "3ti-0018-07",
+              "last_updated": "2026-10-23T10:05:51.861Z"
+            }
+          ],
+          "operator": {
+            "name": "Salford Royal Hospital (Northern Care Alliance)"
+          },
+          "time_zone": "Europe/London",
+          "opening_times": {
+            "twentyfourseven": true
+          },
+          "charging_when_closed": false,
+          "last_updated": "2026-10-23T10:48:27.384Z"
+        },
+        {
+          "id": "9604fdb8-791e-4bb5-b287-a99159064439",
+          "publish": true,
+          "name": "Salford Royal Hospital (West 19)",
+          "address": "M6 8HD, Stott Lane",
+          "city": "Salford",
+          "postal_code": "M6 8HD",
+          "state": "Lancashire",
+          "country": "GBR",
+          "coordinates": {
+            "latitude": "53.489000",
+            "longitude": "-2.322100"
+          },
+          "parking_type": "PARKING_LOT",
+          "evses": [
+            {
+              "uid": "00fb7632-1354-404f-ada2-86360b3cb8ab",
+              "evse_id": "AE0022G1GS5C00138S*1",
+              "status": "AVAILABLE",
+              "capabilities": [
+                "CHARGING_PROFILE_CAPABLE",
+                "CHIP_CARD_SUPPORT",
+                "CONTACTLESS_CARD_SUPPORT",
+                "RFID_READER",
+                "REMOTE_START_STOP_CAPABLE"
+              ],
+              "connectors": [
+                {
+                  "id": "b3bb94a1-fe15-4d09-810c-57ffb63518b0",
+                  "standard": "IEC_62196_T2",
+                  "format": "SOCKET",
+                  "power_type": "AC_3_PHASE",
+                  "max_voltage": 415,
+                  "max_amperage": 31,
+                  "max_electric_power": 22000,
+                  "tariff_ids": [
+                    "f7c18999-715f-4bde-ab1f-fc11ff0be4ce"
+                  ],
+                  "last_updated": "2026-10-19T09:00:26.034Z"
+                }
+              ],
+              "coordinates": {
+                "latitude": "53.489000",
+                "longitude": "-2.322100"
+              },
+              "physical_reference": "3ti-0019-09",
+              "last_updated": "2026-10-23T10:18:55.042Z"
+            },
+            {
+              "uid": "0e58915b-fcc4-4eb0-98ca-64df158105eb",
+              "evse_id": "AE0022G1GS5C00201G*1",
+              "status": "AVAILABLE",
+              "capabilities": [
+                "CHARGING_PROFILE_CAPABLE",
+                "CHIP_CARD_SUPPORT",
+                "CONTACTLESS_CARD_SUPPORT",
+                "RFID_READER",
+                "REMOTE_START_STOP_CAPABLE"
+              ],
+              "connectors": [
+                {
+                  "id": "44d660cf-260f-464b-862b-7d842909fb75",
+                  "standard": "IEC_62196_T2",
+                  "format": "SOCKET",
+                  "power_type": "AC_3_PHASE",
+                  "max_voltage": 415,
+                  "max_amperage": 31,
+                  "max_electric_power": 22000,
+                  "tariff_ids": [
+                    "f7c18999-715f-4bde-ab1f-fc11ff0be4ce"
+                  ],
+                  "last_updated": "2026-10-21T17:35:04.609Z"
+                }
+              ],
+              "coordinates": {
+                "latitude": "53.489000",
+                "longitude": "-2.322100"
+              },
+              "physical_reference": "3ti-0019-10",
+              "last_updated": "2026-10-23T10:05:51.861Z"
+            },
+            {
+              "uid": "1f5c4ab0-577e-4f84-af25-cf3f38052af8",
+              "evse_id": "AE0022G1GS5C00019P*1",
+              "status": "AVAILABLE",
+              "capabilities": [
+                "CHARGING_PROFILE_CAPABLE",
+                "CHIP_CARD_SUPPORT",
+                "CONTACTLESS_CARD_SUPPORT",
+                "RFID_READER",
+                "REMOTE_START_STOP_CAPABLE"
+              ],
+              "connectors": [
+                {
+                  "id": "fe55b4e1-6cf7-4691-8ad1-08c1f4bd1b0e",
+                  "standard": "IEC_62196_T2",
+                  "format": "SOCKET",
+                  "power_type": "AC_3_PHASE",
+                  "max_voltage": 240,
+                  "max_amperage": 32,
+                  "max_electric_power": 22000,
+                  "tariff_ids": [
+                    "f7c18999-715f-4bde-ab1f-fc11ff0be4ce"
+                  ],
+                  "last_updated": "2026-10-20T09:00:21.460Z"
+                }
+              ],
+              "coordinates": {
+                "latitude": "53.489000",
+                "longitude": "-2.322100"
+              },
+              "physical_reference": "3ti-0019-01",
+              "last_updated": "2026-10-23T10:05:51.756Z"
+            },
+            {
+              "uid": "54f850e6-17ff-4f21-babd-f045dabff0fa",
+              "evse_id": "AE0022G1GS5C00080M*1",
+              "status": "AVAILABLE",
+              "capabilities": [
+                "CHARGING_PROFILE_CAPABLE",
+                "CHIP_CARD_SUPPORT",
+                "CONTACTLESS_CARD_SUPPORT",
+                "RFID_READER",
+                "REMOTE_START_STOP_CAPABLE"
+              ],
+              "connectors": [
+                {
+                  "id": "de391819-e373-46fd-87b6-fbd79a640cfb",
+                  "standard": "IEC_62196_T2",
+                  "format": "SOCKET",
+                  "power_type": "AC_3_PHASE",
+                  "max_voltage": 240,
+                  "max_amperage": 32,
+                  "max_electric_power": 22000,
+                  "tariff_ids": [
+                    "f7c18999-715f-4bde-ab1f-fc11ff0be4ce"
+                  ],
+                  "last_updated": "2026-10-21T13:20:14.148Z"
+                }
+              ],
+              "coordinates": {
+                "latitude": "53.489000",
+                "longitude": "-2.322100"
+              },
+              "physical_reference": "3ti-0019-05",
+              "last_updated": "2026-10-23T10:42:47.192Z"
+            },
+            {
+              "uid": "5f3308eb-776b-424e-b750-e844257d7fc8",
+              "evse_id": "AE0022G1GS5C00210G*1",
+              "status": "AVAILABLE",
+              "capabilities": [
+                "CHARGING_PROFILE_CAPABLE",
+                "CHIP_CARD_SUPPORT",
+                "CONTACTLESS_CARD_SUPPORT",
+                "RFID_READER",
+                "REMOTE_START_STOP_CAPABLE"
+              ],
+              "connectors": [
+                {
+                  "id": "bc2bb413-57f0-4aea-9623-f66640759ebb",
+                  "standard": "IEC_62196_T2",
+                  "format": "SOCKET",
+                  "power_type": "AC_3_PHASE",
+                  "max_voltage": 415,
+                  "max_amperage": 31,
+                  "max_electric_power": 22000,
+                  "tariff_ids": [
+                    "f7c18999-715f-4bde-ab1f-fc11ff0be4ce"
+                  ],
+                  "last_updated": "2026-10-23T20:56:32.936Z"
+                }
+              ],
+              "coordinates": {
+                "latitude": "53.489000",
+                "longitude": "-2.322100"
+              },
+              "physical_reference": "3ti-0019-11",
+              "last_updated": "2026-10-23T20:56:32.936Z"
+            },
+            {
+              "uid": "a6ff45f8-45c2-4341-b224-c7f8ca5c2018",
+              "evse_id": "AE0022G1GS5C001992*1",
+              "status": "AVAILABLE",
+              "capabilities": [
+                "CHARGING_PROFILE_CAPABLE",
+                "CHIP_CARD_SUPPORT",
+                "CONTACTLESS_CARD_SUPPORT",
+                "RFID_READER",
+                "REMOTE_START_STOP_CAPABLE"
+              ],
+              "connectors": [
+                {
+                  "id": "05e86ecb-c8c2-4f9b-964a-ab70c1039a52",
+                  "standard": "IEC_62196_T2",
+                  "format": "SOCKET",
+                  "power_type": "AC_3_PHASE",
+                  "max_voltage": 415,
+                  "max_amperage": 31,
+                  "max_electric_power": 22000,
+                  "tariff_ids": [
+                    "f7c18999-715f-4bde-ab1f-fc11ff0be4ce"
+                  ],
+                  "last_updated": "2026-10-22T22:23:15.224Z"
+                }
+              ],
+              "coordinates": {
+                "latitude": "53.489000",
+                "longitude": "-2.322100"
+              },
+              "physical_reference": "3ti-0019-12",
+              "last_updated": "2026-10-23T10:05:51.756Z"
+            },
+            {
+              "uid": "b340cc38-00e7-4a2d-affd-0b837e9cedb9",
+              "evse_id": "AE0022G1GS5C00068V*1",
+              "status": "AVAILABLE",
+              "capabilities": [
+                "CHARGING_PROFILE_CAPABLE",
+                "CHIP_CARD_SUPPORT",
+                "CONTACTLESS_CARD_SUPPORT",
+                "RFID_READER",
+                "REMOTE_START_STOP_CAPABLE"
+              ],
+              "connectors": [
+                {
+                  "id": "b1099fa0-8b45-4a3e-8df3-adaf9d5ce118",
+                  "standard": "IEC_62196_T2",
+                  "format": "SOCKET",
+                  "power_type": "AC_3_PHASE",
+                  "max_voltage": 240,
+                  "max_amperage": 32,
+                  "max_electric_power": 22000,
+                  "tariff_ids": [
+                    "f7c18999-715f-4bde-ab1f-fc11ff0be4ce"
+                  ],
+                  "last_updated": "2026-10-22T09:52:36.666Z"
+                }
+              ],
+              "coordinates": {
+                "latitude": "53.489000",
+                "longitude": "-2.322100"
+              },
+              "physical_reference": "3ti-0019-02",
+              "last_updated": "2026-10-23T20:03:37.190Z"
+            },
+            {
+              "uid": "b374c468-825a-45fd-ac28-7d2114fd6305",
+              "evse_id": "AE0022G1GS5C00091P*1",
+              "status": "AVAILABLE",
+              "capabilities": [
+                "CHARGING_PROFILE_CAPABLE",
+                "CHIP_CARD_SUPPORT",
+                "CONTACTLESS_CARD_SUPPORT",
+                "RFID_READER",
+                "REMOTE_START_STOP_CAPABLE"
+              ],
+              "connectors": [
+                {
+                  "id": "853921eb-f30e-4872-b12c-9d9ee90de02d",
+                  "standard": "IEC_62196_T2",
+                  "format": "SOCKET",
+                  "power_type": "AC_3_PHASE",
+                  "max_voltage": 415,
+                  "max_amperage": 31,
+                  "max_electric_power": 22000,
+                  "tariff_ids": [
+                    "f7c18999-715f-4bde-ab1f-fc11ff0be4ce"
+                  ],
+                  "last_updated": "2026-10-19T09:00:25.598Z"
+                }
+              ],
+              "coordinates": {
+                "latitude": "53.489000",
+                "longitude": "-2.322100"
+              },
+              "physical_reference": "3ti-0019-07",
+              "last_updated": "2026-10-23T10:05:51.861Z"
+            },
+            {
+              "uid": "db189303-638e-42ac-b048-638f95309a54",
+              "evse_id": "AE0022G1GS5C00072N*1",
+              "status": "AVAILABLE",
+              "capabilities": [
+                "CHARGING_PROFILE_CAPABLE",
+                "CHIP_CARD_SUPPORT",
+                "CONTACTLESS_CARD_SUPPORT",
+                "RFID_READER",
+                "REMOTE_START_STOP_CAPABLE"
+              ],
+              "connectors": [
+                {
+                  "id": "efa8bca8-3709-45b3-9ed7-ead794bc5dc6",
+                  "standard": "IEC_62196_T2",
+                  "format": "SOCKET",
+                  "power_type": "AC_3_PHASE",
+                  "max_voltage": 240,
+                  "max_amperage": 32,
+                  "max_electric_power": 22000,
+                  "tariff_ids": [
+                    "f7c18999-715f-4bde-ab1f-fc11ff0be4ce"
+                  ],
+                  "last_updated": "2026-10-23T09:02:53.788Z"
+                }
+              ],
+              "coordinates": {
+                "latitude": "53.489000",
+                "longitude": "-2.322100"
+              },
+              "physical_reference": "3ti-0019-03",
+              "last_updated": "2026-10-23T10:05:50.512Z"
+            },
+            {
+              "uid": "dc524a22-6194-41a0-bc01-f9fd569f52fc",
+              "evse_id": "AE0022G1GS5C00125M*1",
+              "status": "AVAILABLE",
+              "capabilities": [
+                "CHARGING_PROFILE_CAPABLE",
+                "CHIP_CARD_SUPPORT",
+                "CONTACTLESS_CARD_SUPPORT",
+                "RFID_READER",
+                "REMOTE_START_STOP_CAPABLE"
+              ],
+              "connectors": [
+                {
+                  "id": "1a0634cf-d6ea-4caf-9df2-9d80e6096e8d",
+                  "standard": "IEC_62196_T2",
+                  "format": "SOCKET",
+                  "power_type": "AC_3_PHASE",
+                  "max_voltage": 415,
+                  "max_amperage": 31,
+                  "max_electric_power": 22000,
+                  "tariff_ids": [
+                    "f7c18999-715f-4bde-ab1f-fc11ff0be4ce"
+                  ],
+                  "last_updated": "2026-10-19T09:00:25.967Z"
+                }
+              ],
+              "coordinates": {
+                "latitude": "53.489000",
+                "longitude": "-2.322100"
+              },
+              "physical_reference": "3ti-0019-08",
+              "last_updated": "2026-10-23T10:05:51.756Z"
+            },
+            {
+              "uid": "e5d61f9b-fe1c-40a3-b7ef-1e9d682f4630",
+              "evse_id": "AE0022G1GS5C00083R*1",
+              "status": "AVAILABLE",
+              "capabilities": [
+                "CHARGING_PROFILE_CAPABLE",
+                "CHIP_CARD_SUPPORT",
+                "CONTACTLESS_CARD_SUPPORT",
+                "RFID_READER",
+                "REMOTE_START_STOP_CAPABLE"
+              ],
+              "connectors": [
+                {
+                  "id": "77f238de-1a94-4366-9d2c-85a41b67a299",
+                  "standard": "IEC_62196_T2",
+                  "format": "SOCKET",
+                  "power_type": "AC_3_PHASE",
+                  "max_voltage": 415,
+                  "max_amperage": 31,
+                  "max_electric_power": 22000,
+                  "tariff_ids": [
+                    "f7c18999-715f-4bde-ab1f-fc11ff0be4ce"
+                  ],
+                  "last_updated": "2026-10-23T09:01:43.090Z"
+                }
+              ],
+              "coordinates": {
+                "latitude": "53.489000",
+                "longitude": "-2.322100"
+              },
+              "physical_reference": "3ti-0019-06",
+              "last_updated": "2026-10-23T10:05:51.756Z"
+            },
+            {
+              "uid": "e8e58a0a-58e3-4701-8149-1e9570a1f53c",
+              "evse_id": "AE0022G1GS5C00077V*1",
+              "status": "AVAILABLE",
+              "capabilities": [
+                "CHARGING_PROFILE_CAPABLE",
+                "CHIP_CARD_SUPPORT",
+                "CONTACTLESS_CARD_SUPPORT",
+                "RFID_READER",
+                "REMOTE_START_STOP_CAPABLE"
+              ],
+              "connectors": [
+                {
+                  "id": "235d2d2e-8bf6-4852-b9b8-49c31576632c",
+                  "standard": "IEC_62196_T2",
+                  "format": "SOCKET",
+                  "power_type": "AC_3_PHASE",
+                  "max_voltage": 240,
+                  "max_amperage": 32,
+                  "max_electric_power": 22000,
+                  "tariff_ids": [
+                    "f7c18999-715f-4bde-ab1f-fc11ff0be4ce"
+                  ],
+                  "last_updated": "2026-10-23T10:12:11.780Z"
+                }
+              ],
+              "coordinates": {
+                "latitude": "53.489000",
+                "longitude": "-2.322100"
+              },
+              "physical_reference": "3ti-0019-04",
+              "last_updated": "2026-10-23T10:12:26.116Z"
+            }
+          ],
+          "operator": {
+            "name": "Salford Royal Hospital (Northern Care Alliance)"
+          },
+          "time_zone": "Europe/London",
+          "opening_times": {
+            "twentyfourseven": true
+          },
+          "charging_when_closed": false,
+          "last_updated": "2026-10-23T20:56:32.936Z"
+        }
+      ],
+      "timestamp": "2026-10-23T21:45:57.375Z"
+    }
+  }
+}

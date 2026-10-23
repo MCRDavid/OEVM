@@ -43,7 +43,7 @@ BROWSER_ARGS = [
 # In the fixtures (recorded, and Monta's made-up ones), without the two hidden unless
 # asked for (ADR 0023): Evolt Network's "Arthur House - Private Use Only" and PoGo
 # Charge's taxi-only "Swales Central Avenue".
-LOCATIONS = 104
+LOCATIONS = 110
 PRIVATE = "Arthur House - Private Use Only"
 TAXIS = "Swales Central Avenue"
 OUT_OF_SERVICE = 11  # fixture locations with every charger reported out of service

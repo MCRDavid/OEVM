@@ -12,7 +12,7 @@ import httpx
 import pytest
 from pydantic import ValidationError
 
-from adapters.http import FeedError, PoliteClient
+from adapters.http import FeedError, PoliteClient, operator_hosts
 from adapters.ocpi_221 import fetch
 from adapters.ocpi_221.client import fetch_module
 from adapters.ocpi_221.normalise import IssueLog, location_from_ocpi, parse_ocpi_datetime
@@ -421,6 +421,122 @@ def test_by_module_needs_one_url_for_locations_and_tariffs():
                 "tariffs": {"url": f"{EXAMPLE}/tariffs", "status": "needs_testing"},
             },
         )
+
+
+# Several files per operator (more_endpoints)
+
+
+def site_pair(site: str) -> dict:
+    return {
+        "locations": {"url": f"{EXAMPLE}/{site}/location", "status": "needs_testing"},
+        "tariffs": {"url": f"{EXAMPLE}/{site}/tariff", "status": "needs_testing"},
+    }
+
+
+def per_site_config(**overrides) -> OperatorConfig:
+    settings = {
+        "endpoints": site_pair("site1"),
+        "more_endpoints": [site_pair("site2"), site_pair("site3")],
+        "licence": {"name": "OGL-3.0", "basis": "test", "checked": "2026-10-07"},
+    }
+    return make_config(**{**settings, **overrides})
+
+
+def raw_tariff(tariff_id: str) -> dict:
+    return {
+        "country_code": "GB",
+        "party_id": "EXA",
+        "id": tariff_id,
+        "currency": "GBP",
+        "elements": [{"price_components": [{"type": "ENERGY", "price": 0.5, "step_size": 1}]}],
+        "last_updated": "2026-10-07T10:00:00Z",
+    }
+
+
+def per_site_pages(failing: str | None = None) -> dict[str, httpx.Response]:
+    pages = {}
+    for n in (1, 2, 3):
+        for kind, record in (("location", raw_location(f"L{n}")), ("tariff", raw_tariff(f"T{n}"))):
+            url = f"{EXAMPLE}/site{n}/{kind}"
+            pages[url] = (
+                httpx.Response(500)
+                if url == failing
+                else httpx.Response(200, json=ocpi_body([record]), headers={"X-Total-Count": "1"})
+            )
+    return pages
+
+
+def test_more_endpoints_reads_every_file_and_keeps_where_each_record_came_from():
+    config = per_site_config()
+    pages = per_site_pages()
+    requested = []
+
+    def handler(request: httpx.Request) -> httpx.Response:
+        requested.append(str(request.url))
+        return serve_pages(pages)(request)
+
+    with client_for(config, handler) as client:
+        result = fetch(config, client, now=NOW)
+    assert requested == [f"{EXAMPLE}/site{n}/location" for n in (1, 2, 3)] + [
+        f"{EXAMPLE}/site{n}/tariff" for n in (1, 2, 3)
+    ]
+    assert result.complete
+    locations = result.modules["locations"]
+    assert locations.endpoint == f"{EXAMPLE}/site1/location"
+    assert (len(locations.pages), len(locations.records), locations.total_reported) == (3, 3, 3)
+    assert {
+        loc.id.rsplit(":", 1)[1]: str(loc.provenance.source_url) for loc in result.locations
+    } == {f"L{n}": f"{EXAMPLE}/site{n}/location" for n in (1, 2, 3)}
+    assert {t.id.rsplit(":", 1)[1]: str(t.provenance.source_url) for t in result.tariffs} == {
+        f"T{n}": f"{EXAMPLE}/site{n}/tariff" for n in (1, 2, 3)
+    }
+
+
+def test_one_failing_file_fails_the_fetch_and_says_how_far_it_got():
+    config = per_site_config()
+    pages = per_site_pages(failing=f"{EXAMPLE}/site2/tariff")
+    with (
+        client_for(config, serve_pages(pages)) as client,
+        pytest.raises(FeedError, match="HTTP 500") as caught,
+    ):
+        fetch(config, client, now=NOW)
+    modules = caught.value.modules
+    assert modules["locations"].complete and len(modules["locations"].records) == 3
+    assert not modules["tariffs"].complete and len(modules["tariffs"].records) == 1
+
+
+def test_more_endpoints_join_the_host_checks():
+    config = per_site_config(
+        more_endpoints=[
+            {
+                "locations": {"url": "https://other.invalid/a/location", "status": "documented"},
+                "tariffs": {"url": "https://other.invalid/a/tariff", "status": "documented"},
+            }
+        ]
+    )
+    assert operator_hosts(config) == {"example.invalid", "other.invalid"}
+    assert "https://other.invalid/a/tariff" in config.feed_urls()
+
+
+@pytest.mark.parametrize(
+    ("overrides", "message"),
+    [
+        ({"adapter": "custom"}, "more_endpoints only applies to the ocpi_221 adapter"),
+        ({"endpoints": {}}, "more_endpoints needs locations and tariffs in endpoints"),
+        (
+            {"more_endpoints": [site_pair("site1")]},
+            "is given more than once in endpoints and more_endpoints",
+        ),
+        (
+            {"response_envelope": "by_module"},
+            "more_endpoints cannot be used with response_envelope by_module",
+        ),
+    ],
+    ids=["other-adapter", "no-endpoints", "repeated-url", "by-module"],
+)
+def test_more_endpoints_is_checked(overrides, message):
+    with pytest.raises(ValidationError, match=message):
+        per_site_config(**overrides)
 
 
 # Politeness and retries

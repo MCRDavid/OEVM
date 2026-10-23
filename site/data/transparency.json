@@ -35,6 +35,185 @@
   },
   "operators": [
     {
+      "id": "three_ti",
+      "name": "3ti",
+      "enabled": true,
+      "adapter": "ocpi_221",
+      "engagement": {
+        "status": "open_anonymous",
+        "label": "Open, no registration",
+        "headline": "Open, no registration (as of 2026-10-23)",
+        "as_of": "2026-10-23",
+        "last_request": null,
+        "last_response": null,
+        "last_response_text": "No request sent",
+        "evidence": [
+          {
+            "date": "2026-10-23",
+            "url": "https://3ti.co.uk/3ti-public-charge-points/",
+            "file": null,
+            "note": "3ti's public charge points page shows \"live availability and pricing for the public charge points we operate\" for six sites, says \"Data supplied by Fuuse\", and its script reads each site from api.fuuse.io/opendata/<site id>/location and /tariff."
+          }
+        ],
+        "log": [
+          {
+            "date": "2026-10-23",
+            "action": "page_checked",
+            "action_label": "Operator's page checked",
+            "channel": null,
+            "channel_label": null,
+            "summary": "3ti's public charge points page was read; it reads six sites' location and tariff data from Fuuse's open data host with no key.",
+            "quote": null,
+            "evidence_url": "https://3ti.co.uk/3ti-public-charge-points/",
+            "evidence_file": null
+          },
+          {
+            "date": "2026-10-23",
+            "action": "page_checked",
+            "action_label": "Operator's page checked",
+            "channel": null,
+            "channel_label": null,
+            "summary": "3ti's website pages were listed and its terms read: a general website Terms of Service page and a privacy policy (last updated July 2026); two \"EV Charging\" terms pages have no text. None mentions the charge point data.",
+            "quote": null,
+            "evidence_url": "https://3ti.co.uk/hfh-equipment-maintenance-tcs-2-2/",
+            "evidence_file": null
+          }
+        ]
+      },
+      "access_requested": null,
+      "access_granted": null,
+      "feeds": [
+        {
+          "kind": "locations",
+          "url": "https://api.fuuse.io/opendata/c3947832-9352-41fa-96c1-831215eea8e0/location",
+          "status": "documented"
+        },
+        {
+          "kind": "tariffs",
+          "url": "https://api.fuuse.io/opendata/c3947832-9352-41fa-96c1-831215eea8e0/tariff",
+          "status": "documented"
+        },
+        {
+          "kind": "locations",
+          "url": "https://api.fuuse.io/opendata/4a5b700e-6a15-40f3-92cc-dcc8732a92e0/location",
+          "status": "documented"
+        },
+        {
+          "kind": "tariffs",
+          "url": "https://api.fuuse.io/opendata/4a5b700e-6a15-40f3-92cc-dcc8732a92e0/tariff",
+          "status": "documented"
+        },
+        {
+          "kind": "locations",
+          "url": "https://api.fuuse.io/opendata/36bd06f3-5184-4939-a7a1-4c0c1dec5583/location",
+          "status": "documented"
+        },
+        {
+          "kind": "tariffs",
+          "url": "https://api.fuuse.io/opendata/36bd06f3-5184-4939-a7a1-4c0c1dec5583/tariff",
+          "status": "documented"
+        },
+        {
+          "kind": "locations",
+          "url": "https://api.fuuse.io/opendata/542c7548-899e-43e8-854c-05fd0f76dc70/location",
+          "status": "documented"
+        },
+        {
+          "kind": "tariffs",
+          "url": "https://api.fuuse.io/opendata/542c7548-899e-43e8-854c-05fd0f76dc70/tariff",
+          "status": "documented"
+        },
+        {
+          "kind": "locations",
+          "url": "https://api.fuuse.io/opendata/6922c10c-4f17-4929-bf7a-32c4a6075277/location",
+          "status": "documented"
+        },
+        {
+          "kind": "tariffs",
+          "url": "https://api.fuuse.io/opendata/6922c10c-4f17-4929-bf7a-32c4a6075277/tariff",
+          "status": "documented"
+        }
+      ],
+      "licence": {
+        "name": "OGL-3.0",
+        "url": "https://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/",
+        "checked": "2026-10-23"
+      },
+      "attribution": "Contains data from 3ti published under the Public Charge Point Regulations 2023, used in line with the Open Government Licence v3.0.",
+      "missing_publish_flag": null,
+      "swapped_coordinates": null,
+      "nonstandard_statuses": null,
+      "tariffs_from": null,
+      "nonstandard_parking_restrictions": null,
+      "zero_price_tariffs": null,
+      "vat_not_stated": null,
+      "vat_in_price": null,
+      "own_feed_over_copies": null,
+      "relay": null,
+      "expired_certificate": null,
+      "excluded_locations": null,
+      "rate_limit": {
+        "our_gap_seconds": 31.0,
+        "our_max_per_hour": 117,
+        "ours": "At least 31 s between requests to the operator's host, measured from the end of the previous request (at most 117 in any hour), retries included.",
+        "published": [
+          {
+            "text": "1 per 30 seconds for all requests",
+            "publisher": "3ti",
+            "quote": "Fuuse allows roughly 1-2 requests per 30 seconds per IP (shared across sites and endpoints), so this script makes ONE request at a time, at least 31 s apart",
+            "source_url": "https://3ti.co.uk/3ti-public-charge-points/",
+            "checked": "2026-10-23"
+          }
+        ],
+        "limits_checked": "2026-10-23",
+        "comparison": "Within every published limit. The strictest needs 30 s between requests; this project waits 31 s, which includes a safety margin.",
+        "difference_from_regulations": "The operator sets a limit; the regulations set none. DfT guidance allows such terms on access.",
+        "notes": "The limit is quoted from a comment in the script on 3ti's public charge points page, read as its lower figure, 1 request per 30 seconds. Arnold Clark Charge and ScottishPower Recharge use the same 31 second gap on the same host, and the client keeps one timer for it. Five sites are read, each with a location and a tariff file, so a run makes 10 requests and takes about 5 minutes."
+      },
+      "findings": [
+        {
+          "date": "2026-10-23",
+          "kind": "documentation",
+          "kind_label": "Documentation",
+          "summary": "3ti publishes its data per site rather than as one feed: each of six sites listed on its page has its own location and tariff address on Fuuse's open data host.",
+          "handling": "The pairs of addresses are read in turn and their records added together; each record keeps the address it came from.",
+          "evidence_url": "https://3ti.co.uk/3ti-public-charge-points/",
+          "status": "open",
+          "resolved_date": null
+        },
+        {
+          "date": "2026-10-23",
+          "kind": "access",
+          "kind_label": "Access",
+          "summary": "On 2026-10-23 the location and tariff addresses for Segen, Medway answered HTTP 204 with no content (the location address twice, about 8 minutes apart). The other five sites answered with OCPI responses.",
+          "handling": "Segen's two addresses are not read, so its site is not on the map. They are listed in sources and will be checked again.",
+          "evidence_url": "https://api.fuuse.io/opendata/6cd94287-a370-48ae-8079-a514a8ac2c7b/location",
+          "status": "open",
+          "resolved_date": null
+        },
+        {
+          "date": "2026-10-23",
+          "kind": "spec_conformance",
+          "kind_label": "Differs from OCPI 2.2.1",
+          "summary": "Locations and tariffs carry no country_code or party_id, which OCPI 2.2.1 requires. EV Roam's register lists 3ti Energy Hubs as GB*3TI.",
+          "handling": "Record ids use \"unknown\" for the country and party, from this file, until the operator's own data gives them.",
+          "evidence_url": "https://api.fuuse.io/opendata/c3947832-9352-41fa-96c1-831215eea8e0/location",
+          "status": "open",
+          "resolved_date": null
+        },
+        {
+          "date": "2026-10-23",
+          "kind": "spec_conformance",
+          "kind_label": "Differs from OCPI 2.2.1",
+          "summary": "Tariff prices and VAT rates are sent as strings (for example \"0.2917\" and \"20.0000\") rather than numbers.",
+          "handling": "Read as the numbers they spell; the stated 20% VAT is added, so the map's prices match the VAT-inclusive prices on 3ti's page.",
+          "evidence_url": "https://api.fuuse.io/opendata/c3947832-9352-41fa-96c1-831215eea8e0/tariff",
+          "status": "open",
+          "resolved_date": null
+        }
+      ]
+    },
+    {
       "id": "arnold_clark_charge",
       "name": "Arnold Clark Charge",
       "enabled": true,
@@ -2932,81 +3111,6 @@
           "summary": "Monta's open data feed also carries Urban Fox locations under the party GB UFX, with different location ids (95 of them were on the map on 2026-10-23). Of the first 50 locations in Urban Fox's own feed, 39 are within about 30 metres of one of those.",
           "handling": "Urban Fox's own feed is shown, and Monta's GB UFX locations are left off while it is on the map, by the repository owner's decision of 2026-10-23 (own_feed_over_copies above). The feed health page lists how many were left off.",
           "evidence_url": "https://api.urbanfox.network/api/opendata/locations",
-          "status": "open",
-          "resolved_date": null
-        }
-      ]
-    },
-    {
-      "id": "three_ti",
-      "name": "3ti",
-      "enabled": false,
-      "adapter": "unknown",
-      "engagement": {
-        "status": "open_anonymous",
-        "label": "Open, no registration",
-        "headline": "Open, no registration (as of 2026-10-23)",
-        "as_of": "2026-10-23",
-        "last_request": null,
-        "last_response": null,
-        "last_response_text": "No request sent",
-        "evidence": [
-          {
-            "date": "2026-10-23",
-            "url": "https://3ti.co.uk/3ti-public-charge-points/",
-            "file": null,
-            "note": "3ti's public charge points page shows \"live availability and pricing for the public charge points we operate\" for six sites, says \"Data supplied by Fuuse\", and its script reads each site from api.fuuse.io/opendata/<site id>/location and /tariff."
-          }
-        ],
-        "log": [
-          {
-            "date": "2026-10-23",
-            "action": "page_checked",
-            "action_label": "Operator's page checked",
-            "channel": null,
-            "channel_label": null,
-            "summary": "3ti's public charge points page was read; it reads six sites' location and tariff data from Fuuse's open data host with no key.",
-            "quote": null,
-            "evidence_url": "https://3ti.co.uk/3ti-public-charge-points/",
-            "evidence_file": null
-          }
-        ]
-      },
-      "access_requested": null,
-      "access_granted": null,
-      "feeds": [],
-      "licence": null,
-      "attribution": null,
-      "missing_publish_flag": null,
-      "swapped_coordinates": null,
-      "nonstandard_statuses": null,
-      "tariffs_from": null,
-      "nonstandard_parking_restrictions": null,
-      "zero_price_tariffs": null,
-      "vat_not_stated": null,
-      "vat_in_price": null,
-      "own_feed_over_copies": null,
-      "relay": null,
-      "expired_certificate": null,
-      "excluded_locations": null,
-      "rate_limit": {
-        "our_gap_seconds": 31.0,
-        "our_max_per_hour": 117,
-        "ours": "At least 31 s between requests to the operator's host, measured from the end of the previous request (at most 117 in any hour), retries included.",
-        "published": [],
-        "limits_checked": "2026-10-23",
-        "comparison": "No limit published (checked 2026-10-23). The gap is our own choice.",
-        "difference_from_regulations": "Neither the operator nor the regulations set a limit.",
-        "notes": "3ti's page states no rate limit. Its own script keeps 31 seconds between any two calls to Fuuse, with the comment \"its limit is ~1-2 per 30 s per IP\", and Arnold Clark Charge and ScottishPower Recharge use the same 31 second gap on the same host. Six sites, each with a location and a tariff file, would make 12 requests a run."
-      },
-      "findings": [
-        {
-          "date": "2026-10-23",
-          "kind": "documentation",
-          "kind_label": "Documentation",
-          "summary": "3ti publishes its data per site rather than as one feed: each of six sites has its own location and tariff address on Fuuse's open data host. One request on 2026-10-23 to the first site's location address answered with one location, Raigmore Hospital, with 12 EVSEs, the operator name \"Raigmore Hospital\" and no country_code or party_id.",
-          "handling": "Recorded, not switched on: the ocpi_221 adapter reads one location address per operator. Reading several is a separate change.",
-          "evidence_url": "https://api.fuuse.io/opendata/c3947832-9352-41fa-96c1-831215eea8e0/location",
           "status": "open",
           "resolved_date": null
         }

@@ -271,6 +271,11 @@ def operator_view(config: OperatorConfig) -> dict:
         {"kind": kind, "url": endpoint.url, "status": endpoint.status}
         for kind, endpoint in config.endpoints.items()
     ]
+    feeds += [
+        {"kind": kind, "url": endpoint.url, "status": endpoint.status}
+        for pair in config.more_endpoints
+        for kind, endpoint in (("locations", pair.locations), ("tariffs", pair.tariffs))
+    ]
     if not feeds and config.base_url != "unknown":
         feeds = [{"kind": "base", "url": config.base_url, "status": "documented"}]
     return {
