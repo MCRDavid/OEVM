@@ -1,0 +1,50 @@
+# yaml-language-server: $schema=schema.json
+id: evolo
+display_name: "Evolo"
+ocpi_country_code: unknown
+ocpi_party_id: unknown
+adapter: unknown
+base_url: unknown
+endpoints: {}
+auth:
+  method: unknown
+  name: null
+  secret_name: null
+rate_limit:
+  min_seconds_between_requests: 2
+  limits: []
+  limits_checked: unknown
+  notes: null
+supports_single_location: unknown
+cors: unknown
+attribution: null
+licence: null
+engagement:
+  status: no_public_feed_found
+  evidence:
+    - date: 2026-10-23
+      url: https://evroam.org.uk/_functions/getRegister
+      note: >-
+        The EV Roam ID register lists "Evolo" with operator ID GB*369 and website https://evolo.energy/
+        (read 2026-10-23). The register names companies and IDs, not chargers.
+  log:
+    - date: 2026-10-23
+      action: feed_searched
+      summary: >-
+        Its home page and its sitemap (48 pages) were read once on 2026-10-23 and gave no open data link, feed or request route.
+      evidence_url: https://evolo.energy/
+access_requested: null
+access_granted: null
+sources:
+  - url: https://evroam.org.uk/_functions/getRegister
+    note: >-
+      EV Roam ID register, the UK issuer of GB operator IDs (read 2026-10-23), used as a
+      pointer only: "Evolo", operator ID GB*369.
+  - url: https://evolo.energy/
+    note: >-
+      Evolo's own website. Its home page and its sitemap (48 pages) were read once on 2026-10-23 and gave no open data link, feed or request route.
+findings: []
+notes: >-
+  Found through the EV Roam ID register on 2026-10-23 (operator ID GB*369; the OCPI country and
+  party codes stay unknown until read from a feed). Its home page and its sitemap (48 pages) were read once on 2026-10-23 and gave no open data link, feed or request route. The next step is a written request asking where its open data under regulation 10 is published.
+enabled: false

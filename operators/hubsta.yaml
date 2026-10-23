@@ -20,7 +20,7 @@ cors: unknown
 attribution: null
 licence: null
 engagement:
-  status: unknown
+  status: possibly_out_of_scope
   evidence: []
   log:
     - date: 2026-10-10
@@ -30,6 +30,11 @@ engagement:
         (no answer, then its address could not be found), so its open data route is not yet
         known; it needs checking in a browser.
       evidence_url: https://hubsta.co.uk/
+    - date: 2026-10-23
+      action: page_checked
+      summary: >-
+        In a browser on 2026-10-23, hubsta.co.uk and www.hubsta.co.uk did not resolve. Mer UK's feed (one request that day) lists Business Durham NETPark, a site press reports named as on the Hubsta network.
+      evidence_url: https://uk.mer.eco/news/mer-acquires-elmtronics-expandong-its-uk-ev-charging-business/
 access_requested: null
 access_granted: null
 sources:
@@ -40,6 +45,5 @@ sources:
       could not find the address (DNS lookup failed), so it was not read.
 findings: []
 notes: >-
-  Hubsta's website could not be reached on 2026-10-10. The next step is to confirm its
-  current website address in a browser and look for an open data or regulations link.
+  Inferred on 2026-10-23, not confirmed by Hubsta: its sites appear to be covered by Mer UK's feed, which is switched on. Hubsta's domains no longer answer. Mer bought Elmtronics on 5 January 2022 (Mer's own news page), and Mer UK's feed lists Business Durham NETPark, a site press reports named as on the Hubsta network.
 enabled: false
