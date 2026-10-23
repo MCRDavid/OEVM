@@ -1,5 +1,6 @@
 # Temporary: a one-off check of PLUG Charging's feed from this branch, removed before the PR
-# is ready. Four requests, two seconds apart, with the key from the PLUG_CHARGING_TOKEN secret.
+# is ready. Reads the whole feed once, two seconds between requests, with the key from the
+# PLUG_CHARGING_TOKEN secret, and prints the recorded responses for a trimmed test fixture.
 name: PLUG Charging check (temporary)
 
 on:
@@ -24,7 +25,13 @@ jobs:
           persist-credentials: false
       - uses: astral-sh/setup-uv@v7
       - run: uv sync --locked
-      - name: Read PLUG Charging's feed once
+      - name: Fetch PLUG Charging's whole feed once with the pipeline
         env:
           PLUG_CHARGING_TOKEN: ${{ secrets.PLUG_CHARGING_TOKEN }}
-        run: PYTHONPATH=. uv run python .github/scripts/plug-check.py
+        run: |
+          sed -i 's/^enabled: false$/enabled: true/' operators/plug_charging.yaml
+          uv run python -m pipeline.run --live plug_charging --save-raw raw --log-dir logs || echo "exit $?"
+          for f in $(find raw logs -name '*.json' | sort); do
+            echo "----- $f -----"
+            python3 -c "import json, sys; print(json.dumps(json.load(open(sys.argv[1]))))" "$f"
+          done

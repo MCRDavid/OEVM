@@ -1,8 +1,8 @@
 # yaml-language-server: $schema=schema.json
 id: plug_charging
 display_name: PLUG Charging
-ocpi_country_code: unknown
-ocpi_party_id: unknown
+ocpi_country_code: GB
+ocpi_party_id: PLG # Confirmed from the feed's own country_code and party_id on 2026-10-23.
 adapter: ocpi_221
 base_url: unknown
 endpoints:
@@ -14,6 +14,16 @@ endpoints:
       answered HTTP 401 to one request without a key on 2026-10-22, asking for a key from
       the same page. The locations and tariffs addresses come from this endpoint once a key
       is issued.
+  locations:
+    url: https://plugcharging.co.uk/ocpi/2.2.1/locations
+    status: documented
+    note: >-
+      Listed as the locations module (role SENDER) in the 2.2.1 version details on
+      2026-10-23. Paged with offset and limit, with a Link header to the next page.
+  tariffs:
+    url: https://plugcharging.co.uk/ocpi/2.2.1/tariffs
+    status: documented
+    note: Listed as the tariffs module (role SENDER) in the same version details on 2026-10-23.
 auth:
   method: header
   name: Authorization

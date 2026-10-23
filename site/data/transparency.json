@@ -5308,6 +5308,16 @@
           "kind": "versions",
           "url": "https://plugcharging.co.uk/ocpi/versions",
           "status": "documented"
+        },
+        {
+          "kind": "locations",
+          "url": "https://plugcharging.co.uk/ocpi/2.2.1/locations",
+          "status": "documented"
+        },
+        {
+          "kind": "tariffs",
+          "url": "https://plugcharging.co.uk/ocpi/2.2.1/tariffs",
+          "status": "documented"
         }
       ],
       "licence": {
