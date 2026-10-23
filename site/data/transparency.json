@@ -1585,8 +1585,8 @@
           "date": "2026-10-23",
           "kind": "access",
           "kind_label": "Access",
-          "summary": "Monta's Public API also documents GET /api/v1/afir/charge-points/{evseId}/status, which \"Returns the current availability status and ad-hoc price for a single EVSE\". Asked once for a UK EVSE from the open data list, it answered HTTP 404 by the EVSE's evse_id and HTTP 400 by its uid. The endpoint for many EVSEs at once takes only the country DK or BE.",
-          "handling": "Not used. Prices come only from the tariffs in the open data list.",
+          "summary": "Monta's Public API also documents GET /api/v1/afir/charge-points/{evseId}/status, which \"Returns the current availability status and ad-hoc price for a single EVSE\". On 2026-10-23 it answered HTTP 404 (\"Not Found\") for four UK EVSEs from the open data list, asked by evse_id as given or percent-encoded, HTTP 400 by uid or with the separators removed, and HTTP 200 with a price in DKK for two Danish EVSEs from Monta's AFIR status list for DK. The list and bulk status AFIR endpoints answered HTTP 400 for GB (\"Unsupported country 'GB'. Allowed values: DK, BE\"). So UK chargers are not in Monta's AFIR data. No response carried rate limit headers.",
+          "handling": "Not used. Prices come only from the tariffs in the open data list. On 2026-10-23 the repository owner decided not to ask Monta for UK prices and to record this instead.",
           "evidence_url": "https://docs.public-api.monta.com/reference/get-afir-evse-status",
           "status": "open",
           "resolved_date": null

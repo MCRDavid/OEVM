@@ -6,6 +6,10 @@ data as a file sent by email, fill in nine fields by hand, and publish it. Of th
 pages we could read, we found none that publishes the result where it can be collected. Monta's
 developer pages also describe a UK data feed, but say it needs an access token.
 
+**Update, 23 October 2026:** the map now reads the UK feed described in Monta's developer pages,
+with an access token the project registered for. It lists the UK sites of many networks on Monta in
+one place, though few with prices. See [the post on Monta's feed](findings/monta-feed-and-prices/).
+
 ## What Monta's help page says
 
 Monta's help page "[How do I export open data for my charge
