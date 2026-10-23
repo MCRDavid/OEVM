@@ -71,8 +71,24 @@ engagement:
         Regulations 2023, in the OCPI 2.2.1 format. Access is free. Register below and we'll
         email you an API key straight away.
       evidence_url: https://plugcharging.co.uk/open-data
-access_requested: null
-access_granted: null
+    - date: 2026-10-23
+      action: request_sent
+      channel: web_form
+      summary: >-
+        Registered for a key through the form on PLUG Charging's open data page, agreeing to
+        its API access terms (version 2026-10-07). The optional fields were left blank.
+      evidence_url: https://plugcharging.co.uk/open-data
+    - date: 2026-10-23
+      action: key_granted
+      summary: >-
+        PLUG Charging emailed a key straight after registration, with instructions to send
+        it in the Authorization header from the versions endpoint. The key is kept as a
+        GitHub Actions secret.
+      quote: >-
+        Thank you for registering for the PLUG open data API.
+      evidence_file: evidence/plug_charging/2026-10-23-key-email.md
+access_requested: 2026-10-23
+access_granted: 2026-10-23
 sources:
   - url: https://plugcharging.co.uk/open-data
     note: >-
