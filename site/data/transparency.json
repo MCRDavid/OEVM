@@ -3028,8 +3028,8 @@
       "engagement": {
         "status": "no_public_feed_found",
         "label": "No public feed found",
-        "headline": "No public feed found (as of 2026-10-11)",
-        "as_of": "2026-10-11",
+        "headline": "No public feed found (as of 2026-10-23)",
+        "as_of": "2026-10-23",
         "last_request": null,
         "last_response": null,
         "last_response_text": "No request sent",
@@ -3051,6 +3051,17 @@
             "summary": "APCOA's UK websites, its full site index and its help centre were searched, and no open data feed or route for requesting open data was found.",
             "quote": "APCOA offers accessible EV charging stations at car parks nationwide, so you can plug in and go.",
             "evidence_url": "https://www.apcoa.co.uk/ev-charging-services/electric-vehicle-charging/electric-vehicle-charging",
+            "evidence_file": null
+          },
+          {
+            "date": "2026-10-23",
+            "action": "page_checked",
+            "action_label": "Operator's page checked",
+            "channel": null,
+            "channel_label": null,
+            "summary": "In a browser on 2026-10-23, APCOA's legal page, help centre (EV Charging category and searches for open data, OCPI, charge point regulations, API and data request), APCOA Connect site and charging station map were read; none gives an open data feed or a data request route.",
+            "quote": null,
+            "evidence_url": "https://helpcentre.apcoa.com/hc/en-gb",
             "evidence_file": null
           }
         ]
@@ -4481,10 +4492,10 @@
       "enabled": false,
       "adapter": "unknown",
       "engagement": {
-        "status": "unknown",
-        "label": "Not yet established",
-        "headline": "Not yet established (as of 2026-10-10)",
-        "as_of": "2026-10-10",
+        "status": "possibly_out_of_scope",
+        "label": "Possibly out of scope",
+        "headline": "Possibly out of scope (as of 2026-10-23)",
+        "as_of": "2026-10-23",
         "last_request": null,
         "last_response": null,
         "last_response_text": "No request sent",
@@ -4499,6 +4510,17 @@
             "summary": "Electric Blue's website could not be read by this project's automated checks on 2026-10-10 (no answer, then its address could not be found), so its open data route is not yet known; it needs checking in a browser.",
             "quote": null,
             "evidence_url": "https://www.electricbluecharging.co.uk/",
+            "evidence_file": null
+          },
+          {
+            "date": "2026-10-23",
+            "action": "page_checked",
+            "action_label": "Operator's page checked",
+            "channel": null,
+            "channel_label": null,
+            "summary": "In a browser on 2026-10-23, electricbluecharging.co.uk did not resolve and electricblue.co.uk served another site's certificate. A business directory, used as a pointer only, lists Electric Blue under the name EB Charging, whose old site redirected to Blink on 2026-10-10.",
+            "quote": null,
+            "evidence_url": "https://electricblue.co.uk/",
             "evidence_file": null
           }
         ]
@@ -4602,10 +4624,10 @@
       "enabled": false,
       "adapter": "unknown",
       "engagement": {
-        "status": "unknown",
-        "label": "Not yet established",
-        "headline": "Not yet established (as of 2026-10-10)",
-        "as_of": "2026-10-10",
+        "status": "possibly_out_of_scope",
+        "label": "Possibly out of scope",
+        "headline": "Possibly out of scope (as of 2026-10-23)",
+        "as_of": "2026-10-23",
         "last_request": null,
         "last_response": null,
         "last_response_text": "No request sent",
@@ -4620,6 +4642,17 @@
             "summary": "Elmtronics' website could not be read by this project's automated checks on 2026-10-10 (connection reset, then HTTP 503), so its open data route is not yet known; it needs checking in a browser.",
             "quote": null,
             "evidence_url": "https://www.elmtronics.co.uk/",
+            "evidence_file": null
+          },
+          {
+            "date": "2026-10-23",
+            "action": "page_checked",
+            "action_label": "Operator's page checked",
+            "channel": null,
+            "channel_label": null,
+            "summary": "In a browser on 2026-10-23, www.elmtronics.co.uk and elmtronics.co.uk timed out. Mer's own news page of 5 January 2022 says Mer Fleet Services Ltd acquired Elmtronics, and Mer UK's feed (one request that day) lists Mer Fleet Services sites at Consett Business Park.",
+            "quote": null,
+            "evidence_url": "https://uk.mer.eco/news/mer-acquires-elmtronics-expandong-its-uk-ev-charging-business/",
             "evidence_file": null
           }
         ]
@@ -6096,10 +6129,10 @@
       "enabled": false,
       "adapter": "unknown",
       "engagement": {
-        "status": "unknown",
-        "label": "Not yet established",
-        "headline": "Not yet established (as of 2026-10-10)",
-        "as_of": "2026-10-10",
+        "status": "possibly_out_of_scope",
+        "label": "Possibly out of scope",
+        "headline": "Possibly out of scope (as of 2026-10-23)",
+        "as_of": "2026-10-23",
         "last_request": null,
         "last_response": null,
         "last_response_text": "No request sent",
@@ -6114,6 +6147,17 @@
             "summary": "Hubsta's website could not be read by this project's automated checks on 2026-10-10 (no answer, then its address could not be found), so its open data route is not yet known; it needs checking in a browser.",
             "quote": null,
             "evidence_url": "https://hubsta.co.uk/",
+            "evidence_file": null
+          },
+          {
+            "date": "2026-10-23",
+            "action": "page_checked",
+            "action_label": "Operator's page checked",
+            "channel": null,
+            "channel_label": null,
+            "summary": "In a browser on 2026-10-23, hubsta.co.uk and www.hubsta.co.uk did not resolve. Mer UK's feed (one request that day) lists Business Durham NETPark, a site press reports named as on the Hubsta network.",
+            "quote": null,
+            "evidence_url": "https://uk.mer.eco/news/mer-acquires-elmtronics-expandong-its-uk-ev-charging-business/",
             "evidence_file": null
           }
         ]
@@ -7712,10 +7756,10 @@
       "enabled": false,
       "adapter": "unknown",
       "engagement": {
-        "status": "unknown",
-        "label": "Not yet established",
-        "headline": "Not yet established (as of 2026-10-10)",
-        "as_of": "2026-10-10",
+        "status": "possibly_out_of_scope",
+        "label": "Possibly out of scope",
+        "headline": "Possibly out of scope (as of 2026-10-23)",
+        "as_of": "2026-10-23",
         "last_request": null,
         "last_response": null,
         "last_response_text": "No request sent",
@@ -7730,6 +7774,17 @@
             "summary": "Sprint's website could not be read by this project's automated checks on 2026-10-10 (no answer, then its address could not be found), so its open data route is not yet known; it needs checking in a browser.",
             "quote": null,
             "evidence_url": "https://www.sprintev.co.uk/",
+            "evidence_file": null
+          },
+          {
+            "date": "2026-10-23",
+            "action": "page_checked",
+            "action_label": "Operator's page checked",
+            "channel": null,
+            "channel_label": null,
+            "summary": "In a browser on 2026-10-23, sprintev.co.uk did not resolve and no UK charging network called Sprint was found; the only similar name found was an engineering firm working on vehicle-side and wireless charging.",
+            "quote": null,
+            "evidence_url": "https://sprintev.co.uk/",
             "evidence_file": null
           }
         ]
