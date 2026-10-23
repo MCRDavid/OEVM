@@ -36,6 +36,11 @@ engagement:
         data feed or route for requesting open data was found.
       quote: APCOA offers accessible EV charging stations at car parks nationwide, so you can plug in and go.
       evidence_url: https://www.apcoa.co.uk/ev-charging-services/electric-vehicle-charging/electric-vehicle-charging
+    - date: 2026-10-23
+      action: page_checked
+      summary: >-
+        In a browser on 2026-10-23, APCOA's legal page, help centre (EV Charging category and searches for open data, OCPI, charge point regulations, API and data request), APCOA Connect site and charging station map were read; none gives an open data feed or a data request route.
+      evidence_url: https://helpcentre.apcoa.com/hc/en-gb
 access_requested: null
 access_granted: null
 sources:
