@@ -111,7 +111,7 @@ CLIENT_CREDENTIALS = {
     "method": "client_credentials",
     "name": "Authorization",
     "scheme": "Bearer",
-    "secret_name": "EXAMPLE_CLIENT_SECRET",
+    "secret_name": "EXAMPLE_CLIENT_SECRET",  # pragma: allowlist secret
     "client_id_secret_name": "EXAMPLE_CLIENT_ID",
     "token_url": "https://example.invalid/auth/token",
 }

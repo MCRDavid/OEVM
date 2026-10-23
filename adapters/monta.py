@@ -195,8 +195,11 @@ def fetch(
         raise FeedError(f"{config.id}: this adapter sets its own page size and has no date_from")
     fetched_at = now or datetime.now(UTC).replace(microsecond=0)
     issues = IssueLog()
+    # Field names in Monta's token request and reply, not values.
     client.request_token(
-        id_field="clientId", secret_field="clientSecret", token_field="accessToken"
+        id_field="clientId",
+        secret_field="clientSecret",  # pragma: allowlist secret
+        token_field="accessToken",
     )
     url = config.endpoints["locations"].url
     reader = _Reader(client, url, issues)
