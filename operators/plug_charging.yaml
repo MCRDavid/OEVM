@@ -1,8 +1,8 @@
 # yaml-language-server: $schema=schema.json
 id: plug_charging
 display_name: PLUG Charging
-ocpi_country_code: unknown
-ocpi_party_id: unknown
+ocpi_country_code: GB
+ocpi_party_id: PLG # Confirmed from the feed's own country_code and party_id on 2026-10-23.
 adapter: ocpi_221
 base_url: unknown
 endpoints:
@@ -14,6 +14,16 @@ endpoints:
       answered HTTP 401 to one request without a key on 2026-10-22, asking for a key from
       the same page. The locations and tariffs addresses come from this endpoint once a key
       is issued.
+  locations:
+    url: https://plugcharging.co.uk/ocpi/2.2.1/locations
+    status: documented
+    note: >-
+      Listed as the locations module (role SENDER) in the 2.2.1 version details on
+      2026-10-23. Paged with offset and limit, with a Link header to the next page.
+  tariffs:
+    url: https://plugcharging.co.uk/ocpi/2.2.1/tariffs
+    status: documented
+    note: Listed as the tariffs module (role SENDER) in the same version details on 2026-10-23.
 auth:
   method: header
   name: Authorization
@@ -33,9 +43,10 @@ rate_limit:
   notes: >-
     The API access terms on the same page also say requests "must not exceed the published
     rate limit, currently 120 requests per minute per key" and forbid registering several
-    keys for one service. This project would use one key.
+    keys for one service. This project uses one key. Each module comes in one page (the
+    server's page size was 500 on 2026-10-23), so a full run makes two requests.
 supports_single_location: unknown
-cors: unknown
+cors: supported # access-control-allow-origin: * seen on 2026-10-23
 attribution: >-
   Contains data from PLUG Charging published under the Public Charge Point Regulations 2023,
   used in line with the Open Government Licence v3.0.
@@ -71,8 +82,24 @@ engagement:
         Regulations 2023, in the OCPI 2.2.1 format. Access is free. Register below and we'll
         email you an API key straight away.
       evidence_url: https://plugcharging.co.uk/open-data
-access_requested: null
-access_granted: null
+    - date: 2026-10-23
+      action: request_sent
+      channel: web_form
+      summary: >-
+        Registered for a key through the form on PLUG Charging's open data page, agreeing to
+        its API access terms (version 2026-10-07). The optional fields were left blank.
+      evidence_url: https://plugcharging.co.uk/open-data
+    - date: 2026-10-23
+      action: key_granted
+      summary: >-
+        PLUG Charging emailed a key straight after registration, with instructions to send
+        it in the Authorization header from the versions endpoint. The key is kept as a
+        GitHub Actions secret.
+      quote: >-
+        Thank you for registering for the PLUG open data API.
+      evidence_file: evidence/plug_charging/2026-10-23-key-email.md
+access_requested: 2026-10-23
+access_granted: 2026-10-23
 sources:
   - url: https://plugcharging.co.uk/open-data
     note: >-
@@ -88,9 +115,36 @@ sources:
     note: >-
       PLUG Charging's home page (read 2026-10-22), titled "PLUG Charging Wales". Links a live
       map of its chargers across Wales and the open data page.
-findings: []
+findings:
+  - date: 2026-10-23
+    kind: data_quality
+    summary: >-
+      24 of the 151 single-phase connectors (485 connectors in all) give max_amperage 0 and
+      no max_electric_power, so their power cannot be worked out from the feed.
+    handling: >-
+      Their power is shown as unknown. Nothing is filled in from other connectors or
+      sources.
+    evidence_url: https://plugcharging.co.uk/ocpi/2.2.1/locations
+  - date: 2026-10-23
+    kind: data_quality
+    summary: >-
+      6 connectors name tariff ids 130 or 134, which are not in the tariffs module, and 1
+      connector names no tariff.
+    handling: These 7 connectors show "Price unknown".
+    evidence_url: https://plugcharging.co.uk/ocpi/2.2.1/tariffs
+  - date: 2026-10-23
+    kind: data_quality
+    summary: >-
+      3 of 177 locations have every EVSE marked REMOVED. OCPI 2.2.1 says a location without
+      valid EVSE objects can be considered expired.
+    handling: >-
+      As with the other OCPI feeds, these locations stay on the map with their chargers
+      shown as out of service.
+    evidence_url: https://plugcharging.co.uk/ocpi/2.2.1/locations
 notes: >-
-  A charge point operator based in Cardiff with public chargers across Wales. Its open data
-  needs a free key, issued by email at once after registering and agreeing to the API access
-  terms. The key would be stored as the GitHub Actions secret PLUG_CHARGING_TOKEN.
-enabled: false
+  A charge point operator based in Cardiff with public chargers in Wales and across Great
+  Britain (177 locations on 2026-10-23, 83 of them in Cardiff, many on-street). Its open
+  data needs a free key, issued by email at once after registering and agreeing to the API
+  access terms; the key is the GitHub Actions secret PLUG_CHARGING_TOKEN. Responses carry a
+  Link header with rel="license" pointing to the Open Government Licence v3.0.
+enabled: true

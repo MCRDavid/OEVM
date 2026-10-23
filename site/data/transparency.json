@@ -1918,8 +1918,8 @@
           "date": "2026-10-23",
           "kind": "access",
           "kind_label": "Access",
-          "summary": "Monta's Public API also documents GET /api/v1/afir/charge-points/{evseId}/status, which \"Returns the current availability status and ad-hoc price for a single EVSE\". Asked once for a UK EVSE from the open data list, it answered HTTP 404 by the EVSE's evse_id and HTTP 400 by its uid. The endpoint for many EVSEs at once takes only the country DK or BE.",
-          "handling": "Not used. Prices come only from the tariffs in the open data list.",
+          "summary": "Monta's Public API also documents GET /api/v1/afir/charge-points/{evseId}/status, which \"Returns the current availability status and ad-hoc price for a single EVSE\". On 2026-10-23 it answered HTTP 404 (\"Not Found\") for four UK EVSEs from the open data list, asked by evse_id as given or percent-encoded, HTTP 400 by uid or with the separators removed, and HTTP 200 with a price in DKK for two Danish EVSEs from Monta's AFIR status list for DK. The list and bulk status AFIR endpoints answered HTTP 400 for GB (\"Unsupported country 'GB'. Allowed values: DK, BE\"). So UK chargers are not in Monta's AFIR data. No response carried rate limit headers.",
+          "handling": "Not used. Prices come only from the tariffs in the open data list. On 2026-10-23 the repository owner decided not to ask Monta for UK prices and to record this instead.",
           "evidence_url": "https://docs.public-api.monta.com/reference/get-afir-evse-status",
           "status": "open",
           "resolved_date": null
@@ -2209,6 +2209,154 @@
           "summary": "Two location names begin \"(REMOVED)\" (id 2647) and \"(Archived)\" (id 3779), while their EVSEs report AVAILABLE or CHARGING. Five locations have every EVSE marked REMOVED.",
           "handling": "Shown as published, each EVSE with the status and date it reports. A REMOVED EVSE shows as Removed and counts as reported out of service.",
           "evidence_url": "https://ocpi.hubeleon.net/ocpi/public/2.2.1/locations",
+          "status": "open",
+          "resolved_date": null
+        }
+      ]
+    },
+    {
+      "id": "plug_charging",
+      "name": "PLUG Charging",
+      "enabled": true,
+      "adapter": "ocpi_221",
+      "engagement": {
+        "status": "key_on_request",
+        "label": "Key issued on request",
+        "headline": "Key issued on request (as of 2026-10-23)",
+        "as_of": "2026-10-23",
+        "last_request": "2026-10-23",
+        "last_response": {
+          "date": "2026-10-23",
+          "action": "key_granted"
+        },
+        "last_response_text": "2026-10-23 (Key issued)",
+        "evidence": [
+          {
+            "date": "2026-10-22",
+            "url": "https://plugcharging.co.uk/open-data",
+            "file": null,
+            "note": "PLUG Charging's open data page offers an OCPI 2.2.1 API with locations, EVSEs, connectors, live availability and tariffs. A key is free and is emailed after registering with a name, email address and website and agreeing to the API access terms."
+          }
+        ],
+        "log": [
+          {
+            "date": "2026-10-22",
+            "action": "page_checked",
+            "action_label": "Operator's page checked",
+            "channel": null,
+            "channel_label": null,
+            "summary": "PLUG Charging's open data page was read. It offers a free key by email after registration, publishes the data under the Open Government Licence v3.0 and states a rate limit of 120 requests a minute per key.",
+            "quote": "We publish live data about our public charge points under the Public Charge Point Regulations 2023, in the OCPI 2.2.1 format. Access is free. Register below and we'll email you an API key straight away.",
+            "evidence_url": "https://plugcharging.co.uk/open-data",
+            "evidence_file": null
+          },
+          {
+            "date": "2026-10-23",
+            "action": "request_sent",
+            "action_label": "Access requested",
+            "channel": "web_form",
+            "channel_label": "Web form",
+            "summary": "Registered for a key through the form on PLUG Charging's open data page, agreeing to its API access terms (version 2026-10-07). The optional fields were left blank.",
+            "quote": null,
+            "evidence_url": "https://plugcharging.co.uk/open-data",
+            "evidence_file": null
+          },
+          {
+            "date": "2026-10-23",
+            "action": "key_granted",
+            "action_label": "Key issued",
+            "channel": null,
+            "channel_label": null,
+            "summary": "PLUG Charging emailed a key straight after registration, with instructions to send it in the Authorization header from the versions endpoint. The key is kept as a GitHub Actions secret.",
+            "quote": "Thank you for registering for the PLUG open data API.",
+            "evidence_url": null,
+            "evidence_file": "evidence/plug_charging/2026-10-23-key-email.md"
+          }
+        ]
+      },
+      "access_requested": "2026-10-23",
+      "access_granted": "2026-10-23",
+      "feeds": [
+        {
+          "kind": "versions",
+          "url": "https://plugcharging.co.uk/ocpi/versions",
+          "status": "documented"
+        },
+        {
+          "kind": "locations",
+          "url": "https://plugcharging.co.uk/ocpi/2.2.1/locations",
+          "status": "documented"
+        },
+        {
+          "kind": "tariffs",
+          "url": "https://plugcharging.co.uk/ocpi/2.2.1/tariffs",
+          "status": "documented"
+        }
+      ],
+      "licence": {
+        "name": "OGL-3.0",
+        "url": "https://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/",
+        "checked": "2026-10-22"
+      },
+      "attribution": "Contains data from PLUG Charging published under the Public Charge Point Regulations 2023, used in line with the Open Government Licence v3.0.",
+      "missing_publish_flag": null,
+      "swapped_coordinates": null,
+      "nonstandard_statuses": null,
+      "tariffs_from": null,
+      "nonstandard_parking_restrictions": null,
+      "zero_price_tariffs": null,
+      "vat_not_stated": null,
+      "vat_in_price": null,
+      "own_feed_over_copies": null,
+      "relay": null,
+      "expired_certificate": null,
+      "excluded_locations": null,
+      "rate_limit": {
+        "our_gap_seconds": 2.0,
+        "our_max_per_hour": 1800,
+        "ours": "At least 2 s between requests to the operator's host, measured from the end of the previous request (at most 1800 in any hour), retries included.",
+        "published": [
+          {
+            "text": "120 per 1 minute for all requests",
+            "publisher": "PLUG Charging",
+            "quote": "Each key can make 120 requests a minute.",
+            "source_url": "https://plugcharging.co.uk/open-data",
+            "checked": "2026-10-22"
+          }
+        ],
+        "limits_checked": "2026-10-22",
+        "comparison": "Within every published limit. The strictest needs 0.5 s between requests; this project waits 2 s, which includes a safety margin.",
+        "difference_from_regulations": "The operator sets a limit; the regulations set none. DfT guidance allows such terms on access.",
+        "notes": "The API access terms on the same page also say requests \"must not exceed the published rate limit, currently 120 requests per minute per key\" and forbid registering several keys for one service. This project uses one key. Each module comes in one page (the server's page size was 500 on 2026-10-23), so a full run makes two requests."
+      },
+      "findings": [
+        {
+          "date": "2026-10-23",
+          "kind": "data_quality",
+          "kind_label": "Data quirk",
+          "summary": "24 of the 151 single-phase connectors (485 connectors in all) give max_amperage 0 and no max_electric_power, so their power cannot be worked out from the feed.",
+          "handling": "Their power is shown as unknown. Nothing is filled in from other connectors or sources.",
+          "evidence_url": "https://plugcharging.co.uk/ocpi/2.2.1/locations",
+          "status": "open",
+          "resolved_date": null
+        },
+        {
+          "date": "2026-10-23",
+          "kind": "data_quality",
+          "kind_label": "Data quirk",
+          "summary": "6 connectors name tariff ids 130 or 134, which are not in the tariffs module, and 1 connector names no tariff.",
+          "handling": "These 7 connectors show \"Price unknown\".",
+          "evidence_url": "https://plugcharging.co.uk/ocpi/2.2.1/tariffs",
+          "status": "open",
+          "resolved_date": null
+        },
+        {
+          "date": "2026-10-23",
+          "kind": "data_quality",
+          "kind_label": "Data quirk",
+          "summary": "3 of 177 locations have every EVSE marked REMOVED. OCPI 2.2.1 says a location without valid EVSE objects can be considered expired.",
+          "handling": "As with the other OCPI feeds, these locations stay on the map with their chargers shown as out of service.",
+          "evidence_url": "https://plugcharging.co.uk/ocpi/2.2.1/locations",
           "status": "open",
           "resolved_date": null
         }
@@ -5925,88 +6073,6 @@
           "resolved_date": null
         }
       ]
-    },
-    {
-      "id": "plug_charging",
-      "name": "PLUG Charging",
-      "enabled": false,
-      "adapter": "ocpi_221",
-      "engagement": {
-        "status": "key_on_request",
-        "label": "Key issued on request",
-        "headline": "Key issued on request (as of 2026-10-22)",
-        "as_of": "2026-10-22",
-        "last_request": null,
-        "last_response": null,
-        "last_response_text": "No request sent",
-        "evidence": [
-          {
-            "date": "2026-10-22",
-            "url": "https://plugcharging.co.uk/open-data",
-            "file": null,
-            "note": "PLUG Charging's open data page offers an OCPI 2.2.1 API with locations, EVSEs, connectors, live availability and tariffs. A key is free and is emailed after registering with a name, email address and website and agreeing to the API access terms."
-          }
-        ],
-        "log": [
-          {
-            "date": "2026-10-22",
-            "action": "page_checked",
-            "action_label": "Operator's page checked",
-            "channel": null,
-            "channel_label": null,
-            "summary": "PLUG Charging's open data page was read. It offers a free key by email after registration, publishes the data under the Open Government Licence v3.0 and states a rate limit of 120 requests a minute per key.",
-            "quote": "We publish live data about our public charge points under the Public Charge Point Regulations 2023, in the OCPI 2.2.1 format. Access is free. Register below and we'll email you an API key straight away.",
-            "evidence_url": "https://plugcharging.co.uk/open-data",
-            "evidence_file": null
-          }
-        ]
-      },
-      "access_requested": null,
-      "access_granted": null,
-      "feeds": [
-        {
-          "kind": "versions",
-          "url": "https://plugcharging.co.uk/ocpi/versions",
-          "status": "documented"
-        }
-      ],
-      "licence": {
-        "name": "OGL-3.0",
-        "url": "https://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/",
-        "checked": "2026-10-22"
-      },
-      "attribution": "Contains data from PLUG Charging published under the Public Charge Point Regulations 2023, used in line with the Open Government Licence v3.0.",
-      "missing_publish_flag": null,
-      "swapped_coordinates": null,
-      "nonstandard_statuses": null,
-      "tariffs_from": null,
-      "nonstandard_parking_restrictions": null,
-      "zero_price_tariffs": null,
-      "vat_not_stated": null,
-      "vat_in_price": null,
-      "own_feed_over_copies": null,
-      "relay": null,
-      "expired_certificate": null,
-      "excluded_locations": null,
-      "rate_limit": {
-        "our_gap_seconds": 2.0,
-        "our_max_per_hour": 1800,
-        "ours": "At least 2 s between requests to the operator's host, measured from the end of the previous request (at most 1800 in any hour), retries included.",
-        "published": [
-          {
-            "text": "120 per 1 minute for all requests",
-            "publisher": "PLUG Charging",
-            "quote": "Each key can make 120 requests a minute.",
-            "source_url": "https://plugcharging.co.uk/open-data",
-            "checked": "2026-10-22"
-          }
-        ],
-        "limits_checked": "2026-10-22",
-        "comparison": "Within every published limit. The strictest needs 0.5 s between requests; this project waits 2 s, which includes a safety margin.",
-        "difference_from_regulations": "The operator sets a limit; the regulations set none. DfT guidance allows such terms on access.",
-        "notes": "The API access terms on the same page also say requests \"must not exceed the published rate limit, currently 120 requests per minute per key\" and forbid registering several keys for one service. This project would use one key."
-      },
-      "findings": []
     },
     {
       "id": "plug_n_go",
