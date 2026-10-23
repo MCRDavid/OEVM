@@ -1,0 +1,490 @@
+{
+  "request": {
+    "method": "GET",
+    "url": "https://api.fuuse.io/opendata/36bd06f3-5184-4939-a7a1-4c0c1dec5583/location"
+  },
+  "response": {
+    "status_code": 200,
+    "headers": {
+      "content-type": "application/json; charset=utf-8",
+      "x-total-count": "1",
+      "x-limit": "1000"
+    },
+    "body": {
+      "status_code": 1000,
+      "data": [
+        {
+          "id": "9b6d02ba-878d-4d71-8f32-ae2437a7d41a",
+          "publish": true,
+          "name": "University of Surrey",
+          "address": "University of Surrey",
+          "city": "Guildford",
+          "postal_code": "GU2 7XH",
+          "state": "Surrey",
+          "country": "GBR",
+          "coordinates": {
+            "latitude": "51.244900",
+            "longitude": "-0.591300"
+          },
+          "parking_type": "PARKING_LOT",
+          "evses": [
+            {
+              "uid": "09cd314a-f9d6-4a37-99ac-ec57355239b6",
+              "evse_id": "cbfe3a*a4445e",
+              "status": "AVAILABLE",
+              "capabilities": [
+                "CHARGING_PROFILE_CAPABLE",
+                "CHIP_CARD_SUPPORT",
+                "CONTACTLESS_CARD_SUPPORT",
+                "PED_TERMINAL",
+                "REMOTE_START_STOP_CAPABLE",
+                "RFID_READER",
+                "UNLOCK_CAPABLE",
+                "REMOTE_START_STOP_CAPABLE"
+              ],
+              "connectors": [
+                {
+                  "id": "6f2f7623-9fc7-4021-bec8-7635e749e59b",
+                  "standard": "IEC_62196_T2",
+                  "format": "SOCKET",
+                  "power_type": "AC_3_PHASE",
+                  "max_voltage": 240,
+                  "max_amperage": 32,
+                  "max_electric_power": 22000,
+                  "tariff_ids": [
+                    "caf84577-94ea-4bc5-af05-4c8384b47c7a"
+                  ],
+                  "terms_and_conditions": "https://3ti.co.uk/ev-charging-terms-conditions/",
+                  "last_updated": "2026-10-21T17:42:00.913Z"
+                }
+              ],
+              "coordinates": {
+                "latitude": "51.244900",
+                "longitude": "-0.591300"
+              },
+              "physical_reference": "3ti-0013-04",
+              "last_updated": "2026-10-23T10:07:18.817Z"
+            },
+            {
+              "uid": "0d73338f-bc14-4391-b044-ff403bcf52e4",
+              "evse_id": "a9bec6*afcbb8",
+              "status": "AVAILABLE",
+              "capabilities": [
+                "CHARGING_PROFILE_CAPABLE",
+                "CHIP_CARD_SUPPORT",
+                "CONTACTLESS_CARD_SUPPORT",
+                "PED_TERMINAL",
+                "REMOTE_START_STOP_CAPABLE",
+                "RFID_READER",
+                "UNLOCK_CAPABLE",
+                "REMOTE_START_STOP_CAPABLE"
+              ],
+              "connectors": [
+                {
+                  "id": "9cbb32a4-66c2-448d-8839-ce354b39ced7",
+                  "standard": "IEC_62196_T2",
+                  "format": "SOCKET",
+                  "power_type": "AC_3_PHASE",
+                  "max_voltage": 240,
+                  "max_amperage": 32,
+                  "max_electric_power": 22000,
+                  "tariff_ids": [
+                    "caf84577-94ea-4bc5-af05-4c8384b47c7a"
+                  ],
+                  "terms_and_conditions": "https://3ti.co.uk/ev-charging-terms-conditions/",
+                  "last_updated": "2026-10-23T14:55:28.981Z"
+                }
+              ],
+              "coordinates": {
+                "latitude": "51.244900",
+                "longitude": "-0.591300"
+              },
+              "physical_reference": "3ti-0013-07",
+              "last_updated": "2026-10-23T14:55:28.981Z"
+            },
+            {
+              "uid": "2924d03f-ca52-4262-b903-561c1ff12cff",
+              "evse_id": "AE0022G1GP4C00680R*1",
+              "status": "AVAILABLE",
+              "capabilities": [
+                "CHARGING_PROFILE_CAPABLE",
+                "CHIP_CARD_SUPPORT",
+                "CONTACTLESS_CARD_SUPPORT",
+                "PED_TERMINAL",
+                "REMOTE_START_STOP_CAPABLE",
+                "RFID_READER",
+                "UNLOCK_CAPABLE",
+                "REMOTE_START_STOP_CAPABLE"
+              ],
+              "connectors": [
+                {
+                  "id": "36099bbd-4217-408d-a339-e47225586c22",
+                  "standard": "IEC_62196_T2",
+                  "format": "SOCKET",
+                  "power_type": "AC_3_PHASE",
+                  "max_voltage": 240,
+                  "max_amperage": 32,
+                  "max_electric_power": 22000,
+                  "tariff_ids": [
+                    "caf84577-94ea-4bc5-af05-4c8384b47c7a"
+                  ],
+                  "terms_and_conditions": "https://3ti.co.uk/ev-charging-terms-conditions/",
+                  "last_updated": "2026-10-22T08:00:22.294Z"
+                }
+              ],
+              "coordinates": {
+                "latitude": "51.244900",
+                "longitude": "-0.591300"
+              },
+              "physical_reference": "3ti-0013-01",
+              "last_updated": "2026-10-23T10:05:51.756Z"
+            },
+            {
+              "uid": "35a936a0-4682-4160-b049-5f984a5f3297",
+              "evse_id": "3d1690*7ce2ae",
+              "status": "AVAILABLE",
+              "capabilities": [
+                "CHARGING_PROFILE_CAPABLE",
+                "CHIP_CARD_SUPPORT",
+                "CONTACTLESS_CARD_SUPPORT",
+                "PED_TERMINAL",
+                "REMOTE_START_STOP_CAPABLE",
+                "RFID_READER",
+                "UNLOCK_CAPABLE",
+                "REMOTE_START_STOP_CAPABLE"
+              ],
+              "connectors": [
+                {
+                  "id": "fdf7748e-e28f-436c-81f4-3e7053e0da41",
+                  "standard": "IEC_62196_T2",
+                  "format": "SOCKET",
+                  "power_type": "AC_3_PHASE",
+                  "max_voltage": 240,
+                  "max_amperage": 32,
+                  "max_electric_power": 22000,
+                  "tariff_ids": [
+                    "caf84577-94ea-4bc5-af05-4c8384b47c7a"
+                  ],
+                  "terms_and_conditions": "https://3ti.co.uk/ev-charging-terms-conditions/",
+                  "last_updated": "2026-10-23T11:55:03.250Z"
+                }
+              ],
+              "coordinates": {
+                "latitude": "51.244900",
+                "longitude": "-0.591300"
+              },
+              "physical_reference": "3ti-0013-11",
+              "last_updated": "2026-10-23T11:55:03.250Z"
+            },
+            {
+              "uid": "500f12eb-1ea6-4006-ba88-e689a8ac0cb5",
+              "evse_id": "ad466d*06f23d",
+              "status": "AVAILABLE",
+              "capabilities": [
+                "CHARGING_PROFILE_CAPABLE",
+                "CHIP_CARD_SUPPORT",
+                "CONTACTLESS_CARD_SUPPORT",
+                "PED_TERMINAL",
+                "REMOTE_START_STOP_CAPABLE",
+                "RFID_READER",
+                "UNLOCK_CAPABLE",
+                "REMOTE_START_STOP_CAPABLE"
+              ],
+              "connectors": [
+                {
+                  "id": "f8ced10f-ea91-447f-a399-38676896254c",
+                  "standard": "IEC_62196_T2",
+                  "format": "SOCKET",
+                  "power_type": "AC_3_PHASE",
+                  "max_voltage": 240,
+                  "max_amperage": 32,
+                  "max_electric_power": 22000,
+                  "tariff_ids": [
+                    "caf84577-94ea-4bc5-af05-4c8384b47c7a"
+                  ],
+                  "terms_and_conditions": "https://3ti.co.uk/ev-charging-terms-conditions/",
+                  "last_updated": "2026-10-22T14:52:53.263Z"
+                }
+              ],
+              "coordinates": {
+                "latitude": "51.244900",
+                "longitude": "-0.591300"
+              },
+              "physical_reference": "3ti-0013-03",
+              "last_updated": "2026-10-23T10:05:51.756Z"
+            },
+            {
+              "uid": "5836309a-bf65-426c-bbd8-447fcc0f6302",
+              "evse_id": "a469fd*156f98",
+              "status": "AVAILABLE",
+              "capabilities": [
+                "CHARGING_PROFILE_CAPABLE",
+                "CHIP_CARD_SUPPORT",
+                "CONTACTLESS_CARD_SUPPORT",
+                "PED_TERMINAL",
+                "REMOTE_START_STOP_CAPABLE",
+                "RFID_READER",
+                "UNLOCK_CAPABLE",
+                "REMOTE_START_STOP_CAPABLE"
+              ],
+              "connectors": [
+                {
+                  "id": "e1ff675a-f9d0-42d3-b8e5-20a524184fbe",
+                  "standard": "IEC_62196_T2",
+                  "format": "SOCKET",
+                  "power_type": "AC_3_PHASE",
+                  "max_voltage": 240,
+                  "max_amperage": 32,
+                  "max_electric_power": 22000,
+                  "tariff_ids": [
+                    "caf84577-94ea-4bc5-af05-4c8384b47c7a"
+                  ],
+                  "terms_and_conditions": "https://3ti.co.uk/ev-charging-terms-conditions/",
+                  "last_updated": "2026-10-23T10:25:45.177Z"
+                }
+              ],
+              "coordinates": {
+                "latitude": "51.244900",
+                "longitude": "-0.591300"
+              },
+              "physical_reference": "3ti-0013-09",
+              "last_updated": "2026-10-23T10:25:45.177Z"
+            },
+            {
+              "uid": "62cd4170-24ca-4172-a552-10d656468b84",
+              "evse_id": "fd7bab*3c84c5",
+              "status": "AVAILABLE",
+              "capabilities": [
+                "CHARGING_PROFILE_CAPABLE",
+                "CHIP_CARD_SUPPORT",
+                "CONTACTLESS_CARD_SUPPORT",
+                "PED_TERMINAL",
+                "REMOTE_START_STOP_CAPABLE",
+                "RFID_READER",
+                "UNLOCK_CAPABLE",
+                "REMOTE_START_STOP_CAPABLE"
+              ],
+              "connectors": [
+                {
+                  "id": "2fa8e596-4c89-46eb-8618-67b7c4fba12e",
+                  "standard": "IEC_62196_T2",
+                  "format": "SOCKET",
+                  "power_type": "AC_3_PHASE",
+                  "max_voltage": 240,
+                  "max_amperage": 32,
+                  "max_electric_power": 22000,
+                  "tariff_ids": [
+                    "caf84577-94ea-4bc5-af05-4c8384b47c7a"
+                  ],
+                  "terms_and_conditions": "https://3ti.co.uk/ev-charging-terms-conditions/",
+                  "last_updated": "2026-10-22T15:36:02.252Z"
+                }
+              ],
+              "coordinates": {
+                "latitude": "51.244900",
+                "longitude": "-0.591300"
+              },
+              "physical_reference": "3ti-0013-02",
+              "last_updated": "2026-10-23T18:46:08.831Z"
+            },
+            {
+              "uid": "8c76cbef-48c2-4fe4-893f-20e96f881198",
+              "evse_id": "6a2796*b921c9",
+              "status": "AVAILABLE",
+              "capabilities": [
+                "CHARGING_PROFILE_CAPABLE",
+                "CHIP_CARD_SUPPORT",
+                "CONTACTLESS_CARD_SUPPORT",
+                "PED_TERMINAL",
+                "REMOTE_START_STOP_CAPABLE",
+                "RFID_READER",
+                "UNLOCK_CAPABLE",
+                "REMOTE_START_STOP_CAPABLE"
+              ],
+              "connectors": [
+                {
+                  "id": "49ca4609-7f5e-47c6-b247-09727906abb8",
+                  "standard": "IEC_62196_T2",
+                  "format": "SOCKET",
+                  "power_type": "AC_3_PHASE",
+                  "max_voltage": 240,
+                  "max_amperage": 32,
+                  "max_electric_power": 22000,
+                  "tariff_ids": [
+                    "caf84577-94ea-4bc5-af05-4c8384b47c7a"
+                  ],
+                  "terms_and_conditions": "https://3ti.co.uk/ev-charging-terms-conditions/",
+                  "last_updated": "2026-10-23T14:05:43.383Z"
+                }
+              ],
+              "coordinates": {
+                "latitude": "51.244900",
+                "longitude": "-0.591300"
+              },
+              "physical_reference": "3ti-0013-06",
+              "last_updated": "2026-10-23T14:05:43.383Z"
+            },
+            {
+              "uid": "a3d4edca-98b4-4924-8895-a60830271520",
+              "evse_id": "2d5cfb*c29592",
+              "status": "AVAILABLE",
+              "capabilities": [
+                "CHARGING_PROFILE_CAPABLE",
+                "CHIP_CARD_SUPPORT",
+                "CONTACTLESS_CARD_SUPPORT",
+                "PED_TERMINAL",
+                "REMOTE_START_STOP_CAPABLE",
+                "RFID_READER",
+                "UNLOCK_CAPABLE",
+                "REMOTE_START_STOP_CAPABLE"
+              ],
+              "connectors": [
+                {
+                  "id": "f946357b-d031-4e66-b5c0-ca44c1e06fc9",
+                  "standard": "IEC_62196_T2",
+                  "format": "SOCKET",
+                  "power_type": "AC_3_PHASE",
+                  "max_voltage": 240,
+                  "max_amperage": 32,
+                  "max_electric_power": 22000,
+                  "tariff_ids": [
+                    "caf84577-94ea-4bc5-af05-4c8384b47c7a"
+                  ],
+                  "terms_and_conditions": "https://3ti.co.uk/ev-charging-terms-conditions/",
+                  "last_updated": "2026-10-23T16:23:48.893Z"
+                }
+              ],
+              "coordinates": {
+                "latitude": "51.244900",
+                "longitude": "-0.591300"
+              },
+              "physical_reference": "3ti-0013-08",
+              "last_updated": "2026-10-23T16:23:48.893Z"
+            },
+            {
+              "uid": "b950c5c2-0c8c-493a-95bc-5c4508a81d0b",
+              "evse_id": "40604d*91f159",
+              "status": "AVAILABLE",
+              "capabilities": [
+                "CHARGING_PROFILE_CAPABLE",
+                "CHIP_CARD_SUPPORT",
+                "CONTACTLESS_CARD_SUPPORT",
+                "PED_TERMINAL",
+                "REMOTE_START_STOP_CAPABLE",
+                "RFID_READER",
+                "UNLOCK_CAPABLE",
+                "REMOTE_START_STOP_CAPABLE"
+              ],
+              "connectors": [
+                {
+                  "id": "d20b2675-ccfc-45e4-8209-cc84d9ddb138",
+                  "standard": "IEC_62196_T2",
+                  "format": "SOCKET",
+                  "power_type": "AC_3_PHASE",
+                  "max_voltage": 240,
+                  "max_amperage": 32,
+                  "max_electric_power": 22000,
+                  "tariff_ids": [
+                    "caf84577-94ea-4bc5-af05-4c8384b47c7a"
+                  ],
+                  "terms_and_conditions": "https://3ti.co.uk/ev-charging-terms-conditions/",
+                  "last_updated": "2026-10-23T12:17:30.135Z"
+                }
+              ],
+              "coordinates": {
+                "latitude": "51.244900",
+                "longitude": "-0.591300"
+              },
+              "physical_reference": "3ti-0013-12",
+              "last_updated": "2026-10-23T12:17:30.135Z"
+            },
+            {
+              "uid": "d129ba46-d95d-4773-a210-2d0be4ec18fb",
+              "evse_id": "d1b5c9*d00795",
+              "status": "AVAILABLE",
+              "capabilities": [
+                "CHARGING_PROFILE_CAPABLE",
+                "CHIP_CARD_SUPPORT",
+                "CONTACTLESS_CARD_SUPPORT",
+                "PED_TERMINAL",
+                "REMOTE_START_STOP_CAPABLE",
+                "RFID_READER",
+                "UNLOCK_CAPABLE",
+                "REMOTE_START_STOP_CAPABLE"
+              ],
+              "connectors": [
+                {
+                  "id": "0d8f86cb-2ff7-4de3-984f-59b1a11b9fb2",
+                  "standard": "IEC_62196_T2",
+                  "format": "SOCKET",
+                  "power_type": "AC_3_PHASE",
+                  "max_voltage": 240,
+                  "max_amperage": 32,
+                  "max_electric_power": 22000,
+                  "tariff_ids": [
+                    "caf84577-94ea-4bc5-af05-4c8384b47c7a"
+                  ],
+                  "terms_and_conditions": "https://3ti.co.uk/ev-charging-terms-conditions/",
+                  "last_updated": "2026-10-23T15:22:49.679Z"
+                }
+              ],
+              "coordinates": {
+                "latitude": "51.244900",
+                "longitude": "-0.591300"
+              },
+              "physical_reference": "3ti-0013-10",
+              "last_updated": "2026-10-23T15:22:49.679Z"
+            },
+            {
+              "uid": "eef6d5df-e8c1-4f61-b3e3-a04aa4ceabf6",
+              "evse_id": "be5b1f*c51e13",
+              "status": "AVAILABLE",
+              "capabilities": [
+                "CHARGING_PROFILE_CAPABLE",
+                "CHIP_CARD_SUPPORT",
+                "CONTACTLESS_CARD_SUPPORT",
+                "PED_TERMINAL",
+                "REMOTE_START_STOP_CAPABLE",
+                "RFID_READER",
+                "UNLOCK_CAPABLE",
+                "REMOTE_START_STOP_CAPABLE"
+              ],
+              "connectors": [
+                {
+                  "id": "e1382050-936f-41bc-aed7-99d4df492ad4",
+                  "standard": "IEC_62196_T2",
+                  "format": "SOCKET",
+                  "power_type": "AC_3_PHASE",
+                  "max_voltage": 240,
+                  "max_amperage": 32,
+                  "max_electric_power": 22000,
+                  "tariff_ids": [
+                    "caf84577-94ea-4bc5-af05-4c8384b47c7a"
+                  ],
+                  "terms_and_conditions": "https://3ti.co.uk/ev-charging-terms-conditions/",
+                  "last_updated": "2026-10-23T15:37:35.766Z"
+                }
+              ],
+              "coordinates": {
+                "latitude": "51.244900",
+                "longitude": "-0.591300"
+              },
+              "physical_reference": "3ti-0013-05",
+              "last_updated": "2026-10-23T15:37:35.766Z"
+            }
+          ],
+          "operator": {
+            "name": "University of Surrey"
+          },
+          "time_zone": "Europe/London",
+          "opening_times": {
+            "twentyfourseven": true
+          },
+          "charging_when_closed": false,
+          "last_updated": "2026-10-23T16:23:48.893Z"
+        }
+      ],
+      "timestamp": "2026-10-23T21:44:53.502Z"
+    }
+  }
+}

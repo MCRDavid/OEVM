@@ -1,0 +1,394 @@
+{
+  "request": {
+    "method": "GET",
+    "url": "https://api.fuuse.io/opendata/542c7548-899e-43e8-854c-05fd0f76dc70/location"
+  },
+  "response": {
+    "status_code": 200,
+    "headers": {
+      "content-type": "application/json; charset=utf-8",
+      "x-total-count": "1",
+      "x-limit": "1000"
+    },
+    "body": {
+      "status_code": 1000,
+      "data": [
+        {
+          "id": "98c1be30-0a73-48ed-9140-0402a0583829",
+          "publish": true,
+          "name": "ESBC Uttoxeter",
+          "address": "The Maltings Car Park",
+          "city": "Uttoxeter",
+          "postal_code": "ST14 7QE",
+          "state": "Staffordshire",
+          "country": "GBR",
+          "coordinates": {
+            "latitude": "52.899700",
+            "longitude": "-1.863700"
+          },
+          "parking_type": "PARKING_LOT",
+          "evses": [
+            {
+              "uid": "0e0a7d39-9644-48d0-87ce-c19d8373a64b",
+              "evse_id": "AE0022G1GNCC003651*1",
+              "status": "AVAILABLE",
+              "capabilities": [
+                "REMOTE_START_STOP_CAPABLE"
+              ],
+              "connectors": [
+                {
+                  "id": "72db3a8f-781e-4917-a11d-d335ba9591ae",
+                  "standard": "IEC_62196_T2",
+                  "format": "SOCKET",
+                  "power_type": "AC_3_PHASE",
+                  "max_voltage": 240,
+                  "max_amperage": 32,
+                  "max_electric_power": 22000,
+                  "tariff_ids": [
+                    "57fdf226-b279-47c4-afdc-b9c7daed294e"
+                  ],
+                  "last_updated": "2026-10-23T19:11:56.556Z"
+                }
+              ],
+              "coordinates": {
+                "latitude": "52.899700",
+                "longitude": "-1.863700"
+              },
+              "physical_reference": "3ti-0007-05",
+              "last_updated": "2026-10-23T19:11:56.556Z"
+            },
+            {
+              "uid": "2e59fc30-70e5-4331-b7ea-39905662e603",
+              "evse_id": "AE0022G1GNCC00333T*1",
+              "status": "AVAILABLE",
+              "capabilities": [
+                "REMOTE_START_STOP_CAPABLE"
+              ],
+              "connectors": [
+                {
+                  "id": "cd1e4778-ee60-4f7a-b330-e98daea72724",
+                  "standard": "IEC_62196_T2",
+                  "format": "SOCKET",
+                  "power_type": "AC_3_PHASE",
+                  "max_voltage": 240,
+                  "max_amperage": 32,
+                  "max_electric_power": 22000,
+                  "tariff_ids": [
+                    "57fdf226-b279-47c4-afdc-b9c7daed294e"
+                  ],
+                  "last_updated": "2026-10-23T10:10:01.933Z"
+                }
+              ],
+              "coordinates": {
+                "latitude": "52.899700",
+                "longitude": "-1.863700"
+              },
+              "physical_reference": "3ti-0007-11",
+              "last_updated": "2026-10-23T10:10:01.933Z"
+            },
+            {
+              "uid": "51849d7b-33cc-467d-befb-452483a82382",
+              "evse_id": "AE0022G1GNCC00401N*1",
+              "status": "AVAILABLE",
+              "capabilities": [
+                "REMOTE_START_STOP_CAPABLE"
+              ],
+              "connectors": [
+                {
+                  "id": "42418cb8-85a5-4215-9747-f295e7dd5a6f",
+                  "standard": "IEC_62196_T2",
+                  "format": "SOCKET",
+                  "power_type": "AC_3_PHASE",
+                  "max_voltage": 240,
+                  "max_amperage": 32,
+                  "max_electric_power": 22000,
+                  "tariff_ids": [
+                    "57fdf226-b279-47c4-afdc-b9c7daed294e"
+                  ],
+                  "last_updated": "2026-10-23T10:25:11.772Z"
+                }
+              ],
+              "coordinates": {
+                "latitude": "52.899700",
+                "longitude": "-1.863700"
+              },
+              "physical_reference": "3ti-0007-08",
+              "last_updated": "2026-10-23T21:06:42.256Z"
+            },
+            {
+              "uid": "5f1f8d3c-8679-49e1-8a64-a8e2b448aaf6",
+              "evse_id": "AE0022G1GNCC003875*1",
+              "status": "AVAILABLE",
+              "capabilities": [
+                "REMOTE_START_STOP_CAPABLE"
+              ],
+              "connectors": [
+                {
+                  "id": "ba2e809e-da4c-4302-9a3b-da391f518cda",
+                  "standard": "IEC_62196_T2",
+                  "format": "SOCKET",
+                  "power_type": "AC_3_PHASE",
+                  "max_voltage": 240,
+                  "max_amperage": 32,
+                  "max_electric_power": 22000,
+                  "tariff_ids": [
+                    "57fdf226-b279-47c4-afdc-b9c7daed294e"
+                  ],
+                  "last_updated": "2026-10-22T17:59:14.871Z"
+                }
+              ],
+              "coordinates": {
+                "latitude": "52.899700",
+                "longitude": "-1.863700"
+              },
+              "physical_reference": "3ti-0007-10",
+              "last_updated": "2026-10-23T10:05:51.756Z"
+            },
+            {
+              "uid": "7a9326aa-8fe1-41b3-9574-f9859f0ddc8b",
+              "evse_id": "AE0022G1GNCC00305S*1",
+              "status": "AVAILABLE",
+              "capabilities": [
+                "REMOTE_START_STOP_CAPABLE"
+              ],
+              "connectors": [
+                {
+                  "id": "c9014ced-3f50-4074-94cd-5432482bdeaa",
+                  "standard": "IEC_62196_T2",
+                  "format": "SOCKET",
+                  "power_type": "AC_3_PHASE",
+                  "max_voltage": 240,
+                  "max_amperage": 32,
+                  "max_electric_power": 22000,
+                  "tariff_ids": [
+                    "57fdf226-b279-47c4-afdc-b9c7daed294e"
+                  ],
+                  "last_updated": "2026-10-22T11:37:52.457Z"
+                }
+              ],
+              "coordinates": {
+                "latitude": "52.899700",
+                "longitude": "-1.863700"
+              },
+              "physical_reference": "3ti-0007-02",
+              "last_updated": "2026-10-23T10:05:51.861Z"
+            },
+            {
+              "uid": "8da09b83-0870-4556-9456-58c75f278222",
+              "evse_id": "AE0022G1GNCC003886*1",
+              "status": "AVAILABLE",
+              "capabilities": [
+                "REMOTE_START_STOP_CAPABLE"
+              ],
+              "connectors": [
+                {
+                  "id": "c1e44d80-7381-4082-9252-5791fab648cf",
+                  "standard": "IEC_62196_T2",
+                  "format": "SOCKET",
+                  "power_type": "AC_3_PHASE",
+                  "max_voltage": 240,
+                  "max_amperage": 32,
+                  "max_electric_power": 22000,
+                  "tariff_ids": [
+                    "57fdf226-b279-47c4-afdc-b9c7daed294e"
+                  ],
+                  "last_updated": "2026-10-23T12:09:36.891Z"
+                }
+              ],
+              "coordinates": {
+                "latitude": "52.899700",
+                "longitude": "-1.863700"
+              },
+              "physical_reference": "3ti-0007-04",
+              "last_updated": "2026-10-23T20:08:21.043Z"
+            },
+            {
+              "uid": "a79886b3-6cc4-40af-a0d4-07ae4b390ddd",
+              "evse_id": "AE0022G1GNCC004360*1",
+              "status": "AVAILABLE",
+              "capabilities": [
+                "REMOTE_START_STOP_CAPABLE"
+              ],
+              "connectors": [
+                {
+                  "id": "d01c36b3-9977-4e5c-9ec5-e42159a568f1",
+                  "standard": "IEC_62196_T2",
+                  "format": "SOCKET",
+                  "power_type": "AC_3_PHASE",
+                  "max_voltage": 415,
+                  "max_amperage": 31,
+                  "max_electric_power": 22000,
+                  "tariff_ids": [
+                    "57fdf226-b279-47c4-afdc-b9c7daed294e"
+                  ],
+                  "last_updated": "2026-10-20T19:13:34.067Z"
+                }
+              ],
+              "coordinates": {
+                "latitude": "52.899700",
+                "longitude": "-1.863700"
+              },
+              "physical_reference": "3ti-0007-03",
+              "last_updated": "2026-10-23T10:05:50.512Z"
+            },
+            {
+              "uid": "afb1d9dd-08a6-40ed-bbbf-ba40454d83dd",
+              "evse_id": "AE0022G1GNCC004977*1",
+              "status": "AVAILABLE",
+              "capabilities": [
+                "REMOTE_START_STOP_CAPABLE"
+              ],
+              "connectors": [
+                {
+                  "id": "51091aa4-a4c2-4844-991d-a91c717c2771",
+                  "standard": "IEC_62196_T2",
+                  "format": "SOCKET",
+                  "power_type": "AC_3_PHASE",
+                  "max_voltage": 240,
+                  "max_amperage": 32,
+                  "max_electric_power": 22000,
+                  "tariff_ids": [
+                    "57fdf226-b279-47c4-afdc-b9c7daed294e"
+                  ],
+                  "last_updated": "2026-10-22T08:00:22.198Z"
+                }
+              ],
+              "coordinates": {
+                "latitude": "52.899700",
+                "longitude": "-1.863700"
+              },
+              "physical_reference": "3ti-0007-01",
+              "last_updated": "2026-10-23T10:07:05.966Z"
+            },
+            {
+              "uid": "b5d641dc-c1ca-4ac2-b2b3-f3648c8b3191",
+              "evse_id": "AE0022G1GNCC003897*1",
+              "status": "AVAILABLE",
+              "capabilities": [
+                "REMOTE_START_STOP_CAPABLE"
+              ],
+              "connectors": [
+                {
+                  "id": "947f615d-1888-4b38-802d-f0042dcd5c87",
+                  "standard": "IEC_62196_T2",
+                  "format": "SOCKET",
+                  "power_type": "AC_3_PHASE",
+                  "max_voltage": 415,
+                  "max_amperage": 31,
+                  "max_electric_power": 22000,
+                  "tariff_ids": [
+                    "57fdf226-b279-47c4-afdc-b9c7daed294e"
+                  ],
+                  "last_updated": "2026-10-21T15:50:14.201Z"
+                }
+              ],
+              "coordinates": {
+                "latitude": "52.899700",
+                "longitude": "-1.863700"
+              },
+              "physical_reference": "3ti-0007-07",
+              "last_updated": "2026-10-23T10:05:50.512Z"
+            },
+            {
+              "uid": "d7fe0c13-e564-479a-bdcf-238537de6552",
+              "evse_id": "AE0022G1GNCC00480X*1",
+              "status": "AVAILABLE",
+              "capabilities": [
+                "REMOTE_START_STOP_CAPABLE"
+              ],
+              "connectors": [
+                {
+                  "id": "78697083-6a2b-4ee6-b3af-c17154425617",
+                  "standard": "IEC_62196_T2",
+                  "format": "SOCKET",
+                  "power_type": "AC_3_PHASE",
+                  "max_voltage": 415,
+                  "max_amperage": 31,
+                  "max_electric_power": 22000,
+                  "tariff_ids": [
+                    "57fdf226-b279-47c4-afdc-b9c7daed294e"
+                  ],
+                  "last_updated": "2026-10-17T08:00:22.555Z"
+                }
+              ],
+              "coordinates": {
+                "latitude": "52.899700",
+                "longitude": "-1.863700"
+              },
+              "physical_reference": "3ti-0007-12",
+              "last_updated": "2026-10-23T20:08:31.533Z"
+            },
+            {
+              "uid": "dcd8dff0-4ec5-4ef6-b448-6f6b971c76f9",
+              "evse_id": "AE0022G1GNCC004450*1",
+              "status": "AVAILABLE",
+              "capabilities": [
+                "REMOTE_START_STOP_CAPABLE"
+              ],
+              "connectors": [
+                {
+                  "id": "65e91bdc-e0f8-4e47-a562-ffde220e61c1",
+                  "standard": "IEC_62196_T2",
+                  "format": "SOCKET",
+                  "power_type": "AC_3_PHASE",
+                  "max_voltage": 415,
+                  "max_amperage": 31,
+                  "max_electric_power": 22000,
+                  "tariff_ids": [
+                    "57fdf226-b279-47c4-afdc-b9c7daed294e"
+                  ],
+                  "last_updated": "2026-10-22T08:00:26.008Z"
+                }
+              ],
+              "coordinates": {
+                "latitude": "52.899700",
+                "longitude": "-1.863700"
+              },
+              "physical_reference": "3ti-0007-06",
+              "last_updated": "2026-10-23T10:05:50.512Z"
+            },
+            {
+              "uid": "e38fe6de-60f9-4066-a0d8-1a828ba9a4d0",
+              "evse_id": "AE0022G1GNCC00453X*1",
+              "status": "AVAILABLE",
+              "capabilities": [
+                "REMOTE_START_STOP_CAPABLE"
+              ],
+              "connectors": [
+                {
+                  "id": "036b4dd5-9a00-47ea-9de6-23ee8dc44ba1",
+                  "standard": "IEC_62196_T2",
+                  "format": "SOCKET",
+                  "power_type": "AC_3_PHASE",
+                  "max_voltage": 240,
+                  "max_amperage": 32,
+                  "max_electric_power": 22000,
+                  "tariff_ids": [
+                    "57fdf226-b279-47c4-afdc-b9c7daed294e"
+                  ],
+                  "last_updated": "2026-10-22T08:00:22.411Z"
+                }
+              ],
+              "coordinates": {
+                "latitude": "52.899700",
+                "longitude": "-1.863700"
+              },
+              "physical_reference": "3ti-0007-09",
+              "last_updated": "2026-10-23T10:05:51.861Z"
+            }
+          ],
+          "operator": {
+            "name": "East Staffordshire Borough Council"
+          },
+          "time_zone": "Europe/London",
+          "opening_times": {
+            "twentyfourseven": true
+          },
+          "charging_when_closed": false,
+          "last_updated": "2026-10-23T19:11:56.556Z"
+        }
+      ],
+      "timestamp": "2026-10-23T21:45:25.496Z"
+    }
+  }
+}

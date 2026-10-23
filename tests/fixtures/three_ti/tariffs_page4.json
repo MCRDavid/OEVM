@@ -1,0 +1,60 @@
+{
+  "request": {
+    "method": "GET",
+    "url": "https://api.fuuse.io/opendata/542c7548-899e-43e8-854c-05fd0f76dc70/tariff"
+  },
+  "response": {
+    "status_code": 200,
+    "headers": {
+      "content-type": "application/json; charset=utf-8",
+      "x-total-count": "1",
+      "x-limit": "1000"
+    },
+    "body": {
+      "status_code": 1000,
+      "data": [
+        {
+          "id": "57fdf226-b279-47c4-afdc-b9c7daed294e",
+          "currency": "GBP",
+          "type": "AD_HOC_PAYMENT",
+          "tariff_alt_text": [
+            {
+              "language": "en",
+              "text": "ESBC Public Tariff"
+            }
+          ],
+          "elements": [
+            {
+              "price_components": [
+                {
+                  "type": "ENERGY",
+                  "price": "0.4500",
+                  "vat": "20.0000",
+                  "step_size": 1
+                },
+                {
+                  "type": "FLAT",
+                  "price": "0.0000",
+                  "vat": "20.0000",
+                  "step_size": 1
+                },
+                {
+                  "type": "TIME",
+                  "price": "0.0000",
+                  "vat": "20.0000",
+                  "step_size": 1
+                }
+              ],
+              "restrictions": {
+                "min_kwh": "0.1000",
+                "min_duration": 60
+              }
+            }
+          ],
+          "last_updated": "2026-05-22T09:16:24.546Z"
+        }
+      ],
+      "timestamp": "2026-10-23T21:48:36.752Z"
+    }
+  }
+}

@@ -26,14 +26,6 @@ more_endpoints:
       status: documented
       note: Riverbridge House, Surrey.
   - locations:
-      url: https://api.fuuse.io/opendata/6cd94287-a370-48ae-8079-a514a8ac2c7b/location
-      status: documented
-      note: Segen, Medway, from 3ti's public charge points page (read 2026-10-23).
-    tariffs:
-      url: https://api.fuuse.io/opendata/6cd94287-a370-48ae-8079-a514a8ac2c7b/tariff
-      status: documented
-      note: Segen, Medway.
-  - locations:
       url: https://api.fuuse.io/opendata/36bd06f3-5184-4939-a7a1-4c0c1dec5583/location
       status: documented
       note: >-
@@ -82,8 +74,8 @@ rate_limit:
     The limit is quoted from a comment in the script on 3ti's public charge points page,
     read as its lower figure, 1 request per 30 seconds. Arnold Clark Charge and ScottishPower
     Recharge use the same 31 second gap on the same host, and the client keeps one timer
-    for it. Six sites, each with a location and a tariff file, make 12 requests a run, so a
-    full run takes about 6 minutes.
+    for it. Five sites are read, each with a location and a tariff file, so a run makes 10
+    requests and takes about 5 minutes.
 supports_single_location: unknown
 cors: unknown
 attribution: >-
@@ -139,7 +131,10 @@ sources:
       Read on 2026-10-23. Lists six sites, each read from its own Fuuse open data address
       (with "location" or "tariff" added): Raigmore Hospital, Inverness; Riverbridge House,
       Surrey; Segen, Medway; University of Surrey, Surrey; East Staffordshire Borough
-      Council; Salford Royal Hospital. The addresses are in endpoints and more_endpoints.
+      Council; Salford Royal Hospital. The addresses are in endpoints and more_endpoints,
+      apart from Segen's, which are
+      https://api.fuuse.io/opendata/6cd94287-a370-48ae-8079-a514a8ac2c7b/location and
+      .../tariff (see findings).
       The page says "Prices include VAT" and its script multiplies each energy price by
       1.2.
   - url: https://3ti.co.uk/hfh-equipment-maintenance-tcs-2-2/
@@ -161,12 +156,40 @@ findings:
   - date: 2026-10-23
     kind: documentation
     summary: >-
-      3ti publishes its data per site rather than as one feed: each of six sites has its
-      own location and tariff address on Fuuse's open data host.
+      3ti publishes its data per site rather than as one feed: each of six sites listed on
+      its page has its own location and tariff address on Fuuse's open data host.
     handling: >-
-      The six pairs of addresses are read in turn and their records added together; each
-      record keeps the address it came from.
+      The pairs of addresses are read in turn and their records added together; each record
+      keeps the address it came from.
     evidence_url: https://3ti.co.uk/3ti-public-charge-points/
+  - date: 2026-10-23
+    kind: access
+    summary: >-
+      On 2026-10-23 the location and tariff addresses for Segen, Medway answered HTTP 204
+      with no content (the location address twice, about 8 minutes apart). The other five
+      sites answered with OCPI responses.
+    handling: >-
+      Segen's two addresses are not read, so its site is not on the map. They are listed in
+      sources and will be checked again.
+    evidence_url: https://api.fuuse.io/opendata/6cd94287-a370-48ae-8079-a514a8ac2c7b/location
+  - date: 2026-10-23
+    kind: spec_conformance
+    summary: >-
+      Locations and tariffs carry no country_code or party_id, which OCPI 2.2.1 requires.
+      EV Roam's register lists 3ti Energy Hubs as GB*3TI.
+    handling: >-
+      Record ids use "unknown" for the country and party, from this file, until the
+      operator's own data gives them.
+    evidence_url: https://api.fuuse.io/opendata/c3947832-9352-41fa-96c1-831215eea8e0/location
+  - date: 2026-10-23
+    kind: spec_conformance
+    summary: >-
+      Tariff prices and VAT rates are sent as strings (for example "0.2917" and "20.0000")
+      rather than numbers.
+    handling: >-
+      Read as the numbers they spell; the stated 20% VAT is added, so the map's prices match
+      the VAT-inclusive prices on 3ti's page.
+    evidence_url: https://api.fuuse.io/opendata/c3947832-9352-41fa-96c1-831215eea8e0/tariff
 notes: >-
   Found through EV Roam's ID register on 2026-10-23. The page is a live status page rather
   than a page about the regulations.
