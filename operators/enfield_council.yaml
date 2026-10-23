@@ -97,7 +97,42 @@ sources:
       Fuuse's help article "Open Data Access (ODA) Links - Overview" (updated 2026-09-07,
       read 2026-10-17). Each Fuuse customer has a "Location Data Link" and a "Tariff Data
       Link" and is expected to publish them on its own website.
-findings: []
+findings:
+  - date: 2026-10-23
+    kind: access
+    summary: >-
+      The host answered tariff requests sent soon after the location request with HTTP 429
+      and a page titled "The Fuuse API is currently being rate limited" (seen in a browser on
+      2026-10-23); a later request was answered normally. The council's page states no limit.
+    handling: >-
+      Requests to the host are spaced 31 seconds apart, as for the other operators on it. A
+      recording made that way on 2026-10-23 needed no retry.
+    evidence_url: https://api.fuuse.io/opendata/d73a73f9-d063-456c-9f25-b51765e5747f/tariff
+  - date: 2026-10-23
+    kind: spec_conformance
+    summary: >-
+      Locations and tariffs carry no country_code or party_id, which OCPI 2.2.1 requires.
+    handling: >-
+      Record ids use "unknown" for the country and party, from this file, until the
+      operator's own data gives them.
+    evidence_url: https://api.fuuse.io/opendata/d73a73f9-d063-456c-9f25-b51765e5747f/location
+  - date: 2026-10-23
+    kind: spec_conformance
+    summary: >-
+      Tariff prices, VAT rates and the minimum kWh are sent as strings (for example "0.4417",
+      "20.0000" and "0.1000") rather than numbers.
+    handling: Read as the numbers they spell. Values that are not numbers would be unknown.
+    evidence_url: https://api.fuuse.io/opendata/d73a73f9-d063-456c-9f25-b51765e5747f/tariff
+  - date: 2026-10-23
+    kind: data_quality
+    summary: >-
+      30 of 32 connectors, at 6 of the 7 locations, name no tariff (on 2026-10-23). Only the
+      2 connectors at Palace Gardens - Multi-storey name the feed's one tariff, "London
+      Borough of Enfield - Public Tariff DAY".
+    handling: >-
+      Connectors with no tariff show "Price unknown". The one tariff is not applied to them,
+      since the feed does not say it covers them.
+    evidence_url: https://api.fuuse.io/opendata/d73a73f9-d063-456c-9f25-b51765e5747f/location
 notes: >-
   The London Borough of Enfield runs some of the borough's public chargers itself on Fuuse's
   platform; the others belong to Ubitricity, BP Pulse and Char.gy. On 2026-10-23 the feed

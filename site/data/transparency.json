@@ -842,6 +842,137 @@
       ]
     },
     {
+      "id": "enfield_council",
+      "name": "Enfield Council",
+      "enabled": true,
+      "adapter": "ocpi_221",
+      "engagement": {
+        "status": "open_anonymous",
+        "label": "Open, no registration",
+        "headline": "Open, no registration (as of 2026-10-23)",
+        "as_of": "2026-10-23",
+        "last_request": null,
+        "last_response": null,
+        "last_response_text": "No request sent",
+        "evidence": [
+          {
+            "date": "2026-10-23",
+            "url": "https://www.enfield.gov.uk/services/roads-and-transport/electric-vehicle-charging",
+            "file": null,
+            "note": "The page links location data and tariff data on api.fuuse.io for \"the chargers supported by Fuuse and operated by the council\", under a sentence citing the Public Charge Point Regulations 2023. Read in a browser; the page answers HTTP 403 to this project's automated requests."
+          }
+        ],
+        "log": [
+          {
+            "date": "2026-10-17",
+            "action": "page_checked",
+            "action_label": "Operator's page checked",
+            "channel": null,
+            "channel_label": null,
+            "summary": "The council's electric vehicle charging page answered 403 to this project's automated requests, so its content could not be read. Web search summaries of the page say it links location data and tariff data for the chargers it runs on Fuuse. It needs reading in a browser.",
+            "quote": null,
+            "evidence_url": "https://www.enfield.gov.uk/services/roads-and-transport/electric-vehicle-charging",
+            "evidence_file": null
+          },
+          {
+            "date": "2026-10-23",
+            "action": "page_checked",
+            "action_label": "Operator's page checked",
+            "channel": null,
+            "channel_label": null,
+            "summary": "The page was read in a browser. It links location and tariff data on Fuuse's open data host for the chargers the council runs on Fuuse, which need no key.",
+            "quote": "In accordance with The Public Charge Point Regulations 2023 the following links will provide up-to-date information for the chargers supported by Fuuse and operated by the council",
+            "evidence_url": "https://www.enfield.gov.uk/services/roads-and-transport/electric-vehicle-charging",
+            "evidence_file": null
+          }
+        ]
+      },
+      "access_requested": null,
+      "access_granted": null,
+      "feeds": [
+        {
+          "kind": "locations",
+          "url": "https://api.fuuse.io/opendata/d73a73f9-d063-456c-9f25-b51765e5747f/location",
+          "status": "documented"
+        },
+        {
+          "kind": "tariffs",
+          "url": "https://api.fuuse.io/opendata/d73a73f9-d063-456c-9f25-b51765e5747f/tariff",
+          "status": "documented"
+        }
+      ],
+      "licence": {
+        "name": "OGL-3.0",
+        "url": "https://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/",
+        "checked": "2026-10-23"
+      },
+      "attribution": "Contains data from Enfield Council published under the Public Charge Point Regulations 2023, used in line with the Open Government Licence v3.0.",
+      "missing_publish_flag": null,
+      "swapped_coordinates": null,
+      "nonstandard_statuses": null,
+      "tariffs_from": null,
+      "nonstandard_parking_restrictions": null,
+      "zero_price_tariffs": null,
+      "vat_not_stated": null,
+      "vat_in_price": null,
+      "own_feed_over_copies": null,
+      "relay": null,
+      "expired_certificate": null,
+      "excluded_locations": null,
+      "rate_limit": {
+        "our_gap_seconds": 31.0,
+        "our_max_per_hour": 117,
+        "ours": "At least 31 s between requests to the operator's host, measured from the end of the previous request (at most 117 in any hour), retries included.",
+        "published": [],
+        "limits_checked": "2026-10-23",
+        "comparison": "No limit published (checked 2026-10-23). The gap is our own choice.",
+        "difference_from_regulations": "Neither the operator nor the regulations set a limit.",
+        "notes": "The council's page states no rate limit. The host answers quick repeat requests with HTTP 429 (\"The Fuuse API is currently being rate limited\"), and asked for 30 seconds when ScottishPower Recharge's files were recorded on 2026-10-11. The 31 second gap is this project's own choice, the same as for the other operators on this host. Each response holds every record, so a full run makes two requests."
+      },
+      "findings": [
+        {
+          "date": "2026-10-23",
+          "kind": "access",
+          "kind_label": "Access",
+          "summary": "The host answered tariff requests sent soon after the location request with HTTP 429 and a page titled \"The Fuuse API is currently being rate limited\" (seen in a browser on 2026-10-23); a later request was answered normally. The council's page states no limit.",
+          "handling": "Requests to the host are spaced 31 seconds apart, as for the other operators on it. A recording made that way on 2026-10-23 needed no retry.",
+          "evidence_url": "https://api.fuuse.io/opendata/d73a73f9-d063-456c-9f25-b51765e5747f/tariff",
+          "status": "open",
+          "resolved_date": null
+        },
+        {
+          "date": "2026-10-23",
+          "kind": "spec_conformance",
+          "kind_label": "Differs from OCPI 2.2.1",
+          "summary": "Locations and tariffs carry no country_code or party_id, which OCPI 2.2.1 requires.",
+          "handling": "Record ids use \"unknown\" for the country and party, from this file, until the operator's own data gives them.",
+          "evidence_url": "https://api.fuuse.io/opendata/d73a73f9-d063-456c-9f25-b51765e5747f/location",
+          "status": "open",
+          "resolved_date": null
+        },
+        {
+          "date": "2026-10-23",
+          "kind": "spec_conformance",
+          "kind_label": "Differs from OCPI 2.2.1",
+          "summary": "Tariff prices, VAT rates and the minimum kWh are sent as strings (for example \"0.4417\", \"20.0000\" and \"0.1000\") rather than numbers.",
+          "handling": "Read as the numbers they spell. Values that are not numbers would be unknown.",
+          "evidence_url": "https://api.fuuse.io/opendata/d73a73f9-d063-456c-9f25-b51765e5747f/tariff",
+          "status": "open",
+          "resolved_date": null
+        },
+        {
+          "date": "2026-10-23",
+          "kind": "data_quality",
+          "kind_label": "Data quirk",
+          "summary": "30 of 32 connectors, at 6 of the 7 locations, name no tariff (on 2026-10-23). Only the 2 connectors at Palace Gardens - Multi-storey name the feed's one tariff, \"London Borough of Enfield - Public Tariff DAY\".",
+          "handling": "Connectors with no tariff show \"Price unknown\". The one tariff is not applied to them, since the feed does not say it covers them.",
+          "evidence_url": "https://api.fuuse.io/opendata/d73a73f9-d063-456c-9f25-b51765e5747f/location",
+          "status": "open",
+          "resolved_date": null
+        }
+      ]
+    },
+    {
       "id": "evolt",
       "name": "Evolt Network",
       "enabled": true,
@@ -4322,63 +4453,6 @@
         "comparison": "The operator's pages have not been checked for limits yet.",
         "difference_from_regulations": "Not known yet.",
         "notes": null
-      },
-      "findings": []
-    },
-    {
-      "id": "enfield_council",
-      "name": "Enfield Council",
-      "enabled": false,
-      "adapter": "unknown",
-      "engagement": {
-        "status": "unknown",
-        "label": "Not yet established",
-        "headline": "Not yet established (as of 2026-10-17)",
-        "as_of": "2026-10-17",
-        "last_request": null,
-        "last_response": null,
-        "last_response_text": "No request sent",
-        "evidence": [],
-        "log": [
-          {
-            "date": "2026-10-17",
-            "action": "page_checked",
-            "action_label": "Operator's page checked",
-            "channel": null,
-            "channel_label": null,
-            "summary": "The council's electric vehicle charging page answered 403 to this project's automated requests, so its content could not be read. Web search summaries of the page say it links location data and tariff data for the chargers it runs on Fuuse. It needs reading in a browser.",
-            "quote": null,
-            "evidence_url": "https://www.enfield.gov.uk/services/roads-and-transport/electric-vehicle-charging",
-            "evidence_file": null
-          }
-        ]
-      },
-      "access_requested": null,
-      "access_granted": null,
-      "feeds": [],
-      "licence": null,
-      "attribution": null,
-      "missing_publish_flag": null,
-      "swapped_coordinates": null,
-      "nonstandard_statuses": null,
-      "tariffs_from": null,
-      "nonstandard_parking_restrictions": null,
-      "zero_price_tariffs": null,
-      "vat_not_stated": null,
-      "vat_in_price": null,
-      "own_feed_over_copies": null,
-      "relay": null,
-      "expired_certificate": null,
-      "excluded_locations": null,
-      "rate_limit": {
-        "our_gap_seconds": 31.0,
-        "our_max_per_hour": 117,
-        "ours": "At least 31 s between requests to the operator's host, measured from the end of the previous request (at most 117 in any hour), retries included.",
-        "published": [],
-        "limits_checked": "unknown",
-        "comparison": "The operator's pages have not been checked for limits yet.",
-        "difference_from_regulations": "Not known yet.",
-        "notes": "No feed read yet. The council's chargers run on Fuuse, whose open data host (api.fuuse.io) asks for 30 seconds between requests, so any feed there would use the same 31 second gap as Arnold Clark Charge and ScottishPower Recharge."
       },
       "findings": []
     },
