@@ -9,6 +9,7 @@ Prints counts and OCPI codes only: never a name, address, owner, id, coordinate 
 Keeps at least 7 seconds between requests (Monta: 10 requests a minute, plus 1 second).
 """
 
+import base64
 import json
 import os
 import re
@@ -25,6 +26,7 @@ from pipeline.geography import place_in_uk
 API = "https://public-api.monta.com/api/v1"
 GAP_SECONDS = 7.0
 MAX_PAGES = 600
+SIZES = (100, 10, 1)
 CODE = re.compile(r"[A-Za-z0-9_\-]{1,40}")
 SCOPES = {"all", "charge-points", "charge-transactions", "control-charging"}
 BUSINESS = re.compile(
@@ -167,6 +169,9 @@ def main() -> int:
         if base is None:
             return report(summary, 0)
         first = response
+        level = streak = 0
+        shapes: dict = {}
+        cursor_forms: Counter = Counter()
         while pages < MAX_PAGES:
             if pages == 0:
                 response = first
@@ -174,14 +179,12 @@ def main() -> int:
                     k: clean(v, 40) for k, v in response.headers.items() if "ratelimit" in k.lower()
                 }
             else:
-                # Run 2 got HTTP 500 at page 17. Retry that page once after 30 seconds,
-                # then once with 10 per page, before giving up.
-                for attempt, size in enumerate((None, None, "10")):
-                    if attempt == 1:
-                        time.sleep(30)
-                    params = dict(base, after=after)
-                    if size:
-                        params["per_page"] = size
+                # Runs 2 and 3 got HTTP 500 part-way, and pages of 10 often worked where
+                # pages of 100 failed. Drop to 10, then 1, after a failure; go back up a
+                # size after 5 pages that work. A failure at size 1 ends the run.
+                while True:
+                    params = dict(base, after=after, per_page=str(SIZES[level]))
+                    note_cursor(after, totals, cursor_forms)
                     response = send(
                         client,
                         "GET",
@@ -190,10 +193,14 @@ def main() -> int:
                         headers={"Authorization": f"Bearer {token}"},
                     )
                     if response.status_code == 200:
-                        if attempt:
-                            totals[f"pages_that_worked_on_try_{attempt + 1}"] += 1
+                        totals[f"pages_of_{SIZES[level]}_read"] += 1
+                        streak += 1
                         break
-                    totals[f"http_{response.status_code}_answers"] += 1
+                    totals[f"http_{response.status_code}_answers_at_size_{SIZES[level]}"] += 1
+                    streak = 0
+                    if level == len(SIZES) - 1:
+                        break
+                    level += 1
             if response.status_code != 200:
                 summary["stopped_at_page"] = pages + 1
                 summary["stop_http_status"] = response.status_code
@@ -207,6 +214,11 @@ def main() -> int:
                 break
             for location in records:
                 count(location, counts, totals, operators)
+                if len(shapes) < 20_000:
+                    note_shape(location, "", shapes)
+            if level and streak >= 5:
+                level -= 1
+                streak = 0
             meta = body.get("meta", {}) if isinstance(body, dict) else {}
             pagination = meta.get("pagination", {}) if isinstance(meta, dict) else {}
             after = pagination.get("after")
@@ -224,7 +236,58 @@ def main() -> int:
             clean(n, 60): c for n, c in operators.most_common() if c >= 5
         }
         summary["counts"] = {name: dict(c.most_common()) for name, c in counts.items()}
+        summary["cursor_forms"] = dict(cursor_forms.most_common())
+        # Field paths and the kinds of value seen, never the values: to build a made-up
+        # fixture in the same shape.
+        summary["record_shape"] = {path: sorted(kinds) for path, kinds in sorted(shapes.items())}
     return report(summary, 0)
+
+
+def note_cursor(after: object, totals: Counter, forms: Counter) -> None:
+    """The form of a paging cursor, never its value: length, characters, and, if it is
+    base64 for JSON, the JSON's keys and kinds of value."""
+    if not isinstance(after, str):
+        forms["not text"] += 1
+        return
+    kind = (
+        "digits"
+        if after.isdigit()
+        else "hex"
+        if re.fullmatch(r"[0-9a-fA-F-]+", after)
+        else "base64-like"
+        if re.fullmatch(r"[A-Za-z0-9+/=_-]+", after)
+        else "other"
+    )
+    form = f"{kind}, {len(after)} characters"
+    if kind == "base64-like":
+        try:
+            padded = after + "=" * (-len(after) % 4)
+            decoded = base64.urlsafe_b64decode(padded.replace("+", "-").replace("/", "_"))
+            value = json.loads(decoded)
+            if isinstance(value, dict):
+                form += ", base64 JSON " + ",".join(
+                    f"{k}:{type(v).__name__}" for k, v in sorted(value.items())
+                )
+            else:
+                form += f", base64 JSON {type(value).__name__}"
+        except (ValueError, UnicodeDecodeError):
+            pass
+    forms[form] += 1
+
+
+def note_shape(value: object, path: str, shapes: dict) -> None:
+    """Record each field path in value and the kind of value found there."""
+    if isinstance(value, dict):
+        shapes.setdefault(path or ".", set()).add("object")
+        for key, item in value.items():
+            name = key if CODE.fullmatch(str(key)) else "other"
+            note_shape(item, f"{path}.{name}", shapes)
+    elif isinstance(value, list):
+        shapes.setdefault(path, set()).add("list" if value else "empty list")
+        for item in value:
+            note_shape(item, f"{path}[]", shapes)
+    else:
+        shapes.setdefault(path, set()).add(type(value).__name__)
 
 
 def count(location: object, counts: dict, totals: Counter, operators: Counter) -> None:
@@ -285,6 +348,21 @@ def count(location: object, counts: dict, totals: Counter, operators: Counter) -
         counts["party_id_of_active_locations"][code(location.get("party_id"))] += 1
         if published and in_uk:
             totals["mappable_publish_true_in_uk_with_an_evse_not_removed"] += 1
+            if not isinstance(owner, str) or not owner.strip():
+                totals["mappable_owner_missing"] += 1
+            elif BUSINESS.search(owner):
+                totals["mappable_owner_business_like"] += 1
+            else:
+                totals["mappable_owner_other"] += 1
+                if owner.strip().lower() in address:
+                    totals["mappable_owner_name_part_of_address"] += 1
+            if isinstance(name, str) and STARTS_WITH_NUMBER.match(name):
+                totals["mappable_name_starts_with_a_number"] += 1
+            if isinstance(name, str) and private_words(name):
+                totals["mappable_name_marks_it_private"] += 1
+            same = isinstance(name, str) and isinstance(owner, str) and owner.strip()
+            if same and owner.strip().lower() == name.strip().lower():
+                totals["mappable_name_is_the_owner_name"] += 1
             if location.get("parking_type") == "ON_DRIVEWAY":
                 totals["mappable_on_driveway"] += 1
     any_tariff_object = False
