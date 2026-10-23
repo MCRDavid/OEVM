@@ -39,7 +39,7 @@ def test_every_output_validates_against_its_exported_schema(results, tmp_path):
     jsonschema.validate(layer, schema("map-layer"))
     jsonschema.validate(json.loads((data / "manifest.json").read_text()), schema("manifest"))
     details = sorted((data / "loc").glob("*/*.json"))
-    assert len(details) == len(layer["features"]) == 71
+    assert len(details) == len(layer["features"]) == 85
     for path in details:
         jsonschema.validate(json.loads(path.read_text()), schema("location-detail"))
 
@@ -63,11 +63,13 @@ def test_the_manifest_records_operators_attribution_and_sizes(results, tmp_path)
     manifest = out.manifest
     assert set(manifest.operators) == {
         "arnold_clark_charge",
+        "bright_green",
         "chargeplace_scotland",
         "chargy",
         "clenergy_ev",
         "evolt",
         "geniepoint",
+        "globe_ev",
         "jolt",
         "mer_uk",
         "mfg_ev_power",
@@ -82,7 +84,7 @@ def test_the_manifest_records_operators_attribution_and_sizes(results, tmp_path)
         assert entry.licence == "OGL-3.0"
     sizes = {f.path: f for f in manifest.files}
     assert sizes["data/locations.geojson"].bytes > sizes["data/locations.geojson"].gzip_bytes > 0
-    assert sizes["data/loc/"].files == 71
+    assert sizes["data/loc/"].files == 85
     assert any("gzipped" in line for line in out.report)
 
 
@@ -246,13 +248,52 @@ def test_obviously_swapped_coordinates_are_swapped_back_and_marked(results, tmp_
         "longitude": 51.467819,
     }
     assert "wrong way round" in detail["coordinates_corrected"]["note"]
-    # Evolt Network's Glasgow location is the only other one corrected (a minus sign).
+    # Evolt Network's Glasgow location and BrightGreen's Kiln Farm Station, named by the owner,
+    # are the only others corrected (a minus sign each).
     glasgow = publish.location_key("evolt:GB:SSM:1261778")
+    kiln = publish.location_key(KILN_FARM)
     others = [
-        p for p in (tmp_path / "data" / "loc").glob("*/*.json") if p.stem not in (key, glasgow)
+        p
+        for p in (tmp_path / "data" / "loc").glob("*/*.json")
+        if p.stem not in (key, glasgow, kiln)
     ]
     assert all(json.loads(p.read_text())["coordinates_corrected"] is None for p in others)
     assert any("1 with coordinates corrected" in line for line in out.report)
+
+
+KILN_FARM = "bright_green:GB:unknown:4cbfa56a-07da-4cf1-90be-8277667b4158"
+
+
+def test_a_minus_sign_is_added_only_to_a_location_the_owner_named(results, tmp_path):
+    # Kiln Farm Station (MK11 3LW) is published at longitude .82, in Suffolk: inside the UK, so
+    # only the owner's naming it in swapped_coordinates.sign_missing moves it (ADR 0013).
+    out = published(results, tmp_path)
+    entry = out.manifest.operators["bright_green"]
+    assert entry.corrected_ids == [KILN_FARM]
+    key = publish.location_key(KILN_FARM)
+    detail = json.loads((tmp_path / "data" / "loc" / key[:2] / f"{key}.json").read_text())
+    assert detail["location"]["coordinates"] == {"latitude": 52.04, "longitude": -0.82}
+    assert detail["coordinates_corrected"]["published"] == {"latitude": 52.04, "longitude": 0.82}
+    assert "away from the place its postcode names" in detail["coordinates_corrected"]["note"]
+    bright_green = load_registry()["bright_green"]
+    unnamed = bright_green.swapped_coordinates.model_copy(update={"sign_missing": []})
+    operators = load_registry() | {
+        "bright_green": bright_green.model_copy(update={"swapped_coordinates": unnamed})
+    }
+    again = published(results, tmp_path / "unnamed", operators)
+    assert again.manifest.operators["bright_green"].corrected == 0
+    assert again.manifest.operators["bright_green"].mapped == entry.mapped
+
+
+def test_a_named_location_keeps_its_place_once_the_feed_sends_a_new_postcode(results):
+    bright_green = next(r for r in results if r.operator_id == "bright_green")
+    kiln = next(loc for loc in bright_green.locations if loc.id == KILN_FARM)
+    config = load_registry()["bright_green"]
+    assert publish.corrected_coordinates(kiln, config) is not None
+    moved = kiln.model_copy(
+        update={"address": kiln.address.model_copy(update={"postal_code": "IP14 1AA"})}
+    )
+    assert publish.corrected_coordinates(moved, config) is None
 
 
 def _swapped_location(results, **address):
@@ -442,6 +483,15 @@ def test_price_per_kwh_is_only_given_with_vat(results, tmp_path):
     # char.gy's feed states no VAT; the owner decided to add 20% (vat_not_stated).
     assert by_operator["chargy"] == {59.0}
     assert 49.2 in by_operator["jolt"]
+    # BrightGreen states VAT at 20%, read as already in its prices by the owner's decision.
+    assert 59.0 in by_operator["bright_green"] and 70.8 not in by_operator["bright_green"]
+
+
+def test_without_the_in_price_decision_stated_vat_is_added(results, tmp_path):
+    operators = load_registry()
+    operators["bright_green"] = operators["bright_green"].model_copy(update={"vat_in_price": None})
+    by_operator = _ppk_by_operator(results, tmp_path, operators)
+    assert 70.8 in by_operator["bright_green"] and 59.0 not in by_operator["bright_green"]
 
 
 def test_without_the_vat_decision_a_price_with_no_vat_has_no_price_per_kwh(results, tmp_path):
@@ -454,7 +504,7 @@ def test_vat_is_added_only_where_the_owner_decided_and_the_tariffs_stay_as_publi
     results, tmp_path
 ):
     decided = {i for i, c in load_registry().items() if c.vat_not_stated}
-    assert decided == {"chargy", "clenergy_ev"}
+    assert decided == {"chargy", "clenergy_ev", "globe_ev"}
     for properties, detail in _layer_and_details(results, tmp_path):
         texts = [o["text"] for o in detail["tariff_options"] if o["state"] == "priced"]
         added = [t for t in texts if "added by this project" in t]

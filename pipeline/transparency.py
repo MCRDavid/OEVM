@@ -81,6 +81,14 @@ VAT_RULE = {
         'published and marked "VAT not stated". The tariffs themselves are published '
         "unchanged."
     ),
+    "in_price": (
+        "A feed can also give each price as drivers see it. Where that display price equals "
+        "the price with no VAT added, although the feed states a VAT rate, adding the rate "
+        "would show a price higher than the operator displays. On 23 October 2026 the "
+        "repository owner decided that for each operator listed here, the VAT its feed "
+        "states is read as already in its prices: each price is shown as published, "
+        "including VAT, and says it was read as the operator's display price shows it."
+    ),
 }
 
 # Chargers hidden unless a visitor asks to see them (pipeline/access.py, ADR 0023).
@@ -297,6 +305,10 @@ def operator_view(config: OperatorConfig) -> dict:
             {
                 "decided": str(config.swapped_coordinates.decided),
                 "basis": config.swapped_coordinates.basis,
+                "sign_missing": [
+                    {"id": n.id, "name": n.name, "postal_code": n.postal_code}
+                    for n in config.swapped_coordinates.sign_missing
+                ],
             }
             if config.swapped_coordinates
             else None
@@ -349,6 +361,25 @@ def operator_view(config: OperatorConfig) -> dict:
                 "add_percent": config.vat_not_stated.add_percent,
             }
             if config.vat_not_stated
+            else None
+        ),
+        "vat_in_price": (
+            {
+                "decided": str(config.vat_in_price.decided),
+                "basis": config.vat_in_price.basis,
+                "evidence_url": config.vat_in_price.evidence_url,
+            }
+            if config.vat_in_price
+            else None
+        ),
+        "own_feed_over_copies": (
+            {
+                "decided": str(config.own_feed_over_copies.decided),
+                "basis": config.own_feed_over_copies.basis,
+                "evidence_url": config.own_feed_over_copies.evidence_url,
+                "operators": list(config.own_feed_over_copies.operators),
+            }
+            if config.own_feed_over_copies
             else None
         ),
         "relay": (
@@ -428,6 +459,8 @@ def last_reviewed(operators: dict[str, OperatorConfig]) -> str:
             config.tariffs_from.decided if config.tariffs_from else None,
             config.zero_price_tariffs.decided if config.zero_price_tariffs else None,
             config.vat_not_stated.decided if config.vat_not_stated else None,
+            config.vat_in_price.decided if config.vat_in_price else None,
+            config.own_feed_over_copies.decided if config.own_feed_over_copies else None,
             config.expired_certificate.decided if config.expired_certificate else None,
             config.excluded_locations.decided if config.excluded_locations else None,
         ]
@@ -511,6 +544,16 @@ def _sources_table(data: dict) -> str:
                 f"of {_e(swapped['decided'])}: "
                 f"{_e(swapped['basis'])}"
             )
+            if swapped["sign_missing"]:
+                named = ", ".join(
+                    f"{_e(n['name'])} ({_e(n['postal_code'])}, id {_e(n['id'])})"
+                    for n in swapped["sign_missing"]
+                )
+                fetched = fetched.rstrip(".")
+                fetched += (
+                    ". Named by the owner as missing a minus sign although the point as "
+                    f"published is inside the UK: {named}"
+                )
         statuses = op["nonstandard_statuses"]
         if op["enabled"] and statuses:
             fetched = fetched.rstrip(".")  # a basis may end with its own full stop
@@ -557,6 +600,25 @@ def _sources_table(data: dict) -> str:
                 f". Prices that give no VAT rate have VAT at {_e(rate)} "
                 f"added, by the owner's decision of {_e(vat['decided'])}: {_e(vat['basis'])} "
                 f"({_link(vat['evidence_url'], 'evidence')})"
+            )
+        in_price = op["vat_in_price"]
+        if op["enabled"] and in_price:
+            fetched = fetched.rstrip(".")
+            fetched += (
+                ". The VAT each price states is read as already in the price, so it is not "
+                f"added again, by the owner's decision of {_e(in_price['decided'])}: "
+                f"{_e(in_price['basis'])} ({_link(in_price['evidence_url'], 'evidence')})"
+            )
+        copies = op["own_feed_over_copies"]
+        if op["enabled"] and copies:
+            names = ", ".join(_e(names_by_id.get(i, i)) for i in copies["operators"])
+            fetched = fetched.rstrip(".")
+            fetched += (
+                f". While its own locations are on the map, the locations {names} "
+                f"{'sends' if len(copies['operators']) == 1 else 'send'} under its country "
+                "and party codes are left off and listed on the feed health page, by the "
+                f"owner's decision of {_e(copies['decided'])}: {_e(copies['basis'])} "
+                f"({_link(copies['evidence_url'], 'evidence')})"
             )
         certificate = op["expired_certificate"]
         if op["enabled"] and certificate:
@@ -757,6 +819,12 @@ def render_html(data: dict) -> str:
         for op in data["operators"]
         if op["enabled"] and op["vat_not_stated"]
     )
+    vat_in_price = "".join(
+        f"<li>{_e(op['name'])}: decided {_e(op['vat_in_price']['decided'])} "
+        f"({_link(op['vat_in_price']['evidence_url'], 'evidence')})</li>"
+        for op in data["operators"]
+        if op["enabled"] and op["vat_in_price"]
+    )
     private = data["private_rule"]
     phrases = "".join(f"<li>{_e(p)}</li>" for p in private["phrases"])
     regulation_quotes = "".join(
@@ -817,6 +885,8 @@ are shown as unknown, never guessed. Only prices in pounds sterling are shown.</
 <p>{_e(vat["observed"])}</p>
 <p>{_e(vat["decision"])}</p>
 <ul>{vat_added or "<li>None</li>"}</ul>
+<p>{_e(vat["in_price"])}</p>
+<ul>{vat_in_price or "<li>None</li>"}</ul>
 <h2 id="private">Private and restricted chargers</h2>
 <p>{_e(private["summary"])}</p>
 <ul>{phrases}</ul>

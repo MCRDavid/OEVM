@@ -51,6 +51,19 @@ licence:
     operators can be switched on without asking again, and on 2026-10-23 asked for the new
     feeds whose terms allow use to be switched on.
   checked: 2026-10-23
+vat_not_stated:
+  decided: 2026-10-23
+  basis: >-
+    Globe EV's feed gives no VAT rate on any price, and its website gives no charging prices
+    to compare (read 23 October 2026). Of the 10 prices per kWh in pounds in its tariffs
+    file of 23 October 2026, 9 come to a whole penny, to within 0.02p, once 20% is added
+    (for example 0.4334 becomes 52p), while only 3 are whole pence as published, the same
+    pattern as Clenergy EV's prices on the same platform. This suggests prices with VAT at
+    20%, the UK standard rate on public charging, taken off; that is inferred from the
+    figures, not stated by Globe EV. The repository owner decided that VAT at 20% is added,
+    so prices on the map all include VAT and can be compared.
+  evidence_url: https://api.evdot.clenergy.online/development/pcpr/tariffs
+  add_percent: 20
 engagement:
   status: open_anonymous
   evidence:
@@ -133,8 +146,9 @@ findings:
       come to a whole penny, to within 0.02p, once 20% is added (for example 0.4334 becomes
       52p), against 3 as published, the same pattern as Clenergy EV's prices.
     handling: >-
-      Prices are shown as published and marked "excluding VAT, VAT not stated" until the
-      repository owner decides whether VAT is added. The tariffs are published unchanged.
+      VAT at 20% is added to each price that gives no rate, by the repository owner's
+      decision of 2026-10-23 (vat_not_stated above), and each such price says the VAT was
+      added by this project. The tariffs are published unchanged.
     evidence_url: https://api.evdot.clenergy.online/development/pcpr/tariffs
 notes: >-
   Globe EV's files are OCPI 2.2.1 records inside Clenergy's wrapper, so the ocpi_221 adapter

@@ -15,6 +15,9 @@ regulations describe the price in reference data as "the price in pence per kilo
 - Where the owner has recorded vat_not_stated in the operator file (ADR 0003, amended 22
   October 2026), its rate is added to each component that gives no VAT figure
   (`added_vat`), and the price says this project added it.
+- Where the owner has recorded vat_in_price in the operator file (ADR 0003, amended 23
+  October 2026), `added_vat` is VAT_IN_PRICE: a component's stated VAT is read as already
+  in its price, so nothing is added, and the price says it was read that way.
 - Sums are done in exact decimal arithmetic, so half pennies round up as expected.
 - Reservation fees are not shown as charging prices.
 - Prices that apply only at some times or after some time are shown with their
@@ -54,6 +57,10 @@ TARIFF_KINDS = {
     "profile_green": "When the session is set to the greenest charging",
 }
 UNSTATED_KIND = "How to pay is not stated"
+# `added_vat` when the operator file records vat_in_price: stated VAT is already in prices.
+VAT_IN_PRICE: Literal["in_price"] = "in_price"
+VatReading = float | Literal["in_price"] | None
+IN_PRICE_NOTE = "including VAT, read as the operator's display price shows it"
 WEEK = ("monday", "tuesday", "wednesday", "thursday", "friday", "saturday", "sunday")
 
 
@@ -162,24 +169,28 @@ def _reachable(elements: list[TariffElement], kind: str) -> list[tuple[PriceComp
     return found
 
 
-def _rate(component: PriceComponent, added_vat: float | None) -> float | None:
+def _rate(component: PriceComponent, added_vat: VatReading) -> float | None:
     # The component's own VAT figure, or the rate the owner decided to add when it has none.
-    return component.vat if component.vat is not None else added_vat
+    if component.vat is not None or added_vat == VAT_IN_PRICE:
+        return component.vat
+    return added_vat
 
 
-def _vat_stated(components: list[PriceComponent], added_vat: float | None = None) -> bool:
+def _vat_stated(components: list[PriceComponent], added_vat: VatReading = None) -> bool:
     # A zero price is zero with or without VAT, so only priced components decide this.
     return all(_rate(c, added_vat) is not None for c in components if c.price > 0)
 
 
-def _vat_added(components: list[PriceComponent], added_vat: float | None) -> bool:
-    return added_vat is not None and any(c.vat is None for c in components if c.price > 0)
+def _vat_added(components: list[PriceComponent], added_vat: VatReading) -> bool:
+    if added_vat is None or added_vat == VAT_IN_PRICE:
+        return False
+    return any(c.vat is None for c in components if c.price > 0)
 
 
-def _amount(component: PriceComponent, vat_stated: bool, added_vat: float | None = None) -> Decimal:
+def _amount(component: PriceComponent, vat_stated: bool, added_vat: VatReading = None) -> Decimal:
     price = _decimal(component.price)
     rate = _rate(component, added_vat)
-    if vat_stated and rate is not None:
+    if vat_stated and rate is not None and added_vat != VAT_IN_PRICE:
         return price * (1 + _decimal(rate) / 100)
     return price
 
@@ -196,11 +207,12 @@ def _gbp_problem(tariff: Tariff) -> PriceDisplay | None:
 
 
 def energy_range(
-    tariff: Tariff, added_vat: float | None = None
+    tariff: Tariff, added_vat: VatReading = None
 ) -> tuple[Decimal, Decimal, bool] | None:
     """Lowest and highest price per kWh that can apply, in pounds, and whether VAT is
-    included. added_vat is the rate from the operator's vat_not_stated decision, if any.
-    None when the tariff is not in GBP or gives no energy price."""
+    included. added_vat is the rate from the operator's vat_not_stated decision, or
+    VAT_IN_PRICE from its vat_in_price decision, if any. None when the tariff is not in GBP
+    or gives no energy price."""
     if tariff.currency != DISPLAY_CURRENCY:
         return None
     elements = _charging_elements(tariff)
@@ -224,11 +236,12 @@ ZERO_PRICE_WITHHELD = (
 
 
 def describe_tariff(
-    tariff: Tariff, *, zero_price_withheld: bool = False, added_vat: float | None = None
+    tariff: Tariff, *, zero_price_withheld: bool = False, added_vat: VatReading = None
 ) -> PriceDisplay:
     """The price text the map shows for one tariff. zero_price_withheld is True only for a
     tariff the owner names in zero_price_tariffs (ADR 0022). added_vat is the rate from
-    the operator's vat_not_stated decision, if any."""
+    the operator's vat_not_stated decision, or VAT_IN_PRICE from its vat_in_price
+    decision, if any."""
     problem = _gbp_problem(tariff)
     if problem:
         return problem
@@ -273,10 +286,14 @@ def describe_tariff(
             f"including VAT, with VAT at {added_vat:g}% added by this project where the "
             "operator's feed does not state it"
         )
+    elif vat_stated and added_vat == VAT_IN_PRICE:
+        vat_note = IN_PRICE_NOTE
     # Semicolons separate kinds of charge when a list of conditional prices uses commas.
     joiner = "; plus " if any(", " in part for part in parts) else ", plus "
     text = f"{joiner.join(parts)} {vat_note}"
-    if tariff.min_price and added_vat is not None:
+    if tariff.min_price and added_vat == VAT_IN_PRICE:
+        text += f"; minimum charge {pounds(tariff.min_price)} {IN_PRICE_NOTE}"
+    elif tariff.min_price and added_vat is not None:
         minimum = _decimal(tariff.min_price) * (1 + _decimal(added_vat) / 100)
         text += f"; minimum charge {pounds(minimum)} including VAT added by this project"
     elif tariff.min_price:

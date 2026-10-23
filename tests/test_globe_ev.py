@@ -55,16 +55,18 @@ def test_tariffs_without_a_party_use_the_operator_files_party():
     assert referenced == {tariff.id for tariff in result.tariffs}
 
 
-def test_prices_without_vat_are_shown_as_published_and_marked():
-    # No vat_not_stated decision is recorded, so no VAT is added and the price says so.
+def test_prices_without_vat_have_the_owners_rate_added_and_say_so():
+    # The owner's vat_not_stated decision of 2026-10-23 adds 20% where no rate is given.
     config = load_registry()["globe_ev"]
-    assert config.vat_not_stated is None
+    assert config.vat_not_stated.add_percent == 20
     result, _ = replay()
-    shown = [describe_tariff(tariff) for tariff in result.tariffs]
+    shown = [describe_tariff(tariff, added_vat=20) for tariff in result.tariffs]
     assert all(d.state == "priced" for d in shown)
-    assert all("excluding VAT, VAT not stated" in d.text for d in shown)
+    assert all("added by this project" in d.text for d in shown)
     assert any("per session" in d.text for d in shown)
     assert not any(d.text == "Free" for d in shown)
+    as_published = [describe_tariff(tariff) for tariff in result.tariffs]
+    assert all("excluding VAT, VAT not stated" in d.text for d in as_published)
 
 
 def test_globe_ev_records_its_terms_and_rate_limit_header():

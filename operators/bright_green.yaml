@@ -47,6 +47,29 @@ licence:
     can be switched on without asking again, and on 2026-10-23 asked for the new feeds
     whose terms allow use to be switched on.
   checked: 2026-10-23
+swapped_coordinates:
+  decided: 2026-10-23
+  basis: >-
+    Where a location's longitude is obviously missing its minus sign, or its latitude and
+    longitude are obviously the wrong way round, the repository owner decided to show it
+    in the right place rather than leave it off the map, with the operator's own figures
+    kept and the correction shown on the map and recorded in the findings below. Kiln Farm
+    Station's point as published is inside the UK, so the owner named it here on the same
+    day (see findings).
+  sign_missing:
+    - id: 4cbfa56a-07da-4cf1-90be-8277667b4158
+      name: Kiln Farm Station
+      postal_code: MK11 3LW
+vat_in_price:
+  decided: 2026-10-23
+  basis: >-
+    BrightGreen's tariffs file gives every price with VAT 20 and also a display price,
+    "price_display", equal to the price as written: for example price "0.59", VAT 20 and
+    price_display "£0.59" (12 of 12 tariffs on 23 October 2026). Read as OCPI 2.2.1 says,
+    0.59 is 70.8p per kWh including VAT, while the display price shows 59p; which one
+    drivers pay is not stated. The repository owner decided that the prices are read as
+    the display price shows them, already including VAT, so no VAT is added.
+  evidence_url: https://connect.bright.green/ocpp/tariffs
 engagement:
   status: open_anonymous
   evidence:
@@ -106,8 +129,9 @@ findings:
       way the price is 70.8p per kWh including VAT, while the display price suggests 59p.
       Which one drivers pay is not stated.
     handling: >-
-      Not switched on while this is open, so no BrightGreen price is shown. The repository
-      owner has been asked how to show these prices.
+      Each price is shown as written, read as including VAT as the display price shows it,
+      by the repository owner's decision of 2026-10-23 (vat_in_price above), and the price
+      says it was read that way. The tariffs are published unchanged.
     evidence_url: https://connect.bright.green/ocpp/tariffs
   - date: 2026-10-23
     kind: spec_conformance
@@ -140,11 +164,12 @@ findings:
       .82. Milton Keynes is at about longitude -0.82, west of the Greenwich meridian, so the
       minus sign appears to be missing; as published the point is in Suffolk.
     handling: >-
-      Shown where the feed puts it unless the repository owner decides otherwise; the
-      decision has been asked for.
+      Shown at longitude -0.82, by the repository owner's decision of 2026-10-23
+      (swapped_coordinates above), with the operator's own figures kept and the correction
+      shown on the map.
     evidence_url: https://connect.bright.green/ocpp/locations
 notes: >-
   One location in the feed is named "EZ charge HQ" (Bicester). EZ-Charge has its own file in
   the registry (operators/ez_charge.yaml), with no public feed found; whether BrightGreen's
   feed covers EZ-Charge's network is not known.
-enabled: false
+enabled: true

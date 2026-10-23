@@ -95,6 +95,7 @@ def load_registry(directory: Path = OPERATORS_DIR) -> dict[str, OperatorConfig]:
         operators[config.id] = config
 
     problems += _related_problems(operators)
+    problems += _copies_problems(operators)
     if problems:
         raise RegistryError(problems)
     return operators
@@ -123,6 +124,17 @@ def _related_problems(operators: dict[str, OperatorConfig]) -> list[str]:
                     "the same host as this operator's"
                 )
     return problems
+
+
+def _copies_problems(operators: dict[str, OperatorConfig]) -> list[str]:
+    """Check each own_feed_over_copies decision names known operators (ADR 0027)."""
+    return [
+        f"{config.id}.yaml: own_feed_over_copies names unknown operator {other!r}"
+        for config in operators.values()
+        if config.own_feed_over_copies is not None
+        for other in config.own_feed_over_copies.operators
+        if other not in operators
+    ]
 
 
 def warnings_for(config: OperatorConfig, today: dt.date | None = None) -> list[str]:

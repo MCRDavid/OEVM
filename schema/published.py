@@ -304,6 +304,20 @@ class OperatorEntry(_Model):
         description="Connectors priced from a tariff found in a related operator's feed, by "
         "the owner's decision in the operator file (tariffs_from, ADR 0020).",
     )
+    replaced: int = Field(
+        default=0,
+        ge=0,
+        description="Locations left off because this feed sends them under another "
+        "operator's country and party codes, and that operator's own feed is on the map, by "
+        "the owner's decision in that operator's file (own_feed_over_copies, ADR 0027).",
+    )
+    replaced_ids: list[RecordId] = Field(
+        default_factory=list, description="Ids of the locations left off as copies."
+    )
+    replaced_by: dict[SourceId, int] = Field(
+        default_factory=dict,
+        description="How many were left off for each operator whose own feed is shown instead.",
+    )
     attribution: str
     licence: str
     licence_url: str | None = None

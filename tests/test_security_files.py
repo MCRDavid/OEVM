@@ -42,11 +42,17 @@ PUBLISHED_FEED_ADDRESSES = {
 PUBLISHED_RECORD_IDS = {
     "2bf0030b-e446-473f-96ef-76de022b87e9",
 }
+# Location ids an operator publishes, named in swapped_coordinates.sign_missing (ADR 0013,
+# amended 23 October 2026): Kiln Farm Station in operators/bright_green.yaml.
+PUBLISHED_LOCATION_IDS = {
+    "4cbfa56a-07da-4cf1-90be-8277667b4158",
+}
 KEY_LIKE_ALLOWED = {
     "https://www.contractsfinder.service.gov.uk/Notice/9b22d88e-38ba-4055-8e0e-84c58a196aa0",
     "https://www.contractsfinder.service.gov.uk/Notice/Attachment/3f6da4fd-2533-4289-a49e-ebad9a25c086",
     *PUBLISHED_FEED_ADDRESSES,
     *PUBLISHED_RECORD_IDS,
+    *PUBLISHED_LOCATION_IDS,
 }
 # RFC 9116 fields, plus CSAF and Bug-Bounty, which IANA's registry added later.
 RFC_9116_FIELDS = {

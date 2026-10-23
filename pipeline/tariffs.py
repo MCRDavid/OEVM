@@ -16,7 +16,9 @@ Blueprint task 6. For each connector:
 - A tariff from an operator whose file records vat_not_stated (ADR 0003, amended 22
   October 2026) has that rate of VAT added to each price with no VAT figure. `added_vat`
   maps each such operator's id to its rate, and a tariff is matched by the operator whose
-  feed published it, so a related operator's tariff follows its own operator's file.
+  feed published it, so a related operator's tariff follows its own operator's file. An
+  operator whose file records vat_in_price (ADR 0003, amended 23 October 2026) maps to
+  VAT_IN_PRICE instead: its stated VAT is read as already in its prices.
 - The indicative price per kWh is the lowest and highest energy price that can apply,
   including VAT when the operator states it. It is a guide for filters and map labels;
   the text from pipeline.pricing is what explains the price.
@@ -48,6 +50,7 @@ from typing import Literal
 
 from pipeline.pricing import (
     UNSTATED_KIND,
+    VatReading,
     comparison,
     describe_tariff,
     energy_always,
@@ -96,11 +99,12 @@ class ConnectorPrice:
 
 
 UNKNOWN: Literal["unknown"] = "unknown"
-NO_VAT_ADDED: Mapping[str, float] = MappingProxyType({})
+NO_VAT_ADDED: Mapping[str, VatReading] = MappingProxyType({})
 
 
-def _added(tariff: Tariff, added_vat: Mapping[str, float]) -> float | None:
-    # The VAT rate the owner decided to add to the publishing operator's prices, if any.
+def _added(tariff: Tariff, added_vat: Mapping[str, VatReading]) -> VatReading:
+    # The VAT rate the owner decided to add to the publishing operator's prices, or
+    # VAT_IN_PRICE where the owner decided its stated VAT is already in its prices.
     return added_vat.get(tariff.provenance.source_id)
 
 
@@ -118,7 +122,7 @@ def _as_shown(amount: Decimal) -> Decimal:
 
 
 def lowest_energy(
-    tariffs: list[Tariff], added_vat: Mapping[str, float] = NO_VAT_ADDED
+    tariffs: list[Tariff], added_vat: Mapping[str, VatReading] = NO_VAT_ADDED
 ) -> tuple[Decimal, bool, bool] | None:
     """The lowest price per kWh that any of these tariffs gives, to the tenth of a penny,
     whether it includes VAT, and whether it applies only in some cases (every tariff giving
@@ -180,7 +184,7 @@ def price_connector(
     location_id: str,
     evse_uid: str,
     withheld: frozenset[str] = frozenset(),
-    added_vat: Mapping[str, float] = NO_VAT_ADDED,
+    added_vat: Mapping[str, VatReading] = NO_VAT_ADDED,
 ) -> ConnectorPrice:
     """The price for one connector, using a dictionary of the operator's tariffs by id.
     `withheld` holds the ids from withheld_free_tariffs; `added_vat` the VAT rates from
@@ -286,7 +290,7 @@ class SiteTariffs:
 
 
 def _option(
-    tariff: Tariff, count: int, withheld: frozenset[str], added_vat: Mapping[str, float]
+    tariff: Tariff, count: int, withheld: frozenset[str], added_vat: Mapping[str, VatReading]
 ) -> TariffOption:
     vat = _added(tariff, added_vat)
     shown = describe_tariff(tariff, zero_price_withheld=tariff.id in withheld, added_vat=vat)
@@ -325,7 +329,7 @@ def site_tariffs(
     location: Location,
     tariffs: dict[str, Tariff],
     withheld: frozenset[str] = frozenset(),
-    added_vat: Mapping[str, float] = NO_VAT_ADDED,
+    added_vat: Mapping[str, VatReading] = NO_VAT_ADDED,
 ) -> SiteTariffs:
     """Every tariff the location's connectors list, cheapest first (see _cheapest_first);
     tariffs that sort the same keep the order they are first listed in. `withheld` holds
@@ -402,7 +406,7 @@ def price_locations(
     tariffs: list[Tariff],
     related: dict[str, Tariff] | None = None,
     withheld: frozenset[str] = frozenset(),
-    added_vat: Mapping[str, float] = NO_VAT_ADDED,
+    added_vat: Mapping[str, VatReading] = NO_VAT_ADDED,
 ) -> list[ConnectorPrice]:
     """The price for every connector at every location, in order. `related` adds tariffs
     from related_tariffs, keyed by the id the connector names; `withheld` holds the ids
