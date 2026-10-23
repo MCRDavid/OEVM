@@ -1,12 +1,12 @@
 name: Monta token check (one-off)
 
-# Temporary. Runs once on this branch to see whether the project's Monta token reads Monta's
-# UK open data feed, printing counts only, then is removed before the branch is merged.
+# Temporary. Runs Monta's adapter once on this branch, printing the run report (counts and
+# issue lines only, no records), then is removed before the branch is merged.
 
 on:
   push:
     branches: [claude/project-thread-yma71t]
-    paths: [.github/workflows/monta-check.yml, .github/scripts/monta_check.py]
+    paths: [.github/workflows/monta-check.yml]
 
 permissions:
   contents: read
@@ -17,9 +17,9 @@ concurrency:
 
 jobs:
   check:
-    name: Count Monta's open data with the project's token
+    name: Run Monta's adapter once with the project's token
     runs-on: ubuntu-latest
-    timeout-minutes: 100
+    timeout-minutes: 60
     steps:
       - uses: actions/checkout@v7
         with:
@@ -30,9 +30,8 @@ jobs:
       - name: Install dependencies from the lock file
         run: uv sync --locked
 
-      - name: Count what the feed returns (counts and codes only)
+      - name: Run Monta's adapter and build map files (report only)
         env:
           MONTA_CLIENT_ID: ${{ secrets.MONTA_CLIENT_ID }}
           MONTA_CLIENT_SECRET: ${{ secrets.MONTA_CLIENT_SECRET }}
-          PYTHONPATH: ${{ github.workspace }}
-        run: uv run python .github/scripts/monta_check.py
+        run: uv run python -m pipeline.run --live monta --publish build

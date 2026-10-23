@@ -30,6 +30,11 @@ adapter's handling of HTTP 500 answers is tested with made-up responses in
 
 ## Source and licence
 
-Made up for this project's tests. The real feed: contains data from Monta published under
-the Public Charge Point Regulations 2023, used in line with the Open Government Licence
-v3.0 (https://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/).
+Made up for this project's tests, in the shape of the real feed, whose attribution is:
+
+Contains data from Monta published under the Public Charge Point Regulations 2023, used in
+line with the Open Government Licence v3.0
+(https://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/).
+
+The real feed's data belongs to Monta. It is not covered by this project's Apache-2.0 code
+licence. See `DATA_LICENCES.md` at the repository root.
