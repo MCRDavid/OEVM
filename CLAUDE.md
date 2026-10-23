@@ -8,7 +8,7 @@ decisions are in docs/adr/.
 
 ## Commands
 - Lint: uv run ruff check . && uv run ruff format --check .
-- Test: uv run pytest -q
+- Test: uv run pytest -q (add -n auto to use every core, as CI does)
 - Validate registry: uv run python -m pipeline.registry --validate
 - Validate plan providers: uv run python -m pipeline.plans --validate
 - Offline pipeline: uv run python -m pipeline.run --fixtures
