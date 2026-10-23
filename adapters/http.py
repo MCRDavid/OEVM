@@ -309,14 +309,12 @@ RELAY_HOST = "relay"
 
 
 def operator_hosts(config: OperatorConfig) -> frozenset[str]:
-    """Every host this operator's requests can reach: its endpoints, base URL and relay.
+    """Every host this operator's requests can reach: its feed URLs, token URL and relay.
 
     Paging never leaves an endpoint's host (adapters.ocpi_221.client). An operator with no
     known host gets the empty name, so all such operators count as sharing one host.
     """
-    urls = [endpoint.url for endpoint in config.endpoints.values()]
-    if config.base_url != "unknown":
-        urls.append(config.base_url)
+    urls = config.feed_urls()
     if config.auth.token_url:
         urls.append(config.auth.token_url)
     hosts = {urlsplit(url).netloc.lower() for url in urls if url != "unknown"}
@@ -369,10 +367,7 @@ def relay_route(config: OperatorConfig) -> RelayRoute | None:
         raise FeedError(f"{config.id}: the relay needs {missing} as well")
     if urlsplit(base).scheme != "https" or not urlsplit(base).netloc:
         raise FeedError(f"{config.id}: {relay.url_variable} must be an https address")
-    urls = [endpoint.url for endpoint in config.endpoints.values()]
-    if config.base_url != "unknown":
-        urls.append(config.base_url)
-    hosts = frozenset(urlsplit(url).netloc.lower() for url in urls)
+    hosts = frozenset(urlsplit(url).netloc.lower() for url in config.feed_urls())
     return RelayRoute(base=base, prefix=relay.path_prefix, token=token, hosts=hosts)
 
 

@@ -710,6 +710,24 @@
       "title": "MissingPublishFlag",
       "type": "object"
     },
+    "MoreEndpoints": {
+      "additionalProperties": false,
+      "description": "One more pair of files, read as well as the operator's endpoints (ocpi_221 only).",
+      "properties": {
+        "locations": {
+          "$ref": "#/$defs/Endpoint"
+        },
+        "tariffs": {
+          "$ref": "#/$defs/Endpoint"
+        }
+      },
+      "required": [
+        "locations",
+        "tariffs"
+      ],
+      "title": "MoreEndpoints",
+      "type": "object"
+    },
     "NonstandardParkingRestrictions": {
       "additionalProperties": false,
       "description": "The repository owner's recorded decision on how EVSE parking restrictions that are\nnot OCPI 2.2.1 values are read (ADR 0023).\n\nWithout this decision such values are ignored and logged. A value may only be read as\n\"taxis_only\": the charge point is labelled \"Taxis only\", and a location where every\ncharge point is taxis only is hidden on the map with private ones unless a visitor asks\nto see them.",
@@ -1247,6 +1265,14 @@
       },
       "title": "Endpoints",
       "type": "object"
+    },
+    "more_endpoints": {
+      "description": "Further location and tariff files, for an operator that publishes its data in several files of the same form, such as one pair for each site. Each pair is read like 'endpoints' and the records are added together, each keeping the URL it came from. Needs locations and tariffs in 'endpoints'. ocpi_221 only.",
+      "items": {
+        "$ref": "#/$defs/MoreEndpoints"
+      },
+      "title": "More Endpoints",
+      "type": "array"
     },
     "response_envelope": {
       "default": "ocpi",
