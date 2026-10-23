@@ -20,7 +20,7 @@ cors: unknown
 attribution: null
 licence: null
 engagement:
-  status: key_on_request
+  status: requested_no_reply
   evidence:
     - date: 2026-10-10
       url: https://gigapoweruk.com/opendata/
@@ -38,7 +38,12 @@ engagement:
         To request an API key to the Giga Power Open Access Data, in line with Open Charge
         Point Regulations (2023) of the PCPR, please fill in the form below.
       evidence_url: https://gigapoweruk.com/opendata/
-access_requested: null
+    - date: 2026-10-23
+      action: request_sent
+      channel: web_form
+      summary: >-
+        Requested access to Giga Power's open data through its open data form.
+access_requested: 2026-10-23
 access_granted: null
 sources:
   - url: https://gigapoweruk.com/opendata/

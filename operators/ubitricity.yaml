@@ -65,7 +65,7 @@ supports_single_location: supported
 cors: needs_testing
 attribution: null
 engagement:
-  status: unknown
+  status: requested_no_reply
   evidence:
     - date: 2026-10-09
       url: https://ubitricity.com/en/pcpr-data-request/
@@ -80,7 +80,12 @@ engagement:
         the data will be provided in a suitable format, with questions going to an
         Eco-Movement address.
       evidence_url: https://ubitricity.com/en/pcpr-data-request/
-access_requested: null
+    - date: 2026-10-23
+      action: request_sent
+      channel: web_form
+      summary: >-
+        Requested access to ubitricity's PCPR data through its Google form, which is shared with Eco-Movement.
+access_requested: 2026-10-23
 access_granted: null
 sources:
   - url: https://wiki.openstreetmap.org/wiki/EV_charge_points_in_the_United_Kingdom

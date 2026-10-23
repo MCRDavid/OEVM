@@ -20,7 +20,7 @@ cors: unknown
 attribution: null
 licence: null
 engagement:
-  status: key_on_request
+  status: requested_no_reply
   evidence:
     - date: 2026-10-10
       url: https://www.ionity.eu/open-data-request
@@ -39,7 +39,12 @@ engagement:
         Your request will be shared with Eco-Movement, who will act on behalf of IONITY, to
         fulfil your request.
       evidence_url: https://www.ionity.eu/open-data-request
-access_requested: null
+    - date: 2026-10-23
+      action: request_sent
+      channel: web_form
+      summary: >-
+        Requested access to IONITY's PCPR data through its Google form, which is shared with Eco-Movement.
+access_requested: 2026-10-23
 access_granted: null
 sources:
   - url: https://www.ionity.eu/open-data-request

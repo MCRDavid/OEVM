@@ -20,7 +20,7 @@ cors: unknown
 attribution: null
 licence: null
 engagement:
-  status: no_public_feed_found
+  status: requested_no_reply
   evidence:
     - date: 2026-10-22
       url: https://www.ev-point.com/
@@ -38,7 +38,12 @@ engagement:
         Our directly managed, owned and operated network provides us with complete control
         over quality, consistency and pricing for our consumers.
       evidence_url: https://www.ev-point.com/
-access_requested: null
+    - date: 2026-10-23
+      action: request_sent
+      channel: web_form
+      summary: >-
+        Requested access to evpoint's PCPR data through ChargePoint's Google form (one submission for this network), which is shared with Eco-Movement.
+access_requested: 2026-10-23
 access_granted: null
 sources:
   - url: https://www.ev-point.com/

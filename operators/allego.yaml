@@ -20,7 +20,7 @@ cors: unknown
 attribution: null
 licence: null
 engagement:
-  status: key_on_request
+  status: requested_no_reply
   evidence:
     - date: 2026-10-10
       url: https://www.allego.eu/charge-point-data/
@@ -42,7 +42,12 @@ engagement:
         data and names no key, licence, data terms or rate limit.
       quote: Request charge point data
       evidence_url: https://www.allego.eu/charge-point-data/
-access_requested: null
+    - date: 2026-10-23
+      action: request_sent
+      channel: web_form
+      summary: >-
+        Requested access to Allego's PCPR data through its charge point data form.
+access_requested: 2026-10-23
 access_granted: null
 sources:
   - url: https://www.allego.eu/
