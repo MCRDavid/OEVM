@@ -20,7 +20,7 @@ cors: unknown
 attribution: null
 licence: null
 engagement:
-  status: unknown
+  status: possibly_out_of_scope
   evidence: []
   log:
     - date: 2026-10-10
@@ -30,6 +30,11 @@ engagement:
         2026-10-10 (connection reset, then HTTP 503), so its open data route is not yet known;
         it needs checking in a browser.
       evidence_url: https://www.elmtronics.co.uk/
+    - date: 2026-10-23
+      action: page_checked
+      summary: >-
+        In a browser on 2026-10-23, www.elmtronics.co.uk and elmtronics.co.uk timed out. Mer's own news page of 5 January 2022 says Mer Fleet Services Ltd acquired Elmtronics, and Mer UK's feed (one request that day) lists Mer Fleet Services sites at Consett Business Park.
+      evidence_url: https://uk.mer.eco/news/mer-acquires-elmtronics-expandong-its-uk-ev-charging-business/
 access_requested: null
 access_granted: null
 sources:
@@ -39,6 +44,5 @@ sources:
       check and a second answered HTTP 503, so it was not read.
 findings: []
 notes: >-
-  Elmtronics' website could not be read on 2026-10-10. The next step is to read it in a
-  browser and look for an open data or regulations link.
+  Inferred on 2026-10-23, not confirmed by Elmtronics: its sites appear to be covered by Mer UK's feed, which is switched on. Mer's news page of 5 January 2022 says "The UK EV Charging company Mer Fleet Services Ltd acquires Elmtronics", and Mer UK's feed lists Mer Fleet Services sites at Consett Business Park, Elmtronics' former base.
 enabled: false

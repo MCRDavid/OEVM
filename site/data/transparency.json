@@ -2925,7 +2925,7 @@
       "nonstandard_parking_restrictions": null,
       "zero_price_tariffs": {
         "decided": "2026-10-23",
-        "basis": "8 of the 22 tariffs give an energy price of 0.0 and no other price, and they cover 127 of the 138 locations (mostly in Newport and Plymouth) on 2026-10-23; the other tariffs charge 30p to 50p per kWh. A web search on 2026-10-23 found third-party listings giving prices of about 38p to 50p per kWh for some of these sites; they were not checked further and are not used as data. Monta's copies of these sites showed \"Price unknown\". On 2026-10-23 the repository owner decided these tariffs show \"Price unknown\" rather than \"Free\".",
+        "basis": "8 of the 22 tariffs give an energy price of 0.0 and no other price, and they cover 127 of the 138 locations (mostly in Newport and Plymouth) on 2026-10-23; the other tariffs charge 30p to 50p per kWh. Urban Fox's own website, read in a browser on 2026-10-23, gives prices for these places that the feed does not: \"30 - 40p/kWh\" on each of its 24 Newport street pages (for example https://urbanfox.network/networks/newport-city-council/alexandra-road/) and \"43 - 50p/kWh\" for Plymouth, without saying what decides the rate within a range. Newport City Council's newspaper, Newport Matters for July 2026 (page 6, https://www.newport.gov.uk/sites/default/files/media/media-documents/Newport-Matters-July-2026.pdf), says \"Our charging network offers competitive overnight rates, starting from 39p per kWh\". These prices are noted here only and are not used as data. Monta's copies of these sites showed \"Price unknown\". On 2026-10-23 the repository owner decided these tariffs show \"Price unknown\" rather than \"Free\".",
         "evidence_url": "https://api.urbanfox.network/api/opendata/tariffs",
         "tariffs": 8
       },
@@ -2967,7 +2967,7 @@
           "date": "2026-10-23",
           "kind": "data_quality",
           "kind_label": "Data quirk",
-          "summary": "8 of the 22 tariffs give an energy price of 0.0 and no other price, and 127 of the 138 locations (116 with the city Newport, 1 with Gwent, 9 in Plymouth and 1 in Brighton) name only these tariffs. The same 8 tariff ids were sent again about four hours later. As published, these sites would read as free to use.",
+          "summary": "8 of the 22 tariffs give an energy price of 0.0 and no other price, and 127 of the 138 locations (116 with the city Newport, 1 with Gwent, 9 in Plymouth and 1 in Brighton) name only these tariffs. The same 8 tariff ids were sent again about four hours later. As published, these sites would read as free to use, while Urban Fox's own website gives 30 to 40p per kWh for Newport and 43 to 50p per kWh for Plymouth (read 2026-10-23).",
           "handling": "Shown as \"Price unknown\" rather than \"Free\", by the repository owner's decision of 2026-10-23 (zero_price_tariffs above), matched by exact tariff id while their prices stay zero. The tariffs are published unchanged.",
           "evidence_url": "https://api.urbanfox.network/api/opendata/tariffs",
           "status": "open",
@@ -3132,8 +3132,8 @@
       "engagement": {
         "status": "no_public_feed_found",
         "label": "No public feed found",
-        "headline": "No public feed found (as of 2026-10-11)",
-        "as_of": "2026-10-11",
+        "headline": "No public feed found (as of 2026-10-23)",
+        "as_of": "2026-10-23",
         "last_request": null,
         "last_response": null,
         "last_response_text": "No request sent",
@@ -3155,6 +3155,17 @@
             "summary": "APCOA's UK websites, its full site index and its help centre were searched, and no open data feed or route for requesting open data was found.",
             "quote": "APCOA offers accessible EV charging stations at car parks nationwide, so you can plug in and go.",
             "evidence_url": "https://www.apcoa.co.uk/ev-charging-services/electric-vehicle-charging/electric-vehicle-charging",
+            "evidence_file": null
+          },
+          {
+            "date": "2026-10-23",
+            "action": "page_checked",
+            "action_label": "Operator's page checked",
+            "channel": null,
+            "channel_label": null,
+            "summary": "In a browser on 2026-10-23, APCOA's legal page, help centre (EV Charging category and searches for open data, OCPI, charge point regulations, API and data request), APCOA Connect site and charging station map were read; none gives an open data feed or a data request route.",
+            "quote": null,
+            "evidence_url": "https://helpcentre.apcoa.com/hc/en-gb",
             "evidence_file": null
           }
         ]
@@ -4196,6 +4207,70 @@
       "findings": []
     },
     {
+      "id": "dragon_charging",
+      "name": "Dragon Charging",
+      "enabled": false,
+      "adapter": "unknown",
+      "engagement": {
+        "status": "unknown",
+        "label": "Not yet established",
+        "headline": "Not yet established (as of 2026-10-23)",
+        "as_of": "2026-10-23",
+        "last_request": null,
+        "last_response": null,
+        "last_response_text": "No request sent",
+        "evidence": [
+          {
+            "date": "2026-10-23",
+            "url": "https://evroam.org.uk/_functions/getRegister",
+            "file": null,
+            "note": "The EV Roam ID register lists \"Dragon Charging\" with operator ID GB*DGN and website https://www.silverstonegreenenergy.co.uk/ (read 2026-10-23). The register names companies and IDs, not chargers."
+          }
+        ],
+        "log": [
+          {
+            "date": "2026-10-23",
+            "action": "page_checked",
+            "action_label": "Operator's page checked",
+            "channel": null,
+            "channel_label": null,
+            "summary": "Its website returned HTTP 403 to an automated request on 2026-10-23, so it needs a check in a browser.",
+            "quote": null,
+            "evidence_url": "https://www.silverstonegreenenergy.co.uk/",
+            "evidence_file": null
+          }
+        ]
+      },
+      "access_requested": null,
+      "access_granted": null,
+      "feeds": [],
+      "licence": null,
+      "attribution": null,
+      "missing_publish_flag": null,
+      "swapped_coordinates": null,
+      "nonstandard_statuses": null,
+      "tariffs_from": null,
+      "nonstandard_parking_restrictions": null,
+      "zero_price_tariffs": null,
+      "vat_not_stated": null,
+      "vat_in_price": null,
+      "own_feed_over_copies": null,
+      "relay": null,
+      "expired_certificate": null,
+      "excluded_locations": null,
+      "rate_limit": {
+        "our_gap_seconds": 2.0,
+        "our_max_per_hour": 1800,
+        "ours": "At least 2 s between requests to the operator's host, measured from the end of the previous request (at most 1800 in any hour), retries included.",
+        "published": [],
+        "limits_checked": "unknown",
+        "comparison": "The operator's pages have not been checked for limits yet.",
+        "difference_from_regulations": "Not known yet.",
+        "notes": null
+      },
+      "findings": []
+    },
+    {
       "id": "drax_energy_solutions",
       "name": "Drax Energy Solutions",
       "enabled": false,
@@ -4226,6 +4301,134 @@
             "summary": "Drax's PCPR page was read; the form asks for a name, email address, organisation and planned use of the data, and promises a reply within five working days.",
             "quote": "Your request will be shared with Eco-Movement, and in submitting the email you are consenting to the processing of their data for the purpose of providing you with the requested information.",
             "evidence_url": "https://energy.drax.com/drax-network-of-public-chargers/",
+            "evidence_file": null
+          }
+        ]
+      },
+      "access_requested": null,
+      "access_granted": null,
+      "feeds": [],
+      "licence": null,
+      "attribution": null,
+      "missing_publish_flag": null,
+      "swapped_coordinates": null,
+      "nonstandard_statuses": null,
+      "tariffs_from": null,
+      "nonstandard_parking_restrictions": null,
+      "zero_price_tariffs": null,
+      "vat_not_stated": null,
+      "vat_in_price": null,
+      "own_feed_over_copies": null,
+      "relay": null,
+      "expired_certificate": null,
+      "excluded_locations": null,
+      "rate_limit": {
+        "our_gap_seconds": 2.0,
+        "our_max_per_hour": 1800,
+        "ours": "At least 2 s between requests to the operator's host, measured from the end of the previous request (at most 1800 in any hour), retries included.",
+        "published": [],
+        "limits_checked": "unknown",
+        "comparison": "The operator's pages have not been checked for limits yet.",
+        "difference_from_regulations": "Not known yet.",
+        "notes": null
+      },
+      "findings": []
+    },
+    {
+      "id": "duracell_charge",
+      "name": "Duracell Charge",
+      "enabled": false,
+      "adapter": "unknown",
+      "engagement": {
+        "status": "no_public_feed_found",
+        "label": "No public feed found",
+        "headline": "No public feed found (as of 2026-10-23)",
+        "as_of": "2026-10-23",
+        "last_request": null,
+        "last_response": null,
+        "last_response_text": "No request sent",
+        "evidence": [
+          {
+            "date": "2026-10-23",
+            "url": "https://evroam.org.uk/_functions/getRegister",
+            "file": null,
+            "note": "The EV Roam ID register lists \"Elektra Charge Limited\" with operator ID GB*321 and website https://duracellecharge.com/ (read 2026-10-23). The register names companies and IDs, not chargers."
+          }
+        ],
+        "log": [
+          {
+            "date": "2026-10-23",
+            "action": "feed_searched",
+            "action_label": "Searched for a feed",
+            "channel": null,
+            "channel_label": null,
+            "summary": "Its home page and its sitemap (2 pages) were read once on 2026-10-23 and gave no open data link, feed or request route.",
+            "quote": null,
+            "evidence_url": "https://duracellecharge.com/",
+            "evidence_file": null
+          }
+        ]
+      },
+      "access_requested": null,
+      "access_granted": null,
+      "feeds": [],
+      "licence": null,
+      "attribution": null,
+      "missing_publish_flag": null,
+      "swapped_coordinates": null,
+      "nonstandard_statuses": null,
+      "tariffs_from": null,
+      "nonstandard_parking_restrictions": null,
+      "zero_price_tariffs": null,
+      "vat_not_stated": null,
+      "vat_in_price": null,
+      "own_feed_over_copies": null,
+      "relay": null,
+      "expired_certificate": null,
+      "excluded_locations": null,
+      "rate_limit": {
+        "our_gap_seconds": 2.0,
+        "our_max_per_hour": 1800,
+        "ours": "At least 2 s between requests to the operator's host, measured from the end of the previous request (at most 1800 in any hour), retries included.",
+        "published": [],
+        "limits_checked": "unknown",
+        "comparison": "The operator's pages have not been checked for limits yet.",
+        "difference_from_regulations": "Not known yet.",
+        "notes": null
+      },
+      "findings": []
+    },
+    {
+      "id": "dv8",
+      "name": "DV8",
+      "enabled": false,
+      "adapter": "unknown",
+      "engagement": {
+        "status": "no_public_feed_found",
+        "label": "No public feed found",
+        "headline": "No public feed found (as of 2026-10-23)",
+        "as_of": "2026-10-23",
+        "last_request": null,
+        "last_response": null,
+        "last_response_text": "No request sent",
+        "evidence": [
+          {
+            "date": "2026-10-23",
+            "url": "https://evroam.org.uk/_functions/getRegister",
+            "file": null,
+            "note": "The EV Roam ID register lists \"DV8 CPO Ltd\" with operator ID GB*844 and website https://www.dv8.energy/ (read 2026-10-23). The register names companies and IDs, not chargers."
+          }
+        ],
+        "log": [
+          {
+            "date": "2026-10-23",
+            "action": "feed_searched",
+            "action_label": "Searched for a feed",
+            "channel": null,
+            "channel_label": null,
+            "summary": "Its home page and its sitemap (6 pages) were read once on 2026-10-23 and gave no open data link, feed or request route.",
+            "quote": null,
+            "evidence_url": "https://www.dv8.energy/",
             "evidence_file": null
           }
         ]
@@ -4324,15 +4527,79 @@
       "findings": []
     },
     {
-      "id": "electric_blue",
-      "name": "Electric Blue",
+      "id": "easygo",
+      "name": "EasyGo",
       "enabled": false,
       "adapter": "unknown",
       "engagement": {
         "status": "unknown",
         "label": "Not yet established",
-        "headline": "Not yet established (as of 2026-10-10)",
-        "as_of": "2026-10-10",
+        "headline": "Not yet established (as of 2026-10-23)",
+        "as_of": "2026-10-23",
+        "last_request": null,
+        "last_response": null,
+        "last_response_text": "No request sent",
+        "evidence": [
+          {
+            "date": "2026-10-23",
+            "url": "https://evroam.org.uk/_functions/getRegister",
+            "file": null,
+            "note": "The EV Roam ID register lists \"EasyGo Charging Limited\" with operator ID GB*EGO and website https://easygo.co.uk/ (read 2026-10-23). The register names companies and IDs, not chargers."
+          }
+        ],
+        "log": [
+          {
+            "date": "2026-10-23",
+            "action": "page_checked",
+            "action_label": "Operator's page checked",
+            "channel": null,
+            "channel_label": null,
+            "summary": "Its website could not be read from the cloud on 2026-10-23 (the TLS certificate check failed), so it needs a check in a browser.",
+            "quote": null,
+            "evidence_url": "https://easygo.co.uk/",
+            "evidence_file": null
+          }
+        ]
+      },
+      "access_requested": null,
+      "access_granted": null,
+      "feeds": [],
+      "licence": null,
+      "attribution": null,
+      "missing_publish_flag": null,
+      "swapped_coordinates": null,
+      "nonstandard_statuses": null,
+      "tariffs_from": null,
+      "nonstandard_parking_restrictions": null,
+      "zero_price_tariffs": null,
+      "vat_not_stated": null,
+      "vat_in_price": null,
+      "own_feed_over_copies": null,
+      "relay": null,
+      "expired_certificate": null,
+      "excluded_locations": null,
+      "rate_limit": {
+        "our_gap_seconds": 2.0,
+        "our_max_per_hour": 1800,
+        "ours": "At least 2 s between requests to the operator's host, measured from the end of the previous request (at most 1800 in any hour), retries included.",
+        "published": [],
+        "limits_checked": "unknown",
+        "comparison": "The operator's pages have not been checked for limits yet.",
+        "difference_from_regulations": "Not known yet.",
+        "notes": null
+      },
+      "findings": []
+    },
+    {
+      "id": "electric_blue",
+      "name": "Electric Blue",
+      "enabled": false,
+      "adapter": "unknown",
+      "engagement": {
+        "status": "possibly_out_of_scope",
+        "label": "Possibly out of scope",
+        "headline": "Possibly out of scope (as of 2026-10-23)",
+        "as_of": "2026-10-23",
         "last_request": null,
         "last_response": null,
         "last_response_text": "No request sent",
@@ -4347,6 +4614,17 @@
             "summary": "Electric Blue's website could not be read by this project's automated checks on 2026-10-10 (no answer, then its address could not be found), so its open data route is not yet known; it needs checking in a browser.",
             "quote": null,
             "evidence_url": "https://www.electricbluecharging.co.uk/",
+            "evidence_file": null
+          },
+          {
+            "date": "2026-10-23",
+            "action": "page_checked",
+            "action_label": "Operator's page checked",
+            "channel": null,
+            "channel_label": null,
+            "summary": "In a browser on 2026-10-23, electricbluecharging.co.uk did not resolve and electricblue.co.uk served another site's certificate. A business directory, used as a pointer only, lists Electric Blue under the name EB Charging, whose old site redirected to Blink on 2026-10-10.",
+            "quote": null,
+            "evidence_url": "https://electricblue.co.uk/",
             "evidence_file": null
           }
         ]
@@ -4450,10 +4728,10 @@
       "enabled": false,
       "adapter": "unknown",
       "engagement": {
-        "status": "unknown",
-        "label": "Not yet established",
-        "headline": "Not yet established (as of 2026-10-10)",
-        "as_of": "2026-10-10",
+        "status": "possibly_out_of_scope",
+        "label": "Possibly out of scope",
+        "headline": "Possibly out of scope (as of 2026-10-23)",
+        "as_of": "2026-10-23",
         "last_request": null,
         "last_response": null,
         "last_response_text": "No request sent",
@@ -4468,6 +4746,81 @@
             "summary": "Elmtronics' website could not be read by this project's automated checks on 2026-10-10 (connection reset, then HTTP 503), so its open data route is not yet known; it needs checking in a browser.",
             "quote": null,
             "evidence_url": "https://www.elmtronics.co.uk/",
+            "evidence_file": null
+          },
+          {
+            "date": "2026-10-23",
+            "action": "page_checked",
+            "action_label": "Operator's page checked",
+            "channel": null,
+            "channel_label": null,
+            "summary": "In a browser on 2026-10-23, www.elmtronics.co.uk and elmtronics.co.uk timed out. Mer's own news page of 5 January 2022 says Mer Fleet Services Ltd acquired Elmtronics, and Mer UK's feed (one request that day) lists Mer Fleet Services sites at Consett Business Park.",
+            "quote": null,
+            "evidence_url": "https://uk.mer.eco/news/mer-acquires-elmtronics-expandong-its-uk-ev-charging-business/",
+            "evidence_file": null
+          }
+        ]
+      },
+      "access_requested": null,
+      "access_granted": null,
+      "feeds": [],
+      "licence": null,
+      "attribution": null,
+      "missing_publish_flag": null,
+      "swapped_coordinates": null,
+      "nonstandard_statuses": null,
+      "tariffs_from": null,
+      "nonstandard_parking_restrictions": null,
+      "zero_price_tariffs": null,
+      "vat_not_stated": null,
+      "vat_in_price": null,
+      "own_feed_over_copies": null,
+      "relay": null,
+      "expired_certificate": null,
+      "excluded_locations": null,
+      "rate_limit": {
+        "our_gap_seconds": 2.0,
+        "our_max_per_hour": 1800,
+        "ours": "At least 2 s between requests to the operator's host, measured from the end of the previous request (at most 1800 in any hour), retries included.",
+        "published": [],
+        "limits_checked": "unknown",
+        "comparison": "The operator's pages have not been checked for limits yet.",
+        "difference_from_regulations": "Not known yet.",
+        "notes": null
+      },
+      "findings": []
+    },
+    {
+      "id": "energyforce",
+      "name": "Energyforce",
+      "enabled": false,
+      "adapter": "unknown",
+      "engagement": {
+        "status": "no_public_feed_found",
+        "label": "No public feed found",
+        "headline": "No public feed found (as of 2026-10-23)",
+        "as_of": "2026-10-23",
+        "last_request": null,
+        "last_response": null,
+        "last_response_text": "No request sent",
+        "evidence": [
+          {
+            "date": "2026-10-23",
+            "url": "https://evroam.org.uk/_functions/getRegister",
+            "file": null,
+            "note": "The EV Roam ID register lists \"Energyforce Ltd\" with operator ID GB*EGF and website https://www.energyforce.uk/ (read 2026-10-23). The register names companies and IDs, not chargers."
+          }
+        ],
+        "log": [
+          {
+            "date": "2026-10-23",
+            "action": "feed_searched",
+            "action_label": "Searched for a feed",
+            "channel": null,
+            "channel_label": null,
+            "summary": "Its home page and its sitemap (9 pages) were read once on 2026-10-23 and gave no open data link, feed or request route.",
+            "quote": null,
+            "evidence_url": "https://www.energyforce.uk/",
             "evidence_file": null
           }
         ]
@@ -4728,6 +5081,134 @@
             "summary": "EV Smart's open data page was read; it invites requests for direct access to its OCPI data feed through its support team and says no terms, fees or usage restrictions apply to the data.",
             "quote": "If you would like direct access to our OCPI data feed or further technical information on how our open data is structured and delivered, please contact us:",
             "evidence_url": "https://www.ev-smart.co.uk/opendataregulatorycompliance",
+            "evidence_file": null
+          }
+        ]
+      },
+      "access_requested": null,
+      "access_granted": null,
+      "feeds": [],
+      "licence": null,
+      "attribution": null,
+      "missing_publish_flag": null,
+      "swapped_coordinates": null,
+      "nonstandard_statuses": null,
+      "tariffs_from": null,
+      "nonstandard_parking_restrictions": null,
+      "zero_price_tariffs": null,
+      "vat_not_stated": null,
+      "vat_in_price": null,
+      "own_feed_over_copies": null,
+      "relay": null,
+      "expired_certificate": null,
+      "excluded_locations": null,
+      "rate_limit": {
+        "our_gap_seconds": 2.0,
+        "our_max_per_hour": 1800,
+        "ours": "At least 2 s between requests to the operator's host, measured from the end of the previous request (at most 1800 in any hour), retries included.",
+        "published": [],
+        "limits_checked": "unknown",
+        "comparison": "The operator's pages have not been checked for limits yet.",
+        "difference_from_regulations": "Not known yet.",
+        "notes": null
+      },
+      "findings": []
+    },
+    {
+      "id": "evcp_solutions",
+      "name": "EVCP Solutions",
+      "enabled": false,
+      "adapter": "unknown",
+      "engagement": {
+        "status": "no_public_feed_found",
+        "label": "No public feed found",
+        "headline": "No public feed found (as of 2026-10-23)",
+        "as_of": "2026-10-23",
+        "last_request": null,
+        "last_response": null,
+        "last_response_text": "No request sent",
+        "evidence": [
+          {
+            "date": "2026-10-23",
+            "url": "https://evroam.org.uk/_functions/getRegister",
+            "file": null,
+            "note": "The EV Roam ID register lists \"EV Charger Points Ltd\" with operator ID GB*CAG and website https://www.evcps.uk/ (read 2026-10-23). The register names companies and IDs, not chargers."
+          }
+        ],
+        "log": [
+          {
+            "date": "2026-10-23",
+            "action": "feed_searched",
+            "action_label": "Searched for a feed",
+            "channel": null,
+            "channel_label": null,
+            "summary": "Its home page and its sitemap (3 pages) were read once on 2026-10-23 and gave no open data link, feed or request route.",
+            "quote": null,
+            "evidence_url": "https://www.evcps.uk/",
+            "evidence_file": null
+          }
+        ]
+      },
+      "access_requested": null,
+      "access_granted": null,
+      "feeds": [],
+      "licence": null,
+      "attribution": null,
+      "missing_publish_flag": null,
+      "swapped_coordinates": null,
+      "nonstandard_statuses": null,
+      "tariffs_from": null,
+      "nonstandard_parking_restrictions": null,
+      "zero_price_tariffs": null,
+      "vat_not_stated": null,
+      "vat_in_price": null,
+      "own_feed_over_copies": null,
+      "relay": null,
+      "expired_certificate": null,
+      "excluded_locations": null,
+      "rate_limit": {
+        "our_gap_seconds": 2.0,
+        "our_max_per_hour": 1800,
+        "ours": "At least 2 s between requests to the operator's host, measured from the end of the previous request (at most 1800 in any hour), retries included.",
+        "published": [],
+        "limits_checked": "unknown",
+        "comparison": "The operator's pages have not been checked for limits yet.",
+        "difference_from_regulations": "Not known yet.",
+        "notes": null
+      },
+      "findings": []
+    },
+    {
+      "id": "evolo",
+      "name": "Evolo",
+      "enabled": false,
+      "adapter": "unknown",
+      "engagement": {
+        "status": "no_public_feed_found",
+        "label": "No public feed found",
+        "headline": "No public feed found (as of 2026-10-23)",
+        "as_of": "2026-10-23",
+        "last_request": null,
+        "last_response": null,
+        "last_response_text": "No request sent",
+        "evidence": [
+          {
+            "date": "2026-10-23",
+            "url": "https://evroam.org.uk/_functions/getRegister",
+            "file": null,
+            "note": "The EV Roam ID register lists \"Evolo\" with operator ID GB*369 and website https://evolo.energy/ (read 2026-10-23). The register names companies and IDs, not chargers."
+          }
+        ],
+        "log": [
+          {
+            "date": "2026-10-23",
+            "action": "feed_searched",
+            "action_label": "Searched for a feed",
+            "channel": null,
+            "channel_label": null,
+            "summary": "Its home page and its sitemap (48 pages) were read once on 2026-10-23 and gave no open data link, feed or request route.",
+            "quote": null,
+            "evidence_url": "https://evolo.energy/",
             "evidence_file": null
           }
         ]
@@ -5371,6 +5852,70 @@
       "findings": []
     },
     {
+      "id": "gensource",
+      "name": "Gensource",
+      "enabled": false,
+      "adapter": "unknown",
+      "engagement": {
+        "status": "no_public_feed_found",
+        "label": "No public feed found",
+        "headline": "No public feed found (as of 2026-10-23)",
+        "as_of": "2026-10-23",
+        "last_request": null,
+        "last_response": null,
+        "last_response_text": "No request sent",
+        "evidence": [
+          {
+            "date": "2026-10-23",
+            "url": "https://evroam.org.uk/_functions/getRegister",
+            "file": null,
+            "note": "The EV Roam ID register lists \"Gensource\" with operator ID GB*GEN and website https://gensource.co.uk/ (read 2026-10-23). The register names companies and IDs, not chargers."
+          }
+        ],
+        "log": [
+          {
+            "date": "2026-10-23",
+            "action": "feed_searched",
+            "action_label": "Searched for a feed",
+            "channel": null,
+            "channel_label": null,
+            "summary": "Its home page was read once on 2026-10-23 and gave no open data link, feed or request route.",
+            "quote": null,
+            "evidence_url": "https://gensource.co.uk/",
+            "evidence_file": null
+          }
+        ]
+      },
+      "access_requested": null,
+      "access_granted": null,
+      "feeds": [],
+      "licence": null,
+      "attribution": null,
+      "missing_publish_flag": null,
+      "swapped_coordinates": null,
+      "nonstandard_statuses": null,
+      "tariffs_from": null,
+      "nonstandard_parking_restrictions": null,
+      "zero_price_tariffs": null,
+      "vat_not_stated": null,
+      "vat_in_price": null,
+      "own_feed_over_copies": null,
+      "relay": null,
+      "expired_certificate": null,
+      "excluded_locations": null,
+      "rate_limit": {
+        "our_gap_seconds": 2.0,
+        "our_max_per_hour": 1800,
+        "ours": "At least 2 s between requests to the operator's host, measured from the end of the previous request (at most 1800 in any hour), retries included.",
+        "published": [],
+        "limits_checked": "unknown",
+        "comparison": "The operator's pages have not been checked for limits yet.",
+        "difference_from_regulations": "Not known yet.",
+        "notes": null
+      },
+      "findings": []
+    },
+    {
       "id": "giga_power",
       "name": "Giga Power",
       "enabled": false,
@@ -5503,6 +6048,70 @@
       "findings": []
     },
     {
+      "id": "greenpoint_ev",
+      "name": "GreenPoint EV",
+      "enabled": false,
+      "adapter": "unknown",
+      "engagement": {
+        "status": "no_public_feed_found",
+        "label": "No public feed found",
+        "headline": "No public feed found (as of 2026-10-23)",
+        "as_of": "2026-10-23",
+        "last_request": null,
+        "last_response": null,
+        "last_response_text": "No request sent",
+        "evidence": [
+          {
+            "date": "2026-10-23",
+            "url": "https://evroam.org.uk/_functions/getRegister",
+            "file": null,
+            "note": "The EV Roam ID register lists \"Greenpoint EV Ltd\" with operator ID GB*GP1 and website https://www.greenpointev.com/ (read 2026-10-23). The register names companies and IDs, not chargers."
+          }
+        ],
+        "log": [
+          {
+            "date": "2026-10-23",
+            "action": "feed_searched",
+            "action_label": "Searched for a feed",
+            "channel": null,
+            "channel_label": null,
+            "summary": "Its home page and its sitemap (1 page) were read once on 2026-10-23 and gave no open data link, feed or request route.",
+            "quote": null,
+            "evidence_url": "https://www.greenpointev.com/",
+            "evidence_file": null
+          }
+        ]
+      },
+      "access_requested": null,
+      "access_granted": null,
+      "feeds": [],
+      "licence": null,
+      "attribution": null,
+      "missing_publish_flag": null,
+      "swapped_coordinates": null,
+      "nonstandard_statuses": null,
+      "tariffs_from": null,
+      "nonstandard_parking_restrictions": null,
+      "zero_price_tariffs": null,
+      "vat_not_stated": null,
+      "vat_in_price": null,
+      "own_feed_over_copies": null,
+      "relay": null,
+      "expired_certificate": null,
+      "excluded_locations": null,
+      "rate_limit": {
+        "our_gap_seconds": 2.0,
+        "our_max_per_hour": 1800,
+        "ours": "At least 2 s between requests to the operator's host, measured from the end of the previous request (at most 1800 in any hour), retries included.",
+        "published": [],
+        "limits_checked": "unknown",
+        "comparison": "The operator's pages have not been checked for limits yet.",
+        "difference_from_regulations": "Not known yet.",
+        "notes": null
+      },
+      "findings": []
+    },
+    {
       "id": "gridserve",
       "name": "Gridserve",
       "enabled": false,
@@ -5624,10 +6233,10 @@
       "enabled": false,
       "adapter": "unknown",
       "engagement": {
-        "status": "unknown",
-        "label": "Not yet established",
-        "headline": "Not yet established (as of 2026-10-10)",
-        "as_of": "2026-10-10",
+        "status": "possibly_out_of_scope",
+        "label": "Possibly out of scope",
+        "headline": "Possibly out of scope (as of 2026-10-23)",
+        "as_of": "2026-10-23",
         "last_request": null,
         "last_response": null,
         "last_response_text": "No request sent",
@@ -5642,6 +6251,17 @@
             "summary": "Hubsta's website could not be read by this project's automated checks on 2026-10-10 (no answer, then its address could not be found), so its open data route is not yet known; it needs checking in a browser.",
             "quote": null,
             "evidence_url": "https://hubsta.co.uk/",
+            "evidence_file": null
+          },
+          {
+            "date": "2026-10-23",
+            "action": "page_checked",
+            "action_label": "Operator's page checked",
+            "channel": null,
+            "channel_label": null,
+            "summary": "In a browser on 2026-10-23, hubsta.co.uk and www.hubsta.co.uk did not resolve. Mer UK's feed (one request that day) lists Business Durham NETPark, a site press reports named as on the Hubsta network.",
+            "quote": null,
+            "evidence_url": "https://uk.mer.eco/news/mer-acquires-elmtronics-expandong-its-uk-ev-charging-business/",
             "evidence_file": null
           }
         ]
@@ -5811,8 +6431,8 @@
       "engagement": {
         "status": "unknown",
         "label": "Not yet established",
-        "headline": "Not yet established (as of 2026-10-10)",
-        "as_of": "2026-10-10",
+        "headline": "Not yet established (as of 2026-10-23)",
+        "as_of": "2026-10-23",
         "last_request": null,
         "last_response": null,
         "last_response_text": "No request sent",
@@ -5827,6 +6447,92 @@
             "summary": "Joju's website could not be read by this project's automated checks on 2026-10-10 (a failed secure connection, then HTTP 503), so its open data route is not yet known; it needs checking in a browser.",
             "quote": null,
             "evidence_url": "https://jojucharging.com/",
+            "evidence_file": null
+          },
+          {
+            "date": "2026-10-11",
+            "action": "page_checked",
+            "action_label": "Operator's page checked",
+            "channel": null,
+            "channel_label": null,
+            "summary": "Read in a browser: jojucharging.com failed to connect securely and joju.co.uk redirects to Joju Solar. A Joju Solar post says \"Our Joju installed charge points, running on the Mer network, have hit a 10 million kWh milestone\". No open data page was found in its sitemap.",
+            "quote": null,
+            "evidence_url": "https://www.jojusolar.co.uk/a-10-million-kwh-milestone-joju-and-mer-ev-charging/",
+            "evidence_file": null
+          },
+          {
+            "date": "2026-10-23",
+            "action": "feed_searched",
+            "action_label": "Searched for a feed",
+            "channel": null,
+            "channel_label": null,
+            "summary": "Checked Mer UK's open data feed (https://uk.mer.eco/wp-json/ozev/v1/data) for Joju sites. It held 175 locations, all with operator \"Mer\" and suboperator \"Mer Fleet Services Ltd\". No owner, operator, name or other field mentions Joju, and only 2 locations have London postcodes. It has no Portsmouth or Eastleigh (Hampshire) locations, where a browser check the same day found Joju runs public chargers. So Joju's own Hampshire network is not in Mer UK's feed; whether any other Joju-installed chargers are in it is unknown.",
+            "quote": null,
+            "evidence_url": "https://uk.mer.eco/live-charge-point-data/",
+            "evidence_file": null
+          }
+        ]
+      },
+      "access_requested": null,
+      "access_granted": null,
+      "feeds": [],
+      "licence": null,
+      "attribution": null,
+      "missing_publish_flag": null,
+      "swapped_coordinates": null,
+      "nonstandard_statuses": null,
+      "tariffs_from": null,
+      "nonstandard_parking_restrictions": null,
+      "zero_price_tariffs": null,
+      "vat_not_stated": null,
+      "vat_in_price": null,
+      "own_feed_over_copies": null,
+      "relay": null,
+      "expired_certificate": null,
+      "excluded_locations": null,
+      "rate_limit": {
+        "our_gap_seconds": 2.0,
+        "our_max_per_hour": 1800,
+        "ours": "At least 2 s between requests to the operator's host, measured from the end of the previous request (at most 1800 in any hour), retries included.",
+        "published": [],
+        "limits_checked": "unknown",
+        "comparison": "The operator's pages have not been checked for limits yet.",
+        "difference_from_regulations": "Not known yet.",
+        "notes": null
+      },
+      "findings": []
+    },
+    {
+      "id": "leap24",
+      "name": "LEAP24",
+      "enabled": false,
+      "adapter": "unknown",
+      "engagement": {
+        "status": "unknown",
+        "label": "Not yet established",
+        "headline": "Not yet established (as of 2026-10-23)",
+        "as_of": "2026-10-23",
+        "last_request": null,
+        "last_response": null,
+        "last_response_text": "No request sent",
+        "evidence": [
+          {
+            "date": "2026-10-23",
+            "url": "https://evroam.org.uk/_functions/getRegister",
+            "file": null,
+            "note": "The EV Roam ID register lists \"LEAP24 UK Limited\" with operator ID GB*24L and website https://www.leap24.co.uk/ (read 2026-10-23). The register names companies and IDs, not chargers."
+          }
+        ],
+        "log": [
+          {
+            "date": "2026-10-23",
+            "action": "page_checked",
+            "action_label": "Operator's page checked",
+            "channel": null,
+            "channel_label": null,
+            "summary": "Its website returned HTTP 403 to an automated request on 2026-10-23, so it needs a check in a browser.",
+            "quote": null,
+            "evidence_url": "https://www.leap24.co.uk/",
             "evidence_file": null
           }
         ]
@@ -6110,6 +6816,70 @@
       "findings": []
     },
     {
+      "id": "myevs",
+      "name": "MyEVS",
+      "enabled": false,
+      "adapter": "unknown",
+      "engagement": {
+        "status": "no_public_feed_found",
+        "label": "No public feed found",
+        "headline": "No public feed found (as of 2026-10-23)",
+        "as_of": "2026-10-23",
+        "last_request": null,
+        "last_response": null,
+        "last_response_text": "No request sent",
+        "evidence": [
+          {
+            "date": "2026-10-23",
+            "url": "https://evroam.org.uk/_functions/getRegister",
+            "file": null,
+            "note": "The EV Roam ID register lists \"4th Dimension Technology LTD\" with operator ID GB*MYE and website https://myevs.co.uk/ (read 2026-10-23). The register names companies and IDs, not chargers."
+          }
+        ],
+        "log": [
+          {
+            "date": "2026-10-23",
+            "action": "feed_searched",
+            "action_label": "Searched for a feed",
+            "channel": null,
+            "channel_label": null,
+            "summary": "Its home page and its sitemap (5 pages) were read once on 2026-10-23 and gave no open data link, feed or request route.",
+            "quote": null,
+            "evidence_url": "https://myevs.co.uk/",
+            "evidence_file": null
+          }
+        ]
+      },
+      "access_requested": null,
+      "access_granted": null,
+      "feeds": [],
+      "licence": null,
+      "attribution": null,
+      "missing_publish_flag": null,
+      "swapped_coordinates": null,
+      "nonstandard_statuses": null,
+      "tariffs_from": null,
+      "nonstandard_parking_restrictions": null,
+      "zero_price_tariffs": null,
+      "vat_not_stated": null,
+      "vat_in_price": null,
+      "own_feed_over_copies": null,
+      "relay": null,
+      "expired_certificate": null,
+      "excluded_locations": null,
+      "rate_limit": {
+        "our_gap_seconds": 2.0,
+        "our_max_per_hour": 1800,
+        "ours": "At least 2 s between requests to the operator's host, measured from the end of the previous request (at most 1800 in any hour), retries included.",
+        "published": [],
+        "limits_checked": "unknown",
+        "comparison": "The operator's pages have not been checked for limits yet.",
+        "difference_from_regulations": "Not known yet.",
+        "notes": null
+      },
+      "findings": []
+    },
+    {
       "id": "ncp",
       "name": "NCP",
       "enabled": false,
@@ -6140,6 +6910,70 @@
             "summary": "No sign was found that NCP runs a charging network itself; charge points listed at NCP car parks name other networks, and NCP's own website could not be read by this project's automated checks, so it needs checking in a browser.",
             "quote": null,
             "evidence_url": "https://www.ncp.co.uk/",
+            "evidence_file": null
+          }
+        ]
+      },
+      "access_requested": null,
+      "access_granted": null,
+      "feeds": [],
+      "licence": null,
+      "attribution": null,
+      "missing_publish_flag": null,
+      "swapped_coordinates": null,
+      "nonstandard_statuses": null,
+      "tariffs_from": null,
+      "nonstandard_parking_restrictions": null,
+      "zero_price_tariffs": null,
+      "vat_not_stated": null,
+      "vat_in_price": null,
+      "own_feed_over_copies": null,
+      "relay": null,
+      "expired_certificate": null,
+      "excluded_locations": null,
+      "rate_limit": {
+        "our_gap_seconds": 2.0,
+        "our_max_per_hour": 1800,
+        "ours": "At least 2 s between requests to the operator's host, measured from the end of the previous request (at most 1800 in any hour), retries included.",
+        "published": [],
+        "limits_checked": "unknown",
+        "comparison": "The operator's pages have not been checked for limits yet.",
+        "difference_from_regulations": "Not known yet.",
+        "notes": null
+      },
+      "findings": []
+    },
+    {
+      "id": "octopus_electroverse",
+      "name": "Octopus Electroverse",
+      "enabled": false,
+      "adapter": "unknown",
+      "engagement": {
+        "status": "possibly_out_of_scope",
+        "label": "Possibly out of scope",
+        "headline": "Possibly out of scope (as of 2026-10-23)",
+        "as_of": "2026-10-23",
+        "last_request": null,
+        "last_response": null,
+        "last_response_text": "No request sent",
+        "evidence": [
+          {
+            "date": "2026-10-23",
+            "url": "https://evroam.org.uk/_functions/getRegister",
+            "file": null,
+            "note": "The EV Roam ID register lists \"Octopus Electroverse Ltd\" with operator ID GB*OCT and website https://electroverse.com/ (read 2026-10-23). The register names companies and IDs, not chargers."
+          }
+        ],
+        "log": [
+          {
+            "date": "2026-10-23",
+            "action": "feed_searched",
+            "action_label": "Searched for a feed",
+            "channel": null,
+            "channel_label": null,
+            "summary": "Its home page and its sitemap (1 page) were read once on 2026-10-23 and gave no open data link, feed or request route.",
+            "quote": null,
+            "evidence_url": "https://electroverse.com/",
             "evidence_file": null
           }
         ]
@@ -6370,6 +7204,134 @@
           "status": "needs_testing"
         }
       ],
+      "licence": null,
+      "attribution": null,
+      "missing_publish_flag": null,
+      "swapped_coordinates": null,
+      "nonstandard_statuses": null,
+      "tariffs_from": null,
+      "nonstandard_parking_restrictions": null,
+      "zero_price_tariffs": null,
+      "vat_not_stated": null,
+      "vat_in_price": null,
+      "own_feed_over_copies": null,
+      "relay": null,
+      "expired_certificate": null,
+      "excluded_locations": null,
+      "rate_limit": {
+        "our_gap_seconds": 2.0,
+        "our_max_per_hour": 1800,
+        "ours": "At least 2 s between requests to the operator's host, measured from the end of the previous request (at most 1800 in any hour), retries included.",
+        "published": [],
+        "limits_checked": "unknown",
+        "comparison": "The operator's pages have not been checked for limits yet.",
+        "difference_from_regulations": "Not known yet.",
+        "notes": null
+      },
+      "findings": []
+    },
+    {
+      "id": "pretium_ev_charging",
+      "name": "Pretium EV Charging",
+      "enabled": false,
+      "adapter": "unknown",
+      "engagement": {
+        "status": "no_public_feed_found",
+        "label": "No public feed found",
+        "headline": "No public feed found (as of 2026-10-23)",
+        "as_of": "2026-10-23",
+        "last_request": null,
+        "last_response": null,
+        "last_response_text": "No request sent",
+        "evidence": [
+          {
+            "date": "2026-10-23",
+            "url": "https://evroam.org.uk/_functions/getRegister",
+            "file": null,
+            "note": "The EV Roam ID register lists \"Pretium EV Charging Infra & Solutions Limited\" with operator ID GB*007 and website https://pretiumsynergy.co.uk/ (read 2026-10-23). The register names companies and IDs, not chargers."
+          }
+        ],
+        "log": [
+          {
+            "date": "2026-10-23",
+            "action": "feed_searched",
+            "action_label": "Searched for a feed",
+            "channel": null,
+            "channel_label": null,
+            "summary": "Its home page and its sitemap (61 pages) were read once on 2026-10-23 and gave no open data link, feed or request route.",
+            "quote": null,
+            "evidence_url": "https://pretiumsynergy.co.uk/",
+            "evidence_file": null
+          }
+        ]
+      },
+      "access_requested": null,
+      "access_granted": null,
+      "feeds": [],
+      "licence": null,
+      "attribution": null,
+      "missing_publish_flag": null,
+      "swapped_coordinates": null,
+      "nonstandard_statuses": null,
+      "tariffs_from": null,
+      "nonstandard_parking_restrictions": null,
+      "zero_price_tariffs": null,
+      "vat_not_stated": null,
+      "vat_in_price": null,
+      "own_feed_over_copies": null,
+      "relay": null,
+      "expired_certificate": null,
+      "excluded_locations": null,
+      "rate_limit": {
+        "our_gap_seconds": 2.0,
+        "our_max_per_hour": 1800,
+        "ours": "At least 2 s between requests to the operator's host, measured from the end of the previous request (at most 1800 in any hour), retries included.",
+        "published": [],
+        "limits_checked": "unknown",
+        "comparison": "The operator's pages have not been checked for limits yet.",
+        "difference_from_regulations": "Not known yet.",
+        "notes": null
+      },
+      "findings": []
+    },
+    {
+      "id": "q_park_recharge",
+      "name": "Q-Park Recharge",
+      "enabled": false,
+      "adapter": "unknown",
+      "engagement": {
+        "status": "no_public_feed_found",
+        "label": "No public feed found",
+        "headline": "No public feed found (as of 2026-10-23)",
+        "as_of": "2026-10-23",
+        "last_request": null,
+        "last_response": null,
+        "last_response_text": "No request sent",
+        "evidence": [
+          {
+            "date": "2026-10-23",
+            "url": "https://evroam.org.uk/_functions/getRegister",
+            "file": null,
+            "note": "The EV Roam ID register lists \"Q-Park Recharge Ltd\" with operator ID GB*QPA and website https://www.q-park.co.uk/en-gb/ (read 2026-10-23). The register names companies and IDs, not chargers."
+          }
+        ],
+        "log": [
+          {
+            "date": "2026-10-23",
+            "action": "feed_searched",
+            "action_label": "Searched for a feed",
+            "channel": null,
+            "channel_label": null,
+            "summary": "Its home page was read once on 2026-10-23 and gave no open data link, feed or request route.",
+            "quote": null,
+            "evidence_url": "https://www.q-park.co.uk/en-gb/",
+            "evidence_file": null
+          }
+        ]
+      },
+      "access_requested": null,
+      "access_granted": null,
+      "feeds": [],
       "licence": null,
       "attribution": null,
       "missing_publish_flag": null,
@@ -6920,10 +7882,10 @@
       "enabled": false,
       "adapter": "unknown",
       "engagement": {
-        "status": "unknown",
-        "label": "Not yet established",
-        "headline": "Not yet established (as of 2026-10-10)",
-        "as_of": "2026-10-10",
+        "status": "possibly_out_of_scope",
+        "label": "Possibly out of scope",
+        "headline": "Possibly out of scope (as of 2026-10-23)",
+        "as_of": "2026-10-23",
         "last_request": null,
         "last_response": null,
         "last_response_text": "No request sent",
@@ -6938,6 +7900,17 @@
             "summary": "Sprint's website could not be read by this project's automated checks on 2026-10-10 (no answer, then its address could not be found), so its open data route is not yet known; it needs checking in a browser.",
             "quote": null,
             "evidence_url": "https://www.sprintev.co.uk/",
+            "evidence_file": null
+          },
+          {
+            "date": "2026-10-23",
+            "action": "page_checked",
+            "action_label": "Operator's page checked",
+            "channel": null,
+            "channel_label": null,
+            "summary": "In a browser on 2026-10-23, sprintev.co.uk did not resolve and no UK charging network called Sprint was found; the only similar name found was an engineering firm working on vehicle-side and wireless charging.",
+            "quote": null,
+            "evidence_url": "https://sprintev.co.uk/",
             "evidence_file": null
           }
         ]
@@ -7332,6 +8305,70 @@
           "resolved_date": null
         }
       ]
+    },
+    {
+      "id": "voltempo",
+      "name": "Voltempo",
+      "enabled": false,
+      "adapter": "unknown",
+      "engagement": {
+        "status": "no_public_feed_found",
+        "label": "No public feed found",
+        "headline": "No public feed found (as of 2026-10-23)",
+        "as_of": "2026-10-23",
+        "last_request": null,
+        "last_response": null,
+        "last_response_text": "No request sent",
+        "evidence": [
+          {
+            "date": "2026-10-23",
+            "url": "https://evroam.org.uk/_functions/getRegister",
+            "file": null,
+            "note": "The EV Roam ID register lists \"Voltempo\" with operator ID GB*VTO and website https://voltempo.uk/ (read 2026-10-23). The register names companies and IDs, not chargers."
+          }
+        ],
+        "log": [
+          {
+            "date": "2026-10-23",
+            "action": "feed_searched",
+            "action_label": "Searched for a feed",
+            "channel": null,
+            "channel_label": null,
+            "summary": "Its home page and its sitemap (5 pages) were read once on 2026-10-23 and gave no open data link, feed or request route.",
+            "quote": null,
+            "evidence_url": "https://voltempo.uk/",
+            "evidence_file": null
+          }
+        ]
+      },
+      "access_requested": null,
+      "access_granted": null,
+      "feeds": [],
+      "licence": null,
+      "attribution": null,
+      "missing_publish_flag": null,
+      "swapped_coordinates": null,
+      "nonstandard_statuses": null,
+      "tariffs_from": null,
+      "nonstandard_parking_restrictions": null,
+      "zero_price_tariffs": null,
+      "vat_not_stated": null,
+      "vat_in_price": null,
+      "own_feed_over_copies": null,
+      "relay": null,
+      "expired_certificate": null,
+      "excluded_locations": null,
+      "rate_limit": {
+        "our_gap_seconds": 2.0,
+        "our_max_per_hour": 1800,
+        "ours": "At least 2 s between requests to the operator's host, measured from the end of the previous request (at most 1800 in any hour), retries included.",
+        "published": [],
+        "limits_checked": "unknown",
+        "comparison": "The operator's pages have not been checked for limits yet.",
+        "difference_from_regulations": "Not known yet.",
+        "notes": null
+      },
+      "findings": []
     },
     {
       "id": "wattif",

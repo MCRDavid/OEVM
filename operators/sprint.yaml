@@ -20,7 +20,7 @@ cors: unknown
 attribution: null
 licence: null
 engagement:
-  status: unknown
+  status: possibly_out_of_scope
   evidence: []
   log:
     - date: 2026-10-10
@@ -30,6 +30,11 @@ engagement:
         (no answer, then its address could not be found), so its open data route is not yet
         known; it needs checking in a browser.
       evidence_url: https://www.sprintev.co.uk/
+    - date: 2026-10-23
+      action: page_checked
+      summary: >-
+        In a browser on 2026-10-23, sprintev.co.uk did not resolve and no UK charging network called Sprint was found; the only similar name found was an engineering firm working on vehicle-side and wireless charging.
+      evidence_url: https://sprintev.co.uk/
 access_requested: null
 access_granted: null
 sources:
@@ -40,6 +45,5 @@ sources:
       could not find the address (DNS lookup failed), so it was not read.
 findings: []
 notes: >-
-  Sprint's website could not be reached on 2026-10-10. The next step is to confirm its
-  current website address in a browser and look for an open data or regulations link.
+  No UK public charging network called Sprint was found on 2026-10-23. Kept as a record only, to drop unless the source of the name can be found.
 enabled: false
