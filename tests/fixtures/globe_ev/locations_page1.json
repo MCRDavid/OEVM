@@ -1,0 +1,675 @@
+{
+  "request": {
+    "method": "GET",
+    "url": "https://api.evdot.clenergy.online/development/pcpr/locations"
+  },
+  "response": {
+    "status_code": 200,
+    "headers": {
+      "content-type": "application/json; charset=utf-8",
+      "access-control-allow-origin": "*"
+    },
+    "body": {
+      "name": "OK",
+      "message": "ok",
+      "data": [
+        {
+          "country_code": "GB",
+          "party_id": "CEV",
+          "id": "5e99bdd860418e07415d70ed",
+          "publish": true,
+          "name": "Watling Street Car Park, Canterbury",
+          "address": "Watling Street",
+          "city": "Canterbury",
+          "postal_code": "CT1 2TN",
+          "state": null,
+          "country": "GBR",
+          "coordinates": {
+            "latitude": "51.276377",
+            "longitude": "1.079630"
+          },
+          "related_locations": [],
+          "parking_type": "UNKNOWN",
+          "evses": [
+            {
+              "uid": "GB*CEV*E5f401942e03939062adc82b2-1",
+              "evse_id": "GB*CEV*E5f401942e03939062adc82b2",
+              "status": "AVAILABLE",
+              "status_schedule": [],
+              "capabilities": [
+                "REMOTE_START_STOP_CAPABLE",
+                "RFID_READER",
+                "UNLOCK_CAPABLE"
+              ],
+              "connectors": [
+                {
+                  "id": "1",
+                  "standard": "IEC_62196_T2",
+                  "format": "SOCKET",
+                  "power_type": "AC_3_PHASE",
+                  "max_voltage": 230,
+                  "max_amperage": 32,
+                  "max_electric_power": null,
+                  "tariff_ids": [
+                    "5f401936e03939062adc6dff"
+                  ],
+                  "terms_and_conditions": null,
+                  "last_updated": "2026-10-23T12:20:05.984Z",
+                  "voltage": 230,
+                  "amperage": 32
+                }
+              ],
+              "floor_level": null,
+              "coordinates": null,
+              "physical_reference": "000418",
+              "directions": [],
+              "parking_restrictions": [],
+              "images": [],
+              "last_updated": "2026-10-23T12:20:05.984Z"
+            },
+            {
+              "uid": "GB*CEV*E5f401942e03939062adc82b3-2",
+              "evse_id": "GB*CEV*E5f401942e03939062adc82b3",
+              "status": "CHARGING",
+              "status_schedule": [],
+              "capabilities": [
+                "REMOTE_START_STOP_CAPABLE",
+                "RFID_READER",
+                "UNLOCK_CAPABLE"
+              ],
+              "connectors": [
+                {
+                  "id": "2",
+                  "standard": "IEC_62196_T2",
+                  "format": "SOCKET",
+                  "power_type": "AC_3_PHASE",
+                  "max_voltage": 230,
+                  "max_amperage": 32,
+                  "max_electric_power": null,
+                  "tariff_ids": [
+                    "5f401936e03939062adc6dff"
+                  ],
+                  "terms_and_conditions": null,
+                  "last_updated": "2026-10-23T12:59:42.410Z",
+                  "voltage": 230,
+                  "amperage": 32
+                }
+              ],
+              "floor_level": null,
+              "coordinates": null,
+              "physical_reference": "000418",
+              "directions": [],
+              "parking_restrictions": [],
+              "images": [],
+              "last_updated": "2026-10-23T12:59:42.410Z"
+            }
+          ],
+          "directions": [],
+          "operator": null,
+          "suboperator": null,
+          "owner": null,
+          "facilities": [],
+          "time_zone": "Europe/London",
+          "opening_times": {
+            "twentyfourseven": true,
+            "regular_hours": [],
+            "exceptional_openings": [],
+            "exceptional_closings": []
+          },
+          "charging_when_closed": null,
+          "images": [],
+          "energy_mix": null,
+          "last_updated": "2026-10-23T13:01:00.008Z",
+          "publish_allowed_to": [],
+          "location_point": {
+            "coordinates": [
+              1.07963,
+              51.276377
+            ]
+          }
+        },
+        {
+          "country_code": "GB",
+          "party_id": "CEV",
+          "id": "5e99d9c2e2f16808d8999300",
+          "publish": true,
+          "name": "Westgate Hall Road, Canterbury",
+          "address": "Westgate Hall Road",
+          "city": "Canterbury",
+          "postal_code": "CT1 2BT",
+          "state": null,
+          "country": "GBR",
+          "coordinates": {
+            "latitude": "51.281400",
+            "longitude": "1.077648"
+          },
+          "related_locations": [],
+          "parking_type": "UNKNOWN",
+          "evses": [
+            {
+              "uid": "GB*CEV*E5f401942e03939062adc82c5-1",
+              "evse_id": "GB*CEV*E5f401942e03939062adc82c5",
+              "status": "AVAILABLE",
+              "status_schedule": [],
+              "capabilities": [
+                "REMOTE_START_STOP_CAPABLE",
+                "RFID_READER",
+                "UNLOCK_CAPABLE"
+              ],
+              "connectors": [
+                {
+                  "id": "1",
+                  "standard": "IEC_62196_T2",
+                  "format": "SOCKET",
+                  "power_type": "AC_1_PHASE",
+                  "max_voltage": 230,
+                  "max_amperage": 30,
+                  "max_electric_power": null,
+                  "tariff_ids": [
+                    "5f401936e03939062adc6dff"
+                  ],
+                  "terms_and_conditions": null,
+                  "last_updated": "2026-10-22T15:40:54.523Z",
+                  "voltage": 230,
+                  "amperage": 30
+                }
+              ],
+              "floor_level": null,
+              "coordinates": null,
+              "physical_reference": "000423",
+              "directions": [],
+              "parking_restrictions": [],
+              "images": [],
+              "last_updated": "2026-10-22T15:40:54.523Z"
+            },
+            {
+              "uid": "GB*CEV*E5f401942e03939062adc82c6-2",
+              "evse_id": "GB*CEV*E5f401942e03939062adc82c6",
+              "status": "CHARGING",
+              "status_schedule": [],
+              "capabilities": [
+                "REMOTE_START_STOP_CAPABLE",
+                "RFID_READER",
+                "UNLOCK_CAPABLE"
+              ],
+              "connectors": [
+                {
+                  "id": "2",
+                  "standard": "IEC_62196_T2",
+                  "format": "SOCKET",
+                  "power_type": "AC_1_PHASE",
+                  "max_voltage": 230,
+                  "max_amperage": 30,
+                  "max_electric_power": null,
+                  "tariff_ids": [
+                    "5f401936e03939062adc6dff"
+                  ],
+                  "terms_and_conditions": null,
+                  "last_updated": "2026-10-23T08:51:21.863Z",
+                  "voltage": 230,
+                  "amperage": 30
+                }
+              ],
+              "floor_level": null,
+              "coordinates": null,
+              "physical_reference": "000423",
+              "directions": [],
+              "parking_restrictions": [],
+              "images": [],
+              "last_updated": "2026-10-23T08:51:21.863Z"
+            }
+          ],
+          "directions": [],
+          "operator": null,
+          "suboperator": null,
+          "owner": null,
+          "facilities": [],
+          "time_zone": "Europe/London",
+          "opening_times": {
+            "twentyfourseven": true,
+            "regular_hours": [],
+            "exceptional_openings": [],
+            "exceptional_closings": []
+          },
+          "charging_when_closed": null,
+          "images": [],
+          "energy_mix": null,
+          "last_updated": "2026-10-23T13:01:00.008Z",
+          "publish_allowed_to": [],
+          "location_point": {
+            "coordinates": [
+              1.077648,
+              51.2814
+            ]
+          }
+        },
+        {
+          "country_code": "GB",
+          "party_id": "CEV",
+          "id": "5e99f407ff5d7909f4cc022f",
+          "publish": true,
+          "name": "Cromwell Road, Whitstable",
+          "address": "Cromwell Road",
+          "city": "Whitstable",
+          "postal_code": "CT5 1NA",
+          "state": null,
+          "country": "GBR",
+          "coordinates": {
+            "latitude": "51.361275",
+            "longitude": "1.029006"
+          },
+          "related_locations": [],
+          "parking_type": "UNKNOWN",
+          "evses": [
+            {
+              "uid": "GB*CEV*E5f401942e03939062adc82d7-1",
+              "evse_id": "GB*CEV*E5f401942e03939062adc82d7",
+              "status": "UNKNOWN",
+              "status_schedule": [],
+              "capabilities": [
+                "REMOTE_START_STOP_CAPABLE",
+                "RFID_READER",
+                "UNLOCK_CAPABLE"
+              ],
+              "connectors": [
+                {
+                  "id": "1",
+                  "standard": "IEC_62196_T2",
+                  "format": "SOCKET",
+                  "power_type": "AC_1_PHASE",
+                  "max_voltage": 230,
+                  "max_amperage": 30,
+                  "max_electric_power": null,
+                  "tariff_ids": [
+                    "5f401936e03939062adc6dff"
+                  ],
+                  "terms_and_conditions": null,
+                  "last_updated": "2026-09-28T07:12:02.998Z",
+                  "voltage": 230,
+                  "amperage": 30
+                }
+              ],
+              "floor_level": null,
+              "coordinates": null,
+              "physical_reference": "000424",
+              "directions": [],
+              "parking_restrictions": [],
+              "images": [],
+              "last_updated": "2026-09-28T07:12:02.998Z"
+            },
+            {
+              "uid": "GB*CEV*E5f401942e03939062adc82d8-2",
+              "evse_id": "GB*CEV*E5f401942e03939062adc82d8",
+              "status": "UNKNOWN",
+              "status_schedule": [],
+              "capabilities": [
+                "REMOTE_START_STOP_CAPABLE",
+                "RFID_READER",
+                "UNLOCK_CAPABLE"
+              ],
+              "connectors": [
+                {
+                  "id": "2",
+                  "standard": "IEC_62196_T2",
+                  "format": "SOCKET",
+                  "power_type": "AC_1_PHASE",
+                  "max_voltage": 230,
+                  "max_amperage": 30,
+                  "max_electric_power": null,
+                  "tariff_ids": [
+                    "5f401936e03939062adc6dff"
+                  ],
+                  "terms_and_conditions": null,
+                  "last_updated": "2026-09-28T08:13:25.409Z",
+                  "voltage": 230,
+                  "amperage": 30
+                }
+              ],
+              "floor_level": null,
+              "coordinates": null,
+              "physical_reference": "000424",
+              "directions": [],
+              "parking_restrictions": [],
+              "images": [],
+              "last_updated": "2026-09-28T08:13:25.409Z"
+            }
+          ],
+          "directions": [],
+          "operator": null,
+          "suboperator": null,
+          "owner": null,
+          "facilities": [],
+          "time_zone": "Europe/London",
+          "opening_times": {
+            "twentyfourseven": true,
+            "regular_hours": [],
+            "exceptional_openings": [],
+            "exceptional_closings": []
+          },
+          "charging_when_closed": null,
+          "images": [],
+          "energy_mix": null,
+          "last_updated": "2026-10-23T13:01:00.008Z",
+          "publish_allowed_to": [],
+          "location_point": {
+            "coordinates": [
+              1.029006,
+              51.361275
+            ]
+          }
+        },
+        {
+          "country_code": "GB",
+          "party_id": "CEV",
+          "id": "607ef5049ca98e42822269e9",
+          "publish": true,
+          "name": "Whittlebury Hall 4",
+          "address": "High Street",
+          "city": "Whittlebury",
+          "postal_code": "NN12 8QH",
+          "state": null,
+          "country": "GBR",
+          "coordinates": {
+            "latitude": "52.079536",
+            "longitude": "-0.997432"
+          },
+          "related_locations": [],
+          "parking_type": "UNKNOWN",
+          "evses": [
+            {
+              "uid": "GB*CEV*E607ef5499ca98eb88d226b1b-1",
+              "evse_id": "GB*CEV*E607ef5499ca98eb88d226b1b",
+              "status": "AVAILABLE",
+              "status_schedule": [],
+              "capabilities": [
+                "REMOTE_START_STOP_CAPABLE",
+                "RFID_READER",
+                "UNLOCK_CAPABLE"
+              ],
+              "connectors": [
+                {
+                  "id": "1",
+                  "standard": "IEC_62196_T2",
+                  "format": "SOCKET",
+                  "power_type": "AC_3_PHASE",
+                  "max_voltage": 230,
+                  "max_amperage": 32,
+                  "max_electric_power": null,
+                  "tariff_ids": [
+                    "62bd8c3db00a541d676eeb94"
+                  ],
+                  "terms_and_conditions": null,
+                  "last_updated": "2026-10-22T11:46:03.408Z",
+                  "voltage": 230,
+                  "amperage": 32
+                }
+              ],
+              "floor_level": null,
+              "coordinates": null,
+              "physical_reference": "001000",
+              "directions": [],
+              "parking_restrictions": [],
+              "images": [],
+              "last_updated": "2026-10-22T11:46:03.408Z"
+            }
+          ],
+          "directions": [],
+          "operator": null,
+          "suboperator": null,
+          "owner": null,
+          "facilities": [],
+          "time_zone": "Europe/London",
+          "opening_times": {
+            "twentyfourseven": true,
+            "regular_hours": [],
+            "exceptional_openings": [],
+            "exceptional_closings": []
+          },
+          "charging_when_closed": null,
+          "images": [],
+          "energy_mix": null,
+          "last_updated": "2026-10-23T13:01:00.008Z",
+          "publish_allowed_to": [],
+          "location_point": {
+            "coordinates": [
+              -0.997432,
+              52.079536
+            ]
+          }
+        },
+        {
+          "country_code": "GB",
+          "party_id": "CEV",
+          "id": "69207bb723627d83a86a857f",
+          "publish": true,
+          "name": "Vicarage Lane 2",
+          "address": "Vicarage Lane Car Park",
+          "city": "Ashford",
+          "postal_code": "TN23 1QD",
+          "state": null,
+          "country": "GBR",
+          "coordinates": {
+            "latitude": "51.148229",
+            "longitude": "0.875444"
+          },
+          "related_locations": [],
+          "parking_type": "UNKNOWN",
+          "evses": [
+            {
+              "uid": "GB*CEV*E69259bed45dd17a7b2dd884d-1",
+              "evse_id": "GB*CEV*E69259bed45dd17a7b2dd884d",
+              "status": "OUTOFORDER",
+              "status_schedule": [],
+              "capabilities": [
+                "REMOTE_START_STOP_CAPABLE",
+                "RFID_READER",
+                "UNLOCK_CAPABLE"
+              ],
+              "connectors": [
+                {
+                  "id": "1",
+                  "standard": "IEC_62196_T2",
+                  "format": "SOCKET",
+                  "power_type": "AC_3_PHASE",
+                  "max_voltage": 230,
+                  "max_amperage": 16,
+                  "max_electric_power": null,
+                  "tariff_ids": [
+                    "629f0f13cc609ac9b6052308"
+                  ],
+                  "terms_and_conditions": null,
+                  "last_updated": "2026-10-20T08:19:37.678Z",
+                  "voltage": 230,
+                  "amperage": 16
+                }
+              ],
+              "floor_level": null,
+              "coordinates": null,
+              "physical_reference": "023433",
+              "directions": [],
+              "parking_restrictions": [],
+              "images": [],
+              "last_updated": "2026-10-20T08:19:37.678Z"
+            },
+            {
+              "uid": "GB*CEV*E69259bf35897f199100692c2-2",
+              "evse_id": "GB*CEV*E69259bf35897f199100692c2",
+              "status": "OUTOFORDER",
+              "status_schedule": [],
+              "capabilities": [
+                "REMOTE_START_STOP_CAPABLE",
+                "RFID_READER",
+                "UNLOCK_CAPABLE"
+              ],
+              "connectors": [
+                {
+                  "id": "2",
+                  "standard": "IEC_62196_T2",
+                  "format": "SOCKET",
+                  "power_type": "AC_3_PHASE",
+                  "max_voltage": 230,
+                  "max_amperage": 16,
+                  "max_electric_power": null,
+                  "tariff_ids": [
+                    "629f0f13cc609ac9b6052308"
+                  ],
+                  "terms_and_conditions": null,
+                  "last_updated": "2026-10-20T08:19:34.033Z",
+                  "voltage": 230,
+                  "amperage": 16
+                }
+              ],
+              "floor_level": null,
+              "coordinates": null,
+              "physical_reference": "023433",
+              "directions": [],
+              "parking_restrictions": [],
+              "images": [],
+              "last_updated": "2026-10-20T08:19:34.033Z"
+            }
+          ],
+          "directions": [],
+          "operator": null,
+          "suboperator": null,
+          "owner": null,
+          "facilities": [],
+          "time_zone": "Europe/London",
+          "opening_times": {
+            "twentyfourseven": true,
+            "regular_hours": [],
+            "exceptional_openings": [],
+            "exceptional_closings": []
+          },
+          "charging_when_closed": null,
+          "images": [],
+          "energy_mix": null,
+          "last_updated": "2026-10-23T13:01:00.008Z",
+          "publish_allowed_to": [],
+          "location_point": {
+            "coordinates": [
+              0.875444,
+              51.148229
+            ]
+          }
+        },
+        {
+          "country_code": "GB",
+          "party_id": "CEV",
+          "id": "69396c0885d2085cc57a786f",
+          "publish": true,
+          "name": "Elwick Place Car Park",
+          "address": "Elwick Rd",
+          "city": "Ashford",
+          "postal_code": "TN23 1AX",
+          "state": null,
+          "country": "GBR",
+          "coordinates": {
+            "latitude": "51.146916",
+            "longitude": "0.868678"
+          },
+          "related_locations": [],
+          "parking_type": "UNKNOWN",
+          "evses": [
+            {
+              "uid": "GB*CEV*E694a79454db2250bbcf2a9e3-1",
+              "evse_id": "GB*CEV*E694a79454db2250bbcf2a9e3",
+              "status": "AVAILABLE",
+              "status_schedule": [],
+              "capabilities": [
+                "REMOTE_START_STOP_CAPABLE",
+                "RFID_READER",
+                "UNLOCK_CAPABLE"
+              ],
+              "connectors": [
+                {
+                  "id": "1",
+                  "standard": "IEC_62196_T2_COMBO",
+                  "format": "CABLE",
+                  "power_type": "DC",
+                  "max_voltage": 400,
+                  "max_amperage": 100,
+                  "max_electric_power": null,
+                  "tariff_ids": [
+                    "629f0f13cc609ac9b6052308"
+                  ],
+                  "terms_and_conditions": null,
+                  "last_updated": "2026-10-23T07:17:43.946Z",
+                  "voltage": 400,
+                  "amperage": 100
+                }
+              ],
+              "floor_level": null,
+              "coordinates": null,
+              "physical_reference": "029122",
+              "directions": [],
+              "parking_restrictions": [],
+              "images": [],
+              "last_updated": "2026-10-23T07:17:43.946Z"
+            },
+            {
+              "uid": "GB*CEV*E694a7945a6aadbd7bad960bc-2",
+              "evse_id": "GB*CEV*E694a7945a6aadbd7bad960bc",
+              "status": "AVAILABLE",
+              "status_schedule": [],
+              "capabilities": [
+                "REMOTE_START_STOP_CAPABLE",
+                "RFID_READER",
+                "UNLOCK_CAPABLE"
+              ],
+              "connectors": [
+                {
+                  "id": "2",
+                  "standard": "IEC_62196_T2_COMBO",
+                  "format": "CABLE",
+                  "power_type": "DC",
+                  "max_voltage": 400,
+                  "max_amperage": 100,
+                  "max_electric_power": null,
+                  "tariff_ids": [
+                    "629f0f13cc609ac9b6052308"
+                  ],
+                  "terms_and_conditions": null,
+                  "last_updated": "2026-10-23T01:08:57.595Z",
+                  "voltage": 400,
+                  "amperage": 100
+                }
+              ],
+              "floor_level": null,
+              "coordinates": null,
+              "physical_reference": "029122",
+              "directions": [],
+              "parking_restrictions": [],
+              "images": [],
+              "last_updated": "2026-10-23T01:08:57.595Z"
+            }
+          ],
+          "directions": [],
+          "operator": null,
+          "suboperator": null,
+          "owner": null,
+          "facilities": [],
+          "time_zone": "Europe/London",
+          "opening_times": {
+            "twentyfourseven": true,
+            "regular_hours": [],
+            "exceptional_openings": [],
+            "exceptional_closings": []
+          },
+          "charging_when_closed": null,
+          "images": [],
+          "energy_mix": null,
+          "last_updated": "2026-10-23T13:01:00.008Z",
+          "publish_allowed_to": [],
+          "location_point": {
+            "coordinates": [
+              0.868678,
+              51.146916
+            ]
+          }
+        }
+      ],
+      "error": null,
+      "forcelogout": false
+    }
+  }
+}

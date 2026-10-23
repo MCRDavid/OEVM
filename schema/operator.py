@@ -18,6 +18,10 @@ from urllib.parse import parse_qsl, urlsplit
 from pydantic import AfterValidator, BaseModel, ConfigDict, Field, model_validator
 
 Unknown = Literal["unknown"]
+
+# A UK postcode, with or without its space (the BFPO and overseas territory forms are not
+# needed here). Used only to decide whether wrong coordinates are obviously a UK place.
+UK_POSTCODE = re.compile(r"^[A-Z]{1,2}[0-9][A-Z0-9]? ?[0-9][A-Z]{2}$", re.IGNORECASE)
 Support = Literal["supported", "not_supported", "needs_testing", "unknown"]
 AdapterName = Literal[
     "ocpi_221", "eco_movement_pcpr", "gridserve", "static_file", "custom", "unknown"
@@ -416,10 +420,47 @@ class SwappedCoordinates(_Model):
     none is given. The published point is kept with the location, the map says it was
     corrected, and the operator's findings record it. Without this decision such locations
     are left off the map.
+
+    A longitude missing its minus sign can also leave the point inside the UK, far from the
+    place its postcode names. No check can see that, so such a location is corrected only
+    when the owner names it in sign_missing (ADR 0013, amended 23 October 2026).
     """
 
     decided: dt.date = Field(description="Date the owner made the decision (YYYY-MM-DD).")
     basis: NeutralText = Field(description="Why obviously wrong coordinates may be corrected.")
+    sign_missing: list["SignMissingLocation"] = Field(
+        default_factory=list,
+        description="Locations whose longitude is missing its minus sign although the point "
+        "as published is inside the UK, each named by the owner by exact OCPI id.",
+    )
+
+    @model_validator(mode="after")
+    def _unique(self) -> "SwappedCoordinates":
+        ids = [location.id for location in self.sign_missing]
+        if len(set(ids)) != len(ids):
+            raise ValueError("each location may be listed once in sign_missing")
+        return self
+
+
+class SignMissingLocation(_Model):
+    """A location the owner found to be missing its longitude's minus sign by its postcode.
+
+    Its minus sign is added only while the feed still sends this postcode and a positive
+    longitude, and the point west of the Greenwich meridian is on the UK's land or within
+    2 km of its coast.
+    """
+
+    id: str = Field(min_length=1, description="The location's OCPI id, exactly as sent.")
+    name: str = Field(min_length=1, description="The location's name as the feed sends it.")
+    postal_code: str = Field(
+        min_length=1, description="The UK postcode the feed sends, which shows where it is."
+    )
+
+    @model_validator(mode="after")
+    def _uk_postcode(self) -> "SignMissingLocation":
+        if not UK_POSTCODE.match(self.postal_code.strip()):
+            raise ValueError("postal_code must be a UK postcode")
+        return self
 
 
 # OCPI 2.2.1 EVSE statuses, which a non-standard reading can never replace.
@@ -535,6 +576,58 @@ class VatNotStated(_Model):
     add_percent: float = Field(
         gt=0, le=100, description="The VAT rate added, in percent (UK standard rate: 20)."
     )
+
+
+class VatInPrice(_Model):
+    """The repository owner's recorded decision that the VAT this operator's feed states is
+    already in its prices, so it is not added again (ADR 0003, amended 23 October 2026).
+
+    OCPI 2.2.1 prices exclude VAT, and each price component can give the VAT rate to add.
+    Some feeds also show the price drivers see, and it can equal the price with no VAT
+    added. Without this decision VAT at the stated rate is added, as OCPI says. With it,
+    each price is shown as published, marked as read from the operator's display price.
+    The tariffs themselves are published unchanged.
+    """
+
+    decided: dt.date = Field(description="Date the owner made the decision (YYYY-MM-DD).")
+    basis: NeutralText = Field(
+        description="Why the prices are read as including VAT, with the evidence checked."
+    )
+    evidence_url: SafeUrl = Field(description="Where the prices and their VAT can be seen.")
+
+
+class OwnFeedOverCopies(_Model):
+    """The repository owner's recorded decision that this operator's own feed is shown in
+    place of copies of its locations in other operators' feeds (ADR 0027).
+
+    A platform's feed can carry a network's locations under the network's own OCPI country
+    and party codes, while the network publishes them itself too. While this operator's own
+    locations are on the map, from this run or its last good copy, every location that a
+    named operator's feed sends under this operator's ocpi_country_code and ocpi_party_id
+    is left off the map. Each is counted and listed on the feed health page; nothing in
+    either feed is changed. When this operator has nothing on the map, the copies are shown.
+    """
+
+    decided: dt.date = Field(description="Date the owner made the decision (YYYY-MM-DD).")
+    basis: NeutralText = Field(
+        description="Why the other feeds' records are copies of this operator's, with the "
+        "evidence checked."
+    )
+    evidence_url: SafeUrl = Field(description="Where the copies can be seen.")
+    operators: list[str] = Field(
+        min_length=1,
+        description="Ids of the operators whose feeds carry the copies. Each must be in the "
+        "registry.",
+    )
+
+    @model_validator(mode="after")
+    def _ids(self) -> "OwnFeedOverCopies":
+        for item in self.operators:
+            if not re.fullmatch(r"[a-z0-9_]+", item):
+                raise ValueError(f"{item!r} is not an operator id")
+        if len(set(self.operators)) != len(self.operators):
+            raise ValueError("each operator may be named once")
+        return self
 
 
 class Relay(_Model):
@@ -827,6 +920,17 @@ class OperatorConfig(_Model):
         "price components that give no VAT figure. Null means such prices are shown as "
         "published and marked 'VAT not stated'.",
     )
+    vat_in_price: VatInPrice | None = Field(
+        default=None,
+        description="Only by the repository owner's decision: read the VAT the feed states "
+        "as already in its prices. Null means the stated VAT is added, as OCPI 2.2.1 says.",
+    )
+    own_feed_over_copies: OwnFeedOverCopies | None = Field(
+        default=None,
+        description="Only by the repository owner's decision: leave off the map the "
+        "locations other operators' feeds send under this operator's country and party "
+        "codes, while this operator's own are on it. Null means both are shown.",
+    )
     expired_certificate: ExpiredCertificate | None = Field(
         default=None,
         description="Only by the repository owner's decision: read the feed past one "
@@ -906,6 +1010,13 @@ class OperatorConfig(_Model):
                 problems.append("relay url_variable and secret_name must differ")
         if self.tariffs_from is not None and self.id in self.tariffs_from.operators:
             problems.append("tariffs_from cannot name the operator itself")
+        if self.vat_in_price is not None and self.vat_not_stated is not None:
+            problems.append("vat_in_price and vat_not_stated cannot both be recorded")
+        if self.own_feed_over_copies is not None:
+            if self.id in self.own_feed_over_copies.operators:
+                problems.append("own_feed_over_copies cannot name the operator itself")
+            if "unknown" in (self.ocpi_country_code, self.ocpi_party_id):
+                problems.append("own_feed_over_copies needs a known ocpi_country_code and party")
         if self.expired_certificate is not None:
             if self.auth.method != "none":
                 problems.append("only a feed that needs no key may be read past a certificate")

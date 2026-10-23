@@ -16,7 +16,7 @@ from pipeline import health, publish, run, status
 from pipeline.registry import ROOT, load_registry
 from pipeline.transparency import short_disclaimer
 from schema.operator import neutral_text
-from schema.published import OperatorStatus, StatusFile
+from schema.published import Manifest, OperatorStatus, StatusFile
 from schema.runlog import RunLog
 
 NOW = datetime(2026, 10, 8, 13, 0, tzinfo=UTC)
@@ -268,7 +268,7 @@ def test_operators_with_no_run_are_not_fetched_yet(tmp_path):
     empty = tmp_path / "empty"
     empty.mkdir()
     page, data = render(empty, tmp_path / "out")
-    assert text_of(page)[0].count("Not fetched yet") == len(data["operators"]) == 14
+    assert text_of(page)[0].count("Not fetched yet") == len(data["operators"]) == 17
 
 
 def latest(log: dict) -> OperatorStatus:
@@ -448,7 +448,48 @@ def test_names_from_the_map_file_are_escaped(logs, published, tmp_path):
     feature["properties"]["name"] = "<b>Private</b>"
     changed = tmp_path / "locations.geojson"
     changed.write_text(json.dumps(layer))
+    (tmp_path / "manifest.json").write_bytes((published.parent / "manifest.json").read_bytes())
     page = status.outputs(logs, tmp_path / "out", None, NOW, changed)[
         tmp_path / "out" / "status" / "index.html"
     ]
     assert "<b>" not in page and "&lt;b&gt;Private&lt;/b&gt;" in page
+
+
+# Locations left off as copies of a network's own feed (ADR 0027)
+
+
+def test_the_page_says_when_no_copies_were_left_off(logs, published, tmp_path):
+    page = status.outputs(logs, tmp_path / "out", None, NOW, published)[
+        tmp_path / "out" / "status" / "index.html"
+    ]
+    text, _ = text_of(page)
+    assert 'id="copies"' in page
+    assert "No location in the latest map files was left off this way." in text
+
+
+def test_the_page_lists_copies_left_off_with_their_ids(logs, published, tmp_path):
+    (tmp_path / "locations.geojson").write_bytes(published.read_bytes())
+    manifest = json.loads((published.parent / "manifest.json").read_text())
+    ids = ["monta:GB:UFX:<b>1</b>", "monta:GB:UFX:2"]
+    manifest["operators"]["monta"] |= {
+        "replaced": 2,
+        "replaced_ids": ids,
+        "replaced_by": {"urban_fox": 2},
+    }
+    (tmp_path / "manifest.json").write_text(json.dumps(manifest))
+    page = status.outputs(logs, tmp_path / "out", None, NOW, tmp_path / "locations.geojson")[
+        tmp_path / "out" / "status" / "index.html"
+    ]
+    text, _ = text_of(page)
+    neutral_text(text)
+    assert "Monta Urban Fox 2" in text
+    assert "<b>1" not in page and "monta:GB:UFX:&lt;b&gt;1&lt;/b&gt;" in page
+    assert status.copy_rows(Manifest.model_validate(manifest), load_registry()) == [
+        ("Monta", "Urban Fox", ids)
+    ]
+
+
+def test_a_missing_manifest_beside_the_map_file_is_refused(logs, published, tmp_path):
+    (tmp_path / "locations.geojson").write_bytes(published.read_bytes())
+    with pytest.raises(status.StatusError, match=r"manifest\.json does not exist"):
+        status.outputs(logs, tmp_path / "out", None, NOW, tmp_path / "locations.geojson")

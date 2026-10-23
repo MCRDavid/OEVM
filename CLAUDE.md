@@ -72,6 +72,7 @@ decisions are in docs/adr/.
   currencies; other currencies show as "Price unknown".
 - Add VAT to a price whose feed gives no VAT rate only where the operator file records the
   owner's decision in vat_not_stated, at its rate, saying so in the price (ADR 0003); never add one yourself.
+  Read a stated VAT rate as already in the price only where the owner recorded vat_in_price.
 - Never go below 1 second between requests to a host, or below any limit in an operator's
   rate_limit.limits plus a 1 second margin. Record each published limit with its publisher, an
   exact quote, source URL and date; tests enforce these rules. Never run two fetches that use the same host in parallel.
@@ -94,6 +95,7 @@ decisions are in docs/adr/.
 - Map only locations whose coordinates are genuinely in the UK (pipeline/geography.py, ADR 0017).
 - Correct coordinates only where the operator file records the owner's decision in
   swapped_coordinates, and only obvious latitude/longitude swaps or missing longitude minus signs (ADR 0013); show and record each one.
+  A point that is inside the UK as published moves only if the owner names it in sign_missing.
 - Switch an operator on only after reading its own terms and filling in its licence section.
 - Price a connector from another operator's tariff only where the operator file records the
   owner's decision in tariffs_from, only by exact tariff id, never by name (ADR 0020); never add one yourself.
@@ -103,6 +105,9 @@ decisions are in docs/adr/.
   feed health page.
 - Show a tariff whose prices are all zero as "Price unknown" rather than "Free" only where the
   operator file records the owner's decision in zero_price_tariffs, by exact tariff id (ADR 0022); never add one yourself.
+- Leave off another operator's copies of a network's locations (records under the network's own
+  country and party codes) only where the network's operator file records the owner's decision in
+  own_feed_over_copies, and only while its own locations are on the map (ADR 0027); never add one yourself.
 - Fetch through the relay (relay/worker.js) only when the operator file records the owner's
   decision in relay; only feeds that need no key; same User-Agent and rate limits; never
   rotate addresses or disguise the project. Cloudflare deploys relay/ from main (relay/wrangler.toml).

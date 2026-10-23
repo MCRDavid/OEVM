@@ -88,6 +88,22 @@ Date: 2026-10-07. Status: accepted.
 - A last good copy kept from before the decision (ADR 0018) keeps its prices until the
   operator's next good fetch.
 
+### Amendment, 23 October 2026: stated VAT read as already in the price
+
+- BrightGreen's feed gives every price with VAT 20 and also a `price_display` field, not
+  in OCPI 2.2.1, equal to the price as written: price "0.59", VAT 20 and price_display
+  "£0.59" (12 of 12 tariffs on 23 October 2026). Read as OCPI says, that is 70.8p per kWh
+  including VAT, while the display price shows 59p. Which one drivers pay is not stated.
+- The owner decided the prices are read as the display price shows them. The decision is
+  recorded per operator in `vat_in_price` (decided, basis, evidence). Where it is
+  recorded, `pipeline/pricing.py` adds nothing to a price component that states its VAT,
+  and the price says "including VAT, read as the operator's display price shows it". A
+  component that gives no rate is still marked "VAT not stated"; this decision never
+  supplies a rate. A minimum charge is read the same way.
+- An operator cannot record both `vat_in_price` and `vat_not_stated`. The tariffs are
+  published unchanged, the transparency page shows the decision in the operator's row and
+  in its "VAT in prices" section, and only the owner adds one.
+
 ## Security
 
 - `SECURITY.md` asks for private reports through GitHub's private vulnerability
