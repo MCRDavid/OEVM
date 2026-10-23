@@ -15,9 +15,12 @@ endpoints:
       meta.pagination.after and has_more. With group_by_location=true each site is one
       Location (id s<siteId>). No tariffs endpoint is documented for open data.
 auth:
-  method: unknown
-  name: null
-  secret_name: null
+  method: client_credentials
+  name: Authorization
+  scheme: Bearer
+  secret_name: MONTA_CLIENT_SECRET
+  client_id_secret_name: MONTA_CLIENT_ID
+  token_url: https://public-api.monta.com/api/v1/auth/token
 rate_limit:
   min_seconds_between_requests: 7
   limits:
@@ -36,8 +39,23 @@ rate_limit:
     change in the future."
 supports_single_location: unknown
 cors: unknown
-attribution: null
-licence: null
+attribution: >-
+  Contains data from Monta published under the Public Charge Point Regulations 2023, used in
+  line with the Open Government Licence v3.0.
+licence:
+  name: OGL-3.0
+  url: https://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/
+  basis: >-
+    Monta's Public API pages describe the open data endpoint as "Intended for AFIR-style
+    aggregators and government open-data consumers" and state no licence or terms for the
+    data; the Public API's index of pages lists none (read 2026-10-23). Monta's Fair Use
+    Policy for its partner API asks callers to keep to its rate limits, cache and "avoid
+    unnecessary polling"; this project reads the list once a day within the published rate
+    limit. DfT's guidance says "Data must be open in line with the Open Government Licence",
+    and regulation 10(5) requires the data to be available without terms on its use. On
+    2026-10-23 the repository owner decided to switch the feed on, reading it as open data
+    published under the regulations for the networks on Monta's platform.
+  checked: 2026-10-23
 engagement:
   status: key_on_request
   evidence:
@@ -101,8 +119,8 @@ findings:
       secret of an application registered in the Monta portal and lasts one hour.
     handling: >-
       The client id and secret are kept in the GitHub Actions secrets MONTA_CLIENT_ID and
-      MONTA_CLIENT_SECRET and are never committed. The registry cannot yet describe a token
-      request, so auth is recorded as unknown here until an adapter is built.
+      MONTA_CLIENT_SECRET and are never committed. The adapter requests one token per run
+      (auth method client_credentials).
     evidence_url: https://docs.public-api.monta.com/reference/authentication
   - date: 2026-10-22
     kind: spec_conformance
@@ -110,7 +128,7 @@ findings:
       Monta documents each page as a {data, meta} object with a cursor in meta.pagination,
       not the OCPI 2.2.1 response format with Link headers. A page of 1,000 locations, the
       documented maximum, answered HTTP 500; pages of 100 worked.
-    handling: Any adapter would read pages of 100 or fewer.
+    handling: The adapter reads pages of 100, and of 10 or 1 where a page fails.
     evidence_url: https://docs.public-api.monta.com/reference/get-open-data-locations
   - date: 2026-10-22
     kind: access
@@ -119,15 +137,16 @@ findings:
       location, the next request answered HTTP 500 ("An unexpected error occurred"), with
       pages of 100, 10 or 1 location, on 22 and 23 October 2026.
     handling: >-
-      Nothing from the feed is mapped. It stays switched off until the whole list can be
-      read.
+      The cursor is the lowest charge point id in a site, so the adapter skips each site the
+      server cannot send by finding the smallest cursor past it that answers. The number of
+      sites skipped is logged with each run, and a run that skips any is marked incomplete.
     evidence_url: https://docs.public-api.monta.com/reference/get-open-data-locations
   - date: 2026-10-22
     kind: data_quality
     summary: >-
       No prices: in the 1,675 locations read, every EVSE's tariffs list was empty, although
       6,941 of 6,985 connectors name a tariff id.
-    handling: Prices would show as "Price unknown".
+    handling: Prices show as "Price unknown".
     evidence_url: https://docs.public-api.monta.com/reference/get-open-data-locations
   - date: 2026-10-22
     kind: data_quality
@@ -136,7 +155,10 @@ findings:
       locations read had status REMOVED, and 142 locations had at least one EVSE that was
       not. 1,496 locations had publish true.
     handling: >-
-      Only published locations with at least one EVSE that is not removed would be shown.
+      Locations with publish false are not kept, as for every feed. A location with no EVSE
+      that is not REMOVED is not kept either: OCPI 2.2.1 says "A Location without any valid
+      EVSE object can be considered expired and should no longer be displayed" (Locations
+      module, Flow and Lifecycle). Its id is listed as dropped in the run log.
     evidence_url: https://docs.public-api.monta.com/reference/get-open-data-locations
   - date: 2026-10-22
     kind: data_quality
@@ -144,15 +166,14 @@ findings:
       Every location read gives country GBR. 1,667 carry country_code DK, party_id MON and
       operator Monta ApS; 8 carry country_code GB, party_id UFX and operator Urban Fox.
     handling: >-
-      Each location also names its site owner in owner. This project would not keep or show
-      owner names.
+      Each location also names its site owner in owner. The adapter removes that field from
+      every record as it is read, so owner names are never kept or shown.
     evidence_url: https://docs.public-api.monta.com/reference/get-open-data-locations
 notes: >-
   Monta runs charge point management software used by many UK charge point owners, and
   publishes their open data through one endpoint of its Public API. It is separate from
   Monta's partner API (developer.monta.com). Monta's help pages also describe each network
-  exporting its own open data file from Monta Hub. The client id and secret would be stored
-  as the GitHub Actions secrets MONTA_CLIENT_ID and MONTA_CLIENT_SECRET. Switched off: the
-  feed cannot yet be read in full, its terms for the data are not stated, and no adapter is
-  built.
-enabled: false
+  exporting its own open data file from Monta Hub. The client id and secret are stored as
+  the GitHub Actions secrets MONTA_CLIENT_ID and MONTA_CLIENT_SECRET. Switched on by the
+  repository owner on 2026-10-23 (adapters/monta.py).
+enabled: true

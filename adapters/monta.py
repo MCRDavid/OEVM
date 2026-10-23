@@ -13,11 +13,14 @@ findings in operators/monta.yaml on 2026-10-22 and 2026-10-23, are:
 - The server answers HTTP 500 for some sites, and for any page that holds one. A page
   that fails is asked for again as pages of 10, then 1. When one site fails on its own,
   the adapter looks for the smallest cursor past the last good one that answers,
-  doubling the step and then halving the gap, so only that site is skipped. Each skip
-  is logged and the fetch is marked incomplete.
+  doubling the step and then halving the gap, so only the failing site (or run of
+  failing sites) is skipped. Each skip is logged and the fetch is marked incomplete.
 - Each Location names its site owner in owner, often a private individual. The field is
   removed from every record as soon as it is read, so owner names are never kept, saved,
   logged or shown.
+- Most sites listed have every charger marked REMOVED. OCPI 2.2.1 says "A Location
+  without any valid EVSE object can be considered expired and should no longer be
+  displayed" (Locations module, Flow and Lifecycle), so those sites are not kept.
 - No tariffs are given (every EVSE's tariffs list is empty), so prices are unknown.
 
 Records are then converted by adapters.ocpi_221.convert_records, so the publish rule and
@@ -29,7 +32,7 @@ from datetime import UTC, datetime
 from adapters.http import FeedError, PoliteClient, redact_url, with_params
 from adapters.ocpi_221 import AdapterResult, convert_records
 from adapters.ocpi_221.client import KEPT_HEADERS, ModuleFetch, Page
-from adapters.ocpi_221.normalise import IssueLog
+from adapters.ocpi_221.normalise import IssueLog, location_record_id
 from adapters.progress import NO_PROGRESS, PageProgress
 from schema.operator import OperatorConfig
 
@@ -44,6 +47,13 @@ SERVER_ERROR = 500
 # Charge point ids are 64-bit numbers.
 MAX_STEP = 2**62
 REMOVED_FIELDS = ("owner",)
+
+
+def _expired(record: object) -> bool:
+    """Whether a site has no EVSE that is not REMOVED (OCPI 2.2.1: expired)."""
+    if not isinstance(record, dict) or not isinstance(record.get("evses"), list):
+        return False
+    return all(isinstance(e, dict) and e.get("status") == "REMOVED" for e in record["evses"])
 
 
 def _without_owner(record: object) -> object:
@@ -74,7 +84,9 @@ class _Reader:
 
         Every cursor from `after` up to the failing site's own id answers HTTP 500, and
         every cursor from that id up to the next site's id answers, so the smallest
-        cursor that answers is the failing site's id.
+        cursor that answers is the failing site's id. Where failing sites come one after
+        another, it is the last one's id: one skip passes them all, and how many there
+        were cannot be known.
         """
         low, step, found = after, 1, None
         while step <= MAX_STEP and self.client.requests_made < MAX_REQUESTS:
@@ -120,7 +132,7 @@ class _Reader:
                     raise FeedError(f"{redact_url(url)} returned HTTP 500 for the first site")
                 if self.skipped >= MAX_SKIPS:
                     self.issues.add(
-                        f"stopped after skipping {MAX_SKIPS} sites the server could not "
+                        f"stopped after skipping {MAX_SKIPS} times past sites the server could not "
                         "send; the rest of the list was not read"
                     )
                     return self.module
@@ -151,7 +163,9 @@ class _Reader:
             kept = {"data": records, "meta": body.get("meta")}
             page = Page(redact_url(url), 200, self.client.redact(headers), self.client.redact(kept))
             self.module.pages.append(page)
-            progress.page("locations", pages=len(self.module.pages), records=len(records))
+            progress.page(
+                "locations", pages=len(self.module.pages), records=len(self.module.records)
+            )
             if level and streak >= BACK_UP_AFTER:
                 level, streak = level - 1, 0
             next_after = pagination.get("after")
@@ -189,8 +203,8 @@ def fetch(
     locations = reader.read(max_pages, progress)
     if reader.skipped:
         issues.add(
-            f"{reader.skipped} site(s) skipped: the server answered HTTP 500 for each, "
-            "even asked for on its own"
+            f"skipped {reader.skipped} time(s) past sites the server answered HTTP 500 for, "
+            "even asked for one at a time (at least one site each time)"
         )
     progress.module_done(
         "locations",
@@ -201,6 +215,17 @@ def fetch(
     # Monta's open data has no tariffs; every EVSE's tariffs list is empty.
     tariffs = ModuleFetch("tariffs", url, complete=True)
     result = AdapterResult(config.id, fetched_at, {"locations": locations, "tariffs": tariffs})
-    convert_records(config, result, locations=locations.records, tariffs=[], issues=issues)
+    current = []
+    for record in locations.records:
+        if _expired(record):
+            issues.add(
+                "location not kept: it has no EVSE that is not REMOVED (OCPI 2.2.1: expired)"
+            )
+            record_id = location_record_id(record, config)
+            if record_id is not None:
+                result.dropped_location_ids.append(record_id)
+        else:
+            current.append(record)
+    convert_records(config, result, locations=current, tariffs=[], issues=issues)
     result.issues = [client.redact(line) for line in issues.lines()]
     return result

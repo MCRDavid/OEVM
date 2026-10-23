@@ -1,0 +1,240 @@
+{
+  "request": {
+    "method": "GET",
+    "url": "https://public-api.monta.com/api/v1/open-data/locations?per_page=100&group_by_location=true&after=1009"
+  },
+  "response": {
+    "status_code": 200,
+    "headers": {
+      "content-type": "application/json"
+    },
+    "body": {
+      "data": [
+        {
+          "country_code": "GB",
+          "party_id": "EXN",
+          "id": "s1012",
+          "publish": true,
+          "publish_allowed_to": [],
+          "name": "Example Town Car Park",
+          "address": "12 Market Place",
+          "city": "Norwich",
+          "postal_code": "NR2 1ND",
+          "state": null,
+          "country": "GBR",
+          "coordinates": {
+            "latitude": "52.62840",
+            "longitude": "1.29230"
+          },
+          "related_locations": null,
+          "parking_type": "ON_STREET",
+          "evses": [
+            {
+              "uid": "1012",
+              "evse_id": "GB*UFX*E1012",
+              "status": "UNKNOWN",
+              "status_schedule": [],
+              "capabilities": [
+                "REMOTE_START_STOP_CAPABLE",
+                "RFID_READER"
+              ],
+              "connectors": [
+                {
+                  "id": "1",
+                  "standard": "IEC_62196_T2",
+                  "format": "SOCKET",
+                  "power_type": "AC_3_PHASE",
+                  "max_voltage": 400,
+                  "max_amperage": 16,
+                  "max_electric_power": 11000,
+                  "tariff_ids": null,
+                  "terms_and_conditions": null,
+                  "last_updated": "2026-10-21T08:30:00Z"
+                }
+              ],
+              "floor_level": null,
+              "coordinates": {
+                "latitude": "52.62840",
+                "longitude": "1.29230"
+              },
+              "physical_reference": "1",
+              "directions": null,
+              "parking_restrictions": null,
+              "images": null,
+              "ocpp_identity": null,
+              "tariffs": [],
+              "last_updated": "2026-10-21T08:30:00Z"
+            }
+          ],
+          "directions": null,
+          "operator": {
+            "name": "Example Network",
+            "website": "https://example.invalid",
+            "logo": {
+              "url": "https://example.invalid/network.png",
+              "thumbnail": null,
+              "category": "OPERATOR",
+              "type": "png",
+              "width": null,
+              "height": null
+            }
+          },
+          "sub_operator": {
+            "name": "Example Sub Operator",
+            "website": "https://example.invalid",
+            "logo": {
+              "url": "https://example.invalid/sub.png",
+              "thumbnail": null,
+              "category": "OPERATOR",
+              "type": "png",
+              "width": null,
+              "height": null
+            }
+          },
+          "owner": {
+            "name": "Example Owner Ltd",
+            "website": null,
+            "logo": null
+          },
+          "facilities": null,
+          "time_zone": "Europe/London",
+          "opening_times": {
+            "twentyfourseven": true,
+            "regular_hours": null,
+            "exceptional_openings": null,
+            "exceptional_closings": null
+          },
+          "charging_when_closed": true,
+          "images": null,
+          "energy_mix": null,
+          "last_updated": "2026-10-20T09:00:00Z"
+        },
+        {
+          "country_code": "DK",
+          "party_id": "MON",
+          "id": "s1020",
+          "publish": true,
+          "publish_allowed_to": [],
+          "name": "Example Services",
+          "address": "20 Sample Way",
+          "city": "Cardiff",
+          "postal_code": "CF10 1EP",
+          "state": null,
+          "country": "GBR",
+          "coordinates": {
+            "latitude": "51.47820",
+            "longitude": "-3.17710"
+          },
+          "related_locations": null,
+          "parking_type": "PARKING_LOT",
+          "evses": [
+            {
+              "uid": "1020",
+              "evse_id": "GB*MON*E1020",
+              "status": "OUTOFORDER",
+              "status_schedule": [],
+              "capabilities": [
+                "REMOTE_START_STOP_CAPABLE",
+                "RFID_READER"
+              ],
+              "connectors": [
+                {
+                  "id": "1",
+                  "standard": "IEC_62196_T2_COMBO",
+                  "format": "CABLE",
+                  "power_type": "DC",
+                  "max_voltage": 920,
+                  "max_amperage": 125,
+                  "max_electric_power": 50000,
+                  "tariff_ids": [
+                    "40104"
+                  ],
+                  "terms_and_conditions": null,
+                  "last_updated": "2026-10-21T08:30:00Z"
+                },
+                {
+                  "id": "2",
+                  "standard": "CHADEMO",
+                  "format": "CABLE",
+                  "power_type": "DC",
+                  "max_voltage": 500,
+                  "max_amperage": 125,
+                  "max_electric_power": 50000,
+                  "tariff_ids": [
+                    "40104"
+                  ],
+                  "terms_and_conditions": null,
+                  "last_updated": "2026-10-21T08:30:00Z"
+                }
+              ],
+              "floor_level": null,
+              "coordinates": {
+                "latitude": "51.47820",
+                "longitude": "-3.17710"
+              },
+              "physical_reference": "1",
+              "directions": null,
+              "parking_restrictions": null,
+              "images": null,
+              "ocpp_identity": null,
+              "tariffs": [],
+              "last_updated": "2026-10-21T08:30:00Z"
+            }
+          ],
+          "directions": null,
+          "operator": {
+            "name": "Monta ApS",
+            "website": "https://monta.com",
+            "logo": {
+              "url": "https://example.invalid/operator.png",
+              "thumbnail": null,
+              "category": "OPERATOR",
+              "type": "png",
+              "width": null,
+              "height": null
+            }
+          },
+          "sub_operator": {
+            "name": "Example Sub Operator",
+            "website": "https://example.invalid",
+            "logo": {
+              "url": "https://example.invalid/sub.png",
+              "thumbnail": null,
+              "category": "OPERATOR",
+              "type": "png",
+              "width": null,
+              "height": null
+            }
+          },
+          "owner": {
+            "name": "Example Owner Ltd",
+            "website": null,
+            "logo": null
+          },
+          "facilities": null,
+          "time_zone": "Europe/London",
+          "opening_times": {
+            "twentyfourseven": true,
+            "regular_hours": null,
+            "exceptional_openings": null,
+            "exceptional_closings": null
+          },
+          "charging_when_closed": true,
+          "images": null,
+          "energy_mix": null,
+          "last_updated": "2026-10-20T09:00:00Z"
+        }
+      ],
+      "meta": {
+        "pagination": {
+          "type": "cursor",
+          "count": 2,
+          "per_page": 100,
+          "before": 1012,
+          "after": 1020,
+          "has_more": false
+        }
+      }
+    }
+  }
+}

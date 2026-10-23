@@ -1,0 +1,367 @@
+{
+  "request": {
+    "method": "GET",
+    "url": "https://public-api.monta.com/api/v1/open-data/locations?per_page=100&group_by_location=true"
+  },
+  "response": {
+    "status_code": 200,
+    "headers": {
+      "content-type": "application/json"
+    },
+    "body": {
+      "data": [
+        {
+          "country_code": "DK",
+          "party_id": "MON",
+          "id": "s1001",
+          "publish": true,
+          "publish_allowed_to": [],
+          "name": "Example Retail Park",
+          "address": "1 Example Road",
+          "city": "Manchester",
+          "postal_code": "M1 1AE",
+          "state": null,
+          "country": "GBR",
+          "coordinates": {
+            "latitude": "53.47740",
+            "longitude": "-2.23090"
+          },
+          "related_locations": null,
+          "parking_type": "PARKING_LOT",
+          "evses": [
+            {
+              "uid": "1001",
+              "evse_id": "GB*MON*E1001",
+              "status": "AVAILABLE",
+              "status_schedule": [],
+              "capabilities": [
+                "REMOTE_START_STOP_CAPABLE",
+                "RFID_READER"
+              ],
+              "connectors": [
+                {
+                  "id": "1",
+                  "standard": "IEC_62196_T2",
+                  "format": "SOCKET",
+                  "power_type": "AC_3_PHASE",
+                  "max_voltage": 400,
+                  "max_amperage": 32,
+                  "max_electric_power": 22000,
+                  "tariff_ids": [
+                    "40101"
+                  ],
+                  "terms_and_conditions": null,
+                  "last_updated": "2026-10-21T08:30:00Z"
+                }
+              ],
+              "floor_level": null,
+              "coordinates": {
+                "latitude": "53.47740",
+                "longitude": "-2.23090"
+              },
+              "physical_reference": "1",
+              "directions": null,
+              "parking_restrictions": null,
+              "images": null,
+              "ocpp_identity": null,
+              "tariffs": [],
+              "last_updated": "2026-10-21T08:30:00Z"
+            },
+            {
+              "uid": "1002",
+              "evse_id": "GB*MON*E1002",
+              "status": "CHARGING",
+              "status_schedule": [],
+              "capabilities": [
+                "REMOTE_START_STOP_CAPABLE",
+                "RFID_READER"
+              ],
+              "connectors": [
+                {
+                  "id": "1",
+                  "standard": "IEC_62196_T2",
+                  "format": "SOCKET",
+                  "power_type": "AC_3_PHASE",
+                  "max_voltage": 400,
+                  "max_amperage": 32,
+                  "max_electric_power": 22000,
+                  "tariff_ids": [
+                    "40101"
+                  ],
+                  "terms_and_conditions": null,
+                  "last_updated": "2026-10-21T08:30:00Z"
+                }
+              ],
+              "floor_level": null,
+              "coordinates": {
+                "latitude": "53.47741",
+                "longitude": "-2.23091"
+              },
+              "physical_reference": "2",
+              "directions": null,
+              "parking_restrictions": null,
+              "images": null,
+              "ocpp_identity": null,
+              "tariffs": [],
+              "last_updated": "2026-10-21T08:30:00Z"
+            }
+          ],
+          "directions": null,
+          "operator": {
+            "name": "Monta ApS",
+            "website": "https://monta.com",
+            "logo": {
+              "url": "https://example.invalid/operator.png",
+              "thumbnail": null,
+              "category": "OPERATOR",
+              "type": "png",
+              "width": null,
+              "height": null
+            }
+          },
+          "sub_operator": {
+            "name": "Example Sub Operator",
+            "website": "https://example.invalid",
+            "logo": {
+              "url": "https://example.invalid/sub.png",
+              "thumbnail": null,
+              "category": "OPERATOR",
+              "type": "png",
+              "width": null,
+              "height": null
+            }
+          },
+          "owner": {
+            "name": "Example Owner Ltd",
+            "website": null,
+            "logo": null
+          },
+          "facilities": null,
+          "time_zone": "Europe/London",
+          "opening_times": {
+            "twentyfourseven": true,
+            "regular_hours": null,
+            "exceptional_openings": null,
+            "exceptional_closings": null
+          },
+          "charging_when_closed": true,
+          "images": null,
+          "energy_mix": null,
+          "last_updated": "2026-10-20T09:00:00Z"
+        },
+        {
+          "country_code": "DK",
+          "party_id": "MON",
+          "id": "s1005",
+          "publish": true,
+          "publish_allowed_to": [],
+          "name": "Example Hotel",
+          "address": "5 Sample Street",
+          "city": "Leeds",
+          "postal_code": "LS1 4AP",
+          "state": null,
+          "country": "GBR",
+          "coordinates": {
+            "latitude": "53.79650",
+            "longitude": "-1.54790"
+          },
+          "related_locations": null,
+          "parking_type": null,
+          "evses": [
+            {
+              "uid": "1005",
+              "evse_id": "GB*MON*E1005",
+              "status": "REMOVED",
+              "status_schedule": [],
+              "capabilities": [
+                "REMOTE_START_STOP_CAPABLE",
+                "RFID_READER"
+              ],
+              "connectors": [
+                {
+                  "id": "1",
+                  "standard": "IEC_62196_T2",
+                  "format": "SOCKET",
+                  "power_type": "AC_1_PHASE",
+                  "max_voltage": 230,
+                  "max_amperage": 32,
+                  "max_electric_power": 7400,
+                  "tariff_ids": [
+                    "40102"
+                  ],
+                  "terms_and_conditions": null,
+                  "last_updated": "2025-03-01T10:00:00Z"
+                }
+              ],
+              "floor_level": null,
+              "coordinates": {
+                "latitude": "53.79650",
+                "longitude": "-1.54790"
+              },
+              "physical_reference": "1",
+              "directions": null,
+              "parking_restrictions": null,
+              "images": null,
+              "ocpp_identity": null,
+              "tariffs": [],
+              "last_updated": "2025-03-01T10:00:00Z"
+            }
+          ],
+          "directions": null,
+          "operator": {
+            "name": "Monta ApS",
+            "website": "https://monta.com",
+            "logo": {
+              "url": "https://example.invalid/operator.png",
+              "thumbnail": null,
+              "category": "OPERATOR",
+              "type": "png",
+              "width": null,
+              "height": null
+            }
+          },
+          "sub_operator": {
+            "name": "Example Sub Operator",
+            "website": "https://example.invalid",
+            "logo": {
+              "url": "https://example.invalid/sub.png",
+              "thumbnail": null,
+              "category": "OPERATOR",
+              "type": "png",
+              "width": null,
+              "height": null
+            }
+          },
+          "owner": {
+            "name": "Example Hotel Group Ltd",
+            "website": null,
+            "logo": null
+          },
+          "facilities": null,
+          "time_zone": "Europe/London",
+          "opening_times": {
+            "twentyfourseven": true,
+            "regular_hours": null,
+            "exceptional_openings": null,
+            "exceptional_closings": null
+          },
+          "charging_when_closed": true,
+          "images": null,
+          "energy_mix": null,
+          "last_updated": "2025-03-01T10:00:00Z"
+        },
+        {
+          "country_code": "DK",
+          "party_id": "MON",
+          "id": "s1009",
+          "publish": false,
+          "publish_allowed_to": [],
+          "name": "Example Depot",
+          "address": "9 Test Lane",
+          "city": "Bristol",
+          "postal_code": "BS1 6QH",
+          "state": null,
+          "country": "GBR",
+          "coordinates": {
+            "latitude": "51.45140",
+            "longitude": "-2.59720"
+          },
+          "related_locations": null,
+          "parking_type": null,
+          "evses": [
+            {
+              "uid": "1009",
+              "evse_id": "GB*MON*E1009",
+              "status": "AVAILABLE",
+              "status_schedule": [],
+              "capabilities": [
+                "REMOTE_START_STOP_CAPABLE",
+                "RFID_READER"
+              ],
+              "connectors": [
+                {
+                  "id": "1",
+                  "standard": "IEC_62196_T2",
+                  "format": "SOCKET",
+                  "power_type": "AC_1_PHASE",
+                  "max_voltage": 230,
+                  "max_amperage": 32,
+                  "max_electric_power": 7400,
+                  "tariff_ids": [
+                    "40103"
+                  ],
+                  "terms_and_conditions": null,
+                  "last_updated": "2026-10-21T08:30:00Z"
+                }
+              ],
+              "floor_level": null,
+              "coordinates": {
+                "latitude": "51.45140",
+                "longitude": "-2.59720"
+              },
+              "physical_reference": "1",
+              "directions": null,
+              "parking_restrictions": null,
+              "images": null,
+              "ocpp_identity": null,
+              "tariffs": [],
+              "last_updated": "2026-10-21T08:30:00Z"
+            }
+          ],
+          "directions": null,
+          "operator": {
+            "name": "Monta ApS",
+            "website": "https://monta.com",
+            "logo": {
+              "url": "https://example.invalid/operator.png",
+              "thumbnail": null,
+              "category": "OPERATOR",
+              "type": "png",
+              "width": null,
+              "height": null
+            }
+          },
+          "sub_operator": {
+            "name": "Example Sub Operator",
+            "website": "https://example.invalid",
+            "logo": {
+              "url": "https://example.invalid/sub.png",
+              "thumbnail": null,
+              "category": "OPERATOR",
+              "type": "png",
+              "width": null,
+              "height": null
+            }
+          },
+          "owner": {
+            "name": "Example Owner Ltd",
+            "website": null,
+            "logo": null
+          },
+          "facilities": null,
+          "time_zone": "Europe/London",
+          "opening_times": {
+            "twentyfourseven": true,
+            "regular_hours": null,
+            "exceptional_openings": null,
+            "exceptional_closings": null
+          },
+          "charging_when_closed": true,
+          "images": null,
+          "energy_mix": null,
+          "last_updated": "2026-10-20T09:00:00Z"
+        }
+      ],
+      "meta": {
+        "pagination": {
+          "type": "cursor",
+          "count": 3,
+          "per_page": 100,
+          "before": 1001,
+          "after": 1009,
+          "has_more": true
+        }
+      }
+    }
+  }
+}
