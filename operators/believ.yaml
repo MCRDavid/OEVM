@@ -7,16 +7,40 @@ adapter: unknown
 base_url: unknown
 endpoints: {}
 auth:
-  method: unknown
-  name: null
-  secret_name: null
+  method: client_credentials
+  name: Authorization
+  scheme: Bearer
+  secret_name: BELIEV_CLIENT_SECRET
+  client_id_secret_name: BELIEV_CLIENT_ID
+  token_url: https://api.believ.com/oauth/token
 rate_limit:
-  min_seconds_between_requests: 2
-  limits: []
-  limits_checked: unknown
+  min_seconds_between_requests: 865
+  limits:
+    - publisher: Believ
+      requests: 100
+      per_seconds: 86400
+      endpoint: all
+      quote: >-
+        Requests are limited to 100 calls per 24hrs, with a maximum of one request per
+        second.
+      source_url: https://api.believ.com/
+      checked: 2026-10-23
+    - publisher: Believ
+      requests: 1
+      per_seconds: 1
+      endpoint: all
+      quote: >-
+        Requests are limited to 100 calls per 24hrs, with a maximum of one request per
+        second.
+      source_url: https://api.believ.com/
+      checked: 2026-10-23
+  limits_checked: 2026-10-23
   notes: >-
-    Believ's API documentation is shown only after registering, so any published limits
-    have not been read.
+    The limits are in the API documentation, shown only after signing in (copy in
+    evidence/believ/2026-10-23-api-documentation.md). 100 calls a day, with this project's
+    1 second margin, means one request every 865 seconds. A documented call on 2026-10-23
+    answered with x-ratelimit-limit 1 and x-ratelimit-remaining 1, which match the
+    one-a-second limit; no header gave the daily limit.
 supports_single_location: unknown
 cors: unknown
 attribution: null
@@ -41,8 +65,33 @@ engagement:
         After creating your FREE account you'll be able to view the documentation and
         generate credentials to call our service.
       evidence_url: https://api.believ.com/
-access_requested: null
-access_granted: null
+    - date: 2026-10-23
+      action: request_sent
+      channel: web_form
+      summary: >-
+        Registered for a free account on Believ's API portal and generated API credentials
+        in its dashboard.
+      evidence_url: https://api.believ.com/register
+    - date: 2026-10-23
+      action: key_granted
+      summary: >-
+        Believ's portal showed a client id and secret at once, with the API documentation.
+        The credentials are kept outside the repository.
+      quote: >-
+        Store your client secret securely. It cannot be retrieved after generation and will
+        need to be regenerated if lost.
+      evidence_file: evidence/believ/2026-10-23-api-documentation.md
+    - date: 2026-10-23
+      action: page_checked
+      summary: >-
+        The API documentation was read. It describes one endpoint, which returns a single
+        EVSE by the label printed on the charger, and a limit of 100 calls per 24 hours.
+        Believ's open data page was read again; it offers a separate form for a larger data
+        set.
+      quote: If you would like access to a larger data set please fill in the form linked below
+      evidence_url: https://www.believ.com/open-data/
+access_requested: 2026-10-23
+access_granted: 2026-10-23
 sources:
   - url: https://www.believ.com/open-data/
     note: >-
@@ -61,9 +110,39 @@ sources:
     note: >-
       Registration page, read 2026-10-10 without submitting it. Asks for a name, email
       address and password; shows no terms to agree to.
-findings: []
+  - url: https://forms.monday.com/forms/e5d445c2e96e6b7f2d53291bb0d7711d?r=euc1
+    note: >-
+      Believ's "Request Data" form, linked from its open data page, read 2026-10-23 without
+      submitting it. Asks for an organisation name, company registration number, registered
+      address, phone number, the purpose and use of the data, how it will be stored and
+      secured, whether it will be shared or sent outside the UK or EEA, ISO 27001 or 27701
+      certification and a data protection officer.
+findings:
+  - date: 2026-10-23
+    kind: access
+    summary: >-
+      Believ's API documentation describes one endpoint, which returns a single EVSE by the
+      label printed on the charger, limited to 100 calls per 24 hours. It documents no way
+      to list locations or chargers.
+    handling: >-
+      Believ stays off the map, because its chargers cannot be found without their labels.
+      Its open data page offers a form for a larger data set; no request has been sent.
+    evidence_url: https://api.believ.com/
+  - date: 2026-10-23
+    kind: data_quality
+    summary: >-
+      In the one EVSE read on 2026-10-23, and in the documentation's example, the location's
+      address field holds the country code "GB" rather than a street address.
+    handling: Recorded only; no Believ data is on the map.
+    evidence_url: https://api.believ.com/1.0/evses/A1190
 notes: >-
-  Access is through a free self-serve account on Believ's API portal, which gives
-  credentials and documentation after registering. The repository owner could register,
-  store the key as a GitHub Actions secret and then follow the add-operator steps.
+  Access to Believ's API is through a free self-serve account on its API portal, which gives
+  a client id and secret and the documentation after registering (done 2026-10-23). The API
+  answers one charger at a time by its label, with location, live status, connectors and
+  tariffs, so it suits checking a known charger rather than mapping the network. The
+  credentials are kept as the GitHub Actions secrets BELIEV_CLIENT_ID and
+  BELIEV_CLIENT_SECRET. The documentation states no licence for the data. One documented
+  call on 2026-10-23 (evidence/believ/2026-10-23-api-check.md) returned a token valid for
+  3600 seconds and the documentation's example label as a 22 kW, two-connector charger in
+  Ealing with an ENERGY price component of 0.55 GBP and vat 20, in the documented fields.
 enabled: false
