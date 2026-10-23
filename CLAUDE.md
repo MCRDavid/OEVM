@@ -101,6 +101,8 @@ decisions are in docs/adr/.
   where the operator file records the owner's decision in nonstandard_parking_restrictions
   (ADR 0023); never add one yourself. Hidden locations stay in the data and are listed on the
   feed health page.
+- Leave out a location name that is the same as its owner's name only where the operator file
+  records the owner's decision in owner_named_sites (Monta); never add one yourself.
 - Show a tariff whose prices are all zero as "Price unknown" rather than "Free" only where the
   operator file records the owner's decision in zero_price_tariffs, by exact tariff id (ADR 0022); never add one yourself.
 - Fetch through the relay (relay/worker.js) only when the operator file records the owner's

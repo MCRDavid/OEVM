@@ -486,6 +486,20 @@ class NonstandardParkingRestrictions(_Model):
         return self
 
 
+class OwnerNamedSites(_Model):
+    """The repository owner's recorded decision to leave out location names that are the
+    same as the name in the location's owner field.
+
+    The Monta adapter drops each record's owner field as it is read, because it often
+    names a private person. Where a location's name is that same name, keeping it would
+    show the owner's name on the map anyway. With this decision such a name is left out
+    and the location is shown by its address; without it, names are kept as published.
+    """
+
+    decided: dt.date = Field(description="Date the owner made the decision (YYYY-MM-DD).")
+    basis: NeutralText = Field(description="Why such names are left out.")
+
+
 class ZeroPriceTariffs(_Model):
     """The repository owner's recorded decision that named tariffs whose prices are all zero
     show "Price unknown" rather than "Free" (ADR 0022).
@@ -832,6 +846,12 @@ class OperatorConfig(_Model):
         description="Only by the repository owner's decision: read the feed past one "
         "expired TLS certificate, still checking its chain and host name. Null means an "
         "expired certificate stops the fetch.",
+    )
+    owner_named_sites: OwnerNamedSites | None = Field(
+        default=None,
+        description="Only by the repository owner's decision: leave out a location's name "
+        "where it is the same as the name in its owner field, which the adapter drops. Null "
+        "means names are kept as published.",
     )
     excluded_locations: ExcludedLocations | None = Field(
         default=None,

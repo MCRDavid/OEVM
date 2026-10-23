@@ -747,6 +747,11 @@ def test_only_chargy_and_clenergy_carry_a_vat_decision_at_20_percent():
     assert decisions == {"chargy": ("2026-10-22", 20), "clenergy_ev": ("2026-10-22", 20)}
 
 
+def test_only_monta_carries_an_owner_named_sites_decision():
+    operators = registry.load_registry(OPERATORS_DIR)
+    assert [i for i, c in operators.items() if c.owner_named_sites] == ["monta"]
+
+
 def test_only_scottishpower_recharge_carries_a_zero_price_tariffs_decision():
     operators = registry.load_registry(OPERATORS_DIR)
     decisions = {

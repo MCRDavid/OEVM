@@ -351,6 +351,14 @@ def operator_view(config: OperatorConfig) -> dict:
             if config.vat_not_stated
             else None
         ),
+        "owner_named_sites": (
+            {
+                "decided": str(config.owner_named_sites.decided),
+                "basis": config.owner_named_sites.basis,
+            }
+            if config.owner_named_sites
+            else None
+        ),
         "relay": (
             {
                 "decided": str(config.relay.decided),
@@ -430,6 +438,7 @@ def last_reviewed(operators: dict[str, OperatorConfig]) -> str:
             config.vat_not_stated.decided if config.vat_not_stated else None,
             config.expired_certificate.decided if config.expired_certificate else None,
             config.excluded_locations.decided if config.excluded_locations else None,
+            config.owner_named_sites.decided if config.owner_named_sites else None,
         ]
         dates += [d for d in candidates if isinstance(d, date)]
     return max(dates).isoformat() if dates else "unknown"
@@ -548,6 +557,14 @@ def _sources_table(data: dict) -> str:
                 f"&quot;Price unknown&quot; rather than &quot;Free&quot;, by the owner's "
                 f"decision of {_e(zero['decided'])}: {_e(zero['basis'])} "
                 f"({_link(zero['evidence_url'], 'evidence')})"
+            )
+        owner_named = op["owner_named_sites"]
+        if op["enabled"] and owner_named:
+            fetched = fetched.rstrip(".")
+            fetched += (
+                f". Location names that are the same as the site owner's name are left out, "
+                f"by the owner's decision of {_e(owner_named['decided'])}: "
+                f"{_e(owner_named['basis'])}"
             )
         vat = op["vat_not_stated"]
         if op["enabled"] and vat:

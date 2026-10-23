@@ -56,6 +56,12 @@ licence:
     2026-10-23 the repository owner decided to switch the feed on, reading it as open data
     published under the regulations for the networks on Monta's platform.
   checked: 2026-10-23
+owner_named_sites:
+  decided: 2026-10-23
+  basis: >-
+    Monta's records name each site's owner, often a private person. The adapter drops the
+    owner field, and a location name that is the same name would still show it on the map,
+    so such locations are shown by their address instead.
 engagement:
   status: key_on_request
   evidence:
@@ -174,7 +180,10 @@ findings:
       evyve charging network, Urban Fox and Moto Hospitality.
     handling: >-
       Each location also names its site owner in owner. The adapter removes that field from
-      every record as it is read, so owner names are never kept or shown.
+      every record as it is read, so owner names are never kept or shown. By the owner's
+      decision of 2026-10-23 (owner_named_sites), a location name that is the same as the
+      owner's name is removed too; 135 of the 729 locations mapped on 23 October 2026 had
+      one.
     evidence_url: https://docs.public-api.monta.com/reference/get-open-data-locations
 notes: >-
   Monta runs charge point management software used by many UK charge point owners, and

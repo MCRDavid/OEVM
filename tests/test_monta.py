@@ -200,6 +200,29 @@ def test_reads_every_page_and_removes_owner_names():
     assert result.locations[0].operator.name == "Monta ApS"
 
 
+def test_names_that_are_the_owners_name_are_left_out_by_the_owners_decision():
+    assert config().owner_named_sites is not None  # decided 2026-10-23
+    server = Server([1, 2, 3])
+    server.sites[2]["name"] = "a private  PERSON"
+    server.sites[3]["name"] = "A Private Person Charging"
+    result = run_with(server)
+    assert [loc.name for loc in result.locations] == [
+        "Example Site 1",
+        None,
+        "A Private Person Charging",
+    ]
+    assert any("name left out: it is the owner's name" in i for i in result.issues)
+    assert "PERSON" not in json.dumps([p.body for p in result.modules["locations"].pages])
+
+
+def test_without_the_decision_names_are_kept_as_published():
+    server = Server([1, 2])
+    server.sites[2]["name"] = "A Private Person"
+    result = run_with(server, config(owner_named_sites=None))
+    assert [loc.name for loc in result.locations] == ["Example Site 1", "A Private Person"]
+    assert not any("name left out" in i for i in result.issues)
+
+
 def test_sites_with_every_charger_removed_are_not_kept():
     server = Server([1, 2, 3])
     server.sites[2] = site(2, status="REMOVED")

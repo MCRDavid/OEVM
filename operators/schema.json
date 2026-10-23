@@ -797,6 +797,30 @@
       "title": "NonstandardStatuses",
       "type": "object"
     },
+    "OwnerNamedSites": {
+      "additionalProperties": false,
+      "description": "The repository owner's recorded decision to leave out location names that are the\nsame as the name in the location's owner field.\n\nThe Monta adapter drops each record's owner field as it is read, because it often\nnames a private person. Where a location's name is that same name, keeping it would\nshow the owner's name on the map anyway. With this decision such a name is left out\nand the location is shown by its address; without it, names are kept as published.",
+      "properties": {
+        "decided": {
+          "description": "Date the owner made the decision (YYYY-MM-DD).",
+          "format": "date",
+          "title": "Decided",
+          "type": "string"
+        },
+        "basis": {
+          "description": "Why such names are left out.",
+          "minLength": 1,
+          "title": "Basis",
+          "type": "string"
+        }
+      },
+      "required": [
+        "decided",
+        "basis"
+      ],
+      "title": "OwnerNamedSites",
+      "type": "object"
+    },
     "RateLimit": {
       "additionalProperties": false,
       "properties": {
@@ -1306,6 +1330,18 @@
       ],
       "default": null,
       "description": "Only by the repository owner's decision: read the feed past one expired TLS certificate, still checking its chain and host name. Null means an expired certificate stops the fetch."
+    },
+    "owner_named_sites": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/OwnerNamedSites"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "description": "Only by the repository owner's decision: leave out a location's name where it is the same as the name in its owner field, which the adapter drops. Null means names are kept as published."
     },
     "excluded_locations": {
       "anyOf": [

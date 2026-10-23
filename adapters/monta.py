@@ -17,11 +17,13 @@ findings in operators/monta.yaml on 2026-10-22 and 2026-10-23, are:
   failing sites) is skipped. Each skip is logged and the fetch is marked incomplete.
 - Each Location names its site owner in owner, often a private individual. The field is
   removed from every record as soon as it is read, so owner names are never kept, saved,
-  logged or shown.
+  logged or shown. Where the operator file records the owner's decision in
+  owner_named_sites, a location name that is the same as the owner's name is removed too.
 - Most sites listed have every charger marked REMOVED. OCPI 2.2.1 says "A Location
   without any valid EVSE object can be considered expired and should no longer be
   displayed" (Locations module, Flow and Lifecycle), so those sites are not kept.
-- No tariffs are given (every EVSE's tariffs list is empty), so prices are unknown.
+- Almost no tariffs are given (5 of 4,775 locations had any on 23 October 2026), and this
+  adapter does not read them, so prices are unknown.
 
 Records are then converted by adapters.ocpi_221.convert_records, so the publish rule and
 every model rule apply as for any other feed.
@@ -57,19 +59,38 @@ def _expired(record: object) -> bool:
     return all(isinstance(e, dict) and e.get("status") == "REMOVED" for e in record["evses"])
 
 
-def _without_owner(record: object) -> object:
-    if isinstance(record, dict):
-        return {key: value for key, value in record.items() if key not in REMOVED_FIELDS}
-    return record
+def _same_name(name: object, other: object) -> bool:
+    """Whether two names are the same, ignoring case and spacing."""
+    if not isinstance(name, str) or not isinstance(other, str) or not name.strip():
+        return False
+    return " ".join(name.split()).casefold() == " ".join(other.split()).casefold()
+
+
+def _without_owner(record: object, hide_owner_name: bool, issues: IssueLog) -> object:
+    """The record without its owner field, and without its name where that is the owner's
+    name and the owner has decided such names are left out (owner_named_sites)."""
+    if not isinstance(record, dict):
+        return record
+    kept = {key: value for key, value in record.items() if key not in REMOVED_FIELDS}
+    owner = record.get("owner")
+    if (
+        hide_owner_name
+        and isinstance(owner, dict)
+        and _same_name(kept.get("name"), owner.get("name"))
+    ):
+        del kept["name"]
+        issues.add("location name left out: it is the owner's name (owner_named_sites)")
+    return kept
 
 
 class _Reader:
     """Reads the locations list, page by page, skipping sites the server cannot send."""
 
-    def __init__(self, client: PoliteClient, url: str, issues: IssueLog):
+    def __init__(self, client: PoliteClient, url: str, issues: IssueLog, hide_owner_names: bool):
         self.client = client
         self.url = url
         self.issues = issues
+        self.hide_owner_names = hide_owner_names
         self.module = ModuleFetch("locations", url)
         self.skipped = 0
 
@@ -157,7 +178,9 @@ class _Reader:
             records = body.get("data") if isinstance(body, dict) else None
             if not isinstance(records, list):
                 raise FeedError(f"{redact_url(url)} returned no list of locations")
-            records = [_without_owner(record) for record in records]
+            records = [
+                _without_owner(record, self.hide_owner_names, self.issues) for record in records
+            ]
             pagination = (body.get("meta") or {}).get("pagination") or {}
             self.module.records += records
             headers = {k: response.headers[k] for k in KEPT_HEADERS if k in response.headers}
@@ -203,7 +226,7 @@ def fetch(
         token_field="accessToken",
     )
     url = config.endpoints["locations"].url
-    reader = _Reader(client, url, issues)
+    reader = _Reader(client, url, issues, config.owner_named_sites is not None)
     locations = reader.read(max_pages, progress)
     if reader.skipped:
         issues.add(
@@ -216,7 +239,7 @@ def fetch(
         records=len(locations.records),
         complete=locations.complete,
     )
-    # Monta's open data has no tariffs; every EVSE's tariffs list is empty.
+    # Monta's open data has no tariffs module, and this adapter reads none.
     tariffs = ModuleFetch("tariffs", url, complete=True)
     result = AdapterResult(config.id, fetched_at, {"locations": locations, "tariffs": tariffs})
     current = []
