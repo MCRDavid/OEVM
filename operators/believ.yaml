@@ -38,7 +38,9 @@ rate_limit:
   notes: >-
     The limits are in the API documentation, shown only after signing in (copy in
     evidence/believ/2026-10-23-api-documentation.md). 100 calls a day, with this project's
-    1 second margin, means one request every 865 seconds.
+    1 second margin, means one request every 865 seconds. A documented call on 2026-10-23
+    answered with x-ratelimit-limit 1 and x-ratelimit-remaining 1, which match the
+    one-a-second limit; no header gave the daily limit.
 supports_single_location: unknown
 cors: unknown
 attribution: null
@@ -126,11 +128,21 @@ findings:
       Believ stays off the map, because its chargers cannot be found without their labels.
       Its open data page offers a form for a larger data set; no request has been sent.
     evidence_url: https://api.believ.com/
+  - date: 2026-10-23
+    kind: data_quality
+    summary: >-
+      In the one EVSE read on 2026-10-23, and in the documentation's example, the location's
+      address field holds the country code "GB" rather than a street address.
+    handling: Recorded only; no Believ data is on the map.
+    evidence_url: https://api.believ.com/1.0/evses/A1190
 notes: >-
   Access to Believ's API is through a free self-serve account on its API portal, which gives
   a client id and secret and the documentation after registering (done 2026-10-23). The API
   answers one charger at a time by its label, with location, live status, connectors and
   tariffs, so it suits checking a known charger rather than mapping the network. The
   credentials are kept as the GitHub Actions secrets BELIEV_CLIENT_ID and
-  BELIEV_CLIENT_SECRET. The documentation states no licence for the data.
+  BELIEV_CLIENT_SECRET. The documentation states no licence for the data. One documented
+  call on 2026-10-23 (evidence/believ/2026-10-23-api-check.md) returned a token valid for
+  3600 seconds and the documentation's example label as a 22 kW, two-connector charger in
+  Ealing with an ENERGY price component of 0.55 GBP and vat 20, in the documented fields.
 enabled: false

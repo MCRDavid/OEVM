@@ -3391,7 +3391,7 @@
         "limits_checked": "2026-10-23",
         "comparison": "Within every published limit. The strictest needs 864 s between requests; this project waits 865 s, which includes a safety margin.",
         "difference_from_regulations": "The operator sets a limit; the regulations set none. DfT guidance allows such terms on access.",
-        "notes": "The limits are in the API documentation, shown only after signing in (copy in evidence/believ/2026-10-23-api-documentation.md). 100 calls a day, with this project's 1 second margin, means one request every 865 seconds."
+        "notes": "The limits are in the API documentation, shown only after signing in (copy in evidence/believ/2026-10-23-api-documentation.md). 100 calls a day, with this project's 1 second margin, means one request every 865 seconds. A documented call on 2026-10-23 answered with x-ratelimit-limit 1 and x-ratelimit-remaining 1, which match the one-a-second limit; no header gave the daily limit."
       },
       "findings": [
         {
@@ -3401,6 +3401,16 @@
           "summary": "Believ's API documentation describes one endpoint, which returns a single EVSE by the label printed on the charger, limited to 100 calls per 24 hours. It documents no way to list locations or chargers.",
           "handling": "Believ stays off the map, because its chargers cannot be found without their labels. Its open data page offers a form for a larger data set; no request has been sent.",
           "evidence_url": "https://api.believ.com/",
+          "status": "open",
+          "resolved_date": null
+        },
+        {
+          "date": "2026-10-23",
+          "kind": "data_quality",
+          "kind_label": "Data quirk",
+          "summary": "In the one EVSE read on 2026-10-23, and in the documentation's example, the location's address field holds the country code \"GB\" rather than a street address.",
+          "handling": "Recorded only; no Believ data is on the map.",
+          "evidence_url": "https://api.believ.com/1.0/evses/A1190",
           "status": "open",
           "resolved_date": null
         }
