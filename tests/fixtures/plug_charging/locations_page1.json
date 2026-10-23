@@ -1,0 +1,755 @@
+{
+  "request": {
+    "method": "GET",
+    "url": "https://plugcharging.co.uk/ocpi/2.2.1/locations"
+  },
+  "response": {
+    "status_code": 200,
+    "headers": {
+      "content-type": "application/json; charset=utf-8",
+      "x-total-count": "8",
+      "x-limit": "500"
+    },
+    "body": {
+      "data": [
+        {
+          "country_code": "GB",
+          "party_id": "PLG",
+          "id": "6",
+          "publish": true,
+          "name": "St James' House, Telford",
+          "address": "Hollinswood Rd",
+          "city": "Telford",
+          "postal_code": "TF2 9TZ",
+          "country": "GBR",
+          "coordinates": {
+            "latitude": "52.685913",
+            "longitude": "-2.443500"
+          },
+          "evses": [
+            {
+              "uid": "10",
+              "evse_id": "GB*PLG*EW044004001",
+              "status": "AVAILABLE",
+              "connectors": [
+                {
+                  "id": "23",
+                  "standard": "IEC_62196_T2",
+                  "format": "SOCKET",
+                  "power_type": "AC_3_PHASE",
+                  "max_voltage": 230,
+                  "max_amperage": 32,
+                  "max_electric_power": 22000,
+                  "tariff_ids": [
+                    "435"
+                  ],
+                  "last_updated": "2026-10-23T02:43:09Z"
+                }
+              ],
+              "physical_reference": "W044004001",
+              "last_updated": "2026-10-23T02:43:09Z"
+            },
+            {
+              "uid": "13",
+              "evse_id": "GB*PLG*EW044004005",
+              "status": "OUTOFORDER",
+              "connectors": [
+                {
+                  "id": "25",
+                  "standard": "IEC_62196_T2",
+                  "format": "SOCKET",
+                  "power_type": "AC_3_PHASE",
+                  "max_voltage": 230,
+                  "max_amperage": 32,
+                  "max_electric_power": 22000,
+                  "tariff_ids": [
+                    "435"
+                  ],
+                  "last_updated": "2026-10-21T09:57:15Z"
+                }
+              ],
+              "physical_reference": "W044004005",
+              "last_updated": "2026-10-21T09:57:15Z"
+            },
+            {
+              "uid": "18",
+              "evse_id": "GB*PLG*EW044004002",
+              "status": "CHARGING",
+              "connectors": [
+                {
+                  "id": "10",
+                  "standard": "IEC_62196_T2",
+                  "format": "SOCKET",
+                  "power_type": "AC_3_PHASE",
+                  "max_voltage": 230,
+                  "max_amperage": 32,
+                  "max_electric_power": 22000,
+                  "tariff_ids": [
+                    "435"
+                  ],
+                  "last_updated": "2026-10-23T12:41:55Z"
+                }
+              ],
+              "physical_reference": "W044004002",
+              "last_updated": "2026-10-23T12:41:55Z"
+            },
+            {
+              "uid": "19",
+              "evse_id": "GB*PLG*EW044004004",
+              "status": "AVAILABLE",
+              "connectors": [
+                {
+                  "id": "21",
+                  "standard": "IEC_62196_T2",
+                  "format": "SOCKET",
+                  "power_type": "AC_3_PHASE",
+                  "max_voltage": 230,
+                  "max_amperage": 32,
+                  "max_electric_power": 22000,
+                  "tariff_ids": [
+                    "435"
+                  ],
+                  "last_updated": "2026-10-23T05:55:51Z"
+                }
+              ],
+              "physical_reference": "W044004004",
+              "last_updated": "2026-10-23T05:55:51Z"
+            },
+            {
+              "uid": "20",
+              "evse_id": "GB*PLG*EW044004003",
+              "status": "OUTOFORDER",
+              "connectors": [
+                {
+                  "id": "11",
+                  "standard": "IEC_62196_T2",
+                  "format": "SOCKET",
+                  "power_type": "AC_3_PHASE",
+                  "max_voltage": 230,
+                  "max_amperage": 32,
+                  "max_electric_power": 22000,
+                  "tariff_ids": [
+                    "435"
+                  ],
+                  "last_updated": "2026-10-23T01:41:40Z"
+                }
+              ],
+              "physical_reference": "W044004003",
+              "last_updated": "2026-10-23T01:41:40Z"
+            },
+            {
+              "uid": "21",
+              "evse_id": "GB*PLG*EW044004006",
+              "status": "AVAILABLE",
+              "connectors": [
+                {
+                  "id": "20",
+                  "standard": "IEC_62196_T2",
+                  "format": "SOCKET",
+                  "power_type": "AC_3_PHASE",
+                  "max_voltage": 230,
+                  "max_amperage": 32,
+                  "max_electric_power": 22000,
+                  "tariff_ids": [
+                    "435"
+                  ],
+                  "last_updated": "2026-10-22T16:44:56Z"
+                }
+              ],
+              "physical_reference": "W044004006",
+              "last_updated": "2026-10-22T16:44:56Z"
+            }
+          ],
+          "operator": {
+            "name": "PLUG Charging",
+            "website": "https://plugcharging.co.uk"
+          },
+          "time_zone": "Europe/London",
+          "opening_times": {
+            "twentyfourseven": false,
+            "regular_hours": [
+              {
+                "weekday": 1,
+                "period_begin": "06:00",
+                "period_end": "20:00"
+              },
+              {
+                "weekday": 2,
+                "period_begin": "06:00",
+                "period_end": "20:00"
+              },
+              {
+                "weekday": 3,
+                "period_begin": "06:00",
+                "period_end": "20:00"
+              },
+              {
+                "weekday": 4,
+                "period_begin": "06:00",
+                "period_end": "20:00"
+              },
+              {
+                "weekday": 5,
+                "period_begin": "06:00",
+                "period_end": "20:00"
+              },
+              {
+                "weekday": 6,
+                "period_begin": "06:00",
+                "period_end": "20:00"
+              },
+              {
+                "weekday": 7,
+                "period_begin": "06:00",
+                "period_end": "20:00"
+              }
+            ]
+          },
+          "last_updated": "2026-10-23T12:41:55Z"
+        },
+        {
+          "country_code": "GB",
+          "party_id": "PLG",
+          "id": "13",
+          "publish": true,
+          "name": "Tingdene - Broadlands Leisure Park",
+          "address": "29 Beccles Rd",
+          "city": "Lowestoft",
+          "postal_code": "NR33 8QT",
+          "country": "GBR",
+          "coordinates": {
+            "latitude": "52.469706",
+            "longitude": "1.705767"
+          },
+          "evses": [
+            {
+              "uid": "29",
+              "evse_id": "GB*PLG*EW044024003A",
+              "status": "INOPERATIVE",
+              "connectors": [
+                {
+                  "id": "31",
+                  "standard": "IEC_62196_T2",
+                  "format": "SOCKET",
+                  "power_type": "AC_3_PHASE",
+                  "max_voltage": 230,
+                  "max_amperage": 32,
+                  "max_electric_power": 22000,
+                  "tariff_ids": [
+                    "195"
+                  ],
+                  "last_updated": "2026-10-23T08:31:17Z"
+                }
+              ],
+              "physical_reference": "W044024003A",
+              "last_updated": "2026-10-23T08:31:17Z"
+            },
+            {
+              "uid": "31",
+              "evse_id": "GB*PLG*EW044024002B",
+              "status": "AVAILABLE",
+              "connectors": [
+                {
+                  "id": "28",
+                  "standard": "IEC_62196_T2",
+                  "format": "SOCKET",
+                  "power_type": "AC_3_PHASE",
+                  "max_voltage": 230,
+                  "max_amperage": 32,
+                  "max_electric_power": 22000,
+                  "tariff_ids": [
+                    "195"
+                  ],
+                  "last_updated": "2026-10-23T08:31:51Z"
+                }
+              ],
+              "physical_reference": "W044024002B",
+              "last_updated": "2026-10-23T08:31:51Z"
+            },
+            {
+              "uid": "33",
+              "evse_id": "GB*PLG*EW044024002A",
+              "status": "AVAILABLE",
+              "connectors": [
+                {
+                  "id": "41",
+                  "standard": "IEC_62196_T2",
+                  "format": "SOCKET",
+                  "power_type": "AC_3_PHASE",
+                  "max_voltage": 230,
+                  "max_amperage": 32,
+                  "max_electric_power": 22000,
+                  "tariff_ids": [
+                    "195"
+                  ],
+                  "last_updated": "2026-10-23T08:31:48Z"
+                }
+              ],
+              "physical_reference": "W044024002A",
+              "last_updated": "2026-10-23T08:31:48Z"
+            },
+            {
+              "uid": "34",
+              "evse_id": "GB*PLG*EW044024003B",
+              "status": "INOPERATIVE",
+              "connectors": [
+                {
+                  "id": "46",
+                  "standard": "IEC_62196_T2",
+                  "format": "SOCKET",
+                  "power_type": "AC_3_PHASE",
+                  "max_voltage": 230,
+                  "max_amperage": 32,
+                  "max_electric_power": 22000,
+                  "tariff_ids": [
+                    "195"
+                  ],
+                  "last_updated": "2026-10-23T08:31:18Z"
+                }
+              ],
+              "physical_reference": "W044024003B",
+              "last_updated": "2026-10-23T08:31:18Z"
+            }
+          ],
+          "operator": {
+            "name": "PLUG Charging",
+            "website": "https://plugcharging.co.uk"
+          },
+          "time_zone": "Europe/London",
+          "opening_times": {
+            "twentyfourseven": true
+          },
+          "last_updated": "2026-10-23T08:31:51Z"
+        },
+        {
+          "country_code": "GB",
+          "party_id": "PLG",
+          "id": "62",
+          "publish": true,
+          "name": "Cawder Golf Club",
+          "address": "Cadder Rd",
+          "city": "Glasgow",
+          "postal_code": "G64 3QD",
+          "country": "GBR",
+          "coordinates": {
+            "latitude": "55.927022",
+            "longitude": "-4.232740"
+          },
+          "evses": [
+            {
+              "uid": "217",
+              "evse_id": "GB*PLG*EW044133002B",
+              "status": "REMOVED",
+              "connectors": [
+                {
+                  "id": "207",
+                  "standard": "IEC_62196_T2",
+                  "format": "SOCKET",
+                  "power_type": "AC_3_PHASE",
+                  "max_voltage": 230,
+                  "max_amperage": 32,
+                  "max_electric_power": 22000,
+                  "tariff_ids": [
+                    "134"
+                  ],
+                  "last_updated": "2026-10-14T15:13:58Z"
+                }
+              ],
+              "physical_reference": "W044133002B",
+              "last_updated": "2026-10-14T15:13:58Z"
+            },
+            {
+              "uid": "218",
+              "evse_id": "GB*PLG*EW044133002A",
+              "status": "REMOVED",
+              "connectors": [
+                {
+                  "id": "223",
+                  "standard": "IEC_62196_T2",
+                  "format": "SOCKET",
+                  "power_type": "AC_3_PHASE",
+                  "max_voltage": 230,
+                  "max_amperage": 32,
+                  "max_electric_power": 22000,
+                  "tariff_ids": [
+                    "134"
+                  ],
+                  "last_updated": "2026-10-14T15:13:58Z"
+                }
+              ],
+              "physical_reference": "W044133002A",
+              "last_updated": "2026-10-14T15:13:58Z"
+            },
+            {
+              "uid": "221",
+              "evse_id": "GB*PLG*EW044133001A",
+              "status": "REMOVED",
+              "connectors": [
+                {
+                  "id": "214",
+                  "standard": "IEC_62196_T2",
+                  "format": "SOCKET",
+                  "power_type": "AC_3_PHASE",
+                  "max_voltage": 230,
+                  "max_amperage": 32,
+                  "max_electric_power": 22000,
+                  "tariff_ids": [
+                    "134"
+                  ],
+                  "last_updated": "2026-10-14T15:14:29Z"
+                }
+              ],
+              "physical_reference": "W044133001A",
+              "last_updated": "2026-10-14T15:14:29Z"
+            },
+            {
+              "uid": "222",
+              "evse_id": "GB*PLG*EW044133001B",
+              "status": "REMOVED",
+              "connectors": [
+                {
+                  "id": "213",
+                  "standard": "IEC_62196_T2",
+                  "format": "SOCKET",
+                  "power_type": "AC_3_PHASE",
+                  "max_voltage": 230,
+                  "max_amperage": 32,
+                  "max_electric_power": 22000,
+                  "tariff_ids": [
+                    "134"
+                  ],
+                  "last_updated": "2026-10-14T15:14:29Z"
+                }
+              ],
+              "physical_reference": "W044133001B",
+              "last_updated": "2026-10-14T15:14:29Z"
+            }
+          ],
+          "operator": {
+            "name": "PLUG Charging",
+            "website": "https://plugcharging.co.uk"
+          },
+          "time_zone": "Europe/London",
+          "opening_times": {
+            "twentyfourseven": true
+          },
+          "last_updated": "2026-10-14T15:14:29Z"
+        },
+        {
+          "country_code": "GB",
+          "party_id": "PLG",
+          "id": "86",
+          "publish": true,
+          "name": "Howarth Timber Malton - Sphere",
+          "address": "Showfield Ln",
+          "city": "Malton",
+          "postal_code": "YO17 6BT",
+          "country": "GBR",
+          "coordinates": {
+            "latitude": "54.143209",
+            "longitude": "-0.796984"
+          },
+          "evses": [
+            {
+              "uid": "296",
+              "evse_id": "GB*PLG*E7546",
+              "status": "REMOVED",
+              "connectors": [
+                {
+                  "id": "292",
+                  "standard": "IEC_62196_T2",
+                  "format": "SOCKET",
+                  "power_type": "AC_1_PHASE",
+                  "max_voltage": 230,
+                  "max_amperage": 0,
+                  "last_updated": "2026-10-09T16:17:13Z"
+                }
+              ],
+              "physical_reference": "7546",
+              "last_updated": "2026-10-09T16:17:13Z"
+            }
+          ],
+          "operator": {
+            "name": "PLUG Charging",
+            "website": "https://plugcharging.co.uk"
+          },
+          "time_zone": "Europe/London",
+          "opening_times": {
+            "twentyfourseven": true
+          },
+          "last_updated": "2026-10-09T16:17:13Z"
+        },
+        {
+          "country_code": "GB",
+          "party_id": "PLG",
+          "id": "102",
+          "publish": true,
+          "name": "Gulf Garage",
+          "address": "1229 Govan Rd",
+          "city": "Glasgow",
+          "postal_code": "G51 4PL",
+          "country": "GBR",
+          "coordinates": {
+            "latitude": "55.864349",
+            "longitude": "-4.333442"
+          },
+          "evses": [
+            {
+              "uid": "319",
+              "evse_id": "GB*PLG*EW044058001A",
+              "status": "AVAILABLE",
+              "connectors": [
+                {
+                  "id": "319",
+                  "standard": "IEC_62196_T2_COMBO",
+                  "format": "CABLE",
+                  "power_type": "DC",
+                  "max_voltage": 400,
+                  "max_amperage": 150,
+                  "max_electric_power": 60000,
+                  "tariff_ids": [
+                    "306"
+                  ],
+                  "last_updated": "2026-10-23T10:52:10Z"
+                }
+              ],
+              "physical_reference": "W044058001A",
+              "last_updated": "2026-10-23T10:52:10Z"
+            },
+            {
+              "uid": "334",
+              "evse_id": "GB*PLG*EW044058001B",
+              "status": "AVAILABLE",
+              "connectors": [
+                {
+                  "id": "327",
+                  "standard": "IEC_62196_T2_COMBO",
+                  "format": "CABLE",
+                  "power_type": "DC",
+                  "max_voltage": 400,
+                  "max_amperage": 150,
+                  "max_electric_power": 60000,
+                  "tariff_ids": [
+                    "306"
+                  ],
+                  "last_updated": "2026-10-23T10:52:10Z"
+                }
+              ],
+              "physical_reference": "W044058001B",
+              "last_updated": "2026-10-23T10:52:10Z"
+            }
+          ],
+          "operator": {
+            "name": "PLUG Charging",
+            "website": "https://plugcharging.co.uk"
+          },
+          "facilities": [
+            "FUEL_STATION"
+          ],
+          "time_zone": "Europe/London",
+          "opening_times": {
+            "twentyfourseven": true
+          },
+          "last_updated": "2026-10-23T10:52:10Z"
+        },
+        {
+          "country_code": "GB",
+          "party_id": "PLG",
+          "id": "125",
+          "publish": true,
+          "name": "Qualifications Wales",
+          "address": "Q2 Building, IMPERIAL PARK, Pencarn Ln",
+          "city": "Newport",
+          "postal_code": "NP10 8AR",
+          "country": "GBR",
+          "coordinates": {
+            "latitude": "51.557637",
+            "longitude": "-3.031993"
+          },
+          "evses": [
+            {
+              "uid": "390",
+              "evse_id": "GB*PLG*E7315",
+              "status": "AVAILABLE",
+              "capabilities": [
+                "RESERVABLE"
+              ],
+              "connectors": [
+                {
+                  "id": "398",
+                  "standard": "IEC_62196_T2",
+                  "format": "SOCKET",
+                  "power_type": "AC_3_PHASE",
+                  "max_voltage": 230,
+                  "max_amperage": 32,
+                  "max_electric_power": 22000,
+                  "tariff_ids": [
+                    "341"
+                  ],
+                  "last_updated": "2026-10-23T08:12:55Z"
+                }
+              ],
+              "physical_reference": "7315",
+              "last_updated": "2026-10-23T08:12:55Z"
+            },
+            {
+              "uid": "391",
+              "evse_id": "GB*PLG*E5011",
+              "status": "AVAILABLE",
+              "capabilities": [
+                "RESERVABLE"
+              ],
+              "connectors": [
+                {
+                  "id": "399",
+                  "standard": "IEC_62196_T2",
+                  "format": "SOCKET",
+                  "power_type": "AC_3_PHASE",
+                  "max_voltage": 230,
+                  "max_amperage": 32,
+                  "max_electric_power": 22000,
+                  "tariff_ids": [
+                    "341"
+                  ],
+                  "last_updated": "2026-10-23T12:40:25Z"
+                }
+              ],
+              "physical_reference": "5011",
+              "last_updated": "2026-10-23T12:40:25Z"
+            }
+          ],
+          "operator": {
+            "name": "PLUG Charging",
+            "website": "https://plugcharging.co.uk"
+          },
+          "parking_type": "PARKING_LOT",
+          "time_zone": "Europe/London",
+          "opening_times": {
+            "twentyfourseven": true
+          },
+          "last_updated": "2026-10-23T12:40:25Z"
+        },
+        {
+          "country_code": "GB",
+          "party_id": "PLG",
+          "id": "133",
+          "publish": true,
+          "name": "Telford College",
+          "address": "Wellington",
+          "city": "Telford",
+          "postal_code": "TF1 2NP",
+          "country": "GBR",
+          "coordinates": {
+            "latitude": "52.697329",
+            "longitude": "-2.498607"
+          },
+          "evses": [
+            {
+              "uid": "463",
+              "evse_id": "GB*PLG*EW044061001B",
+              "status": "AVAILABLE",
+              "connectors": [
+                {
+                  "id": "477",
+                  "standard": "IEC_62196_T2",
+                  "format": "SOCKET",
+                  "power_type": "AC_3_PHASE",
+                  "max_voltage": 230,
+                  "max_amperage": 32,
+                  "max_electric_power": 22000,
+                  "tariff_ids": [
+                    "358"
+                  ],
+                  "last_updated": "2026-10-19T23:28:39Z"
+                }
+              ],
+              "physical_reference": "W044061001B",
+              "last_updated": "2026-10-19T23:28:39Z"
+            },
+            {
+              "uid": "504",
+              "evse_id": "GB*PLG*EW044061001A",
+              "status": "AVAILABLE",
+              "connectors": [
+                {
+                  "id": "521",
+                  "standard": "IEC_62196_T2",
+                  "format": "SOCKET",
+                  "power_type": "AC_1_PHASE",
+                  "max_voltage": 230,
+                  "max_amperage": 0,
+                  "tariff_ids": [
+                    "358"
+                  ],
+                  "last_updated": "2026-10-19T23:28:40Z"
+                }
+              ],
+              "physical_reference": "W044061001A",
+              "last_updated": "2026-10-19T23:28:40Z"
+            }
+          ],
+          "operator": {
+            "name": "PLUG Charging",
+            "website": "https://plugcharging.co.uk"
+          },
+          "time_zone": "Europe/London",
+          "opening_times": {
+            "twentyfourseven": true
+          },
+          "last_updated": "2026-10-19T23:28:40Z"
+        },
+        {
+          "country_code": "GB",
+          "party_id": "PLG",
+          "id": "317",
+          "publish": true,
+          "name": "Ordell Street",
+          "address": "Ordell Street",
+          "city": "Cardiff",
+          "postal_code": "CF24 2AZ",
+          "country": "GBR",
+          "coordinates": {
+            "latitude": "51.482067",
+            "longitude": "-3.155797"
+          },
+          "evses": [
+            {
+              "uid": "1014",
+              "status": "UNKNOWN",
+              "connectors": [
+                {
+                  "id": "1027",
+                  "standard": "IEC_62196_T2",
+                  "format": "SOCKET",
+                  "power_type": "AC_1_PHASE",
+                  "max_voltage": 230,
+                  "max_amperage": 20,
+                  "max_electric_power": 5000,
+                  "tariff_ids": [
+                    "370"
+                  ],
+                  "last_updated": "2026-10-23T05:01:38Z"
+                }
+              ],
+              "physical_reference": "Ordell Street",
+              "last_updated": "2026-10-23T05:01:38Z"
+            }
+          ],
+          "operator": {
+            "name": "PLUG Charging",
+            "website": "https://plugcharging.co.uk"
+          },
+          "parking_type": "ON_STREET",
+          "time_zone": "Europe/London",
+          "opening_times": {
+            "twentyfourseven": true
+          },
+          "last_updated": "2026-10-23T05:01:38Z"
+        }
+      ],
+      "status_code": 1000,
+      "status_message": "Success",
+      "timestamp": "2026-10-23T12:47:43Z"
+    }
+  }
+}

@@ -1,0 +1,191 @@
+{
+  "request": {
+    "method": "GET",
+    "url": "https://plugcharging.co.uk/ocpi/2.2.1/tariffs"
+  },
+  "response": {
+    "status_code": 200,
+    "headers": {
+      "content-type": "application/json; charset=utf-8",
+      "x-total-count": "6",
+      "x-limit": "500"
+    },
+    "body": {
+      "data": [
+        {
+          "country_code": "GB",
+          "party_id": "PLG",
+          "id": "195",
+          "currency": "GBP",
+          "tariff_alt_text": [
+            {
+              "language": "en",
+              "text": "£0.65 per kWh, minimum charge £0.30. Prices include VAT at 20%."
+            }
+          ],
+          "elements": [
+            {
+              "price_components": [
+                {
+                  "type": "ENERGY",
+                  "price": 0.5417,
+                  "vat": 20,
+                  "step_size": 1
+                }
+              ]
+            }
+          ],
+          "min_price": {
+            "excl_vat": 0.25,
+            "incl_vat": 0.3
+          },
+          "last_updated": "2026-10-05T12:45:21Z"
+        },
+        {
+          "country_code": "GB",
+          "party_id": "PLG",
+          "id": "306",
+          "currency": "GBP",
+          "tariff_alt_text": [
+            {
+              "language": "en",
+              "text": "£0.80 per kWh, £0.25 per minute idle fee from 31 minutes without charging, minimum charge £0.30. Prices include VAT at 20%."
+            }
+          ],
+          "elements": [
+            {
+              "price_components": [
+                {
+                  "type": "ENERGY",
+                  "price": 0.6667,
+                  "vat": 20,
+                  "step_size": 1
+                }
+              ]
+            }
+          ],
+          "min_price": {
+            "excl_vat": 0.25,
+            "incl_vat": 0.3
+          },
+          "last_updated": "2026-10-05T12:45:21Z"
+        },
+        {
+          "country_code": "GB",
+          "party_id": "PLG",
+          "id": "341",
+          "currency": "GBP",
+          "tariff_alt_text": [
+            {
+              "language": "en",
+              "text": "£0.56 per kWh, £0.10 per minute idle fee, minimum charge £0.30. Prices include VAT at 20%."
+            }
+          ],
+          "elements": [
+            {
+              "price_components": [
+                {
+                  "type": "ENERGY",
+                  "price": 0.4667,
+                  "vat": 20,
+                  "step_size": 1
+                }
+              ]
+            }
+          ],
+          "min_price": {
+            "excl_vat": 0.25,
+            "incl_vat": 0.3
+          },
+          "last_updated": "2026-10-05T12:45:21Z"
+        },
+        {
+          "country_code": "GB",
+          "party_id": "PLG",
+          "id": "358",
+          "currency": "GBP",
+          "tariff_alt_text": [
+            {
+              "language": "en",
+              "text": "£0.42 per kWh. Prices include VAT at 20%."
+            }
+          ],
+          "elements": [
+            {
+              "price_components": [
+                {
+                  "type": "ENERGY",
+                  "price": 0.35,
+                  "vat": 20,
+                  "step_size": 1
+                }
+              ]
+            }
+          ],
+          "last_updated": "2026-10-05T12:45:21Z"
+        },
+        {
+          "country_code": "GB",
+          "party_id": "PLG",
+          "id": "370",
+          "currency": "GBP",
+          "tariff_alt_text": [
+            {
+              "language": "en",
+              "text": "£0.52 per kWh, minimum charge £0.31. Prices include VAT at 20%."
+            }
+          ],
+          "elements": [
+            {
+              "price_components": [
+                {
+                  "type": "ENERGY",
+                  "price": 0.4333,
+                  "vat": 20,
+                  "step_size": 1
+                }
+              ]
+            }
+          ],
+          "min_price": {
+            "excl_vat": 0.2583,
+            "incl_vat": 0.31
+          },
+          "last_updated": "2026-10-05T12:45:21Z"
+        },
+        {
+          "country_code": "GB",
+          "party_id": "PLG",
+          "id": "435",
+          "currency": "GBP",
+          "tariff_alt_text": [
+            {
+              "language": "en",
+              "text": "£0.65 per kWh, minimum charge £0.30. Prices include VAT at 20%."
+            }
+          ],
+          "elements": [
+            {
+              "price_components": [
+                {
+                  "type": "ENERGY",
+                  "price": 0.5417,
+                  "vat": 20,
+                  "step_size": 1
+                }
+              ]
+            }
+          ],
+          "min_price": {
+            "excl_vat": 0.25,
+            "incl_vat": 0.3
+          },
+          "last_updated": "2026-10-05T12:45:21Z"
+        }
+      ],
+      "status_code": 1000,
+      "status_message": "Success",
+      "timestamp": "2026-10-23T12:47:45Z"
+    }
+  }
+}
