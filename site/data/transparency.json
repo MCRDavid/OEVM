@@ -1,5 +1,5 @@
 {
-  "last_reviewed": "2026-10-22",
+  "last_reviewed": "2026-10-23",
   "disclaimer": "OEVM is a personal, experimental project for learning about AI tools. Much of its code and text was written with an AI assistant, and it will contain mistakes. Charger data comes from the operators and other sources credited on every record, and remains their work. Everything is provided \"as is\", with no warranty or guarantee of any kind. Always check prices and availability at the charger.",
   "regulation": {
     "summary": "The Public Charge Point Regulations 2023 set no limit on how often data users may request the data. Regulation 10(5) requires the data to be available free of charge without terms on its use. DfT's guidance allows terms covering the means of access, which is where operators' rate limits come from.",
@@ -4860,6 +4860,168 @@
         "notes": null
       },
       "findings": []
+    },
+    {
+      "id": "monta",
+      "name": "Monta",
+      "enabled": false,
+      "adapter": "custom",
+      "engagement": {
+        "status": "key_on_request",
+        "label": "Key issued on request",
+        "headline": "Key issued on request (as of 2026-10-23)",
+        "as_of": "2026-10-23",
+        "last_request": null,
+        "last_response": {
+          "date": "2026-10-22",
+          "action": "key_granted"
+        },
+        "last_response_text": "2026-10-22 (Key issued)",
+        "evidence": [
+          {
+            "date": "2026-10-23",
+            "url": "https://docs.public-api.monta.com/reference/get-open-data-locations",
+            "file": null,
+            "note": "Monta's Public API documents an open data endpoint that \"Returns a cursor-paginated list of publicly accessible (or roaming-enabled) charge points in the United Kingdom in OCPI 2.2.1 Location format. Intended for AFIR-style aggregators and government open-data consumers.\" It needs an access token. No licence or terms for the data are given on this page or in the Public API's index of pages."
+          }
+        ],
+        "log": [
+          {
+            "date": "2026-10-17",
+            "action": "page_checked",
+            "action_label": "Operator's page checked",
+            "channel": null,
+            "channel_label": null,
+            "summary": "Monta's Public API documentation was read. It lists an open data endpoint for UK charge points in OCPI 2.2.1 Location format, protected by an access token.",
+            "quote": "Returns a cursor-paginated list of publicly accessible (or roaming-enabled) charge points in the United Kingdom in OCPI 2.2.1 Location format.",
+            "evidence_url": "https://docs.public-api.monta.com/reference/get-open-data-locations",
+            "evidence_file": null
+          },
+          {
+            "date": "2026-10-22",
+            "action": "page_checked",
+            "action_label": "Operator's page checked",
+            "channel": null,
+            "channel_label": null,
+            "summary": "The Public API's authentication pages were read. An access token, valid for one hour, is requested with the client id and secret of an application registered in the Monta portal.",
+            "quote": null,
+            "evidence_url": "https://docs.public-api.monta.com/reference/authentication",
+            "evidence_file": null
+          },
+          {
+            "date": "2026-10-22",
+            "action": "key_granted",
+            "action_label": "Key issued",
+            "channel": null,
+            "channel_label": null,
+            "summary": "The repository owner registered an application in the Monta portal, which issued a client id and secret at once, with no request to Monta. They are stored as the GitHub Actions secrets MONTA_CLIENT_ID and MONTA_CLIENT_SECRET.",
+            "quote": null,
+            "evidence_url": "https://docs.public-api.monta.com/reference/authentication",
+            "evidence_file": null
+          }
+        ]
+      },
+      "access_requested": null,
+      "access_granted": "2026-10-22",
+      "feeds": [
+        {
+          "kind": "locations",
+          "url": "https://public-api.monta.com/api/v1/open-data/locations",
+          "status": "documented"
+        }
+      ],
+      "licence": null,
+      "attribution": null,
+      "missing_publish_flag": null,
+      "swapped_coordinates": null,
+      "nonstandard_statuses": null,
+      "tariffs_from": null,
+      "nonstandard_parking_restrictions": null,
+      "zero_price_tariffs": null,
+      "vat_not_stated": null,
+      "relay": null,
+      "expired_certificate": null,
+      "excluded_locations": null,
+      "rate_limit": {
+        "our_gap_seconds": 7.0,
+        "our_max_per_hour": 515,
+        "ours": "At least 7 s between requests to the operator's host, measured from the end of the previous request (at most 515 in any hour), retries included.",
+        "published": [
+          {
+            "text": "10 per 1 minute for all requests",
+            "publisher": "Monta",
+            "quote": "Our APIs are rate-limited. Currently we have a rate-limit of 10 requests per minute across all applications of a single user in place",
+            "source_url": "https://docs.public-api.monta.com/reference/integration-notes",
+            "checked": "2026-10-23"
+          }
+        ],
+        "limits_checked": "2026-10-23",
+        "comparison": "Within every published limit. The strictest needs 6 s between requests; this project waits 7 s, which includes a safety margin.",
+        "difference_from_regulations": "The operator sets a limit; the regulations set none. DfT guidance allows such terms on access.",
+        "notes": "The token request counts towards the same limit. The same page says \"Rate limits might change in the future.\""
+      },
+      "findings": [
+        {
+          "date": "2026-10-22",
+          "kind": "access",
+          "kind_label": "Access",
+          "summary": "Reading the open data needs an access token, which is requested with the client id and secret of an application registered in the Monta portal and lasts one hour.",
+          "handling": "The client id and secret are kept in the GitHub Actions secrets MONTA_CLIENT_ID and MONTA_CLIENT_SECRET and are never committed. The registry cannot yet describe a token request, so auth is recorded as unknown here until an adapter is built.",
+          "evidence_url": "https://docs.public-api.monta.com/reference/authentication",
+          "status": "open",
+          "resolved_date": null
+        },
+        {
+          "date": "2026-10-22",
+          "kind": "spec_conformance",
+          "kind_label": "Differs from OCPI 2.2.1",
+          "summary": "Monta documents each page as a {data, meta} object with a cursor in meta.pagination, not the OCPI 2.2.1 response format with Link headers. A page of 1,000 locations, the documented maximum, answered HTTP 500; pages of 100 worked.",
+          "handling": "Any adapter would read pages of 100 or fewer.",
+          "evidence_url": "https://docs.public-api.monta.com/reference/get-open-data-locations",
+          "status": "open",
+          "resolved_date": null
+        },
+        {
+          "date": "2026-10-22",
+          "kind": "access",
+          "kind_label": "Access",
+          "summary": "The list could not be read to the end. At the same point each time, after its 1,675th location, the next request answered HTTP 500 (\"An unexpected error occurred\"), with pages of 100, 10 or 1 location, on 22 and 23 October 2026.",
+          "handling": "Nothing from the feed is mapped. It stays switched off until the whole list can be read.",
+          "evidence_url": "https://docs.public-api.monta.com/reference/get-open-data-locations",
+          "status": "open",
+          "resolved_date": null
+        },
+        {
+          "date": "2026-10-22",
+          "kind": "data_quality",
+          "kind_label": "Data quirk",
+          "summary": "No prices: in the 1,675 locations read, every EVSE's tariffs list was empty, although 6,941 of 6,985 connectors name a tariff id.",
+          "handling": "Prices would show as \"Price unknown\".",
+          "evidence_url": "https://docs.public-api.monta.com/reference/get-open-data-locations",
+          "status": "open",
+          "resolved_date": null
+        },
+        {
+          "date": "2026-10-22",
+          "kind": "data_quality",
+          "kind_label": "Data quirk",
+          "summary": "Most chargers listed are marked removed: 6,439 of the 6,989 EVSEs in the 1,675 locations read had status REMOVED, and 142 locations had at least one EVSE that was not. 1,496 locations had publish true.",
+          "handling": "Only published locations with at least one EVSE that is not removed would be shown.",
+          "evidence_url": "https://docs.public-api.monta.com/reference/get-open-data-locations",
+          "status": "open",
+          "resolved_date": null
+        },
+        {
+          "date": "2026-10-22",
+          "kind": "data_quality",
+          "kind_label": "Data quirk",
+          "summary": "Every location read gives country GBR. 1,667 carry country_code DK, party_id MON and operator Monta ApS; 8 carry country_code GB, party_id UFX and operator Urban Fox.",
+          "handling": "Each location also names its site owner in owner. This project would not keep or show owner names.",
+          "evidence_url": "https://docs.public-api.monta.com/reference/get-open-data-locations",
+          "status": "open",
+          "resolved_date": null
+        }
+      ]
     },
     {
       "id": "moto_charge",
