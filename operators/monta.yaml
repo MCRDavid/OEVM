@@ -178,6 +178,16 @@ findings:
       Each location also names its site owner in owner. The adapter removes that field from
       every record as it is read, so owner names are never kept or shown.
     evidence_url: https://docs.public-api.monta.com/reference/get-open-data-locations
+  - date: 2026-10-23
+    kind: access
+    summary: >-
+      Monta's Public API also documents GET /api/v1/afir/charge-points/{evseId}/status,
+      which "Returns the current availability status and ad-hoc price for a single EVSE".
+      Asked once for a UK EVSE from the open data list, it answered HTTP 404 by the EVSE's
+      evse_id and HTTP 400 by its uid. The endpoint for many EVSEs at once takes only the
+      country DK or BE.
+    handling: Not used. Prices come only from the tariffs in the open data list.
+    evidence_url: https://docs.public-api.monta.com/reference/get-afir-evse-status
 notes: >-
   Monta runs charge point management software used by many UK charge point owners, and
   publishes their open data through one endpoint of its Public API. It is separate from
