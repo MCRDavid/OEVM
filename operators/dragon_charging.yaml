@@ -1,0 +1,50 @@
+# yaml-language-server: $schema=schema.json
+id: dragon_charging
+display_name: "Dragon Charging"
+ocpi_country_code: unknown
+ocpi_party_id: unknown
+adapter: unknown
+base_url: unknown
+endpoints: {}
+auth:
+  method: unknown
+  name: null
+  secret_name: null
+rate_limit:
+  min_seconds_between_requests: 2
+  limits: []
+  limits_checked: unknown
+  notes: null
+supports_single_location: unknown
+cors: unknown
+attribution: null
+licence: null
+engagement:
+  status: unknown
+  evidence:
+    - date: 2026-10-23
+      url: https://evroam.org.uk/_functions/getRegister
+      note: >-
+        The EV Roam ID register lists "Dragon Charging" with operator ID GB*DGN and website https://www.silverstonegreenenergy.co.uk/
+        (read 2026-10-23). The register names companies and IDs, not chargers.
+  log:
+    - date: 2026-10-23
+      action: page_checked
+      summary: >-
+        Its website returned HTTP 403 to an automated request on 2026-10-23, so it needs a check in a browser.
+      evidence_url: https://www.silverstonegreenenergy.co.uk/
+access_requested: null
+access_granted: null
+sources:
+  - url: https://evroam.org.uk/_functions/getRegister
+    note: >-
+      EV Roam ID register, the UK issuer of GB operator IDs (read 2026-10-23), used as a
+      pointer only: "Dragon Charging", operator ID GB*DGN.
+  - url: https://www.silverstonegreenenergy.co.uk/
+    note: >-
+      Dragon Charging's own website. Its website returned HTTP 403 to an automated request on 2026-10-23, so it needs a check in a browser.
+findings: []
+notes: >-
+  Found through the EV Roam ID register on 2026-10-23 (operator ID GB*DGN; the OCPI country and
+  party codes stay unknown until read from a feed). Its website returned HTTP 403 to an automated request on 2026-10-23, so it needs a check in a browser. The next step is a browser check of its own site, then a written request if no data link is found.
+enabled: false

@@ -1,0 +1,50 @@
+# yaml-language-server: $schema=schema.json
+id: q_park_recharge
+display_name: "Q-Park Recharge"
+ocpi_country_code: unknown
+ocpi_party_id: unknown
+adapter: unknown
+base_url: unknown
+endpoints: {}
+auth:
+  method: unknown
+  name: null
+  secret_name: null
+rate_limit:
+  min_seconds_between_requests: 2
+  limits: []
+  limits_checked: unknown
+  notes: null
+supports_single_location: unknown
+cors: unknown
+attribution: null
+licence: null
+engagement:
+  status: no_public_feed_found
+  evidence:
+    - date: 2026-10-23
+      url: https://evroam.org.uk/_functions/getRegister
+      note: >-
+        The EV Roam ID register lists "Q-Park Recharge Ltd" with operator ID GB*QPA and website https://www.q-park.co.uk/en-gb/
+        (read 2026-10-23). The register names companies and IDs, not chargers.
+  log:
+    - date: 2026-10-23
+      action: feed_searched
+      summary: >-
+        Its home page was read once on 2026-10-23 and gave no open data link, feed or request route.
+      evidence_url: https://www.q-park.co.uk/en-gb/
+access_requested: null
+access_granted: null
+sources:
+  - url: https://evroam.org.uk/_functions/getRegister
+    note: >-
+      EV Roam ID register, the UK issuer of GB operator IDs (read 2026-10-23), used as a
+      pointer only: "Q-Park Recharge Ltd", operator ID GB*QPA.
+  - url: https://www.q-park.co.uk/en-gb/
+    note: >-
+      Q-Park Recharge's own website. Its home page was read once on 2026-10-23 and gave no open data link, feed or request route.
+findings: []
+notes: >-
+  Found through the EV Roam ID register on 2026-10-23 (operator ID GB*QPA; the OCPI country and
+  party codes stay unknown until read from a feed). Its home page was read once on 2026-10-23 and gave no open data link, feed or request route. Its sitemap returned HTTP 403 to an automated request. The next step is a written request asking where its open data under regulation 10 is published.
+enabled: false
