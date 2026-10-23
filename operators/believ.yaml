@@ -131,6 +131,6 @@ notes: >-
   a client id and secret and the documentation after registering (done 2026-10-23). The API
   answers one charger at a time by its label, with location, live status, connectors and
   tariffs, so it suits checking a known charger rather than mapping the network. The
-  credentials are to be kept as the GitHub Actions secrets BELIEV_CLIENT_ID and
+  credentials are kept as the GitHub Actions secrets BELIEV_CLIENT_ID and
   BELIEV_CLIENT_SECRET. The documentation states no licence for the data.
 enabled: false
