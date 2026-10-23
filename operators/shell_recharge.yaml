@@ -65,7 +65,7 @@ supports_single_location: supported
 cors: needs_testing
 attribution: null
 engagement:
-  status: unknown
+  status: requested_no_reply
   evidence:
     - date: 2026-10-09
       url: https://www.shell.co.uk/electric-vehicle-charging/shell-recharge-open-data-request.html
@@ -85,7 +85,12 @@ engagement:
         Your request will be shared with Eco-Movement, who will act on behalf of Shell, to
         fulfil your request.
       evidence_url: https://www.shell.co.uk/electric-vehicle-charging/public-charge-point-regulations.html
-access_requested: null
+    - date: 2026-10-23
+      action: request_sent
+      channel: web_form
+      summary: >-
+        Requested access to PCPR data for all Shell networks through Shell's open data request form (choice "All Networks").
+access_requested: 2026-10-23
 access_granted: null
 sources:
   - url: https://wiki.openstreetmap.org/wiki/EV_charge_points_in_the_United_Kingdom

@@ -20,7 +20,7 @@ cors: unknown
 attribution: null
 licence: null
 engagement:
-  status: key_on_request
+  status: requested_no_reply
   evidence:
     - date: 2026-10-10
       url: https://www.esbenergy.co.uk/ev
@@ -47,7 +47,12 @@ engagement:
         Kingdom which complies with the Public Charge Point Regulations. You will receive an
         answer within 5 working days.
       evidence_url: https://docs.google.com/forms/d/e/1FAIpQLSfAe5GBI7djZfhpr-yq1QBpb6oSs2dF1rG4SxIYK7rj9AVnHw/viewform
-access_requested: null
+    - date: 2026-10-23
+      action: request_sent
+      channel: web_form
+      summary: >-
+        Requested access to ESB Energy's PCPR data through its Google form, which is shared with Eco-Movement.
+access_requested: 2026-10-23
 access_granted: null
 sources:
   - url: https://www.esbenergy.co.uk/

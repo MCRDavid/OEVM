@@ -65,7 +65,7 @@ supports_single_location: supported
 cors: needs_testing
 attribution: null
 engagement:
-  status: unknown
+  status: requested_no_reply
   evidence: []
   log:
     - date: 2026-10-09
@@ -75,7 +75,12 @@ engagement:
         Its network choices are All Networks, Shell Recharge and ubitricity; Community by
         Shell Recharge is not named. No page of its own about open data was found.
       evidence_url: https://www.shell.co.uk/electric-vehicle-charging/shell-recharge-open-data-request.html
-access_requested: null
+    - date: 2026-10-23
+      action: request_sent
+      channel: web_form
+      summary: >-
+        Requested access to PCPR data for all Shell networks, including Community by Shell Recharge, through Shell's open data request form (choice "All Networks").
+access_requested: 2026-10-23
 access_granted: null
 sources:
   - url: https://wiki.openstreetmap.org/wiki/EV_charge_points_in_the_United_Kingdom

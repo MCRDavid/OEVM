@@ -20,7 +20,7 @@ cors: unknown
 attribution: null
 licence: null
 engagement:
-  status: key_on_request
+  status: requested_no_reply
   evidence:
     - date: 2026-10-10
       url: https://blinkcharging.com/en-gb/getintouch/blink-open-data-request
@@ -44,7 +44,12 @@ engagement:
         The Blink Data team will review your request and provide the data in api format and
         a stipulated timeframe..
       evidence_url: https://blinkcharging.com/en-gb/getintouch/blink-open-data-request
-access_requested: null
+    - date: 2026-10-23
+      action: request_sent
+      channel: web_form
+      summary: >-
+        Requested access to Blink Charging's PCPR data through its Google form, which is shared with Eco-Movement.
+access_requested: 2026-10-23
 access_granted: null
 sources:
   - url: https://blinkcharging.com/en-gb/getintouch/blink-open-data-request

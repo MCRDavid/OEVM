@@ -2887,13 +2887,13 @@
       "enabled": false,
       "adapter": "unknown",
       "engagement": {
-        "status": "key_on_request",
-        "label": "Key issued on request",
-        "headline": "Key issued on request (as of 2026-10-10)",
-        "as_of": "2026-10-10",
-        "last_request": null,
+        "status": "requested_no_reply",
+        "label": "Requested, no reply",
+        "headline": "Requested, no reply (as of 2026-10-23)",
+        "as_of": "2026-10-23",
+        "last_request": "2026-10-23",
         "last_response": null,
-        "last_response_text": "No request sent",
+        "last_response_text": "None recorded",
         "evidence": [
           {
             "date": "2026-10-10",
@@ -2924,10 +2924,21 @@
             "quote": "Request charge point data",
             "evidence_url": "https://www.allego.eu/charge-point-data/",
             "evidence_file": null
+          },
+          {
+            "date": "2026-10-23",
+            "action": "request_sent",
+            "action_label": "Access requested",
+            "channel": "web_form",
+            "channel_label": "Web form",
+            "summary": "Requested access to Allego's PCPR data through its charge point data form.",
+            "quote": null,
+            "evidence_url": null,
+            "evidence_file": null
           }
         ]
       },
-      "access_requested": null,
+      "access_requested": "2026-10-23",
       "access_granted": null,
       "feeds": [],
       "licence": null,
@@ -3422,13 +3433,13 @@
       "enabled": false,
       "adapter": "unknown",
       "engagement": {
-        "status": "key_on_request",
-        "label": "Key issued on request",
-        "headline": "Key issued on request (as of 2026-10-10)",
-        "as_of": "2026-10-10",
-        "last_request": null,
+        "status": "requested_no_reply",
+        "label": "Requested, no reply",
+        "headline": "Requested, no reply (as of 2026-10-23)",
+        "as_of": "2026-10-23",
+        "last_request": "2026-10-23",
         "last_response": null,
-        "last_response_text": "No request sent",
+        "last_response_text": "None recorded",
         "evidence": [
           {
             "date": "2026-10-10",
@@ -3454,10 +3465,21 @@
             "quote": "The Blink Data team will review your request and provide the data in api format and a stipulated timeframe..",
             "evidence_url": "https://blinkcharging.com/en-gb/getintouch/blink-open-data-request",
             "evidence_file": null
+          },
+          {
+            "date": "2026-10-23",
+            "action": "request_sent",
+            "action_label": "Access requested",
+            "channel": "web_form",
+            "channel_label": "Web form",
+            "summary": "Requested access to Blink Charging's PCPR data through its Google form, which is shared with Eco-Movement.",
+            "quote": null,
+            "evidence_url": null,
+            "evidence_file": null
           }
         ]
       },
-      "access_requested": null,
+      "access_requested": "2026-10-23",
       "access_granted": null,
       "feeds": [],
       "licence": null,
@@ -3492,13 +3514,13 @@
       "enabled": false,
       "adapter": "eco_movement_pcpr",
       "engagement": {
-        "status": "key_on_request",
-        "label": "Key issued on request",
-        "headline": "Key issued on request (as of 2026-10-09)",
-        "as_of": "2026-10-09",
-        "last_request": null,
+        "status": "requested_no_reply",
+        "label": "Requested, no reply",
+        "headline": "Requested, no reply (as of 2026-10-23)",
+        "as_of": "2026-10-23",
+        "last_request": "2026-10-23",
         "last_response": null,
-        "last_response_text": "No request sent",
+        "last_response_text": "None recorded",
         "evidence": [
           {
             "date": "unknown",
@@ -3518,10 +3540,21 @@
             "quote": "Once received we will process your request and will contact you to provide instruction on how you can gain access to this data in a machine readable format",
             "evidence_url": "https://www.bppulse.com/en-gb/help-and-support/public-ev-charging/public-charge-point-regulations",
             "evidence_file": null
+          },
+          {
+            "date": "2026-10-23",
+            "action": "request_sent",
+            "action_label": "Access requested",
+            "channel": "web_form",
+            "channel_label": "Web form",
+            "summary": "Requested access to bp pulse's PCPR data through the form linked from its Public Charge Point Regulations help page.",
+            "quote": null,
+            "evidence_url": null,
+            "evidence_file": null
           }
         ]
       },
-      "access_requested": null,
+      "access_requested": "2026-10-23",
       "access_granted": null,
       "feeds": [
         {
@@ -3697,13 +3730,13 @@
       "enabled": false,
       "adapter": "unknown",
       "engagement": {
-        "status": "key_on_request",
-        "label": "Key issued on request",
-        "headline": "Key issued on request (as of 2026-10-10)",
-        "as_of": "2026-10-10",
-        "last_request": null,
+        "status": "requested_no_reply",
+        "label": "Requested, no reply",
+        "headline": "Requested, no reply (as of 2026-10-23)",
+        "as_of": "2026-10-23",
+        "last_request": "2026-10-23",
         "last_response": null,
-        "last_response_text": "No request sent",
+        "last_response_text": "None recorded",
         "evidence": [
           {
             "date": "2026-10-10",
@@ -3716,6 +3749,12 @@
             "url": "https://docs.google.com/forms/d/e/1FAIpQLSeJ9Z3dyMdsBjaQ3pj9F3aOAXE4jstoHFBxwVq3wxs5lU5JLg/viewform",
             "file": null,
             "note": "The \"PCPR Data Request - ChargePoint station management software\" form asks for an email address, name, organisation, network and planned use of data, and says requests are shared with Eco-Movement. It names no licence, terms, key or rate limit."
+          },
+          {
+            "date": "2026-10-23",
+            "url": "https://docs.google.com/forms/d/e/1FAIpQLSeJ9Z3dyMdsBjaQ3pj9F3aOAXE4jstoHFBxwVq3wxs5lU5JLg/viewform",
+            "file": null,
+            "note": "On 2026-10-23 the form said the data of these operators on the ChargePoint platform is reached by choosing \"ChargePoint platform CPOs\": Airbus UK, AMR GP Ltd, Aylesford Electrical, Bicester Village, BILLING SERVICE STATION LTD., ChargePoint UK Headquarters, Chargie Chargie, Cullen Group Limited, Dean Court Community Association, Derby Leisure and Events Venue, East Devon 4x4, Euro Stars WIDNES LTD, Evie Life, Harwell Science & Innovation Campus, Harwich Haven, Holiday Inn Express - St Albans, InstaVolt Ltd, Jute Jam & Journalism Group, LCFA Sefton CIC, Loch Ness Inn, Macrow Ltd, MEPC Milton Park, mysql8ccqauat_eu (appears to be a test entry), Otford Parish Council, Pamusoro, Sea Level Wave Co Ltd, Selwood Limited, Sutton hotel collection, Tylehurst Instruments, West Estates Limited, ZOLB EV."
           }
         ],
         "log": [
@@ -3751,10 +3790,21 @@
             "quote": "Request data on the location, status, and properties of stations and networks using ChargePoint station management software in the United Kingdom, in accordance with the UK Public Charge Point Regulations. You will receive an answer within 5 working days.",
             "evidence_url": "https://docs.google.com/forms/d/e/1FAIpQLSeJ9Z3dyMdsBjaQ3pj9F3aOAXE4jstoHFBxwVq3wxs5lU5JLg/viewform",
             "evidence_file": null
+          },
+          {
+            "date": "2026-10-23",
+            "action": "request_sent",
+            "action_label": "Access requested",
+            "channel": "web_form",
+            "channel_label": "Web form",
+            "summary": "Requested access to PCPR data for the ChargePoint platform networks through ChargePoint's Google form (choice \"ChargePoint platform CPOs\"), which is shared with Eco-Movement.",
+            "quote": null,
+            "evidence_url": null,
+            "evidence_file": null
           }
         ]
       },
-      "access_requested": null,
+      "access_requested": "2026-10-23",
       "access_granted": null,
       "feeds": [],
       "licence": null,
@@ -3853,13 +3903,13 @@
       "enabled": false,
       "adapter": "eco_movement_pcpr",
       "engagement": {
-        "status": "unknown",
-        "label": "Not yet established",
-        "headline": "Not yet established (as of 2026-10-09)",
-        "as_of": "2026-10-09",
-        "last_request": null,
+        "status": "requested_no_reply",
+        "label": "Requested, no reply",
+        "headline": "Requested, no reply (as of 2026-10-23)",
+        "as_of": "2026-10-23",
+        "last_request": "2026-10-23",
         "last_response": null,
-        "last_response_text": "No request sent",
+        "last_response_text": "None recorded",
         "evidence": [],
         "log": [
           {
@@ -3872,10 +3922,21 @@
             "quote": null,
             "evidence_url": "https://www.shell.co.uk/electric-vehicle-charging/shell-recharge-open-data-request.html",
             "evidence_file": null
+          },
+          {
+            "date": "2026-10-23",
+            "action": "request_sent",
+            "action_label": "Access requested",
+            "channel": "web_form",
+            "channel_label": "Web form",
+            "summary": "Requested access to PCPR data for all Shell networks, including Community by Shell Recharge, through Shell's open data request form (choice \"All Networks\").",
+            "quote": null,
+            "evidence_url": null,
+            "evidence_file": null
           }
         ]
       },
-      "access_requested": null,
+      "access_requested": "2026-10-23",
       "access_granted": null,
       "feeds": [
         {
@@ -4097,13 +4158,13 @@
       "enabled": false,
       "adapter": "unknown",
       "engagement": {
-        "status": "key_on_request",
-        "label": "Key issued on request",
-        "headline": "Key issued on request (as of 2026-10-23)",
+        "status": "requested_no_reply",
+        "label": "Requested, no reply",
+        "headline": "Requested, no reply (as of 2026-10-23)",
         "as_of": "2026-10-23",
-        "last_request": null,
+        "last_request": "2026-10-23",
         "last_response": null,
-        "last_response_text": "No request sent",
+        "last_response_text": "None recorded",
         "evidence": [
           {
             "date": "2026-10-23",
@@ -4123,10 +4184,21 @@
             "quote": "Your request will be shared with Eco-Movement, and in submitting the email you are consenting to the processing of their data for the purpose of providing you with the requested information.",
             "evidence_url": "https://energy.drax.com/drax-network-of-public-chargers/",
             "evidence_file": null
+          },
+          {
+            "date": "2026-10-23",
+            "action": "request_sent",
+            "action_label": "Access requested",
+            "channel": "web_form",
+            "channel_label": "Web form",
+            "summary": "Requested access to Drax Energy Solutions' PCPR data through the form on its PCPR page, which is shared with Eco-Movement.",
+            "quote": null,
+            "evidence_url": null,
+            "evidence_file": null
           }
         ]
       },
-      "access_requested": null,
+      "access_requested": "2026-10-23",
       "access_granted": null,
       "feeds": [],
       "licence": null,
@@ -4524,13 +4596,13 @@
       "enabled": false,
       "adapter": "unknown",
       "engagement": {
-        "status": "key_on_request",
-        "label": "Key issued on request",
-        "headline": "Key issued on request (as of 2026-10-10)",
-        "as_of": "2026-10-10",
-        "last_request": null,
+        "status": "requested_no_reply",
+        "label": "Requested, no reply",
+        "headline": "Requested, no reply (as of 2026-10-23)",
+        "as_of": "2026-10-23",
+        "last_request": "2026-10-23",
         "last_response": null,
-        "last_response_text": "No request sent",
+        "last_response_text": "None recorded",
         "evidence": [
           {
             "date": "2026-10-10",
@@ -4561,10 +4633,21 @@
             "quote": "Request data on the location, status, and properties of the ESB network in the United Kingdom which complies with the Public Charge Point Regulations. You will receive an answer within 5 working days.",
             "evidence_url": "https://docs.google.com/forms/d/e/1FAIpQLSfAe5GBI7djZfhpr-yq1QBpb6oSs2dF1rG4SxIYK7rj9AVnHw/viewform",
             "evidence_file": null
+          },
+          {
+            "date": "2026-10-23",
+            "action": "request_sent",
+            "action_label": "Access requested",
+            "channel": "web_form",
+            "channel_label": "Web form",
+            "summary": "Requested access to ESB Energy's PCPR data through its Google form, which is shared with Eco-Movement.",
+            "quote": null,
+            "evidence_url": null,
+            "evidence_file": null
           }
         ]
       },
-      "access_requested": null,
+      "access_requested": "2026-10-23",
       "access_granted": null,
       "feeds": [],
       "licence": null,
@@ -4727,13 +4810,13 @@
       "enabled": false,
       "adapter": "unknown",
       "engagement": {
-        "status": "no_public_feed_found",
-        "label": "No public feed found",
-        "headline": "No public feed found (as of 2026-10-22)",
-        "as_of": "2026-10-22",
-        "last_request": null,
+        "status": "requested_no_reply",
+        "label": "Requested, no reply",
+        "headline": "Requested, no reply (as of 2026-10-23)",
+        "as_of": "2026-10-23",
+        "last_request": "2026-10-23",
         "last_response": null,
-        "last_response_text": "No request sent",
+        "last_response_text": "None recorded",
         "evidence": [
           {
             "date": "2026-10-22",
@@ -4753,10 +4836,21 @@
             "quote": "Our directly managed, owned and operated network provides us with complete control over quality, consistency and pricing for our consumers.",
             "evidence_url": "https://www.ev-point.com/",
             "evidence_file": null
+          },
+          {
+            "date": "2026-10-23",
+            "action": "request_sent",
+            "action_label": "Access requested",
+            "channel": "web_form",
+            "channel_label": "Web form",
+            "summary": "Requested access to evpoint's PCPR data through ChargePoint's Google form (one submission for this network), which is shared with Eco-Movement.",
+            "quote": null,
+            "evidence_url": null,
+            "evidence_file": null
           }
         ]
       },
-      "access_requested": null,
+      "access_requested": "2026-10-23",
       "access_granted": null,
       "feeds": [],
       "licence": null,
@@ -4791,13 +4885,13 @@
       "enabled": false,
       "adapter": "unknown",
       "engagement": {
-        "status": "key_on_request",
-        "label": "Key issued on request",
-        "headline": "Key issued on request (as of 2026-10-17)",
-        "as_of": "2026-10-17",
-        "last_request": null,
+        "status": "requested_no_reply",
+        "label": "Requested, no reply",
+        "headline": "Requested, no reply (as of 2026-10-23)",
+        "as_of": "2026-10-23",
+        "last_request": "2026-10-23",
         "last_response": null,
-        "last_response_text": "No request sent",
+        "last_response_text": "None recorded",
         "evidence": [
           {
             "date": "2026-10-10",
@@ -4828,10 +4922,21 @@
             "quote": "evyve, an electric vehicle charging network owner and operator, has selected EV charging platform Monta to deploy its intelligent end-to-end charging management system across evyve's network of 350 rapid and ultra-rapid charge points across the UK.",
             "evidence_url": "https://evyve.co.uk/news/evyve-selects-monta-to-power-reliable-growth-across-the-uk-s-ev-charging-network/",
             "evidence_file": null
+          },
+          {
+            "date": "2026-10-23",
+            "action": "request_sent",
+            "action_label": "Access requested",
+            "channel": "web_form",
+            "channel_label": "Web form",
+            "summary": "Requested access to evyve's PCPR data through its Google form, which is shared with Eco-Movement.",
+            "quote": null,
+            "evidence_url": null,
+            "evidence_file": null
           }
         ]
       },
-      "access_requested": null,
+      "access_requested": "2026-10-23",
       "access_granted": null,
       "feeds": [],
       "licence": null,
@@ -5272,13 +5377,13 @@
       "enabled": false,
       "adapter": "unknown",
       "engagement": {
-        "status": "key_on_request",
-        "label": "Key issued on request",
-        "headline": "Key issued on request (as of 2026-10-10)",
-        "as_of": "2026-10-10",
-        "last_request": null,
+        "status": "requested_no_reply",
+        "label": "Requested, no reply",
+        "headline": "Requested, no reply (as of 2026-10-23)",
+        "as_of": "2026-10-23",
+        "last_request": "2026-10-23",
         "last_response": null,
-        "last_response_text": "No request sent",
+        "last_response_text": "None recorded",
         "evidence": [
           {
             "date": "2026-10-10",
@@ -5298,10 +5403,21 @@
             "quote": "To request an API key to the Giga Power Open Access Data, in line with Open Charge Point Regulations (2023) of the PCPR, please fill in the form below.",
             "evidence_url": "https://gigapoweruk.com/opendata/",
             "evidence_file": null
+          },
+          {
+            "date": "2026-10-23",
+            "action": "request_sent",
+            "action_label": "Access requested",
+            "channel": "web_form",
+            "channel_label": "Web form",
+            "summary": "Requested access to Giga Power's open data through its open data form.",
+            "quote": null,
+            "evidence_url": null,
+            "evidence_file": null
           }
         ]
       },
-      "access_requested": null,
+      "access_requested": "2026-10-23",
       "access_granted": null,
       "feeds": [],
       "licence": null,
@@ -5641,13 +5757,13 @@
       "enabled": false,
       "adapter": "unknown",
       "engagement": {
-        "status": "key_on_request",
-        "label": "Key issued on request",
-        "headline": "Key issued on request (as of 2026-10-10)",
-        "as_of": "2026-10-10",
-        "last_request": null,
+        "status": "requested_no_reply",
+        "label": "Requested, no reply",
+        "headline": "Requested, no reply (as of 2026-10-23)",
+        "as_of": "2026-10-23",
+        "last_request": "2026-10-23",
         "last_response": null,
-        "last_response_text": "No request sent",
+        "last_response_text": "None recorded",
         "evidence": [
           {
             "date": "2026-10-10",
@@ -5667,10 +5783,21 @@
             "quote": "Your request will be shared with Eco-Movement, who will act on behalf of IONITY, to fulfil your request.",
             "evidence_url": "https://www.ionity.eu/open-data-request",
             "evidence_file": null
+          },
+          {
+            "date": "2026-10-23",
+            "action": "request_sent",
+            "action_label": "Access requested",
+            "channel": "web_form",
+            "channel_label": "Web form",
+            "summary": "Requested access to IONITY's PCPR data through its Google form, which is shared with Eco-Movement.",
+            "quote": null,
+            "evidence_url": null,
+            "evidence_file": null
           }
         ]
       },
-      "access_requested": null,
+      "access_requested": "2026-10-23",
       "access_granted": null,
       "feeds": [],
       "licence": null,
@@ -5841,13 +5968,13 @@
       "enabled": false,
       "adapter": "unknown",
       "engagement": {
-        "status": "no_public_feed_found",
-        "label": "No public feed found",
-        "headline": "No public feed found (as of 2026-10-10)",
-        "as_of": "2026-10-10",
-        "last_request": null,
+        "status": "requested_no_reply",
+        "label": "Requested, no reply",
+        "headline": "Requested, no reply (as of 2026-10-23)",
+        "as_of": "2026-10-23",
+        "last_request": "2026-10-23",
         "last_response": null,
-        "last_response_text": "No request sent",
+        "last_response_text": "None recorded",
         "evidence": [
           {
             "date": "2026-10-10",
@@ -5867,10 +5994,21 @@
             "quote": "Lidl EV Charging network 2025 reliability results",
             "evidence_url": "https://www.lidl.co.uk/c/electric-vehicle-charging/s10049808",
             "evidence_file": null
+          },
+          {
+            "date": "2026-10-23",
+            "action": "request_sent",
+            "action_label": "Access requested",
+            "channel": "web_form",
+            "channel_label": "Web form",
+            "summary": "Requested access to Lidl's PCPR data through ChargePoint's Google form (one submission for this network), which is shared with Eco-Movement.",
+            "quote": null,
+            "evidence_url": null,
+            "evidence_file": null
           }
         ]
       },
-      "access_requested": null,
+      "access_requested": "2026-10-23",
       "access_granted": null,
       "feeds": [],
       "licence": null,
@@ -6377,13 +6515,13 @@
       "enabled": false,
       "adapter": "unknown",
       "engagement": {
-        "status": "no_public_feed_found",
-        "label": "No public feed found",
-        "headline": "No public feed found (as of 2026-10-10)",
-        "as_of": "2026-10-10",
-        "last_request": null,
+        "status": "requested_no_reply",
+        "label": "Requested, no reply",
+        "headline": "Requested, no reply (as of 2026-10-23)",
+        "as_of": "2026-10-23",
+        "last_request": "2026-10-23",
         "last_response": null,
-        "last_response_text": "No request sent",
+        "last_response_text": "None recorded",
         "evidence": [
           {
             "date": "2026-10-10",
@@ -6403,10 +6541,21 @@
             "quote": "We manage all necessary data reporting to government authorities.",
             "evidence_url": "https://rawcharging.com/news/article/new-government-ev-charging-regulations-faqs",
             "evidence_file": null
+          },
+          {
+            "date": "2026-10-23",
+            "action": "request_sent",
+            "action_label": "Access requested",
+            "channel": "web_form",
+            "channel_label": "Web form",
+            "summary": "Requested access to Raw Charging's PCPR data through ChargePoint's Google form (one submission for this network), which is shared with Eco-Movement.",
+            "quote": null,
+            "evidence_url": null,
+            "evidence_file": null
           }
         ]
       },
-      "access_requested": null,
+      "access_requested": "2026-10-23",
       "access_granted": null,
       "feeds": [],
       "licence": null,
@@ -6569,13 +6718,13 @@
       "enabled": false,
       "adapter": "eco_movement_pcpr",
       "engagement": {
-        "status": "unknown",
-        "label": "Not yet established",
-        "headline": "Not yet established (as of 2026-10-09)",
-        "as_of": "2026-10-09",
-        "last_request": null,
+        "status": "requested_no_reply",
+        "label": "Requested, no reply",
+        "headline": "Requested, no reply (as of 2026-10-23)",
+        "as_of": "2026-10-23",
+        "last_request": "2026-10-23",
         "last_response": null,
-        "last_response_text": "No request sent",
+        "last_response_text": "None recorded",
         "evidence": [
           {
             "date": "2026-10-09",
@@ -6595,10 +6744,21 @@
             "quote": "Your request will be shared with Eco-Movement, who will act on behalf of Shell, to fulfil your request.",
             "evidence_url": "https://www.shell.co.uk/electric-vehicle-charging/public-charge-point-regulations.html",
             "evidence_file": null
+          },
+          {
+            "date": "2026-10-23",
+            "action": "request_sent",
+            "action_label": "Access requested",
+            "channel": "web_form",
+            "channel_label": "Web form",
+            "summary": "Requested access to PCPR data for all Shell networks through Shell's open data request form (choice \"All Networks\").",
+            "quote": null,
+            "evidence_url": null,
+            "evidence_file": null
           }
         ]
       },
-      "access_requested": null,
+      "access_requested": "2026-10-23",
       "access_granted": null,
       "feeds": [
         {
@@ -7127,13 +7287,13 @@
       "enabled": false,
       "adapter": "eco_movement_pcpr",
       "engagement": {
-        "status": "unknown",
-        "label": "Not yet established",
-        "headline": "Not yet established (as of 2026-10-09)",
-        "as_of": "2026-10-09",
-        "last_request": null,
+        "status": "requested_no_reply",
+        "label": "Requested, no reply",
+        "headline": "Requested, no reply (as of 2026-10-23)",
+        "as_of": "2026-10-23",
+        "last_request": "2026-10-23",
         "last_response": null,
-        "last_response_text": "No request sent",
+        "last_response_text": "None recorded",
         "evidence": [
           {
             "date": "2026-10-09",
@@ -7153,10 +7313,21 @@
             "quote": null,
             "evidence_url": "https://ubitricity.com/en/pcpr-data-request/",
             "evidence_file": null
+          },
+          {
+            "date": "2026-10-23",
+            "action": "request_sent",
+            "action_label": "Access requested",
+            "channel": "web_form",
+            "channel_label": "Web form",
+            "summary": "Requested access to ubitricity's PCPR data through its Google form, which is shared with Eco-Movement.",
+            "quote": null,
+            "evidence_url": null,
+            "evidence_file": null
           }
         ]
       },
-      "access_requested": null,
+      "access_requested": "2026-10-23",
       "access_granted": null,
       "feeds": [
         {
@@ -7720,13 +7891,13 @@
       "enabled": false,
       "adapter": "unknown",
       "engagement": {
-        "status": "key_on_request",
-        "label": "Key issued on request",
-        "headline": "Key issued on request (as of 2026-10-10)",
-        "as_of": "2026-10-10",
-        "last_request": null,
+        "status": "requested_no_reply",
+        "label": "Requested, no reply",
+        "headline": "Requested, no reply (as of 2026-10-23)",
+        "as_of": "2026-10-23",
+        "last_request": "2026-10-23",
         "last_response": null,
-        "last_response_text": "No request sent",
+        "last_response_text": "None recorded",
         "evidence": [
           {
             "date": "2026-10-10",
@@ -7746,10 +7917,21 @@
             "quote": "Request Zest’s charge point open data as per the Public Charge Point Regulations 2023.",
             "evidence_url": "https://www.zest.uk.com/charge-point-open-data",
             "evidence_file": null
+          },
+          {
+            "date": "2026-10-23",
+            "action": "request_sent",
+            "action_label": "Access requested",
+            "channel": "web_form",
+            "channel_label": "Web form",
+            "summary": "Requested access to Zest's charge point open data through its open data form.",
+            "quote": null,
+            "evidence_url": null,
+            "evidence_file": null
           }
         ]
       },
-      "access_requested": null,
+      "access_requested": "2026-10-23",
       "access_granted": null,
       "feeds": [],
       "licence": null,
