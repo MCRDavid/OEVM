@@ -12,15 +12,15 @@ from pipeline.pricing import describe_tariff
 from pipeline.registry import load_registry
 
 FIXTURES = Path(__file__).parent / "fixtures" / "three_ti"
-HOST = "https://api.fuuse.io/opendata/"
+# Each site's address, with "location" or "tariff" added, as 3ti's page reads it.
 SITES = [
-    "c3947832-9352-41fa-96c1-831215eea8e0",  # Raigmore Hospital, Inverness
-    "4a5b700e-6a15-40f3-92cc-dcc8732a92e0",  # Riverbridge House, Surrey
-    "36bd06f3-5184-4939-a7a1-4c0c1dec5583",  # University of Surrey
-    "542c7548-899e-43e8-854c-05fd0f76dc70",  # East Staffordshire Borough Council
-    "6922c10c-4f17-4929-bf7a-32c4a6075277",  # Salford Royal Hospital
+    "https://api.fuuse.io/opendata/c3947832-9352-41fa-96c1-831215eea8e0/",  # Raigmore Hospital
+    "https://api.fuuse.io/opendata/4a5b700e-6a15-40f3-92cc-dcc8732a92e0/",  # Riverbridge House
+    "https://api.fuuse.io/opendata/36bd06f3-5184-4939-a7a1-4c0c1dec5583/",  # University of Surrey
+    "https://api.fuuse.io/opendata/542c7548-899e-43e8-854c-05fd0f76dc70/",  # East Staffordshire
+    "https://api.fuuse.io/opendata/6922c10c-4f17-4929-bf7a-32c4a6075277/",  # Salford Royal Hospital
 ]
-SEGEN = "6cd94287-a370-48ae-8079-a514a8ac2c7b"
+SEGEN = "https://api.fuuse.io/opendata/6cd94287-a370-48ae-8079-a514a8ac2c7b/"
 
 
 def replay():
@@ -32,8 +32,8 @@ def replay():
 
 def test_every_site_file_is_read_once_on_one_host():
     result, transport = replay()
-    assert transport.requested == [f"{HOST}{site}/location" for site in SITES] + [
-        f"{HOST}{site}/tariff" for site in SITES
+    assert transport.requested == [f"{site}location" for site in SITES] + [
+        f"{site}tariff" for site in SITES
     ]
     assert result.complete
     assert result.modules["locations"].total_reported == 6
@@ -51,11 +51,9 @@ def test_segen_is_listed_but_not_read_while_it_answers_204():
 def test_each_location_keeps_the_file_it_came_from():
     result, _ = replay()
     sources = Counter(str(loc.provenance.source_url) for loc in result.locations)
-    assert sources == Counter(
-        {f"{HOST}{site}/location": 2 if site == SITES[-1] else 1 for site in SITES}
-    )
+    assert sources == Counter({f"{site}location": 2 if site == SITES[-1] else 1 for site in SITES})
     tariff_sources = {str(t.provenance.source_url) for t in result.tariffs}
-    assert tariff_sources == {f"{HOST}{site}/tariff" for site in SITES}
+    assert tariff_sources == {f"{site}tariff" for site in SITES}
 
 
 def test_recorded_locations_convert_faithfully():
@@ -73,12 +71,12 @@ def test_recorded_locations_convert_faithfully():
 
 def test_prices_given_as_strings_have_the_stated_vat_added():
     result, _ = replay()
-    shown = {t.id.rsplit(":", 1)[1]: describe_tariff(t) for t in result.tariffs}
+    shown = {str(t.provenance.source_url): describe_tariff(t) for t in result.tariffs}
     assert all(s.state == "priced" for s in shown.values())
     # Raigmore Hospital: 0.2917 plus the stated 20% VAT, as 3ti's own page shows it.
-    assert "35p per kWh" in shown["eca6de9f-e5ee-4b20-9786-f597cb96aacc"].text
+    assert "35p per kWh" in shown[f"{SITES[0]}tariff"].text
     # University of Surrey: 0.5000 plus 20% VAT.
-    assert "60p per kWh" in shown["caf84577-94ea-4bc5-af05-4c8384b47c7a"].text
+    assert "60p per kWh" in shown[f"{SITES[2]}tariff"].text
     connectors = [c for loc in result.locations for e in loc.evses for c in e.connectors]
     assert {t for c in connectors for t in c.tariff_ids} == {t.id for t in result.tariffs}
 
