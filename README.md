@@ -111,7 +111,7 @@ on the site at `privacy/` from the same file.
 |---|---|
 | Lint | `uv run ruff check . && uv run ruff format --check .` |
 | Fix formatting | `uv run ruff format .` |
-| Run the tests | `uv run pytest -q` |
+| Run the tests (add `-n auto` to use every core) | `uv run pytest -q` |
 | Validate the operator registry | `uv run python -m pipeline.registry --validate` |
 | Run the adapters on recorded data (no network) | `uv run python -m pipeline.run --fixtures` |
 | Fetch one page from a real feed | `uv run python -m pipeline.run --live chargy --max-pages 1` |
