@@ -1,5 +1,5 @@
 {
-  "last_reviewed": "2026-10-23",
+  "last_reviewed": "2026-10-24",
   "disclaimer": "OEVM is a personal, experimental project for learning about AI tools. Much of its code and text was written with an AI assistant, and it will contain mistakes. Charger data comes from the operators and other sources credited on every record, and remains their work. Everything is provided \"as is\", with no warranty or guarantee of any kind. Always check prices and availability at the charger.",
   "regulation": {
     "summary": "The Public Charge Point Regulations 2023 set no limit on how often data users may request the data. Regulation 10(5) requires the data to be available free of charge without terms on its use. DfT's guidance allows terms covering the means of access, which is where operators' rate limits come from.",
@@ -1348,6 +1348,158 @@
           "evidence_url": "https://info.smartcharging.uk/public_feed/locations/3666",
           "status": "open",
           "resolved_date": null
+        }
+      ]
+    },
+    {
+      "id": "fastned",
+      "name": "Fastned",
+      "enabled": true,
+      "adapter": "ocpi_221",
+      "engagement": {
+        "status": "key_on_request",
+        "label": "Key issued on request",
+        "headline": "Key issued on request (as of 2026-10-24)",
+        "as_of": "2026-10-24",
+        "last_request": "2026-10-24",
+        "last_response": {
+          "date": "2026-10-24",
+          "action": "key_granted"
+        },
+        "last_response_text": "2026-10-24 (Key issued)",
+        "evidence": [
+          {
+            "date": "2026-10-10",
+            "url": "https://www.fastnedcharging.com/en-gb/uk-open-data",
+            "file": null,
+            "note": "Fastned's UK Open Data page is its Fair Use Policy for the Fastned UK Open Data API. The policy refers to API keys and credentials. Directly below the policy the page embeds a Typeform form that is loaded by JavaScript, so its questions could not be read without running the script; they need checking in a browser."
+          },
+          {
+            "date": "2026-10-24",
+            "url": null,
+            "file": "evidence/fastned/2026-10-24-key-email.md",
+            "note": "Fastned's automated email with the key, received minutes after the form on its UK Open Data page was sent. It gives the OCPI 2.2.1 locations and tariffs endpoints and the x-api-key header. The key itself is not kept here."
+          }
+        ],
+        "log": [
+          {
+            "date": "2026-10-10",
+            "action": "page_checked",
+            "action_label": "Operator's page checked",
+            "channel": null,
+            "channel_label": null,
+            "summary": "Fastned's UK Open Data page was read; it holds the Fair Use Policy for its UK Open Data API, followed by an embedded form that is loaded by JavaScript.",
+            "quote": "You are responsible for maintaining the confidentiality of your API keys and credentials.",
+            "evidence_url": "https://www.fastnedcharging.com/en-gb/uk-open-data",
+            "evidence_file": null
+          },
+          {
+            "date": "2026-10-24",
+            "action": "request_sent",
+            "action_label": "Access requested",
+            "channel": "web_form",
+            "channel_label": "Web form",
+            "summary": "Requested a key through the form on Fastned's UK Open Data page, agreeing to its Fair Use Policy, with a short description of the project that says the map would show the data as adapted from Fastned's data.",
+            "quote": null,
+            "evidence_url": "https://www.fastnedcharging.com/en-gb/uk-open-data",
+            "evidence_file": null
+          },
+          {
+            "date": "2026-10-24",
+            "action": "key_granted",
+            "action_label": "Key issued",
+            "channel": null,
+            "channel_label": null,
+            "summary": "Fastned sent a key by automated email minutes after the form, with the OCPI 2.2.1 locations and tariffs endpoints and a reminder that use is under its Fair Use Policy. The key is kept as a GitHub Actions secret.",
+            "quote": null,
+            "evidence_url": null,
+            "evidence_file": "evidence/fastned/2026-10-24-key-email.md"
+          },
+          {
+            "date": "2026-10-24",
+            "action": "page_checked",
+            "action_label": "Operator's page checked",
+            "channel": null,
+            "channel_label": null,
+            "summary": "Fastned's UK Open Data page was read again; the Fair Use Policy is unchanged and still states no numeric rate limit.",
+            "quote": "Where the Data is adapted and exploited, distributed, published, transmitted or disseminated to a third party by You, You must acknowledge that Fastned’s source Data has been adapted.",
+            "evidence_url": "https://www.fastnedcharging.com/en-gb/uk-open-data",
+            "evidence_file": null
+          }
+        ]
+      },
+      "access_requested": "2026-10-24",
+      "access_granted": "2026-10-24",
+      "feeds": [
+        {
+          "kind": "locations",
+          "url": "https://uk-public.api.fastned.nl/uk-public/ocpi/cpo/2.2.1/locations",
+          "status": "documented"
+        },
+        {
+          "kind": "tariffs",
+          "url": "https://uk-public.api.fastned.nl/uk-public/ocpi/cpo/2.2.1/tariffs",
+          "status": "documented"
+        }
+      ],
+      "licence": {
+        "name": "OGL-3.0",
+        "url": "https://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/",
+        "checked": "2026-10-24"
+      },
+      "attribution": "Contains data from Fastned published under the Public Charge Point Regulations 2023, used in line with the Open Government Licence v3.0. Adapted from Fastned's data.",
+      "missing_publish_flag": null,
+      "swapped_coordinates": null,
+      "nonstandard_statuses": null,
+      "tariffs_from": null,
+      "nonstandard_parking_restrictions": null,
+      "zero_price_tariffs": null,
+      "vat_not_stated": null,
+      "vat_in_price": null,
+      "own_feed_over_copies": null,
+      "relay": null,
+      "expired_certificate": null,
+      "excluded_locations": null,
+      "rate_limit": {
+        "our_gap_seconds": 2.0,
+        "our_max_per_hour": 1800,
+        "ours": "At least 2 s between requests to the operator's host, measured from the end of the previous request (at most 1800 in any hour), retries included.",
+        "published": [],
+        "limits_checked": "2026-10-24",
+        "comparison": "No limit published (checked 2026-10-24). The gap is our own choice.",
+        "difference_from_regulations": "Neither the operator nor the regulations set a limit.",
+        "notes": "Fastned's Fair Use Policy, read 2026-10-10 and again 2026-10-24, states no numeric limit. It says \"Fastned may throttle your use of the APIs at any time.\" and \"Fastned reserves the right to implement rate limits on the API to ensure system performance, reliability, and overall service quality or for other reasons at its discretion.\" The key email gives no limit either, and the responses of 2026-10-24 carried no rate limit headers. The 2 second gap is this project's own choice, and the feed is fetched once a day: two requests a run."
+      },
+      "findings": [
+        {
+          "date": "2026-10-24",
+          "kind": "data_quality",
+          "kind_label": "Data quirk",
+          "summary": "Location 51040, Freebridge King's Lynn on Clenchwarton Road, gives postal_code \"LE34 3LW\". Its city and coordinates are in King's Lynn, whose postcodes are in the PE area.",
+          "handling": "The postcode is shown as published and nothing is corrected. The map places the site by its coordinates, which are in the UK.",
+          "evidence_url": "https://uk-public.api.fastned.nl/uk-public/ocpi/cpo/2.2.1/locations",
+          "status": "open",
+          "resolved_date": null
+        },
+        {
+          "date": "2026-10-24",
+          "kind": "data_quality",
+          "kind_label": "Data quirk",
+          "summary": "38 of the 309 EVSEs, at 9 of the 42 locations, have status REMOVED, and these are the only EVSEs with no evse_id (optional in OCPI 2.2.1). No location has every EVSE removed.",
+          "handling": "As with the other OCPI feeds, these chargers are shown as out of service and their locations stay on the map.",
+          "evidence_url": "https://uk-public.api.fastned.nl/uk-public/ocpi/cpo/2.2.1/locations",
+          "status": "open",
+          "resolved_date": null
+        },
+        {
+          "date": "2026-10-10",
+          "kind": "access",
+          "kind_label": "Access",
+          "summary": "Fastned's Fair Use Policy says \"Fastned retains all rights, title and interest in both the Data and the API. Nothing in this Policy shall be interpreted as transferring any intellectual rights to you or any third party.\" and \"Access to the API is provided solely under a limited, non-exclusive, non-transferable, and revocable license for permitted use as outlined in this Policy.\"",
+          "handling": "The policy is specific to the open data, so the repository owner's standing rule of 2026-10-10 on general website or charging terms did not settle it. On 2026-10-24 the owner decided to agree to the policy through Fastned's form and to follow its attribution rules (ADR 0028); the data is used in line with the Open Government Licence v3.0.",
+          "evidence_url": "https://www.fastnedcharging.com/en-gb/uk-open-data",
+          "status": "resolved",
+          "resolved_date": "2026-10-24"
         }
       ]
     },
@@ -5751,81 +5903,6 @@
         "notes": null
       },
       "findings": []
-    },
-    {
-      "id": "fastned",
-      "name": "Fastned",
-      "enabled": false,
-      "adapter": "unknown",
-      "engagement": {
-        "status": "key_on_request",
-        "label": "Key issued on request",
-        "headline": "Key issued on request (as of 2026-10-10)",
-        "as_of": "2026-10-10",
-        "last_request": null,
-        "last_response": null,
-        "last_response_text": "No request sent",
-        "evidence": [
-          {
-            "date": "2026-10-10",
-            "url": "https://www.fastnedcharging.com/en-gb/uk-open-data",
-            "file": null,
-            "note": "Fastned's UK Open Data page is its Fair Use Policy for the Fastned UK Open Data API. The policy refers to API keys and credentials. Directly below the policy the page embeds a Typeform form that is loaded by JavaScript, so its questions could not be read without running the script; they need checking in a browser."
-          }
-        ],
-        "log": [
-          {
-            "date": "2026-10-10",
-            "action": "page_checked",
-            "action_label": "Operator's page checked",
-            "channel": null,
-            "channel_label": null,
-            "summary": "Fastned's UK Open Data page was read; it holds the Fair Use Policy for its UK Open Data API, followed by an embedded form that is loaded by JavaScript.",
-            "quote": "You are responsible for maintaining the confidentiality of your API keys and credentials.",
-            "evidence_url": "https://www.fastnedcharging.com/en-gb/uk-open-data",
-            "evidence_file": null
-          }
-        ]
-      },
-      "access_requested": null,
-      "access_granted": null,
-      "feeds": [],
-      "licence": null,
-      "attribution": null,
-      "missing_publish_flag": null,
-      "swapped_coordinates": null,
-      "nonstandard_statuses": null,
-      "tariffs_from": null,
-      "nonstandard_parking_restrictions": null,
-      "zero_price_tariffs": null,
-      "vat_not_stated": null,
-      "vat_in_price": null,
-      "own_feed_over_copies": null,
-      "relay": null,
-      "expired_certificate": null,
-      "excluded_locations": null,
-      "rate_limit": {
-        "our_gap_seconds": 2.0,
-        "our_max_per_hour": 1800,
-        "ours": "At least 2 s between requests to the operator's host, measured from the end of the previous request (at most 1800 in any hour), retries included.",
-        "published": [],
-        "limits_checked": "2026-10-10",
-        "comparison": "No limit published (checked 2026-10-10). The gap is our own choice.",
-        "difference_from_regulations": "Neither the operator nor the regulations set a limit.",
-        "notes": "Fastned's Fair Use Policy, read 2026-10-10, states no numeric limit. It says \"Fastned may throttle your use of the APIs at any time.\" and \"Fastned reserves the right to implement rate limits on the API to ensure system performance, reliability, and overall service quality or for other reasons at its discretion.\" The API's technical documentation has not been seen."
-      },
-      "findings": [
-        {
-          "date": "2026-10-10",
-          "kind": "access",
-          "kind_label": "Access",
-          "summary": "Fastned's Fair Use Policy says \"Fastned retains all rights, title and interest in both the Data and the API. Nothing in this Policy shall be interpreted as transferring any intellectual rights to you or any third party.\" and \"Access to the API is provided solely under a limited, non-exclusive, non-transferable, and revocable license for permitted use as outlined in this Policy.\"",
-          "handling": "The policy is specific to the open data, so the repository owner's standing rule of 2026-10-10 on general website or charging terms does not settle it. The owner's decision on the policy is needed before access is requested, as it was for Gridserve. The operator stays switched off.",
-          "evidence_url": "https://www.fastnedcharging.com/en-gb/uk-open-data",
-          "status": "open",
-          "resolved_date": null
-        }
-      ]
     },
     {
       "id": "first_charge",
