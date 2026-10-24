@@ -121,3 +121,6 @@ page](transparency/).
 **Update, 23 October 2026:** the project registered for PLUG Charging's free key, which arrived
 straight away (see [the post on small networks](findings/small-networks/)), and for an access token
 for Monta's UK feed. The other request texts are still drafts.
+
+**Update, 24 October 2026:** the first 16 access requests were sent on 23 October 2026, each through
+the operator's own web form. See [the post on six more networks](findings/six-more-networks/).
