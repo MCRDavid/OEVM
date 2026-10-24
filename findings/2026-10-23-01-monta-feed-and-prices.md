@@ -37,6 +37,10 @@ Most locations carry Monta's own party id, MON. Others carry the party ids and n
 run on Monta, among them evyve charging network (EVY, 225 locations) and Urban Fox (UFX, 152). The
 EVSE ids we tried at UK sites begin DK*MON, with Denmark's country code.
 
+**Update, 24 October 2026:** Urban Fox's own feed is now on the map, so by the project owner's
+decision Monta's copies of Urban Fox sites are left off: 95 in the daily run of 24 October 2026,
+which mapped 636 Monta locations. See [the post on six more networks](findings/six-more-networks/).
+
 OCPI 2.2.1 says "A Location without any valid EVSE object can be considered expired and should no
 longer be displayed", so locations whose chargers are all marked REMOVED are left off the map.
 
