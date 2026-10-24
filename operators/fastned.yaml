@@ -1,8 +1,8 @@
 # yaml-language-server: $schema=schema.json
 id: fastned
 display_name: Fastned
-ocpi_country_code: unknown
-ocpi_party_id: unknown
+ocpi_country_code: GB
+ocpi_party_id: FAS # Confirmed from the feed's own country_code and party_id on 2026-10-24.
 adapter: ocpi_221
 base_url: unknown
 endpoints:
@@ -11,11 +11,14 @@ endpoints:
     status: documented
     note: >-
       Given in Fastned's automated key email of 2026-10-24 as a GET endpoint of its UK Open
-      Data API, OCPI 2.2.1, with the key in the x-api-key header.
+      Data API, OCPI 2.2.1, with the key in the x-api-key header. On 2026-10-24 it sent all
+      42 locations in one page (X-Total-Count 42, X-Limit 500), with no Link header.
   tariffs:
     url: https://uk-public.api.fastned.nl/uk-public/ocpi/cpo/2.2.1/tariffs
     status: documented
-    note: Given in the same email as the tariffs endpoint.
+    note: >-
+      Given in the same email as the tariffs endpoint. On 2026-10-24 it sent 1 tariff in one
+      page.
 auth:
   method: header
   name: x-api-key
@@ -29,8 +32,8 @@ rate_limit:
     It says "Fastned may throttle your use of the APIs at any time." and "Fastned reserves the
     right to implement rate limits on the API to ensure system performance, reliability, and
     overall service quality or for other reasons at its discretion." The key email gives no
-    limit either. The 2 second gap is this project's own choice, and the feed is fetched once
-    a day.
+    limit either, and the responses of 2026-10-24 carried no rate limit headers. The 2 second
+    gap is this project's own choice, and the feed is fetched once a day: two requests a run.
 supports_single_location: unknown
 cors: unknown
 attribution: >-
@@ -121,6 +124,26 @@ sources:
       embeds a Typeform form, which is the route for requesting a key; the endpoints are given
       in the key email (evidence/fastned/2026-10-24-key-email.md), not on the page.
 findings:
+  - date: 2026-10-24
+    kind: data_quality
+    summary: >-
+      Location 51040, Freebridge King's Lynn on Clenchwarton Road, gives postal_code
+      "LE34 3LW". Its city and coordinates are in King's Lynn, whose postcodes are in the PE
+      area.
+    handling: >-
+      The postcode is shown as published and nothing is corrected. The map places the site
+      by its coordinates, which are in the UK.
+    evidence_url: https://uk-public.api.fastned.nl/uk-public/ocpi/cpo/2.2.1/locations
+  - date: 2026-10-24
+    kind: data_quality
+    summary: >-
+      38 of the 309 EVSEs, at 9 of the 42 locations, have status REMOVED, and these are the
+      only EVSEs with no evse_id (optional in OCPI 2.2.1). No location has every EVSE
+      removed.
+    handling: >-
+      As with the other OCPI feeds, these chargers are shown as out of service and their
+      locations stay on the map.
+    evidence_url: https://uk-public.api.fastned.nl/uk-public/ocpi/cpo/2.2.1/locations
   - date: 2026-10-10
     kind: access
     summary: >-
@@ -145,5 +168,8 @@ notes: >-
   also says "Any use, adaption, exploitation, distribution, publishing, transmission or
   dissemination of the Data to any third party must at all times acknowledge the source of
   the Data as Fastned." The map always shows the data reshaped (prices, statuses and
-  opening times in its own format), so the attribution says it is adapted.
-enabled: false
+  opening times in its own format), so the attribution says it is adapted. Each location's
+  operator object in the feed includes a link to a Fastned logo; the pipeline keeps only the
+  operator's name, so no logo is stored or shown. On 2026-10-24 the feed had one tariff, a GBP
+  price per kWh with VAT stated as 20 per cent, which the map shows including VAT.
+enabled: true
