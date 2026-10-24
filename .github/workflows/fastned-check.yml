@@ -1,0 +1,40 @@
+# Temporary: a one-off check of Fastned's feed from this branch, removed before the PR is
+# ready. One request to read the response headers, then the whole feed once with the
+# pipeline, two seconds between requests, with the key from the FASTNED_API_KEY secret. It
+# prints the recorded responses for a trimmed test fixture.
+name: Fastned check (temporary)
+
+on:
+  push:
+    branches: [claude/project-thread-oqzj35]
+    paths: [.github/workflows/fastned-check.yml, .github/scripts/fastned-check.py]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: fetch-daily
+  cancel-in-progress: false
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+      - uses: astral-sh/setup-uv@v7
+      - run: uv sync --locked
+      - name: Read Fastned's feed once and record it with the pipeline
+        env:
+          FASTNED_API_KEY: ${{ secrets.FASTNED_API_KEY }}
+        run: |
+          sed -i 's/^enabled: false$/enabled: true/' operators/fastned.yaml
+          PYTHONPATH=. uv run python .github/scripts/fastned-check.py || echo "check exit $?"
+          sleep 3
+          uv run python -m pipeline.run --live fastned --save-raw raw --log-dir logs || echo "exit $?"
+          for f in $(find raw logs -name '*.json' | sort); do
+            echo "----- $f -----"
+            python3 -c "import json, sys; print(json.dumps(json.load(open(sys.argv[1]))))" "$f"
+          done
