@@ -30,7 +30,7 @@ rate_limit:
       endpoint: locations
       quote: The `locations` endpoint has a rate limit of 30 requests per 1 hour.
       source_url: https://developers.eco-movement.com/v2.2.1/reference/get-all-locations-pcpr-api
-      checked: 2026-10-07
+      checked: 2026-10-26
     - publisher: Eco-Movement
       requests: 30
       per_seconds: 3600
@@ -38,22 +38,22 @@ rate_limit:
       scope: single location
       quote: The `locations/{id}` endpoint has a rate limit of 30 requests per 1 hour.
       source_url: https://developers.eco-movement.com/v2.2.1/reference/get-specific-location-pcpr-api
-      checked: 2026-10-07
+      checked: 2026-10-26
     - publisher: Eco-Movement
       requests: 30
       per_seconds: 3600
       endpoint: tariffs
       quote: The `tariffs` endpoint has a rate limit of 30 requests per 1 hour.
       source_url: https://developers.eco-movement.com/reference/get-tariffs-pcpr-api
-      checked: 2026-10-07
+      checked: 2026-10-26
     - publisher: Eco-Movement
       requests: 1
       per_seconds: 30
       endpoint: statuses
       quote: The `statuses` endpoint has a rate limit of 1 request per 30 seconds.
       source_url: https://developers.eco-movement.com/reference/get-statuses-pcpr-api
-      checked: 2026-10-07
-  limits_checked: 2026-10-07
+      checked: 2026-10-26
+  limits_checked: 2026-10-26
   notes: >-
     One gap of 125 seconds (the 120 seconds the strictest limit needs, plus a safety
     margin) is kept between any two requests to open-chargepoints.com, shared by every
@@ -65,13 +65,19 @@ supports_single_location: supported
 cors: needs_testing
 attribution: null
 engagement:
-  status: requested_no_reply
+  status: key_on_request
   evidence:
     - date: 2026-10-09
       url: https://ubitricity.com/en/pcpr-data-request/
       note: >-
         ubitricity's PCPR data request page asks for contact details and the data needed
         through a request form. It names no licence, terms, key or agreement.
+    - date: 2026-10-26
+      file: evidence/ubitricity/2026-10-26-token-email.md
+      note: >-
+        Eco-Movement's email with an expiring link to this network's token for its PCPR
+        API, sent as an "Authorization: Token" header to its OCPI 2.2.1 endpoints. The
+        token itself is not kept here.
   log:
     - date: 2026-10-09
       action: page_checked
@@ -85,8 +91,16 @@ engagement:
       channel: web_form
       summary: >-
         Requested access to ubitricity's PCPR data through its Google form, which is shared with Eco-Movement.
+    - date: 2026-10-26
+      action: key_granted
+      channel: email
+      summary: >-
+        Eco-Movement sent a token for this network's PCPR data by email, through an
+        expiring link, to be sent as an "Authorization: Token" header to its OCPI
+        2.2.1 endpoints. The token is kept as a GitHub Actions secret.
+      evidence_file: evidence/ubitricity/2026-10-26-token-email.md
 access_requested: 2026-10-23
-access_granted: null
+access_granted: 2026-10-26
 sources:
   - url: https://wiki.openstreetmap.org/wiki/EV_charge_points_in_the_United_Kingdom
     note: The blueprint cites this page for this operator using Eco-Movement's PCPR API.
@@ -138,4 +152,7 @@ notes: >-
   Whether one token covers several operators is unverified, so this operator has its own
   secret. How access is requested is not
   recorded in the blueprint.
+  On 2026-10-26 Eco-Movement sent a token for this network's data on its PCPR API, so it
+  uses the eco_movement_pcpr adapter. What the token returns needs testing with one
+  recorded fetch before the network is switched on.
 enabled: false

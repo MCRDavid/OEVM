@@ -13,7 +13,7 @@ section filled in.
 
 | Task | Adapter | Unlocks | Blocked on | Suggested order |
 |---|---|---|---|---|
-| A1 | `eco_movement_pcpr` | bp pulse, Shell Recharge, ubitricity, Community by Shell Recharge | A token from at least one operator | 2 |
+| A1 | `eco_movement_pcpr` | bp pulse, Shell Recharge, ubitricity, Community by Shell Recharge, and 12 more networks whose tokens arrived on 2026-10-26 | Nothing | Built: a thin layer over `ocpi_221` (`adapters/eco_movement.py`) |
 | A2 | `gridserve` | Gridserve | A key | 3 |
 | A3 | `static_file` | No current operator; later council CSVs and FOI spreadsheets | A source that needs it | Deferred |
 | A4 | None yet | MFG and Fastned on `ocpi_221`; Believ and others once their format is known | Nothing for MFG; access for the rest | 1 |

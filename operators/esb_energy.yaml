@@ -3,24 +3,70 @@ id: esb_energy
 display_name: ESB Energy
 ocpi_country_code: unknown
 ocpi_party_id: unknown
-adapter: unknown
+adapter: eco_movement_pcpr
 base_url: unknown
-endpoints: {}
+endpoints:
+  locations:
+    url: https://open-chargepoints.com/api/ocpi/cpo/2.2.1/locations
+    status: documented
+    note: Confirmed in Eco-Movement's PCPR API reference on 2026-10-07.
+  tariffs:
+    url: https://open-chargepoints.com/api/ocpi/cpo/2.2.1/tariffs
+    status: documented
+  statuses:
+    url: https://open-chargepoints.com/api/statuses
+    status: documented
 auth:
-  method: unknown
-  name: null
-  secret_name: null
+  method: header
+  name: Authorization
+  scheme: Token
+  secret_name: ESB_ENERGY_TOKEN
 rate_limit:
-  min_seconds_between_requests: 2
-  limits: []
-  limits_checked: unknown
-  notes: null
+  min_seconds_between_requests: 125
+  limits:
+    - publisher: Eco-Movement
+      requests: 30
+      per_seconds: 3600
+      endpoint: locations
+      quote: The `locations` endpoint has a rate limit of 30 requests per 1 hour.
+      source_url: https://developers.eco-movement.com/v2.2.1/reference/get-all-locations-pcpr-api
+      checked: 2026-10-26
+    - publisher: Eco-Movement
+      requests: 30
+      per_seconds: 3600
+      endpoint: locations
+      scope: single location
+      quote: The `locations/{id}` endpoint has a rate limit of 30 requests per 1 hour.
+      source_url: https://developers.eco-movement.com/v2.2.1/reference/get-specific-location-pcpr-api
+      checked: 2026-10-26
+    - publisher: Eco-Movement
+      requests: 30
+      per_seconds: 3600
+      endpoint: tariffs
+      quote: The `tariffs` endpoint has a rate limit of 30 requests per 1 hour.
+      source_url: https://developers.eco-movement.com/reference/get-tariffs-pcpr-api
+      checked: 2026-10-26
+    - publisher: Eco-Movement
+      requests: 1
+      per_seconds: 30
+      endpoint: statuses
+      quote: The `statuses` endpoint has a rate limit of 1 request per 30 seconds.
+      source_url: https://developers.eco-movement.com/reference/get-statuses-pcpr-api
+      checked: 2026-10-26
+  limits_checked: 2026-10-26
+  notes: >-
+    One gap of 125 seconds (the 120 seconds the strictest limit needs, plus a safety
+    margin) is kept between any two requests to open-chargepoints.com, shared by every
+    operator served from it, so this project sends it at most 29 requests in any hour.
+    Requests are sent one at a time; Eco-Movement "strongly recommends limiting
+    simultaneous GET requests to a maximum of 5". It recommends retrieving the entire
+    dataset once a day.
 supports_single_location: unknown
 cors: unknown
 attribution: null
 licence: null
 engagement:
-  status: requested_no_reply
+  status: key_on_request
   evidence:
     - date: 2026-10-10
       url: https://www.esbenergy.co.uk/ev
@@ -29,6 +75,12 @@ engagement:
         form asking for an email address, name, organisation and planned use of data. The
         form says requests are shared with Eco-Movement and names no licence, terms, key or
         rate limit.
+    - date: 2026-10-26
+      file: evidence/esb_energy/2026-10-26-token-email.md
+      note: >-
+        Eco-Movement's email with an expiring link to this network's token for its PCPR
+        API, sent as an "Authorization: Token" header to its OCPI 2.2.1 endpoints. The
+        token itself is not kept here.
   log:
     - date: 2026-10-10
       action: feed_searched
@@ -52,8 +104,16 @@ engagement:
       channel: web_form
       summary: >-
         Requested access to ESB Energy's PCPR data through its Google form, which is shared with Eco-Movement.
+    - date: 2026-10-26
+      action: key_granted
+      channel: email
+      summary: >-
+        Eco-Movement sent a token for this network's PCPR data by email, through an
+        expiring link, to be sent as an "Authorization: Token" header to its OCPI
+        2.2.1 endpoints. The token is kept as a GitHub Actions secret.
+      evidence_file: evidence/esb_energy/2026-10-26-token-email.md
 access_requested: 2026-10-23
-access_granted: null
+access_granted: 2026-10-26
 sources:
   - url: https://www.esbenergy.co.uk/
     note: ESB Energy's home page (read 2026-10-10). No open data link.
@@ -72,4 +132,7 @@ notes: >-
   electric vehicle pages. Requests are shared with Eco-Movement, so the eco_movement_pcpr
   adapter may apply once access is given, but the form does not say how the data is
   delivered; this needs testing.
+  On 2026-10-26 Eco-Movement sent a token for this network's data on its PCPR API, so it
+  uses the eco_movement_pcpr adapter. What the token returns needs testing with one
+  recorded fetch before the network is switched on.
 enabled: false

@@ -236,11 +236,11 @@ def test_client_never_breaks_an_operators_limits(operator_id):
 
 
 def test_operators_on_one_host_share_one_gap():
-    """bp pulse, Shell Recharge, ubitricity and Community by Shell Recharge share a host."""
+    """Every network served by Eco-Movement's PCPR API shares open-chargepoints.com."""
     shared = [c for c in OPERATORS.values() if c.adapter == "eco_movement_pcpr"]
-    assert len(shared) == 4
+    assert len(shared) == 16
     clock = FakeClock()
-    server = Server(clock, [httpx.Response(200, json={})] * 40, UNEVEN_DELAYS)
+    server = Server(clock, [httpx.Response(200, json={})] * 10 * len(shared), UNEVEN_DELAYS)
     for config in shared:
         with client_for(config, clock, server) as client:
             for _ in range(10):

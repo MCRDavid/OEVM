@@ -30,7 +30,7 @@ rate_limit:
       endpoint: locations
       quote: The `locations` endpoint has a rate limit of 30 requests per 1 hour.
       source_url: https://developers.eco-movement.com/v2.2.1/reference/get-all-locations-pcpr-api
-      checked: 2026-10-07
+      checked: 2026-10-26
     - publisher: Eco-Movement
       requests: 30
       per_seconds: 3600
@@ -38,22 +38,22 @@ rate_limit:
       scope: single location
       quote: The `locations/{id}` endpoint has a rate limit of 30 requests per 1 hour.
       source_url: https://developers.eco-movement.com/v2.2.1/reference/get-specific-location-pcpr-api
-      checked: 2026-10-07
+      checked: 2026-10-26
     - publisher: Eco-Movement
       requests: 30
       per_seconds: 3600
       endpoint: tariffs
       quote: The `tariffs` endpoint has a rate limit of 30 requests per 1 hour.
       source_url: https://developers.eco-movement.com/reference/get-tariffs-pcpr-api
-      checked: 2026-10-07
+      checked: 2026-10-26
     - publisher: Eco-Movement
       requests: 1
       per_seconds: 30
       endpoint: statuses
       quote: The `statuses` endpoint has a rate limit of 1 request per 30 seconds.
       source_url: https://developers.eco-movement.com/reference/get-statuses-pcpr-api
-      checked: 2026-10-07
-  limits_checked: 2026-10-07
+      checked: 2026-10-26
+  limits_checked: 2026-10-26
   notes: >-
     One gap of 125 seconds (the 120 seconds the strictest limit needs, plus a safety
     margin) is kept between any two requests to open-chargepoints.com, shared by every

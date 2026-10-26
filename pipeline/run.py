@@ -30,6 +30,7 @@ from pathlib import Path
 
 import httpx
 
+import adapters.eco_movement
 import adapters.jolt
 import adapters.monta
 import adapters.ocpi_221
@@ -47,7 +48,11 @@ from schema.operator import OperatorConfig
 from schema.runlog import MAX_ISSUE_LENGTH, RunLog
 
 FIXTURES_DIR = ROOT / "tests" / "fixtures"
-ADAPTERS = {"ocpi_221": adapters.ocpi_221.fetch, "sent_copy": adapters.sent_copy.fetch}
+ADAPTERS = {
+    "ocpi_221": adapters.ocpi_221.fetch,
+    "eco_movement_pcpr": adapters.eco_movement.fetch,
+    "sent_copy": adapters.sent_copy.fetch,
+}
 # Operators whose registry adapter is "custom", by operator id.
 CUSTOM_ADAPTERS = {
     "jolt": adapters.jolt.fetch,

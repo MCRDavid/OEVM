@@ -33,6 +33,8 @@ decisions are in docs/adr/.
   Monta asks for a token (auth client_credentials), skips sites its server cannot send and drops each
   record's owner. Roam gives its OCPI 2.1.1 connectors their 2.2.1 names.
   adapters/sent_copy.py: reads a copy an operator sent (sent_copies/<id>/, gzipped as received; ADR 0029).
+  adapters/eco_movement.py: Eco-Movement's PCPR API (adapter eco_movement_pcpr), ocpi_221 with pages of
+  1000; one token per network, one 125 s gap shared by every network on open-chargepoints.com.
 - pipeline/registry.py, pipeline/run.py. operators/*.yaml: one file per operator.
 - pipeline/pricing.py: the only way prices are shown. pipeline/tariffs.py: price per connector.
 - providers/*.yaml: charging plans from providers' own pages (schema/provider.py, pipeline/plans.py,
