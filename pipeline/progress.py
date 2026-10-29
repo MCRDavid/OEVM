@@ -10,6 +10,10 @@ feed. Times left are worked out from the pace so far and are labelled as estimat
     chargy (1 of 3): starting, 4 s between requests
     chargy locations: page 10 of 119 (8%), 500 of 5,949 records, about 12 min 40 s left (estimate)
     chargy locations: done, 119 pages, 5,949 records in 13 min 40 s
+
+A page line comes for the first page, every tenth page, and any page after a quiet minute
+and a half, so a feed with a long gap between requests shows each page. Every 5 minutes a
+summary line says how many operators have finished and where the others have got to.
 """
 
 import sys
@@ -21,8 +25,13 @@ from typing import TextIO
 from adapters.http import relay_route, required_gap
 from schema.operator import OperatorConfig
 
-# A line for the first page of a module, then for every tenth page.
+# A line for the first page of a module, then for every tenth page, or sooner when an
+# operator has said nothing for HEARTBEAT seconds, so slow feeds do not look stalled.
 EVERY_PAGES = 10
+HEARTBEAT = 90
+# How often the whole run's state is summed up, as lines from operators fetched at the
+# same time interleave.
+SUMMARY_EVERY = 300
 
 
 def _plural(count: int, word: str) -> str:
@@ -60,25 +69,50 @@ class RunProgress:
         clock: Callable[[], float] = time.monotonic,
         max_pages: int | None = None,
         every: int = EVERY_PAGES,
+        heartbeat: float = HEARTBEAT,
+        summary_every: float = SUMMARY_EVERY,
     ):
         self._out = out
         self._clock = clock
         self._max_pages = max_pages
         self._every = every
+        self._heartbeat = heartbeat
+        self._summary_every = summary_every
+        self._count = 0
+        self._finished: set[str] = set()
         self._lock = threading.Lock()
         self._run_started = clock()
         self._operators: dict[str, OperatorProgress] = {}
+        self._last_summary = self._run_started
 
     def _say(self, text: str) -> None:
         with self._lock:
             print(text, file=self._out or sys.stdout, flush=True)
+            now = self._clock()
+            if self._count and now - self._last_summary >= self._summary_every:
+                summary = self._summary(now)
+                if summary:
+                    self._last_summary = now
+                    print(summary, file=self._out or sys.stdout, flush=True)
+
+    def _summary(self, now: float) -> str | None:
+        running = [
+            f"{id_} ({reporter.where})" if reporter.where else id_
+            for id_, reporter in self._operators.items()
+            if id_ not in self._finished
+        ]
+        line = (
+            f"== Progress after {duration(now - self._run_started)}: "
+            f"{len(self._finished):,} of {self._count:,} operators finished"
+        )
+        return f"{line}; still fetching: {', '.join(running)}" if running else None
 
     def run_started(self, groups: list[list[str]], turns: Collection[int] = ()) -> None:
         """groups: operator ids that share a host, fetched one after another, except the
         groups numbered (from 0) in turns, whose operators are fetched together, taking
         turns for each request, as the owner reads their limits per key."""
-        self._run_started = self._clock()
-        count = sum(len(group) for group in groups)
+        self._run_started = self._last_summary = self._clock()
+        count = self._count = sum(len(group) for group in groups)
         together = "".join(
             f" The {len(groups[n])} operators in the group with {groups[n][0]} are fetched "
             "together, one request at a time, as their limits are read per key."
@@ -111,11 +145,13 @@ class RunProgress:
         return reporter
 
     def operator_done(self, operator_id: str, *, requests: int) -> None:
+        self._finished.add(operator_id)
         took = duration(self._clock() - self._operators[operator_id].started)
         self._say(f"{operator_id}: finished in {took}, {_plural(requests, 'request')}")
 
     def operator_failed(self, operator_id: str) -> None:
         """Also for an operator that failed before it started, such as a half-set relay."""
+        self._finished.add(operator_id)
         now = self._clock()
         reporter = self._operators.get(operator_id)
         took = duration(now - (reporter.started if reporter else now))
@@ -141,6 +177,13 @@ class OperatorProgress:
         self._mark = self.started
         self._module_started: dict[str, float] = {}
         self._first_page_at: dict[str, float] = {}
+        self._last_line_at = self.started
+        # Where the operator has got to, for the run's summary lines.
+        self.where = ""
+
+    def _say(self, text: str) -> None:
+        self._last_line_at = self._run._clock()
+        self._run._say(text)
 
     def _prefix(self, module: str) -> str:
         return f"{self._operator} {module}"
@@ -158,16 +201,20 @@ class OperatorProgress:
         started = self._module_started.setdefault(module, self._mark)
         if pages == 1:
             self._first_page_at[module] = now
+        self.where = f"{module} page {pages:,}"
         try:
             line = self._page_line(module, now, started, pages, records, total_records, total_pages)
         except (ArithmeticError, ValueError):
             # A total too large to work with: show the page and the records only. Progress
             # must never stop a fetch.
-            due = pages == 1 or pages % self._run._every == 0
+            due = pages == 1 or pages % self._run._every == 0 or self._quiet(now)
             line = f"{self._prefix(module)}: page {pages:,}, {_plural(records, 'record')}"
             line = line if due else None
         if line:
-            self._run._say(line)
+            self._say(line)
+
+    def _quiet(self, now: float) -> bool:
+        return now - self._last_line_at >= self._run._heartbeat
 
     def _page_line(
         self,
@@ -185,9 +232,11 @@ class OperatorProgress:
             total_pages = pages + -(-(total_records - records) * pages // records)
         if total_pages is not None and self._run._max_pages is not None:
             total_pages = min(total_pages, self._run._max_pages)
+        if total_pages is not None:
+            self.where = f"{module} page {pages:,} of {total_pages:,}"
         if total_pages is not None and pages >= total_pages:
             return None  # module_done says the rest
-        if pages != 1 and pages % self._run._every:
+        if pages != 1 and pages % self._run._every and not self._quiet(now):
             return None
 
         if total_pages is None:
@@ -217,11 +266,10 @@ class OperatorProgress:
         started = self._module_started.pop(module, self._mark)
         self._first_page_at.pop(module, None)
         self._mark = now
+        self.where = ""
         took = duration(now - started)
         counts = f"{_plural(pages, 'page')}, {_plural(records, 'record')}"
         if complete:
-            self._run._say(f"{self._prefix(module)}: done, {counts} in {took}")
+            self._say(f"{self._prefix(module)}: done, {counts} in {took}")
         else:
-            self._run._say(
-                f"{self._prefix(module)}: incomplete, {counts} in {took} (see the report)"
-            )
+            self._say(f"{self._prefix(module)}: incomplete, {counts} in {took} (see the report)")

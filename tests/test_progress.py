@@ -246,6 +246,7 @@ def test_operator_and_run_lines(registry, no_relay):
         "chargy (1 of 3): starting, 6 s between requests",
         "chargy: finished in 13 min 49 s, 120 requests",
         "geniepoint (2 of 3): starting, 2 s between requests",
+        "== Progress after 13 min 49 s: 1 of 3 operators finished; still fetching: geniepoint",
         "geniepoint: failed after 3 s (the error follows)",
         "jolt (3 of 3): starting, 2 s between requests",
         "jolt: finished in 1 s, 1 request",
@@ -372,3 +373,33 @@ def test_fixture_runs_print_no_progress(capsys):
     # The report's own module lines are indented; progress lines are not.
     progress_line = r"^(\S+ )?(locations|tariffs): (page \d|done, |incomplete, )"
     assert not re.search(progress_line, shown, re.MULTILINE)
+
+
+def test_a_slow_feed_shows_every_page(registry, no_relay):
+    """Pages 125 s apart, as on Eco-Movement's API, each get a line."""
+    reporter, out, clock = progress()
+    op = reporter.operator_started(registry["chargy"], number=1, count=1)
+    for page in range(1, 5):
+        clock.now += 125
+        op.page("locations", pages=page, records=page * 1000, total_records=14000)
+    assert [line.split(": page ")[1].split(" of")[0] for line in lines(out)[1:]] == [
+        "1",
+        "2",
+        "3",
+        "4",
+    ]
+
+
+def test_a_summary_says_who_is_still_fetching(registry, no_relay):
+    reporter, out, clock = progress()
+    reporter.run_started([["chargy"], ["jolt"]])
+    chargy = reporter.operator_started(registry["chargy"], number=1, count=2)
+    reporter.operator_started(registry["jolt"], number=2, count=2)
+    clock.now += 10
+    reporter.operator_done("jolt", requests=1)
+    clock.now += 300
+    chargy.page("locations", pages=3, records=150, total_records=5949)
+    assert lines(out)[-1] == (
+        "== Progress after 5 min 10 s: 1 of 2 operators finished; "
+        "still fetching: chargy (locations page 3 of 119)"
+    )
