@@ -24,7 +24,7 @@ Unknown = Literal["unknown"]
 UK_POSTCODE = re.compile(r"^[A-Z]{1,2}[0-9][A-Z0-9]? ?[0-9][A-Z]{2}$", re.IGNORECASE)
 Support = Literal["supported", "not_supported", "needs_testing", "unknown"]
 AdapterName = Literal[
-    "ocpi_221", "eco_movement_pcpr", "gridserve", "static_file", "custom", "unknown"
+    "ocpi_221", "sent_copy", "eco_movement_pcpr", "gridserve", "static_file", "custom", "unknown"
 ]
 AuthMethod = Literal["none", "header", "query_param", "client_credentials", "unknown"]
 EndpointKind = Literal["versions", "locations", "tariffs", "statuses", "download"]
@@ -730,6 +730,58 @@ class ExpiredCertificate(_Model):
     expired: dt.date = Field(description="The day the certificate expired (YYYY-MM-DD).")
 
 
+SentCopyFile = Annotated[
+    str,
+    Field(
+        pattern=r"^sent_copies/[a-z0-9_]+/[^/]+\.json\.gz$",
+        description="Path of the file as the operator sent it, gzipped, under "
+        "sent_copies/<operator id>/.",
+    ),
+]
+
+
+class SentCopy(_Model):
+    """The repository owner's recorded decision to show a copy of this operator's data that
+    it sent to this project, because it publishes none at an address that can be fetched
+    (ADR 0029). Used with the sent_copy adapter.
+
+    The copy is OCPI 2.2.1 location and tariff responses, kept in the repository exactly
+    as sent (gzipped) and read as they are on every run, with no request to the operator.
+    Its records carry the time the operator made the copy, never the time of the run, so
+    nothing looks newer than it is, and the map says the data is a copy, when it was sent
+    and that it is not updated. Every charge point status is shown as unknown, because a
+    status from a file sent once says nothing about now. Without this decision a copy an
+    operator sends is kept as evidence only and never shown.
+    """
+
+    decided: dt.date = Field(description="Date the owner made the decision (YYYY-MM-DD).")
+    basis: NeutralText = Field(description="Why the copy may be shown, and until when.")
+    evidence_file: EvidenceFile = Field(
+        description="The operator's message that came with the copy, saved under "
+        "evidence/<operator id>/ with names and addresses removed."
+    )
+    channel: Channel = Field(description="How the copy came, for example 'email'.")
+    received: dt.date = Field(description="Date the copy came (YYYY-MM-DD).")
+    made_at: dt.datetime = Field(
+        description="When the operator made the copy, to the second, with its time zone: "
+        "the timestamp its OCPI responses carry. Shown as the date of the data."
+    )
+    locations: SentCopyFile = Field(description="The OCPI 2.2.1 locations response.")
+    tariffs: SentCopyFile = Field(description="The OCPI 2.2.1 tariffs response.")
+
+    @model_validator(mode="after")
+    def _check(self) -> "SentCopy":
+        if self.made_at.tzinfo is None:
+            raise ValueError("made_at needs a time zone, for example 2026-10-26T14:22:52Z")
+        if self.made_at.date() > self.received:
+            raise ValueError("made_at is later than the day the copy was received")
+        if self.decided < self.received:
+            raise ValueError("decided is earlier than the day the copy was received")
+        if self.locations == self.tariffs:
+            raise ValueError("locations and tariffs must be different files")
+        return self
+
+
 class ExcludedLocation(_Model):
     id: str = Field(min_length=1, description="The location's OCPI id, exactly as sent.")
     name: str = Field(min_length=1, description="The location's name as the feed sends it.")
@@ -957,6 +1009,12 @@ class OperatorConfig(_Model):
         "the map, such as test sites. Null means every location marked for publishing is "
         "kept.",
     )
+    sent_copy: SentCopy | None = Field(
+        default=None,
+        description="Only by the repository owner's decision, with the sent_copy adapter: "
+        "show a copy of the operator's data that it sent, dated as made, with every charge "
+        "point status unknown (ADR 0029). Null means a sent copy is never shown.",
+    )
     engagement: Engagement
     access_requested: dt.date | None = None
     access_granted: dt.date | None = None
@@ -1007,7 +1065,7 @@ class OperatorConfig(_Model):
         if self.enabled:
             if self.adapter == "unknown":
                 problems.append("an enabled operator needs an adapter")
-            if self.base_url == "unknown" and not self.endpoints:
+            if self.base_url == "unknown" and not self.endpoints and self.sent_copy is None:
                 problems.append("an enabled operator needs a base_url or at least one endpoint")
             if self.auth.method == "unknown" or self.auth.name == "unknown":
                 problems.append("an enabled operator needs known auth details")
@@ -1019,6 +1077,21 @@ class OperatorConfig(_Model):
                 or self.licence.checked == "unknown"
             ):
                 problems.append("an enabled operator needs licence terms that have been checked")
+        if (self.adapter == "sent_copy") != (self.sent_copy is not None):
+            problems.append("the sent_copy adapter and a sent_copy decision go together")
+        if self.sent_copy is not None:
+            folder = f"sent_copies/{self.id}/"
+            problems += [
+                f"sent_copy file {path} must be under {folder}"
+                for path in (self.sent_copy.locations, self.sent_copy.tariffs)
+                if not path.startswith(folder)
+            ]
+            if self.feed_urls():
+                problems.append("a sent copy is read from the repository, so it has no feed URLs")
+            if self.auth.method != "none":
+                problems.append("a sent copy is never fetched, so its auth method is none")
+            if self.relay is not None or self.expired_certificate is not None:
+                problems.append("a sent copy is never fetched, so it has no relay or certificate")
         if self.response_envelope != "ocpi" and self.adapter != "ocpi_221":
             problems.append("response_envelope only applies to the ocpi_221 adapter")
         if self.response_envelope == "by_module" and (

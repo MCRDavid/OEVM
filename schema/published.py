@@ -182,6 +182,17 @@ class TariffSource(_Model):
     fetched_at: AwareDatetime
 
 
+class SentCopyNote(_Model):
+    """Set when an operator's data is a copy it sent, shown by the owner's decision in its
+    operator file (sent_copy, ADR 0029), not a feed this project fetches."""
+
+    received: dt.date = Field(description="When the copy came from the operator.")
+    made_at: AwareDatetime = Field(description="When the operator made the copy.")
+    channel: str = Field(description="How the copy came, for example 'email'.")
+    note: str = Field(description="What the copy is and why it is shown, with the location.")
+    files_url: str = Field(description="The repository page that lists the files as sent.")
+
+
 class CoordinatesCorrection(_Model):
     published: Coordinates = Field(description="The coordinates exactly as the operator sent them.")
     note: str = Field(description="What was corrected and why, shown with the location.")
@@ -217,6 +228,11 @@ class LocationDetail(_Model):
     licence: str
     licence_url: str | None = None
     fetched_at: AwareDatetime
+    sent_copy: SentCopyNote | None = Field(
+        default=None,
+        description="Set when the operator's data is a copy it sent (ADR 0029); fetched_at "
+        "is then when the operator made the copy. Null for a fetched feed.",
+    )
 
 
 ProviderKindOut = Literal["roaming", "operator"]
@@ -326,6 +342,11 @@ class OperatorEntry(_Model):
         description="True when this run's fetch failed and the map shows the operator's last "
         "good copy, fetched at fetched_at (ADR 0018).",
     )
+    sent_copy: SentCopyNote | None = Field(
+        default=None,
+        description="Set when the operator's data is a copy it sent (ADR 0029); fetched_at "
+        "is then when the operator made the copy. Null for a fetched feed.",
+    )
 
 
 class FileEntry(_Model):
@@ -367,6 +388,11 @@ class OperatorStatus(_Model):
     last_success: AwareDatetime | None = None
     latest: RunLog | None = Field(default=None, description="The most recent run log.")
     history: list[HistoryPoint] = Field(description="Up to 30 days, oldest first.")
+    sent_copy: SentCopyNote | None = Field(
+        default=None,
+        description="Set when the operator's data is a copy it sent (ADR 0029), so its runs "
+        "read that copy and fetch nothing. Null for a fetched feed.",
+    )
 
 
 class StatusFile(_Model):

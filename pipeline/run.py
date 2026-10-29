@@ -33,6 +33,7 @@ import httpx
 import adapters.jolt
 import adapters.monta
 import adapters.ocpi_221
+import adapters.sent_copy
 from adapters.http import FeedError, PoliteClient, operator_hosts
 from adapters.ocpi_221 import AdapterResult
 from adapters.progress import NO_PROGRESS, PageProgress
@@ -45,7 +46,7 @@ from schema.operator import OperatorConfig
 from schema.runlog import MAX_ISSUE_LENGTH, RunLog
 
 FIXTURES_DIR = ROOT / "tests" / "fixtures"
-ADAPTERS = {"ocpi_221": adapters.ocpi_221.fetch}
+ADAPTERS = {"ocpi_221": adapters.ocpi_221.fetch, "sent_copy": adapters.sent_copy.fetch}
 # Operators whose registry adapter is "custom", by operator id.
 CUSTOM_ADAPTERS = {"jolt": adapters.jolt.fetch, "monta": adapters.monta.fetch}
 # Sent in place of a real key when replaying fixtures, which never reach the network.
@@ -263,6 +264,13 @@ def run_fixtures(operators: dict[str, OperatorConfig]) -> list[AdapterResult]:
         date_from = manifest.get("date_from")
         # Replays never go through the relay: the recordings hold the operator's own URLs.
         config = operators[manifest["operator"]].model_copy(update={"relay": None})
+        if config.sent_copy is not None:
+            # A sent copy's fixture is a trimmed copy of its files, in the fixture folder.
+            folder = manifest_path.parent.relative_to(ROOT).as_posix()
+            files = {module: f"{folder}/{name}" for module, name in manifest["sent_copy"].items()}
+            config = config.model_copy(
+                update={"sent_copy": config.sent_copy.model_copy(update=files)}
+            )
         results.append(
             run_operator(
                 config,

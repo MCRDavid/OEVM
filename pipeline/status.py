@@ -23,6 +23,7 @@ Each operator also gets a coloured circle for a view at a glance (the owner's re
 October 2026): green working, yellow some problems but data on the map, red nothing on
 the map, grey switched off or not fetched yet. The colours come only from the run logs
 and the registry, so they describe what this project received, not any operator's duties.
+An operator shown from a copy it sent rather than a feed (sent_copy, ADR 0029) is yellow.
 """
 
 import argparse
@@ -35,6 +36,7 @@ from pathlib import Path
 from pydantic import ValidationError
 
 from pipeline import daily_runs
+from pipeline.publish import sent_copy_note
 from pipeline.registry import ROOT, RegistryError, load_registry
 from pipeline.transparency import LINKS, STYLE, _e, _link, short_disclaimer
 from schema.operator import OperatorConfig
@@ -71,7 +73,8 @@ MEANINGS = {
     GREEN: f"the last fetch received complete data, in the last {STALE_AFTER.days} days. "
     "Data quirks listed under Problems logged do not change the colour.",
     YELLOW: "there is data on the map, but the last fetch was incomplete, failed (so the "
-    f"map shows the last good copy) or is more than {STALE_AFTER.days} days old.",
+    f"map shows the last good copy) or is more than {STALE_AFTER.days} days old, or the map "
+    "shows a copy the operator sent instead of a feed.",
     RED: "the last fetch failed or received no locations, and the map shows nothing from "
     "this operator.",
     GREY: "this project does not fetch the operator's data, or has not fetched it yet.",
@@ -166,6 +169,7 @@ def build(
             last_success=last_success,
             latest=latest,
             history=[history[d] for d in sorted(history) if d >= cutoff],
+            sent_copy=sent_copy_note(config),
         )
     return StatusFile(generated_at=now, operators=statuses)
 
@@ -207,6 +211,12 @@ def result_label(status: OperatorStatus) -> str:
         )
     if run.failed:
         return "Fetch failed"
+    if status.sent_copy is not None:
+        copy = status.sent_copy
+        return (
+            f"Not fetched: the map shows a copy the operator sent on {copy.received:%Y-%m-%d}, "
+            f"made {_time(copy.made_at)}, with charge point status unknown"
+        )
     return "Fetched" if run.complete else "Fetched, incomplete"
 
 
@@ -219,6 +229,8 @@ def colour(status: OperatorStatus, now: datetime) -> str:
         return YELLOW if run.kept_copy is not None and run.kept_copy.locations else RED
     if not run.kept.locations:
         return RED
+    if status.sent_copy is not None:
+        return YELLOW  # On the map, but a copy that is never updated (ADR 0029).
     if not run.complete or now - _when(run) > STALE_AFTER:
         return YELLOW
     return GREEN
