@@ -317,6 +317,63 @@ def test_every_operator_has_a_circle_and_switched_off_ones_are_listed(logs, tmp_
     assert 'aria-label="Some problems"' in page  # the char.gy fixtures stop after two pages
 
 
+OVERVIEW_ITEM = re.compile(
+    r'<li><span class="circle" role="img" aria-label="([^"]+)"[^>]*>(.)</span> (.*?)</li>'
+)
+
+
+def test_the_overview_lists_every_operator_by_name_with_its_circle(logs, tmp_path):
+    page, _ = render(logs, tmp_path)
+    overview = re.search(r'<ul class="off overview">(.*?)</ul>', page)
+    assert overview and overview.start() < page.index("Latest runs")
+    items = OVERVIEW_ITEM.findall(overview.group(1))
+    registry = load_registry()
+    names = sorted((c.display_name for c in registry.values()), key=str.casefold)
+    assert [html.unescape(name) for _, _, name in items] == names
+    data = status.build(registry, status.load_runs(logs), None, NOW)
+    by_name = {c.display_name: (i, c) for i, c in registry.items()}
+    for label, circle, name in items:
+        operator_id, config = by_name[html.unescape(name)]
+        if config.enabled:
+            shown = status.colour(data.operators[operator_id], NOW)
+            assert (circle, label) == (status.CIRCLES[shown], status.LABELS[shown])
+        else:
+            assert (circle, label) == (status.CIRCLES[status.GREY], "Switched off")
+    # An operator switched on but not fetched yet is grey, and says so.
+    empty = tmp_path / "empty"
+    empty.mkdir()
+    page, _ = render(empty, tmp_path / "out")
+    overview = re.search(r'<ul class="off overview">(.*?)</ul>', page)
+    labels = [label for label, _, _ in OVERVIEW_ITEM.findall(overview.group(1))]
+    assert labels.count("Not fetched yet") == sum(c.enabled for c in registry.values())
+
+
+def test_the_detail_sections_stay_closed_until_opened(logs):
+    page = status.render_html(
+        status.build(load_registry(), status.load_runs(logs), None, NOW),
+        [],
+        ["Switched Off Example"],
+        "The record of runs could not be read from GitHub when this page was built.",
+        [],
+    )
+    headings = re.findall(r'<details class="section"><summary><h2([^>]*)>(.*?)</h2>', page)
+    assert headings == [
+        ("", "Latest runs"),
+        ("", "Switched off"),
+        (' id="daily-runs"', "How the daily fetch started"),
+        ("", f"The last {status.HISTORY_DAYS} days"),
+        (' id="private"', "Hidden on the map unless asked for"),
+        (' id="copies"', "Shown from the network&rsquo;s own feed"),
+    ]
+    # Only the overview is open; every other heading is inside a closed section, and the
+    # ids that other pages link to are on headings, which show while closed.
+    assert "<details open" not in page
+    assert re.findall(r"<h2[^>]*>(.*?)</h2>", page)[0] == "At a glance"
+    assert len(re.findall(r"<h2", page)) == len(headings) + 1
+    assert '<details class="colours"><summary>What the colours mean</summary>' in page
+    assert "<script" not in page
+
+
 def test_the_committed_site_folder_is_never_written(logs):
     with pytest.raises(status.StatusError, match="not the committed site/ folder"):
         status.outputs(logs, ROOT / "site", None, NOW)
