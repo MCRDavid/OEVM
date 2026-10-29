@@ -120,12 +120,15 @@ def fetch_module(
     progress: PageProgress = NO_PROGRESS,
     envelope: str = "ocpi",
     responses: dict[str, httpx.Response] | None = None,
+    stop_at_total: bool = False,
 ) -> ModuleFetch:
     """Fetch all pages of one module, or the first `max_pages` pages.
 
     envelope is the operator file's response_envelope setting (see _ocpi_data). responses,
     if given, keeps each response by URL and is reused for a URL already fetched, so a
-    feed that answers every module from one URL is requested once.
+    feed that answers every module from one URL is requested once. With stop_at_total,
+    paging stops once X-Total-Count records have arrived, even if the server still sends a
+    next link (Eco-Movement's PCPR API links to an empty page past the end).
 
     Saved pages and error messages have the operator's key removed, in case a server
     echoes it back in a header, a link or the body. If a page fails, the FeedError carries
@@ -143,6 +146,7 @@ def fetch_module(
             progress=progress,
             envelope=envelope,
             responses=responses,
+            stop_at_total=stop_at_total,
         )
     except FeedError as exc:
         error = FeedError(client.redact(str(exc)))
@@ -160,6 +164,7 @@ def _fetch_pages(
     progress: PageProgress,
     envelope: str,
     responses: dict[str, httpx.Response] | None,
+    stop_at_total: bool,
 ) -> ModuleFetch:
     module, endpoint = result.module, result.endpoint
     params = {}
@@ -218,7 +223,13 @@ def _fetch_pages(
         )
 
         next_link = response.links.get("next", {}).get("url")
-        if next_link:
+        if (
+            stop_at_total
+            and result.total_reported is not None
+            and received >= result.total_reported
+        ):
+            url = None
+        elif next_link:
             url = urljoin(url, next_link)
             if not _same_site(url, endpoint):
                 raise FeedError(f"next page link leaves {endpoint}: {redact_url(url)}")

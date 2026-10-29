@@ -1,0 +1,66 @@
+{
+  "request": {
+    "method": "GET",
+    "url": "https://open-chargepoints.com/api/ocpi/cpo/2.2.1/tariffs/?limit=1000"
+  },
+  "response": {
+    "status_code": 200,
+    "headers": {
+      "content-type": "application/json",
+      "link": "<https://open-chargepoints.com/api/ocpi/cpo/2.2.1/tariffs/?limit=1000&offset=2>; rel=\"next\"",
+      "x-total-count": "2",
+      "x-limit": "1000"
+    },
+    "body": {
+      "timestamp": "2026-10-29T13:38:42Z",
+      "status_code": 1000,
+      "status_message": "Success",
+      "data": [
+        {
+          "party_id": "LDL",
+          "id": "COM311",
+          "currency": "GBP",
+          "tariff_alt_url": null,
+          "tariff_alt_text": null,
+          "last_updated": "2026-09-16T21:30:02Z",
+          "country_code": "GB",
+          "elements": [
+            {
+              "restrictions": null,
+              "price_components": [
+                {
+                  "type": "ENERGY",
+                  "price": 0.6167,
+                  "vat": null,
+                  "step_size": 1
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "party_id": "LDL",
+          "id": "COM309",
+          "currency": "GBP",
+          "tariff_alt_url": null,
+          "tariff_alt_text": null,
+          "last_updated": "2026-09-16T21:30:02Z",
+          "country_code": "GB",
+          "elements": [
+            {
+              "restrictions": null,
+              "price_components": [
+                {
+                  "type": "ENERGY",
+                  "price": 0.4583,
+                  "vat": null,
+                  "step_size": 1
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  }
+}

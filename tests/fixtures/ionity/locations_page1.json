@@ -1,0 +1,1514 @@
+{
+  "request": {
+    "method": "GET",
+    "url": "https://open-chargepoints.com/api/ocpi/cpo/2.2.1/locations/?limit=1000"
+  },
+  "response": {
+    "status_code": 200,
+    "headers": {
+      "content-type": "application/json",
+      "link": "<https://open-chargepoints.com/api/ocpi/cpo/2.2.1/locations/?limit=1000&offset=3>; rel=\"next\"",
+      "x-total-count": "3",
+      "x-limit": "1000"
+    },
+    "body": {
+      "timestamp": "2026-10-29T13:57:33Z",
+      "status_code": 1000,
+      "status_message": "Success",
+      "data": [
+        {
+          "party_id": "IOY",
+          "id": "1492",
+          "country_code": "GB",
+          "publish": true,
+          "country": "GBR",
+          "address": "Fallows Way",
+          "city": "Liverpool",
+          "postal_code": "L35 1RZ",
+          "coordinates": {
+            "latitude": "53.40198700",
+            "longitude": "-2.80964300"
+          },
+          "state": null,
+          "last_updated": "2026-10-29T13:51:44Z",
+          "opening_times": {
+            "exceptional_closings": [],
+            "exceptional_openings": [],
+            "regular_hours": [],
+            "twentyfourseven": true
+          },
+          "name": "IONITY GmbH IONITY Liverpool VH",
+          "time_zone": "Europe/London",
+          "owner": {
+            "name": "IONITY",
+            "website": "https://ionity.eu"
+          },
+          "operator": {
+            "name": "IONITY",
+            "website": "https://ionity.eu"
+          },
+          "energy_mix": {
+            "energy_product_name": null,
+            "energy_sources": null,
+            "environ_impact": null,
+            "is_green_energy": true,
+            "supplier_name": null
+          },
+          "charging_when_closed": true,
+          "directions": null,
+          "evses": [
+            {
+              "uid": "GB*IOY*E471306",
+              "status": "AVAILABLE",
+              "last_updated": "2026-10-29T13:38:03Z",
+              "evse_id": "GB*IOY*E471306",
+              "physical_reference": "06",
+              "floor_level": null,
+              "directions": null,
+              "parking_restrictions": null,
+              "capabilities": [
+                "REMOTE_START_STOP_CAPABLE",
+                "RFID_READER"
+              ],
+              "connectors": [
+                {
+                  "id": "1",
+                  "standard": "IEC_62196_T2_COMBO",
+                  "format": "CABLE",
+                  "power_type": "DC",
+                  "last_updated": "2026-10-28T21:17:13Z",
+                  "max_amperage": 500,
+                  "max_voltage": 920,
+                  "max_electric_power": 350000,
+                  "tariff_ids": [
+                    "GB*HPC*ADHOC*004"
+                  ]
+                }
+              ]
+            },
+            {
+              "uid": "GB*IOY*E471352",
+              "status": "AVAILABLE",
+              "last_updated": "2026-10-28T15:39:54Z",
+              "evse_id": "GB*IOY*E471352",
+              "physical_reference": "52",
+              "floor_level": null,
+              "directions": null,
+              "parking_restrictions": null,
+              "capabilities": [
+                "REMOTE_START_STOP_CAPABLE",
+                "RFID_READER"
+              ],
+              "connectors": [
+                {
+                  "id": "2",
+                  "standard": "IEC_62196_T2_COMBO",
+                  "format": "CABLE",
+                  "power_type": "DC",
+                  "last_updated": "2026-10-28T21:17:13Z",
+                  "max_amperage": 150,
+                  "max_voltage": 920,
+                  "max_electric_power": 50000,
+                  "tariff_ids": [
+                    "GB*MC*ADHOC*004"
+                  ]
+                }
+              ]
+            },
+            {
+              "uid": "GB*IOY*E471372",
+              "status": "AVAILABLE",
+              "last_updated": "2026-10-29T13:03:47Z",
+              "evse_id": "GB*IOY*E471372",
+              "physical_reference": "72",
+              "floor_level": null,
+              "directions": null,
+              "parking_restrictions": null,
+              "capabilities": [
+                "REMOTE_START_STOP_CAPABLE",
+                "RFID_READER"
+              ],
+              "connectors": [
+                {
+                  "id": "2",
+                  "standard": "IEC_62196_T2_COMBO",
+                  "format": "CABLE",
+                  "power_type": "DC",
+                  "last_updated": "2026-10-28T21:17:13Z",
+                  "max_amperage": 500,
+                  "max_voltage": 920,
+                  "max_electric_power": 400000,
+                  "tariff_ids": [
+                    "GB*HPC*ADHOC*004"
+                  ]
+                }
+              ]
+            },
+            {
+              "uid": "GB*IOY*E471303",
+              "status": "CHARGING",
+              "last_updated": "2026-10-29T13:44:51Z",
+              "evse_id": "GB*IOY*E471303",
+              "physical_reference": "03",
+              "floor_level": null,
+              "directions": null,
+              "parking_restrictions": null,
+              "capabilities": [
+                "REMOTE_START_STOP_CAPABLE",
+                "RFID_READER"
+              ],
+              "connectors": [
+                {
+                  "id": "1",
+                  "standard": "IEC_62196_T2_COMBO",
+                  "format": "CABLE",
+                  "power_type": "DC",
+                  "last_updated": "2026-10-28T21:17:12Z",
+                  "max_amperage": 500,
+                  "max_voltage": 920,
+                  "max_electric_power": 350000,
+                  "tariff_ids": [
+                    "GB*HPC*ADHOC*004"
+                  ]
+                }
+              ]
+            },
+            {
+              "uid": "GB*IOY*E471304",
+              "status": "AVAILABLE",
+              "last_updated": "2026-10-29T09:30:53Z",
+              "evse_id": "GB*IOY*E471304",
+              "physical_reference": "04",
+              "floor_level": null,
+              "directions": null,
+              "parking_restrictions": null,
+              "capabilities": [
+                "REMOTE_START_STOP_CAPABLE",
+                "RFID_READER"
+              ],
+              "connectors": [
+                {
+                  "id": "1",
+                  "standard": "IEC_62196_T2_COMBO",
+                  "format": "CABLE",
+                  "power_type": "DC",
+                  "last_updated": "2026-10-28T21:17:13Z",
+                  "max_amperage": 500,
+                  "max_voltage": 920,
+                  "max_electric_power": 350000,
+                  "tariff_ids": [
+                    "GB*HPC*ADHOC*004"
+                  ]
+                }
+              ]
+            },
+            {
+              "uid": "GB*IOY*E471305",
+              "status": "CHARGING",
+              "last_updated": "2026-10-29T13:51:44Z",
+              "evse_id": "GB*IOY*E471305",
+              "physical_reference": "05",
+              "floor_level": null,
+              "directions": null,
+              "parking_restrictions": null,
+              "capabilities": [
+                "REMOTE_START_STOP_CAPABLE",
+                "RFID_READER"
+              ],
+              "connectors": [
+                {
+                  "id": "1",
+                  "standard": "IEC_62196_T2_COMBO",
+                  "format": "CABLE",
+                  "power_type": "DC",
+                  "last_updated": "2026-10-28T21:17:13Z",
+                  "max_amperage": 500,
+                  "max_voltage": 920,
+                  "max_electric_power": 350000,
+                  "tariff_ids": [
+                    "GB*HPC*ADHOC*004"
+                  ]
+                }
+              ]
+            },
+            {
+              "uid": "GB*IOY*E471307",
+              "status": "AVAILABLE",
+              "last_updated": "2026-10-29T11:59:30Z",
+              "evse_id": "GB*IOY*E471307",
+              "physical_reference": "07",
+              "floor_level": null,
+              "directions": null,
+              "parking_restrictions": null,
+              "capabilities": [
+                "REMOTE_START_STOP_CAPABLE",
+                "RFID_READER"
+              ],
+              "connectors": [
+                {
+                  "id": "1",
+                  "standard": "IEC_62196_T2_COMBO",
+                  "format": "CABLE",
+                  "power_type": "DC",
+                  "last_updated": "2026-10-28T21:17:13Z",
+                  "max_amperage": 500,
+                  "max_voltage": 920,
+                  "max_electric_power": 350000,
+                  "tariff_ids": [
+                    "GB*HPC*ADHOC*004"
+                  ]
+                }
+              ]
+            },
+            {
+              "uid": "GB*IOY*E471308",
+              "status": "AVAILABLE",
+              "last_updated": "2026-10-29T13:00:38Z",
+              "evse_id": "GB*IOY*E471308",
+              "physical_reference": "08",
+              "floor_level": null,
+              "directions": null,
+              "parking_restrictions": null,
+              "capabilities": [
+                "REMOTE_START_STOP_CAPABLE",
+                "RFID_READER"
+              ],
+              "connectors": [
+                {
+                  "id": "1",
+                  "standard": "IEC_62196_T2_COMBO",
+                  "format": "CABLE",
+                  "power_type": "DC",
+                  "last_updated": "2026-10-28T21:17:13Z",
+                  "max_amperage": 500,
+                  "max_voltage": 920,
+                  "max_electric_power": 350000,
+                  "tariff_ids": [
+                    "GB*HPC*ADHOC*004"
+                  ]
+                }
+              ]
+            },
+            {
+              "uid": "GB*IOY*E471351",
+              "status": "AVAILABLE",
+              "last_updated": "2026-10-28T00:33:04Z",
+              "evse_id": "GB*IOY*E471351",
+              "physical_reference": "51",
+              "floor_level": null,
+              "directions": null,
+              "parking_restrictions": null,
+              "capabilities": [
+                "REMOTE_START_STOP_CAPABLE",
+                "RFID_READER"
+              ],
+              "connectors": [
+                {
+                  "id": "1",
+                  "standard": "IEC_62196_T2_COMBO",
+                  "format": "CABLE",
+                  "power_type": "DC",
+                  "last_updated": "2026-10-28T21:17:13Z",
+                  "max_amperage": 150,
+                  "max_voltage": 920,
+                  "max_electric_power": 50000,
+                  "tariff_ids": [
+                    "GB*MC*ADHOC*004"
+                  ]
+                }
+              ]
+            },
+            {
+              "uid": "GB*IOY*E471371",
+              "status": "AVAILABLE",
+              "last_updated": "2026-10-29T13:25:35Z",
+              "evse_id": "GB*IOY*E471371",
+              "physical_reference": "71",
+              "floor_level": null,
+              "directions": null,
+              "parking_restrictions": null,
+              "capabilities": [
+                "REMOTE_START_STOP_CAPABLE",
+                "RFID_READER"
+              ],
+              "connectors": [
+                {
+                  "id": "1",
+                  "standard": "IEC_62196_T2_COMBO",
+                  "format": "CABLE",
+                  "power_type": "DC",
+                  "last_updated": "2026-10-28T21:17:13Z",
+                  "max_amperage": 500,
+                  "max_voltage": 920,
+                  "max_electric_power": 400000,
+                  "tariff_ids": [
+                    "GB*HPC*ADHOC*004"
+                  ]
+                }
+              ]
+            },
+            {
+              "uid": "GB*IOY*E471301",
+              "status": "AVAILABLE",
+              "last_updated": "2026-10-29T11:32:13Z",
+              "evse_id": "GB*IOY*E471301",
+              "physical_reference": "01",
+              "floor_level": null,
+              "directions": null,
+              "parking_restrictions": null,
+              "capabilities": [
+                "REMOTE_START_STOP_CAPABLE",
+                "RFID_READER"
+              ],
+              "connectors": [
+                {
+                  "id": "1",
+                  "standard": "IEC_62196_T2_COMBO",
+                  "format": "CABLE",
+                  "power_type": "DC",
+                  "last_updated": "2026-10-28T21:17:12Z",
+                  "max_amperage": 500,
+                  "max_voltage": 920,
+                  "max_electric_power": 350000,
+                  "tariff_ids": [
+                    "GB*HPC*ADHOC*004"
+                  ]
+                }
+              ]
+            },
+            {
+              "uid": "GB*IOY*E471302",
+              "status": "AVAILABLE",
+              "last_updated": "2026-10-29T07:59:30Z",
+              "evse_id": "GB*IOY*E471302",
+              "physical_reference": "02",
+              "floor_level": null,
+              "directions": null,
+              "parking_restrictions": null,
+              "capabilities": [
+                "REMOTE_START_STOP_CAPABLE",
+                "RFID_READER"
+              ],
+              "connectors": [
+                {
+                  "id": "1",
+                  "standard": "IEC_62196_T2_COMBO",
+                  "format": "CABLE",
+                  "power_type": "DC",
+                  "last_updated": "2026-10-28T21:17:12Z",
+                  "max_amperage": 500,
+                  "max_voltage": 920,
+                  "max_electric_power": 350000,
+                  "tariff_ids": [
+                    "GB*HPC*ADHOC*004"
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "party_id": "IOY",
+          "id": "79",
+          "country_code": "GB",
+          "publish": true,
+          "country": "GBR",
+          "address": "Cambridge Services, A14",
+          "city": "Cambridge",
+          "postal_code": "CB23 4WU",
+          "coordinates": {
+            "latitude": "52.26976500",
+            "longitude": "-0.01010700"
+          },
+          "state": null,
+          "last_updated": "2026-10-29T13:57:14Z",
+          "opening_times": {
+            "exceptional_closings": [],
+            "exceptional_openings": [],
+            "regular_hours": [],
+            "twentyfourseven": true
+          },
+          "name": "IONITY GmbH IONITY Cambridge",
+          "time_zone": "Europe/London",
+          "owner": {
+            "name": "IONITY",
+            "website": "https://ionity.eu"
+          },
+          "operator": {
+            "name": "IONITY",
+            "website": "https://ionity.eu"
+          },
+          "energy_mix": {
+            "energy_product_name": null,
+            "energy_sources": null,
+            "environ_impact": null,
+            "is_green_energy": true,
+            "supplier_name": null
+          },
+          "charging_when_closed": true,
+          "directions": null,
+          "evses": [
+            {
+              "uid": "GB*IOY*E400575",
+              "status": "UNKNOWN",
+              "last_updated": "2026-10-29T13:57:14Z",
+              "evse_id": "GB*IOY*E400575",
+              "physical_reference": "75",
+              "floor_level": null,
+              "directions": null,
+              "parking_restrictions": null,
+              "capabilities": [
+                "REMOTE_START_STOP_CAPABLE",
+                "RFID_READER"
+              ],
+              "connectors": [
+                {
+                  "id": "1",
+                  "standard": "IEC_62196_T2_COMBO",
+                  "format": "CABLE",
+                  "power_type": "DC",
+                  "last_updated": "2026-10-28T21:04:58Z",
+                  "max_amperage": 500,
+                  "max_voltage": 920,
+                  "max_electric_power": 350000,
+                  "tariff_ids": [
+                    "GB*ONHW*HPC*ADHOC*001"
+                  ]
+                }
+              ]
+            },
+            {
+              "uid": "GB*IOY*E400501",
+              "status": "AVAILABLE",
+              "last_updated": "2026-10-29T13:53:34Z",
+              "evse_id": "GB*IOY*E400501",
+              "physical_reference": "01",
+              "floor_level": null,
+              "directions": null,
+              "parking_restrictions": null,
+              "capabilities": [
+                "REMOTE_START_STOP_CAPABLE",
+                "RFID_READER"
+              ],
+              "connectors": [
+                {
+                  "id": "1",
+                  "standard": "IEC_62196_T2_COMBO",
+                  "format": "CABLE",
+                  "power_type": "DC",
+                  "last_updated": "2026-10-28T21:04:56Z",
+                  "max_amperage": 500,
+                  "max_voltage": 920,
+                  "max_electric_power": 350000,
+                  "tariff_ids": [
+                    "GB*ONHW*HPC*ADHOC*001"
+                  ]
+                }
+              ]
+            },
+            {
+              "uid": "GB*IOY*E400507",
+              "status": "AVAILABLE",
+              "last_updated": "2026-10-29T13:48:11Z",
+              "evse_id": "GB*IOY*E400507",
+              "physical_reference": "07",
+              "floor_level": null,
+              "directions": null,
+              "parking_restrictions": null,
+              "capabilities": [
+                "REMOTE_START_STOP_CAPABLE",
+                "RFID_READER"
+              ],
+              "connectors": [
+                {
+                  "id": "1",
+                  "standard": "IEC_62196_T2_COMBO",
+                  "format": "CABLE",
+                  "power_type": "DC",
+                  "last_updated": "2026-10-28T21:04:57Z",
+                  "max_amperage": 500,
+                  "max_voltage": 920,
+                  "max_electric_power": 350000,
+                  "tariff_ids": [
+                    "GB*ONHW*HPC*ADHOC*001"
+                  ]
+                }
+              ]
+            },
+            {
+              "uid": "GB*IOY*E400515",
+              "status": "CHARGING",
+              "last_updated": "2026-10-29T13:39:25Z",
+              "evse_id": "GB*IOY*E400515",
+              "physical_reference": "15",
+              "floor_level": null,
+              "directions": null,
+              "parking_restrictions": null,
+              "capabilities": [
+                "REMOTE_START_STOP_CAPABLE",
+                "RFID_READER"
+              ],
+              "connectors": [
+                {
+                  "id": "1",
+                  "standard": "IEC_62196_T2_COMBO",
+                  "format": "CABLE",
+                  "power_type": "DC",
+                  "last_updated": "2026-10-28T21:04:57Z",
+                  "max_amperage": 500,
+                  "max_voltage": 920,
+                  "max_electric_power": 350000,
+                  "tariff_ids": [
+                    "GB*ONHW*HPC*ADHOC*001"
+                  ]
+                }
+              ]
+            },
+            {
+              "uid": "GB*IOY*E400571",
+              "status": "CHARGING",
+              "last_updated": "2026-10-29T13:46:11Z",
+              "evse_id": "GB*IOY*E400571",
+              "physical_reference": "71",
+              "floor_level": null,
+              "directions": null,
+              "parking_restrictions": null,
+              "capabilities": [
+                "REMOTE_START_STOP_CAPABLE",
+                "RFID_READER"
+              ],
+              "connectors": [
+                {
+                  "id": "1",
+                  "standard": "IEC_62196_T2_COMBO",
+                  "format": "CABLE",
+                  "power_type": "DC",
+                  "last_updated": "2026-10-28T21:04:58Z",
+                  "max_amperage": 500,
+                  "max_voltage": 920,
+                  "max_electric_power": 350000,
+                  "tariff_ids": [
+                    "GB*ONHW*HPC*ADHOC*001"
+                  ]
+                }
+              ]
+            },
+            {
+              "uid": "GB*IOY*E400573",
+              "status": "CHARGING",
+              "last_updated": "2026-10-29T13:18:14Z",
+              "evse_id": "GB*IOY*E400573",
+              "physical_reference": "73",
+              "floor_level": null,
+              "directions": null,
+              "parking_restrictions": null,
+              "capabilities": [
+                "REMOTE_START_STOP_CAPABLE",
+                "RFID_READER"
+              ],
+              "connectors": [
+                {
+                  "id": "1",
+                  "standard": "IEC_62196_T2_COMBO",
+                  "format": "CABLE",
+                  "power_type": "DC",
+                  "last_updated": "2026-10-28T21:04:58Z",
+                  "max_amperage": 500,
+                  "max_voltage": 920,
+                  "max_electric_power": 350000,
+                  "tariff_ids": [
+                    "GB*ONHW*HPC*ADHOC*001"
+                  ]
+                }
+              ]
+            },
+            {
+              "uid": "GB*IOY*E400504",
+              "status": "AVAILABLE",
+              "last_updated": "2026-10-29T13:37:02Z",
+              "evse_id": "GB*IOY*E400504",
+              "physical_reference": "04",
+              "floor_level": null,
+              "directions": null,
+              "parking_restrictions": null,
+              "capabilities": [
+                "REMOTE_START_STOP_CAPABLE",
+                "RFID_READER"
+              ],
+              "connectors": [
+                {
+                  "id": "1",
+                  "standard": "IEC_62196_T2_COMBO",
+                  "format": "CABLE",
+                  "power_type": "DC",
+                  "last_updated": "2026-10-28T21:04:56Z",
+                  "max_amperage": 500,
+                  "max_voltage": 920,
+                  "max_electric_power": 350000,
+                  "tariff_ids": [
+                    "GB*ONHW*HPC*ADHOC*001"
+                  ]
+                }
+              ]
+            },
+            {
+              "uid": "GB*IOY*E400509",
+              "status": "CHARGING",
+              "last_updated": "2026-10-29T13:26:48Z",
+              "evse_id": "GB*IOY*E400509",
+              "physical_reference": "09",
+              "floor_level": null,
+              "directions": null,
+              "parking_restrictions": null,
+              "capabilities": [
+                "REMOTE_START_STOP_CAPABLE",
+                "RFID_READER"
+              ],
+              "connectors": [
+                {
+                  "id": "1",
+                  "standard": "IEC_62196_T2_COMBO",
+                  "format": "CABLE",
+                  "power_type": "DC",
+                  "last_updated": "2026-10-28T21:04:57Z",
+                  "max_amperage": 500,
+                  "max_voltage": 920,
+                  "max_electric_power": 350000,
+                  "tariff_ids": [
+                    "GB*ONHW*HPC*ADHOC*001"
+                  ]
+                }
+              ]
+            },
+            {
+              "uid": "GB*IOY*E400510",
+              "status": "CHARGING",
+              "last_updated": "2026-10-29T13:46:49Z",
+              "evse_id": "GB*IOY*E400510",
+              "physical_reference": "10",
+              "floor_level": null,
+              "directions": null,
+              "parking_restrictions": null,
+              "capabilities": [
+                "REMOTE_START_STOP_CAPABLE",
+                "RFID_READER"
+              ],
+              "connectors": [
+                {
+                  "id": "1",
+                  "standard": "IEC_62196_T2_COMBO",
+                  "format": "CABLE",
+                  "power_type": "DC",
+                  "last_updated": "2026-10-28T21:04:57Z",
+                  "max_amperage": 500,
+                  "max_voltage": 920,
+                  "max_electric_power": 350000,
+                  "tariff_ids": [
+                    "GB*ONHW*HPC*ADHOC*001"
+                  ]
+                }
+              ]
+            },
+            {
+              "uid": "GB*IOY*E400511",
+              "status": "AVAILABLE",
+              "last_updated": "2026-10-29T13:45:52Z",
+              "evse_id": "GB*IOY*E400511",
+              "physical_reference": "11",
+              "floor_level": null,
+              "directions": null,
+              "parking_restrictions": null,
+              "capabilities": [
+                "REMOTE_START_STOP_CAPABLE",
+                "RFID_READER"
+              ],
+              "connectors": [
+                {
+                  "id": "1",
+                  "standard": "IEC_62196_T2_COMBO",
+                  "format": "CABLE",
+                  "power_type": "DC",
+                  "last_updated": "2026-10-28T21:04:57Z",
+                  "max_amperage": 500,
+                  "max_voltage": 920,
+                  "max_electric_power": 350000,
+                  "tariff_ids": [
+                    "GB*ONHW*HPC*ADHOC*001"
+                  ]
+                }
+              ]
+            },
+            {
+              "uid": "GB*IOY*E400513",
+              "status": "AVAILABLE",
+              "last_updated": "2026-10-29T13:42:08Z",
+              "evse_id": "GB*IOY*E400513",
+              "physical_reference": "13",
+              "floor_level": null,
+              "directions": null,
+              "parking_restrictions": null,
+              "capabilities": [
+                "REMOTE_START_STOP_CAPABLE",
+                "RFID_READER"
+              ],
+              "connectors": [
+                {
+                  "id": "1",
+                  "standard": "IEC_62196_T2_COMBO",
+                  "format": "CABLE",
+                  "power_type": "DC",
+                  "last_updated": "2026-10-28T21:04:57Z",
+                  "max_amperage": 500,
+                  "max_voltage": 920,
+                  "max_electric_power": 350000,
+                  "tariff_ids": [
+                    "GB*ONHW*HPC*ADHOC*001"
+                  ]
+                }
+              ]
+            },
+            {
+              "uid": "GB*IOY*E400516",
+              "status": "AVAILABLE",
+              "last_updated": "2026-10-29T13:56:25Z",
+              "evse_id": "GB*IOY*E400516",
+              "physical_reference": "16",
+              "floor_level": null,
+              "directions": null,
+              "parking_restrictions": null,
+              "capabilities": [
+                "REMOTE_START_STOP_CAPABLE",
+                "RFID_READER"
+              ],
+              "connectors": [
+                {
+                  "id": "1",
+                  "standard": "IEC_62196_T2_COMBO",
+                  "format": "CABLE",
+                  "power_type": "DC",
+                  "last_updated": "2026-10-28T21:04:58Z",
+                  "max_amperage": 500,
+                  "max_voltage": 920,
+                  "max_electric_power": 350000,
+                  "tariff_ids": [
+                    "GB*ONHW*HPC*ADHOC*001"
+                  ]
+                }
+              ]
+            },
+            {
+              "uid": "GB*IOY*E400576",
+              "status": "UNKNOWN",
+              "last_updated": "2026-10-29T13:57:14Z",
+              "evse_id": "GB*IOY*E400576",
+              "physical_reference": "76",
+              "floor_level": null,
+              "directions": null,
+              "parking_restrictions": null,
+              "capabilities": [
+                "REMOTE_START_STOP_CAPABLE",
+                "RFID_READER"
+              ],
+              "connectors": [
+                {
+                  "id": "2",
+                  "standard": "IEC_62196_T2_COMBO",
+                  "format": "CABLE",
+                  "power_type": "DC",
+                  "last_updated": "2026-10-28T21:04:58Z",
+                  "max_amperage": 500,
+                  "max_voltage": 920,
+                  "max_electric_power": 350000,
+                  "tariff_ids": [
+                    "GB*ONHW*HPC*ADHOC*001"
+                  ]
+                }
+              ]
+            },
+            {
+              "uid": "GB*IOY*E400578",
+              "status": "AVAILABLE",
+              "last_updated": "2026-10-29T01:41:03Z",
+              "evse_id": "GB*IOY*E400578",
+              "physical_reference": "78",
+              "floor_level": null,
+              "directions": null,
+              "parking_restrictions": null,
+              "capabilities": [
+                "REMOTE_START_STOP_CAPABLE",
+                "RFID_READER"
+              ],
+              "connectors": [
+                {
+                  "id": "2",
+                  "standard": "IEC_62196_T2_COMBO",
+                  "format": "CABLE",
+                  "power_type": "DC",
+                  "last_updated": "2026-10-28T21:04:58Z",
+                  "max_amperage": 500,
+                  "max_voltage": 920,
+                  "max_electric_power": 350000,
+                  "tariff_ids": [
+                    "GB*ONHW*HPC*ADHOC*001"
+                  ]
+                }
+              ]
+            },
+            {
+              "uid": "GB*IOY*E400502",
+              "status": "AVAILABLE",
+              "last_updated": "2026-10-29T13:48:59Z",
+              "evse_id": "GB*IOY*E400502",
+              "physical_reference": "02",
+              "floor_level": null,
+              "directions": null,
+              "parking_restrictions": null,
+              "capabilities": [
+                "REMOTE_START_STOP_CAPABLE",
+                "RFID_READER"
+              ],
+              "connectors": [
+                {
+                  "id": "1",
+                  "standard": "IEC_62196_T2_COMBO",
+                  "format": "CABLE",
+                  "power_type": "DC",
+                  "last_updated": "2026-10-28T21:04:56Z",
+                  "max_amperage": 500,
+                  "max_voltage": 920,
+                  "max_electric_power": 350000,
+                  "tariff_ids": [
+                    "GB*ONHW*HPC*ADHOC*001"
+                  ]
+                }
+              ]
+            },
+            {
+              "uid": "GB*IOY*E400574",
+              "status": "CHARGING",
+              "last_updated": "2026-10-29T13:42:48Z",
+              "evse_id": "GB*IOY*E400574",
+              "physical_reference": "74",
+              "floor_level": null,
+              "directions": null,
+              "parking_restrictions": null,
+              "capabilities": [
+                "REMOTE_START_STOP_CAPABLE",
+                "RFID_READER"
+              ],
+              "connectors": [
+                {
+                  "id": "2",
+                  "standard": "IEC_62196_T2_COMBO",
+                  "format": "CABLE",
+                  "power_type": "DC",
+                  "last_updated": "2026-10-28T21:04:58Z",
+                  "max_amperage": 500,
+                  "max_voltage": 920,
+                  "max_electric_power": 350000,
+                  "tariff_ids": [
+                    "GB*ONHW*HPC*ADHOC*001"
+                  ]
+                }
+              ]
+            },
+            {
+              "uid": "GB*IOY*E400577",
+              "status": "AVAILABLE",
+              "last_updated": "2026-10-29T12:52:11Z",
+              "evse_id": "GB*IOY*E400577",
+              "physical_reference": "77",
+              "floor_level": null,
+              "directions": null,
+              "parking_restrictions": null,
+              "capabilities": [
+                "REMOTE_START_STOP_CAPABLE",
+                "RFID_READER"
+              ],
+              "connectors": [
+                {
+                  "id": "1",
+                  "standard": "IEC_62196_T2_COMBO",
+                  "format": "CABLE",
+                  "power_type": "DC",
+                  "last_updated": "2026-10-28T21:04:58Z",
+                  "max_amperage": 500,
+                  "max_voltage": 920,
+                  "max_electric_power": 350000,
+                  "tariff_ids": [
+                    "GB*ONHW*HPC*ADHOC*001"
+                  ]
+                }
+              ]
+            },
+            {
+              "uid": "GB*IOY*E400503",
+              "status": "AVAILABLE",
+              "last_updated": "2026-10-29T06:42:50Z",
+              "evse_id": "GB*IOY*E400503",
+              "physical_reference": "03",
+              "floor_level": null,
+              "directions": null,
+              "parking_restrictions": null,
+              "capabilities": [
+                "REMOTE_START_STOP_CAPABLE",
+                "RFID_READER"
+              ],
+              "connectors": [
+                {
+                  "id": "1",
+                  "standard": "IEC_62196_T2_COMBO",
+                  "format": "CABLE",
+                  "power_type": "DC",
+                  "last_updated": "2026-10-28T21:04:56Z",
+                  "max_amperage": 500,
+                  "max_voltage": 920,
+                  "max_electric_power": 350000,
+                  "tariff_ids": [
+                    "GB*ONHW*HPC*ADHOC*001"
+                  ]
+                }
+              ]
+            },
+            {
+              "uid": "GB*IOY*E400505",
+              "status": "AVAILABLE",
+              "last_updated": "2026-10-29T13:51:21Z",
+              "evse_id": "GB*IOY*E400505",
+              "physical_reference": "05",
+              "floor_level": null,
+              "directions": null,
+              "parking_restrictions": null,
+              "capabilities": [
+                "REMOTE_START_STOP_CAPABLE",
+                "RFID_READER"
+              ],
+              "connectors": [
+                {
+                  "id": "1",
+                  "standard": "IEC_62196_T2_COMBO",
+                  "format": "CABLE",
+                  "power_type": "DC",
+                  "last_updated": "2026-10-28T21:04:56Z",
+                  "max_amperage": 500,
+                  "max_voltage": 920,
+                  "max_electric_power": 350000,
+                  "tariff_ids": [
+                    "GB*ONHW*HPC*ADHOC*001"
+                  ]
+                }
+              ]
+            },
+            {
+              "uid": "GB*IOY*E400506",
+              "status": "AVAILABLE",
+              "last_updated": "2026-10-29T13:17:13Z",
+              "evse_id": "GB*IOY*E400506",
+              "physical_reference": "06",
+              "floor_level": null,
+              "directions": null,
+              "parking_restrictions": null,
+              "capabilities": [
+                "REMOTE_START_STOP_CAPABLE",
+                "RFID_READER"
+              ],
+              "connectors": [
+                {
+                  "id": "1",
+                  "standard": "IEC_62196_T2_COMBO",
+                  "format": "CABLE",
+                  "power_type": "DC",
+                  "last_updated": "2026-10-28T21:04:57Z",
+                  "max_amperage": 500,
+                  "max_voltage": 920,
+                  "max_electric_power": 350000,
+                  "tariff_ids": [
+                    "GB*ONHW*HPC*ADHOC*001"
+                  ]
+                }
+              ]
+            },
+            {
+              "uid": "GB*IOY*E400508",
+              "status": "AVAILABLE",
+              "last_updated": "2026-10-29T13:44:01Z",
+              "evse_id": "GB*IOY*E400508",
+              "physical_reference": "08",
+              "floor_level": null,
+              "directions": null,
+              "parking_restrictions": null,
+              "capabilities": [
+                "REMOTE_START_STOP_CAPABLE",
+                "RFID_READER"
+              ],
+              "connectors": [
+                {
+                  "id": "1",
+                  "standard": "IEC_62196_T2_COMBO",
+                  "format": "CABLE",
+                  "power_type": "DC",
+                  "last_updated": "2026-10-28T21:04:57Z",
+                  "max_amperage": 500,
+                  "max_voltage": 920,
+                  "max_electric_power": 350000,
+                  "tariff_ids": [
+                    "GB*ONHW*HPC*ADHOC*001"
+                  ]
+                }
+              ]
+            },
+            {
+              "uid": "GB*IOY*E400512",
+              "status": "AVAILABLE",
+              "last_updated": "2026-10-29T13:19:34Z",
+              "evse_id": "GB*IOY*E400512",
+              "physical_reference": "12",
+              "floor_level": null,
+              "directions": null,
+              "parking_restrictions": null,
+              "capabilities": [
+                "REMOTE_START_STOP_CAPABLE",
+                "RFID_READER"
+              ],
+              "connectors": [
+                {
+                  "id": "1",
+                  "standard": "IEC_62196_T2_COMBO",
+                  "format": "CABLE",
+                  "power_type": "DC",
+                  "last_updated": "2026-10-28T21:04:57Z",
+                  "max_amperage": 500,
+                  "max_voltage": 920,
+                  "max_electric_power": 350000,
+                  "tariff_ids": [
+                    "GB*ONHW*HPC*ADHOC*001"
+                  ]
+                }
+              ]
+            },
+            {
+              "uid": "GB*IOY*E400514",
+              "status": "CHARGING",
+              "last_updated": "2026-10-29T13:52:11Z",
+              "evse_id": "GB*IOY*E400514",
+              "physical_reference": "14",
+              "floor_level": null,
+              "directions": null,
+              "parking_restrictions": null,
+              "capabilities": [
+                "REMOTE_START_STOP_CAPABLE",
+                "RFID_READER"
+              ],
+              "connectors": [
+                {
+                  "id": "1",
+                  "standard": "IEC_62196_T2_COMBO",
+                  "format": "CABLE",
+                  "power_type": "DC",
+                  "last_updated": "2026-10-28T21:04:57Z",
+                  "max_amperage": 500,
+                  "max_voltage": 920,
+                  "max_electric_power": 350000,
+                  "tariff_ids": [
+                    "GB*ONHW*HPC*ADHOC*001"
+                  ]
+                }
+              ]
+            },
+            {
+              "uid": "GB*IOY*E400572",
+              "status": "AVAILABLE",
+              "last_updated": "2026-10-29T13:50:25Z",
+              "evse_id": "GB*IOY*E400572",
+              "physical_reference": "72",
+              "floor_level": null,
+              "directions": null,
+              "parking_restrictions": null,
+              "capabilities": [
+                "REMOTE_START_STOP_CAPABLE",
+                "RFID_READER"
+              ],
+              "connectors": [
+                {
+                  "id": "2",
+                  "standard": "IEC_62196_T2_COMBO",
+                  "format": "CABLE",
+                  "power_type": "DC",
+                  "last_updated": "2026-10-28T21:04:58Z",
+                  "max_amperage": 500,
+                  "max_voltage": 920,
+                  "max_electric_power": 350000,
+                  "tariff_ids": [
+                    "GB*ONHW*HPC*ADHOC*001"
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "party_id": "IOY",
+          "id": "1090",
+          "country_code": "GB",
+          "publish": true,
+          "country": "GBR",
+          "address": "Kennedy Centre, Falls Rd, Belfast",
+          "city": "Belfast",
+          "postal_code": "BT11 9AE",
+          "coordinates": {
+            "latitude": "54.58052000",
+            "longitude": "-5.97979100"
+          },
+          "state": null,
+          "last_updated": "2026-10-29T13:57:14Z",
+          "opening_times": {
+            "exceptional_closings": [],
+            "exceptional_openings": [],
+            "regular_hours": [],
+            "twentyfourseven": true
+          },
+          "name": "IONITY GmbH IONITY Belfast",
+          "time_zone": "Europe/Belfast",
+          "owner": {
+            "name": "IONITY",
+            "website": "https://ionity.eu"
+          },
+          "operator": {
+            "name": "IONITY",
+            "website": "https://ionity.eu"
+          },
+          "energy_mix": {
+            "energy_product_name": null,
+            "energy_sources": null,
+            "environ_impact": null,
+            "is_green_energy": true,
+            "supplier_name": null
+          },
+          "charging_when_closed": true,
+          "directions": null,
+          "evses": [
+            {
+              "uid": "GB*IOY*E462002",
+              "status": "AVAILABLE",
+              "last_updated": "2026-10-29T13:15:48Z",
+              "evse_id": "GB*IOY*E462002",
+              "physical_reference": "02",
+              "floor_level": null,
+              "directions": null,
+              "parking_restrictions": null,
+              "capabilities": [
+                "REMOTE_START_STOP_CAPABLE",
+                "RFID_READER"
+              ],
+              "connectors": [
+                {
+                  "id": "1",
+                  "standard": "IEC_62196_T2_COMBO",
+                  "format": "CABLE",
+                  "power_type": "DC",
+                  "last_updated": "2026-10-28T21:13:24Z",
+                  "max_amperage": 500,
+                  "max_voltage": 920,
+                  "max_electric_power": 350000,
+                  "tariff_ids": [
+                    "GB*HPC*ADHOC*004"
+                  ]
+                }
+              ]
+            },
+            {
+              "uid": "GB*IOY*E462004",
+              "status": "AVAILABLE",
+              "last_updated": "2026-10-29T12:14:12Z",
+              "evse_id": "GB*IOY*E462004",
+              "physical_reference": "04",
+              "floor_level": null,
+              "directions": null,
+              "parking_restrictions": null,
+              "capabilities": [
+                "REMOTE_START_STOP_CAPABLE",
+                "RFID_READER"
+              ],
+              "connectors": [
+                {
+                  "id": "1",
+                  "standard": "IEC_62196_T2_COMBO",
+                  "format": "CABLE",
+                  "power_type": "DC",
+                  "last_updated": "2026-10-28T21:13:24Z",
+                  "max_amperage": 500,
+                  "max_voltage": 920,
+                  "max_electric_power": 350000,
+                  "tariff_ids": [
+                    "GB*HPC*ADHOC*004"
+                  ]
+                }
+              ]
+            },
+            {
+              "uid": "GB*IOY*E462008",
+              "status": "CHARGING",
+              "last_updated": "2026-10-29T13:22:14Z",
+              "evse_id": "GB*IOY*E462008",
+              "physical_reference": "08",
+              "floor_level": null,
+              "directions": null,
+              "parking_restrictions": null,
+              "capabilities": [
+                "REMOTE_START_STOP_CAPABLE",
+                "RFID_READER"
+              ],
+              "connectors": [
+                {
+                  "id": "1",
+                  "standard": "IEC_62196_T2_COMBO",
+                  "format": "CABLE",
+                  "power_type": "DC",
+                  "last_updated": "2026-10-28T21:13:25Z",
+                  "max_amperage": 500,
+                  "max_voltage": 920,
+                  "max_electric_power": 350000,
+                  "tariff_ids": [
+                    "GB*HPC*ADHOC*004"
+                  ]
+                }
+              ]
+            },
+            {
+              "uid": "GB*IOY*E462009",
+              "status": "CHARGING",
+              "last_updated": "2026-10-29T13:21:37Z",
+              "evse_id": "GB*IOY*E462009",
+              "physical_reference": "09",
+              "floor_level": null,
+              "directions": null,
+              "parking_restrictions": null,
+              "capabilities": [
+                "REMOTE_START_STOP_CAPABLE",
+                "RFID_READER"
+              ],
+              "connectors": [
+                {
+                  "id": "1",
+                  "standard": "IEC_62196_T2_COMBO",
+                  "format": "CABLE",
+                  "power_type": "DC",
+                  "last_updated": "2026-10-28T21:13:25Z",
+                  "max_amperage": 500,
+                  "max_voltage": 920,
+                  "max_electric_power": 350000,
+                  "tariff_ids": [
+                    "GB*HPC*ADHOC*004"
+                  ]
+                }
+              ]
+            },
+            {
+              "uid": "GB*IOY*E462010",
+              "status": "BLOCKED",
+              "last_updated": "2026-10-29T13:57:14Z",
+              "evse_id": "GB*IOY*E462010",
+              "physical_reference": "10",
+              "floor_level": null,
+              "directions": null,
+              "parking_restrictions": null,
+              "capabilities": [
+                "REMOTE_START_STOP_CAPABLE",
+                "RFID_READER"
+              ],
+              "connectors": [
+                {
+                  "id": "1",
+                  "standard": "IEC_62196_T2_COMBO",
+                  "format": "CABLE",
+                  "power_type": "DC",
+                  "last_updated": "2026-10-28T21:13:25Z",
+                  "max_amperage": 500,
+                  "max_voltage": 920,
+                  "max_electric_power": 350000,
+                  "tariff_ids": [
+                    "GB*HPC*ADHOC*004"
+                  ]
+                }
+              ]
+            },
+            {
+              "uid": "GB*IOY*E462001",
+              "status": "CHARGING",
+              "last_updated": "2026-10-29T13:51:46Z",
+              "evse_id": "GB*IOY*E462001",
+              "physical_reference": "01",
+              "floor_level": null,
+              "directions": null,
+              "parking_restrictions": null,
+              "capabilities": [
+                "REMOTE_START_STOP_CAPABLE",
+                "RFID_READER"
+              ],
+              "connectors": [
+                {
+                  "id": "1",
+                  "standard": "IEC_62196_T2_COMBO",
+                  "format": "CABLE",
+                  "power_type": "DC",
+                  "last_updated": "2026-10-28T21:13:24Z",
+                  "max_amperage": 500,
+                  "max_voltage": 920,
+                  "max_electric_power": 350000,
+                  "tariff_ids": [
+                    "GB*HPC*ADHOC*004"
+                  ]
+                }
+              ]
+            },
+            {
+              "uid": "GB*IOY*E462003",
+              "status": "CHARGING",
+              "last_updated": "2026-10-29T13:19:56Z",
+              "evse_id": "GB*IOY*E462003",
+              "physical_reference": "03",
+              "floor_level": null,
+              "directions": null,
+              "parking_restrictions": null,
+              "capabilities": [
+                "REMOTE_START_STOP_CAPABLE",
+                "RFID_READER"
+              ],
+              "connectors": [
+                {
+                  "id": "1",
+                  "standard": "IEC_62196_T2_COMBO",
+                  "format": "CABLE",
+                  "power_type": "DC",
+                  "last_updated": "2026-10-28T21:13:24Z",
+                  "max_amperage": 500,
+                  "max_voltage": 920,
+                  "max_electric_power": 350000,
+                  "tariff_ids": [
+                    "GB*HPC*ADHOC*004"
+                  ]
+                }
+              ]
+            },
+            {
+              "uid": "GB*IOY*E462005",
+              "status": "CHARGING",
+              "last_updated": "2026-10-29T13:34:55Z",
+              "evse_id": "GB*IOY*E462005",
+              "physical_reference": "05",
+              "floor_level": null,
+              "directions": null,
+              "parking_restrictions": null,
+              "capabilities": [
+                "REMOTE_START_STOP_CAPABLE",
+                "RFID_READER"
+              ],
+              "connectors": [
+                {
+                  "id": "1",
+                  "standard": "IEC_62196_T2_COMBO",
+                  "format": "CABLE",
+                  "power_type": "DC",
+                  "last_updated": "2026-10-28T21:13:24Z",
+                  "max_amperage": 500,
+                  "max_voltage": 920,
+                  "max_electric_power": 350000,
+                  "tariff_ids": [
+                    "GB*HPC*ADHOC*004"
+                  ]
+                }
+              ]
+            },
+            {
+              "uid": "GB*IOY*E462006",
+              "status": "CHARGING",
+              "last_updated": "2026-10-29T13:47:11Z",
+              "evse_id": "GB*IOY*E462006",
+              "physical_reference": "06",
+              "floor_level": null,
+              "directions": null,
+              "parking_restrictions": null,
+              "capabilities": [
+                "REMOTE_START_STOP_CAPABLE",
+                "RFID_READER"
+              ],
+              "connectors": [
+                {
+                  "id": "1",
+                  "standard": "IEC_62196_T2_COMBO",
+                  "format": "CABLE",
+                  "power_type": "DC",
+                  "last_updated": "2026-10-28T21:13:25Z",
+                  "max_amperage": 500,
+                  "max_voltage": 920,
+                  "max_electric_power": 350000,
+                  "tariff_ids": [
+                    "GB*HPC*ADHOC*004"
+                  ]
+                }
+              ]
+            },
+            {
+              "uid": "GB*IOY*E462007",
+              "status": "AVAILABLE",
+              "last_updated": "2026-10-29T13:28:48Z",
+              "evse_id": "GB*IOY*E462007",
+              "physical_reference": "07",
+              "floor_level": null,
+              "directions": null,
+              "parking_restrictions": null,
+              "capabilities": [
+                "REMOTE_START_STOP_CAPABLE",
+                "RFID_READER"
+              ],
+              "connectors": [
+                {
+                  "id": "1",
+                  "standard": "IEC_62196_T2_COMBO",
+                  "format": "CABLE",
+                  "power_type": "DC",
+                  "last_updated": "2026-10-28T21:13:25Z",
+                  "max_amperage": 500,
+                  "max_voltage": 920,
+                  "max_electric_power": 350000,
+                  "tariff_ids": [
+                    "GB*HPC*ADHOC*004"
+                  ]
+                }
+              ]
+            },
+            {
+              "uid": "GB*IOY*E462011",
+              "status": "AVAILABLE",
+              "last_updated": "2026-10-29T10:47:22Z",
+              "evse_id": "GB*IOY*E462011",
+              "physical_reference": "11",
+              "floor_level": null,
+              "directions": null,
+              "parking_restrictions": null,
+              "capabilities": [
+                "REMOTE_START_STOP_CAPABLE",
+                "RFID_READER"
+              ],
+              "connectors": [
+                {
+                  "id": "1",
+                  "standard": "IEC_62196_T2_COMBO",
+                  "format": "CABLE",
+                  "power_type": "DC",
+                  "last_updated": "2026-10-28T21:13:25Z",
+                  "max_amperage": 500,
+                  "max_voltage": 920,
+                  "max_electric_power": 350000,
+                  "tariff_ids": [
+                    "GB*HPC*ADHOC*004"
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  }
+}

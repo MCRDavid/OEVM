@@ -1,0 +1,76 @@
+{
+  "request": {
+    "method": "GET",
+    "url": "https://open-chargepoints.com/api/ocpi/cpo/2.2.1/tariffs/?limit=1000"
+  },
+  "response": {
+    "status_code": 200,
+    "headers": {
+      "content-type": "application/json",
+      "link": "<https://open-chargepoints.com/api/ocpi/cpo/2.2.1/tariffs/?limit=1000&offset=2>; rel=\"next\"",
+      "x-total-count": "2",
+      "x-limit": "1000"
+    },
+    "body": {
+      "timestamp": "2026-10-29T14:08:04Z",
+      "status_code": 1000,
+      "status_message": "Success",
+      "data": [
+        {
+          "party_id": "SGB",
+          "id": "GB*SGB_02",
+          "currency": "GBP",
+          "tariff_alt_url": null,
+          "tariff_alt_text": null,
+          "last_updated": "2026-10-19T12:00:30Z",
+          "country_code": "GB",
+          "elements": [
+            {
+              "restrictions": {
+                "start_date": "2026-10-27"
+              },
+              "price_components": [
+                {
+                  "type": "ENERGY",
+                  "price": 0.75,
+                  "vat": 20,
+                  "step_size": 1
+                },
+                {
+                  "type": "FLAT",
+                  "price": 0,
+                  "vat": 20,
+                  "step_size": 1
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "party_id": "SGB",
+          "id": "GB*SGB_02_22Kw_AC",
+          "currency": "GBP",
+          "tariff_alt_url": null,
+          "tariff_alt_text": null,
+          "last_updated": "2026-06-15T12:19:17Z",
+          "country_code": "GB",
+          "elements": [
+            {
+              "restrictions": {
+                "start_date": "2026-06-16"
+              },
+              "price_components": [
+                {
+                  "type": "ENERGY",
+                  "price": 0.45,
+                  "vat": 0.2,
+                  "step_size": 1000
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  }
+}

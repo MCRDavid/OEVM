@@ -1,0 +1,123 @@
+{
+  "request": {
+    "method": "GET",
+    "url": "https://open-chargepoints.com/api/ocpi/cpo/2.2.1/tariffs/?limit=1000"
+  },
+  "response": {
+    "status_code": 200,
+    "headers": {
+      "content-type": "application/json",
+      "link": "<https://open-chargepoints.com/api/ocpi/cpo/2.2.1/tariffs/?limit=1000&offset=1>; rel=\"next\"",
+      "x-total-count": "1",
+      "x-limit": "1000"
+    },
+    "body": {
+      "timestamp": "2026-10-29T14:12:16Z",
+      "status_code": 1000,
+      "status_message": "Success",
+      "data": [
+        {
+          "party_id": "UBI",
+          "id": "f9c8695b565b8164e2a02029c4cc73f7",
+          "currency": "GBP",
+          "tariff_alt_url": null,
+          "tariff_alt_text": null,
+          "last_updated": "2026-10-28T09:58:43Z",
+          "country_code": "GB",
+          "elements": [
+            {
+              "restrictions": {
+                "day_of_week": [
+                  "MONDAY",
+                  "TUESDAY",
+                  "WEDNESDAY",
+                  "THURSDAY",
+                  "FRIDAY",
+                  "SATURDAY",
+                  "SUNDAY"
+                ],
+                "end_time": "19:59",
+                "min_duration": 0,
+                "start_time": "16:00"
+              },
+              "price_components": [
+                {
+                  "type": "ENERGY",
+                  "price": 0.5583,
+                  "vat": 20,
+                  "step_size": 1
+                }
+              ]
+            },
+            {
+              "restrictions": {
+                "day_of_week": [
+                  "MONDAY",
+                  "TUESDAY",
+                  "WEDNESDAY",
+                  "THURSDAY",
+                  "FRIDAY",
+                  "SATURDAY",
+                  "SUNDAY"
+                ],
+                "end_time": "23:59",
+                "min_duration": 0,
+                "start_time": "07:00"
+              },
+              "price_components": [
+                {
+                  "type": "ENERGY",
+                  "price": 0.4667,
+                  "vat": 20,
+                  "step_size": 1
+                }
+              ]
+            },
+            {
+              "restrictions": {
+                "day_of_week": [
+                  "MONDAY",
+                  "TUESDAY",
+                  "WEDNESDAY",
+                  "THURSDAY",
+                  "FRIDAY",
+                  "SATURDAY",
+                  "SUNDAY"
+                ],
+                "end_time": "06:59",
+                "min_duration": 0,
+                "start_time": "00:00"
+              },
+              "price_components": [
+                {
+                  "type": "ENERGY",
+                  "price": 0.375,
+                  "vat": 20,
+                  "step_size": 1
+                }
+              ]
+            },
+            {
+              "restrictions": {
+                "day_of_week": [
+                  "MONDAY"
+                ],
+                "end_time": "15:59",
+                "min_duration": 0,
+                "start_time": "07:00"
+              },
+              "price_components": [
+                {
+                  "type": "ENERGY",
+                  "price": 0.4667,
+                  "vat": 20,
+                  "step_size": 1
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  }
+}

@@ -148,6 +148,15 @@ def test_error_messages_say_who_answered():
     assert server_hint(httpx.Response(403)) == ""
 
 
+def test_error_messages_say_where_a_redirect_points_without_any_key():
+    response = httpx.Response(
+        307, headers={"Location": "https://example.invalid/ocpi/locations/?limit=10&token=abc"}
+    )
+    assert server_hint(response) == (
+        " (redirect to https://example.invalid/ocpi/locations/?limit=10&token=REDACTED)"
+    )
+
+
 # How far a failed fetch got
 
 

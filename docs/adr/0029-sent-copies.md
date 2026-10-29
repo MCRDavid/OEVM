@@ -72,3 +72,12 @@ with every charge point status unknown, as an exception to the 7 day rule.
   owner decides whether it replaces this one.
 - Another operator that sends files instead of an address can be shown the same way, but
   only after the owner decides for that operator.
+
+## Later decisions
+
+- 29 October 2026: the repository owner decided to show Zest's copy (party GB ZST) the same
+  way. Zest emailed it on 28 October 2026, made on 26 October, and asks for its form to be
+  completed monthly for an updated snapshot. By the same decision, each newer copy Zest
+  sends replaces the one shown without a new decision (`operators/zest.yaml`,
+  `sent_copies/zest/README.md`). Zest's data is licensed under CC BY 4.0, as its open data
+  page states, so its attribution names that licence and says the data is adapted.

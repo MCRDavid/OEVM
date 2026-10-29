@@ -1,0 +1,247 @@
+{
+  "request": {
+    "method": "GET",
+    "url": "https://open-chargepoints.com/api/ocpi/cpo/2.2.1/locations/?limit=1000"
+  },
+  "response": {
+    "status_code": 200,
+    "headers": {
+      "content-type": "application/json",
+      "link": "<https://open-chargepoints.com/api/ocpi/cpo/2.2.1/locations/?limit=1000&offset=3>; rel=\"next\"",
+      "x-total-count": "3",
+      "x-limit": "1000"
+    },
+    "body": {
+      "timestamp": "2026-10-29T14:10:10Z",
+      "status_code": 1000,
+      "status_message": "Success",
+      "data": [
+        {
+          "party_id": "UBI",
+          "id": "2858",
+          "country_code": "GB",
+          "publish": true,
+          "country": "GBR",
+          "address": "123 Wakeman Road",
+          "city": "London",
+          "postal_code": "NW10 5BH",
+          "coordinates": {
+            "latitude": "51.53024610",
+            "longitude": "-0.22206720"
+          },
+          "state": null,
+          "last_updated": "2026-10-28T12:12:24Z",
+          "opening_times": {
+            "twentyfourseven": true
+          },
+          "name": "ubitricity Distributed Energy Systems UK Ltd. 123 Wakeman Road",
+          "time_zone": "Europe/London",
+          "owner": {
+            "name": "Ubitricity",
+            "website": "https://info.ubitricity.com/"
+          },
+          "operator": {
+            "name": "Ubitricity",
+            "website": "https://info.ubitricity.com/"
+          },
+          "suboperator": {
+            "name": "Ubitricity",
+            "website": "https://info.ubitricity.com/"
+          },
+          "energy_mix": {
+            "is_green_energy": true
+          },
+          "charging_when_closed": true,
+          "directions": [
+            {
+              "language": "en",
+              "text": ""
+            }
+          ],
+          "evses": [
+            {
+              "uid": "3079",
+              "status": "AVAILABLE",
+              "last_updated": "2026-10-08T12:02:11Z",
+              "evse_id": "GB*UBI*E10008103",
+              "physical_reference": "suby1100008238",
+              "floor_level": null,
+              "directions": null,
+              "parking_restrictions": null,
+              "capabilities": [
+                "CHARGING_PROFILE_CAPABLE",
+                "REMOTE_START_STOP_CAPABLE",
+                "TOKEN_GROUP_CAPABLE"
+              ],
+              "connectors": [
+                {
+                  "id": "3079",
+                  "standard": "IEC_62196_T2",
+                  "format": "SOCKET",
+                  "power_type": "AC_1_PHASE",
+                  "last_updated": "2026-10-28T12:12:24Z",
+                  "max_amperage": 22,
+                  "max_voltage": 230,
+                  "max_electric_power": 5000,
+                  "tariff_ids": [
+                    "f9c8695b565b8164e2a02029c4cc73f7"
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "party_id": "UBI",
+          "id": "1451",
+          "country_code": "GB",
+          "publish": true,
+          "country": "GBR",
+          "address": "16 Montagu Street",
+          "city": "London",
+          "postal_code": "W1H 7EX",
+          "coordinates": {
+            "latitude": "51.51650060",
+            "longitude": "-0.15880260"
+          },
+          "state": null,
+          "last_updated": "2026-10-29T07:16:25Z",
+          "opening_times": {
+            "twentyfourseven": true
+          },
+          "name": "ubitricity Distributed Energy Systems UK Ltd. 16 Montagu Street",
+          "time_zone": "Europe/London",
+          "owner": {
+            "name": "Ubitricity",
+            "website": "https://info.ubitricity.com/"
+          },
+          "operator": {
+            "name": "Ubitricity",
+            "website": "https://info.ubitricity.com/"
+          },
+          "suboperator": {
+            "name": "Ubitricity",
+            "website": "https://info.ubitricity.com/"
+          },
+          "energy_mix": {
+            "is_green_energy": true
+          },
+          "charging_when_closed": true,
+          "directions": [
+            {
+              "language": "en",
+              "text": ""
+            }
+          ],
+          "evses": [
+            {
+              "uid": "1672",
+              "status": "UNKNOWN",
+              "last_updated": "2026-10-29T07:16:25Z",
+              "evse_id": "GB*UBI*E10092294",
+              "physical_reference": "suby1100003110",
+              "floor_level": null,
+              "directions": null,
+              "parking_restrictions": "ev_only",
+              "capabilities": [
+                "CHARGING_PROFILE_CAPABLE",
+                "REMOTE_START_STOP_CAPABLE",
+                "TOKEN_GROUP_CAPABLE"
+              ],
+              "connectors": [
+                {
+                  "id": "1672",
+                  "standard": "IEC_62196_T2",
+                  "format": "SOCKET",
+                  "power_type": "AC_1_PHASE",
+                  "last_updated": "2026-10-28T12:06:26Z",
+                  "max_amperage": 22,
+                  "max_voltage": 230,
+                  "max_electric_power": 5000,
+                  "tariff_ids": [
+                    "f9c8695b565b8164e2a02029c4cc73f7"
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "party_id": "UBI",
+          "id": "3803",
+          "country_code": "GB",
+          "publish": true,
+          "country": "GBR",
+          "address": "1 Bradiston Road",
+          "city": "London",
+          "postal_code": "W9 3HN",
+          "coordinates": {
+            "latitude": "51.53071790",
+            "longitude": "-0.20179140"
+          },
+          "state": null,
+          "last_updated": "2026-10-29T09:02:45Z",
+          "opening_times": {
+            "twentyfourseven": true
+          },
+          "name": "ubitricity Distributed Energy Systems UK Ltd. 1 Bradiston Road",
+          "time_zone": "Europe/London",
+          "owner": {
+            "name": "Ubitricity",
+            "website": "https://info.ubitricity.com/"
+          },
+          "operator": {
+            "name": "Ubitricity",
+            "website": "https://info.ubitricity.com/"
+          },
+          "suboperator": {
+            "name": "Ubitricity",
+            "website": "https://info.ubitricity.com/"
+          },
+          "energy_mix": {
+            "is_green_energy": true
+          },
+          "charging_when_closed": true,
+          "directions": [
+            {
+              "language": "en",
+              "text": ""
+            }
+          ],
+          "evses": [
+            {
+              "uid": "4024",
+              "status": "AVAILABLE",
+              "last_updated": "2026-10-29T09:02:45Z",
+              "evse_id": "GB*UBI*E10064829",
+              "physical_reference": "suby1100006541",
+              "floor_level": null,
+              "directions": null,
+              "parking_restrictions": "ev_only",
+              "capabilities": [
+                "CHARGING_PROFILE_CAPABLE",
+                "REMOTE_START_STOP_CAPABLE",
+                "TOKEN_GROUP_CAPABLE"
+              ],
+              "connectors": [
+                {
+                  "id": "4024",
+                  "standard": "IEC_62196_T2",
+                  "format": "SOCKET",
+                  "power_type": "AC_1_PHASE",
+                  "last_updated": "2026-10-28T12:14:16Z",
+                  "max_amperage": 22,
+                  "max_voltage": 230,
+                  "max_electric_power": 5000,
+                  "tariff_ids": [
+                    "f9c8695b565b8164e2a02029c4cc73f7"
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  }
+}

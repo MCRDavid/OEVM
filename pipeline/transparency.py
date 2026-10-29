@@ -18,6 +18,7 @@ import sys
 from datetime import UTC, date
 from pathlib import Path
 
+from adapters.http import SHARED_HOST_SECONDS
 from adapters.sent_copy import CHANNEL_WORDS
 from pipeline.access import PHRASES
 from pipeline.project import REPOSITORY_URL
@@ -83,12 +84,14 @@ VAT_RULE = {
         "unchanged."
     ),
     "in_price": (
-        "A feed can also give each price as drivers see it. Where that display price equals "
-        "the price with no VAT added, although the feed states a VAT rate, adding the rate "
-        "would show a price higher than the operator displays. On 23 October 2026 the "
-        "repository owner decided that for each operator listed here, the VAT its feed "
-        "states is read as already in its prices: each price is shown as published, "
-        "including VAT, and says it was read as the operator's display price shows it."
+        "A feed can state a VAT rate on prices that seem to include VAT already: "
+        "BrightGreen's display price equals the price with no VAT added, and some feeds "
+        "give every price in whole pence as published, which adding the rate would not. "
+        "Adding the rate would then show a price higher than the operator seems to charge. "
+        "On 23 and 29 October 2026 the repository owner decided that for each operator "
+        "listed here, the VAT its feed states is read as already in its prices: each price "
+        "is shown as published, including VAT, and says so. This is inferred from the "
+        "figures, not stated by the operators."
     ),
 }
 
@@ -178,6 +181,15 @@ def rate_limit_view(config: OperatorConfig) -> dict:
         f"At least {gap:g} s between requests to the operator's host, measured from the end "
         f"of the previous request (at most {per_hour} in any hour), retries included."
     )
+    per_key = config.limits_per_key
+    if per_key is not None:
+        ours = (
+            f"At least {gap:g} s between requests with the operator's own key, measured from "
+            f"the end of the previous request (at most {per_hour} in any hour with it), "
+            f"retries included. The limits are read as applying to each key, by the owner's "
+            f"decision of {per_key.decided}; requests to the host are still sent one at a "
+            f"time, at least {SHARED_HOST_SECONDS:g} s apart."
+        )
     if rate.limits:
         needed = max(limit.min_interval for limit in rate.limits)
         comparison = (
@@ -214,6 +226,15 @@ def rate_limit_view(config: OperatorConfig) -> dict:
         "comparison": comparison,
         "difference_from_regulations": difference,
         "notes": rate.notes,
+        "per_key": (
+            {
+                "decided": str(per_key.decided),
+                "basis": per_key.basis,
+                "evidence_url": per_key.evidence_url,
+            }
+            if per_key
+            else None
+        ),
     }
 
 
@@ -384,6 +405,12 @@ def operator_view(config: OperatorConfig) -> dict:
                 "basis": config.own_feed_over_copies.basis,
                 "evidence_url": config.own_feed_over_copies.evidence_url,
                 "operators": list(config.own_feed_over_copies.operators),
+                "codes": " ".join(
+                    config.own_feed_over_copies.copies_codes(
+                        config.ocpi_country_code, config.ocpi_party_id
+                    )
+                ),
+                "own_codes": config.own_feed_over_copies.copies_party_id is None,
             }
             if config.own_feed_over_copies
             else None
@@ -649,8 +676,13 @@ def _sources_table(data: dict) -> str:
             fetched = fetched.rstrip(".")
             fetched += (
                 f". While its own locations are on the map, the locations {names} "
-                f"{'sends' if len(copies['operators']) == 1 else 'send'} under its country "
-                "and party codes are left off and listed on the feed health page, by the "
+                f"{'sends' if len(copies['operators']) == 1 else 'send'} under "
+                + (
+                    "its country and party codes"
+                    if copies["own_codes"]
+                    else f"the country and party codes {_e(copies['codes'])}"
+                )
+                + " are left off and listed on the feed health page, by the "
                 f"owner's decision of {_e(copies['decided'])}: {_e(copies['basis'])} "
                 f"({_link(copies['evidence_url'], 'evidence')})"
             )
@@ -784,6 +816,12 @@ def _rate_table(data: dict) -> str:
             else "Not checked yet"
         )
         notes = f"<br>{_e(rate['notes'])}" if rate["notes"] else ""
+        if rate["per_key"]:
+            per_key = rate["per_key"]
+            notes += (
+                f"<br>Limits read per key by the owner's decision of {_e(per_key['decided'])}: "
+                f"{_e(per_key['basis'])} ({_link(per_key['evidence_url'], 'evidence')})"
+            )
         rows.append(
             "<tr>"
             f'<th scope="row">{_e(op["name"])}</th>'
@@ -911,8 +949,10 @@ replies are added to its log.</p>
 within every limit an operator, or the company hosting its data, publishes with a safety
 margin on top, and waits as long as
 a server asks before contacting it again. Gaps are measured from the end of the previous
-request and shared by every operator on the same host. Automated tests check these
-rules.</p>
+request and shared by every operator on the same host, unless the repository owner has
+decided that a host's published limits apply to each key: then each operator keeps its gap
+for its own key, and the host still gets one request at a time. Automated tests check
+these rules.</p>
 <div class="table-wrap">{_rate_table(data)}</div>
 <h2>What has been found</h2>
 <p>Differences from the OCPI 2.2.1 standard, quirks in the data and access issues, each

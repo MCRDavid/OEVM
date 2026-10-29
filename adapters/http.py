@@ -5,7 +5,10 @@
   response finished, so network delays can never squeeze two requests closer together
   at the server's end.
 - Keeps one timer per host, shared by every client in the process, so operators served
-  from the same host share one gap and one Retry-After.
+  from the same host share one gap and one Retry-After. Where the owner has recorded
+  limits_per_key in an operator file, that operator's gap is kept for its own key instead,
+  while the host still gets one request at a time, at least SHARED_HOST_SECONDS apart, and
+  any wait the server asks for holds back every key on it (ADR 0003, amended).
 - Retries connection errors, timeouts, HTTP 429 and HTTP 5xx with exponential backoff.
 - Honours every Retry-After header, in seconds or as an HTTP date, on any attempt. One
   that cannot be read is treated as a long wait. If the wait is longer than this project
@@ -67,6 +70,9 @@ from schema.operator import (
 USER_AGENT = f"{NAME}/{VERSION} (+{REPOSITORY_URL})"
 RETRY_STATUSES = frozenset({429, 500, 502, 503, 504})
 MAX_RETRY_WAIT_SECONDS = 600
+# Between any two requests to a host whose operators' limits the owner reads per key
+# (limits_per_key): the project floor plus the margin, whichever key each request uses.
+SHARED_HOST_SECONDS = MIN_SECONDS_BETWEEN_REQUESTS + LIMIT_MARGIN_SECONDS
 UNREADABLE_RETRY_AFTER_SECONDS = 3600
 # A refusal (HTTP 403) part-way through a run: wait this long when the server does not say,
 # then go on with the gap to that host this many times wider (ADR 0018).
@@ -260,11 +266,15 @@ def rate_limit_state(response: httpx.Response, now: datetime) -> tuple[float | N
 
 
 def server_hint(response: httpx.Response) -> str:
-    """A short note on who answered, for error messages: the Server header and any limits."""
+    """A short note on who answered, for error messages: the Server header, where a
+    redirect points (never followed, so a key is never sent on) and any limits."""
     parts = []
     server = re.sub(r"[^A-Za-z0-9 ./_()-]", "", response.headers.get("Server", ""))[:40]
     if server.strip():
         parts.append(f"server {server.strip()}")
+    if response.is_redirect:
+        target = redact_url(response.headers["Location"])
+        parts.append("redirect to " + re.sub(r"[^A-Za-z0-9:/?&=%._~+-]", "", target)[:120])
     names = sorted(name for name in response.headers if "ratelimit" in name.replace("-", ""))
     if names:
         parts.append("rate limit headers " + ", ".join(names))
@@ -292,9 +302,12 @@ _HOST_TIMERS: dict[str, HostTimer] = {}
 _HOST_TIMERS_LOCK = threading.Lock()
 
 
-def host_timer(url: str) -> HostTimer:
+def host_timer(url: str, key_name: str | None = None) -> HostTimer:
+    """The timer for url's host, or for one key on it when key_name (a secret's name) is
+    given, for an operator whose limits the owner reads per key."""
+    host = urlsplit(url).netloc.lower()
     with _HOST_TIMERS_LOCK:
-        return _HOST_TIMERS.setdefault(urlsplit(url).netloc.lower(), HostTimer())
+        return _HOST_TIMERS.setdefault(f"{host} {key_name}" if key_name else host, HostTimer())
 
 
 def reset_host_timers() -> None:
@@ -476,6 +489,12 @@ class PoliteClient:
             ),
         )
         self.min_interval = required_gap(config)
+        # The owner's decision to read the limits per key: the gap is kept for this key.
+        self._key_name = (
+            config.auth.secret_name
+            if config.limits_per_key is not None and config.auth.method != "none"
+            else None
+        )
         self.max_retries = max_retries
         self.backoff_seconds = backoff_seconds
         self._sleep = sleep
@@ -512,13 +531,19 @@ class PoliteClient:
                 "try later"
             )
 
-    def _wait_turn(self, timer: HostTimer) -> None:
+    def _wait_turn(self, timer: HostTimer, host: HostTimer | None) -> None:
+        """Wait for this client's gap, and with a per-key timer also for the host's."""
         now = self._clock()
         ready = now
         if timer.last_finished_at is not None:
             ready = max(ready, timer.last_finished_at + self.min_interval * timer.slow_down)
         if timer.not_before is not None:
             ready = max(ready, timer.not_before)
+        if host is not None:
+            if host.last_finished_at is not None:
+                ready = max(ready, host.last_finished_at + SHARED_HOST_SECONDS)
+            if host.not_before is not None:
+                ready = max(ready, host.not_before)
         if ready > now:
             self._sleep(ready - now)
 
@@ -600,7 +625,16 @@ class PoliteClient:
     ) -> httpx.Response:
         if self._secrets and urlsplit(url).scheme != "https":
             raise FeedError(f"not sending a key over plain http: {redact_url(url)}")
-        timer = host_timer(url)
+        timer = host_timer(url, self._key_name)
+        # With a per-key timer, the host's own timer keeps one request at a time to the
+        # host, SHARED_HOST_SECONDS apart, and every wait the server asks for.
+        host = host_timer(url) if self._key_name else None
+        timers = (timer,) if host is None else (timer, host)
+
+        def hold_until(moment: float) -> None:
+            for each in timers:
+                each.hold_until(moment)
+
         request_url = with_params(url, self._auth_params) if self._auth_params else url
         relayed = self._relay is not None and urlsplit(url).netloc.lower() in self._relay.hosts
         headers = {}
@@ -610,8 +644,9 @@ class PoliteClient:
         via = " (through the relay)" if relayed else ""
         attempt = refusals = 0
         while True:
-            self._refuse_if_held(timer, url)
-            self._wait_turn(timer)
+            for each in timers:
+                self._refuse_if_held(each, url)
+            self._wait_turn(timer, host)
             self.requests_made += 1
             response = None
             try:
@@ -620,12 +655,14 @@ class PoliteClient:
                 problem, retry_after = type(exc).__name__, None
             finally:
                 timer.last_finished_at = self._clock()
+                if host is not None:
+                    host.last_finished_at = timer.last_finished_at
             now = timer.last_finished_at
             if response is not None:
                 wall = self._wall_clock()
                 remaining, reset = rate_limit_state(response, wall)
                 if remaining == 0 and reset is not None:
-                    timer.hold_until(now + reset + LIMIT_MARGIN_SECONDS)
+                    hold_until(now + reset + LIMIT_MARGIN_SECONDS)
                 retry_after = retry_after_seconds(response, wall)
                 if retry_after is None and response.status_code >= 400 and reset is not None:
                     retry_after = reset + LIMIT_MARGIN_SECONDS
@@ -633,7 +670,7 @@ class PoliteClient:
                 if status == REFUSAL_STATUS and timer.answered and refusals < MAX_REFUSAL_RETRIES:
                     refusals += 1
                     wait = REFUSAL_COOL_DOWN_SECONDS if retry_after is None else retry_after
-                    timer.hold_until(now + wait)
+                    hold_until(now + wait)
                     timer.slow_down *= REFUSAL_SLOW_DOWN
                     gap = self.min_interval * timer.slow_down
                     event = (
@@ -650,7 +687,7 @@ class PoliteClient:
                 problem = f"HTTP {status}"
 
             if retry_after is not None:
-                timer.hold_until(now + retry_after)
+                hold_until(now + retry_after)
             if attempt == self.max_retries:
                 asked = (
                     f"; the server asked to wait {retry_after:g} s"
@@ -662,5 +699,5 @@ class PoliteClient:
                     f"{problem}{asked}"
                 )
             if retry_after is None:
-                timer.hold_until(now + self.backoff_seconds * 2**attempt)
+                hold_until(now + self.backoff_seconds * 2**attempt)
             attempt += 1

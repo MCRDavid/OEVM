@@ -1,30 +1,120 @@
 # yaml-language-server: $schema=schema.json
 id: pod
 display_name: Pod
-ocpi_country_code: unknown
-ocpi_party_id: unknown
-adapter: ocpi_221
+ocpi_country_code: GB
+ocpi_party_id: POD # Confirmed from the feed's own country_code and party_id on 2026-10-29.
+adapter: eco_movement_pcpr
 base_url: unknown
 endpoints:
-  versions:
-    url: https://ocpi.podenergy.com/ocpi/cpo/versions
-    status: needs_testing
-    note: Given in the blueprint as an example of a version endpoint that can be probed.
+  locations:
+    url: https://open-chargepoints.com/api/ocpi/cpo/2.2.1/locations/
+    status: documented
+    note: >-
+      Confirmed in Eco-Movement's PCPR API reference on 2026-10-07. Written with the trailing
+      slash, as in the user guide's example request and the getting started page's paging
+      link (read 2026-10-26); without it the server answered HTTP 307 on 2026-10-29.
+  tariffs:
+    url: https://open-chargepoints.com/api/ocpi/cpo/2.2.1/tariffs/
+    status: documented
+  statuses:
+    url: https://open-chargepoints.com/api/statuses
+    status: documented
 auth:
-  method: unknown
-  name: null
+  method: header
+  name: Authorization
+  scheme: Token
   secret_name: POD_TOKEN
 rate_limit:
-  min_seconds_between_requests: 2
-  limits: []
-  limits_checked: unknown
-  notes: null
+  min_seconds_between_requests: 125
+  limits:
+    - publisher: Eco-Movement
+      requests: 30
+      per_seconds: 3600
+      endpoint: locations
+      quote: The `locations` endpoint has a rate limit of 30 requests per 1 hour.
+      source_url: https://developers.eco-movement.com/v2.2.1/reference/get-all-locations-pcpr-api
+      checked: 2026-10-26
+    - publisher: Eco-Movement
+      requests: 30
+      per_seconds: 3600
+      endpoint: locations
+      scope: single location
+      quote: The `locations/{id}` endpoint has a rate limit of 30 requests per 1 hour.
+      source_url: https://developers.eco-movement.com/v2.2.1/reference/get-specific-location-pcpr-api
+      checked: 2026-10-26
+    - publisher: Eco-Movement
+      requests: 30
+      per_seconds: 3600
+      endpoint: tariffs
+      quote: The `tariffs` endpoint has a rate limit of 30 requests per 1 hour.
+      source_url: https://developers.eco-movement.com/reference/get-tariffs-pcpr-api
+      checked: 2026-10-26
+    - publisher: Eco-Movement
+      requests: 1
+      per_seconds: 30
+      endpoint: statuses
+      quote: The `statuses` endpoint has a rate limit of 1 request per 30 seconds.
+      source_url: https://developers.eco-movement.com/reference/get-statuses-pcpr-api
+      checked: 2026-10-26
+  limits_checked: 2026-10-26
+  notes: >-
+    A gap of 125 seconds (the 120 seconds the strictest limit needs, plus a safety
+    margin) is kept between any two requests with this network's token, so at most 29
+    requests in any hour are sent with it. By the repository owner's decision of
+    2026-10-29 (limits_per_key) the limits are read as applying to each token. Requests
+    to open-chargepoints.com are still sent one at a time, at least 2 seconds apart
+    whichever network they are for, and a request from the server to wait holds back
+    every network on it. Eco-Movement "strongly recommends limiting simultaneous GET
+    requests to a maximum of 5". It recommends retrieving the entire dataset once a day.
+limits_per_key:
+  decided: 2026-10-29
+  basis: >-
+    Eco-Movement publishes a limit of 30 requests an hour for each of the locations and
+    tariffs endpoints and gives each network its own token, but does not say whether the
+    limits count per token or per address. The repository owner decided on 2026-10-29
+    that they are read as applying to each token, so each network keeps its own 125
+    second gap, while requests to open-chargepoints.com are still sent one at a time.
+  evidence_url: https://developers.eco-movement.com/v2.2.1/docs/eco-movement-pcpr-api-user-guide
 supports_single_location: unknown
 cors: unknown
-attribution: null
+attribution: >-
+  Contains data from Pod published under the Public Charge Point Regulations 2023, used in
+  line with the Open Government Licence v3.0.
+licence:
+  name: OGL-3.0
+  url: https://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/
+  basis: >-
+    The "PCPR Data Request - Pod Point" Google form linked from Pod's contact page (read
+    2026-10-29) names no licence, terms or rate limit; its only disclaimer is about sharing
+    the request with Eco-Movement and processing the requester's personal data.
+    Eco-Movement's email of 2026-10-26 with the token, and its PCPR API user guide and
+    reference (read 2026-10-26), state no licence or terms either. Regulation 10(5) of the
+    Public Charge Point Regulations 2023 requires the data to be available "without any
+    requirement to agree to terms and conditions regarding the use of that data", and the
+    DfT guidance says "Data must be open in line with the Open Government Licence". On
+    2026-10-10 the repository owner decided, as a standing rule for operators whose data has
+    no terms of its own, that such operators can be switched on without asking again.
+  checked: 2026-10-29
+vat_in_price:
+  decided: 2026-10-29
+  basis: >-
+    Pod's tariffs on Eco-Movement's PCPR API give every energy price with VAT 20 on
+    2026-10-29, and all 823 energy prices in its 774 tariffs are whole pence as
+    published (most often 0.38 and 0.42 pounds per kWh), while only 121 would be once
+    20% is added. Read as OCPI 2.2.1 says, with VAT added, 0.38 would be 45.6p per kWh.
+    That the stated VAT is already in the prices is inferred from the figures, not
+    stated by Pod. The repository owner decided on 2026-10-29 that the prices are read
+    as already including VAT, so no VAT is added.
+  evidence_url: https://open-chargepoints.com/api/ocpi/cpo/2.2.1/tariffs/
 engagement:
-  status: no_public_feed_found
-  evidence: []
+  status: key_on_request
+  evidence:
+    - date: 2026-10-26
+      file: evidence/pod/2026-10-26-token-email.md
+      note: >-
+        Eco-Movement's email with an expiring link to this network's token for its PCPR
+        API, sent as an "Authorization: Token" header to its OCPI 2.2.1 endpoints. The
+        token itself is not kept here.
   log:
     - date: 2026-10-09
       action: feed_searched
@@ -39,9 +129,40 @@ engagement:
         Charge Point Regulations page, and the paths /open-data, /opendata and
         /public-charge-point-regulations each answered HTTP 404.
       evidence_url: https://podenergy.com/sitemap
-access_requested: null
-access_granted: null
+    - date: 2026-10-24
+      action: request_sent
+      channel: web_form
+      summary: >-
+        Requested access to Pod's PCPR data through the request form linked from its
+        contact page, a Google form shared with Eco-Movement.
+      evidence_url: https://podenergy.com/contact-us
+    - date: 2026-10-26
+      action: key_granted
+      channel: email
+      summary: >-
+        Eco-Movement sent a token for this network's PCPR data by email, through an
+        expiring link, to be sent as an "Authorization: Token" header to its OCPI
+        2.2.1 endpoints. The token is kept as a GitHub Actions secret.
+      evidence_file: evidence/pod/2026-10-26-token-email.md
+    - date: 2026-10-29
+      action: page_checked
+      summary: >-
+        The "Open public data access" link on Pod's contact page leads to a Google form
+        titled "PCPR Data Request - Pod Point", which asks for an email address, name,
+        organisation and planned use of the data. It names no licence, terms or rate limit.
+      quote: >-
+        Request data on the location, status, and properties of the Community by Pod Point
+        network in the United Kingdom which complies with the Public Charge Point
+        Regulations.
+      evidence_url: https://docs.google.com/forms/d/e/1FAIpQLScNZ1BAAvtnlg407DU3Xaxqsrvg7kJ5XPsBX9DPQWJMQKTSWA/viewform
+access_requested: 2026-10-24
+access_granted: 2026-10-26
 sources:
+  - url: https://docs.google.com/forms/d/e/1FAIpQLScNZ1BAAvtnlg407DU3Xaxqsrvg7kJ5XPsBX9DPQWJMQKTSWA/viewform
+    note: >-
+      The "PCPR Data Request - Pod Point" Google form, linked as "Open public data access"
+      from https://podenergy.com/contact-us (read 2026-10-29). Its disclaimer says the request
+      will be shared with Eco-Movement. It names no licence, terms or rate limit.
   - url: https://podenergy.com/
     note: >-
       Pod's home page, reached from https://pod-point.com/ by redirect (read 2026-10-10).
@@ -54,7 +175,48 @@ sources:
     note: >-
       Pod's public charging page (read 2026-10-10). It covers how drivers use the network and
       says nothing about open data.
+findings:
+  - date: 2026-10-29
+    kind: spec_conformance
+    summary: >-
+      Every energy price gives VAT 20, and all 823 are whole pence as published (most
+      often 38p and 42p per kWh); with VAT added as OCPI 2.2.1 says, 0.38 would be
+      45.6p.
+    handling: >-
+      By the repository owner's decision of 2026-10-29 recorded in vat_in_price, the
+      stated VAT is read as already in each price, so it is not added again. This is
+      inferred from the figures and needs confirming by Pod. The tariffs are published
+      unchanged.
+    evidence_url: https://open-chargepoints.com/api/ocpi/cpo/2.2.1/tariffs/
+  - date: 2026-10-29
+    kind: data_quality
+    summary: >-
+      12 of the first 1,000 locations are on the Isle of Man (postcodes starting IM),
+      with country GBR. The Isle of Man is a Crown Dependency, not part of the UK.
+    handling: >-
+      They are left off the map, as every location outside the UK is (ADR 0017), and
+      listed on the feed health page.
+    evidence_url: https://open-chargepoints.com/api/ocpi/cpo/2.2.1/locations/
+  - date: 2026-10-29
+    kind: data_quality
+    summary: >-
+      Two tariffs have every price zero. In the first 1,000 locations, 163 connectors
+      at 63 locations name one of them, at sites such as Sainsbury's stores, a
+      McDonald's and schools.
+    handling: >-
+      These connectors show "Free", as the feed gives no charge. On 2026-10-29 the
+      repository owner decided they are shown as published, rather than as "Price
+      unknown". Whether drivers pay nothing at every one of these sites needs
+      confirming by Pod.
+    evidence_url: https://open-chargepoints.com/api/ocpi/cpo/2.2.1/tariffs/
 notes: >-
-  The blueprint says the ocpi_221 adapter covers Pod "once a token is granted", so a token
-  is expected, but how tokens are issued and how they are sent are not recorded.
-enabled: false
+  The blueprint said the ocpi_221 adapter would cover Pod "once a token is granted", with
+  a version endpoint at ocpi.podenergy.com as an example to probe; the token came instead
+  through Pod's request form, which is shared with Eco-Movement. Its regulation 10 data is
+  served by Eco-Movement's PCPR API (eco_movement_pcpr adapter), with a token Eco-Movement
+  sent on 2026-10-26, kept as the GitHub Actions secret POD_TOKEN. Every response on
+  2026-10-29 linked to a next page past the last record, which the adapter does not
+  follow. Eco-Movement's user guide says it creates the location ids and may change them
+  when it merges locations. On 2026-10-29 the feed reported 1,809 locations, in 2 pages of
+  1000, and 774 tariffs.
+enabled: true

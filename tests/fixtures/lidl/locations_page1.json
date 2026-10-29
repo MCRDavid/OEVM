@@ -1,0 +1,477 @@
+{
+  "request": {
+    "method": "GET",
+    "url": "https://open-chargepoints.com/api/ocpi/cpo/2.2.1/locations/?limit=1000"
+  },
+  "response": {
+    "status_code": 200,
+    "headers": {
+      "content-type": "application/json",
+      "link": "<https://open-chargepoints.com/api/ocpi/cpo/2.2.1/locations/?limit=1000&offset=3>; rel=\"next\"",
+      "x-total-count": "3",
+      "x-limit": "1000"
+    },
+    "body": {
+      "timestamp": "2026-10-29T13:36:35Z",
+      "status_code": 1000,
+      "status_message": "Success",
+      "data": [
+        {
+          "party_id": "LDL",
+          "id": "4c6dba24-ee81-4a55-8ee3-7118c99fb2de",
+          "country_code": "GB",
+          "publish": true,
+          "country": "GBR",
+          "address": "Hungerdown Lane",
+          "city": "Chippenham",
+          "postal_code": "SN14 0JW",
+          "coordinates": {
+            "latitude": "51.46527000",
+            "longitude": "-2.13717000"
+          },
+          "state": null,
+          "last_updated": "2026-10-29T12:42:59Z",
+          "opening_times": {
+            "twentyfourseven": true
+          },
+          "name": "Chippenham - Hungerdown Lane",
+          "time_zone": "Europe/London",
+          "owner": {
+            "name": "Lidl Great Britain Limited",
+            "website": ""
+          },
+          "operator": {
+            "name": "Lidl Great Britain Limited",
+            "website": ""
+          },
+          "suboperator": {
+            "name": "Lidl Great Britain Limited",
+            "website": ""
+          },
+          "energy_mix": null,
+          "charging_when_closed": true,
+          "directions": null,
+          "evses": [
+            {
+              "uid": "008f0e64-c52c-447e-b689-07f021cae428",
+              "status": "AVAILABLE",
+              "last_updated": "2026-10-29T12:35:46Z",
+              "evse_id": "GB*LDL*E00001089",
+              "physical_reference": "00001089",
+              "floor_level": null,
+              "directions": null,
+              "parking_restrictions": "customers",
+              "capabilities": [
+                "CREDIT_CARD_PAYABLE",
+                "REMOTE_START_STOP_CAPABLE",
+                "RESERVABLE",
+                "RFID_READER"
+              ],
+              "connectors": [
+                {
+                  "id": "008f0e64-c52c-447e-b689-07f021cae428",
+                  "standard": "CHADEMO",
+                  "format": "CABLE",
+                  "power_type": "DC",
+                  "last_updated": "2026-10-28T12:36:07Z",
+                  "max_amperage": 125,
+                  "max_voltage": 400,
+                  "max_electric_power": 50000,
+                  "tariff_ids": [
+                    "COM311"
+                  ]
+                }
+              ]
+            },
+            {
+              "uid": "b579a6d7-3f2c-46ff-b17e-eb10ff74da27",
+              "status": "CHARGING",
+              "last_updated": "2026-10-29T12:42:59Z",
+              "evse_id": "GB*LDL*E00001088",
+              "physical_reference": "00001088",
+              "floor_level": null,
+              "directions": null,
+              "parking_restrictions": "customers",
+              "capabilities": [
+                "CREDIT_CARD_PAYABLE",
+                "REMOTE_START_STOP_CAPABLE",
+                "RESERVABLE",
+                "RFID_READER"
+              ],
+              "connectors": [
+                {
+                  "id": "b579a6d7-3f2c-46ff-b17e-eb10ff74da27",
+                  "standard": "IEC_62196_T2",
+                  "format": "CABLE",
+                  "power_type": "AC_3_PHASE",
+                  "last_updated": "2026-10-28T12:36:08Z",
+                  "max_amperage": 32,
+                  "max_voltage": 230,
+                  "max_electric_power": 22000,
+                  "tariff_ids": [
+                    "COM311"
+                  ]
+                }
+              ]
+            },
+            {
+              "uid": "0f67f953-5e27-44e7-be66-036a9a2356a0",
+              "status": "AVAILABLE",
+              "last_updated": "2026-10-29T12:36:01Z",
+              "evse_id": "GB*LDL*E00001090",
+              "physical_reference": "00001090",
+              "floor_level": null,
+              "directions": null,
+              "parking_restrictions": "customers",
+              "capabilities": [
+                "CREDIT_CARD_PAYABLE",
+                "REMOTE_START_STOP_CAPABLE",
+                "RESERVABLE",
+                "RFID_READER"
+              ],
+              "connectors": [
+                {
+                  "id": "0f67f953-5e27-44e7-be66-036a9a2356a0",
+                  "standard": "IEC_62196_T2_COMBO",
+                  "format": "CABLE",
+                  "power_type": "DC",
+                  "last_updated": "2026-10-28T12:36:07Z",
+                  "max_amperage": 100,
+                  "max_voltage": 500,
+                  "max_electric_power": 50000,
+                  "tariff_ids": [
+                    "COM311"
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "party_id": "LDL",
+          "id": "f0450feb-f6a3-4e43-a0fd-b99b50416eae",
+          "country_code": "GB",
+          "publish": true,
+          "country": "GBR",
+          "address": "Seamer Road",
+          "city": "Scarborough",
+          "postal_code": "YO12 4HF",
+          "coordinates": {
+            "latitude": "54.26596300",
+            "longitude": "-0.41726100"
+          },
+          "state": null,
+          "last_updated": "2026-10-29T12:48:51Z",
+          "opening_times": {
+            "twentyfourseven": true
+          },
+          "name": "hadleigh",
+          "time_zone": "Europe/London",
+          "owner": {
+            "name": "Lidl Great Britain Limited",
+            "website": ""
+          },
+          "operator": {
+            "name": "Lidl Great Britain Limited",
+            "website": ""
+          },
+          "suboperator": {
+            "name": "Lidl Great Britain Limited",
+            "website": ""
+          },
+          "energy_mix": null,
+          "charging_when_closed": true,
+          "directions": null,
+          "evses": [
+            {
+              "uid": "1f3264b0-0b76-4fc2-bb2e-5566f22d69e6",
+              "status": "AVAILABLE",
+              "last_updated": "2026-10-29T12:42:15Z",
+              "evse_id": "GB*LDL*E00001636",
+              "physical_reference": "00001636",
+              "floor_level": null,
+              "directions": null,
+              "parking_restrictions": "customers",
+              "capabilities": [
+                "CREDIT_CARD_PAYABLE",
+                "REMOTE_START_STOP_CAPABLE",
+                "RESERVABLE",
+                "RFID_READER"
+              ],
+              "connectors": [
+                {
+                  "id": "1f3264b0-0b76-4fc2-bb2e-5566f22d69e6",
+                  "standard": "IEC_62196_T2",
+                  "format": "CABLE",
+                  "power_type": "AC_3_PHASE",
+                  "last_updated": "2026-10-28T10:53:06Z",
+                  "max_amperage": 32,
+                  "max_voltage": 230,
+                  "max_electric_power": 22000,
+                  "tariff_ids": [
+                    "COM311"
+                  ]
+                }
+              ]
+            },
+            {
+              "uid": "67f33b9a-e99b-423c-8e1a-99770e744abb",
+              "status": "INOPERATIVE",
+              "last_updated": "2026-10-29T12:48:26Z",
+              "evse_id": "GB*LDL*E00001637",
+              "physical_reference": "00001637",
+              "floor_level": null,
+              "directions": null,
+              "parking_restrictions": "customers",
+              "capabilities": [
+                "CREDIT_CARD_PAYABLE",
+                "REMOTE_START_STOP_CAPABLE",
+                "RESERVABLE",
+                "RFID_READER"
+              ],
+              "connectors": [
+                {
+                  "id": "67f33b9a-e99b-423c-8e1a-99770e744abb",
+                  "standard": "CHADEMO",
+                  "format": "CABLE",
+                  "power_type": "DC",
+                  "last_updated": "2026-10-28T10:53:06Z",
+                  "max_amperage": 125,
+                  "max_voltage": 400,
+                  "max_electric_power": 50000,
+                  "tariff_ids": [
+                    "COM311"
+                  ]
+                }
+              ]
+            },
+            {
+              "uid": "51ad750a-8932-4b5b-85fa-0013781d51c6",
+              "status": "CHARGING",
+              "last_updated": "2026-10-29T12:48:51Z",
+              "evse_id": "GB*LDL*E00001638",
+              "physical_reference": "00001638",
+              "floor_level": null,
+              "directions": null,
+              "parking_restrictions": "customers",
+              "capabilities": [
+                "CREDIT_CARD_PAYABLE",
+                "REMOTE_START_STOP_CAPABLE",
+                "RESERVABLE",
+                "RFID_READER"
+              ],
+              "connectors": [
+                {
+                  "id": "51ad750a-8932-4b5b-85fa-0013781d51c6",
+                  "standard": "IEC_62196_T2_COMBO",
+                  "format": "CABLE",
+                  "power_type": "DC",
+                  "last_updated": "2026-10-28T10:53:06Z",
+                  "max_amperage": 100,
+                  "max_voltage": 500,
+                  "max_electric_power": 50000,
+                  "tariff_ids": [
+                    "COM311"
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "party_id": "LDL",
+          "id": "3e88c3a5-8630-419b-93ef-3a79b6d556c3",
+          "country_code": "GB",
+          "publish": true,
+          "country": "GBR",
+          "address": "Connaught Road",
+          "city": "Kingston upon Hull",
+          "postal_code": "HU7 3AP",
+          "coordinates": {
+            "latitude": "53.79471900",
+            "longitude": "-0.35606000"
+          },
+          "state": null,
+          "last_updated": "2026-10-29T13:09:08Z",
+          "opening_times": {
+            "twentyfourseven": true
+          },
+          "name": "Lidl HUL-Connaught Road",
+          "time_zone": "Europe/Warsaw",
+          "owner": {
+            "name": "Lidl Great Britain Limited",
+            "website": ""
+          },
+          "operator": {
+            "name": "Lidl Great Britain Limited",
+            "website": ""
+          },
+          "suboperator": {
+            "name": "Lidl Great Britain Limited",
+            "website": ""
+          },
+          "energy_mix": null,
+          "charging_when_closed": true,
+          "directions": null,
+          "evses": [
+            {
+              "uid": "a6825d6f-8e77-4d24-9269-6116639196a0",
+              "status": "AVAILABLE",
+              "last_updated": "2026-10-29T13:09:08Z",
+              "evse_id": "GB*LDL*E00000564",
+              "physical_reference": "00000564",
+              "floor_level": null,
+              "directions": null,
+              "parking_restrictions": "customers",
+              "capabilities": [
+                "CREDIT_CARD_PAYABLE",
+                "REMOTE_START_STOP_CAPABLE",
+                "RESERVABLE",
+                "RFID_READER"
+              ],
+              "connectors": [
+                {
+                  "id": "a6825d6f-8e77-4d24-9269-6116639196a0",
+                  "standard": "CHADEMO",
+                  "format": "CABLE",
+                  "power_type": "DC",
+                  "last_updated": "2026-10-28T11:09:18Z",
+                  "max_amperage": 125,
+                  "max_voltage": 400,
+                  "max_electric_power": 50000,
+                  "tariff_ids": [
+                    "COM311"
+                  ]
+                }
+              ]
+            },
+            {
+              "uid": "295ab3e7-4e60-4dc5-b51b-b1d9a9bd6c70",
+              "status": "AVAILABLE",
+              "last_updated": "2026-10-29T13:09:08Z",
+              "evse_id": "GB*LDL*E00000563",
+              "physical_reference": "00000563",
+              "floor_level": null,
+              "directions": null,
+              "parking_restrictions": "customers",
+              "capabilities": [
+                "CREDIT_CARD_PAYABLE",
+                "REMOTE_START_STOP_CAPABLE",
+                "RESERVABLE",
+                "RFID_READER"
+              ],
+              "connectors": [
+                {
+                  "id": "295ab3e7-4e60-4dc5-b51b-b1d9a9bd6c70",
+                  "standard": "IEC_62196_T2_COMBO",
+                  "format": "CABLE",
+                  "power_type": "DC",
+                  "last_updated": "2026-10-28T11:09:18Z",
+                  "max_amperage": 100,
+                  "max_voltage": 500,
+                  "max_electric_power": 50000,
+                  "tariff_ids": [
+                    "COM311"
+                  ]
+                }
+              ]
+            },
+            {
+              "uid": "df5a8d2d-844c-491b-873a-e5e0e72ac1c1",
+              "status": "CHARGING",
+              "last_updated": "2026-10-29T12:47:22Z",
+              "evse_id": "GB*LDL*E00000562",
+              "physical_reference": "00000562",
+              "floor_level": null,
+              "directions": null,
+              "parking_restrictions": "customers",
+              "capabilities": [
+                "CREDIT_CARD_PAYABLE",
+                "REMOTE_START_STOP_CAPABLE",
+                "RESERVABLE",
+                "RFID_READER"
+              ],
+              "connectors": [
+                {
+                  "id": "df5a8d2d-844c-491b-873a-e5e0e72ac1c1",
+                  "standard": "IEC_62196_T2",
+                  "format": "CABLE",
+                  "power_type": "AC_3_PHASE",
+                  "last_updated": "2026-10-28T11:09:19Z",
+                  "max_amperage": 32,
+                  "max_voltage": 230,
+                  "max_electric_power": 22000,
+                  "tariff_ids": [
+                    "COM311"
+                  ]
+                }
+              ]
+            },
+            {
+              "uid": "848be937-7bec-439c-a748-f370a0d0eb6b",
+              "status": "AVAILABLE",
+              "last_updated": "2026-10-29T02:43:19Z",
+              "evse_id": "GB*LDL*E00001553",
+              "physical_reference": "00001553",
+              "floor_level": null,
+              "directions": null,
+              "parking_restrictions": "customers",
+              "capabilities": [
+                "CREDIT_CARD_PAYABLE",
+                "REMOTE_START_STOP_CAPABLE",
+                "RESERVABLE",
+                "RFID_READER"
+              ],
+              "connectors": [
+                {
+                  "id": "848be937-7bec-439c-a748-f370a0d0eb6b",
+                  "standard": "IEC_62196_T2",
+                  "format": "SOCKET",
+                  "power_type": "AC_1_PHASE",
+                  "last_updated": "2026-10-28T10:53:55Z",
+                  "max_amperage": 32,
+                  "max_voltage": 230,
+                  "max_electric_power": 7360,
+                  "tariff_ids": [
+                    "COM309"
+                  ]
+                }
+              ]
+            },
+            {
+              "uid": "8ddaf8b6-5b3a-4189-9352-88c66ba268eb",
+              "status": "AVAILABLE",
+              "last_updated": "2026-10-29T02:43:11Z",
+              "evse_id": "GB*LDL*E00001552",
+              "physical_reference": "00001552",
+              "floor_level": null,
+              "directions": null,
+              "parking_restrictions": "customers",
+              "capabilities": [
+                "CREDIT_CARD_PAYABLE",
+                "REMOTE_START_STOP_CAPABLE",
+                "RESERVABLE",
+                "RFID_READER"
+              ],
+              "connectors": [
+                {
+                  "id": "8ddaf8b6-5b3a-4189-9352-88c66ba268eb",
+                  "standard": "IEC_62196_T2",
+                  "format": "SOCKET",
+                  "power_type": "AC_1_PHASE",
+                  "last_updated": "2026-10-28T10:53:55Z",
+                  "max_amperage": 32,
+                  "max_voltage": 230,
+                  "max_electric_power": 7360,
+                  "tariff_ids": [
+                    "COM309"
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  }
+}
