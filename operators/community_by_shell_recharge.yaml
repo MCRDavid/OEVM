@@ -58,14 +58,17 @@ rate_limit:
       checked: 2026-10-26
   limits_checked: 2026-10-26
   notes: >-
-    A gap of 125 seconds (the 120 seconds the strictest limit needs, plus a safety
-    margin) is kept between any two requests with this network's token, so at most 29
-    requests in any hour are sent with it. By the repository owner's decision of
-    2026-10-29 (limits_per_key) the limits are read as applying to each token. Requests
-    to open-chargepoints.com are still sent one at a time, at least 2 seconds apart
-    whichever network they are for, and a request from the server to wait holds back
-    every network on it. Eco-Movement "strongly recommends limiting simultaneous GET
-    requests to a maximum of 5". It recommends retrieving the entire dataset once a day.
+    By the repository owner's decisions of 2026-10-29 the limits are read as applying to
+    each network's own token (limits_per_key) and as an allowance rather than a spacing
+    (limits_as_allowance). With this network's token, no period of an hour and a second
+    holds more than 29 requests to an endpoint limited to 30 an hour, and each request
+    starts at least 2 seconds after the last one finished. At most 5 requests are sent to
+    open-chargepoints.com at the same time, whichever network they are for, started at
+    least 1 second apart. Any retry, wait the server asks for or refusal puts every
+    network back to a gap of 125 seconds (the 120 seconds the strictest limit needs, plus
+    a safety margin) and one request at a time for the rest of the run. Eco-Movement
+    "strongly recommends limiting simultaneous GET requests to a maximum of 5". It
+    recommends retrieving the entire dataset once a day.
 limits_per_key:
   decided: 2026-10-29
   basis: >-
@@ -74,6 +77,21 @@ limits_per_key:
     limits count per token or per address. The repository owner decided on 2026-10-29
     that they are read as applying to each token, so each network keeps its own 125
     second gap, while requests to open-chargepoints.com are still sent one at a time.
+  evidence_url: https://developers.eco-movement.com/v2.2.1/docs/eco-movement-pcpr-api-user-guide
+limits_as_allowance:
+  decided: 2026-10-29
+  basis: >-
+    Eco-Movement publishes its limits as a number of requests an hour (30 for each of the
+    locations and tariffs endpoints) and does not say they must be spread evenly. The
+    repository owner decided on 2026-10-29 that each network's token may use that
+    allowance close together once a day, as the whole dataset fits within it (the largest
+    network, ubitricity, took 14 requests on 2026-10-29), keeping one request in hand as
+    the margin.
+  at_once: 5
+  at_once_source: >-
+    Eco-Movement's PCPR API user guide "strongly recommends limiting simultaneous GET
+    requests to a maximum of 5". It does not say whether that counts per token or in
+    total; the owner chose 5 in total, which keeps within either reading.
   evidence_url: https://developers.eco-movement.com/v2.2.1/docs/eco-movement-pcpr-api-user-guide
 supports_single_location: supported
 cors: needs_testing

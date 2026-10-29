@@ -11,6 +11,14 @@
   any wait the server asks for holds back every key on it (ADR 0003, amended). Such
   operators may be fetched at the same time (pipeline.run): each waits for its own key's
   gap, then takes the host's turn, so their requests never overlap.
+- Where the owner has also recorded limits_as_allowance, each key keeps within its limits
+  as an allowance instead of a spacing: no more requests in any period of a limit's
+  length, plus the margin, than one fewer than the limit, counted for the endpoint each
+  limit names, and each request at least SHARED_HOST_SECONDS after the key's last one
+  finished. The host then gets at most at_once requests at the same time, started at
+  least MIN_SECONDS_BETWEEN_REQUESTS apart. Any retry, wait the server asks for or
+  refusal puts every key on the host back to its gap, one request at a time, for the
+  rest of the run (ADR 0003, amended).
 - Retries connection errors, timeouts, HTTP 429 and HTTP 5xx with exponential backoff.
 - Honours every Retry-After header, in seconds or as an HTTP date, on any attempt. One
   that cannot be read is treated as a long wait. If the wait is longer than this project
@@ -53,7 +61,7 @@ import ssl
 import threading
 import time
 from collections.abc import Callable, Iterable
-from contextlib import nullcontext
+from contextlib import ExitStack, nullcontext
 from dataclasses import dataclass, field
 from datetime import UTC, datetime
 from email.utils import parsedate_to_datetime
@@ -292,6 +300,12 @@ class HostTimer:
     answered says the host has answered at least once in this run. turn is held from the
     wait before a request until its answer has been read, so clients that share the
     timer from different threads send one request at a time.
+
+    For limits read as an allowance (limits_as_allowance): finished keeps, for a key, when
+    each request finished and the endpoint it was for; started_at is when the host's last
+    request was sent; slots, made on first use, limits the requests at the same time; and
+    spaced says something went wrong at the host, so every key is back to its gap and turn
+    is held for each whole request again.
     """
 
     last_finished_at: float | None = None
@@ -299,6 +313,12 @@ class HostTimer:
     slow_down: float = 1.0
     answered: bool = False
     turn: threading.Lock = field(default_factory=threading.Lock, repr=False, compare=False)
+    finished: list[tuple[float, str | None]] = field(
+        default_factory=list, repr=False, compare=False
+    )
+    started_at: float | None = None
+    spaced: bool = False
+    slots: threading.BoundedSemaphore | None = field(default=None, repr=False, compare=False)
 
     def hold_until(self, moment: float) -> None:
         self.not_before = moment if self.not_before is None else max(self.not_before, moment)
@@ -314,6 +334,20 @@ def host_timer(url: str, key_name: str | None = None) -> HostTimer:
     host = urlsplit(url).netloc.lower()
     with _HOST_TIMERS_LOCK:
         return _HOST_TIMERS.setdefault(f"{host} {key_name}" if key_name else host, HostTimer())
+
+
+def host_slots(timer: HostTimer, at_once: int) -> threading.BoundedSemaphore:
+    """The host's limit on requests at the same time, made the first time it is needed."""
+    with _HOST_TIMERS_LOCK:
+        if timer.slots is None:
+            timer.slots = threading.BoundedSemaphore(at_once)
+        return timer.slots
+
+
+def counts_towards(limited: str, endpoint: str | None) -> bool:
+    """Whether a request to endpoint counts towards a limit on `limited` ('all' or one
+    endpoint). A request whose endpoint is not known counts towards every limit."""
+    return limited == "all" or endpoint is None or limited == endpoint
 
 
 def reset_host_timers() -> None:
@@ -443,6 +477,12 @@ def certificate_problem(
     )
 
 
+def _place(url: str) -> str:
+    """url's host and path, to tell which endpoint a request is for."""
+    parts = urlsplit(url)
+    return parts.netloc.lower() + parts.path
+
+
 def required_gap(config: OperatorConfig) -> float:
     """The gap the client keeps: never less than the floor or what any limit needs."""
     rate = config.rate_limit
@@ -501,6 +541,23 @@ class PoliteClient:
             if config.limits_per_key is not None and config.auth.method != "none"
             else None
         )
+        # The owner's decision to read them as an allowance for the key: for each published
+        # limit, its endpoint, the requests allowed (one fewer than the limit, as the
+        # margin) and the period they are counted over (the limit's, plus the margin).
+        self._allowance = config.limits_as_allowance if self._key_name else None
+        self._allowances = [
+            (limit.endpoint, max(1, limit.requests - 1), limit.per_seconds + LIMIT_MARGIN_SECONDS)
+            for limit in (config.rate_limit.limits if self._allowance else ())
+        ]
+        self._endpoints = sorted(
+            (
+                (_place(endpoint.url), kind)
+                for kind, endpoint in config.endpoints.items()
+                if endpoint.url != "unknown"
+            ),
+            key=lambda pair: len(pair[0]),
+            reverse=True,
+        )
         self.max_retries = max_retries
         self.backoff_seconds = backoff_seconds
         self._sleep = sleep
@@ -537,17 +594,52 @@ class PoliteClient:
                 "try later"
             )
 
-    def _wait_turn(self, timer: HostTimer, host: HostTimer | None) -> None:
-        """Wait for this client's gap, and with a per-key timer also for the host's."""
+    def _spaced(self, host: HostTimer | None) -> bool:
+        """Whether this client keeps its gap: always, unless the owner reads its limits as
+        an allowance and nothing has gone wrong at the host in this run."""
+        return self._allowance is None or host is None or host.spaced
+
+    def _endpoint_of(self, url: str) -> str | None:
+        """The operator file's endpoint that url belongs to, or None if it is none of them."""
+        place = _place(url)
+        return next((kind for prefix, kind in self._endpoints if place.startswith(prefix)), None)
+
+    def _allowance_ready(self, timer: HostTimer, endpoint: str | None) -> float:
+        """When a request to endpoint keeps within every limit's allowance for this key."""
+        ready = 0.0
+        for limited, allowed, period in self._allowances:
+            if not counts_towards(limited, endpoint):
+                continue
+            times = [at for at, kind in timer.finished if counts_towards(limited, kind)]
+            if len(times) >= allowed:
+                ready = max(ready, times[-allowed] + period)
+        return ready
+
+    def _wait_turn(
+        self,
+        timer: HostTimer,
+        host: HostTimer | None,
+        *,
+        at_host: bool = True,
+        endpoint: str | None = None,
+    ) -> None:
+        """Wait for this client's gap or allowance, and with a per-key timer at_host also
+        for the host's turn."""
+        spaced = self._spaced(host)
         now = self._clock()
         ready = now
         if timer.last_finished_at is not None:
-            ready = max(ready, timer.last_finished_at + self.min_interval * timer.slow_down)
+            gap = self.min_interval * timer.slow_down if spaced else SHARED_HOST_SECONDS
+            ready = max(ready, timer.last_finished_at + gap)
+        if not spaced:
+            ready = max(ready, self._allowance_ready(timer, endpoint))
         if timer.not_before is not None:
             ready = max(ready, timer.not_before)
-        if host is not None:
-            if host.last_finished_at is not None:
+        if host is not None and at_host:
+            if spaced and host.last_finished_at is not None:
                 ready = max(ready, host.last_finished_at + SHARED_HOST_SECONDS)
+            if self._allowance is not None and host.started_at is not None:
+                ready = max(ready, host.started_at + MIN_SECONDS_BETWEEN_REQUESTS)
             if host.not_before is not None:
                 ready = max(ready, host.not_before)
         if ready > now:
@@ -636,10 +728,13 @@ class PoliteClient:
         # host, SHARED_HOST_SECONDS apart, and every wait the server asks for.
         host = host_timer(url) if self._key_name else None
         timers = (timer,) if host is None else (timer, host)
+        endpoint = self._endpoint_of(url) if self._allowance is not None else None
 
         def hold_until(moment: float) -> None:
             for each in timers:
                 each.hold_until(moment)
+            if host is not None and self._allowance is not None:
+                host.spaced = True
 
         request_url = with_params(url, self._auth_params) if self._auth_params else url
         relayed = self._relay is not None and urlsplit(url).netloc.lower() in self._relay.hosts
@@ -653,14 +748,25 @@ class PoliteClient:
             for each in timers:
                 self._refuse_if_held(each, url)
             if host is not None:
-                # This key's own gap first, so a key that is waiting never holds the host.
-                self._wait_turn(timer, None)
-            # The host's turn, for clients of keys on one host fetched at the same time:
-            # held until the answer, and any wait it asks for, has been recorded.
-            with host.turn if host is not None else nullcontext():
+                # This key's own gap or allowance first, so a key that is waiting never
+                # holds the host.
+                self._wait_turn(timer, host, at_host=False, endpoint=endpoint)
+            with ExitStack() as turn:
                 if host is not None:
+                    if self._allowance is not None:
+                        turn.enter_context(host_slots(host, self._allowance.at_once))
+                    # The host's turn, for clients of keys on one host fetched at the same
+                    # time: held until the answer, and any wait it asks for, has been
+                    # recorded. Read as an allowance, only while the request starts.
+                    whole = self._spaced(host)
+                    if whole:
+                        turn.enter_context(host.turn)
                     self._refuse_if_held(host, url)
-                self._wait_turn(timer, host)
+                    with nullcontext() if whole else host.turn:
+                        self._wait_turn(timer, host, endpoint=endpoint)
+                        host.started_at = self._clock()
+                else:
+                    self._wait_turn(timer, None)
                 self.requests_made += 1
                 response = None
                 try:
@@ -669,6 +775,8 @@ class PoliteClient:
                     problem, retry_after = type(exc).__name__, None
                 finally:
                     timer.last_finished_at = self._clock()
+                    if self._allowance is not None:
+                        timer.finished.append((timer.last_finished_at, endpoint))
                     if host is not None:
                         host.last_finished_at = timer.last_finished_at
                 now = timer.last_finished_at

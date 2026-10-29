@@ -151,14 +151,23 @@ def _copies_problems(operators: dict[str, OperatorConfig]) -> list[str]:
 
 def _per_key_problems(operators: dict[str, OperatorConfig]) -> list[str]:
     """Check that operators sharing a feed host all read its limits per key, or none do,
-    so no operator's shared gap is shortened by others' per-key gaps."""
+    so no operator's shared gap is shortened by others' per-key gaps, and likewise that
+    they all read them as an allowance with the same number of requests at once, or none."""
     by_host: dict[str, set[bool]] = {}
+    allowances: dict[str, set[int | None]] = {}
     for config in operators.values():
+        allowance = config.limits_as_allowance
         for host in feed_hosts(config):
             by_host.setdefault(host, set()).add(config.limits_per_key is not None)
+            allowances.setdefault(host, set()).add(allowance and allowance.at_once)
     return [
         f"operators on {host} must all record limits_per_key, or none of them"
         for host, readings in sorted(by_host.items())
+        if len(readings) > 1
+    ] + [
+        f"operators on {host} must all record limits_as_allowance with the same at_once, "
+        "or none of them"
+        for host, readings in sorted(allowances.items())
         if len(readings) > 1
     ]
 

@@ -19,10 +19,10 @@ summary line says how many operators have finished and where the others have got
 import sys
 import threading
 import time
-from collections.abc import Callable, Collection
+from collections.abc import Callable, Mapping
 from typing import TextIO
 
-from adapters.http import relay_route, required_gap
+from adapters.http import SHARED_HOST_SECONDS, relay_route, required_gap
 from schema.operator import OperatorConfig
 
 # A line for the first page of a module, then for every tenth page, or sooner when an
@@ -107,16 +107,18 @@ class RunProgress:
         )
         return f"{line}; still fetching: {', '.join(running)}" if running else None
 
-    def run_started(self, groups: list[list[str]], turns: Collection[int] = ()) -> None:
+    def run_started(self, groups: list[list[str]], turns: Mapping[int, int] | None = None) -> None:
         """groups: operator ids that share a host, fetched one after another, except the
-        groups numbered (from 0) in turns, whose operators are fetched together, taking
-        turns for each request, as the owner reads their limits per key."""
+        groups numbered (from 0) in turns, whose operators are fetched together, as the
+        owner reads their limits per key, with at most turns[n] requests at once."""
         self._run_started = self._last_summary = self._clock()
         count = self._count = sum(len(group) for group in groups)
         together = "".join(
             f" The {len(groups[n])} operators in the group with {groups[n][0]} are fetched "
-            "together, one request at a time, as their limits are read per key."
-            for n in sorted(turns)
+            "together, "
+            + ("one request at a time" if at_once == 1 else f"up to {at_once} requests at once")
+            + ", as their limits are read per key."
+            for n, at_once in sorted((turns or {}).items())
         )
         if len(groups) <= 1:
             self._say(
@@ -139,9 +141,13 @@ class RunProgress:
         """Raises FeedError, as the client would, if the relay is only half set up."""
         gap = required_gap(config)
         via = ", through the relay" if relay_route(config) else ""
+        pace = f"{gap:g} s between requests"
+        if config.limits_per_key is not None and config.limits_as_allowance is not None:
+            # Read as an allowance, pages can come SHARED_HOST_SECONDS apart.
+            gap, pace = SHARED_HOST_SECONDS, "within its limits read as an allowance"
         reporter = OperatorProgress(self, config.id, gap)
         self._operators[config.id] = reporter
-        self._say(f"{config.id} ({number} of {count}): starting, {gap:g} s between requests{via}")
+        self._say(f"{config.id} ({number} of {count}): starting, {pace}{via}")
         return reporter
 
     def operator_done(self, operator_id: str, *, requests: int) -> None:

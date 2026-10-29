@@ -14,7 +14,9 @@ host are fetched one after another; groups that share no host are fetched at the
 time, so a slow feed no longer holds up the others. Where every operator in a group has
 the owner's limits_per_key decision, they are fetched together instead: each keeps its own
 key's gap and they take turns at the host, one request at a time (adapters.http; the
-owner's decision of 29 October 2026, ADR 0003). If one operator fails, its failure
+owner's decision of 29 October 2026, ADR 0003). Where they also have limits_as_allowance,
+each key keeps within its limits as an allowance and the host gets up to at_once requests
+at the same time, until anything goes wrong there. If one operator fails, its failure
 is logged, the others are still fetched and published, and the map keeps showing the
 failed operator's last good copy from --previous (the files last published) when there is
 one (ADR 0018). The exit code is 3 when every failed operator kept its last good copy,
@@ -97,8 +99,17 @@ def host_groups(configs: list[OperatorConfig]) -> list[list[OperatorConfig]]:
 def takes_turns(group: list[OperatorConfig]) -> bool:
     """Whether a host group's operators may be fetched together: only when every one has
     the owner's limits_per_key decision. Their client still sends the host one request at
-    a time, at least SHARED_HOST_SECONDS apart, each key keeping its own gap."""
+    a time, at least SHARED_HOST_SECONDS apart, each key keeping its own gap, or at most
+    at_once at a time under limits_as_allowance (adapters.http)."""
     return len(group) > 1 and all(config.limits_per_key is not None for config in group)
+
+
+def at_once(group: list[OperatorConfig]) -> int:
+    """Most requests a group fetched together sends its host at the same time: the number
+    in the owner's limits_as_allowance decision (the same in every file on the host), or
+    one at a time without it."""
+    allowance = group[0].limits_as_allowance
+    return 1 if allowance is None else allowance.at_once
 
 
 def run_operator(
@@ -368,7 +379,7 @@ def main(argv: list[str] | None = None) -> int:
             groups = host_groups(configs)
             progress.run_started(
                 [[config.id for config in group] for group in groups],
-                turns=[n for n, group in enumerate(groups) if takes_turns(group)],
+                turns={n: at_once(group) for n, group in enumerate(groups) if takes_turns(group)},
             )
             numbers = {config.id: number for number, config in enumerate(configs, start=1)}
 
@@ -414,7 +425,8 @@ def main(argv: list[str] | None = None) -> int:
 
             # Groups share no host, so they run at the same time; within a group, one
             # operator at a time, unless the owner reads every one's limits per key, when
-            # their requests take turns (CLAUDE.md, rate limits).
+            # their requests take turns, or as an allowance, up to at_once at a time
+            # (CLAUDE.md, rate limits).
             with ThreadPoolExecutor(max_workers=len(groups)) as pool:
                 outcomes = [o for group in pool.map(fetch_group, groups) for o in group]
             fetched = {o.operator_id: o for o in outcomes if not isinstance(o, str)}
