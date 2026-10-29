@@ -10,10 +10,10 @@ header, as Eco-Movement's token email of 28 October 2026 says:
 
 To keep the fixtures short:
 
-- `locations_page1.json` keeps 3 of the 266 locations, chosen to cover a DC site whose tariff
-  has a parking price of 0, a site with AC and DC connectors and EVSEs out of order and
-  UNKNOWN, and one more of the first records.
-- `tariffs_page1.json` keeps the 4 of the 308 tariffs that those locations' connectors name.
+- `locations_page1.json` keeps 2 of the 266 locations, chosen to cover a DC site whose tariff
+  has a parking price of 0, and a site with AC and DC connectors and EVSEs out of order and
+  UNKNOWN.
+- `tariffs_page1.json` keeps the 3 of the 308 tariffs that those locations' connectors name.
 - `X-Total-Count` was changed to match the kept counts, and the `Link` header's offset to
   the kept count. Every response recorded that day linked to a next page past the last
   record, which the adapter does not follow (see `adapters/eco_movement.py`). Every record is

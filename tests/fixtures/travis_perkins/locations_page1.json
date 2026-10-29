@@ -7,8 +7,8 @@
     "status_code": 200,
     "headers": {
       "content-type": "application/json",
-      "link": "<https://open-chargepoints.com/api/ocpi/cpo/2.2.1/locations/?limit=1000&offset=3>; rel=\"next\"",
-      "x-total-count": "3",
+      "link": "<https://open-chargepoints.com/api/ocpi/cpo/2.2.1/locations/?limit=1000&offset=2>; rel=\"next\"",
+      "x-total-count": "2",
       "x-limit": "1000"
     },
     "body": {
@@ -16,134 +16,6 @@
       "status_code": 1000,
       "status_message": "Success",
       "data": [
-        {
-          "party_id": "GFX",
-          "id": "bb911cd6-0953-4a72-85c8-8ead51336780",
-          "country_code": "GB",
-          "publish": true,
-          "country": "GBR",
-          "address": "Teal Park",
-          "city": "Lincoln",
-          "postal_code": "LN6 3AG",
-          "coordinates": {
-            "latitude": "53.19763700",
-            "longitude": "-0.61404500"
-          },
-          "state": null,
-          "last_updated": "2026-10-27T23:59:16Z",
-          "opening_times": {
-            "regular_hours": [
-              {
-                "period_begin": "08:00",
-                "period_end": "12:00",
-                "weekday": 6
-              },
-              {
-                "period_begin": "07:00",
-                "period_end": "17:00",
-                "weekday": 5
-              },
-              {
-                "period_begin": "07:00",
-                "period_end": "17:00",
-                "weekday": 4
-              },
-              {
-                "period_begin": "07:00",
-                "period_end": "17:00",
-                "weekday": 3
-              },
-              {
-                "period_begin": "07:00",
-                "period_end": "17:00",
-                "weekday": 2
-              },
-              {
-                "period_begin": "07:00",
-                "period_end": "17:00",
-                "weekday": 1
-              }
-            ],
-            "twentyfourseven": false
-          },
-          "name": "Travis Perkins - Lincoln South",
-          "time_zone": "Europe/London",
-          "owner": {
-            "name": "Travis Perkins",
-            "website": ""
-          },
-          "operator": {
-            "name": "Travis Perkins",
-            "website": ""
-          },
-          "suboperator": {
-            "name": "Travis Perkins",
-            "website": ""
-          },
-          "energy_mix": null,
-          "charging_when_closed": true,
-          "directions": null,
-          "evses": [
-            {
-              "uid": "GB-GFX-EDRAX00808-1",
-              "status": "AVAILABLE",
-              "last_updated": "2026-09-11T09:48:47Z",
-              "evse_id": "GB*GFX*EDRAX00808*1",
-              "physical_reference": "DRAX00808",
-              "floor_level": null,
-              "directions": null,
-              "parking_restrictions": null,
-              "capabilities": [
-                "REMOTE_START_STOP_CAPABLE",
-                "RFID_READER"
-              ],
-              "connectors": [
-                {
-                  "id": "1",
-                  "standard": "IEC_62196_T2",
-                  "format": "SOCKET",
-                  "power_type": "AC_3_PHASE",
-                  "last_updated": "2026-10-27T23:59:16Z",
-                  "max_amperage": 32,
-                  "max_voltage": 230,
-                  "max_electric_power": 3700,
-                  "tariff_ids": [
-                    "53f76568be8d4225b2fb578c98fe1db6"
-                  ]
-                }
-              ]
-            },
-            {
-              "uid": "GB-GFX-EDRAX00808-2",
-              "status": "AVAILABLE",
-              "last_updated": "2026-08-29T03:37:19Z",
-              "evse_id": "GB*GFX*EDRAX00808*2",
-              "physical_reference": "DRAX00808",
-              "floor_level": null,
-              "directions": null,
-              "parking_restrictions": null,
-              "capabilities": [
-                "REMOTE_START_STOP_CAPABLE",
-                "RFID_READER"
-              ],
-              "connectors": [
-                {
-                  "id": "2",
-                  "standard": "IEC_62196_T2",
-                  "format": "SOCKET",
-                  "power_type": "AC_3_PHASE",
-                  "last_updated": "2026-10-27T23:59:16Z",
-                  "max_amperage": 32,
-                  "max_voltage": 230,
-                  "max_electric_power": 3700,
-                  "tariff_ids": [
-                    "53f76568be8d4225b2fb578c98fe1db6"
-                  ]
-                }
-              ]
-            }
-          ]
-        },
         {
           "party_id": "GFX",
           "id": "c684d828-fed6-47bc-9fc2-3ffa835ab9c7",

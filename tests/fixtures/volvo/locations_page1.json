@@ -7,8 +7,8 @@
     "status_code": 200,
     "headers": {
       "content-type": "application/json",
-      "link": "<https://open-chargepoints.com/api/ocpi/cpo/2.2.1/locations/?limit=1000&offset=3>; rel=\"next\"",
-      "x-total-count": "3",
+      "link": "<https://open-chargepoints.com/api/ocpi/cpo/2.2.1/locations/?limit=1000&offset=2>; rel=\"next\"",
+      "x-total-count": "2",
       "x-limit": "1000"
     },
     "body": {
@@ -16,140 +16,6 @@
       "status_code": 1000,
       "status_message": "Success",
       "data": [
-        {
-          "party_id": "GFX",
-          "id": "7a81d015-db19-4e9b-be8c-38f1dd238c09",
-          "country_code": "GB",
-          "publish": true,
-          "country": "GBR",
-          "address": "Bedford Road",
-          "city": "Northampton",
-          "postal_code": "NN1 5NT",
-          "coordinates": {
-            "latitude": "52.23314000",
-            "longitude": "-0.88236000"
-          },
-          "state": null,
-          "last_updated": "2026-10-28T16:21:22Z",
-          "opening_times": {
-            "regular_hours": [
-              {
-                "period_begin": "08:00",
-                "period_end": "18:00",
-                "weekday": 1
-              },
-              {
-                "period_begin": "08:00",
-                "period_end": "18:00",
-                "weekday": 2
-              },
-              {
-                "period_begin": "08:00",
-                "period_end": "18:00",
-                "weekday": 3
-              },
-              {
-                "period_begin": "08:00",
-                "period_end": "18:00",
-                "weekday": 4
-              },
-              {
-                "period_begin": "08:00",
-                "period_end": "18:00",
-                "weekday": 5
-              },
-              {
-                "period_begin": "08:30",
-                "period_end": "17:00",
-                "weekday": 6
-              },
-              {
-                "period_begin": "10:00",
-                "period_end": "16:00",
-                "weekday": 7
-              }
-            ],
-            "twentyfourseven": false
-          },
-          "name": "Volvo Charging Bells Motor Group Northampton",
-          "time_zone": "Europe/London",
-          "owner": {
-            "name": "Volvo",
-            "website": "https://www.volvo.com/en/"
-          },
-          "operator": {
-            "name": "Volvo",
-            "website": "https://www.volvo.com/en/"
-          },
-          "suboperator": {
-            "name": "Volvo",
-            "website": "https://www.volvo.com/en/"
-          },
-          "energy_mix": null,
-          "charging_when_closed": true,
-          "directions": null,
-          "evses": [
-            {
-              "uid": "GB-GFX-EDRAX00718-2",
-              "status": "CHARGING",
-              "last_updated": "2026-10-28T14:16:19Z",
-              "evse_id": "GB*GFX*EDRAX00718*2",
-              "physical_reference": "DRAX00718",
-              "floor_level": null,
-              "directions": null,
-              "parking_restrictions": null,
-              "capabilities": [
-                "REMOTE_START_STOP_CAPABLE",
-                "RFID_READER"
-              ],
-              "connectors": [
-                {
-                  "id": "2",
-                  "standard": "IEC_62196_T2_COMBO",
-                  "format": "CABLE",
-                  "power_type": "DC",
-                  "last_updated": "2026-10-27T22:51:17Z",
-                  "max_amperage": 435,
-                  "max_voltage": 1000,
-                  "max_electric_power": 175000,
-                  "tariff_ids": [
-                    "47e723a790904168ad8e8e31c5223eba"
-                  ]
-                }
-              ]
-            },
-            {
-              "uid": "GB-GFX-EDRAX00718-1",
-              "status": "CHARGING",
-              "last_updated": "2026-10-28T16:21:22Z",
-              "evse_id": "GB*GFX*EDRAX00718*1",
-              "physical_reference": "DRAX00718",
-              "floor_level": null,
-              "directions": null,
-              "parking_restrictions": null,
-              "capabilities": [
-                "CREDIT_CARD_PAYABLE",
-                "REMOTE_START_STOP_CAPABLE",
-                "RFID_READER"
-              ],
-              "connectors": [
-                {
-                  "id": "1",
-                  "standard": "IEC_62196_T2_COMBO",
-                  "format": "CABLE",
-                  "power_type": "DC",
-                  "last_updated": "2026-10-27T22:51:17Z",
-                  "max_amperage": 435,
-                  "max_voltage": 1000,
-                  "max_electric_power": 175000,
-                  "tariff_ids": [
-                    "47e723a790904168ad8e8e31c5223eba"
-                  ]
-                }
-              ]
-            }
-          ]
-        },
         {
           "party_id": "GFX",
           "id": "3362d771-6822-44a8-bfe2-ec8c4ab4ce21",

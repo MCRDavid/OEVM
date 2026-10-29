@@ -413,6 +413,13 @@ SYSTEM_ID = "-".join(("1a2b3c4d", "5e6f", "4a1b", "8c2d", "9e0f1a2b3c4d"))
         ("[Electroverse as EMSP] Roaming Tariff", "[Electroverse as EMSP] Roaming Tariff"),
         (f"Tariff_{SYSTEM_ID}", None),
         (None, None),
+        (
+            "<div>Pre-auth held.<br><br><strong>Idle fees apply</strong></div><div>£0.10/min</div>",
+            "Pre-auth held. Idle fees apply £0.10/min",
+        ),
+        ("<p>Pay&nbsp;as you go &amp; save</p>", "Pay as you go & save"),
+        ("<br/>", None),
+        ("Under <22kW", "Under <22kW"),
     ],
 )
 def test_system_names_are_made_readable_and_plain_text_is_kept(text, expected):

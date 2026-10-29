@@ -7,8 +7,8 @@
     "status_code": 200,
     "headers": {
       "content-type": "application/json",
-      "link": "<https://open-chargepoints.com/api/ocpi/cpo/2.2.1/tariffs/?limit=1000&offset=4>; rel=\"next\"",
-      "x-total-count": "4",
+      "link": "<https://open-chargepoints.com/api/ocpi/cpo/2.2.1/tariffs/?limit=1000&offset=3>; rel=\"next\"",
+      "x-total-count": "3",
       "x-limit": "1000"
     },
     "body": {
@@ -80,46 +80,6 @@
                   "price": 0,
                   "vat": null,
                   "step_size": 60
-                }
-              ]
-            }
-          ]
-        },
-        {
-          "party_id": "TNM",
-          "id": "PP359125611_999999",
-          "currency": "GBP",
-          "tariff_alt_url": null,
-          "tariff_alt_text": [
-            {
-              "language": "en",
-              "text": "ALL: \u00a30.71 per kWh"
-            }
-          ],
-          "last_updated": "2026-10-28T18:04:19Z",
-          "country_code": "GB",
-          "elements": [
-            {
-              "restrictions": {
-                "day_of_week": [
-                  "MONDAY",
-                  "TUESDAY",
-                  "WEDNESDAY",
-                  "THURSDAY",
-                  "FRIDAY",
-                  "SATURDAY",
-                  "SUNDAY"
-                ],
-                "end_time": "23:59",
-                "start_date": "2026-10-28",
-                "start_time": "00:00"
-              },
-              "price_components": [
-                {
-                  "type": "ENERGY",
-                  "price": 0.7083,
-                  "vat": null,
-                  "step_size": 1
                 }
               ]
             }

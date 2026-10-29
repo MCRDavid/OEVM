@@ -7,8 +7,8 @@
     "status_code": 200,
     "headers": {
       "content-type": "application/json",
-      "link": "<https://open-chargepoints.com/api/ocpi/cpo/2.2.1/locations/?limit=1000&offset=3>; rel=\"next\"",
-      "x-total-count": "3",
+      "link": "<https://open-chargepoints.com/api/ocpi/cpo/2.2.1/locations/?limit=1000&offset=2>; rel=\"next\"",
+      "x-total-count": "2",
       "x-limit": "1000"
     },
     "body": {
@@ -391,81 +391,6 @@
                   "max_electric_power": 120000,
                   "tariff_ids": [
                     "PP359125645_999999"
-                  ]
-                }
-              ]
-            }
-          ]
-        },
-        {
-          "party_id": "TNM",
-          "id": "879",
-          "country_code": "GB",
-          "publish": true,
-          "country": "GBR",
-          "address": "WINTHORPE ROUNDABOUT",
-          "city": "Newark",
-          "postal_code": "NG24 2NY",
-          "coordinates": {
-            "latitude": "53.09507400",
-            "longitude": "-0.78266100"
-          },
-          "state": null,
-          "last_updated": "2026-10-29T17:58:38Z",
-          "opening_times": {
-            "twentyfourseven": true
-          },
-          "name": "Shell Recharge Shell Little Waitrose Newark",
-          "time_zone": "Europe/London",
-          "owner": {
-            "name": "Shell Recharge",
-            "website": ""
-          },
-          "operator": {
-            "name": "Shell Recharge",
-            "website": ""
-          },
-          "energy_mix": null,
-          "charging_when_closed": true,
-          "directions": null,
-          "evses": [
-            {
-              "uid": "08727e81690b4e49babd298ed33b6cb5",
-              "status": "AVAILABLE",
-              "last_updated": "2026-10-29T17:58:38Z",
-              "evse_id": "GB*TNM*EGL44*01*2518*01",
-              "physical_reference": "01",
-              "floor_level": null,
-              "directions": null,
-              "parking_restrictions": null,
-              "capabilities": [
-                "REMOTE_START_STOP_CAPABLE"
-              ],
-              "connectors": [
-                {
-                  "id": "68568",
-                  "standard": "IEC_62196_T2_COMBO",
-                  "format": "CABLE",
-                  "power_type": "DC",
-                  "last_updated": "2026-10-28T21:42:31Z",
-                  "max_amperage": 300,
-                  "max_voltage": 600,
-                  "max_electric_power": 180000,
-                  "tariff_ids": [
-                    "PP359125611_999999"
-                  ]
-                },
-                {
-                  "id": "68569",
-                  "standard": "CHADEMO",
-                  "format": "CABLE",
-                  "power_type": "DC",
-                  "last_updated": "2026-10-28T21:42:31Z",
-                  "max_amperage": 150,
-                  "max_voltage": 400,
-                  "max_electric_power": 60000,
-                  "tariff_ids": [
-                    "PP359125611_999999"
                   ]
                 }
               ]
