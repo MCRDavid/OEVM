@@ -10,6 +10,10 @@ The records are read by the ocpi_221 adapter, with two differences:
 - Every request asks for an explicit page size. The documentation gives two different
   defaults (1000 on the getting started page, 1 in the endpoint reference), and the
   largest page it allows is 1000, so pages of 1000 keep the number of requests down.
+- Paging stops once the X-Total-Count records have arrived. Every response recorded on
+  2026-10-29 still had a next link, to an offset past the last record (for example
+  offset=77 when X-Total-Count was 77), so following it would cost one more request per
+  module per network.
 - date_from is refused. The user guide says it works for locations only, while the
   tariffs reference lists it, so it is left until tested.
 
@@ -50,4 +54,5 @@ def fetch(
         max_pages=max_pages,
         now=now,
         progress=progress,
+        stop_at_total=True,
     )

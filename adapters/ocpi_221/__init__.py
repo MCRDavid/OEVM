@@ -139,10 +139,12 @@ def fetch_feed(
     max_pages: int | None = None,
     now: datetime | None = None,
     progress: PageProgress = NO_PROGRESS,
+    stop_at_total: bool = False,
 ) -> AdapterResult:
     """Fetch and convert an OCPI 2.2.1 feed, whatever the operator file's adapter name.
 
     For adapters that are a thin layer over this one, such as eco_movement_pcpr.
+    stop_at_total is passed to fetch_module.
     """
     fetched_at = now or datetime.now(UTC).replace(microsecond=0)
     fetched: dict[str, list[ModuleFetch]] = {module: [] for module in MODULES}
@@ -162,6 +164,7 @@ def fetch_feed(
                         progress=progress,
                         envelope=config.response_envelope,
                         responses=responses,
+                        stop_at_total=stop_at_total,
                     )
                 )
         except FeedError as exc:

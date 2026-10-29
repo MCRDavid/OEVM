@@ -95,6 +95,57 @@ def test_asks_for_pages_of_1000_and_follows_the_link_header():
     ]
 
 
+def test_paging_stops_once_x_total_count_records_have_arrived():
+    # As recorded on 2026-10-29: the last page still links to an offset past the end.
+    past_the_end = f"{LOCATIONS}?offset=2&limit=1000"
+    server = Server(
+        {
+            f"{LOCATIONS}?limit=1000": httpx.Response(
+                200,
+                json=ocpi_body([location("A"), location("B")]),
+                headers={"Link": f'<{past_the_end}>; rel="next"', "X-Total-Count": "2"},
+            ),
+            f"{TARIFFS}?limit=1000": httpx.Response(
+                200,
+                json=ocpi_body([]),
+                headers={
+                    "Link": f'<{TARIFFS}?offset=0&limit=1000>; rel="next"',
+                    "X-Total-Count": "0",
+                },
+            ),
+        }
+    )
+    result = fetch_with(server)
+
+    assert [str(r.url) for r in server.requests] == [
+        f"{LOCATIONS}?limit=1000",
+        f"{TARIFFS}?limit=1000",
+    ]
+    assert result.complete
+    assert len(result.locations) == 2
+
+
+def test_paging_follows_the_link_while_records_are_still_to_come():
+    second = f"{LOCATIONS}?offset=1&limit=1000"
+    server = Server(
+        {
+            f"{LOCATIONS}?limit=1000": httpx.Response(
+                200,
+                json=ocpi_body([location("A")]),
+                headers={"Link": f'<{second}>; rel="next"', "X-Total-Count": "2"},
+            ),
+            second: httpx.Response(
+                200, json=ocpi_body([location("B")]), headers={"X-Total-Count": "2"}
+            ),
+            f"{TARIFFS}?limit=1000": httpx.Response(200, json=ocpi_body([])),
+        }
+    )
+    result = fetch_with(server)
+
+    assert len(server.requests) == 3
+    assert [loc.id for loc in result.locations] == ["ubitricity:GB:UBI:A", "ubitricity:GB:UBI:B"]
+
+
 @pytest.mark.parametrize(("asked", "sent"), [(50, 50), (5000, 1000)])
 def test_a_page_size_is_kept_up_to_the_documented_largest(asked, sent):
     server = Server(
