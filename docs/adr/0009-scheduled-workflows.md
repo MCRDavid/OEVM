@@ -58,7 +58,8 @@ from main, and a keepalive. Accept: three green scheduled runs in a row; site li
 - Whether re-enabling a workflow through the API restarts GitHub's 60 day count of
   inactivity. GitHub documents the 60 day rule but not this. Other public projects use
   the same approach; it can only be confirmed by watching a quiet repository for 60 days.
-- How long a full char.gy fetch takes. The fetch job allows 60 minutes.
+- How long a full char.gy fetch takes. The fetch job allowed 60 minutes; since 29 October 2026 it allows 150,
+  for the Eco-Movement networks (ADR 0014).
 - Action versions: `actions/upload-artifact@v4`, `actions/download-artifact@v4` and
   `actions/deploy-pages@v4` were pinned from memory, as their release pages could not be
   checked from the build environment. Dependabot proposes newer versions weekly.

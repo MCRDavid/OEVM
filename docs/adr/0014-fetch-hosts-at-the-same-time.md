@@ -62,3 +62,10 @@ hosts are switched on. Gridserve allows one request every 30 seconds (31 s with 
 margin), and the four operators on open-chargepoints.com share 29 requests an hour; one
 after another, those would add their whole time on top of char.gy's. In groups, the run
 takes as long as its slowest group.
+
+Amended 29 October 2026: with the 13 networks on Eco-Movement's PCPR API switched on,
+open-chargepoints.com is the slowest group. A full fetch there is 39 requests (26 pages of
+locations and 13 of tariffs, pages of 1000) 125 seconds apart, about 80 minutes, so the
+fetch job's time limit goes from 60 to 150 minutes and the map is published at about 05:45
+UTC rather than soon after the 04:17 UTC start. Whether Eco-Movement's limits apply per
+token needs confirming by Eco-Movement; if they do, each network could keep its own gap.
