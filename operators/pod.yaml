@@ -63,7 +63,24 @@ rate_limit:
     dataset once a day.
 supports_single_location: unknown
 cors: unknown
-attribution: null
+attribution: >-
+  Contains data from Pod published under the Public Charge Point Regulations 2023, used in
+  line with the Open Government Licence v3.0.
+licence:
+  name: OGL-3.0
+  url: https://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/
+  basis: >-
+    The "PCPR Data Request - Pod Point" Google form linked from Pod's contact page (read
+    2026-10-29) names no licence, terms or rate limit; its only disclaimer is about sharing
+    the request with Eco-Movement and processing the requester's personal data.
+    Eco-Movement's email of 2026-10-26 with the token, and its PCPR API user guide and
+    reference (read 2026-10-26), state no licence or terms either. Regulation 10(5) of the
+    Public Charge Point Regulations 2023 requires the data to be available "without any
+    requirement to agree to terms and conditions regarding the use of that data", and the
+    DfT guidance says "Data must be open in line with the Open Government Licence". On
+    2026-10-10 the repository owner decided, as a standing rule for operators whose data has
+    no terms of its own, that such operators can be switched on without asking again.
+  checked: 2026-10-29
 engagement:
   status: key_on_request
   evidence:
@@ -102,9 +119,25 @@ engagement:
         expiring link, to be sent as an "Authorization: Token" header to its OCPI
         2.2.1 endpoints. The token is kept as a GitHub Actions secret.
       evidence_file: evidence/pod/2026-10-26-token-email.md
+    - date: 2026-10-29
+      action: page_checked
+      summary: >-
+        The "Open public data access" link on Pod's contact page leads to a Google form
+        titled "PCPR Data Request - Pod Point", which asks for an email address, name,
+        organisation and planned use of the data. It names no licence, terms or rate limit.
+      quote: >-
+        Request data on the location, status, and properties of the Community by Pod Point
+        network in the United Kingdom which complies with the Public Charge Point
+        Regulations.
+      evidence_url: https://docs.google.com/forms/d/e/1FAIpQLScNZ1BAAvtnlg407DU3Xaxqsrvg7kJ5XPsBX9DPQWJMQKTSWA/viewform
 access_requested: 2026-10-24
 access_granted: 2026-10-26
 sources:
+  - url: https://docs.google.com/forms/d/e/1FAIpQLScNZ1BAAvtnlg407DU3Xaxqsrvg7kJ5XPsBX9DPQWJMQKTSWA/viewform
+    note: >-
+      The "PCPR Data Request - Pod Point" Google form, linked as "Open public data access"
+      from https://podenergy.com/contact-us (read 2026-10-29). Its disclaimer says the request
+      will be shared with Eco-Movement. It names no licence, terms or rate limit.
   - url: https://podenergy.com/
     note: >-
       Pod's home page, reached from https://pod-point.com/ by redirect (read 2026-10-10).

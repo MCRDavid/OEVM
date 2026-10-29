@@ -63,8 +63,26 @@ rate_limit:
     dataset once a day.
 supports_single_location: unknown
 cors: unknown
-attribution: null
-licence: null
+attribution: >-
+  Contains data from Source EV Ltd, the data provider, published under the Public Charge
+  Point Regulations 2023, used in line with the Open Government Licence v3.0.
+licence:
+  name: OGL-3.0
+  url: https://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/
+  basis: >-
+    Source EV's Request Compliance Data page (read 2026-10-10) says "PCPR open data provided
+    by Source EV is licensed on terms equivalent to the UK Open Government Licence. You are
+    free to copy, publish and distribute the data provided you attribute Source EV Ltd as
+    the data provider and do not misrepresent the data or imply endorsement." The page also
+    asks requesters to "Sign the agreement as required under the PCPR". The request of
+    2026-10-24 asked for a copy of that agreement; on 2026-10-26 Eco-Movement sent the token
+    by email with no agreement to sign, and its PCPR API user guide and reference (read
+    2026-10-26) state no terms. On 2026-10-26 the repository owner decided to use the data
+    on the terms the page states, attributing Source EV Ltd as the data provider. Regulation
+    10(5) of the Public Charge Point Regulations 2023 requires the data to be available
+    "without any requirement to agree to terms and conditions regarding the use of that
+    data".
+  checked: 2026-10-29
 engagement:
   status: key_on_request
   evidence:

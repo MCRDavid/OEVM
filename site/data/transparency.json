@@ -3747,8 +3747,12 @@
           "status": "documented"
         }
       ],
-      "licence": null,
-      "attribution": null,
+      "licence": {
+        "name": "OGL-3.0",
+        "url": "https://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/",
+        "checked": "2026-10-29"
+      },
+      "attribution": "Contains data from Allego published under the Public Charge Point Regulations 2023, used in line with the Open Government Licence v3.0.",
       "missing_publish_flag": null,
       "swapped_coordinates": null,
       "nonstandard_statuses": null,
@@ -4371,8 +4375,12 @@
           "status": "documented"
         }
       ],
-      "licence": null,
-      "attribution": null,
+      "licence": {
+        "name": "OGL-3.0",
+        "url": "https://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/",
+        "checked": "2026-10-29"
+      },
+      "attribution": "Contains data from Blink Charging published under the Public Charge Point Regulations 2023, used in line with the Open Government Licence v3.0.",
       "missing_publish_flag": null,
       "swapped_coordinates": null,
       "nonstandard_statuses": null,
@@ -4764,8 +4772,12 @@
           "status": "documented"
         }
       ],
-      "licence": null,
-      "attribution": null,
+      "licence": {
+        "name": "OGL-3.0",
+        "url": "https://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/",
+        "checked": "2026-10-29"
+      },
+      "attribution": "Contains data from ChargePoint published under the Public Charge Point Regulations 2023, used in line with the Open Government Licence v3.0.",
       "missing_publish_flag": null,
       "swapped_coordinates": null,
       "nonstandard_statuses": null,
@@ -5821,8 +5833,12 @@
           "status": "documented"
         }
       ],
-      "licence": null,
-      "attribution": null,
+      "licence": {
+        "name": "OGL-3.0",
+        "url": "https://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/",
+        "checked": "2026-10-29"
+      },
+      "attribution": "Contains data from ESB ecars (Northern Ireland) published under the Public Charge Point Regulations 2023, used in line with the Open Government Licence v3.0.",
       "missing_publish_flag": null,
       "swapped_coordinates": null,
       "nonstandard_statuses": null,
@@ -5973,8 +5989,12 @@
           "status": "documented"
         }
       ],
-      "licence": null,
-      "attribution": null,
+      "licence": {
+        "name": "OGL-3.0",
+        "url": "https://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/",
+        "checked": "2026-10-29"
+      },
+      "attribution": "Contains data from ESB Energy published under the Public Charge Point Regulations 2023, used in line with the Open Government Licence v3.0.",
       "missing_publish_flag": null,
       "swapped_coordinates": null,
       "nonstandard_statuses": null,
@@ -6374,8 +6394,12 @@
           "status": "documented"
         }
       ],
-      "licence": null,
-      "attribution": null,
+      "licence": {
+        "name": "OGL-3.0",
+        "url": "https://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/",
+        "checked": "2026-10-29"
+      },
+      "attribution": "Contains data from evpoint published under the Public Charge Point Regulations 2023, used in line with the Open Government Licence v3.0.",
       "missing_publish_flag": null,
       "swapped_coordinates": null,
       "nonstandard_statuses": null,
@@ -6526,8 +6550,12 @@
           "status": "documented"
         }
       ],
-      "licence": null,
-      "attribution": null,
+      "licence": {
+        "name": "OGL-3.0",
+        "url": "https://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/",
+        "checked": "2026-10-29"
+      },
+      "attribution": "Contains data from evyve published under the Public Charge Point Regulations 2023, used in line with the Open Government Licence v3.0.",
       "missing_publish_flag": null,
       "swapped_coordinates": null,
       "nonstandard_statuses": null,
@@ -7529,8 +7557,12 @@
           "status": "documented"
         }
       ],
-      "licence": null,
-      "attribution": null,
+      "licence": {
+        "name": "OGL-3.0",
+        "url": "https://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/",
+        "checked": "2026-10-29"
+      },
+      "attribution": "Contains data from IONITY published under the Public Charge Point Regulations 2023, used in line with the Open Government Licence v3.0.",
       "missing_publish_flag": null,
       "swapped_coordinates": null,
       "nonstandard_statuses": null,
@@ -7873,8 +7905,12 @@
           "status": "documented"
         }
       ],
-      "licence": null,
-      "attribution": null,
+      "licence": {
+        "name": "OGL-3.0",
+        "url": "https://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/",
+        "checked": "2026-10-29"
+      },
+      "attribution": "Contains data from Lidl published under the Public Charge Point Regulations 2023, used in line with the Open Government Licence v3.0.",
       "missing_publish_flag": null,
       "swapped_coordinates": null,
       "nonstandard_statuses": null,
@@ -8413,8 +8449,8 @@
       "engagement": {
         "status": "key_on_request",
         "label": "Key issued on request",
-        "headline": "Key issued on request (as of 2026-10-26)",
-        "as_of": "2026-10-26",
+        "headline": "Key issued on request (as of 2026-10-29)",
+        "as_of": "2026-10-29",
         "last_request": "2026-10-24",
         "last_response": {
           "date": "2026-10-26",
@@ -8473,6 +8509,17 @@
             "quote": null,
             "evidence_url": null,
             "evidence_file": "evidence/pod/2026-10-26-token-email.md"
+          },
+          {
+            "date": "2026-10-29",
+            "action": "page_checked",
+            "action_label": "Operator's page checked",
+            "channel": null,
+            "channel_label": null,
+            "summary": "The \"Open public data access\" link on Pod's contact page leads to a Google form titled \"PCPR Data Request - Pod Point\", which asks for an email address, name, organisation and planned use of the data. It names no licence, terms or rate limit.",
+            "quote": "Request data on the location, status, and properties of the Community by Pod Point network in the United Kingdom which complies with the Public Charge Point Regulations.",
+            "evidence_url": "https://docs.google.com/forms/d/e/1FAIpQLScNZ1BAAvtnlg407DU3Xaxqsrvg7kJ5XPsBX9DPQWJMQKTSWA/viewform",
+            "evidence_file": null
           }
         ]
       },
@@ -8495,8 +8542,12 @@
           "status": "documented"
         }
       ],
-      "licence": null,
-      "attribution": null,
+      "licence": {
+        "name": "OGL-3.0",
+        "url": "https://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/",
+        "checked": "2026-10-29"
+      },
+      "attribution": "Contains data from Pod published under the Public Charge Point Regulations 2023, used in line with the Open Government Licence v3.0.",
       "missing_publish_flag": null,
       "swapped_coordinates": null,
       "nonstandard_statuses": null,
@@ -8824,8 +8875,12 @@
           "status": "documented"
         }
       ],
-      "licence": null,
-      "attribution": null,
+      "licence": {
+        "name": "OGL-3.0",
+        "url": "https://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/",
+        "checked": "2026-10-29"
+      },
+      "attribution": "Contains data from RAW Charging published under the Public Charge Point Regulations 2023, used in line with the Open Government Licence v3.0.",
       "missing_publish_flag": null,
       "swapped_coordinates": null,
       "nonstandard_statuses": null,
@@ -9237,8 +9292,12 @@
           "status": "documented"
         }
       ],
-      "licence": null,
-      "attribution": null,
+      "licence": {
+        "name": "OGL-3.0",
+        "url": "https://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/",
+        "checked": "2026-10-29"
+      },
+      "attribution": "Contains data from Source EV Ltd, the data provider, published under the Public Charge Point Regulations 2023, used in line with the Open Government Licence v3.0.",
       "missing_publish_flag": null,
       "swapped_coordinates": null,
       "nonstandard_statuses": null,
@@ -9693,8 +9752,12 @@
           "status": "documented"
         }
       ],
-      "licence": null,
-      "attribution": null,
+      "licence": {
+        "name": "OGL-3.0",
+        "url": "https://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/",
+        "checked": "2026-10-29"
+      },
+      "attribution": "Contains data from ubitricity published under the Public Charge Point Regulations 2023, used in line with the Open Government Licence v3.0.",
       "missing_publish_flag": null,
       "swapped_coordinates": null,
       "nonstandard_statuses": null,

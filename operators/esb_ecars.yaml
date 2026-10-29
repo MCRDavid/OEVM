@@ -63,8 +63,23 @@ rate_limit:
     dataset once a day.
 supports_single_location: unknown
 cors: unknown
-attribution: null
-licence: null
+attribution: >-
+  Contains data from ESB ecars (Northern Ireland) published under the Public Charge Point
+  Regulations 2023, used in line with the Open Government Licence v3.0.
+licence:
+  name: OGL-3.0
+  url: https://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/
+  basis: >-
+    ESB ecars' pages have no open data page and state no terms for the data (read
+    2026-10-22). Eco-Movement's email of 2026-10-26 with the token, and its PCPR API user
+    guide and reference (read 2026-10-26), state no licence or terms either. Regulation
+    10(5) of the Public Charge Point Regulations 2023 requires the data to be available
+    "without any requirement to agree to terms and conditions regarding the use of that
+    data", and the DfT guidance says "Data must be open in line with the Open Government
+    Licence". On 2026-10-10 the repository owner decided, as a standing rule for operators
+    whose data has no terms of its own, that such operators can be switched on without
+    asking again.
+  checked: 2026-10-29
 engagement:
   status: key_on_request
   evidence:
