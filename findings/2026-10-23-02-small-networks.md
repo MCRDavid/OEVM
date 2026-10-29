@@ -68,6 +68,10 @@ Found on 23 October 2026, each called once to see that it answers:
 None of them is on the map yet. Each needs its terms read and an entry in the register first, and
 Urban Fox's own feed and Monta's copy of the same sites must not both be shown.
 
+**Update, 24 October 2026:** all four are on the map since the daily run of 24 October 2026, with
+Urban Fox's own feed shown in place of Monta's copies of its sites. See [the post on six more
+networks](findings/six-more-networks/).
+
 ## Car parks
 
 Some car park companies run charging under their own name. On 11 October 2026 we read the websites
@@ -90,6 +94,9 @@ Government Licence v3.0" and "Each key can make 120 requests a minute", and its 
 
 A first read on 23 October 2026 took two requests and returned 177 locations, all in the UK, with
 478 of their 485 connectors linked to a tariff in the feed. It is not on the map yet.
+
+**Update, 24 October 2026:** PLUG Charging is on the map since the daily run of 24 October 2026,
+with 177 locations. See [the post on six more networks](findings/six-more-networks/).
 
 Our view: PLUG Charging's page answers every question this project has had to ask other operators,
 on licence, rate limit and how to get access, in one place.

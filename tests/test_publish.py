@@ -39,7 +39,7 @@ def test_every_output_validates_against_its_exported_schema(results, tmp_path):
     jsonschema.validate(layer, schema("map-layer"))
     jsonschema.validate(json.loads((data / "manifest.json").read_text()), schema("manifest"))
     details = sorted((data / "loc").glob("*/*.json"))
-    assert len(details) == len(layer["features"]) == 99
+    assert len(details) == len(layer["features"]) == 119
     for path in details:
         jsonschema.validate(json.loads(path.read_text()), schema("location-detail"))
 
@@ -67,7 +67,9 @@ def test_the_manifest_records_operators_attribution_and_sizes(results, tmp_path)
         "chargeplace_scotland",
         "chargy",
         "clenergy_ev",
+        "enfield_council",
         "evolt",
+        "fastned",
         "geniepoint",
         "globe_ev",
         "jolt",
@@ -78,6 +80,7 @@ def test_the_manifest_records_operators_attribution_and_sizes(results, tmp_path)
         "plug_charging",
         "pogo_charge",
         "scottishpower_recharge",
+        "three_ti",
         "urban_fox",
     }
     for operator_id, entry in manifest.operators.items():
@@ -86,7 +89,7 @@ def test_the_manifest_records_operators_attribution_and_sizes(results, tmp_path)
         assert entry.licence == "OGL-3.0"
     sizes = {f.path: f for f in manifest.files}
     assert sizes["data/locations.geojson"].bytes > sizes["data/locations.geojson"].gzip_bytes > 0
-    assert sizes["data/loc/"].files == 99
+    assert sizes["data/loc/"].files == 119
     assert any("gzipped" in line for line in out.report)
 
 

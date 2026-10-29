@@ -1,0 +1,2094 @@
+{
+  "request": {
+    "method": "GET",
+    "url": "https://uk-public.api.fastned.nl/uk-public/ocpi/cpo/2.2.1/locations"
+  },
+  "response": {
+    "status_code": 200,
+    "headers": {
+      "content-type": "application/json",
+      "x-total-count": "7",
+      "x-limit": "500"
+    },
+    "body": {
+      "data": [
+        {
+          "country_code": "GB",
+          "party_id": "FAS",
+          "id": "50003",
+          "publish": true,
+          "name": "West Wear Street",
+          "address": "West Wear Street",
+          "city": "Sunderland",
+          "postal_code": "SR1 1TW",
+          "country": "GBR",
+          "coordinates": {
+            "latitude": "54.909240",
+            "longitude": "-1.377450"
+          },
+          "parking_type": "ON_STREET",
+          "evses": [
+            {
+              "uid": "5003729",
+              "status": "REMOVED",
+              "capabilities": [
+                "REMOTE_START_STOP_CAPABLE",
+                "RFID_READER"
+              ],
+              "connectors": [
+                {
+                  "id": "2",
+                  "standard": "CHADEMO",
+                  "format": "CABLE",
+                  "power_type": "DC",
+                  "max_voltage": 400,
+                  "max_amperage": 125,
+                  "max_electric_power": 50000,
+                  "tariff_ids": [
+                    "678"
+                  ],
+                  "last_updated": "2026-01-19T11:09:59.162Z"
+                },
+                {
+                  "id": "1",
+                  "standard": "IEC_62196_T2",
+                  "format": "CABLE",
+                  "power_type": "AC_3_PHASE",
+                  "max_voltage": 230,
+                  "max_amperage": 55,
+                  "max_electric_power": 38000,
+                  "tariff_ids": [
+                    "678"
+                  ],
+                  "last_updated": "2026-01-19T11:09:59.162Z"
+                },
+                {
+                  "id": "3",
+                  "standard": "IEC_62196_T2_COMBO",
+                  "format": "CABLE",
+                  "power_type": "DC",
+                  "max_voltage": 400,
+                  "max_amperage": 125,
+                  "max_electric_power": 50000,
+                  "tariff_ids": [
+                    "678"
+                  ],
+                  "last_updated": "2026-01-19T11:09:59.162Z"
+                }
+              ],
+              "coordinates": {
+                "latitude": "54.909240",
+                "longitude": "-1.377450"
+              },
+              "physical_reference": "4400202",
+              "last_updated": "2025-04-24T13:42:46.412Z"
+            },
+            {
+              "uid": "5000016",
+              "status": "REMOVED",
+              "capabilities": [
+                "REMOTE_START_STOP_CAPABLE",
+                "RFID_READER"
+              ],
+              "connectors": [
+                {
+                  "id": "2",
+                  "standard": "CHADEMO",
+                  "format": "CABLE",
+                  "power_type": "DC",
+                  "max_voltage": 400,
+                  "max_amperage": 125,
+                  "max_electric_power": 50000,
+                  "tariff_ids": [
+                    "678"
+                  ],
+                  "last_updated": "2026-01-19T11:09:59.162Z"
+                },
+                {
+                  "id": "1",
+                  "standard": "IEC_62196_T2",
+                  "format": "CABLE",
+                  "power_type": "AC_3_PHASE",
+                  "max_voltage": 230,
+                  "max_amperage": 55,
+                  "max_electric_power": 38000,
+                  "tariff_ids": [
+                    "678"
+                  ],
+                  "last_updated": "2026-01-19T11:09:59.162Z"
+                },
+                {
+                  "id": "3",
+                  "standard": "IEC_62196_T2_COMBO",
+                  "format": "CABLE",
+                  "power_type": "DC",
+                  "max_voltage": 400,
+                  "max_amperage": 125,
+                  "max_electric_power": 50000,
+                  "tariff_ids": [
+                    "678"
+                  ],
+                  "last_updated": "2026-01-19T11:09:59.162Z"
+                }
+              ],
+              "coordinates": {
+                "latitude": "54.909240",
+                "longitude": "-1.377450"
+              },
+              "physical_reference": "4400201",
+              "last_updated": "2024-11-21T12:48:31.907Z"
+            },
+            {
+              "uid": "5000021",
+              "status": "REMOVED",
+              "capabilities": [
+                "REMOTE_START_STOP_CAPABLE",
+                "RFID_READER"
+              ],
+              "connectors": [
+                {
+                  "id": "1",
+                  "standard": "IEC_62196_T2",
+                  "format": "CABLE",
+                  "power_type": "AC_3_PHASE",
+                  "max_voltage": 230,
+                  "max_amperage": 55,
+                  "max_electric_power": 38000,
+                  "tariff_ids": [
+                    "678"
+                  ],
+                  "last_updated": "2026-01-19T11:09:59.162Z"
+                },
+                {
+                  "id": "2",
+                  "standard": "CHADEMO",
+                  "format": "CABLE",
+                  "power_type": "DC",
+                  "max_voltage": 400,
+                  "max_amperage": 125,
+                  "max_electric_power": 50000,
+                  "tariff_ids": [
+                    "678"
+                  ],
+                  "last_updated": "2026-01-19T11:09:59.162Z"
+                },
+                {
+                  "id": "3",
+                  "standard": "IEC_62196_T2_COMBO",
+                  "format": "CABLE",
+                  "power_type": "DC",
+                  "max_voltage": 400,
+                  "max_amperage": 125,
+                  "max_electric_power": 50000,
+                  "tariff_ids": [
+                    "678"
+                  ],
+                  "last_updated": "2026-01-19T11:09:59.162Z"
+                }
+              ],
+              "coordinates": {
+                "latitude": "54.909240",
+                "longitude": "-1.377450"
+              },
+              "physical_reference": "4400206",
+              "last_updated": "2024-11-21T12:48:45.936Z"
+            },
+            {
+              "uid": "5000017",
+              "status": "REMOVED",
+              "capabilities": [
+                "REMOTE_START_STOP_CAPABLE",
+                "RFID_READER"
+              ],
+              "connectors": [
+                {
+                  "id": "3",
+                  "standard": "IEC_62196_T2_COMBO",
+                  "format": "CABLE",
+                  "power_type": "DC",
+                  "max_voltage": 400,
+                  "max_amperage": 125,
+                  "max_electric_power": 50000,
+                  "tariff_ids": [
+                    "678"
+                  ],
+                  "last_updated": "2026-01-19T11:09:59.162Z"
+                },
+                {
+                  "id": "1",
+                  "standard": "IEC_62196_T2",
+                  "format": "CABLE",
+                  "power_type": "AC_3_PHASE",
+                  "max_voltage": 230,
+                  "max_amperage": 55,
+                  "max_electric_power": 38000,
+                  "tariff_ids": [
+                    "678"
+                  ],
+                  "last_updated": "2026-01-19T11:09:59.162Z"
+                },
+                {
+                  "id": "2",
+                  "standard": "CHADEMO",
+                  "format": "CABLE",
+                  "power_type": "DC",
+                  "max_voltage": 400,
+                  "max_amperage": 125,
+                  "max_electric_power": 50000,
+                  "tariff_ids": [
+                    "678"
+                  ],
+                  "last_updated": "2026-01-19T11:09:59.162Z"
+                }
+              ],
+              "coordinates": {
+                "latitude": "54.909240",
+                "longitude": "-1.377450"
+              },
+              "physical_reference": "4400202",
+              "last_updated": "2024-11-21T12:48:36.841Z"
+            },
+            {
+              "uid": "5000018",
+              "status": "REMOVED",
+              "capabilities": [
+                "REMOTE_START_STOP_CAPABLE",
+                "RFID_READER"
+              ],
+              "connectors": [
+                {
+                  "id": "1",
+                  "standard": "IEC_62196_T2",
+                  "format": "CABLE",
+                  "power_type": "AC_3_PHASE",
+                  "max_voltage": 230,
+                  "max_amperage": 55,
+                  "max_electric_power": 38000,
+                  "tariff_ids": [
+                    "678"
+                  ],
+                  "last_updated": "2026-01-19T11:09:59.162Z"
+                },
+                {
+                  "id": "2",
+                  "standard": "CHADEMO",
+                  "format": "CABLE",
+                  "power_type": "DC",
+                  "max_voltage": 400,
+                  "max_amperage": 125,
+                  "max_electric_power": 50000,
+                  "tariff_ids": [
+                    "678"
+                  ],
+                  "last_updated": "2026-01-19T11:09:59.162Z"
+                },
+                {
+                  "id": "3",
+                  "standard": "IEC_62196_T2_COMBO",
+                  "format": "CABLE",
+                  "power_type": "DC",
+                  "max_voltage": 400,
+                  "max_amperage": 125,
+                  "max_electric_power": 50000,
+                  "tariff_ids": [
+                    "678"
+                  ],
+                  "last_updated": "2026-01-19T11:09:59.162Z"
+                }
+              ],
+              "coordinates": {
+                "latitude": "54.909240",
+                "longitude": "-1.377450"
+              },
+              "physical_reference": "4400203",
+              "last_updated": "2024-11-21T12:48:41.837Z"
+            },
+            {
+              "uid": "5003557",
+              "status": "REMOVED",
+              "capabilities": [
+                "CREDIT_CARD_PAYABLE",
+                "REMOTE_START_STOP_CAPABLE",
+                "RFID_READER"
+              ],
+              "connectors": [
+                {
+                  "id": "2",
+                  "standard": "CHADEMO",
+                  "format": "CABLE",
+                  "power_type": "DC",
+                  "max_voltage": 400,
+                  "max_amperage": 125,
+                  "max_electric_power": 50000,
+                  "tariff_ids": [
+                    "678"
+                  ],
+                  "last_updated": "2026-01-19T11:09:59.162Z"
+                },
+                {
+                  "id": "1",
+                  "standard": "IEC_62196_T2_COMBO",
+                  "format": "CABLE",
+                  "power_type": "DC",
+                  "max_voltage": 400,
+                  "max_amperage": 125,
+                  "max_electric_power": 50000,
+                  "tariff_ids": [
+                    "678"
+                  ],
+                  "last_updated": "2026-01-19T11:09:59.162Z"
+                }
+              ],
+              "coordinates": {
+                "latitude": "54.909240",
+                "longitude": "-1.377450"
+              },
+              "physical_reference": "4400206",
+              "last_updated": "2025-08-15T07:11:01.327Z"
+            },
+            {
+              "uid": "5003683",
+              "evse_id": "GBFASE4400201",
+              "status": "BLOCKED",
+              "capabilities": [
+                "CREDIT_CARD_PAYABLE",
+                "REMOTE_START_STOP_CAPABLE",
+                "RFID_READER"
+              ],
+              "connectors": [
+                {
+                  "id": "2",
+                  "standard": "IEC_62196_T2_COMBO",
+                  "format": "CABLE",
+                  "power_type": "DC",
+                  "max_voltage": 400,
+                  "max_amperage": 125,
+                  "max_electric_power": 50000,
+                  "tariff_ids": [
+                    "678"
+                  ],
+                  "last_updated": "2026-05-27T15:20:53.902Z"
+                },
+                {
+                  "id": "3",
+                  "standard": "CHADEMO",
+                  "format": "CABLE",
+                  "power_type": "DC",
+                  "max_voltage": 400,
+                  "max_amperage": 125,
+                  "max_electric_power": 50000,
+                  "tariff_ids": [
+                    "678"
+                  ],
+                  "last_updated": "2026-05-27T15:21:03.913Z"
+                },
+                {
+                  "id": "1",
+                  "standard": "IEC_62196_T2",
+                  "format": "CABLE",
+                  "power_type": "AC_3_PHASE",
+                  "max_voltage": 230,
+                  "max_amperage": 55,
+                  "max_electric_power": 38000,
+                  "tariff_ids": [
+                    "678"
+                  ],
+                  "last_updated": "2026-05-27T15:20:42.713Z"
+                }
+              ],
+              "coordinates": {
+                "latitude": "54.909240",
+                "longitude": "-1.377450"
+              },
+              "physical_reference": "4400201",
+              "last_updated": "2026-09-30T08:43:00.890Z"
+            },
+            {
+              "uid": "5000020",
+              "evse_id": "GBFASE4400205",
+              "status": "BLOCKED",
+              "capabilities": [
+                "CREDIT_CARD_PAYABLE",
+                "REMOTE_START_STOP_CAPABLE",
+                "RFID_READER"
+              ],
+              "connectors": [
+                {
+                  "id": "1",
+                  "standard": "IEC_62196_T2_COMBO",
+                  "format": "CABLE",
+                  "power_type": "DC",
+                  "max_voltage": 466,
+                  "max_amperage": 375,
+                  "max_electric_power": 175000,
+                  "tariff_ids": [
+                    "678"
+                  ],
+                  "last_updated": "2026-05-27T15:22:05.289Z"
+                },
+                {
+                  "id": "2",
+                  "standard": "CHADEMO",
+                  "format": "CABLE",
+                  "power_type": "DC",
+                  "max_voltage": 400,
+                  "max_amperage": 125,
+                  "max_electric_power": 50000,
+                  "tariff_ids": [
+                    "678"
+                  ],
+                  "last_updated": "2026-05-27T15:22:16.387Z"
+                }
+              ],
+              "coordinates": {
+                "latitude": "54.909240",
+                "longitude": "-1.377450"
+              },
+              "physical_reference": "4400205",
+              "last_updated": "2026-09-30T08:43:00.894Z"
+            },
+            {
+              "uid": "5003556",
+              "evse_id": "GBFASE4400203",
+              "status": "BLOCKED",
+              "capabilities": [
+                "CREDIT_CARD_PAYABLE",
+                "REMOTE_START_STOP_CAPABLE",
+                "RFID_READER"
+              ],
+              "connectors": [
+                {
+                  "id": "1",
+                  "standard": "IEC_62196_T2_COMBO",
+                  "format": "CABLE",
+                  "power_type": "DC",
+                  "max_voltage": 400,
+                  "max_amperage": 125,
+                  "max_electric_power": 50000,
+                  "tariff_ids": [
+                    "678"
+                  ],
+                  "last_updated": "2026-05-27T15:21:44.846Z"
+                },
+                {
+                  "id": "2",
+                  "standard": "CHADEMO",
+                  "format": "CABLE",
+                  "power_type": "DC",
+                  "max_voltage": 400,
+                  "max_amperage": 125,
+                  "max_electric_power": 50000,
+                  "tariff_ids": [
+                    "678"
+                  ],
+                  "last_updated": "2026-05-25T16:19:06.617Z"
+                }
+              ],
+              "coordinates": {
+                "latitude": "54.909240",
+                "longitude": "-1.377450"
+              },
+              "physical_reference": "4400203",
+              "last_updated": "2026-09-30T08:43:00.898Z"
+            },
+            {
+              "uid": "5000019",
+              "evse_id": "GBFASE4400204",
+              "status": "BLOCKED",
+              "capabilities": [
+                "CREDIT_CARD_PAYABLE",
+                "REMOTE_START_STOP_CAPABLE",
+                "RFID_READER"
+              ],
+              "connectors": [
+                {
+                  "id": "1",
+                  "standard": "IEC_62196_T2_COMBO",
+                  "format": "CABLE",
+                  "power_type": "DC",
+                  "max_voltage": 466,
+                  "max_amperage": 375,
+                  "max_electric_power": 175000,
+                  "tariff_ids": [
+                    "678"
+                  ],
+                  "last_updated": "2026-05-17T06:10:03.984Z"
+                },
+                {
+                  "id": "2",
+                  "standard": "CHADEMO",
+                  "format": "CABLE",
+                  "power_type": "DC",
+                  "max_voltage": 400,
+                  "max_amperage": 125,
+                  "max_electric_power": 50000,
+                  "tariff_ids": [
+                    "678"
+                  ],
+                  "last_updated": "2026-05-17T06:10:04.686Z"
+                }
+              ],
+              "coordinates": {
+                "latitude": "54.909240",
+                "longitude": "-1.377450"
+              },
+              "physical_reference": "4400204",
+              "last_updated": "2026-09-30T08:43:00.901Z"
+            }
+          ],
+          "operator": {
+            "name": "Fastned",
+            "website": "https://fastnedcharging.com/en/",
+            "logo": {
+              "url": "https://content.presspage.com/uploads/2519/500_fastnedlogo-2.jpg",
+              "category": "NETWORK",
+              "type": "jpeg",
+              "width": 400,
+              "height": 400
+            }
+          },
+          "time_zone": "Europe/London",
+          "opening_times": {
+            "twentyfourseven": true
+          },
+          "charging_when_closed": true,
+          "energy_mix": {
+            "is_green_energy": true
+          },
+          "last_updated": "2026-09-30T08:43:00.882Z"
+        },
+        {
+          "country_code": "GB",
+          "party_id": "FAS",
+          "id": "50140",
+          "publish": true,
+          "name": "Angus Court",
+          "address": "Broomhill Road",
+          "city": "Dundee",
+          "postal_code": "DD2 3WT",
+          "country": "GBR",
+          "coordinates": {
+            "latitude": "56.480918",
+            "longitude": "-3.016162"
+          },
+          "parking_type": "PARKING_LOT",
+          "evses": [
+            {
+              "uid": "5000277",
+              "status": "REMOVED",
+              "capabilities": [
+                "REMOTE_START_STOP_CAPABLE",
+                "RFID_READER"
+              ],
+              "connectors": [
+                {
+                  "id": "2",
+                  "standard": "CHADEMO",
+                  "format": "CABLE",
+                  "power_type": "DC",
+                  "max_voltage": 400,
+                  "max_amperage": 125,
+                  "max_electric_power": 50000,
+                  "tariff_ids": [
+                    "678"
+                  ],
+                  "last_updated": "2026-01-19T11:09:59.162Z"
+                },
+                {
+                  "id": "1",
+                  "standard": "IEC_62196_T2",
+                  "format": "CABLE",
+                  "power_type": "AC_3_PHASE",
+                  "max_voltage": 230,
+                  "max_amperage": 63,
+                  "max_electric_power": 43000,
+                  "tariff_ids": [
+                    "678"
+                  ],
+                  "last_updated": "2026-01-19T11:09:59.162Z"
+                },
+                {
+                  "id": "3",
+                  "standard": "IEC_62196_T2_COMBO",
+                  "format": "CABLE",
+                  "power_type": "DC",
+                  "max_voltage": 400,
+                  "max_amperage": 125,
+                  "max_electric_power": 50000,
+                  "tariff_ids": [
+                    "678"
+                  ],
+                  "last_updated": "2026-01-19T11:09:59.162Z"
+                }
+              ],
+              "coordinates": {
+                "latitude": "56.480918",
+                "longitude": "-3.016162"
+              },
+              "physical_reference": "4400801",
+              "last_updated": "2023-11-09T17:18:55.195Z"
+            },
+            {
+              "uid": "5002918",
+              "status": "REMOVED",
+              "capabilities": [
+                "CREDIT_CARD_PAYABLE",
+                "REMOTE_START_STOP_CAPABLE",
+                "RFID_READER"
+              ],
+              "connectors": [
+                {
+                  "id": "1",
+                  "standard": "IEC_62196_T2_COMBO",
+                  "format": "CABLE",
+                  "power_type": "DC",
+                  "max_voltage": 300,
+                  "max_amperage": 500,
+                  "max_electric_power": 150000,
+                  "tariff_ids": [
+                    "678"
+                  ],
+                  "last_updated": "2026-01-19T11:09:59.162Z"
+                }
+              ],
+              "coordinates": {
+                "latitude": "56.480918",
+                "longitude": "-3.016162"
+              },
+              "physical_reference": "4400801",
+              "last_updated": "2024-11-28T13:59:34.244Z"
+            },
+            {
+              "uid": "5000278",
+              "status": "REMOVED",
+              "capabilities": [
+                "REMOTE_START_STOP_CAPABLE",
+                "RFID_READER"
+              ],
+              "connectors": [
+                {
+                  "id": "1",
+                  "standard": "CHADEMO",
+                  "format": "CABLE",
+                  "power_type": "DC",
+                  "max_voltage": 400,
+                  "max_amperage": 125,
+                  "max_electric_power": 50000,
+                  "tariff_ids": [
+                    "678"
+                  ],
+                  "last_updated": "2026-01-19T11:09:59.162Z"
+                },
+                {
+                  "id": "2",
+                  "standard": "IEC_62196_T2_COMBO",
+                  "format": "CABLE",
+                  "power_type": "DC",
+                  "max_voltage": 400,
+                  "max_amperage": 125,
+                  "max_electric_power": 50000,
+                  "tariff_ids": [
+                    "678"
+                  ],
+                  "last_updated": "2026-01-19T11:09:59.162Z"
+                }
+              ],
+              "coordinates": {
+                "latitude": "56.480918",
+                "longitude": "-3.016162"
+              },
+              "physical_reference": "4400802",
+              "last_updated": "2023-11-09T17:18:57.530Z"
+            },
+            {
+              "uid": "5003565",
+              "evse_id": "GBFASE4400802",
+              "status": "AVAILABLE",
+              "capabilities": [
+                "CREDIT_CARD_PAYABLE",
+                "REMOTE_START_STOP_CAPABLE",
+                "RFID_READER"
+              ],
+              "connectors": [
+                {
+                  "id": "2",
+                  "standard": "IEC_62196_T2_COMBO",
+                  "format": "CABLE",
+                  "power_type": "DC",
+                  "max_voltage": 300,
+                  "max_amperage": 500,
+                  "max_electric_power": 150000,
+                  "tariff_ids": [
+                    "678"
+                  ],
+                  "last_updated": "2026-10-24T18:40:09.319Z"
+                }
+              ],
+              "coordinates": {
+                "latitude": "56.480918",
+                "longitude": "-3.016162"
+              },
+              "physical_reference": "4400802",
+              "last_updated": "2026-10-24T18:40:09.319Z"
+            },
+            {
+              "uid": "5003564",
+              "evse_id": "GBFASE4400801",
+              "status": "AVAILABLE",
+              "capabilities": [
+                "CREDIT_CARD_PAYABLE",
+                "REMOTE_START_STOP_CAPABLE",
+                "RFID_READER"
+              ],
+              "connectors": [
+                {
+                  "id": "1",
+                  "standard": "IEC_62196_T2_COMBO",
+                  "format": "CABLE",
+                  "power_type": "DC",
+                  "max_voltage": 300,
+                  "max_amperage": 500,
+                  "max_electric_power": 150000,
+                  "tariff_ids": [
+                    "678"
+                  ],
+                  "last_updated": "2026-10-24T17:53:56.145Z"
+                }
+              ],
+              "coordinates": {
+                "latitude": "56.480918",
+                "longitude": "-3.016162"
+              },
+              "physical_reference": "4400801",
+              "last_updated": "2026-10-24T17:53:56.145Z"
+            }
+          ],
+          "operator": {
+            "name": "Fastned",
+            "website": "https://fastnedcharging.com/en/",
+            "logo": {
+              "url": "https://content.presspage.com/uploads/2519/500_fastnedlogo-2.jpg",
+              "category": "NETWORK",
+              "type": "jpeg",
+              "width": 400,
+              "height": 400
+            }
+          },
+          "time_zone": "Europe/London",
+          "opening_times": {
+            "twentyfourseven": true
+          },
+          "charging_when_closed": true,
+          "energy_mix": {
+            "is_green_energy": true
+          },
+          "last_updated": "2026-10-24T18:40:09.319Z"
+        },
+        {
+          "country_code": "GB",
+          "party_id": "FAS",
+          "id": "51040",
+          "publish": true,
+          "name": "Freebridge King's Lynn",
+          "address": "Clenchwarton Road",
+          "city": "King's Lynn",
+          "postal_code": "LE34 3LW",
+          "country": "GBR",
+          "coordinates": {
+            "latitude": "52.743893",
+            "longitude": "0.383988"
+          },
+          "parking_type": "ON_STREET",
+          "evses": [
+            {
+              "uid": "5003909",
+              "evse_id": "GBFASE4406906",
+              "status": "AVAILABLE",
+              "capabilities": [
+                "CREDIT_CARD_PAYABLE",
+                "REMOTE_START_STOP_CAPABLE",
+                "RFID_READER"
+              ],
+              "connectors": [
+                {
+                  "id": "3",
+                  "standard": "IEC_62196_T2_COMBO",
+                  "format": "CABLE",
+                  "power_type": "DC",
+                  "max_voltage": 800,
+                  "max_amperage": 500,
+                  "max_electric_power": 400000,
+                  "tariff_ids": [
+                    "678"
+                  ],
+                  "last_updated": "2026-10-24T19:26:51.504Z"
+                }
+              ],
+              "coordinates": {
+                "latitude": "52.743893",
+                "longitude": "0.383988"
+              },
+              "physical_reference": "4406906",
+              "last_updated": "2026-10-24T19:26:51.504Z"
+            },
+            {
+              "uid": "5003908",
+              "evse_id": "GBFASE4406905",
+              "status": "AVAILABLE",
+              "capabilities": [
+                "CREDIT_CARD_PAYABLE",
+                "REMOTE_START_STOP_CAPABLE",
+                "RFID_READER"
+              ],
+              "connectors": [
+                {
+                  "id": "2",
+                  "standard": "CHADEMO",
+                  "format": "CABLE",
+                  "power_type": "DC",
+                  "max_voltage": 400,
+                  "max_amperage": 125,
+                  "max_electric_power": 50000,
+                  "tariff_ids": [
+                    "678"
+                  ],
+                  "last_updated": "2026-10-24T19:04:57.903Z"
+                },
+                {
+                  "id": "1",
+                  "standard": "IEC_62196_T2_COMBO",
+                  "format": "CABLE",
+                  "power_type": "DC",
+                  "max_voltage": 800,
+                  "max_amperage": 500,
+                  "max_electric_power": 400000,
+                  "tariff_ids": [
+                    "678"
+                  ],
+                  "last_updated": "2026-10-24T19:04:57.654Z"
+                }
+              ],
+              "coordinates": {
+                "latitude": "52.743893",
+                "longitude": "0.383988"
+              },
+              "physical_reference": "4406905",
+              "last_updated": "2026-10-24T19:04:57.903Z"
+            },
+            {
+              "uid": "5003910",
+              "evse_id": "GBFASE4406907",
+              "status": "AVAILABLE",
+              "capabilities": [
+                "CREDIT_CARD_PAYABLE",
+                "REMOTE_START_STOP_CAPABLE",
+                "RFID_READER"
+              ],
+              "connectors": [
+                {
+                  "id": "1",
+                  "standard": "IEC_62196_T2_COMBO",
+                  "format": "CABLE",
+                  "power_type": "DC",
+                  "max_voltage": 800,
+                  "max_amperage": 500,
+                  "max_electric_power": 400000,
+                  "tariff_ids": [
+                    "678"
+                  ],
+                  "last_updated": "2026-10-24T16:24:15.702Z"
+                }
+              ],
+              "coordinates": {
+                "latitude": "52.743893",
+                "longitude": "0.383988"
+              },
+              "physical_reference": "4406907",
+              "last_updated": "2026-10-24T16:24:15.702Z"
+            },
+            {
+              "uid": "5003911",
+              "evse_id": "GBFASE4406908",
+              "status": "AVAILABLE",
+              "capabilities": [
+                "CREDIT_CARD_PAYABLE",
+                "REMOTE_START_STOP_CAPABLE",
+                "RFID_READER"
+              ],
+              "connectors": [
+                {
+                  "id": "2",
+                  "standard": "IEC_62196_T2_COMBO",
+                  "format": "CABLE",
+                  "power_type": "DC",
+                  "max_voltage": 800,
+                  "max_amperage": 500,
+                  "max_electric_power": 400000,
+                  "tariff_ids": [
+                    "678"
+                  ],
+                  "last_updated": "2026-10-24T15:56:21.835Z"
+                }
+              ],
+              "coordinates": {
+                "latitude": "52.743893",
+                "longitude": "0.383988"
+              },
+              "physical_reference": "4406908",
+              "last_updated": "2026-10-24T15:56:21.835Z"
+            },
+            {
+              "uid": "5003906",
+              "evse_id": "GBFASE4406901",
+              "status": "AVAILABLE",
+              "capabilities": [
+                "CREDIT_CARD_PAYABLE",
+                "REMOTE_START_STOP_CAPABLE",
+                "RFID_READER"
+              ],
+              "connectors": [
+                {
+                  "id": "1",
+                  "standard": "IEC_62196_T2_COMBO",
+                  "format": "CABLE",
+                  "power_type": "DC",
+                  "max_voltage": 800,
+                  "max_amperage": 500,
+                  "max_electric_power": 400000,
+                  "tariff_ids": [
+                    "678"
+                  ],
+                  "last_updated": "2026-10-24T15:36:37.202Z"
+                },
+                {
+                  "id": "2",
+                  "standard": "CHADEMO",
+                  "format": "CABLE",
+                  "power_type": "DC",
+                  "max_voltage": 400,
+                  "max_amperage": 125,
+                  "max_electric_power": 50000,
+                  "tariff_ids": [
+                    "678"
+                  ],
+                  "last_updated": "2026-10-23T15:25:18.721Z"
+                }
+              ],
+              "coordinates": {
+                "latitude": "52.743893",
+                "longitude": "0.383988"
+              },
+              "physical_reference": "4406901",
+              "last_updated": "2026-10-24T15:36:37.202Z"
+            },
+            {
+              "uid": "5003907",
+              "evse_id": "GBFASE4406902",
+              "status": "AVAILABLE",
+              "capabilities": [
+                "CREDIT_CARD_PAYABLE",
+                "REMOTE_START_STOP_CAPABLE",
+                "RFID_READER"
+              ],
+              "connectors": [
+                {
+                  "id": "3",
+                  "standard": "IEC_62196_T2_COMBO",
+                  "format": "CABLE",
+                  "power_type": "DC",
+                  "max_voltage": 800,
+                  "max_amperage": 500,
+                  "max_electric_power": 400000,
+                  "tariff_ids": [
+                    "678"
+                  ],
+                  "last_updated": "2026-10-24T15:04:18.142Z"
+                }
+              ],
+              "coordinates": {
+                "latitude": "52.743893",
+                "longitude": "0.383988"
+              },
+              "physical_reference": "4406902",
+              "last_updated": "2026-10-24T15:04:18.142Z"
+            }
+          ],
+          "operator": {
+            "name": "Fastned",
+            "website": "https://fastnedcharging.com/en/",
+            "logo": {
+              "url": "https://content.presspage.com/uploads/2519/500_fastnedlogo-2.jpg",
+              "category": "NETWORK",
+              "type": "jpeg",
+              "width": 400,
+              "height": 400
+            }
+          },
+          "time_zone": "Europe/London",
+          "opening_times": {
+            "twentyfourseven": true
+          },
+          "charging_when_closed": true,
+          "energy_mix": {
+            "is_green_energy": true
+          },
+          "last_updated": "2026-10-24T19:26:51.504Z"
+        },
+        {
+          "country_code": "GB",
+          "party_id": "FAS",
+          "id": "50132",
+          "publish": true,
+          "name": "Whitley Bay",
+          "address": "Cromer Gardens",
+          "city": "Whitley Bay",
+          "postal_code": "NE26 1QE",
+          "country": "GBR",
+          "coordinates": {
+            "latitude": "55.049718",
+            "longitude": "-1.450766"
+          },
+          "parking_type": "PARKING_LOT",
+          "evses": [
+            {
+              "uid": "5001828",
+              "status": "REMOVED",
+              "capabilities": [
+                "REMOTE_START_STOP_CAPABLE",
+                "RFID_READER"
+              ],
+              "connectors": [
+                {
+                  "id": "3",
+                  "standard": "IEC_62196_T2_COMBO",
+                  "format": "CABLE",
+                  "power_type": "DC",
+                  "max_voltage": 400,
+                  "max_amperage": 125,
+                  "max_electric_power": 50000,
+                  "tariff_ids": [
+                    "678"
+                  ],
+                  "last_updated": "2026-01-19T11:09:59.162Z"
+                },
+                {
+                  "id": "2",
+                  "standard": "CHADEMO",
+                  "format": "CABLE",
+                  "power_type": "DC",
+                  "max_voltage": 400,
+                  "max_amperage": 125,
+                  "max_electric_power": 50000,
+                  "tariff_ids": [
+                    "678"
+                  ],
+                  "last_updated": "2026-01-19T11:09:59.162Z"
+                },
+                {
+                  "id": "1",
+                  "standard": "IEC_62196_T2",
+                  "format": "CABLE",
+                  "power_type": "AC_3_PHASE",
+                  "max_voltage": 230,
+                  "max_amperage": 32,
+                  "max_electric_power": 22000,
+                  "tariff_ids": [
+                    "678"
+                  ],
+                  "last_updated": "2026-01-19T11:09:59.162Z"
+                }
+              ],
+              "coordinates": {
+                "latitude": "55.049718",
+                "longitude": "-1.450766"
+              },
+              "physical_reference": "4400701",
+              "last_updated": "2024-08-29T14:32:43.156Z"
+            },
+            {
+              "uid": "5001827",
+              "status": "REMOVED",
+              "capabilities": [
+                "REMOTE_START_STOP_CAPABLE",
+                "RFID_READER"
+              ],
+              "connectors": [
+                {
+                  "id": "2",
+                  "standard": "IEC_62196_T2_COMBO",
+                  "format": "CABLE",
+                  "power_type": "DC",
+                  "max_voltage": 400,
+                  "max_amperage": 125,
+                  "max_electric_power": 50000,
+                  "tariff_ids": [
+                    "678"
+                  ],
+                  "last_updated": "2026-01-19T11:09:59.162Z"
+                },
+                {
+                  "id": "1",
+                  "standard": "CHADEMO",
+                  "format": "CABLE",
+                  "power_type": "DC",
+                  "max_voltage": 400,
+                  "max_amperage": 125,
+                  "max_electric_power": 50000,
+                  "tariff_ids": [
+                    "678"
+                  ],
+                  "last_updated": "2026-01-19T11:09:59.162Z"
+                }
+              ],
+              "coordinates": {
+                "latitude": "55.049718",
+                "longitude": "-1.450766"
+              },
+              "physical_reference": "4400704",
+              "last_updated": "2024-08-29T14:32:34.467Z"
+            },
+            {
+              "uid": "5000245",
+              "evse_id": "GBFASE4400703",
+              "status": "OUTOFORDER",
+              "capabilities": [
+                "CREDIT_CARD_PAYABLE",
+                "REMOTE_START_STOP_CAPABLE",
+                "RFID_READER"
+              ],
+              "connectors": [
+                {
+                  "id": "3",
+                  "standard": "CHADEMO",
+                  "format": "CABLE",
+                  "power_type": "DC",
+                  "max_voltage": 400,
+                  "max_amperage": 125,
+                  "max_electric_power": 50000,
+                  "tariff_ids": [
+                    "678"
+                  ],
+                  "last_updated": "2026-10-23T14:23:34.361Z"
+                },
+                {
+                  "id": "2",
+                  "standard": "IEC_62196_T2_COMBO",
+                  "format": "CABLE",
+                  "power_type": "DC",
+                  "max_voltage": 400,
+                  "max_amperage": 125,
+                  "max_electric_power": 50000,
+                  "tariff_ids": [
+                    "678"
+                  ],
+                  "last_updated": "2026-10-23T14:23:34.152Z"
+                },
+                {
+                  "id": "1",
+                  "standard": "IEC_62196_T2",
+                  "format": "CABLE",
+                  "power_type": "AC_3_PHASE",
+                  "max_voltage": 230,
+                  "max_amperage": 55,
+                  "max_electric_power": 38000,
+                  "tariff_ids": [
+                    "678"
+                  ],
+                  "last_updated": "2026-10-23T14:23:31.779Z"
+                }
+              ],
+              "coordinates": {
+                "latitude": "55.049718",
+                "longitude": "-1.450766"
+              },
+              "physical_reference": "4400703",
+              "last_updated": "2026-10-23T14:23:34.361Z"
+            },
+            {
+              "uid": "5003416",
+              "evse_id": "GBFASE4400704",
+              "status": "AVAILABLE",
+              "capabilities": [
+                "CREDIT_CARD_PAYABLE",
+                "REMOTE_START_STOP_CAPABLE",
+                "RFID_READER"
+              ],
+              "connectors": [
+                {
+                  "id": "2",
+                  "standard": "IEC_62196_T2_COMBO",
+                  "format": "CABLE",
+                  "power_type": "DC",
+                  "max_voltage": 400,
+                  "max_amperage": 125,
+                  "max_electric_power": 50000,
+                  "tariff_ids": [
+                    "678"
+                  ],
+                  "last_updated": "2026-10-24T19:52:35.051Z"
+                },
+                {
+                  "id": "1",
+                  "standard": "IEC_62196_T2",
+                  "format": "CABLE",
+                  "power_type": "AC_3_PHASE",
+                  "max_voltage": 230,
+                  "max_amperage": 63,
+                  "max_electric_power": 43000,
+                  "tariff_ids": [
+                    "678"
+                  ],
+                  "last_updated": "2026-10-24T19:54:31.393Z"
+                },
+                {
+                  "id": "3",
+                  "standard": "CHADEMO",
+                  "format": "CABLE",
+                  "power_type": "DC",
+                  "max_voltage": 400,
+                  "max_amperage": 125,
+                  "max_electric_power": 50000,
+                  "tariff_ids": [
+                    "678"
+                  ],
+                  "last_updated": "2026-10-22T06:59:48.530Z"
+                }
+              ],
+              "coordinates": {
+                "latitude": "55.049718",
+                "longitude": "-1.450766"
+              },
+              "physical_reference": "4400704",
+              "last_updated": "2026-10-24T19:54:31.393Z"
+            },
+            {
+              "uid": "5003415",
+              "evse_id": "GBFASE4400701",
+              "status": "AVAILABLE",
+              "capabilities": [
+                "CREDIT_CARD_PAYABLE",
+                "REMOTE_START_STOP_CAPABLE",
+                "RFID_READER"
+              ],
+              "connectors": [
+                {
+                  "id": "2",
+                  "standard": "IEC_62196_T2_COMBO",
+                  "format": "CABLE",
+                  "power_type": "DC",
+                  "max_voltage": 400,
+                  "max_amperage": 125,
+                  "max_electric_power": 50000,
+                  "tariff_ids": [
+                    "678"
+                  ],
+                  "last_updated": "2026-10-24T20:25:55.387Z"
+                },
+                {
+                  "id": "3",
+                  "standard": "CHADEMO",
+                  "format": "CABLE",
+                  "power_type": "DC",
+                  "max_voltage": 400,
+                  "max_amperage": 125,
+                  "max_electric_power": 50000,
+                  "tariff_ids": [
+                    "678"
+                  ],
+                  "last_updated": "2026-10-17T12:12:24.802Z"
+                },
+                {
+                  "id": "1",
+                  "standard": "IEC_62196_T2",
+                  "format": "CABLE",
+                  "power_type": "AC_3_PHASE",
+                  "max_voltage": 230,
+                  "max_amperage": 63,
+                  "max_electric_power": 43000,
+                  "tariff_ids": [
+                    "678"
+                  ],
+                  "last_updated": "2026-10-23T07:32:19.112Z"
+                }
+              ],
+              "coordinates": {
+                "latitude": "55.049718",
+                "longitude": "-1.450766"
+              },
+              "physical_reference": "4400701",
+              "last_updated": "2026-10-24T20:25:55.387Z"
+            },
+            {
+              "uid": "5000246",
+              "evse_id": "GBFASE4400702",
+              "status": "AVAILABLE",
+              "capabilities": [
+                "CREDIT_CARD_PAYABLE",
+                "REMOTE_START_STOP_CAPABLE",
+                "RFID_READER"
+              ],
+              "connectors": [
+                {
+                  "id": "2",
+                  "standard": "IEC_62196_T2_COMBO",
+                  "format": "CABLE",
+                  "power_type": "DC",
+                  "max_voltage": 400,
+                  "max_amperage": 125,
+                  "max_electric_power": 50000,
+                  "tariff_ids": [
+                    "678"
+                  ],
+                  "last_updated": "2026-10-24T19:12:34.214Z"
+                },
+                {
+                  "id": "3",
+                  "standard": "CHADEMO",
+                  "format": "CABLE",
+                  "power_type": "DC",
+                  "max_voltage": 400,
+                  "max_amperage": 125,
+                  "max_electric_power": 50000,
+                  "tariff_ids": [
+                    "678"
+                  ],
+                  "last_updated": "2026-10-20T12:30:06.823Z"
+                },
+                {
+                  "id": "1",
+                  "standard": "IEC_62196_T2",
+                  "format": "CABLE",
+                  "power_type": "AC_3_PHASE",
+                  "max_voltage": 230,
+                  "max_amperage": 55,
+                  "max_electric_power": 38000,
+                  "tariff_ids": [
+                    "678"
+                  ],
+                  "last_updated": "2026-10-22T15:23:51.784Z"
+                }
+              ],
+              "coordinates": {
+                "latitude": "55.049718",
+                "longitude": "-1.450766"
+              },
+              "physical_reference": "4400702",
+              "last_updated": "2026-10-24T19:12:34.214Z"
+            }
+          ],
+          "operator": {
+            "name": "Fastned",
+            "website": "https://fastnedcharging.com/en/",
+            "logo": {
+              "url": "https://content.presspage.com/uploads/2519/500_fastnedlogo-2.jpg",
+              "category": "NETWORK",
+              "type": "jpeg",
+              "width": 400,
+              "height": 400
+            }
+          },
+          "time_zone": "Europe/London",
+          "opening_times": {
+            "twentyfourseven": true
+          },
+          "charging_when_closed": true,
+          "energy_mix": {
+            "is_green_energy": true
+          },
+          "last_updated": "2026-10-24T20:25:55.387Z"
+        },
+        {
+          "country_code": "GB",
+          "party_id": "FAS",
+          "id": "51031",
+          "publish": true,
+          "name": "Antrim The Junction",
+          "address": "Ballymena Rd",
+          "city": "Antrim",
+          "postal_code": "BT41 4JG",
+          "country": "GBR",
+          "coordinates": {
+            "latitude": "54.730521",
+            "longitude": "-6.228786"
+          },
+          "parking_type": "ON_STREET",
+          "evses": [
+            {
+              "uid": "5003798",
+              "evse_id": "GBFASE4406405",
+              "status": "AVAILABLE",
+              "capabilities": [
+                "CREDIT_CARD_PAYABLE",
+                "REMOTE_START_STOP_CAPABLE",
+                "RFID_READER"
+              ],
+              "connectors": [
+                {
+                  "id": "1",
+                  "standard": "IEC_62196_T2_COMBO",
+                  "format": "CABLE",
+                  "power_type": "DC",
+                  "max_voltage": 800,
+                  "max_amperage": 500,
+                  "max_electric_power": 400000,
+                  "tariff_ids": [
+                    "678"
+                  ],
+                  "last_updated": "2026-10-24T19:22:09.187Z"
+                }
+              ],
+              "coordinates": {
+                "latitude": "54.730521",
+                "longitude": "-6.228786"
+              },
+              "physical_reference": "4406405",
+              "last_updated": "2026-10-24T19:22:09.187Z"
+            },
+            {
+              "uid": "5003799",
+              "evse_id": "GBFASE4406406",
+              "status": "AVAILABLE",
+              "capabilities": [
+                "CREDIT_CARD_PAYABLE",
+                "REMOTE_START_STOP_CAPABLE",
+                "RFID_READER"
+              ],
+              "connectors": [
+                {
+                  "id": "3",
+                  "standard": "IEC_62196_T2_COMBO",
+                  "format": "CABLE",
+                  "power_type": "DC",
+                  "max_voltage": 800,
+                  "max_amperage": 500,
+                  "max_electric_power": 400000,
+                  "tariff_ids": [
+                    "678"
+                  ],
+                  "last_updated": "2026-10-24T19:56:14.611Z"
+                },
+                {
+                  "id": "2",
+                  "standard": "CHADEMO",
+                  "format": "CABLE",
+                  "power_type": "DC",
+                  "max_voltage": 400,
+                  "max_amperage": 125,
+                  "max_electric_power": 50000,
+                  "tariff_ids": [
+                    "678"
+                  ],
+                  "last_updated": "2026-10-24T19:22:01.317Z"
+                }
+              ],
+              "coordinates": {
+                "latitude": "54.730521",
+                "longitude": "-6.228786"
+              },
+              "physical_reference": "4406406",
+              "last_updated": "2026-10-24T19:56:14.611Z"
+            },
+            {
+              "uid": "5003796",
+              "evse_id": "GBFASE4406401",
+              "status": "AVAILABLE",
+              "capabilities": [
+                "CREDIT_CARD_PAYABLE",
+                "REMOTE_START_STOP_CAPABLE",
+                "RFID_READER"
+              ],
+              "connectors": [
+                {
+                  "id": "1",
+                  "standard": "IEC_62196_T2_COMBO",
+                  "format": "CABLE",
+                  "power_type": "DC",
+                  "max_voltage": 800,
+                  "max_amperage": 500,
+                  "max_electric_power": 400000,
+                  "tariff_ids": [
+                    "678"
+                  ],
+                  "last_updated": "2026-10-24T19:12:54.634Z"
+                }
+              ],
+              "coordinates": {
+                "latitude": "54.730521",
+                "longitude": "-6.228786"
+              },
+              "physical_reference": "4406401",
+              "last_updated": "2026-10-24T19:12:54.634Z"
+            },
+            {
+              "uid": "5003797",
+              "evse_id": "GBFASE4406402",
+              "status": "AVAILABLE",
+              "capabilities": [
+                "CREDIT_CARD_PAYABLE",
+                "REMOTE_START_STOP_CAPABLE",
+                "RFID_READER"
+              ],
+              "connectors": [
+                {
+                  "id": "3",
+                  "standard": "IEC_62196_T2_COMBO",
+                  "format": "CABLE",
+                  "power_type": "DC",
+                  "max_voltage": 800,
+                  "max_amperage": 500,
+                  "max_electric_power": 400000,
+                  "tariff_ids": [
+                    "678"
+                  ],
+                  "last_updated": "2026-10-24T16:57:17.815Z"
+                },
+                {
+                  "id": "2",
+                  "standard": "CHADEMO",
+                  "format": "CABLE",
+                  "power_type": "DC",
+                  "max_voltage": 400,
+                  "max_amperage": 125,
+                  "max_electric_power": 50000,
+                  "tariff_ids": [
+                    "678"
+                  ],
+                  "last_updated": "2026-10-24T16:54:50.839Z"
+                }
+              ],
+              "coordinates": {
+                "latitude": "54.730521",
+                "longitude": "-6.228786"
+              },
+              "physical_reference": "4406402",
+              "last_updated": "2026-10-24T16:57:17.815Z"
+            },
+            {
+              "uid": "5003801",
+              "evse_id": "GBFASE4406410",
+              "status": "AVAILABLE",
+              "capabilities": [
+                "CREDIT_CARD_PAYABLE",
+                "REMOTE_START_STOP_CAPABLE",
+                "RFID_READER"
+              ],
+              "connectors": [
+                {
+                  "id": "2",
+                  "standard": "IEC_62196_T2_COMBO",
+                  "format": "CABLE",
+                  "power_type": "DC",
+                  "max_voltage": 800,
+                  "max_amperage": 500,
+                  "max_electric_power": 400000,
+                  "tariff_ids": [
+                    "678"
+                  ],
+                  "last_updated": "2026-10-24T21:33:01.615Z"
+                }
+              ],
+              "coordinates": {
+                "latitude": "54.730521",
+                "longitude": "-6.228786"
+              },
+              "physical_reference": "4406410",
+              "last_updated": "2026-10-24T21:33:01.615Z"
+            },
+            {
+              "uid": "5003800",
+              "evse_id": "GBFASE4406409",
+              "status": "AVAILABLE",
+              "capabilities": [
+                "CREDIT_CARD_PAYABLE",
+                "REMOTE_START_STOP_CAPABLE",
+                "RFID_READER"
+              ],
+              "connectors": [
+                {
+                  "id": "1",
+                  "standard": "IEC_62196_T2_COMBO",
+                  "format": "CABLE",
+                  "power_type": "DC",
+                  "max_voltage": 800,
+                  "max_amperage": 500,
+                  "max_electric_power": 400000,
+                  "tariff_ids": [
+                    "678"
+                  ],
+                  "last_updated": "2026-10-24T20:52:56.166Z"
+                }
+              ],
+              "coordinates": {
+                "latitude": "54.730521",
+                "longitude": "-6.228786"
+              },
+              "physical_reference": "4406409",
+              "last_updated": "2026-10-24T20:52:56.166Z"
+            }
+          ],
+          "operator": {
+            "name": "Fastned",
+            "website": "https://fastnedcharging.com/en/",
+            "logo": {
+              "url": "https://content.presspage.com/uploads/2519/500_fastnedlogo-2.jpg",
+              "category": "NETWORK",
+              "type": "jpeg",
+              "width": 400,
+              "height": 400
+            }
+          },
+          "time_zone": "Europe/London",
+          "opening_times": {
+            "twentyfourseven": true
+          },
+          "charging_when_closed": true,
+          "energy_mix": {
+            "is_green_energy": true
+          },
+          "last_updated": "2026-10-24T21:33:01.615Z"
+        },
+        {
+          "country_code": "GB",
+          "party_id": "FAS",
+          "id": "50686",
+          "publish": true,
+          "name": "Ramac Way",
+          "address": "Ramac Way",
+          "city": "London",
+          "postal_code": "SE7 7AX",
+          "country": "GBR",
+          "coordinates": {
+            "latitude": "51.487130",
+            "longitude": "0.023420"
+          },
+          "parking_type": "PARKING_LOT",
+          "evses": [
+            {
+              "uid": "5001963",
+              "evse_id": "GBFASE4401303",
+              "status": "UNKNOWN",
+              "capabilities": [
+                "CREDIT_CARD_PAYABLE",
+                "REMOTE_START_STOP_CAPABLE",
+                "RFID_READER"
+              ],
+              "connectors": [
+                {
+                  "id": "1",
+                  "standard": "IEC_62196_T2_COMBO",
+                  "format": "CABLE",
+                  "power_type": "DC",
+                  "max_voltage": 600,
+                  "max_amperage": 500,
+                  "max_electric_power": 300000,
+                  "tariff_ids": [
+                    "678"
+                  ],
+                  "last_updated": "2026-10-24T21:59:07.147Z"
+                }
+              ],
+              "coordinates": {
+                "latitude": "51.487130",
+                "longitude": "0.023420"
+              },
+              "physical_reference": "4401303",
+              "last_updated": "2026-10-24T22:11:54.302Z"
+            },
+            {
+              "uid": "5001964",
+              "evse_id": "GBFASE4401304",
+              "status": "UNKNOWN",
+              "capabilities": [
+                "CREDIT_CARD_PAYABLE",
+                "REMOTE_START_STOP_CAPABLE",
+                "RFID_READER"
+              ],
+              "connectors": [
+                {
+                  "id": "2",
+                  "standard": "CHADEMO",
+                  "format": "CABLE",
+                  "power_type": "DC",
+                  "max_voltage": 400,
+                  "max_amperage": 125,
+                  "max_electric_power": 50000,
+                  "tariff_ids": [
+                    "678"
+                  ],
+                  "last_updated": "2026-10-24T21:58:46.258Z"
+                },
+                {
+                  "id": "3",
+                  "standard": "IEC_62196_T2_COMBO",
+                  "format": "CABLE",
+                  "power_type": "DC",
+                  "max_voltage": 600,
+                  "max_amperage": 500,
+                  "max_electric_power": 300000,
+                  "tariff_ids": [
+                    "678"
+                  ],
+                  "last_updated": "2026-10-24T21:24:40.898Z"
+                }
+              ],
+              "coordinates": {
+                "latitude": "51.487130",
+                "longitude": "0.023420"
+              },
+              "physical_reference": "4401304",
+              "last_updated": "2026-10-24T22:11:54.302Z"
+            },
+            {
+              "uid": "5001961",
+              "evse_id": "GBFASE4401301",
+              "status": "AVAILABLE",
+              "capabilities": [
+                "CREDIT_CARD_PAYABLE",
+                "REMOTE_START_STOP_CAPABLE",
+                "RFID_READER"
+              ],
+              "connectors": [
+                {
+                  "id": "1",
+                  "standard": "IEC_62196_T2_COMBO",
+                  "format": "CABLE",
+                  "power_type": "DC",
+                  "max_voltage": 600,
+                  "max_amperage": 500,
+                  "max_electric_power": 300000,
+                  "tariff_ids": [
+                    "678"
+                  ],
+                  "last_updated": "2026-10-24T22:09:27.836Z"
+                }
+              ],
+              "coordinates": {
+                "latitude": "51.487130",
+                "longitude": "0.023420"
+              },
+              "physical_reference": "4401301",
+              "last_updated": "2026-10-24T22:09:27.836Z"
+            },
+            {
+              "uid": "5001962",
+              "evse_id": "GBFASE4401302",
+              "status": "CHARGING",
+              "capabilities": [
+                "CREDIT_CARD_PAYABLE",
+                "REMOTE_START_STOP_CAPABLE",
+                "RFID_READER"
+              ],
+              "connectors": [
+                {
+                  "id": "2",
+                  "standard": "IEC_62196_T2_COMBO",
+                  "format": "CABLE",
+                  "power_type": "DC",
+                  "max_voltage": 600,
+                  "max_amperage": 500,
+                  "max_electric_power": 300000,
+                  "tariff_ids": [
+                    "678"
+                  ],
+                  "last_updated": "2026-10-24T22:05:14.222Z"
+                }
+              ],
+              "coordinates": {
+                "latitude": "51.487130",
+                "longitude": "0.023420"
+              },
+              "physical_reference": "4401302",
+              "last_updated": "2026-10-24T22:05:14.222Z"
+            },
+            {
+              "uid": "5001966",
+              "evse_id": "GBFASE4401306",
+              "status": "CHARGING",
+              "capabilities": [
+                "CREDIT_CARD_PAYABLE",
+                "REMOTE_START_STOP_CAPABLE",
+                "RFID_READER"
+              ],
+              "connectors": [
+                {
+                  "id": "3",
+                  "standard": "IEC_62196_T2_COMBO",
+                  "format": "CABLE",
+                  "power_type": "DC",
+                  "max_voltage": 600,
+                  "max_amperage": 500,
+                  "max_electric_power": 300000,
+                  "tariff_ids": [
+                    "678"
+                  ],
+                  "last_updated": "2026-10-24T21:52:44.241Z"
+                },
+                {
+                  "id": "2",
+                  "standard": "CHADEMO",
+                  "format": "CABLE",
+                  "power_type": "DC",
+                  "max_voltage": 400,
+                  "max_amperage": 125,
+                  "max_electric_power": 50000,
+                  "tariff_ids": [
+                    "678"
+                  ],
+                  "last_updated": "2026-10-24T22:19:06.901Z"
+                }
+              ],
+              "coordinates": {
+                "latitude": "51.487130",
+                "longitude": "0.023420"
+              },
+              "physical_reference": "4401306",
+              "last_updated": "2026-10-24T22:19:06.901Z"
+            },
+            {
+              "uid": "5001965",
+              "evse_id": "GBFASE4401305",
+              "status": "CHARGING",
+              "capabilities": [
+                "CREDIT_CARD_PAYABLE",
+                "REMOTE_START_STOP_CAPABLE",
+                "RFID_READER"
+              ],
+              "connectors": [
+                {
+                  "id": "1",
+                  "standard": "IEC_62196_T2_COMBO",
+                  "format": "CABLE",
+                  "power_type": "DC",
+                  "max_voltage": 600,
+                  "max_amperage": 500,
+                  "max_electric_power": 300000,
+                  "tariff_ids": [
+                    "678"
+                  ],
+                  "last_updated": "2026-10-24T22:19:28.116Z"
+                }
+              ],
+              "coordinates": {
+                "latitude": "51.487130",
+                "longitude": "0.023420"
+              },
+              "physical_reference": "4401305",
+              "last_updated": "2026-10-24T22:19:28.116Z"
+            }
+          ],
+          "operator": {
+            "name": "Fastned",
+            "website": "https://fastnedcharging.com/en/",
+            "logo": {
+              "url": "https://content.presspage.com/uploads/2519/500_fastnedlogo-2.jpg",
+              "category": "NETWORK",
+              "type": "jpeg",
+              "width": 400,
+              "height": 400
+            }
+          },
+          "time_zone": "Europe/London",
+          "opening_times": {
+            "twentyfourseven": true
+          },
+          "charging_when_closed": true,
+          "energy_mix": {
+            "is_green_energy": true
+          },
+          "last_updated": "2026-10-24T22:19:28.116Z"
+        },
+        {
+          "country_code": "GB",
+          "party_id": "FAS",
+          "id": "50880",
+          "publish": true,
+          "name": "Columbus Way",
+          "address": "Columbus Way",
+          "city": "Andover",
+          "postal_code": "SP10 2PR",
+          "country": "GBR",
+          "coordinates": {
+            "latitude": "51.211720",
+            "longitude": "-1.455675"
+          },
+          "parking_type": "PARKING_LOT",
+          "evses": [
+            {
+              "uid": "5003059",
+              "evse_id": "GBFASE4402701",
+              "status": "AVAILABLE",
+              "capabilities": [
+                "CREDIT_CARD_PAYABLE",
+                "REMOTE_START_STOP_CAPABLE",
+                "RFID_READER"
+              ],
+              "connectors": [
+                {
+                  "id": "1",
+                  "standard": "IEC_62196_T2_COMBO",
+                  "format": "CABLE",
+                  "power_type": "DC",
+                  "max_voltage": 400,
+                  "max_amperage": 250,
+                  "max_electric_power": 100000,
+                  "tariff_ids": [
+                    "678"
+                  ],
+                  "last_updated": "2026-10-24T22:36:46.424Z"
+                }
+              ],
+              "coordinates": {
+                "latitude": "51.211720",
+                "longitude": "-1.455675"
+              },
+              "physical_reference": "4402701",
+              "last_updated": "2026-10-24T22:36:46.424Z"
+            },
+            {
+              "uid": "5003060",
+              "evse_id": "GBFASE4402702",
+              "status": "AVAILABLE",
+              "capabilities": [
+                "CREDIT_CARD_PAYABLE",
+                "REMOTE_START_STOP_CAPABLE",
+                "RFID_READER"
+              ],
+              "connectors": [
+                {
+                  "id": "2",
+                  "standard": "CHADEMO",
+                  "format": "CABLE",
+                  "power_type": "DC",
+                  "max_voltage": 400,
+                  "max_amperage": 125,
+                  "max_electric_power": 50000,
+                  "tariff_ids": [
+                    "678"
+                  ],
+                  "last_updated": "2026-10-24T16:13:57.225Z"
+                },
+                {
+                  "id": "3",
+                  "standard": "IEC_62196_T2_COMBO",
+                  "format": "CABLE",
+                  "power_type": "DC",
+                  "max_voltage": 400,
+                  "max_amperage": 250,
+                  "max_electric_power": 100000,
+                  "tariff_ids": [
+                    "678"
+                  ],
+                  "last_updated": "2026-10-24T20:49:28.276Z"
+                }
+              ],
+              "coordinates": {
+                "latitude": "51.211720",
+                "longitude": "-1.455675"
+              },
+              "physical_reference": "4402702",
+              "last_updated": "2026-10-24T20:49:28.276Z"
+            },
+            {
+              "uid": "5003062",
+              "evse_id": "GBFASE4402704",
+              "status": "AVAILABLE",
+              "capabilities": [
+                "CREDIT_CARD_PAYABLE",
+                "REMOTE_START_STOP_CAPABLE",
+                "RFID_READER"
+              ],
+              "connectors": [
+                {
+                  "id": "2",
+                  "standard": "CHADEMO",
+                  "format": "CABLE",
+                  "power_type": "DC",
+                  "max_voltage": 400,
+                  "max_amperage": 125,
+                  "max_electric_power": 50000,
+                  "tariff_ids": [
+                    "678"
+                  ],
+                  "last_updated": "2026-10-24T16:56:40.352Z"
+                },
+                {
+                  "id": "3",
+                  "standard": "IEC_62196_T2_COMBO",
+                  "format": "CABLE",
+                  "power_type": "DC",
+                  "max_voltage": 400,
+                  "max_amperage": 250,
+                  "max_electric_power": 100000,
+                  "tariff_ids": [
+                    "678"
+                  ],
+                  "last_updated": "2026-10-24T21:02:25.477Z"
+                }
+              ],
+              "coordinates": {
+                "latitude": "51.211720",
+                "longitude": "-1.455675"
+              },
+              "physical_reference": "4402704",
+              "last_updated": "2026-10-24T21:02:25.477Z"
+            },
+            {
+              "uid": "5003061",
+              "evse_id": "GBFASE4402703",
+              "status": "AVAILABLE",
+              "capabilities": [
+                "CREDIT_CARD_PAYABLE",
+                "REMOTE_START_STOP_CAPABLE",
+                "RFID_READER"
+              ],
+              "connectors": [
+                {
+                  "id": "1",
+                  "standard": "IEC_62196_T2_COMBO",
+                  "format": "CABLE",
+                  "power_type": "DC",
+                  "max_voltage": 400,
+                  "max_amperage": 250,
+                  "max_electric_power": 100000,
+                  "tariff_ids": [
+                    "678"
+                  ],
+                  "last_updated": "2026-10-24T22:27:41.217Z"
+                }
+              ],
+              "coordinates": {
+                "latitude": "51.211720",
+                "longitude": "-1.455675"
+              },
+              "physical_reference": "4402703",
+              "last_updated": "2026-10-24T22:27:41.217Z"
+            }
+          ],
+          "operator": {
+            "name": "Fastned",
+            "website": "https://fastnedcharging.com/en/",
+            "logo": {
+              "url": "https://content.presspage.com/uploads/2519/500_fastnedlogo-2.jpg",
+              "category": "NETWORK",
+              "type": "jpeg",
+              "width": 400,
+              "height": 400
+            }
+          },
+          "time_zone": "Europe/London",
+          "opening_times": {
+            "twentyfourseven": true
+          },
+          "charging_when_closed": true,
+          "energy_mix": {
+            "is_green_energy": true
+          },
+          "last_updated": "2026-10-24T22:36:46.424Z"
+        }
+      ],
+      "status_code": 1000,
+      "status_message": "Success",
+      "timestamp": "2026-10-24T22:37:45.627Z"
+    }
+  }
+}

@@ -60,6 +60,32 @@ def endpoint_for(config: OperatorConfig, module: str) -> str:
     raise FeedError(f"{config.id}: no {module} endpoint or base_url is known")
 
 
+def endpoints_for(config: OperatorConfig, module: str) -> list[str]:
+    """Every URL to read for one module: the operator's own, then each in more_endpoints."""
+    more = [getattr(pair, module).url for pair in config.more_endpoints]
+    return [endpoint_for(config, module), *more]
+
+
+def _combined(module: str, fetches: list[ModuleFetch]) -> ModuleFetch:
+    """One module's fetches from several files, as if from one feed."""
+    if len(fetches) == 1:
+        return fetches[0]
+    totals = [fetch.total_reported for fetch in fetches]
+    return ModuleFetch(
+        module=module,
+        endpoint=fetches[0].endpoint,
+        records=[record for fetch in fetches for record in fetch.records],
+        pages=[page for fetch in fetches for page in fetch.pages],
+        total_reported=None if None in totals else sum(totals),
+        complete=all(fetch.complete for fetch in fetches),
+    )
+
+
+def _sources(fetches: list[ModuleFetch]) -> dict[str, str]:
+    """Each record id with the URL of the file it came from; a later file wins."""
+    return {str(raw.get("id")): fetch.endpoint for fetch in fetches for raw in fetch.records}
+
+
 def _describe(exc: Exception) -> str:
     if isinstance(exc, ValidationError):
         error = exc.errors()[0]
@@ -94,26 +120,34 @@ def fetch(
     if config.adapter != "ocpi_221":
         raise FeedError(f"{config.id} uses the {config.adapter} adapter, not ocpi_221")
     fetched_at = now or datetime.now(UTC).replace(microsecond=0)
-    modules: dict[str, ModuleFetch] = {}
+    fetched: dict[str, list[ModuleFetch]] = {module: [] for module in MODULES}
     # One URL answers every module (response_envelope by_module): request it once.
     responses = {} if config.response_envelope == "by_module" else None
     for module in MODULES:
         try:
-            modules[module] = fetch_module(
-                client,
-                module,
-                endpoint_for(config, module),
-                date_from=date_from,
-                page_size=page_size,
-                max_pages=max_pages,
-                progress=progress,
-                envelope=config.response_envelope,
-                responses=responses,
-            )
+            for endpoint in endpoints_for(config, module):
+                fetched[module].append(
+                    fetch_module(
+                        client,
+                        module,
+                        endpoint,
+                        date_from=date_from,
+                        page_size=page_size,
+                        max_pages=max_pages,
+                        progress=progress,
+                        envelope=config.response_envelope,
+                        responses=responses,
+                    )
+                )
         except FeedError as exc:
             # Say how far the fetch got, for the run log (pipeline.run.failure_log).
-            exc.modules = {**modules, **({module: exc.partial} if exc.partial else {})}
+            if exc.partial:
+                fetched[module].append(exc.partial)
+            exc.modules = {
+                name: _combined(name, fetches) for name, fetches in fetched.items() if fetches
+            }
             raise
+    modules = {module: _combined(module, fetches) for module, fetches in fetched.items()}
     result = AdapterResult(operator_id=config.id, fetched_at=fetched_at, modules=modules)
     issues = IssueLog()
     convert_records(
@@ -122,6 +156,8 @@ def fetch(
         locations=modules["locations"].records,
         tariffs=modules["tariffs"].records,
         issues=issues,
+        location_sources=_sources(fetched["locations"]) if config.more_endpoints else None,
+        tariff_sources=_sources(fetched["tariffs"]) if config.more_endpoints else None,
     )
     result.issues = [client.redact(line) for line in issues.lines()]
     return result
@@ -140,18 +176,21 @@ def convert_records(
     locations: list[dict],
     tariffs: list[dict],
     issues: IssueLog,
+    location_sources: dict[str, str] | None = None,
     tariff_sources: dict[str, str] | None = None,
 ) -> None:
     """Convert OCPI 2.2.1 location and tariff objects into result, logging any problems.
 
-    tariff_sources maps a tariff id to the URL it was fetched from, for feeds that serve
-    one tariff per request; otherwise each record's source is its module's endpoint.
+    location_sources and tariff_sources map a record id to the URL it was fetched from,
+    for feeds that serve records from several URLs (one tariff per request, or one file
+    per site); otherwise each record's source is its module's endpoint.
     """
-    source = result.modules["locations"].endpoint
+    endpoint = result.modules["locations"].endpoint
     for raw in _latest_by_id(locations, "location", issues):
         if not publish_allowed(raw, config, issues) or excluded_by_owner(raw, config, issues):
             _dropped(result, raw, config)
             continue
+        source = (location_sources or {}).get(str(raw.get("id")), endpoint)
         try:
             result.locations.append(
                 location_from_ocpi(

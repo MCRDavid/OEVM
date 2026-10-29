@@ -16,9 +16,10 @@ section filled in.
 | A1 | `eco_movement_pcpr` | bp pulse, Shell Recharge, ubitricity, Community by Shell Recharge | A token from at least one operator | 2 |
 | A2 | `gridserve` | Gridserve | A key | 3 |
 | A3 | `static_file` | No current operator; later council CSVs and FOI spreadsheets | A source that needs it | Deferred |
-| A4 | None yet | MFG on `ocpi_221`; Fastned, Believ and others once their format is known | Nothing for MFG; access for the rest | 1 |
+| A4 | None yet | MFG and Fastned on `ocpi_221`; Believ and others once their format is known | Nothing for MFG; access for the rest | 1 |
 | A6 | Plain wrapper option for `ocpi_221` | Clenergy EV | Nothing | Built: `response_envelope: data_list` |
 | A7 | One-response option for `ocpi_221` | Mer UK | Nothing | Built: `response_envelope: by_module` |
+| A8 | Several files option for `ocpi_221` | 3ti | Nothing | Built: `more_endpoints` |
 | A5 | Basic auth for `ocpi_221` | Osprey | Osprey confirming the method and granting credentials | When credentials arrive |
 
 Operators that need no new adapter, so are not tasks here: Pod (`ocpi_221` once a token
@@ -142,9 +143,11 @@ The "More operators from source feeds" thread checked each operator's own pages 
 
 - MFG EV Power: `ocpi_221` (added in its own PR from that thread).
 - Clenergy EV: needs task A6 below.
+- Fastned: `ocpi_221` with its key in an `x-api-key` header, switched on 2026-10-24 once the
+  owner agreed to its Fair Use Policy (ADR 0028). Its key arrived the same day, and the
+  feed turned out to be standard OCPI 2.2.1.
 
-**Format unknown until access is granted:** Fastned (API keys; its Fair Use Policy claims
-all rights in the data and says it "may throttle"), Believ (free self-serve registration;
+**Format unknown until access is granted:** Believ (free self-serve registration;
 documentation only visible after login), Giga Power, EV Smart (says OCPI, no terms),
 Blink and Ionity (all by request). Each gets an A-numbered task in this file once a real
 response shows it is not standard OCPI.
@@ -223,6 +226,26 @@ applies, and a run makes one request.
 **Licence:** the data page states no terms. Mer's general terms and conditions grant
 personal, non-commercial use of website content, so the owner decides whether they cover
 the open data before the operator is switched on.
+
+## A8: several location and tariff files for one operator in `ocpi_221` (3ti)
+
+Added 2026-10-23.
+
+**Unlocks:** 3ti (party GB*3TI in EV Roam's register), six sites.
+
+**Feed format:** 3ti's public charge points page,
+https://3ti.co.uk/3ti-public-charge-points/, reads each site from its own pair of Fuuse
+open data files, `https://api.fuuse.io/opendata/<site id>/location` and `.../tariff`. Each
+file is a standard OCPI 2.2.1 response holding one site's records.
+
+**Change:** an operator file setting, `more_endpoints`, listing further location and
+tariff pairs after the pair in `endpoints`. The adapter reads every file in turn, adds the
+records together and keeps the URL each record came from as its source. The files share
+one host, so the host's gap applies between all of them. If any file fails, the operator's
+fetch fails as it would for a single feed, and the map keeps the last good copy.
+
+**Access:** none needed. **Rate limits:** 31 seconds between requests on Fuuse's host,
+as for Arnold Clark Charge and ScottishPower Recharge; 12 requests a run.
 
 ## Suggested order
 

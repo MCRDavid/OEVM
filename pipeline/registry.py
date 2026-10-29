@@ -27,6 +27,15 @@ FOLLOW_UP_AFTER_DAYS = 14
 ROOT = Path(__file__).resolve().parent.parent
 OPERATORS_DIR = ROOT / "operators"
 
+# libyaml's C parser reads the same files as PyYAML's pure-Python one, about ten times
+# faster; the registry is read many times in tests. Fall back where PyYAML lacks libyaml.
+_YAML_LOADER = getattr(yaml, "CSafeLoader", yaml.SafeLoader)
+
+
+def load_yaml(text: str):
+    """Parse YAML text as yaml.safe_load does (safe tags only)."""
+    return yaml.load(text, Loader=_YAML_LOADER)
+
 
 class RegistryError(Exception):
     """One or more registry files are invalid. `problems` lists each one."""
@@ -38,7 +47,7 @@ class RegistryError(Exception):
 
 def load_operator_file(path: Path) -> OperatorConfig:
     """Parse and validate one operator file. Raises ValueError or yaml.YAMLError."""
-    data = yaml.safe_load(path.read_text(encoding="utf-8"))
+    data = load_yaml(path.read_text(encoding="utf-8"))
     if not isinstance(data, dict):
         raise ValueError("the file must contain a YAML mapping of field names to values")
     return OperatorConfig.model_validate(data)
@@ -103,10 +112,7 @@ def load_registry(directory: Path = OPERATORS_DIR) -> dict[str, OperatorConfig]:
 
 def feed_hosts(config: OperatorConfig) -> set[str]:
     """The hosts this operator's feeds are published on, from its own URLs."""
-    urls = [endpoint.url for endpoint in config.endpoints.values()]
-    if config.base_url != "unknown":
-        urls.append(config.base_url)
-    return {urlsplit(url).hostname for url in urls} - {None}
+    return {urlsplit(url).hostname for url in config.feed_urls()} - {None}
 
 
 def _related_problems(operators: dict[str, OperatorConfig]) -> list[str]:

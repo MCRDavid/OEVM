@@ -95,6 +95,7 @@ jobs:
         # Operators with a relay decision (operators/<id>.yaml, relay) go through the
         # project's one relay Worker, which these two secrets address.
         env:
+          FASTNED_API_KEY: ${{ secrets.FASTNED_API_KEY }}
           JOLT_API_KEY: ${{ secrets.JOLT_API_KEY }}
           MONTA_CLIENT_ID: ${{ secrets.MONTA_CLIENT_ID }}
           MONTA_CLIENT_SECRET: ${{ secrets.MONTA_CLIENT_SECRET }}

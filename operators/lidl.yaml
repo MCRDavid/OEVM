@@ -20,7 +20,7 @@ cors: unknown
 attribution: null
 licence: null
 engagement:
-  status: no_public_feed_found
+  status: requested_no_reply
   evidence:
     - date: 2026-10-10
       url: https://www.lidl.co.uk/c/electric-vehicle-charging/s10049808
@@ -37,7 +37,12 @@ engagement:
         and no open data feed or route for requesting open data was found.
       quote: Lidl EV Charging network 2025 reliability results
       evidence_url: https://www.lidl.co.uk/c/electric-vehicle-charging/s10049808
-access_requested: null
+    - date: 2026-10-23
+      action: request_sent
+      channel: web_form
+      summary: >-
+        Requested access to Lidl's PCPR data through ChargePoint's Google form (one submission for this network), which is shared with Eco-Movement.
+access_requested: 2026-10-23
 access_granted: null
 sources:
   - url: https://www.lidl.co.uk/c/electric-vehicle-charging/s10049808

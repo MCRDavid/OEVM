@@ -20,7 +20,7 @@ cors: unknown
 attribution: null
 licence: null
 engagement:
-  status: key_on_request
+  status: requested_no_reply
   evidence:
     - date: 2026-10-10
       url: https://www.chargepoint.com/en-gb/blog/navigating-uk-public-charging-regulations-guide-charge-point-operators
@@ -35,6 +35,19 @@ engagement:
         The "PCPR Data Request - ChargePoint station management software" form asks for an
         email address, name, organisation, network and planned use of data, and says requests
         are shared with Eco-Movement. It names no licence, terms, key or rate limit.
+    - date: 2026-10-23
+      url: https://docs.google.com/forms/d/e/1FAIpQLSeJ9Z3dyMdsBjaQ3pj9F3aOAXE4jstoHFBxwVq3wxs5lU5JLg/viewform
+      note: >-
+        On 2026-10-23 the form said the data of these operators on the ChargePoint platform
+        is reached by choosing "ChargePoint platform CPOs": Airbus UK, AMR GP Ltd, Aylesford
+        Electrical, Bicester Village, BILLING SERVICE STATION LTD., ChargePoint UK
+        Headquarters, Chargie Chargie, Cullen Group Limited, Dean Court Community
+        Association, Derby Leisure and Events Venue, East Devon 4x4, Euro Stars WIDNES LTD,
+        Evie Life, Harwell Science & Innovation Campus, Harwich Haven, Holiday Inn Express -
+        St Albans, InstaVolt Ltd, Jute Jam & Journalism Group, LCFA Sefton CIC, Loch Ness
+        Inn, Macrow Ltd, MEPC Milton Park, mysql8ccqauat_eu (appears to be a test entry),
+        Otford Parish Council, Pamusoro, Sea Level Wave Co Ltd, Selwood Limited, Sutton hotel
+        collection, Tylehurst Instruments, West Estates Limited, ZOLB EV.
   log:
     - date: 2026-10-10
       action: feed_searched
@@ -60,7 +73,12 @@ engagement:
         ChargePoint station management software in the United Kingdom, in accordance with the
         UK Public Charge Point Regulations. You will receive an answer within 5 working days.
       evidence_url: https://docs.google.com/forms/d/e/1FAIpQLSeJ9Z3dyMdsBjaQ3pj9F3aOAXE4jstoHFBxwVq3wxs5lU5JLg/viewform
-access_requested: null
+    - date: 2026-10-23
+      action: request_sent
+      channel: web_form
+      summary: >-
+        Requested access to PCPR data for the ChargePoint platform networks through ChargePoint's Google form (choice "ChargePoint platform CPOs"), which is shared with Eco-Movement.
+access_requested: 2026-10-23
 access_granted: null
 sources:
   - url: https://www.chargepoint.com/en-gb

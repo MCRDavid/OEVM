@@ -31,6 +31,9 @@ markers = ["e2e: the built map page in a real browser (needs npm ci and Chromium
 
 [tool.coverage.run]
 source = ["adapters", "pipeline", "schema"]
+# Python 3.12's sys.monitoring measures the same lines at about half the cost of the
+# older tracer, so the coverage floor stays in CI without doubling the test time.
+core = "sysmon"
 
 [tool.coverage.report]
 # CI fails if test coverage drops below this. Raise it as coverage improves; never lower
@@ -44,5 +47,6 @@ dev = [
     "pre-commit>=4.6.2",
     "pytest>=9.1.1",
     "pytest-cov>=7",
+    "pytest-xdist>=3.8.0",
     "ruff>=0.16.10",
 ]

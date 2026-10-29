@@ -70,10 +70,16 @@ zero_price_tariffs:
   basis: >-
     8 of the 22 tariffs give an energy price of 0.0 and no other price, and they cover 127
     of the 138 locations (mostly in Newport and Plymouth) on 2026-10-23; the other
-    tariffs charge 30p to 50p per kWh. A web search on 2026-10-23 found third-party
-    listings giving prices of about 38p to 50p per kWh for some of these sites; they were
-    not checked further and are not used as data. Monta's copies of these sites showed
-    "Price unknown". On 2026-10-23 the repository owner decided these tariffs show "Price
+    tariffs charge 30p to 50p per kWh. Urban Fox's own website, read in a browser on
+    2026-10-23, gives prices for these places that the feed does not: "30 - 40p/kWh" on
+    each of its 24 Newport street pages (for example
+    https://urbanfox.network/networks/newport-city-council/alexandra-road/) and "43 -
+    50p/kWh" for Plymouth, without saying what decides the rate within a range. Newport
+    City Council's newspaper, Newport Matters for July 2026 (page 6,
+    https://www.newport.gov.uk/sites/default/files/media/media-documents/Newport-Matters-July-2026.pdf),
+    says "Our charging network offers competitive overnight rates, starting from 39p per
+    kWh". These prices are noted here only and are not used as data. Monta's copies of
+    these sites showed "Price unknown". On 2026-10-23 the repository owner decided these tariffs show "Price
     unknown" rather than "Free".
   evidence_url: https://api.urbanfox.network/api/opendata/tariffs
   tariff_ids:
@@ -136,7 +142,8 @@ findings:
       8 of the 22 tariffs give an energy price of 0.0 and no other price, and 127 of the
       138 locations (116 with the city Newport, 1 with Gwent, 9 in Plymouth and 1 in Brighton) name
       only these tariffs. The same 8 tariff ids were sent again about four hours later. As
-      published, these sites would read as free to use.
+      published, these sites would read as free to use, while Urban Fox's own website gives
+      30 to 40p per kWh for Newport and 43 to 50p per kWh for Plymouth (read 2026-10-23).
     handling: >-
       Shown as "Price unknown" rather than "Free", by the repository owner's decision of
       2026-10-23 (zero_price_tariffs above), matched by exact tariff id while their prices

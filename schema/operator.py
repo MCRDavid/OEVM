@@ -357,6 +357,13 @@ class Endpoint(_Model):
     note: str | None = None
 
 
+class MoreEndpoints(_Model):
+    """One more pair of files, read as well as the operator's endpoints (ocpi_221 only)."""
+
+    locations: Endpoint
+    tariffs: Endpoint
+
+
 class Source(_Model):
     url: SafeUrl
     note: str | None = None
@@ -857,6 +864,13 @@ class OperatorConfig(_Model):
         default_factory=dict,
         description="Specific URLs, recorded only where the source of the URL is known.",
     )
+    more_endpoints: list[MoreEndpoints] = Field(
+        default_factory=list,
+        description="Further location and tariff files, for an operator that publishes its "
+        "data in several files of the same form, such as one pair for each site. Each pair "
+        "is read like 'endpoints' and the records are added together, each keeping the URL "
+        "it came from. Needs locations and tariffs in 'endpoints'. ocpi_221 only.",
+    )
     response_envelope: ResponseEnvelope = Field(
         default="ocpi",
         description="'ocpi' (the default) requires each response to be an OCPI 2.2.1 "
@@ -957,6 +971,15 @@ class OperatorConfig(_Model):
     notes: NeutralText | None = None
     enabled: bool = Field(description="True if the pipeline should fetch this operator.")
 
+    def feed_urls(self) -> list[str]:
+        """Every feed URL in this file: its endpoints, more_endpoints and base URL."""
+        urls = [endpoint.url for endpoint in self.endpoints.values()]
+        urls += [pair.locations.url for pair in self.more_endpoints]
+        urls += [pair.tariffs.url for pair in self.more_endpoints]
+        if self.base_url != "unknown":
+            urls.append(self.base_url)
+        return urls
+
     @model_validator(mode="after")
     def _check(self) -> "OperatorConfig":
         problems = []
@@ -1003,6 +1026,18 @@ class OperatorConfig(_Model):
             or self.endpoints["locations"].url != self.endpoints["tariffs"].url
         ):
             problems.append("response_envelope by_module needs one URL for locations and tariffs")
+        if self.more_endpoints:
+            if self.adapter != "ocpi_221":
+                problems.append("more_endpoints only applies to the ocpi_221 adapter")
+            if not {"locations", "tariffs"} <= set(self.endpoints):
+                problems.append("more_endpoints needs locations and tariffs in endpoints")
+            if self.response_envelope == "by_module":
+                problems.append("more_endpoints cannot be used with response_envelope by_module")
+            urls = self.feed_urls()
+            problems += [
+                f"{url} is given more than once in endpoints and more_endpoints"
+                for url in sorted({url for url in urls if urls.count(url) > 1})
+            ]
         if self.relay is not None:
             if self.auth.method != "none":
                 problems.append("only a feed that needs no key may be relayed")
@@ -1022,9 +1057,7 @@ class OperatorConfig(_Model):
                 problems.append("only a feed that needs no key may be read past a certificate")
             if self.relay is not None:
                 problems.append("a relayed feed cannot also be read past a certificate")
-            urls = [endpoint.url for endpoint in self.endpoints.values()]
-            if self.base_url != "unknown":
-                urls.append(self.base_url)
+            urls = self.feed_urls()
             problems += [
                 f"{url} must be an https URL on {self.expired_certificate.host}, the host "
                 "named in expired_certificate"
@@ -1035,12 +1068,9 @@ class OperatorConfig(_Model):
             if not urls:
                 problems.append("expired_certificate needs the feed URLs on its host")
         if self.auth.method in ("header", "query_param", "client_credentials"):
-            urls = [endpoint.url for endpoint in self.endpoints.values()]
-            if self.base_url != "unknown":
-                urls.append(self.base_url)
             problems += [
                 f"{url} must use https, because requests to it carry a key"
-                for url in urls
+                for url in self.feed_urls()
                 if not url.startswith("https://")
             ]
         if problems:

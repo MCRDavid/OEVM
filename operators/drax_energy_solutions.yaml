@@ -20,7 +20,7 @@ cors: unknown
 attribution: null
 licence: null
 engagement:
-  status: key_on_request
+  status: requested_no_reply
   evidence:
     - date: 2026-10-23
       url: https://energy.drax.com/drax-network-of-public-chargers/
@@ -39,7 +39,12 @@ engagement:
         consenting to the processing of their data for the purpose of providing you with the
         requested information.
       evidence_url: https://energy.drax.com/drax-network-of-public-chargers/
-access_requested: null
+    - date: 2026-10-23
+      action: request_sent
+      channel: web_form
+      summary: >-
+        Requested access to Drax Energy Solutions' PCPR data through the form on its PCPR page, which is shared with Eco-Movement.
+access_requested: 2026-10-23
 access_granted: null
 sources:
   - url: https://energy.drax.com/drax-network-of-public-chargers/

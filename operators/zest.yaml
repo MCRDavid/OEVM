@@ -20,7 +20,7 @@ cors: unknown
 attribution: null
 licence: null
 engagement:
-  status: key_on_request
+  status: requested_no_reply
   evidence:
     - date: 2026-10-10
       url: https://www.zest.uk.com/charge-point-open-data
@@ -39,7 +39,12 @@ engagement:
         Request Zest’s charge point open data as per the Public Charge Point Regulations
         2023.
       evidence_url: https://www.zest.uk.com/charge-point-open-data
-access_requested: null
+    - date: 2026-10-23
+      action: request_sent
+      channel: web_form
+      summary: >-
+        Requested access to Zest's charge point open data through its open data form.
+access_requested: 2026-10-23
 access_granted: null
 sources:
   - url: https://www.zest.uk.com/charge-point-open-data

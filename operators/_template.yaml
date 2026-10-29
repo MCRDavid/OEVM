@@ -36,6 +36,17 @@ base_url: unknown
 #       note: <optional>
 endpoints: {}
 
+# Only for an operator that publishes its data as several location and tariff files of the
+# same form, such as one pair per site (ocpi_221 only; see operators/three_ti.yaml). Put the
+# first pair in endpoints above and each further pair here:
+#   more_endpoints:
+#     - locations:
+#         url: <full URL>
+#         status: documented
+#       tariffs:
+#         url: <full URL>
+#         status: documented
+
 auth:
   # One of: none, header, query_param, client_credentials, unknown. client_credentials
   # requests an access token once per run with a client id and secret (see

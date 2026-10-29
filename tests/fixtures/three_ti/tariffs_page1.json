@@ -1,0 +1,60 @@
+{
+  "request": {
+    "method": "GET",
+    "url": "https://api.fuuse.io/opendata/c3947832-9352-41fa-96c1-831215eea8e0/tariff"
+  },
+  "response": {
+    "status_code": 200,
+    "headers": {
+      "content-type": "application/json; charset=utf-8",
+      "x-total-count": "1",
+      "x-limit": "1000"
+    },
+    "body": {
+      "status_code": 1000,
+      "data": [
+        {
+          "id": "eca6de9f-e5ee-4b20-9786-f597cb96aacc",
+          "currency": "GBP",
+          "type": "AD_HOC_PAYMENT",
+          "tariff_alt_text": [
+            {
+              "language": "en",
+              "text": "Public Tariff"
+            }
+          ],
+          "elements": [
+            {
+              "price_components": [
+                {
+                  "type": "ENERGY",
+                  "price": "0.2917",
+                  "vat": "20.0000",
+                  "step_size": 1
+                },
+                {
+                  "type": "FLAT",
+                  "price": "0.0000",
+                  "vat": "20.0000",
+                  "step_size": 1
+                },
+                {
+                  "type": "TIME",
+                  "price": "0.0000",
+                  "vat": "20.0000",
+                  "step_size": 1
+                }
+              ],
+              "restrictions": {
+                "min_kwh": "0.1000",
+                "min_duration": 60
+              }
+            }
+          ],
+          "last_updated": "2026-07-08T15:22:10.854Z"
+        }
+      ],
+      "timestamp": "2026-10-23T21:46:29.466Z"
+    }
+  }
+}
