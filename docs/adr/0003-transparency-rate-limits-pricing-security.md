@@ -75,6 +75,25 @@ decided that these limits are read per token.
 - If Eco-Movement says its limits count per address, or refuses requests, the decision is
   removed and the shared gap returns.
 
+### Amendment, 29 October 2026 (evening): networks take turns
+
+A manual daily fetch on 29 October 2026 read all 13 Eco-Movement networks with their own
+gaps, 39 requests from one address in about 56 minutes, with no refusal, retry or wait
+asked for. The repository owner then decided that operators whose limits are read per key
+are fetched together, taking turns at the host, rather than one after another.
+
+- **Only where every operator in a host group records `limits_per_key`** (`pipeline.run.takes_turns`).
+  Every other host is still fetched one operator at a time.
+- **Still one request at a time.** Each operator waits for its own key's gap, then for the
+  host's turn (`HostTimer.turn` in `adapters/http.py`), which it holds from the host's
+  2 second floor until the answer and any wait the server asks for are recorded. No two
+  requests to the host overlap, and none is closer than 2 seconds to the last.
+- **Nothing else changes:** each key keeps its 125 second gap, retries and slow-downs, a
+  wait the server asks of one key holds back every key, and one address is used.
+- With 22 networks the slowest is ubitricity (14 requests), so the group takes about 30
+  minutes rather than about 75. If Eco-Movement refuses requests, this and the per-key
+  reading are revisited.
+
 ## Prices
 
 - `pipeline/pricing.py` is the only way prices are shown: pounds and pence, GBP tariffs

@@ -79,7 +79,9 @@ decisions are in docs/adr/.
   Read a stated VAT rate as already in the price only where the owner recorded vat_in_price.
 - Never go below 1 second between requests to a host, or below any limit in an operator's
   rate_limit.limits plus a 1 second margin. Record each published limit with its publisher, an
-  exact quote, source URL and date; tests enforce these rules. Never run two fetches that use the same host in parallel.
+  exact quote, source URL and date; tests enforce these rules. Never run two fetches that use the same host in parallel,
+  except operators that all record limits_per_key, which the owner decided on 29 October 2026 may be
+  fetched together, taking turns: still one request at a time to the host, at least 2 seconds apart.
 - Operators on one host share its gap. Keep the gap per key only where the operator file records
   the owner's decision in limits_per_key, with every operator on that host agreeing; the host still
   gets one request at a time, at least 2 seconds apart. Never add one yourself.
