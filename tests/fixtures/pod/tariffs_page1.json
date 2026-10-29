@@ -1,0 +1,214 @@
+{
+  "request": {
+    "method": "GET",
+    "url": "https://open-chargepoints.com/api/ocpi/cpo/2.2.1/tariffs/?limit=1000"
+  },
+  "response": {
+    "status_code": 200,
+    "headers": {
+      "content-type": "application/json",
+      "link": "<https://open-chargepoints.com/api/ocpi/cpo/2.2.1/tariffs/?limit=1000&offset=6>; rel=\"next\"",
+      "x-total-count": "6",
+      "x-limit": "1000"
+    },
+    "body": {
+      "timestamp": "2026-10-29T14:03:52Z",
+      "status_code": 1000,
+      "status_message": "Success",
+      "data": [
+        {
+          "party_id": "POD",
+          "id": "9e8739a8-cd75-58dd-96d9-1aa9720eef6a",
+          "currency": "GBP",
+          "tariff_alt_url": null,
+          "tariff_alt_text": null,
+          "last_updated": "2026-06-08T09:43:19Z",
+          "country_code": "GB",
+          "elements": [
+            {
+              "restrictions": {
+                "day_of_week": [
+                  "MONDAY",
+                  "TUESDAY",
+                  "WEDNESDAY",
+                  "THURSDAY",
+                  "FRIDAY",
+                  "SATURDAY",
+                  "SUNDAY"
+                ]
+              },
+              "price_components": [
+                {
+                  "type": "ENERGY",
+                  "price": 0.52,
+                  "vat": 20,
+                  "step_size": 1
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "party_id": "POD",
+          "id": "eb134532-ffba-5147-8556-2a3b787ca3a4",
+          "currency": "GBP",
+          "tariff_alt_url": null,
+          "tariff_alt_text": null,
+          "last_updated": "2025-10-30T14:34:34Z",
+          "country_code": "GB",
+          "elements": [
+            {
+              "restrictions": {
+                "day_of_week": [
+                  "MONDAY",
+                  "TUESDAY",
+                  "WEDNESDAY",
+                  "THURSDAY",
+                  "FRIDAY",
+                  "SATURDAY",
+                  "SUNDAY"
+                ]
+              },
+              "price_components": [
+                {
+                  "type": "ENERGY",
+                  "price": 0.38,
+                  "vat": 20,
+                  "step_size": 1
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "party_id": "POD",
+          "id": "f8181b87-4210-593b-bd73-2ba756124a71",
+          "currency": "GBP",
+          "tariff_alt_url": null,
+          "tariff_alt_text": null,
+          "last_updated": "2026-04-02T08:35:53Z",
+          "country_code": "GB",
+          "elements": [
+            {
+              "restrictions": {
+                "day_of_week": [
+                  "MONDAY",
+                  "TUESDAY",
+                  "WEDNESDAY",
+                  "THURSDAY",
+                  "FRIDAY",
+                  "SATURDAY",
+                  "SUNDAY"
+                ]
+              },
+              "price_components": [
+                {
+                  "type": "ENERGY",
+                  "price": 0.27,
+                  "vat": 20,
+                  "step_size": 1
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "party_id": "POD",
+          "id": "ee45fbc2-eab0-5465-8589-d0638d1441e7",
+          "currency": "GBP",
+          "tariff_alt_url": null,
+          "tariff_alt_text": null,
+          "last_updated": "2026-06-08T09:43:17Z",
+          "country_code": "GB",
+          "elements": [
+            {
+              "restrictions": {
+                "day_of_week": [
+                  "MONDAY",
+                  "TUESDAY",
+                  "WEDNESDAY",
+                  "THURSDAY",
+                  "FRIDAY",
+                  "SATURDAY",
+                  "SUNDAY"
+                ]
+              },
+              "price_components": [
+                {
+                  "type": "ENERGY",
+                  "price": 0.41,
+                  "vat": 20,
+                  "step_size": 1
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "party_id": "POD",
+          "id": "ee9a6e17-056c-4186-8b3a-d38ecc595fac",
+          "currency": "GBP",
+          "tariff_alt_url": null,
+          "tariff_alt_text": null,
+          "last_updated": "2024-11-07T14:11:32Z",
+          "country_code": "GB",
+          "elements": [
+            {
+              "restrictions": {
+                "day_of_week": [
+                  "MONDAY",
+                  "TUESDAY",
+                  "WEDNESDAY",
+                  "THURSDAY",
+                  "FRIDAY",
+                  "SATURDAY",
+                  "SUNDAY"
+                ]
+              },
+              "price_components": [
+                {
+                  "type": "FLAT",
+                  "price": 0,
+                  "vat": 20,
+                  "step_size": 1
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "party_id": "POD",
+          "id": "51d448a8-8dce-5103-8fbd-cc13c24d0c7c",
+          "currency": "GBP",
+          "tariff_alt_url": null,
+          "tariff_alt_text": null,
+          "last_updated": "2026-06-08T09:43:24Z",
+          "country_code": "GB",
+          "elements": [
+            {
+              "restrictions": {
+                "day_of_week": [
+                  "MONDAY",
+                  "TUESDAY",
+                  "WEDNESDAY",
+                  "THURSDAY",
+                  "FRIDAY",
+                  "SATURDAY",
+                  "SUNDAY"
+                ]
+              },
+              "price_components": [
+                {
+                  "type": "ENERGY",
+                  "price": 0.37,
+                  "vat": 20,
+                  "step_size": 1
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  }
+}

@@ -1,0 +1,591 @@
+{
+  "request": {
+    "method": "GET",
+    "url": "https://open-chargepoints.com/api/ocpi/cpo/2.2.1/locations/?limit=1000"
+  },
+  "response": {
+    "status_code": 200,
+    "headers": {
+      "content-type": "application/json",
+      "link": "<https://open-chargepoints.com/api/ocpi/cpo/2.2.1/locations/?limit=1000&offset=3>; rel=\"next\"",
+      "x-total-count": "3",
+      "x-limit": "1000"
+    },
+    "body": {
+      "timestamp": "2026-10-29T13:53:22Z",
+      "status_code": 1000,
+      "status_message": "Success",
+      "data": [
+        {
+          "party_id": "DRI",
+          "id": "s1077984",
+          "country_code": "GB",
+          "publish": true,
+          "country": "GBR",
+          "address": "Stockport Road 209",
+          "city": "Cheshire",
+          "postal_code": "SK3 0LX",
+          "coordinates": {
+            "latitude": "53.40074200",
+            "longitude": "-2.19275600"
+          },
+          "state": null,
+          "last_updated": "2026-10-29T12:33:49Z",
+          "opening_times": {
+            "exceptional_closings": [],
+            "exceptional_openings": [],
+            "regular_hours": [],
+            "twentyfourseven": true
+          },
+          "name": "Greggs (Stockport)",
+          "time_zone": "Europe/London",
+          "owner": {
+            "name": "evyve",
+            "website": "https://www.evyve.co.uk/"
+          },
+          "operator": {
+            "name": "evyve",
+            "website": "https://www.evyve.co.uk/"
+          },
+          "energy_mix": null,
+          "charging_when_closed": true,
+          "directions": null,
+          "evses": [
+            {
+              "uid": "5556530",
+              "status": "AVAILABLE",
+              "last_updated": "2026-10-29T12:03:01Z",
+              "evse_id": "GB*EVY*E5556530",
+              "physical_reference": "Stockport 01-A",
+              "floor_level": null,
+              "directions": null,
+              "parking_restrictions": null,
+              "capabilities": [
+                "REMOTE_START_STOP_CAPABLE",
+                "RFID_READER"
+              ],
+              "connectors": [
+                {
+                  "id": "7044609",
+                  "standard": "CHADEMO",
+                  "format": "CABLE",
+                  "power_type": "DC",
+                  "last_updated": "2026-10-28T10:54:13Z",
+                  "max_amperage": 188,
+                  "max_voltage": 400,
+                  "max_electric_power": 75000,
+                  "tariff_ids": [
+                    "GBEVYT18831"
+                  ]
+                }
+              ]
+            },
+            {
+              "uid": "5556531",
+              "status": "AVAILABLE",
+              "last_updated": "2026-10-29T12:33:49Z",
+              "evse_id": "GB*EVY*E5556531",
+              "physical_reference": "Stockport 01-B",
+              "floor_level": null,
+              "directions": null,
+              "parking_restrictions": null,
+              "capabilities": [
+                "REMOTE_START_STOP_CAPABLE",
+                "RFID_READER"
+              ],
+              "connectors": [
+                {
+                  "id": "7044610",
+                  "standard": "IEC_62196_T2_COMBO",
+                  "format": "CABLE",
+                  "power_type": "DC",
+                  "last_updated": "2026-10-28T10:54:13Z",
+                  "max_amperage": 188,
+                  "max_voltage": 400,
+                  "max_electric_power": 75000,
+                  "tariff_ids": [
+                    "GBEVYT18831"
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "party_id": "DRI",
+          "id": "s1078103",
+          "country_code": "GB",
+          "publish": true,
+          "country": "GBR",
+          "address": "Ohio Drive 5",
+          "city": "Salford",
+          "postal_code": "M50 2GT",
+          "coordinates": {
+            "latitude": "53.47612800",
+            "longitude": "-2.29129200"
+          },
+          "state": null,
+          "last_updated": "2026-10-28T18:03:43Z",
+          "opening_times": {
+            "twentyfourseven": true
+          },
+          "name": "Harbour City (Salford)",
+          "time_zone": "Europe/London",
+          "owner": {
+            "name": "evyve",
+            "website": "https://www.evyve.co.uk/"
+          },
+          "operator": {
+            "name": "evyve",
+            "website": "https://www.evyve.co.uk/"
+          },
+          "energy_mix": null,
+          "charging_when_closed": true,
+          "directions": null,
+          "evses": [
+            {
+              "uid": "5557221",
+              "status": "AVAILABLE",
+              "last_updated": "2026-10-28T11:05:43Z",
+              "evse_id": "GB*EVY*E5557221",
+              "physical_reference": "Victoria 02-B",
+              "floor_level": null,
+              "directions": null,
+              "parking_restrictions": null,
+              "capabilities": [
+                "REMOTE_START_STOP_CAPABLE",
+                "RFID_READER"
+              ],
+              "connectors": [
+                {
+                  "id": "7171928",
+                  "standard": "IEC_62196_T2",
+                  "format": "SOCKET",
+                  "power_type": "AC_3_PHASE",
+                  "last_updated": "2026-10-28T10:56:02Z",
+                  "max_amperage": 32,
+                  "max_voltage": 230,
+                  "max_electric_power": 22080,
+                  "tariff_ids": [
+                    "GBEVYT19882"
+                  ]
+                }
+              ]
+            },
+            {
+              "uid": "5557223",
+              "status": "AVAILABLE",
+              "last_updated": "2026-10-28T15:30:40Z",
+              "evse_id": "GB*EVY*E5557223",
+              "physical_reference": "Victoria 03-B",
+              "floor_level": null,
+              "directions": null,
+              "parking_restrictions": null,
+              "capabilities": [
+                "REMOTE_START_STOP_CAPABLE",
+                "RFID_READER"
+              ],
+              "connectors": [
+                {
+                  "id": "7171975",
+                  "standard": "IEC_62196_T2",
+                  "format": "SOCKET",
+                  "power_type": "AC_3_PHASE",
+                  "last_updated": "2026-10-28T10:56:02Z",
+                  "max_amperage": 32,
+                  "max_voltage": 230,
+                  "max_electric_power": 22080,
+                  "tariff_ids": [
+                    "GBEVYT19882"
+                  ]
+                }
+              ]
+            },
+            {
+              "uid": "5557218",
+              "status": "AVAILABLE",
+              "last_updated": "2026-10-21T11:31:38Z",
+              "evse_id": "GB*EVY*E5557218",
+              "physical_reference": "Victoria 01-A",
+              "floor_level": null,
+              "directions": null,
+              "parking_restrictions": null,
+              "capabilities": [
+                "REMOTE_START_STOP_CAPABLE",
+                "RFID_READER"
+              ],
+              "connectors": [
+                {
+                  "id": "7203363",
+                  "standard": "IEC_62196_T2",
+                  "format": "SOCKET",
+                  "power_type": "AC_3_PHASE",
+                  "last_updated": "2026-10-28T10:56:02Z",
+                  "max_amperage": 32,
+                  "max_voltage": 230,
+                  "max_electric_power": 22080,
+                  "tariff_ids": [
+                    "GBEVYT19882"
+                  ]
+                }
+              ]
+            },
+            {
+              "uid": "5557219",
+              "status": "AVAILABLE",
+              "last_updated": "2026-10-28T18:03:43Z",
+              "evse_id": "GB*EVY*E5557219",
+              "physical_reference": "Victoria 01-B",
+              "floor_level": null,
+              "directions": null,
+              "parking_restrictions": null,
+              "capabilities": [
+                "REMOTE_START_STOP_CAPABLE",
+                "RFID_READER"
+              ],
+              "connectors": [
+                {
+                  "id": "7203370",
+                  "standard": "IEC_62196_T2",
+                  "format": "SOCKET",
+                  "power_type": "AC_3_PHASE",
+                  "last_updated": "2026-10-28T10:56:02Z",
+                  "max_amperage": 32,
+                  "max_voltage": 230,
+                  "max_electric_power": 22080,
+                  "tariff_ids": [
+                    "GBEVYT19882"
+                  ]
+                }
+              ]
+            },
+            {
+              "uid": "5557227",
+              "status": "AVAILABLE",
+              "last_updated": "2026-10-21T10:44:29Z",
+              "evse_id": "GB*EVY*E5557227",
+              "physical_reference": "Victoria 05-B",
+              "floor_level": null,
+              "directions": null,
+              "parking_restrictions": null,
+              "capabilities": [
+                "REMOTE_START_STOP_CAPABLE",
+                "RFID_READER"
+              ],
+              "connectors": [
+                {
+                  "id": "7203384",
+                  "standard": "IEC_62196_T2",
+                  "format": "SOCKET",
+                  "power_type": "AC_3_PHASE",
+                  "last_updated": "2026-10-28T10:56:03Z",
+                  "max_amperage": 32,
+                  "max_voltage": 230,
+                  "max_electric_power": 22080,
+                  "tariff_ids": [
+                    "GBEVYT19882"
+                  ]
+                }
+              ]
+            },
+            {
+              "uid": "5557226",
+              "status": "AVAILABLE",
+              "last_updated": "2026-10-28T15:57:31Z",
+              "evse_id": "GB*EVY*E5557226",
+              "physical_reference": "Victoria 05-A",
+              "floor_level": null,
+              "directions": null,
+              "parking_restrictions": null,
+              "capabilities": [
+                "REMOTE_START_STOP_CAPABLE",
+                "RFID_READER"
+              ],
+              "connectors": [
+                {
+                  "id": "7203381",
+                  "standard": "IEC_62196_T2",
+                  "format": "SOCKET",
+                  "power_type": "AC_3_PHASE",
+                  "last_updated": "2026-10-28T10:56:02Z",
+                  "max_amperage": 32,
+                  "max_voltage": 230,
+                  "max_electric_power": 22080,
+                  "tariff_ids": [
+                    "GBEVYT19882"
+                  ]
+                }
+              ]
+            },
+            {
+              "uid": "5557220",
+              "status": "AVAILABLE",
+              "last_updated": "2026-10-25T18:09:08Z",
+              "evse_id": "GB*EVY*E5557220",
+              "physical_reference": "Victoria 02-A",
+              "floor_level": null,
+              "directions": null,
+              "parking_restrictions": null,
+              "capabilities": [
+                "REMOTE_START_STOP_CAPABLE",
+                "RFID_READER"
+              ],
+              "connectors": [
+                {
+                  "id": "7171924",
+                  "standard": "IEC_62196_T2",
+                  "format": "SOCKET",
+                  "power_type": "AC_3_PHASE",
+                  "last_updated": "2026-10-28T10:56:02Z",
+                  "max_amperage": 32,
+                  "max_voltage": 230,
+                  "max_electric_power": 22080,
+                  "tariff_ids": [
+                    "GBEVYT19882"
+                  ]
+                }
+              ]
+            },
+            {
+              "uid": "5557225",
+              "status": "AVAILABLE",
+              "last_updated": "2026-10-23T15:54:36Z",
+              "evse_id": "GB*EVY*E5557225",
+              "physical_reference": "Victoria 04-B",
+              "floor_level": null,
+              "directions": null,
+              "parking_restrictions": null,
+              "capabilities": [
+                "REMOTE_START_STOP_CAPABLE",
+                "RFID_READER"
+              ],
+              "connectors": [
+                {
+                  "id": "7171986",
+                  "standard": "IEC_62196_T2",
+                  "format": "SOCKET",
+                  "power_type": "AC_3_PHASE",
+                  "last_updated": "2026-10-28T10:56:02Z",
+                  "max_amperage": 32,
+                  "max_voltage": 230,
+                  "max_electric_power": 22080,
+                  "tariff_ids": [
+                    "GBEVYT19882"
+                  ]
+                }
+              ]
+            },
+            {
+              "uid": "5557224",
+              "status": "AVAILABLE",
+              "last_updated": "2026-10-20T12:41:08Z",
+              "evse_id": "GB*EVY*E5557224",
+              "physical_reference": "Victoria 04-A",
+              "floor_level": null,
+              "directions": null,
+              "parking_restrictions": null,
+              "capabilities": [
+                "REMOTE_START_STOP_CAPABLE",
+                "RFID_READER"
+              ],
+              "connectors": [
+                {
+                  "id": "7171984",
+                  "standard": "IEC_62196_T2",
+                  "format": "SOCKET",
+                  "power_type": "AC_3_PHASE",
+                  "last_updated": "2026-10-28T10:56:02Z",
+                  "max_amperage": 32,
+                  "max_voltage": 230,
+                  "max_electric_power": 22080,
+                  "tariff_ids": [
+                    "GBEVYT19882"
+                  ]
+                }
+              ]
+            },
+            {
+              "uid": "5557222",
+              "status": "AVAILABLE",
+              "last_updated": "2026-10-28T17:24:05Z",
+              "evse_id": "GB*EVY*E5557222",
+              "physical_reference": "Victoria 03-A",
+              "floor_level": null,
+              "directions": null,
+              "parking_restrictions": null,
+              "capabilities": [
+                "REMOTE_START_STOP_CAPABLE",
+                "RFID_READER"
+              ],
+              "connectors": [
+                {
+                  "id": "7171970",
+                  "standard": "IEC_62196_T2",
+                  "format": "SOCKET",
+                  "power_type": "AC_3_PHASE",
+                  "last_updated": "2026-10-28T10:56:02Z",
+                  "max_amperage": 32,
+                  "max_voltage": 230,
+                  "max_electric_power": 22080,
+                  "tariff_ids": [
+                    "GBEVYT19882"
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "party_id": "DRI",
+          "id": "s1078046",
+          "country_code": "GB",
+          "publish": true,
+          "country": "GBR",
+          "address": "Greene Mews",
+          "city": "Bury Saint Edmunds",
+          "postal_code": "IP33 1QT",
+          "coordinates": {
+            "latitude": "52.23958400",
+            "longitude": "0.71552500"
+          },
+          "state": null,
+          "last_updated": "2026-10-29T07:59:31Z",
+          "opening_times": {
+            "twentyfourseven": true
+          },
+          "name": "Abbot House Staff (Bury St Edmunds)",
+          "time_zone": "Europe/London",
+          "owner": {
+            "name": "evyve",
+            "website": "https://www.evyve.co.uk/"
+          },
+          "operator": {
+            "name": "evyve",
+            "website": "https://www.evyve.co.uk/"
+          },
+          "energy_mix": null,
+          "charging_when_closed": true,
+          "directions": null,
+          "evses": [
+            {
+              "uid": "5557153",
+              "status": "CHARGING",
+              "last_updated": "2026-10-29T07:59:31Z",
+              "evse_id": "GB*EVY*E5557153",
+              "physical_reference": "GK Staff 03-A",
+              "floor_level": null,
+              "directions": null,
+              "parking_restrictions": null,
+              "capabilities": [
+                "REMOTE_START_STOP_CAPABLE",
+                "RFID_READER"
+              ],
+              "connectors": [
+                {
+                  "id": "7044891",
+                  "standard": "IEC_62196_T2",
+                  "format": "SOCKET",
+                  "power_type": "AC_3_PHASE",
+                  "last_updated": "2026-10-28T10:56:07Z",
+                  "max_amperage": 32,
+                  "max_voltage": 230,
+                  "max_electric_power": 22080,
+                  "tariff_ids": [
+                    "GBEVYT19345"
+                  ]
+                }
+              ]
+            },
+            {
+              "uid": "5557150",
+              "status": "AVAILABLE",
+              "last_updated": "2026-10-28T12:40:08Z",
+              "evse_id": "GB*EVY*E5557150",
+              "physical_reference": "GK Staff 01-A",
+              "floor_level": null,
+              "directions": null,
+              "parking_restrictions": null,
+              "capabilities": [
+                "REMOTE_START_STOP_CAPABLE",
+                "RFID_READER"
+              ],
+              "connectors": [
+                {
+                  "id": "7044888",
+                  "standard": "IEC_62196_T2",
+                  "format": "SOCKET",
+                  "power_type": "AC_3_PHASE",
+                  "last_updated": "2026-10-28T10:56:07Z",
+                  "max_amperage": 32,
+                  "max_voltage": 230,
+                  "max_electric_power": 22080,
+                  "tariff_ids": [
+                    "GBEVYT19345"
+                  ]
+                }
+              ]
+            },
+            {
+              "uid": "5557151",
+              "status": "OUTOFORDER",
+              "last_updated": "2026-10-19T16:48:58Z",
+              "evse_id": "GB*EVY*E5557151",
+              "physical_reference": "GK Staff 02-A",
+              "floor_level": null,
+              "directions": null,
+              "parking_restrictions": null,
+              "capabilities": [
+                "REMOTE_START_STOP_CAPABLE",
+                "RFID_READER"
+              ],
+              "connectors": [
+                {
+                  "id": "7184906",
+                  "standard": "IEC_62196_T2",
+                  "format": "SOCKET",
+                  "power_type": "AC_3_PHASE",
+                  "last_updated": "2026-10-28T10:56:07Z",
+                  "max_amperage": 32,
+                  "max_voltage": 230,
+                  "max_electric_power": 22080,
+                  "tariff_ids": [
+                    "GBEVYT19345"
+                  ]
+                }
+              ]
+            },
+            {
+              "uid": "5557152",
+              "status": "OUTOFORDER",
+              "last_updated": "2026-10-19T16:48:58Z",
+              "evse_id": "GB*EVY*E5557152",
+              "physical_reference": "GK Staff 02-B",
+              "floor_level": null,
+              "directions": null,
+              "parking_restrictions": null,
+              "capabilities": [
+                "REMOTE_START_STOP_CAPABLE",
+                "RFID_READER"
+              ],
+              "connectors": [
+                {
+                  "id": "7185005",
+                  "standard": "IEC_62196_T2",
+                  "format": "SOCKET",
+                  "power_type": "AC_3_PHASE",
+                  "last_updated": "2026-10-28T10:56:07Z",
+                  "max_amperage": 32,
+                  "max_voltage": 230,
+                  "max_electric_power": 22080,
+                  "tariff_ids": [
+                    "GBEVYT19345"
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  }
+}

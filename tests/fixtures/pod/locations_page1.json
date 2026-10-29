@@ -1,0 +1,594 @@
+{
+  "request": {
+    "method": "GET",
+    "url": "https://open-chargepoints.com/api/ocpi/cpo/2.2.1/locations/?limit=1000"
+  },
+  "response": {
+    "status_code": 200,
+    "headers": {
+      "content-type": "application/json",
+      "link": "<https://open-chargepoints.com/api/ocpi/cpo/2.2.1/locations/?limit=1000&offset=4>; rel=\"next\"",
+      "x-total-count": "4",
+      "x-limit": "1000"
+    },
+    "body": {
+      "timestamp": "2026-10-29T14:01:45Z",
+      "status_code": 1000,
+      "status_message": "Success",
+      "data": [
+        {
+          "party_id": "POD",
+          "id": "c72f9a95-fbd2-56cc-8a30-c1feeac39eb8",
+          "country_code": "GB",
+          "publish": true,
+          "country": "GBR",
+          "address": "15 Brocks Road",
+          "city": "Swaffham",
+          "postal_code": "PE37 7HS",
+          "coordinates": {
+            "latitude": "52.65358000",
+            "longitude": "0.68765200"
+          },
+          "state": null,
+          "last_updated": "2026-10-29T11:39:45Z",
+          "opening_times": null,
+          "name": "Pod Point Tesco Superstore - Swaffham",
+          "time_zone": "Europe/London",
+          "owner": {
+            "name": "Pod Point",
+            "website": "https://pod-point.com/"
+          },
+          "operator": {
+            "name": "Pod Point",
+            "website": "https://pod-point.com/"
+          },
+          "energy_mix": null,
+          "charging_when_closed": true,
+          "directions": [
+            {
+              "language": "en",
+              "text": "EV charging is only permitted during the car parks specified opening hours, parking charges may apply, please check for signage at the store."
+            }
+          ],
+          "evses": [
+            {
+              "uid": "16aadc2d-0a0b-53f8-b721-27dbbb902053",
+              "status": "UNKNOWN",
+              "last_updated": "2026-10-11T10:13:23Z",
+              "evse_id": "GB*POD*E*veefil12000637E1",
+              "physical_reference": "Yuto-Naya",
+              "floor_level": null,
+              "directions": null,
+              "parking_restrictions": null,
+              "capabilities": [
+                "REMOTE_START_STOP_CAPABLE",
+                "CONTACTLESS_CARD_SUPPORT"
+              ],
+              "connectors": [
+                {
+                  "id": "0221b018-9822-55e7-8752-a99ba31c2f89",
+                  "standard": "CHADEMO",
+                  "format": "CABLE",
+                  "power_type": "DC",
+                  "last_updated": "2026-10-29T07:08:14Z",
+                  "max_amperage": 125,
+                  "max_voltage": 0,
+                  "max_electric_power": 50000,
+                  "tariff_ids": [
+                    "9e8739a8-cd75-58dd-96d9-1aa9720eef6a"
+                  ]
+                },
+                {
+                  "id": "bc137eb4-bc7e-5b09-a755-f09ed922862b",
+                  "standard": "IEC_62196_T2_COMBO",
+                  "format": "CABLE",
+                  "power_type": "DC",
+                  "last_updated": "2026-10-29T07:08:14Z",
+                  "max_amperage": 125,
+                  "max_voltage": 0,
+                  "max_electric_power": 50000,
+                  "tariff_ids": [
+                    "9e8739a8-cd75-58dd-96d9-1aa9720eef6a"
+                  ]
+                }
+              ]
+            },
+            {
+              "uid": "29cfdc6f-0bb9-56de-971e-eb5fcb791f1f",
+              "status": "AVAILABLE",
+              "last_updated": "2026-10-29T11:39:45Z",
+              "evse_id": "GB*POD*E*PG70354E1",
+              "physical_reference": "Alec-Jade",
+              "floor_level": null,
+              "directions": null,
+              "parking_restrictions": null,
+              "capabilities": [
+                "REMOTE_START_STOP_CAPABLE"
+              ],
+              "connectors": [
+                {
+                  "id": "41028953-fd93-58cf-87fe-2b50ca2c6b53",
+                  "standard": "IEC_62196_T2",
+                  "format": "SOCKET",
+                  "power_type": "AC_1_PHASE",
+                  "last_updated": "2026-10-29T07:08:14Z",
+                  "max_amperage": 32,
+                  "max_voltage": 230,
+                  "max_electric_power": 7000,
+                  "tariff_ids": [
+                    "51d448a8-8dce-5103-8fbd-cc13c24d0c7c"
+                  ]
+                }
+              ]
+            },
+            {
+              "uid": "008bad34-758e-5282-a3c9-26efd1381fef",
+              "status": "AVAILABLE",
+              "last_updated": "2026-10-28T13:16:15Z",
+              "evse_id": "GB*POD*E*PG70354E2",
+              "physical_reference": "Alec-Jade",
+              "floor_level": null,
+              "directions": null,
+              "parking_restrictions": null,
+              "capabilities": [
+                "REMOTE_START_STOP_CAPABLE"
+              ],
+              "connectors": [
+                {
+                  "id": "e6850012-314c-5f4e-acbb-2815fa866226",
+                  "standard": "IEC_62196_T2",
+                  "format": "SOCKET",
+                  "power_type": "AC_1_PHASE",
+                  "last_updated": "2026-10-29T07:08:14Z",
+                  "max_amperage": 32,
+                  "max_voltage": 230,
+                  "max_electric_power": 7000,
+                  "tariff_ids": [
+                    "51d448a8-8dce-5103-8fbd-cc13c24d0c7c"
+                  ]
+                }
+              ]
+            },
+            {
+              "uid": "a64ff66d-48eb-58bd-b112-7bee91df169c",
+              "status": "AVAILABLE",
+              "last_updated": "2026-10-29T09:40:35Z",
+              "evse_id": "GB*POD*E*PG86475E1",
+              "physical_reference": "Noel-Noah",
+              "floor_level": null,
+              "directions": null,
+              "parking_restrictions": null,
+              "capabilities": [
+                "REMOTE_START_STOP_CAPABLE"
+              ],
+              "connectors": [
+                {
+                  "id": "b6b15843-4997-50e1-a1bc-3b1ba566c4e7",
+                  "standard": "IEC_62196_T2",
+                  "format": "SOCKET",
+                  "power_type": "AC_3_PHASE",
+                  "last_updated": "2026-10-29T07:08:14Z",
+                  "max_amperage": 30,
+                  "max_voltage": 400,
+                  "max_electric_power": 22000,
+                  "tariff_ids": [
+                    "ee45fbc2-eab0-5465-8589-d0638d1441e7"
+                  ]
+                }
+              ]
+            },
+            {
+              "uid": "c12ebc89-4518-5163-a122-cb3d4872c4e4",
+              "status": "AVAILABLE",
+              "last_updated": "2026-10-28T13:31:25Z",
+              "evse_id": "GB*POD*E*PG86475E2",
+              "physical_reference": "Noel-Noah",
+              "floor_level": null,
+              "directions": null,
+              "parking_restrictions": null,
+              "capabilities": [
+                "REMOTE_START_STOP_CAPABLE"
+              ],
+              "connectors": [
+                {
+                  "id": "0bd7f054-ab68-55fe-bcbd-e410793ecd94",
+                  "standard": "IEC_62196_T2",
+                  "format": "SOCKET",
+                  "power_type": "AC_3_PHASE",
+                  "last_updated": "2026-10-29T07:08:14Z",
+                  "max_amperage": 30,
+                  "max_voltage": 400,
+                  "max_electric_power": 22000,
+                  "tariff_ids": [
+                    "ee45fbc2-eab0-5465-8589-d0638d1441e7"
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "party_id": "POD",
+          "id": "7c8ce869-929f-5043-98f9-90eae293aae7",
+          "country_code": "GB",
+          "publish": true,
+          "country": "GBR",
+          "address": "1 Plough Lane",
+          "city": "Wimbledon",
+          "postal_code": "SW17 0BW",
+          "coordinates": {
+            "latitude": "51.43052200",
+            "longitude": "-0.18528300"
+          },
+          "state": null,
+          "last_updated": "2026-10-29T13:18:26Z",
+          "opening_times": null,
+          "name": "Pod Point Plough Lane Retail Park",
+          "time_zone": "Europe/London",
+          "owner": {
+            "name": "Pod Point",
+            "website": "https://pod-point.com/"
+          },
+          "operator": {
+            "name": "Pod Point",
+            "website": "https://pod-point.com/"
+          },
+          "energy_mix": null,
+          "charging_when_closed": true,
+          "directions": null,
+          "evses": [
+            {
+              "uid": "2697518f-b37c-5168-8e0e-fc186b11cc94",
+              "status": "AVAILABLE",
+              "last_updated": "2026-10-29T13:18:26Z",
+              "evse_id": "GB*POD*E*PG402144E2",
+              "physical_reference": "Tate-John",
+              "floor_level": null,
+              "directions": null,
+              "parking_restrictions": null,
+              "capabilities": [
+                "REMOTE_START_STOP_CAPABLE"
+              ],
+              "connectors": [
+                {
+                  "id": "c1953a4e-7c36-5b81-9a2d-99b05f21c3ed",
+                  "standard": "IEC_62196_T2",
+                  "format": "SOCKET",
+                  "power_type": "AC_1_PHASE",
+                  "last_updated": "2026-10-29T07:14:33Z",
+                  "max_amperage": 32,
+                  "max_voltage": 230,
+                  "max_electric_power": 7000,
+                  "tariff_ids": [
+                    "eb134532-ffba-5147-8556-2a3b787ca3a4"
+                  ]
+                }
+              ]
+            },
+            {
+              "uid": "c6059df2-3801-5780-bf9e-ea9fff29c3dc",
+              "status": "AVAILABLE",
+              "last_updated": "2026-10-19T20:15:30Z",
+              "evse_id": "GB*POD*E*PG402186E1",
+              "physical_reference": "Troy-Lara",
+              "floor_level": null,
+              "directions": null,
+              "parking_restrictions": null,
+              "capabilities": [
+                "REMOTE_START_STOP_CAPABLE"
+              ],
+              "connectors": [
+                {
+                  "id": "d5c23efb-3493-554b-b396-81fb75f00cd2",
+                  "standard": "IEC_62196_T2",
+                  "format": "SOCKET",
+                  "power_type": "AC_1_PHASE",
+                  "last_updated": "2026-10-29T07:14:34Z",
+                  "max_amperage": 32,
+                  "max_voltage": 230,
+                  "max_electric_power": 7000,
+                  "tariff_ids": [
+                    "eb134532-ffba-5147-8556-2a3b787ca3a4"
+                  ]
+                }
+              ]
+            },
+            {
+              "uid": "c65fab5c-0a09-5db2-afee-a0af0bd11519",
+              "status": "OUTOFORDER",
+              "last_updated": "2026-10-02T23:02:35Z",
+              "evse_id": "GB*POD*E*PG402186E2",
+              "physical_reference": "Troy-Lara",
+              "floor_level": null,
+              "directions": null,
+              "parking_restrictions": null,
+              "capabilities": [
+                "REMOTE_START_STOP_CAPABLE"
+              ],
+              "connectors": [
+                {
+                  "id": "3d97181c-a567-544c-9039-4217565d69cf",
+                  "standard": "IEC_62196_T2",
+                  "format": "SOCKET",
+                  "power_type": "AC_1_PHASE",
+                  "last_updated": "2026-10-29T07:14:34Z",
+                  "max_amperage": 32,
+                  "max_voltage": 230,
+                  "max_electric_power": 7000,
+                  "tariff_ids": [
+                    "eb134532-ffba-5147-8556-2a3b787ca3a4"
+                  ]
+                }
+              ]
+            },
+            {
+              "uid": "150723aa-8c65-5fbd-83b8-f8379a2626b9",
+              "status": "AVAILABLE",
+              "last_updated": "2026-10-25T15:59:09Z",
+              "evse_id": "GB*POD*E*PG402144E1",
+              "physical_reference": "Tate-John",
+              "floor_level": null,
+              "directions": null,
+              "parking_restrictions": null,
+              "capabilities": [
+                "REMOTE_START_STOP_CAPABLE"
+              ],
+              "connectors": [
+                {
+                  "id": "7396a18e-1154-5974-841f-e87a73813f00",
+                  "standard": "IEC_62196_T2",
+                  "format": "SOCKET",
+                  "power_type": "AC_1_PHASE",
+                  "last_updated": "2026-10-29T07:14:33Z",
+                  "max_amperage": 32,
+                  "max_voltage": 230,
+                  "max_electric_power": 7000,
+                  "tariff_ids": [
+                    "eb134532-ffba-5147-8556-2a3b787ca3a4"
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "party_id": "POD",
+          "id": "90c39712-1799-5209-8e8c-0324a5eeb303",
+          "country_code": "GB",
+          "publish": true,
+          "country": "GBR",
+          "address": "Homefield Road",
+          "city": "Douglas",
+          "postal_code": "IM2 6RB",
+          "coordinates": {
+            "latitude": "54.17134940",
+            "longitude": "-4.47865280"
+          },
+          "state": null,
+          "last_updated": "2026-10-29T07:11:46Z",
+          "opening_times": null,
+          "name": "Pod Point University College IOM",
+          "time_zone": "Europe/Isle_of_Man",
+          "owner": {
+            "name": "Pod Point",
+            "website": "https://pod-point.com/"
+          },
+          "operator": {
+            "name": "Pod Point",
+            "website": "https://pod-point.com/"
+          },
+          "energy_mix": null,
+          "charging_when_closed": true,
+          "directions": null,
+          "evses": [
+            {
+              "uid": "9984636c-f8ac-50b3-adb4-dc31cc829acd",
+              "status": "OUTOFORDER",
+              "last_updated": "2026-10-29T07:11:46Z",
+              "evse_id": "GB*POD*E*PG87308E2",
+              "physical_reference": "Iggy-Gina",
+              "floor_level": null,
+              "directions": null,
+              "parking_restrictions": null,
+              "capabilities": [
+                "REMOTE_START_STOP_CAPABLE"
+              ],
+              "connectors": [
+                {
+                  "id": "94be98ba-f459-5b3d-9746-2bae32111e83",
+                  "standard": "IEC_62196_T2",
+                  "format": "SOCKET",
+                  "power_type": "AC_1_PHASE",
+                  "last_updated": "2026-10-29T07:11:46Z",
+                  "max_amperage": 32,
+                  "max_voltage": 230,
+                  "max_electric_power": 7000,
+                  "tariff_ids": [
+                    "f8181b87-4210-593b-bd73-2ba756124a71"
+                  ]
+                }
+              ]
+            },
+            {
+              "uid": "ebe24086-372c-5cb0-86c6-d9b3ba19b0e6",
+              "status": "OUTOFORDER",
+              "last_updated": "2026-10-29T07:11:46Z",
+              "evse_id": "GB*POD*E*PG87304E1",
+              "physical_reference": "Fern-Jude",
+              "floor_level": null,
+              "directions": null,
+              "parking_restrictions": null,
+              "capabilities": [
+                "REMOTE_START_STOP_CAPABLE"
+              ],
+              "connectors": [
+                {
+                  "id": "9f0c624a-9d05-5351-aaae-90503a652a30",
+                  "standard": "IEC_62196_T2",
+                  "format": "SOCKET",
+                  "power_type": "AC_1_PHASE",
+                  "last_updated": "2026-10-29T07:11:46Z",
+                  "max_amperage": 32,
+                  "max_voltage": 230,
+                  "max_electric_power": 7000,
+                  "tariff_ids": [
+                    "f8181b87-4210-593b-bd73-2ba756124a71"
+                  ]
+                }
+              ]
+            },
+            {
+              "uid": "7a7c5078-6dfd-5d61-b809-bf88f691bf44",
+              "status": "OUTOFORDER",
+              "last_updated": "2026-10-29T07:11:46Z",
+              "evse_id": "GB*POD*E*PG87304E2",
+              "physical_reference": "Fern-Jude",
+              "floor_level": null,
+              "directions": null,
+              "parking_restrictions": null,
+              "capabilities": [
+                "REMOTE_START_STOP_CAPABLE"
+              ],
+              "connectors": [
+                {
+                  "id": "7b2e31f3-1dfa-53ee-b946-a5d81fec145c",
+                  "standard": "IEC_62196_T2",
+                  "format": "SOCKET",
+                  "power_type": "AC_1_PHASE",
+                  "last_updated": "2026-10-29T07:11:46Z",
+                  "max_amperage": 32,
+                  "max_voltage": 230,
+                  "max_electric_power": 7000,
+                  "tariff_ids": [
+                    "f8181b87-4210-593b-bd73-2ba756124a71"
+                  ]
+                }
+              ]
+            },
+            {
+              "uid": "b31a17d2-cdb8-5b3f-b956-1c37cadefbc0",
+              "status": "OUTOFORDER",
+              "last_updated": "2026-10-29T07:11:46Z",
+              "evse_id": "GB*POD*E*PG87308E1",
+              "physical_reference": "Iggy-Gina",
+              "floor_level": null,
+              "directions": null,
+              "parking_restrictions": null,
+              "capabilities": [
+                "REMOTE_START_STOP_CAPABLE"
+              ],
+              "connectors": [
+                {
+                  "id": "5b266b46-1cbe-5835-9cd5-290f44561dc6",
+                  "standard": "IEC_62196_T2",
+                  "format": "SOCKET",
+                  "power_type": "AC_1_PHASE",
+                  "last_updated": "2026-10-29T07:11:46Z",
+                  "max_amperage": 32,
+                  "max_voltage": 230,
+                  "max_electric_power": 7000,
+                  "tariff_ids": [
+                    "f8181b87-4210-593b-bd73-2ba756124a71"
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "party_id": "POD",
+          "id": "58dd93bb-5052-5046-abbd-76ed1a40e53b",
+          "country_code": "GB",
+          "publish": true,
+          "country": "GBR",
+          "address": "Newark Road Wellow",
+          "city": "Newark",
+          "postal_code": "NG22 0EA",
+          "coordinates": {
+            "latitude": "53.18913600",
+            "longitude": "-0.99875700"
+          },
+          "state": null,
+          "last_updated": "2026-10-29T07:02:19Z",
+          "opening_times": null,
+          "name": "Pod Point The Maypole at Wellow",
+          "time_zone": "Europe/London",
+          "owner": {
+            "name": "Pod Point",
+            "website": "https://pod-point.com/"
+          },
+          "operator": {
+            "name": "Pod Point",
+            "website": "https://pod-point.com/"
+          },
+          "energy_mix": null,
+          "charging_when_closed": true,
+          "directions": [
+            {
+              "language": "en",
+              "text": "For any parking restrictions that may apply, please check relevant signage."
+            }
+          ],
+          "evses": [
+            {
+              "uid": "c2af4379-da10-5a83-9227-6f1796e7263d",
+              "status": "AVAILABLE",
+              "last_updated": "2026-10-29T06:59:49Z",
+              "evse_id": "GB*POD*E*PG95337E1",
+              "physical_reference": "Bing-Earl",
+              "floor_level": null,
+              "directions": null,
+              "parking_restrictions": null,
+              "capabilities": [
+                "REMOTE_START_STOP_CAPABLE"
+              ],
+              "connectors": [
+                {
+                  "id": "bd7bf170-86f0-52f3-99e1-b95d9d97fca6",
+                  "standard": "IEC_62196_T2",
+                  "format": "SOCKET",
+                  "power_type": "AC_1_PHASE",
+                  "last_updated": "2026-10-29T07:02:19Z",
+                  "max_amperage": 32,
+                  "max_voltage": 230,
+                  "max_electric_power": 7000,
+                  "tariff_ids": [
+                    "ee9a6e17-056c-4186-8b3a-d38ecc595fac"
+                  ]
+                }
+              ]
+            },
+            {
+              "uid": "c8319add-c863-51a1-9dff-77508254825f",
+              "status": "AVAILABLE",
+              "last_updated": "2026-10-28T06:51:48Z",
+              "evse_id": "GB*POD*E*PG95342E1",
+              "physical_reference": "Colt-Luca",
+              "floor_level": null,
+              "directions": null,
+              "parking_restrictions": null,
+              "capabilities": [
+                "REMOTE_START_STOP_CAPABLE"
+              ],
+              "connectors": [
+                {
+                  "id": "8a65d61b-de7d-53bd-8a97-bcfdc9f17f0d",
+                  "standard": "IEC_62196_T2",
+                  "format": "SOCKET",
+                  "power_type": "AC_1_PHASE",
+                  "last_updated": "2026-10-29T07:02:19Z",
+                  "max_amperage": 32,
+                  "max_voltage": 230,
+                  "max_electric_power": 7000,
+                  "tariff_ids": [
+                    "ee9a6e17-056c-4186-8b3a-d38ecc595fac"
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  }
+}

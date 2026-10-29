@@ -39,7 +39,7 @@ def test_every_output_validates_against_its_exported_schema(results, tmp_path):
     jsonschema.validate(layer, schema("map-layer"))
     jsonschema.validate(json.loads((data / "manifest.json").read_text()), schema("manifest"))
     details = sorted((data / "loc").glob("*/*.json"))
-    assert len(details) == len(layer["features"]) == 141
+    assert len(details) == len(layer["features"]) == 183
     for path in details:
         jsonschema.validate(json.loads(path.read_text()), schema("location-detail"))
 
@@ -62,27 +62,40 @@ def test_the_manifest_records_operators_attribution_and_sizes(results, tmp_path)
     out = published(results, tmp_path)
     manifest = out.manifest
     assert set(manifest.operators) == {
+        "allego",
         "arnold_clark_charge",
+        "blink_charging_uk",
         "bright_green",
         "chargeplace_scotland",
+        "chargepoint",
         "chargy",
         "clenergy_ev",
         "connekt",
         "enfield_council",
+        "esb_ecars",
+        "esb_energy",
+        "ev_point",
         "evolt",
+        "evyve",
         "fastned",
         "geniepoint",
         "globe_ev",
+        "ionity",
         "jolt",
+        "lidl",
         "mer_uk",
         "mfg_ev_power",
         "monta",
         "parkrecharge",
         "plug_charging",
+        "pod",
         "pogo_charge",
+        "raw_charging",
         "roam",
         "scottishpower_recharge",
+        "source_ev",
         "three_ti",
+        "ubitricity",
         "urban_fox",
         "zest",
     }
@@ -93,7 +106,7 @@ def test_the_manifest_records_operators_attribution_and_sizes(results, tmp_path)
         assert entry.licence == config.licence.name
     sizes = {f.path: f for f in manifest.files}
     assert sizes["data/locations.geojson"].bytes > sizes["data/locations.geojson"].gzip_bytes > 0
-    assert sizes["data/loc/"].files == 141
+    assert sizes["data/loc/"].files == 183
     assert any("gzipped" in line for line in out.report)
 
 
@@ -513,7 +526,17 @@ def test_vat_is_added_only_where_the_owner_decided_and_the_tariffs_stay_as_publi
     results, tmp_path
 ):
     decided = {i for i, c in load_registry().items() if c.vat_not_stated}
-    assert decided == {"chargy", "clenergy_ev", "globe_ev", "roam"}
+    assert decided == {
+        "allego",
+        "blink_charging_uk",
+        "chargy",
+        "clenergy_ev",
+        "ev_point",
+        "globe_ev",
+        "lidl",
+        "raw_charging",
+        "roam",
+    }
     for properties, detail in _layer_and_details(results, tmp_path):
         texts = [o["text"] for o in detail["tariff_options"] if o["state"] == "priced"]
         added = [t for t in texts if "added by this project" in t]

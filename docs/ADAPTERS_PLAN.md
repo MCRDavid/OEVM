@@ -13,7 +13,7 @@ section filled in.
 
 | Task | Adapter | Unlocks | Blocked on | Suggested order |
 |---|---|---|---|---|
-| A1 | `eco_movement_pcpr` | bp pulse, Shell Recharge, ubitricity, Community by Shell Recharge | A token from at least one operator | 2 |
+| A1 | `eco_movement_pcpr` | bp pulse, Shell Recharge, ubitricity, Community by Shell Recharge, and 12 more networks whose tokens arrived on 2026-10-26 | Nothing | Built: a thin layer over `ocpi_221` (`adapters/eco_movement.py`) |
 | A2 | `gridserve` | Gridserve | A key | 3 |
 | A3 | `static_file` | No current operator; later council CSVs and FOI spreadsheets | A source that needs it | Deferred |
 | A4 | None yet | MFG and Fastned on `ocpi_221`; Believ and others once their format is known | Nothing for MFG; access for the rest | 1 |
@@ -65,9 +65,11 @@ unverified, so each operator has its own secret (`BP_PULSE_TOKEN`, `SHELL_RECHAR
 page has not been read yet.
 
 **Rate limits:** Eco-Movement publishes 30 requests per hour for locations and for tariffs,
-and 1 per 30 seconds for statuses. The operator files take the strictest reading: one
+and 1 per 30 seconds for statuses. The operator files first took the strictest reading: one
 allowance shared by every endpoint and every operator on the host, so 125 seconds between
-any two requests to it. Requests are never sent in parallel.
+any two requests to it. Since 29 October 2026, by the owner's decision (`limits_per_key`),
+each token keeps its own 125 second gap, shared by its endpoints, and the host still gets
+one request at a time, at least 2 seconds apart. Requests are never sent in parallel.
 
 **Main risk:** at 125 seconds a request, the daily job's 60 minute limit fits about 28
 requests to this host across all four operators. The page size and record counts are

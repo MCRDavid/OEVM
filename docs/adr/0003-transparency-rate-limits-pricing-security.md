@@ -35,7 +35,8 @@ Date: 2026-10-07. Status: accepted.
 - The gap is measured from when the previous response finished, so uneven network delays
   can never bring two requests closer together at the server than the gap.
 - Timers are kept per host and shared by every client in the process, so operators served
-  from the same host (the four Eco-Movement operators) share one gap and one Retry-After.
+  from the same host (the four Eco-Movement operators) share one gap and one Retry-After
+  (per key since 29 October 2026 where the owner has decided so; see the amendment below).
   Timers live in memory: runs that use the same host must never be started in parallel,
   and a future scheduled workflow needs a concurrency group for that.
 - Every Retry-After is honoured, in seconds or as an HTTP date, on any attempt including
@@ -52,6 +53,27 @@ Date: 2026-10-07. Status: accepted.
   policy's limit is recorded with an exact quote, Gridserve uses a 31 second gap, and the
   difference is a finding on the transparency page. Each published limit now names its
   publisher (the operator, or the company hosting its data), and the page shows it.
+
+### Amendment, 29 October 2026: limits read per key
+
+Eco-Movement serves many networks from open-chargepoints.com, each with its own token, and
+publishes 30 requests an hour for its locations and tariffs endpoints without saying
+whether that counts per token or per address. One gap shared by every network made the
+daily fetch of 13 networks about 80 minutes. On 29 October 2026 the repository owner
+decided that these limits are read per token.
+
+- **Opt-in per operator, by the owner only.** `limits_per_key` in the operator file records
+  the date, the basis and where the limits are published. It needs a key of the operator's
+  own, and every operator on the host must record it, or none, so a shared gap is never
+  shortened by others' per-key gaps.
+- **Each key keeps the operator's gap.** `adapters/http.py` keeps a timer per key on that
+  host, with the same gap, margin, retries and slow-downs as before.
+- **The host still gets one request at a time.** Any two requests to the host, whichever key
+  they use, are at least the floor plus the margin (2 seconds) apart, operators on the host
+  are still fetched one after another, and any wait the server asks for (Retry-After, rate
+  limit headers, a refusal) holds back every key on the host.
+- If Eco-Movement says its limits count per address, or refuses requests, the decision is
+  removed and the shared gap returns.
 
 ## Prices
 
@@ -97,12 +119,24 @@ Date: 2026-10-07. Status: accepted.
 - The owner decided the prices are read as the display price shows them. The decision is
   recorded per operator in `vat_in_price` (decided, basis, evidence). Where it is
   recorded, `pipeline/pricing.py` adds nothing to a price component that states its VAT,
-  and the price says "including VAT, read as the operator's display price shows it". A
+  and the price says "including VAT, read as the operator's display price shows it"
+  (since 29 October 2026, "including VAT, reading the VAT rate the feed states as already
+  in the price", so the words also fit feeds with no display price). A
   component that gives no rate is still marked "VAT not stated"; this decision never
   supplies a rate. A minimum charge is read the same way.
 - An operator cannot record both `vat_in_price` and `vat_not_stated`. The tariffs are
   published unchanged, the transparency page shows the decision in the operator's row and
   in its "VAT in prices" section, and only the owner adds one.
+
+### Amendment, 29 October 2026: Eco-Movement networks
+
+On 29 October 2026 the owner recorded `vat_not_stated` at 20% for five networks on
+Eco-Movement's PCPR API (Allego, Blink Charging, evpoint, Lidl and RAW Charging), whose
+prices give no VAT rate and come to whole pence once 20% is added, and `vat_in_price` for
+three (Pod, ESB Energy and ESB ecars), whose prices state VAT 20 but are all whole pence as
+published. Both readings are inferred from the figures and recorded as findings in each
+operator file. The words a `vat_in_price` price carries were made general, as these feeds
+have no display price.
 
 ## Security
 

@@ -1,0 +1,579 @@
+{
+  "request": {
+    "method": "GET",
+    "url": "https://open-chargepoints.com/api/ocpi/cpo/2.2.1/locations/?limit=1000"
+  },
+  "response": {
+    "status_code": 200,
+    "headers": {
+      "content-type": "application/json",
+      "link": "<https://open-chargepoints.com/api/ocpi/cpo/2.2.1/locations/?limit=1000&offset=4>; rel=\"next\"",
+      "x-total-count": "4",
+      "x-limit": "1000"
+    },
+    "body": {
+      "timestamp": "2026-10-29T13:21:54Z",
+      "status_code": 1000,
+      "status_message": "Success",
+      "data": [
+        {
+          "party_id": "BLK",
+          "id": "c97595ae-9c9e-48af-8c18-8b200a08d410",
+          "country_code": "GB",
+          "publish": true,
+          "country": "GBR",
+          "address": "New Larkhill Street",
+          "city": "Blackpool",
+          "postal_code": "FY1 3AH",
+          "coordinates": {
+            "latitude": "53.82074000",
+            "longitude": "-3.04793000"
+          },
+          "state": null,
+          "last_updated": "2026-10-29T13:01:53Z",
+          "opening_times": {
+            "exceptional_closings": null,
+            "exceptional_openings": null,
+            "regular_hours": null,
+            "twentyfourseven": true
+          },
+          "name": "Bickerstaffe House, Blackpool",
+          "time_zone": "UTC",
+          "owner": {
+            "name": "Blink Charging",
+            "website": "https://blinkcharging.com"
+          },
+          "operator": {
+            "name": "Blink Charging",
+            "website": "https://blinkcharging.com"
+          },
+          "energy_mix": null,
+          "charging_when_closed": true,
+          "directions": null,
+          "evses": [
+            {
+              "uid": "54847e59-34a2-4989-8fdd-3aa5291e8414",
+              "status": "CHARGING",
+              "last_updated": "2026-10-29T13:01:53Z",
+              "evse_id": "GBBLKE1995010001",
+              "physical_reference": "1995-01",
+              "floor_level": null,
+              "directions": null,
+              "parking_restrictions": null,
+              "capabilities": [
+                "CREDIT_CARD_PAYABLE",
+                "REMOTE_START_STOP_CAPABLE",
+                "RFID_READER"
+              ],
+              "connectors": [
+                {
+                  "id": "1",
+                  "standard": "CHADEMO",
+                  "format": "CABLE",
+                  "power_type": "DC",
+                  "last_updated": "2026-10-28T11:13:45Z",
+                  "max_amperage": 125,
+                  "max_voltage": 400,
+                  "max_electric_power": 0,
+                  "tariff_ids": [
+                    "92636d31-9e33-4f58-a65d-54d9456cd435"
+                  ]
+                }
+              ]
+            },
+            {
+              "uid": "a098c3df-200e-4ef8-b34b-dbe9529ed32b",
+              "status": "AVAILABLE",
+              "last_updated": "2026-10-27T12:36:01Z",
+              "evse_id": "GBBLKE1995010002",
+              "physical_reference": "1995-01",
+              "floor_level": null,
+              "directions": null,
+              "parking_restrictions": null,
+              "capabilities": [
+                "CREDIT_CARD_PAYABLE",
+                "REMOTE_START_STOP_CAPABLE",
+                "RFID_READER"
+              ],
+              "connectors": [
+                {
+                  "id": "2",
+                  "standard": "IEC_62196_T2_COMBO",
+                  "format": "CABLE",
+                  "power_type": "DC",
+                  "last_updated": "2026-10-28T11:13:45Z",
+                  "max_amperage": 100,
+                  "max_voltage": 500,
+                  "max_electric_power": 0,
+                  "tariff_ids": [
+                    "92636d31-9e33-4f58-a65d-54d9456cd435"
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "party_id": "BLK",
+          "id": "9f65e2d4-9ede-426e-a58f-9f84f1a9fef1",
+          "country_code": "GB",
+          "publish": true,
+          "country": "GBR",
+          "address": "22 Montefiore Road",
+          "city": "Hove",
+          "postal_code": "BN3 6EP",
+          "coordinates": {
+            "latitude": "50.83351600",
+            "longitude": "-0.15463900"
+          },
+          "state": null,
+          "last_updated": "2026-10-28T11:11:00Z",
+          "opening_times": {
+            "exceptional_closings": null,
+            "exceptional_openings": null,
+            "regular_hours": null,
+            "twentyfourseven": true
+          },
+          "name": "Montefiore Road",
+          "time_zone": "Europe/London",
+          "owner": {
+            "name": "Blink Charging",
+            "website": "https://blinkcharging.com"
+          },
+          "operator": {
+            "name": "Blink Charging",
+            "website": "https://blinkcharging.com"
+          },
+          "energy_mix": null,
+          "charging_when_closed": true,
+          "directions": null,
+          "evses": [
+            {
+              "uid": "4919fad8-c7e4-48f4-be39-6c2db0f5c660",
+              "status": "AVAILABLE",
+              "last_updated": "2026-10-27T06:06:46Z",
+              "evse_id": "GBBLKE2257010001",
+              "physical_reference": "2257-01",
+              "floor_level": null,
+              "directions": null,
+              "parking_restrictions": null,
+              "capabilities": [
+                "CHARGING_PROFILE_CAPABLE",
+                "REMOTE_START_STOP_CAPABLE",
+                "RFID_READER"
+              ],
+              "connectors": [
+                {
+                  "id": "1",
+                  "standard": "IEC_62196_T2",
+                  "format": "SOCKET",
+                  "power_type": "AC_3_PHASE",
+                  "last_updated": "2026-10-28T11:11:00Z",
+                  "max_amperage": 32,
+                  "max_voltage": 230,
+                  "max_electric_power": 0,
+                  "tariff_ids": [
+                    "3f4fc280-5979-4df5-bde2-9918b844be48"
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "party_id": "BLK",
+          "id": "bc304cba-98e7-4483-953b-f8ba1d3310c5",
+          "country_code": "GB",
+          "publish": true,
+          "country": "GBR",
+          "address": "Avenue Road",
+          "city": "Bexleyheath",
+          "postal_code": "DA7 4EQ",
+          "coordinates": {
+            "latitude": "51.46331600",
+            "longitude": "0.13045500"
+          },
+          "state": null,
+          "last_updated": "2026-10-28T11:12:53Z",
+          "opening_times": {
+            "exceptional_closings": null,
+            "exceptional_openings": null,
+            "regular_hours": null,
+            "twentyfourseven": true
+          },
+          "name": "Avenue Road Car Park, Bexleyheath",
+          "time_zone": "UTC",
+          "owner": {
+            "name": "Blink Charging",
+            "website": "https://blinkcharging.com"
+          },
+          "operator": {
+            "name": "Blink Charging",
+            "website": "https://blinkcharging.com"
+          },
+          "energy_mix": null,
+          "charging_when_closed": true,
+          "directions": null,
+          "evses": [
+            {
+              "uid": "f46c1aef-4f0f-4d9c-965a-f96baf70f905",
+              "status": "OUTOFORDER",
+              "last_updated": "2026-10-28T11:12:53Z",
+              "evse_id": "GBBLKE1670020001",
+              "physical_reference": "1670-02",
+              "floor_level": null,
+              "directions": null,
+              "parking_restrictions": null,
+              "capabilities": [
+                "REMOTE_START_STOP_CAPABLE",
+                "RFID_READER"
+              ],
+              "connectors": [
+                {
+                  "id": "1",
+                  "standard": "IEC_62196_T2",
+                  "format": "SOCKET",
+                  "power_type": "AC_1_PHASE",
+                  "last_updated": "2026-10-28T11:12:53Z",
+                  "max_amperage": 16,
+                  "max_voltage": 230,
+                  "max_electric_power": 0,
+                  "tariff_ids": [
+                    "cae00c73-0d75-48e3-9a04-d1aead870228"
+                  ]
+                }
+              ]
+            },
+            {
+              "uid": "5e65928d-69c4-40ac-a22c-2cef7b56c1fb",
+              "status": "OUTOFORDER",
+              "last_updated": "2025-11-25T18:44:11Z",
+              "evse_id": "GBBLKE1670040002",
+              "physical_reference": "1670-04",
+              "floor_level": null,
+              "directions": null,
+              "parking_restrictions": null,
+              "capabilities": [
+                "REMOTE_START_STOP_CAPABLE",
+                "RFID_READER"
+              ],
+              "connectors": [
+                {
+                  "id": "2",
+                  "standard": "IEC_62196_T2",
+                  "format": "SOCKET",
+                  "power_type": "AC_1_PHASE",
+                  "last_updated": "2026-10-28T11:12:53Z",
+                  "max_amperage": 25,
+                  "max_voltage": 230,
+                  "max_electric_power": 0,
+                  "tariff_ids": [
+                    "cae00c73-0d75-48e3-9a04-d1aead870228"
+                  ]
+                }
+              ]
+            },
+            {
+              "uid": "cce4d5fc-12b8-4be3-b56a-0312ec4c8d48",
+              "status": "OUTOFORDER",
+              "last_updated": "2026-01-15T07:19:28Z",
+              "evse_id": "GBBLKE1670030002",
+              "physical_reference": "1670-03",
+              "floor_level": null,
+              "directions": null,
+              "parking_restrictions": null,
+              "capabilities": [
+                "REMOTE_START_STOP_CAPABLE",
+                "RFID_READER"
+              ],
+              "connectors": [
+                {
+                  "id": "2",
+                  "standard": "IEC_62196_T2",
+                  "format": "SOCKET",
+                  "power_type": "AC_1_PHASE",
+                  "last_updated": "2026-10-28T11:12:53Z",
+                  "max_amperage": 32,
+                  "max_voltage": 230,
+                  "max_electric_power": 0,
+                  "tariff_ids": [
+                    "cae00c73-0d75-48e3-9a04-d1aead870228"
+                  ]
+                }
+              ]
+            },
+            {
+              "uid": "8d8185e5-0bb9-4e82-b65e-28188e68d7d9",
+              "status": "OUTOFORDER",
+              "last_updated": "2025-11-17T12:13:10Z",
+              "evse_id": "GBBLKE1670010002",
+              "physical_reference": "1670-01",
+              "floor_level": null,
+              "directions": null,
+              "parking_restrictions": null,
+              "capabilities": [
+                "REMOTE_START_STOP_CAPABLE",
+                "RFID_READER"
+              ],
+              "connectors": [
+                {
+                  "id": "2",
+                  "standard": "IEC_62196_T2",
+                  "format": "SOCKET",
+                  "power_type": "AC_1_PHASE",
+                  "last_updated": "2026-10-28T11:12:53Z",
+                  "max_amperage": 25,
+                  "max_voltage": 230,
+                  "max_electric_power": 0,
+                  "tariff_ids": [
+                    "cae00c73-0d75-48e3-9a04-d1aead870228"
+                  ]
+                }
+              ]
+            },
+            {
+              "uid": "31dab1ee-8472-4d43-b65e-868067ac6030",
+              "status": "OUTOFORDER",
+              "last_updated": "2026-05-11T18:40:46Z",
+              "evse_id": "GBBLKE1670020002",
+              "physical_reference": "1670-02",
+              "floor_level": null,
+              "directions": null,
+              "parking_restrictions": null,
+              "capabilities": [
+                "REMOTE_START_STOP_CAPABLE",
+                "RFID_READER"
+              ],
+              "connectors": [
+                {
+                  "id": "2",
+                  "standard": "IEC_62196_T2",
+                  "format": "SOCKET",
+                  "power_type": "AC_1_PHASE",
+                  "last_updated": "2026-10-28T11:12:53Z",
+                  "max_amperage": 16,
+                  "max_voltage": 230,
+                  "max_electric_power": 0,
+                  "tariff_ids": [
+                    "cae00c73-0d75-48e3-9a04-d1aead870228"
+                  ]
+                }
+              ]
+            },
+            {
+              "uid": "0de66faf-30b8-4e93-a70c-921215841261",
+              "status": "OUTOFORDER",
+              "last_updated": "2025-11-16T09:39:42Z",
+              "evse_id": "GBBLKE1670040001",
+              "physical_reference": "1670-04",
+              "floor_level": null,
+              "directions": null,
+              "parking_restrictions": null,
+              "capabilities": [
+                "REMOTE_START_STOP_CAPABLE",
+                "RFID_READER"
+              ],
+              "connectors": [
+                {
+                  "id": "1",
+                  "standard": "IEC_62196_T2",
+                  "format": "SOCKET",
+                  "power_type": "AC_1_PHASE",
+                  "last_updated": "2026-10-28T11:12:52Z",
+                  "max_amperage": 25,
+                  "max_voltage": 230,
+                  "max_electric_power": 0,
+                  "tariff_ids": [
+                    "cae00c73-0d75-48e3-9a04-d1aead870228"
+                  ]
+                }
+              ]
+            },
+            {
+              "uid": "ddd0d9ca-212a-4d17-8cb5-e42eafe90811",
+              "status": "OUTOFORDER",
+              "last_updated": "2025-12-08T10:50:00Z",
+              "evse_id": "GBBLKE1670030001",
+              "physical_reference": "1670-03",
+              "floor_level": null,
+              "directions": null,
+              "parking_restrictions": null,
+              "capabilities": [
+                "REMOTE_START_STOP_CAPABLE",
+                "RFID_READER"
+              ],
+              "connectors": [
+                {
+                  "id": "1",
+                  "standard": "IEC_62196_T2",
+                  "format": "SOCKET",
+                  "power_type": "AC_1_PHASE",
+                  "last_updated": "2026-10-28T11:12:53Z",
+                  "max_amperage": 32,
+                  "max_voltage": 230,
+                  "max_electric_power": 0,
+                  "tariff_ids": [
+                    "cae00c73-0d75-48e3-9a04-d1aead870228"
+                  ]
+                }
+              ]
+            },
+            {
+              "uid": "b005ad39-8367-4ca3-97ca-4be5d85f894a",
+              "status": "OUTOFORDER",
+              "last_updated": "2025-11-17T12:17:35Z",
+              "evse_id": "GBBLKE1670010001",
+              "physical_reference": "1670-01",
+              "floor_level": null,
+              "directions": null,
+              "parking_restrictions": null,
+              "capabilities": [
+                "REMOTE_START_STOP_CAPABLE",
+                "RFID_READER"
+              ],
+              "connectors": [
+                {
+                  "id": "1",
+                  "standard": "IEC_62196_T2",
+                  "format": "SOCKET",
+                  "power_type": "AC_1_PHASE",
+                  "last_updated": "2026-10-28T11:12:53Z",
+                  "max_amperage": 25,
+                  "max_voltage": 230,
+                  "max_electric_power": 0,
+                  "tariff_ids": [
+                    "cae00c73-0d75-48e3-9a04-d1aead870228"
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "party_id": "BLK",
+          "id": "a56b1c42-1b76-4a27-b4ad-40c144074348",
+          "country_code": "GB",
+          "publish": true,
+          "country": "GBR",
+          "address": "Wilbury Road Brighton and Hove",
+          "city": "Hove",
+          "postal_code": "BN3 3GP",
+          "coordinates": {
+            "latitude": "50.82902400",
+            "longitude": "-0.16606200"
+          },
+          "state": null,
+          "last_updated": "2026-10-29T13:09:03Z",
+          "opening_times": {
+            "exceptional_closings": null,
+            "exceptional_openings": null,
+            "regular_hours": null,
+            "twentyfourseven": true
+          },
+          "name": "Wilbury Road",
+          "time_zone": "UTC",
+          "owner": {
+            "name": "Blink Charging",
+            "website": "https://blinkcharging.com"
+          },
+          "operator": {
+            "name": "Blink Charging",
+            "website": "https://blinkcharging.com"
+          },
+          "energy_mix": null,
+          "charging_when_closed": true,
+          "directions": null,
+          "evses": [
+            {
+              "uid": "01b61e6e-6642-412a-8866-233fb8f5839d",
+              "status": "AVAILABLE",
+              "last_updated": "2026-10-29T13:09:03Z",
+              "evse_id": "GBBLKE2454010001",
+              "physical_reference": "2454-01",
+              "floor_level": null,
+              "directions": null,
+              "parking_restrictions": null,
+              "capabilities": [
+                "REMOTE_START_STOP_CAPABLE",
+                "RFID_READER"
+              ],
+              "connectors": [
+                {
+                  "id": "1",
+                  "standard": "IEC_62196_T2",
+                  "format": "SOCKET",
+                  "power_type": "AC_3_PHASE",
+                  "last_updated": "2026-10-28T11:11:21Z",
+                  "max_amperage": 32,
+                  "max_voltage": 230,
+                  "max_electric_power": 0,
+                  "tariff_ids": [
+                    "3f4fc280-5979-4df5-bde2-9918b844be48"
+                  ]
+                }
+              ]
+            },
+            {
+              "uid": "f9045d64-2564-48af-8089-1581d2b85e5a",
+              "status": "AVAILABLE",
+              "last_updated": "2026-10-28T12:53:59Z",
+              "evse_id": "GBBLKE2454020001",
+              "physical_reference": "2454-02",
+              "floor_level": null,
+              "directions": null,
+              "parking_restrictions": null,
+              "capabilities": [
+                "REMOTE_START_STOP_CAPABLE",
+                "RFID_READER"
+              ],
+              "connectors": [
+                {
+                  "id": "1",
+                  "standard": "IEC_62196_T2",
+                  "format": "SOCKET",
+                  "power_type": "AC_3_PHASE",
+                  "last_updated": "2026-10-28T11:11:22Z",
+                  "max_amperage": 32,
+                  "max_voltage": 230,
+                  "max_electric_power": 0,
+                  "tariff_ids": [
+                    "3f4fc280-5979-4df5-bde2-9918b844be48"
+                  ]
+                }
+              ]
+            },
+            {
+              "uid": "2fe6404d-e92f-4a02-8da9-f0dcc7254d97",
+              "status": "CHARGING",
+              "last_updated": "2026-10-29T11:01:47Z",
+              "evse_id": "GBBLKE2454040001",
+              "physical_reference": "2454-04",
+              "floor_level": null,
+              "directions": null,
+              "parking_restrictions": null,
+              "capabilities": [
+                "REMOTE_START_STOP_CAPABLE",
+                "RFID_READER"
+              ],
+              "connectors": [
+                {
+                  "id": "1",
+                  "standard": "IEC_62196_T2",
+                  "format": "SOCKET",
+                  "power_type": "AC_3_PHASE",
+                  "last_updated": "2026-10-28T11:11:21Z",
+                  "max_amperage": 32,
+                  "max_voltage": 230,
+                  "max_electric_power": 0,
+                  "tariff_ids": [
+                    "3f4fc280-5979-4df5-bde2-9918b844be48"
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  }
+}

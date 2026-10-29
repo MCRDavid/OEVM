@@ -158,7 +158,7 @@ def test_added_vat_covers_other_charges_and_the_minimum_charge():
     )
 
 
-IN_PRICE = "including VAT, read as the operator's display price shows it"
+IN_PRICE = "including VAT, reading the VAT rate the feed states as already in the price"
 
 
 def test_stated_vat_read_as_in_the_price_is_not_added_and_the_price_says_so():
