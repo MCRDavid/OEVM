@@ -1,8 +1,8 @@
 # yaml-language-server: $schema=schema.json
 id: zest
 display_name: Zest
-ocpi_country_code: unknown
-ocpi_party_id: unknown
+ocpi_country_code: GB
+ocpi_party_id: ZST
 adapter: unknown
 base_url: unknown
 endpoints: {}
@@ -20,7 +20,7 @@ cors: unknown
 attribution: null
 licence: null
 engagement:
-  status: requested_no_reply
+  status: no_public_feed_found
   evidence:
     - date: 2026-10-10
       url: https://www.zest.uk.com/charge-point-open-data
@@ -29,6 +29,12 @@ engagement:
         email address, company and reason for the request. It says the data is licensed
         under CC BY 4.0. It does not say whether access is given as a key, a file or by
         other means.
+    - date: 2026-10-28
+      file: evidence/zest/2026-10-28-reply.md
+      note: >-
+        Zest's emailed reply, with its location and tariff data attached as two OCPI 2.2.1
+        JSON files made on 2026-10-26 and no web address or key for fetching the data. It
+        asks for the form to be completed monthly for an updated snapshot.
   log:
     - date: 2026-10-10
       action: page_checked
@@ -44,6 +50,19 @@ engagement:
       channel: web_form
       summary: >-
         Requested access to Zest's charge point open data through its open data form.
+    - date: 2026-10-28
+      action: reply_received
+      channel: email
+      summary: >-
+        Zest replied by email with its location and tariff data attached as two OCPI 2.2.1
+        JSON files, with no web address or key for fetching the data, and asked for the form
+        to be completed monthly for an updated snapshot.
+      quote: >-
+        Please find the OCPI Data request documents attached. We are currently working hard
+        behind the scenes to implement automation for this process. In the meantime, please
+        complete the form monthly to ensure we have an updated snapshot of the necessary
+        information.
+      evidence_file: evidence/zest/2026-10-28-reply.md
 access_requested: 2026-10-23
 access_granted: null
 sources:
@@ -52,8 +71,21 @@ sources:
       Zest's charge point open data page, read 2026-10-10. Request form, and the sentence
       "Use of this data is licensed under CC BY 4.0.", which links to
       https://creativecommons.org/licenses/by/4.0/. States no rate limit or data format.
-findings: []
+findings:
+  - date: 2026-10-28
+    kind: access
+    summary: >-
+      Zest offers its open data through a request form, and its reply to a request on
+      2026-10-23 was the data as two files attached to an email, made on 2026-10-26, with no
+      web address for fetching it. The reply asks for the form to be completed monthly for
+      an updated snapshot and says Zest is working on automating the process.
+    handling: >-
+      The files are kept privately and are not on the map while the repository owner
+      decides whether to show them.
+    evidence_url: https://www.zest.uk.com/charge-point-open-data
 notes: >-
   Zest's page says "Use of this data is licensed under CC BY 4.0." (read 2026-10-10). Access
-  could be requested through the form on its open data page.
+  was requested through the form on its open data page on 2026-10-23, and Zest replied on
+  2026-10-28 with its data as emailed files (1,963 locations under GB ZST), asking for a new
+  request each month.
 enabled: false
