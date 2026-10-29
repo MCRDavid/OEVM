@@ -24,6 +24,9 @@ October 2026): green working, yellow some problems but data on the map, red noth
 the map, grey switched off or not fetched yet. The colours come only from the run logs
 and the registry, so they describe what this project received, not any operator's duties.
 An operator shown from a copy it sent rather than a feed (sent_copy, ADR 0029) is yellow.
+The page opens with every operator in the registry, switched on or off, by name with its
+circle (the owner's request, 29 October 2026). Every other section is closed until a
+visitor opens it, with plain <details> elements, so the page still needs no scripts.
 """
 
 import argparse
@@ -615,6 +618,8 @@ EXTRA_STYLE = """
 .key, .off { list-style: none; padding-left: 0; }
 .off { columns: 16rem; }
 .off li { break-inside: avoid; }
+.overview { columns: 10rem 4; }
+.overview li { padding-left: 1.6em; text-indent: -1.6em; }
 details.section { border-top: 1px solid var(--line); }
 details.section > summary { cursor: pointer; padding: 0.75rem 0; }
 details.section > summary h2 { display: inline; font-size: 1.3rem; margin: 0; }
