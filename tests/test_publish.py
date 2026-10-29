@@ -39,7 +39,7 @@ def test_every_output_validates_against_its_exported_schema(results, tmp_path):
     jsonschema.validate(layer, schema("map-layer"))
     jsonschema.validate(json.loads((data / "manifest.json").read_text()), schema("manifest"))
     details = sorted((data / "loc").glob("*/*.json"))
-    assert len(details) == len(layer["features"]) == 119
+    assert len(details) == len(layer["features"]) == 126
     for path in details:
         jsonschema.validate(json.loads(path.read_text()), schema("location-detail"))
 
@@ -79,6 +79,7 @@ def test_the_manifest_records_operators_attribution_and_sizes(results, tmp_path)
         "parkrecharge",
         "plug_charging",
         "pogo_charge",
+        "roam",
         "scottishpower_recharge",
         "three_ti",
         "urban_fox",
@@ -89,7 +90,7 @@ def test_the_manifest_records_operators_attribution_and_sizes(results, tmp_path)
         assert entry.licence == "OGL-3.0"
     sizes = {f.path: f for f in manifest.files}
     assert sizes["data/locations.geojson"].bytes > sizes["data/locations.geojson"].gzip_bytes > 0
-    assert sizes["data/loc/"].files == 119
+    assert sizes["data/loc/"].files == 126
     assert any("gzipped" in line for line in out.report)
 
 
@@ -509,7 +510,7 @@ def test_vat_is_added_only_where_the_owner_decided_and_the_tariffs_stay_as_publi
     results, tmp_path
 ):
     decided = {i for i, c in load_registry().items() if c.vat_not_stated}
-    assert decided == {"chargy", "clenergy_ev", "globe_ev"}
+    assert decided == {"chargy", "clenergy_ev", "globe_ev", "roam"}
     for properties, detail in _layer_and_details(results, tmp_path):
         texts = [o["text"] for o in detail["tariff_options"] if o["state"] == "priced"]
         added = [t for t in texts if "added by this project" in t]

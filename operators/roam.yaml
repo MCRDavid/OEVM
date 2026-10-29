@@ -1,32 +1,118 @@
 # yaml-language-server: $schema=schema.json
 id: roam
 display_name: Roam
-ocpi_country_code: unknown
-ocpi_party_id: unknown
-adapter: unknown
-base_url: unknown
-endpoints: {}
+# Neither the locations nor the tariffs carry country_code or party_id. GB and EVC are read
+# from the feed's EVSE ids (GBEVCE...) on 2026-10-26; the EV Roam register lists GB*EVC for
+# EV Chargers Ltd (evc.co.uk), and Roam's news page says EVC rebranded to Roam.
+ocpi_country_code: GB
+ocpi_party_id: EVC
+adapter: custom
+base_url: https://data.evc.ninja/public/v1
+endpoints:
+  locations:
+    url: https://data.evc.ninja/public/v1/data
+    status: documented
+    note: >-
+      Given in Roam's reply email of 2026-10-26. Every location in one OCPI response
+      (X-Total-Count 438 on 2026-10-26). No key.
+  tariffs:
+    url: https://data.evc.ninja/public/v1/tariffs
+    status: documented
+    note: >-
+      Given in Roam's reply email of 2026-10-26. Every tariff in one OCPI response
+      (X-Total-Count 728 on 2026-10-26). No key.
 auth:
-  method: unknown
+  method: none
   name: null
   secret_name: null
 rate_limit:
-  min_seconds_between_requests: 2
-  limits: []
-  limits_checked: unknown
-  notes: null
+  min_seconds_between_requests: 721
+  limits:
+    - publisher: Roam's data server, data.evc.ninja (RateLimit-Policy response header)
+      requests: 5
+      per_seconds: 3600
+      endpoint: locations
+      quote: "ratelimit-policy: 5;w=3600"
+      source_url: https://data.evc.ninja/public/v1/data
+      checked: 2026-10-26
+  limits_checked: 2026-10-26
+  notes: >-
+    The locations address answers with the RateLimit-Policy header "5;w=3600", which allows
+    5 requests in a 3,600 second window; the tariffs address sent no such header on
+    2026-10-26. Roam's reply email and website state no limit. The 721 second gap (3,600 /
+    5 plus a 1 second margin) applies to every request to the host, so a run makes its two
+    requests about 12 minutes apart.
 supports_single_location: unknown
-cors: unknown
-attribution: null
-licence: null
+cors: needs_testing
+attribution: >-
+  Contains data from Roam published under the Public Charge Point Regulations 2023, used in
+  line with the Open Government Licence v3.0.
+licence:
+  name: OGL-3.0
+  url: https://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/
+  basis: >-
+    Roam gave the two data addresses by email on 2026-10-26 in reply to a request for its
+    open data under regulation 10, with no licence, terms or conditions. The data server
+    has no page of its own: every other path on it, including its root, answers "Cannot
+    GET" (read 2026-10-26). Roam's website lists legal pages for its mobile app terms, its
+    privacy notice, complaints, modern slavery and its supplier code of conduct; none is
+    written for the open data, and the mobile app terms cover use of the Roam app (read
+    2026-10-26). Regulation 10(5) of the Public Charge Point Regulations 2023 requires the
+    data to be available without terms on its use, and DfT's guidance says "Data must be
+    open in line with the Open Government Licence". On 2026-10-10 the repository owner
+    decided, as a standing rule for operators whose data has no terms of its own, to read
+    general website, app or charging terms as not covering the open data.
+  checked: 2026-10-26
+missing_publish_flag:
+  decided: 2026-10-26
+  basis: >-
+    Roam gave these addresses by email on 2026-10-26 in reply to a request for its open data
+    under regulation 10 of the Public Charge Point Regulations 2023
+    (evidence/roam/2026-10-26-reply-email.md), and the addresses sit under /public/ and
+    need no key. None of its 438 locations has a publish flag. The repository owner decided
+    that locations with no flag may be shown. A flag set to false would still be respected.
+  evidence_url: https://data.evc.ninja/public/v1/data
+vat_not_stated:
+  decided: 2026-10-26
+  basis: >-
+    Roam's tariffs give no VAT rate on any price. Roam's membership guide (read 26 October
+    2026) says pay-as-you-go prices vary by location but "most commonly will be 54p per kWh
+    for fast charging (22kW and below) and 66p per kWh for rapid charging". In the tariffs
+    of 26 October 2026 the most common energy price for AC connectors is 0.45 GBP per kWh
+    (1,199 of 1,963 AC connectors), and 0.45 plus VAT at 20% is 54p. The most common DC
+    price is 0.58 (150 of 213 DC connectors), which comes to about 70p with VAT, not the
+    guide's 66p, so the guide may be older than the tariffs. This suggests prices with VAT
+    at 20%, the UK standard rate on public charging, taken off; that is inferred from the
+    figures, not stated by Roam. The repository owner decided that VAT at 20% is added, so
+    prices on the map all include VAT and can be compared.
+  evidence_url: https://data.evc.ninja/public/v1/tariffs
+  add_percent: 20
+excluded_locations:
+  decided: 2026-10-29
+  basis: >-
+    The EVSE's only connector is named "Schnieder French Test charger" and names the tariff
+    free_tariff, a flat fee of 0, so the map would show a test charger as free. The
+    repository owner decided on 2026-10-29 to leave that charger off; the rest of Norwood
+    Hall Hotel stays on the map.
+  evidence_url: https://data.evc.ninja/public/v1/data
+  locations:
+    - id: 2fDHay9pjCSytGLYz37F
+      name: Norwood Hall Hotel
+      evse_uids:
+        - c008d1ad-292b-4971-813f-18db2e053775
 engagement:
-  status: no_public_feed_found
+  status: open_anonymous
   evidence:
     - date: 2026-10-10
       url: https://www.roamcharging.com/
       note: >-
         Roam's home page has no open data, regulations or charge point data link. Its sitemap
         and FAQ page list or give no open data feed or route for requesting open data.
+    - date: 2026-10-26
+      file: evidence/roam/2026-10-26-reply-email.md
+      note: >-
+        Roam's reply email, giving the locations and tariffs addresses on data.evc.ninja,
+        which need no key.
   log:
     - date: 2026-10-10
       action: feed_searched
@@ -34,17 +120,144 @@ engagement:
         Roam's home page, sitemap and FAQ page were read, and no open data feed or route for
         requesting open data was found.
       evidence_url: https://www.roamcharging.com/
-access_requested: null
+    - date: 2026-10-24
+      action: request_sent
+      channel: web_form
+      summary: >-
+        Asked through the contact form on Roam's website where its open data under
+        regulation 10 is published, saying how the data would be attributed and that
+        published rate limits would be followed.
+      evidence_url: https://www.roamcharging.com/help-and-advice/contact-us
+    - date: 2026-10-26
+      action: reply_received
+      channel: email
+      summary: >-
+        Roam replied with the addresses of its locations and tariffs data on data.evc.ninja,
+        which need no key.
+      evidence_file: evidence/roam/2026-10-26-reply-email.md
+    - date: 2026-10-26
+      action: page_checked
+      summary: >-
+        Both addresses were read once. They give OCPI response objects with no key, and the
+        locations address sends a RateLimit-Policy header allowing 5 requests an hour. The
+        data server and Roam's website state no terms for the data.
+      evidence_url: https://data.evc.ninja/public/v1/data
+access_requested: 2026-10-24
 access_granted: null
 sources:
   - url: https://www.roamcharging.com/
     note: Roam's home page (read 2026-10-10). No open data link.
   - url: https://www.roamcharging.com/sitemap.xml
-    note: Roam's sitemap (read 2026-10-10). No open data, OCPI or data request page is listed.
+    note: >-
+      Roam's sitemap (read 2026-10-10 and 2026-10-26). No open data, OCPI or data request
+      page is listed. Its legal pages are the mobile app terms, privacy notice, complaints
+      policy, modern slavery policy and supplier code of conduct.
   - url: https://www.roamcharging.com/help-and-advice/faqs
     note: Roam's FAQ page (read 2026-10-10). Gives a 99% uptime rate; no open data link.
-findings: []
+  - url: https://data.evc.ninja/public/v1/data
+    note: >-
+      Locations address from Roam's reply email of 2026-10-26. Read once on 2026-10-26: 438
+      locations in one OCPI response, with the header "ratelimit-policy: 5;w=3600".
+  - url: https://data.evc.ninja/public/v1/tariffs
+    note: >-
+      Tariffs address from Roam's reply email of 2026-10-26. Read once on 2026-10-26: 728
+      tariffs in one OCPI response, all in GBP, with no rate limit header.
+  - url: https://www.roamcharging.com/news/evc-is-now-roam
+    note: >-
+      Roam's news page of 18 November 2024 (read 2026-10-26): "EVC has rebranded to Roam".
+      This is why the data host is evc.ninja and the EVSE ids use the party id EVC.
+  - url: https://www.roamcharging.com/help-and-advice/resources/is-signing-up-for-a-roam-membership-worth-it
+    note: >-
+      Roam's membership guide (read 2026-10-26). Says pay-as-you-go prices vary by location
+      but "most commonly will be 54p per kWh for fast charging (22kW and below) and 66p per
+      kWh for rapid charging".
+  - url: https://www.roamcharging.com/legal/mobile-app-terms-and-conditions
+    note: >-
+      Roam's mobile app terms (read 2026-10-26). They cover the Roam app; they say nothing
+      about the open data or about VAT on prices.
+findings:
+  - date: 2026-10-26
+    kind: spec_conformance
+    summary: >-
+      Records come in OCPI response objects but use OCPI 2.1.1 field names: locations give
+      type rather than parking_type, and connectors give one tariff_id, voltage and
+      amperage rather than tariff_ids, max_voltage and max_amperage. No location or tariff
+      has a country_code or party_id.
+    handling: >-
+      A custom adapter gives each connector the OCPI 2.2.1 names, which have the same
+      meanings, then converts the records as usual. The country code GB and party id EVC
+      come from the operator file, read from the EVSE ids.
+    evidence_url: https://data.evc.ninja/public/v1/data
+  - date: 2026-10-26
+    kind: spec_conformance
+    summary: >-
+      Each connector carries its own uid, evse id and status, which OCPI does not define
+      for connectors, and each EVSE's status matches its first connector's. The two
+      connectors' statuses differed in 212 of 1,039 EVSEs with two connectors on
+      2026-10-26.
+    handling: >-
+      Each EVSE's status is shown as sent. The connectors' own uid, evse id and status are
+      not used.
+    evidence_url: https://data.evc.ninja/public/v1/data
+  - date: 2026-10-26
+    kind: spec_conformance
+    summary: >-
+      In 12 EVSEs at 10 locations both connectors have the id 1, while OCPI 2.2.1 requires
+      connector ids to differ within an EVSE (2026-10-26).
+    handling: >-
+      On 2026-10-29 the repository owner decided that these sites should still be shown,
+      as the chargers are likely there and only the ids are wrong. In such an EVSE each
+      connector takes Roam's own connector uuid, which is unique, as its id; the run's
+      issues count how often.
+    evidence_url: https://data.evc.ninja/public/v1/data
+  - date: 2026-10-26
+    kind: spec_conformance
+    summary: >-
+      Locations have no publish flag, which OCPI 2.2.1 requires (none of 438 on
+      2026-10-26).
+    handling: >-
+      Shown under the repository owner's decision recorded in missing_publish_flag, because
+      Roam gave the feed as its open data under the regulations. A flag set to false would
+      always be respected.
+    evidence_url: https://data.evc.ninja/public/v1/data
+  - date: 2026-10-26
+    kind: access
+    summary: >-
+      The locations address sends the RateLimit-Policy header "5;w=3600" (5 requests an
+      hour); neither Roam's reply nor its website states a limit.
+    handling: >-
+      Requests to the host are spaced 721 seconds apart, so a run makes its two requests
+      about 12 minutes apart.
+    evidence_url: https://data.evc.ninja/public/v1/data
+  - date: 2026-10-26
+    kind: data_quality
+    summary: >-
+      Tariff prices give no VAT rate. The most common energy price for AC connectors is
+      0.45 GBP per kWh (1,199 of 1,963 on 2026-10-26); Roam's own guide says pay-as-you-go
+      is "most commonly" 54p per kWh for fast charging, which is 0.45 plus VAT at 20%.
+    handling: >-
+      VAT at 20% is added under the repository owner's decision recorded in vat_not_stated,
+      and each price says this project added it.
+    evidence_url: https://data.evc.ninja/public/v1/tariffs
+  - date: 2026-10-26
+    kind: data_quality
+    summary: >-
+      One EVSE at Norwood Hall Hotel, whose only connector has the charger_name "Schnieder
+      French Test charger", names the tariff free_tariff, whose only price is a flat fee
+      of 0. Its status was UNKNOWN on 2026-10-26.
+    handling: >-
+      That EVSE is left off the map under the repository owner's decision of 2026-10-29
+      recorded in excluded_locations; the hotel's other charger is shown.
+    evidence_url: https://data.evc.ninja/public/v1/tariffs
+  - date: 2026-10-26
+    kind: data_quality
+    summary: Five of 438 locations list no EVSEs (2026-10-26).
+    handling: Shown as published, with no chargers listed.
+    evidence_url: https://data.evc.ninja/public/v1/data
 notes: >-
-  No open data feed or request route was found on Roam's own website on 2026-10-10. A
-  written request could ask where its open data under regulation 10 is published.
-enabled: false
+  Roam was called EVC until November 2024. Its data was given by email on 2026-10-26 in
+  reply to a request; no open data page has been found on its website. Fetched by the
+  custom adapter in adapters/roam.py. Switched on after the repository owner's decisions
+  of 2026-10-26 on locations with no publish flag and on VAT, and of 2026-10-29 on the
+  test charger and on repeated connector ids.
+enabled: true
