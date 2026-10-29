@@ -7,7 +7,10 @@ Eco-Movement; the closing named no one. The greeting's name has been removed.
 
 The expiring link has been removed. It led to a note headed "Token" that held two tokens, one
 labelled "Shell Recharge" and one labelled "Ubitricity", as the repository owner recorded it.
-No token was given for Community by Shell Recharge. ubitricity's own token from Eco-Movement's email of 2026-10-26 is still used (`UBITRICITY_TOKEN`); the second token was not saved, and no token is kept here.
+No token was given for Community by Shell Recharge.
+
+The tokens themselves are never kept here. ubitricity's own token from Eco-Movement's
+email of 2026-10-26 is still used, and the second token was not saved.
 
 The email's wording, with the link and name removed:
 

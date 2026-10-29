@@ -21,13 +21,13 @@ The emails' wording, with the links removed, as the repository owner recorded it
 >
 > Your access tokens are available via these secure, expiring 1Password links:
 >
-> GFX-GB Drax: [link removed]  
-> WCCC Edgbaston: [link removed]  
-> Aldi Stores Limited: [link removed]  
-> Travis Perkins: [link removed]  
-> Southampton Apartment Hotels: [link removed]  
-> Drax Group: [link removed]  
-> Volvo: [link removed]  
+> GFX-GB Drax: [link removed]
+> WCCC Edgbaston: [link removed]
+> Aldi Stores Limited: [link removed]
+> Travis Perkins: [link removed]
+> Southampton Apartment Hotels: [link removed]
+> Drax Group: [link removed]
+> Volvo: [link removed]
 > drax-Ista: [link removed]
 >
 > Use it as a header on each request: `Authorization: Token <your-token>`. The data is served
@@ -44,13 +44,13 @@ The emails' wording, with the links removed, as the repository owner recorded it
 >
 > Your access tokens are available via these secure, expiring 1Password links:
 >
-> Southampton Apartment Hotels: [link removed]  
-> drax-Ista: [link removed]  
-> Drax Group: [link removed]  
-> GFX-GB Drax: [link removed]  
-> Aldi Stores Limited: [link removed]  
-> Travis Perkins: [link removed]  
-> WCCC Edgbaston: [link removed]  
+> Southampton Apartment Hotels: [link removed]
+> drax-Ista: [link removed]
+> Drax Group: [link removed]
+> GFX-GB Drax: [link removed]
+> Aldi Stores Limited: [link removed]
+> Travis Perkins: [link removed]
+> WCCC Edgbaston: [link removed]
 > Volvo: [link removed]
 >
 > Use it as a header on each request: `Authorization: Token <your-token>`. The data is served
@@ -67,13 +67,13 @@ The emails' wording, with the links removed, as the repository owner recorded it
 >
 > Your access tokens are available via these secure, expiring 1Password links:
 >
-> drax-Ista: [link removed]  
-> Drax Group: [link removed]  
-> WCCC Edgbaston: [link removed]  
-> Volvo: [link removed]  
-> GFX-GB Drax: [link removed]  
-> Aldi Stores Limited: [link removed]  
-> Southampton Apartment Hotels: [link removed]  
+> drax-Ista: [link removed]
+> Drax Group: [link removed]
+> WCCC Edgbaston: [link removed]
+> Volvo: [link removed]
+> GFX-GB Drax: [link removed]
+> Aldi Stores Limited: [link removed]
+> Southampton Apartment Hotels: [link removed]
 > Travis Perkins: [link removed]
 >
 > Use it as a header on each request: `Authorization: Token <your-token>`. The data is served
