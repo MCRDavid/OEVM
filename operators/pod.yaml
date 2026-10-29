@@ -1,8 +1,8 @@
 # yaml-language-server: $schema=schema.json
 id: pod
 display_name: Pod
-ocpi_country_code: unknown
-ocpi_party_id: unknown
+ocpi_country_code: GB
+ocpi_party_id: POD # Confirmed from the feed's own country_code and party_id on 2026-10-29.
 adapter: eco_movement_pcpr
 base_url: unknown
 endpoints:
@@ -84,6 +84,17 @@ licence:
     2026-10-10 the repository owner decided, as a standing rule for operators whose data has
     no terms of its own, that such operators can be switched on without asking again.
   checked: 2026-10-29
+vat_in_price:
+  decided: 2026-10-29
+  basis: >-
+    Pod's tariffs on Eco-Movement's PCPR API give every energy price with VAT 20 on
+    2026-10-29, and all 823 energy prices in its 774 tariffs are whole pence as
+    published (most often 0.38 and 0.42 pounds per kWh), while only 121 would be once
+    20% is added. Read as OCPI 2.2.1 says, with VAT added, 0.38 would be 45.6p per kWh.
+    That the stated VAT is already in the prices is inferred from the figures, not
+    stated by Pod. The repository owner decided on 2026-10-29 that the prices are read
+    as already including VAT, so no VAT is added.
+  evidence_url: https://open-chargepoints.com/api/ocpi/cpo/2.2.1/tariffs/
 engagement:
   status: key_on_request
   evidence:
@@ -153,11 +164,46 @@ sources:
     note: >-
       Pod's public charging page (read 2026-10-10). It covers how drivers use the network and
       says nothing about open data.
+findings:
+  - date: 2026-10-29
+    kind: spec_conformance
+    summary: >-
+      Every energy price gives VAT 20, and all 823 are whole pence as published (most
+      often 38p and 42p per kWh); with VAT added as OCPI 2.2.1 says, 0.38 would be
+      45.6p.
+    handling: >-
+      By the repository owner's decision of 2026-10-29 recorded in vat_in_price, the
+      stated VAT is read as already in each price, so it is not added again. This is
+      inferred from the figures and needs confirming by Pod. The tariffs are published
+      unchanged.
+    evidence_url: https://open-chargepoints.com/api/ocpi/cpo/2.2.1/tariffs/
+  - date: 2026-10-29
+    kind: data_quality
+    summary: >-
+      12 of the first 1,000 locations are on the Isle of Man (postcodes starting IM),
+      with country GBR. The Isle of Man is a Crown Dependency, not part of the UK.
+    handling: >-
+      They are left off the map, as every location outside the UK is (ADR 0017), and
+      listed on the feed health page.
+    evidence_url: https://open-chargepoints.com/api/ocpi/cpo/2.2.1/locations/
+  - date: 2026-10-29
+    kind: data_quality
+    summary: >-
+      Two tariffs have every price zero. In the first 1,000 locations, 163 connectors
+      at 63 locations name one of them, at sites such as Sainsbury's stores, a
+      McDonald's and schools.
+    handling: >-
+      These connectors show "Free", as the feed gives no charge. Whether drivers pay
+      nothing at these sites needs confirming by Pod.
+    evidence_url: https://open-chargepoints.com/api/ocpi/cpo/2.2.1/tariffs/
 notes: >-
   The blueprint said the ocpi_221 adapter would cover Pod "once a token is granted", with
   a version endpoint at ocpi.podenergy.com as an example to probe; the token came instead
-  through Pod's request form, which is shared with Eco-Movement.
-  On 2026-10-26 Eco-Movement sent a token for this network's data on its PCPR API, so it
-  uses the eco_movement_pcpr adapter. What the token returns needs testing with one
-  recorded fetch before the network is switched on.
-enabled: false
+  through Pod's request form, which is shared with Eco-Movement. Its regulation 10 data is
+  served by Eco-Movement's PCPR API (eco_movement_pcpr adapter), with a token Eco-Movement
+  sent on 2026-10-26, kept as the GitHub Actions secret POD_TOKEN. Every response on
+  2026-10-29 linked to a next page past the last record, which the adapter does not
+  follow. Eco-Movement's user guide says it creates the location ids and may change them
+  when it merges locations. On 2026-10-29 the feed reported 1,809 locations, in 2 pages of
+  1000, and 774 tariffs.
+enabled: true

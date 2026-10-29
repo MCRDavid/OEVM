@@ -1,8 +1,8 @@
 # yaml-language-server: $schema=schema.json
 id: ionity
 display_name: IONITY
-ocpi_country_code: unknown
-ocpi_party_id: unknown
+ocpi_country_code: GB
+ocpi_party_id: IOY # Confirmed from the feed's own country_code and party_id on 2026-10-29.
 adapter: eco_movement_pcpr
 base_url: unknown
 endpoints:
@@ -137,10 +137,11 @@ sources:
       Eco-Movement.
 findings: []
 notes: >-
-  Access could be requested through the form on IONITY's open data request page. Requests
-  are passed to Eco-Movement, so the eco_movement_pcpr adapter may apply once access is
-  given, but the page does not say how the data is delivered; this needs testing.
-  On 2026-10-26 Eco-Movement sent a token for this network's data on its PCPR API, so it
-  uses the eco_movement_pcpr adapter. What the token returns needs testing with one
-  recorded fetch before the network is switched on.
-enabled: false
+  Its regulation 10 data is served by Eco-Movement's PCPR API (eco_movement_pcpr adapter),
+  with a token Eco-Movement sent on 2026-10-26, kept as the GitHub Actions secret
+  IONITY_TOKEN. Every response on 2026-10-29 linked to a next page past the last record,
+  which the adapter does not follow. Eco-Movement's user guide says it creates the
+  location ids and may change them when it merges locations. On 2026-10-29 the feed
+  reported 84 locations and 3 tariffs, each price with VAT 20 (0.6944 pounds per kWh shows
+  as 83.3p).
+enabled: true

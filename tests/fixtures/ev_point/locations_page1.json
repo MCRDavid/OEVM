@@ -1,0 +1,652 @@
+{
+  "request": {
+    "method": "GET",
+    "url": "https://open-chargepoints.com/api/ocpi/cpo/2.2.1/locations/?limit=1000"
+  },
+  "response": {
+    "status_code": 200,
+    "headers": {
+      "content-type": "application/json",
+      "link": "<https://open-chargepoints.com/api/ocpi/cpo/2.2.1/locations/?limit=1000&offset=3>; rel=\"next\"",
+      "x-total-count": "3",
+      "x-limit": "1000"
+    },
+    "body": {
+      "timestamp": "2026-10-29T13:30:19Z",
+      "status_code": 1000,
+      "status_message": "Success",
+      "data": [
+        {
+          "party_id": "CPI",
+          "id": "GBCPIL6829195",
+          "country_code": "GB",
+          "publish": true,
+          "country": "GBR",
+          "address": "34 Buxton Rd",
+          "city": "Hazel Grove",
+          "postal_code": "SK7 6AF",
+          "coordinates": {
+            "latitude": "53.37355500",
+            "longitude": "-2.10908000"
+          },
+          "state": null,
+          "last_updated": "2026-10-28T19:25:02Z",
+          "opening_times": {
+            "twentyfourseven": true
+          },
+          "name": "EG GROUP HAZEL GROVE",
+          "time_zone": "Europe/London",
+          "owner": {
+            "name": "ev-point",
+            "website": "https://www.ev-point.com/"
+          },
+          "operator": {
+            "name": "ev-point",
+            "website": "https://www.ev-point.com/"
+          },
+          "suboperator": {
+            "name": "ev-point",
+            "website": "https://www.ev-point.com/"
+          },
+          "energy_mix": {
+            "is_green_energy": true
+          },
+          "charging_when_closed": true,
+          "directions": null,
+          "evses": [
+            {
+              "uid": "3603445",
+              "status": "CHARGING",
+              "last_updated": "2026-10-28T16:01:03Z",
+              "evse_id": "GBCPIE6829195*1",
+              "physical_reference": "HAZEL GROVE-1",
+              "floor_level": null,
+              "directions": null,
+              "parking_restrictions": null,
+              "capabilities": [
+                "CREDIT_CARD_PAYABLE",
+                "REMOTE_START_STOP_CAPABLE",
+                "RFID_READER"
+              ],
+              "connectors": [
+                {
+                  "id": "GBCPIP6829195*1*373",
+                  "standard": "IEC_62196_T2_COMBO",
+                  "format": "CABLE",
+                  "power_type": "DC",
+                  "last_updated": "2026-10-28T19:25:02Z",
+                  "max_amperage": 150,
+                  "max_voltage": 1000,
+                  "max_electric_power": 150000,
+                  "tariff_ids": [
+                    "NLCPIT2v8Z*7*0"
+                  ]
+                }
+              ]
+            },
+            {
+              "uid": "3603455",
+              "status": "AVAILABLE",
+              "last_updated": "2026-10-28T16:01:09Z",
+              "evse_id": "GBCPIE6829195*2",
+              "physical_reference": "HAZEL GROVE-2",
+              "floor_level": null,
+              "directions": null,
+              "parking_restrictions": null,
+              "capabilities": [
+                "CREDIT_CARD_PAYABLE",
+                "REMOTE_START_STOP_CAPABLE",
+                "RFID_READER"
+              ],
+              "connectors": [
+                {
+                  "id": "GBCPIP6829195*2*373",
+                  "standard": "IEC_62196_T2_COMBO",
+                  "format": "CABLE",
+                  "power_type": "DC",
+                  "last_updated": "2026-10-28T19:25:02Z",
+                  "max_amperage": 150,
+                  "max_voltage": 1000,
+                  "max_electric_power": 150000,
+                  "tariff_ids": [
+                    "NLCPIT2v8Z*7*0"
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "party_id": "CPI",
+          "id": "GBCPIL6847395",
+          "country_code": "GB",
+          "publish": true,
+          "country": "GBR",
+          "address": "Franche Road",
+          "city": "Kidderminster",
+          "postal_code": "DY11 5BL",
+          "coordinates": {
+            "latitude": "52.39972200",
+            "longitude": "-2.27052000"
+          },
+          "state": null,
+          "last_updated": "2026-10-28T19:25:57Z",
+          "opening_times": {
+            "twentyfourseven": true
+          },
+          "name": "EG GROUP HABBERLEY",
+          "time_zone": "Europe/London",
+          "owner": {
+            "name": "ev-point",
+            "website": "https://www.ev-point.com/"
+          },
+          "operator": {
+            "name": "ev-point",
+            "website": "https://www.ev-point.com/"
+          },
+          "suboperator": {
+            "name": "ev-point",
+            "website": "https://www.ev-point.com/"
+          },
+          "energy_mix": {
+            "is_green_energy": true
+          },
+          "charging_when_closed": true,
+          "directions": null,
+          "evses": [
+            {
+              "uid": "3633535",
+              "status": "UNKNOWN",
+              "last_updated": "2026-06-18T12:41:39Z",
+              "evse_id": "GBCPIE6847395*1",
+              "physical_reference": "HABBERLEY-1",
+              "floor_level": null,
+              "directions": null,
+              "parking_restrictions": null,
+              "capabilities": [
+                "CREDIT_CARD_PAYABLE",
+                "REMOTE_START_STOP_CAPABLE",
+                "RFID_READER"
+              ],
+              "connectors": [
+                {
+                  "id": "GBCPIP6847395*1*373",
+                  "standard": "IEC_62196_T2_COMBO",
+                  "format": "CABLE",
+                  "power_type": "DC",
+                  "last_updated": "2026-10-28T19:25:57Z",
+                  "max_amperage": 150,
+                  "max_voltage": 1000,
+                  "max_electric_power": 150000,
+                  "tariff_ids": [
+                    "NLCPIT2v8Z*7*0"
+                  ]
+                }
+              ]
+            },
+            {
+              "uid": "3633545",
+              "status": "UNKNOWN",
+              "last_updated": "2026-06-18T12:41:39Z",
+              "evse_id": "GBCPIE6847395*2",
+              "physical_reference": "HABBERLEY-2",
+              "floor_level": null,
+              "directions": null,
+              "parking_restrictions": null,
+              "capabilities": [
+                "CREDIT_CARD_PAYABLE",
+                "REMOTE_START_STOP_CAPABLE",
+                "RFID_READER"
+              ],
+              "connectors": [
+                {
+                  "id": "GBCPIP6847395*2*373",
+                  "standard": "IEC_62196_T2_COMBO",
+                  "format": "CABLE",
+                  "power_type": "DC",
+                  "last_updated": "2026-10-28T19:25:57Z",
+                  "max_amperage": 150,
+                  "max_voltage": 1000,
+                  "max_electric_power": 150000,
+                  "tariff_ids": [
+                    "NLCPIT2v8Z*7*0"
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "party_id": "CPI",
+          "id": "GBCPIL6662865",
+          "country_code": "GB",
+          "publish": true,
+          "country": "GBR",
+          "address": "4b Shepiston Ln",
+          "city": "Hayes",
+          "postal_code": "UB3 1LL",
+          "coordinates": {
+            "latitude": "51.49590500",
+            "longitude": "-0.44514700"
+          },
+          "state": null,
+          "last_updated": "2026-10-29T07:48:33Z",
+          "opening_times": {
+            "twentyfourseven": true
+          },
+          "name": "EG GROUP 04 - HEATHROW",
+          "time_zone": "Europe/Jersey",
+          "owner": {
+            "name": "ev-point",
+            "website": "https://www.ev-point.com/"
+          },
+          "operator": {
+            "name": "ev-point",
+            "website": "https://www.ev-point.com/"
+          },
+          "suboperator": {
+            "name": "ev-point",
+            "website": "https://www.ev-point.com/"
+          },
+          "energy_mix": {
+            "is_green_energy": true
+          },
+          "charging_when_closed": true,
+          "directions": null,
+          "evses": [
+            {
+              "uid": "3333695",
+              "status": "CHARGING",
+              "last_updated": "2026-10-28T21:03:41Z",
+              "evse_id": "GBCPIE6662835*2",
+              "physical_reference": "01 - HEATHROW-2",
+              "floor_level": null,
+              "directions": null,
+              "parking_restrictions": null,
+              "capabilities": [
+                "CREDIT_CARD_PAYABLE",
+                "REMOTE_START_STOP_CAPABLE",
+                "RFID_READER"
+              ],
+              "connectors": [
+                {
+                  "id": "GBCPIP6662835*2*100152",
+                  "standard": "CHADEMO",
+                  "format": "CABLE",
+                  "power_type": "DC",
+                  "last_updated": "2026-10-28T19:14:33Z",
+                  "max_amperage": 200,
+                  "max_voltage": 500,
+                  "max_electric_power": 100000,
+                  "tariff_ids": [
+                    "NLCPIT3CCd*1*0"
+                  ]
+                }
+              ]
+            },
+            {
+              "uid": "3333705",
+              "status": "AVAILABLE",
+              "last_updated": "2026-10-29T07:32:42Z",
+              "evse_id": "GBCPIE6662845*1",
+              "physical_reference": "02 - HEATHROW-1",
+              "floor_level": null,
+              "directions": null,
+              "parking_restrictions": null,
+              "capabilities": [
+                "CREDIT_CARD_PAYABLE",
+                "REMOTE_START_STOP_CAPABLE",
+                "RFID_READER"
+              ],
+              "connectors": [
+                {
+                  "id": "GBCPIP6662845*1*373",
+                  "standard": "IEC_62196_T2_COMBO",
+                  "format": "CABLE",
+                  "power_type": "DC",
+                  "last_updated": "2026-10-28T19:14:33Z",
+                  "max_amperage": 150,
+                  "max_voltage": 1000,
+                  "max_electric_power": 150000,
+                  "tariff_ids": [
+                    "NLCPIT3CCd*1*0"
+                  ]
+                }
+              ]
+            },
+            {
+              "uid": "3333715",
+              "status": "AVAILABLE",
+              "last_updated": "2026-10-26T18:23:54Z",
+              "evse_id": "GBCPIE6662845*2",
+              "physical_reference": "02 - HEATHROW-2",
+              "floor_level": null,
+              "directions": null,
+              "parking_restrictions": null,
+              "capabilities": [
+                "CREDIT_CARD_PAYABLE",
+                "REMOTE_START_STOP_CAPABLE",
+                "RFID_READER"
+              ],
+              "connectors": [
+                {
+                  "id": "GBCPIP6662845*2*100152",
+                  "standard": "CHADEMO",
+                  "format": "CABLE",
+                  "power_type": "DC",
+                  "last_updated": "2026-10-28T19:14:33Z",
+                  "max_amperage": 200,
+                  "max_voltage": 500,
+                  "max_electric_power": 100000,
+                  "tariff_ids": [
+                    "NLCPIT3CCd*1*0"
+                  ]
+                }
+              ]
+            },
+            {
+              "uid": "3333745",
+              "status": "CHARGING",
+              "last_updated": "2026-10-29T07:48:33Z",
+              "evse_id": "GBCPIE6662865*1",
+              "physical_reference": "04 - HEATHROW-1",
+              "floor_level": null,
+              "directions": null,
+              "parking_restrictions": null,
+              "capabilities": [
+                "CREDIT_CARD_PAYABLE",
+                "REMOTE_START_STOP_CAPABLE",
+                "RFID_READER"
+              ],
+              "connectors": [
+                {
+                  "id": "GBCPIP6662865*1*373",
+                  "standard": "IEC_62196_T2_COMBO",
+                  "format": "CABLE",
+                  "power_type": "DC",
+                  "last_updated": "2026-10-28T19:14:34Z",
+                  "max_amperage": 150,
+                  "max_voltage": 1000,
+                  "max_electric_power": 150000,
+                  "tariff_ids": [
+                    "NLCPIT3CCd*1*0"
+                  ]
+                }
+              ]
+            },
+            {
+              "uid": "3155445",
+              "status": "CHARGING",
+              "last_updated": "2026-10-05T12:27:47Z",
+              "evse_id": "GBCPIE6541495*2",
+              "physical_reference": "06 - HEATHROW-2",
+              "floor_level": null,
+              "directions": null,
+              "parking_restrictions": null,
+              "capabilities": [
+                "CREDIT_CARD_PAYABLE",
+                "REMOTE_START_STOP_CAPABLE",
+                "RFID_READER"
+              ],
+              "connectors": [
+                {
+                  "id": "GBCPIP6541495*2*373",
+                  "standard": "IEC_62196_T2_COMBO",
+                  "format": "CABLE",
+                  "power_type": "DC",
+                  "last_updated": "2026-10-28T19:05:55Z",
+                  "max_amperage": 150,
+                  "max_voltage": 1000,
+                  "max_electric_power": 150000,
+                  "tariff_ids": [
+                    "NLCPIT3CCd*1*0"
+                  ]
+                }
+              ]
+            },
+            {
+              "uid": "3333435",
+              "status": "CHARGING",
+              "last_updated": "2026-10-28T23:16:41Z",
+              "evse_id": "GBCPIE6662705*1",
+              "physical_reference": "05 - HEATHROW-1",
+              "floor_level": null,
+              "directions": null,
+              "parking_restrictions": null,
+              "capabilities": [
+                "CREDIT_CARD_PAYABLE",
+                "REMOTE_START_STOP_CAPABLE",
+                "RFID_READER"
+              ],
+              "connectors": [
+                {
+                  "id": "GBCPIP6662705*1*373",
+                  "standard": "IEC_62196_T2_COMBO",
+                  "format": "CABLE",
+                  "power_type": "DC",
+                  "last_updated": "2026-10-28T19:14:31Z",
+                  "max_amperage": 150,
+                  "max_voltage": 1000,
+                  "max_electric_power": 150000,
+                  "tariff_ids": [
+                    "NLCPIT3CCd*1*0"
+                  ]
+                }
+              ]
+            },
+            {
+              "uid": "3333445",
+              "status": "AVAILABLE",
+              "last_updated": "2026-10-28T20:15:38Z",
+              "evse_id": "GBCPIE6662705*2",
+              "physical_reference": "05 - HEATHROW-2",
+              "floor_level": null,
+              "directions": null,
+              "parking_restrictions": null,
+              "capabilities": [
+                "CREDIT_CARD_PAYABLE",
+                "REMOTE_START_STOP_CAPABLE",
+                "RFID_READER"
+              ],
+              "connectors": [
+                {
+                  "id": "GBCPIP6662705*2*373",
+                  "standard": "IEC_62196_T2_COMBO",
+                  "format": "CABLE",
+                  "power_type": "DC",
+                  "last_updated": "2026-10-28T19:14:31Z",
+                  "max_amperage": 150,
+                  "max_voltage": 1000,
+                  "max_electric_power": 150000,
+                  "tariff_ids": [
+                    "NLCPIT3CCd*1*0"
+                  ]
+                }
+              ]
+            },
+            {
+              "uid": "3333685",
+              "status": "CHARGING",
+              "last_updated": "2026-10-28T18:39:43Z",
+              "evse_id": "GBCPIE6662835*1",
+              "physical_reference": "01 - HEATHROW-1",
+              "floor_level": null,
+              "directions": null,
+              "parking_restrictions": null,
+              "capabilities": [
+                "CREDIT_CARD_PAYABLE",
+                "REMOTE_START_STOP_CAPABLE",
+                "RFID_READER"
+              ],
+              "connectors": [
+                {
+                  "id": "GBCPIP6662835*1*373",
+                  "standard": "IEC_62196_T2_COMBO",
+                  "format": "CABLE",
+                  "power_type": "DC",
+                  "last_updated": "2026-10-28T19:14:33Z",
+                  "max_amperage": 150,
+                  "max_voltage": 1000,
+                  "max_electric_power": 150000,
+                  "tariff_ids": [
+                    "NLCPIT3CCd*1*0"
+                  ]
+                }
+              ]
+            },
+            {
+              "uid": "3333725",
+              "status": "CHARGING",
+              "last_updated": "2026-10-28T23:53:32Z",
+              "evse_id": "GBCPIE6662855*1",
+              "physical_reference": "03 - HEATHROW-1",
+              "floor_level": null,
+              "directions": null,
+              "parking_restrictions": null,
+              "capabilities": [
+                "CREDIT_CARD_PAYABLE",
+                "REMOTE_START_STOP_CAPABLE",
+                "RFID_READER"
+              ],
+              "connectors": [
+                {
+                  "id": "GBCPIP6662855*1*373",
+                  "standard": "IEC_62196_T2_COMBO",
+                  "format": "CABLE",
+                  "power_type": "DC",
+                  "last_updated": "2026-10-28T19:14:33Z",
+                  "max_amperage": 150,
+                  "max_voltage": 1000,
+                  "max_electric_power": 150000,
+                  "tariff_ids": [
+                    "NLCPIT3CCd*1*0"
+                  ]
+                }
+              ]
+            },
+            {
+              "uid": "3333735",
+              "status": "AVAILABLE",
+              "last_updated": "2026-10-28T16:31:17Z",
+              "evse_id": "GBCPIE6662855*2",
+              "physical_reference": "03 - HEATHROW-2",
+              "floor_level": null,
+              "directions": null,
+              "parking_restrictions": null,
+              "capabilities": [
+                "CREDIT_CARD_PAYABLE",
+                "REMOTE_START_STOP_CAPABLE",
+                "RFID_READER"
+              ],
+              "connectors": [
+                {
+                  "id": "GBCPIP6662855*2*100152",
+                  "standard": "CHADEMO",
+                  "format": "CABLE",
+                  "power_type": "DC",
+                  "last_updated": "2026-10-28T19:14:33Z",
+                  "max_amperage": 200,
+                  "max_voltage": 500,
+                  "max_electric_power": 100000,
+                  "tariff_ids": [
+                    "NLCPIT3CCd*1*0"
+                  ]
+                }
+              ]
+            },
+            {
+              "uid": "3333755",
+              "status": "AVAILABLE",
+              "last_updated": "2026-10-29T07:32:56Z",
+              "evse_id": "GBCPIE6662865*2",
+              "physical_reference": "04 - HEATHROW-2",
+              "floor_level": null,
+              "directions": null,
+              "parking_restrictions": null,
+              "capabilities": [
+                "CREDIT_CARD_PAYABLE",
+                "REMOTE_START_STOP_CAPABLE",
+                "RFID_READER"
+              ],
+              "connectors": [
+                {
+                  "id": "GBCPIP6662865*2*373",
+                  "standard": "IEC_62196_T2_COMBO",
+                  "format": "CABLE",
+                  "power_type": "DC",
+                  "last_updated": "2026-10-28T19:14:34Z",
+                  "max_amperage": 150,
+                  "max_voltage": 1000,
+                  "max_electric_power": 150000,
+                  "tariff_ids": [
+                    "NLCPIT3CCd*1*0"
+                  ]
+                }
+              ]
+            },
+            {
+              "uid": "4225995",
+              "status": "AVAILABLE",
+              "last_updated": "2026-10-28T23:53:13Z",
+              "evse_id": "GBCPIE6662855*3",
+              "physical_reference": "03 - HEATHROW-3",
+              "floor_level": null,
+              "directions": null,
+              "parking_restrictions": null,
+              "capabilities": [
+                "CREDIT_CARD_PAYABLE",
+                "REMOTE_START_STOP_CAPABLE",
+                "RFID_READER"
+              ],
+              "connectors": [
+                {
+                  "id": "GBCPIP6662855*3*373",
+                  "standard": "IEC_62196_T2_COMBO",
+                  "format": "CABLE",
+                  "power_type": "DC",
+                  "last_updated": "2026-10-28T19:14:34Z",
+                  "max_amperage": 150,
+                  "max_voltage": 1000,
+                  "max_electric_power": 150000,
+                  "tariff_ids": [
+                    "NLCPIT3CCd*1*0"
+                  ]
+                }
+              ]
+            },
+            {
+              "uid": "3155435",
+              "status": "CHARGING",
+              "last_updated": "2026-10-28T20:27:20Z",
+              "evse_id": "GBCPIE6541495*1",
+              "physical_reference": "06 - HEATHROW-1",
+              "floor_level": null,
+              "directions": null,
+              "parking_restrictions": null,
+              "capabilities": [
+                "CREDIT_CARD_PAYABLE",
+                "REMOTE_START_STOP_CAPABLE",
+                "RFID_READER"
+              ],
+              "connectors": [
+                {
+                  "id": "GBCPIP6541495*1*373",
+                  "standard": "IEC_62196_T2_COMBO",
+                  "format": "CABLE",
+                  "power_type": "DC",
+                  "last_updated": "2026-10-28T19:05:55Z",
+                  "max_amperage": 150,
+                  "max_voltage": 1000,
+                  "max_electric_power": 150000,
+                  "tariff_ids": [
+                    "NLCPIT3CCd*1*0"
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  }
+}

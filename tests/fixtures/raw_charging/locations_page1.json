@@ -1,0 +1,607 @@
+{
+  "request": {
+    "method": "GET",
+    "url": "https://open-chargepoints.com/api/ocpi/cpo/2.2.1/locations/?limit=1000"
+  },
+  "response": {
+    "status_code": 200,
+    "headers": {
+      "content-type": "application/json",
+      "link": "<https://open-chargepoints.com/api/ocpi/cpo/2.2.1/locations/?limit=1000&offset=4>; rel=\"next\"",
+      "x-total-count": "4",
+      "x-limit": "1000"
+    },
+    "body": {
+      "timestamp": "2026-10-29T13:40:47Z",
+      "status_code": 1000,
+      "status_message": "Success",
+      "data": [
+        {
+          "party_id": "CPI",
+          "id": "GBCPIL7419825",
+          "country_code": "GB",
+          "publish": true,
+          "country": "GBR",
+          "address": "Xscape Yorkshire Colorado Way",
+          "city": "Castleford",
+          "postal_code": "WF10 4TA",
+          "coordinates": {
+            "latitude": "53.70896300",
+            "longitude": "-1.34094200"
+          },
+          "state": null,
+          "last_updated": "2026-10-28T19:45:43Z",
+          "opening_times": {
+            "twentyfourseven": true
+          },
+          "name": "RAW RAPID 50DC2 XSCAPE Y",
+          "time_zone": "Europe/London",
+          "owner": {
+            "name": "RAW Charging",
+            "website": "https://rawcharging.com/"
+          },
+          "operator": {
+            "name": "RAW Charging",
+            "website": "https://rawcharging.com/"
+          },
+          "suboperator": {
+            "name": "RAW Charging",
+            "website": "https://rawcharging.com/"
+          },
+          "energy_mix": {
+            "is_green_energy": true
+          },
+          "charging_when_closed": true,
+          "directions": null,
+          "evses": [
+            {
+              "uid": "4330455",
+              "status": "UNKNOWN",
+              "last_updated": "2026-08-18T13:53:34Z",
+              "evse_id": "GBCPIE7419825*1",
+              "physical_reference": "50DC2 XSCAPE Y-1",
+              "floor_level": null,
+              "directions": null,
+              "parking_restrictions": null,
+              "capabilities": [
+                "CREDIT_CARD_PAYABLE",
+                "REMOTE_START_STOP_CAPABLE",
+                "RFID_READER"
+              ],
+              "connectors": [
+                {
+                  "id": "GBCPIP7419825*1*100104",
+                  "standard": "IEC_62196_T2_COMBO",
+                  "format": "CABLE",
+                  "power_type": "DC",
+                  "last_updated": "2026-10-28T19:45:42Z",
+                  "max_amperage": 50,
+                  "max_voltage": 1000,
+                  "max_electric_power": 50000,
+                  "tariff_ids": [
+                    "NLCPIT1yKb*3*0"
+                  ]
+                }
+              ]
+            },
+            {
+              "uid": "4330465",
+              "status": "UNKNOWN",
+              "last_updated": "2026-08-18T13:53:34Z",
+              "evse_id": "GBCPIE7419825*2",
+              "physical_reference": "50DC2 XSCAPE Y-2",
+              "floor_level": null,
+              "directions": null,
+              "parking_restrictions": null,
+              "capabilities": [
+                "CREDIT_CARD_PAYABLE",
+                "REMOTE_START_STOP_CAPABLE",
+                "RFID_READER"
+              ],
+              "connectors": [
+                {
+                  "id": "GBCPIP7419825*2*100104",
+                  "standard": "IEC_62196_T2_COMBO",
+                  "format": "CABLE",
+                  "power_type": "DC",
+                  "last_updated": "2026-10-28T19:45:43Z",
+                  "max_amperage": 50,
+                  "max_voltage": 1000,
+                  "max_electric_power": 50000,
+                  "tariff_ids": [
+                    "NLCPIT1yKb*3*0"
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "party_id": "CPI",
+          "id": "GBCPIL7271285",
+          "country_code": "GB",
+          "publish": true,
+          "country": "GBR",
+          "address": "National Trust - Biddulph Grange Garden Grang",
+          "city": "Biddulph",
+          "postal_code": "ST8 7SD",
+          "coordinates": {
+            "latitude": "53.13020000",
+            "longitude": "-2.16506600"
+          },
+          "state": null,
+          "last_updated": "2026-10-28T19:38:14Z",
+          "opening_times": {
+            "twentyfourseven": true
+          },
+          "name": "RAW NT BIDDULPH 3",
+          "time_zone": "Europe/London",
+          "owner": {
+            "name": "RAW Charging",
+            "website": "https://rawcharging.com/"
+          },
+          "operator": {
+            "name": "RAW Charging",
+            "website": "https://rawcharging.com/"
+          },
+          "suboperator": {
+            "name": "RAW Charging",
+            "website": "https://rawcharging.com/"
+          },
+          "energy_mix": {
+            "is_green_energy": true
+          },
+          "charging_when_closed": true,
+          "directions": [
+            {
+              "language": "en",
+              "text": "3$0 - Hospitality"
+            }
+          ],
+          "evses": [
+            {
+              "uid": "4090105",
+              "status": "AVAILABLE",
+              "last_updated": "2026-10-18T14:47:52Z",
+              "evse_id": "GBCPIE7271265*1",
+              "physical_reference": "BIDDULPH 1-1",
+              "floor_level": null,
+              "directions": null,
+              "parking_restrictions": null,
+              "capabilities": [
+                "CREDIT_CARD_PAYABLE",
+                "REMOTE_START_STOP_CAPABLE",
+                "RFID_READER"
+              ],
+              "connectors": [
+                {
+                  "id": "GBCPIP7271265*1*1258",
+                  "standard": "IEC_62196_T2",
+                  "format": "SOCKET",
+                  "power_type": "AC_3_PHASE",
+                  "last_updated": "2026-10-28T19:38:13Z",
+                  "max_amperage": 31,
+                  "max_voltage": 400,
+                  "max_electric_power": 22080,
+                  "tariff_ids": [
+                    "NLCPIT3BNL*6*0"
+                  ]
+                }
+              ]
+            },
+            {
+              "uid": "4090115",
+              "status": "AVAILABLE",
+              "last_updated": "2026-10-05T11:29:50Z",
+              "evse_id": "GBCPIE7271265*2",
+              "physical_reference": "BIDDULPH 1-2",
+              "floor_level": null,
+              "directions": null,
+              "parking_restrictions": null,
+              "capabilities": [
+                "CREDIT_CARD_PAYABLE",
+                "REMOTE_START_STOP_CAPABLE",
+                "RFID_READER"
+              ],
+              "connectors": [
+                {
+                  "id": "GBCPIP7271265*2*1258",
+                  "standard": "IEC_62196_T2",
+                  "format": "SOCKET",
+                  "power_type": "AC_3_PHASE",
+                  "last_updated": "2026-10-28T19:38:13Z",
+                  "max_amperage": 31,
+                  "max_voltage": 400,
+                  "max_electric_power": 22080,
+                  "tariff_ids": [
+                    "NLCPIT3BNL*6*0"
+                  ]
+                }
+              ]
+            },
+            {
+              "uid": "4090125",
+              "status": "AVAILABLE",
+              "last_updated": "2026-10-27T13:10:30Z",
+              "evse_id": "GBCPIE7271275*1",
+              "physical_reference": "BIDDULPH 2-1",
+              "floor_level": null,
+              "directions": null,
+              "parking_restrictions": null,
+              "capabilities": [
+                "CREDIT_CARD_PAYABLE",
+                "REMOTE_START_STOP_CAPABLE",
+                "RFID_READER"
+              ],
+              "connectors": [
+                {
+                  "id": "GBCPIP7271275*1*1258",
+                  "standard": "IEC_62196_T2",
+                  "format": "SOCKET",
+                  "power_type": "AC_3_PHASE",
+                  "last_updated": "2026-10-28T19:38:13Z",
+                  "max_amperage": 31,
+                  "max_voltage": 400,
+                  "max_electric_power": 22080,
+                  "tariff_ids": [
+                    "NLCPIT3BNL*6*0"
+                  ]
+                }
+              ]
+            },
+            {
+              "uid": "4090135",
+              "status": "AVAILABLE",
+              "last_updated": "2026-10-26T15:54:14Z",
+              "evse_id": "GBCPIE7271275*2",
+              "physical_reference": "BIDDULPH 2-2",
+              "floor_level": null,
+              "directions": null,
+              "parking_restrictions": null,
+              "capabilities": [
+                "CREDIT_CARD_PAYABLE",
+                "REMOTE_START_STOP_CAPABLE",
+                "RFID_READER"
+              ],
+              "connectors": [
+                {
+                  "id": "GBCPIP7271275*2*1258",
+                  "standard": "IEC_62196_T2",
+                  "format": "SOCKET",
+                  "power_type": "AC_3_PHASE",
+                  "last_updated": "2026-10-28T19:38:13Z",
+                  "max_amperage": 31,
+                  "max_voltage": 400,
+                  "max_electric_power": 22080,
+                  "tariff_ids": [
+                    "NLCPIT3BNL*6*0"
+                  ]
+                }
+              ]
+            },
+            {
+              "uid": "4090145",
+              "status": "AVAILABLE",
+              "last_updated": "2026-10-27T15:01:41Z",
+              "evse_id": "GBCPIE7271285*1",
+              "physical_reference": "BIDDULPH 3-1",
+              "floor_level": null,
+              "directions": null,
+              "parking_restrictions": null,
+              "capabilities": [
+                "CREDIT_CARD_PAYABLE",
+                "REMOTE_START_STOP_CAPABLE",
+                "RFID_READER"
+              ],
+              "connectors": [
+                {
+                  "id": "GBCPIP7271285*1*1258",
+                  "standard": "IEC_62196_T2",
+                  "format": "SOCKET",
+                  "power_type": "AC_3_PHASE",
+                  "last_updated": "2026-10-28T19:38:14Z",
+                  "max_amperage": 31,
+                  "max_voltage": 400,
+                  "max_electric_power": 22080,
+                  "tariff_ids": [
+                    "NLCPIT3BNL*6*0"
+                  ]
+                }
+              ]
+            },
+            {
+              "uid": "4090155",
+              "status": "AVAILABLE",
+              "last_updated": "2026-10-28T14:23:20Z",
+              "evse_id": "GBCPIE7271285*2",
+              "physical_reference": "BIDDULPH 3-2",
+              "floor_level": null,
+              "directions": null,
+              "parking_restrictions": null,
+              "capabilities": [
+                "CREDIT_CARD_PAYABLE",
+                "REMOTE_START_STOP_CAPABLE",
+                "RFID_READER"
+              ],
+              "connectors": [
+                {
+                  "id": "GBCPIP7271285*2*1258",
+                  "standard": "IEC_62196_T2",
+                  "format": "SOCKET",
+                  "power_type": "AC_3_PHASE",
+                  "last_updated": "2026-10-28T19:38:14Z",
+                  "max_amperage": 31,
+                  "max_voltage": 400,
+                  "max_electric_power": 22080,
+                  "tariff_ids": [
+                    "NLCPIT3BNL*6*0"
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "party_id": "CPI",
+          "id": "GBCPIL7248105",
+          "country_code": "GB",
+          "publish": true,
+          "country": "GBR",
+          "address": "Chessington World of Adventures Leatherhead R",
+          "city": "Chessington",
+          "postal_code": "KT9 2NE",
+          "coordinates": {
+            "latitude": "51.35028900",
+            "longitude": "-0.31508900"
+          },
+          "state": null,
+          "last_updated": "2026-10-28T19:37:25Z",
+          "opening_times": {
+            "twentyfourseven": true
+          },
+          "name": "RAW MERLIN SAFARI 8",
+          "time_zone": "Europe/London",
+          "owner": {
+            "name": "RAW Charging",
+            "website": "https://rawcharging.com/"
+          },
+          "operator": {
+            "name": "RAW Charging",
+            "website": "https://rawcharging.com/"
+          },
+          "suboperator": {
+            "name": "RAW Charging",
+            "website": "https://rawcharging.com/"
+          },
+          "energy_mix": {
+            "is_green_energy": true
+          },
+          "charging_when_closed": true,
+          "directions": null,
+          "evses": [
+            {
+              "uid": "4052775",
+              "status": "CHARGING",
+              "last_updated": "2026-10-28T18:58:06Z",
+              "evse_id": "GBCPIE7248055*1",
+              "physical_reference": "SAFARI 7-1",
+              "floor_level": null,
+              "directions": null,
+              "parking_restrictions": null,
+              "capabilities": [
+                "CREDIT_CARD_PAYABLE",
+                "REMOTE_START_STOP_CAPABLE",
+                "RFID_READER"
+              ],
+              "connectors": [
+                {
+                  "id": "GBCPIP7248055*1*1259",
+                  "standard": "IEC_62196_T2",
+                  "format": "CABLE",
+                  "power_type": "AC_3_PHASE",
+                  "last_updated": "2026-10-28T19:37:25Z",
+                  "max_amperage": 55,
+                  "max_voltage": 230,
+                  "max_electric_power": 22080,
+                  "tariff_ids": [
+                    "NLCPIT2nrH*5*0"
+                  ]
+                }
+              ]
+            },
+            {
+              "uid": "4052785",
+              "status": "AVAILABLE",
+              "last_updated": "2026-10-28T16:25:50Z",
+              "evse_id": "GBCPIE7248055*2",
+              "physical_reference": "SAFARI 7-2",
+              "floor_level": null,
+              "directions": null,
+              "parking_restrictions": null,
+              "capabilities": [
+                "CREDIT_CARD_PAYABLE",
+                "REMOTE_START_STOP_CAPABLE",
+                "RFID_READER"
+              ],
+              "connectors": [
+                {
+                  "id": "GBCPIP7248055*2*1259",
+                  "standard": "IEC_62196_T2",
+                  "format": "CABLE",
+                  "power_type": "AC_3_PHASE",
+                  "last_updated": "2026-10-28T19:37:25Z",
+                  "max_amperage": 55,
+                  "max_voltage": 230,
+                  "max_electric_power": 22080,
+                  "tariff_ids": [
+                    "NLCPIT2nrH*5*0"
+                  ]
+                }
+              ]
+            },
+            {
+              "uid": "4052875",
+              "status": "UNKNOWN",
+              "last_updated": "2026-10-23T16:09:47Z",
+              "evse_id": "GBCPIE7248105*1",
+              "physical_reference": "SAFARI 8-1",
+              "floor_level": null,
+              "directions": null,
+              "parking_restrictions": null,
+              "capabilities": [
+                "CREDIT_CARD_PAYABLE",
+                "REMOTE_START_STOP_CAPABLE",
+                "RFID_READER"
+              ],
+              "connectors": [
+                {
+                  "id": "GBCPIP7248105*1*1259",
+                  "standard": "IEC_62196_T2",
+                  "format": "CABLE",
+                  "power_type": "AC_3_PHASE",
+                  "last_updated": "2026-10-28T19:37:25Z",
+                  "max_amperage": 55,
+                  "max_voltage": 230,
+                  "max_electric_power": 22080,
+                  "tariff_ids": [
+                    "NLCPIT2QP*1*0"
+                  ]
+                }
+              ]
+            },
+            {
+              "uid": "4052885",
+              "status": "UNKNOWN",
+              "last_updated": "2026-10-17T17:18:05Z",
+              "evse_id": "GBCPIE7248105*2",
+              "physical_reference": "SAFARI 8-2",
+              "floor_level": null,
+              "directions": null,
+              "parking_restrictions": null,
+              "capabilities": [
+                "CREDIT_CARD_PAYABLE",
+                "REMOTE_START_STOP_CAPABLE",
+                "RFID_READER"
+              ],
+              "connectors": [
+                {
+                  "id": "GBCPIP7248105*2*1259",
+                  "standard": "IEC_62196_T2",
+                  "format": "CABLE",
+                  "power_type": "AC_3_PHASE",
+                  "last_updated": "2026-10-28T19:37:25Z",
+                  "max_amperage": 55,
+                  "max_voltage": 230,
+                  "max_electric_power": 22080,
+                  "tariff_ids": [
+                    "NLCPIT2QP*1*0"
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "party_id": "CPI",
+          "id": "GBCPIL7315305",
+          "country_code": "GB",
+          "publish": true,
+          "country": "GBR",
+          "address": "Xscape Yorkshire Colorado Way",
+          "city": "Castleford",
+          "postal_code": "WF10 4TA",
+          "coordinates": {
+            "latitude": "53.71017000",
+            "longitude": "-1.34208400"
+          },
+          "state": null,
+          "last_updated": "2026-10-28T19:40:04Z",
+          "opening_times": {
+            "twentyfourseven": true
+          },
+          "name": "RAW RAPID XSCAPE YORK 8",
+          "time_zone": "Atlantic/St_Helena",
+          "owner": {
+            "name": "RAW Charging",
+            "website": "https://rawcharging.com/"
+          },
+          "operator": {
+            "name": "RAW Charging",
+            "website": "https://rawcharging.com/"
+          },
+          "suboperator": {
+            "name": "RAW Charging",
+            "website": "https://rawcharging.com/"
+          },
+          "energy_mix": {
+            "is_green_energy": true
+          },
+          "charging_when_closed": true,
+          "directions": null,
+          "evses": [
+            {
+              "uid": "4161655",
+              "status": "AVAILABLE",
+              "last_updated": "2026-10-26T08:57:12Z",
+              "evse_id": "GBCPIE7315305*1",
+              "physical_reference": "XSCAPE YORK 8-1",
+              "floor_level": null,
+              "directions": null,
+              "parking_restrictions": null,
+              "capabilities": [
+                "CREDIT_CARD_PAYABLE",
+                "REMOTE_START_STOP_CAPABLE",
+                "RFID_READER"
+              ],
+              "connectors": [
+                {
+                  "id": "GBCPIP7315305*1*1258",
+                  "standard": "IEC_62196_T2",
+                  "format": "SOCKET",
+                  "power_type": "AC_3_PHASE",
+                  "last_updated": "2026-10-28T19:40:04Z",
+                  "max_amperage": 31,
+                  "max_voltage": 400,
+                  "max_electric_power": 22080,
+                  "tariff_ids": [
+                    "NLCPIT1y0l*K*0"
+                  ]
+                }
+              ]
+            },
+            {
+              "uid": "4161665",
+              "status": "AVAILABLE",
+              "last_updated": "2026-10-27T15:26:42Z",
+              "evse_id": "GBCPIE7315305*2",
+              "physical_reference": "XSCAPE YORK 8-2",
+              "floor_level": null,
+              "directions": null,
+              "parking_restrictions": null,
+              "capabilities": [
+                "CREDIT_CARD_PAYABLE",
+                "REMOTE_START_STOP_CAPABLE",
+                "RFID_READER"
+              ],
+              "connectors": [
+                {
+                  "id": "GBCPIP7315305*2*1258",
+                  "standard": "IEC_62196_T2",
+                  "format": "SOCKET",
+                  "power_type": "AC_3_PHASE",
+                  "last_updated": "2026-10-28T19:40:04Z",
+                  "max_amperage": 31,
+                  "max_voltage": 400,
+                  "max_electric_power": 22080,
+                  "tariff_ids": [
+                    "NLCPIT1y0l*K*0"
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  }
+}

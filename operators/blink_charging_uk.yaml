@@ -1,8 +1,8 @@
 # yaml-language-server: $schema=schema.json
 id: blink_charging_uk
 display_name: Blink Charging
-ocpi_country_code: unknown
-ocpi_party_id: unknown
+ocpi_country_code: GB
+ocpi_party_id: BLK # Confirmed from the feed's own country_code and party_id on 2026-10-29.
 adapter: eco_movement_pcpr
 base_url: unknown
 endpoints:
@@ -83,6 +83,18 @@ licence:
     for operators whose data has no terms of its own, that such operators can be switched on
     without asking again.
   checked: 2026-10-29
+vat_not_stated:
+  decided: 2026-10-29
+  basis: >-
+    Blink Charging's tariffs on Eco-Movement's PCPR API gave no VAT rate on any price on
+    2026-10-29. Of the 57 energy prices in its 56 tariffs, 56 come to whole pence once
+    20% is added (for example 0.375 pounds per kWh becomes 45p), while 12 are whole
+    pence as published. This suggests prices with VAT at 20%, the UK standard rate on
+    public charging, taken off; that is inferred from the figures, not stated by Blink
+    Charging. The repository owner decided on 2026-10-29 that VAT at 20% is added, so
+    prices on the map all include VAT and can be compared.
+  evidence_url: https://open-chargepoints.com/api/ocpi/cpo/2.2.1/tariffs/
+  add_percent: 20
 engagement:
   status: key_on_request
   evidence:
@@ -141,14 +153,43 @@ sources:
       read 2026-10-10 without submitting it. It says "Request data on the location,
       status, and properties of Blink Charging's stations in the United Kingdom, in
       accordance with the UK Public Charge Point Regulations."
-findings: []
+findings:
+  - date: 2026-10-29
+    kind: data_quality
+    summary: >-
+      No price gives a VAT rate. 56 of the 57 energy prices come to whole pence once
+      20% is added, and 12 as published.
+    handling: >-
+      By the repository owner's decision of 2026-10-29 recorded in vat_not_stated, VAT
+      at 20% is added to every price that gives no VAT rate, and the price says this
+      project added it. Reading the prices as excluding VAT is inferred from the
+      figures and needs confirming by Blink Charging. The tariffs are published
+      unchanged.
+    evidence_url: https://open-chargepoints.com/api/ocpi/cpo/2.2.1/tariffs/
+  - date: 2026-10-29
+    kind: data_quality
+    summary: >-
+      404 of the 875 locations give time_zone "UTC", although every location is in the
+      UK, where the time zone is Europe/London.
+    handling: >-
+      The time zone is not used on the map, which shows every time in UK time. Nothing
+      is changed.
+    evidence_url: https://open-chargepoints.com/api/ocpi/cpo/2.2.1/locations/
+  - date: 2026-10-29
+    kind: data_quality
+    summary: >-
+      Every connector gives max_electric_power 0, which OCPI 2.2.1 defines as the
+      connector's maximum power in watts.
+    handling: >-
+      A power of 0 is not shown. As for any connector with no power figure, its power
+      is worked out from max_voltage and max_amperage, which Eco-Movement's
+      documentation says it validates and corrects.
+    evidence_url: https://open-chargepoints.com/api/ocpi/cpo/2.2.1/locations/
 notes: >-
-  Blink Charging's page says requests are shared with Eco-Movement, so the
-  eco_movement_pcpr adapter may apply once access is given; this needs testing. Access
-  could be requested through the form linked from its open data request page. EB
-  Charging's former website redirected to Blink Charging's site when checked on
-  2026-10-10.
-  On 2026-10-26 Eco-Movement sent a token for this network's data on its PCPR API, so it
-  uses the eco_movement_pcpr adapter. What the token returns needs testing with one
-  recorded fetch before the network is switched on.
-enabled: false
+  Its regulation 10 data is served by Eco-Movement's PCPR API (eco_movement_pcpr adapter),
+  with a token Eco-Movement sent on 2026-10-26, kept as the GitHub Actions secret
+  BLINK_CHARGING_UK_TOKEN. Every response on 2026-10-29 linked to a next page past the
+  last record, which the adapter does not follow. Eco-Movement's user guide says it
+  creates the location ids and may change them when it merges locations. On 2026-10-29 the
+  feed reported 875 locations and 56 tariffs.
+enabled: true

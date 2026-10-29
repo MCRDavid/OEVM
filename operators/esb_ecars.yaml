@@ -1,8 +1,8 @@
 # yaml-language-server: $schema=schema.json
 id: esb_ecars
 display_name: ESB ecars (Northern Ireland)
-ocpi_country_code: unknown
-ocpi_party_id: unknown
+ocpi_country_code: GB
+ocpi_party_id: ESB # Confirmed from the feed's own country_code and party_id on 2026-10-29.
 adapter: eco_movement_pcpr
 base_url: unknown
 endpoints:
@@ -83,6 +83,16 @@ licence:
     whose data has no terms of its own, that such operators can be switched on without
     asking again.
   checked: 2026-10-29
+vat_in_price:
+  decided: 2026-10-29
+  basis: >-
+    ESB ecars' three tariffs on Eco-Movement's PCPR API give every energy price with VAT
+    20 on 2026-10-29, and all 9 are whole pence as published (0.75 and 0.61 pounds per
+    kWh). Read as OCPI 2.2.1 says, with VAT added, 0.75 would be 90p per kWh. That the
+    stated VAT is already in the prices is inferred from the figures, not stated by ESB
+    ecars. The repository owner decided on 2026-10-29 that the prices are read as
+    already including VAT, so no VAT is added.
+  evidence_url: https://open-chargepoints.com/api/ocpi/cpo/2.2.1/tariffs/
 engagement:
   status: key_on_request
   evidence:
@@ -138,14 +148,24 @@ sources:
     note: >-
       Regulation 1(2) of the Public Charge Point Regulations 2023 (read 2026-10-22): "These
       Regulations extend to England and Wales, Scotland and Northern Ireland."
-findings: []
+findings:
+  - date: 2026-10-29
+    kind: spec_conformance
+    summary: >-
+      Every energy price gives VAT 20, and all 9 are whole pence as published (75p and
+      61p per kWh); with VAT added as OCPI 2.2.1 says, 0.75 would be 90p.
+    handling: >-
+      By the repository owner's decision of 2026-10-29 recorded in vat_in_price, the
+      stated VAT is read as already in each price, so it is not added again. This is
+      inferred from the figures and needs confirming by ESB ecars. The tariffs are
+      published unchanged.
+    evidence_url: https://open-chargepoints.com/api/ocpi/cpo/2.2.1/tariffs/
 notes: >-
-  ESB's public network in Northern Ireland, separate from ESB Energy's network in Great
-  Britain (operators/esb_energy.yaml). ESB Energy's "PCPR Data Request" form asks about "the
-  ESB network in the United Kingdom"; whether that covers the Northern Ireland sites is not
-  stated, so a request through that form could ask. Otherwise a written request to ESB
-  ecars.
-  On 2026-10-26 Eco-Movement sent a token for this network's data on its PCPR API, so it
-  uses the eco_movement_pcpr adapter. What the token returns needs testing with one
-  recorded fetch before the network is switched on.
-enabled: false
+  Its regulation 10 data is served by Eco-Movement's PCPR API (eco_movement_pcpr adapter),
+  with a token Eco-Movement sent on 2026-10-26, kept as the GitHub Actions secret
+  ESB_ECARS_TOKEN. Every response on 2026-10-29 linked to a next page past the last
+  record, which the adapter does not follow. Eco-Movement's user guide says it creates the
+  location ids and may change them when it merges locations. On 2026-10-29 the feed
+  reported 125 locations and 3 tariffs. ESB ecars and ESB Energy share the OCPI party GB
+  ESB, each with its own token.
+enabled: true

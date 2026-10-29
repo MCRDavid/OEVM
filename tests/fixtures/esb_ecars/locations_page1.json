@@ -1,0 +1,358 @@
+{
+  "request": {
+    "method": "GET",
+    "url": "https://open-chargepoints.com/api/ocpi/cpo/2.2.1/locations/?limit=1000"
+  },
+  "response": {
+    "status_code": 200,
+    "headers": {
+      "content-type": "application/json",
+      "link": "<https://open-chargepoints.com/api/ocpi/cpo/2.2.1/locations/?limit=1000&offset=3>; rel=\"next\"",
+      "x-total-count": "3",
+      "x-limit": "1000"
+    },
+    "body": {
+      "timestamp": "2026-10-29T13:44:59Z",
+      "status_code": 1000,
+      "status_message": "Success",
+      "data": [
+        {
+          "party_id": "ESB",
+          "id": "612",
+          "country_code": "GB",
+          "publish": true,
+          "country": "GBR",
+          "address": "Barbican Filling Station, 80-82 Dundrum Rd",
+          "city": "Newcastle",
+          "postal_code": "BT33 0LN",
+          "coordinates": {
+            "latitude": "54.22050000",
+            "longitude": "-5.88660000"
+          },
+          "state": null,
+          "last_updated": "2026-10-28T20:02:43Z",
+          "opening_times": {
+            "twentyfourseven": true
+          },
+          "name": "ESB ecars Barbican Filling Station, 80-82 Dundrum Rd, Newcastle, Down",
+          "time_zone": "Europe/London",
+          "owner": {
+            "name": "ESB ecars",
+            "website": "https://www.esb.ie/ecars"
+          },
+          "operator": {
+            "name": "ESB ecars",
+            "website": "https://www.esb.ie/ecars"
+          },
+          "energy_mix": {
+            "is_green_energy": true
+          },
+          "charging_when_closed": true,
+          "directions": [
+            {
+              "language": "en",
+              "text": ""
+            }
+          ],
+          "evses": [
+            {
+              "uid": "5060",
+              "status": "AVAILABLE",
+              "last_updated": "2026-10-28T19:36:48Z",
+              "evse_id": "IE*ESB*E4144*1",
+              "physical_reference": "NR0CY6",
+              "floor_level": null,
+              "directions": null,
+              "parking_restrictions": null,
+              "capabilities": [
+                "REMOTE_START_STOP_CAPABLE",
+                "RFID_READER",
+                "TOKEN_GROUP_CAPABLE"
+              ],
+              "connectors": [
+                {
+                  "id": "5060",
+                  "standard": "IEC_62196_T2_COMBO",
+                  "format": "CABLE",
+                  "power_type": "DC",
+                  "last_updated": "2026-10-28T20:02:43Z",
+                  "max_amperage": 250,
+                  "max_voltage": 400,
+                  "max_electric_power": 100000,
+                  "tariff_ids": [
+                    "33ed41de3be4acb8213dd95afe589054"
+                  ]
+                }
+              ]
+            },
+            {
+              "uid": "5061",
+              "status": "AVAILABLE",
+              "last_updated": "2026-10-28T19:41:43Z",
+              "evse_id": "IE*ESB*E4144*2",
+              "physical_reference": "NR0CY6",
+              "floor_level": null,
+              "directions": null,
+              "parking_restrictions": null,
+              "capabilities": [
+                "REMOTE_START_STOP_CAPABLE",
+                "RFID_READER",
+                "TOKEN_GROUP_CAPABLE"
+              ],
+              "connectors": [
+                {
+                  "id": "5061",
+                  "standard": "IEC_62196_T2_COMBO",
+                  "format": "CABLE",
+                  "power_type": "DC",
+                  "last_updated": "2026-10-28T20:02:43Z",
+                  "max_amperage": 250,
+                  "max_voltage": 400,
+                  "max_electric_power": 100000,
+                  "tariff_ids": [
+                    "33ed41de3be4acb8213dd95afe589054"
+                  ]
+                }
+              ]
+            },
+            {
+              "uid": "5062",
+              "status": "AVAILABLE",
+              "last_updated": "2026-10-28T19:10:06Z",
+              "evse_id": "IE*ESB*E4145*1",
+              "physical_reference": "NR0F0Q",
+              "floor_level": null,
+              "directions": null,
+              "parking_restrictions": null,
+              "capabilities": [
+                "REMOTE_START_STOP_CAPABLE",
+                "RFID_READER",
+                "TOKEN_GROUP_CAPABLE"
+              ],
+              "connectors": [
+                {
+                  "id": "5062",
+                  "standard": "IEC_62196_T2_COMBO",
+                  "format": "CABLE",
+                  "power_type": "DC",
+                  "last_updated": "2026-10-28T20:02:43Z",
+                  "max_amperage": 250,
+                  "max_voltage": 400,
+                  "max_electric_power": 100000,
+                  "tariff_ids": [
+                    "33ed41de3be4acb8213dd95afe589054"
+                  ]
+                }
+              ]
+            },
+            {
+              "uid": "5063",
+              "status": "AVAILABLE",
+              "last_updated": "2026-10-28T19:10:07Z",
+              "evse_id": "IE*ESB*E4145*2",
+              "physical_reference": "NR0F0Q",
+              "floor_level": null,
+              "directions": null,
+              "parking_restrictions": null,
+              "capabilities": [
+                "REMOTE_START_STOP_CAPABLE",
+                "RFID_READER",
+                "TOKEN_GROUP_CAPABLE"
+              ],
+              "connectors": [
+                {
+                  "id": "5063",
+                  "standard": "IEC_62196_T2_COMBO",
+                  "format": "CABLE",
+                  "power_type": "DC",
+                  "last_updated": "2026-10-28T20:02:43Z",
+                  "max_amperage": 250,
+                  "max_voltage": 400,
+                  "max_electric_power": 100000,
+                  "tariff_ids": [
+                    "33ed41de3be4acb8213dd95afe589054"
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "party_id": "ESB",
+          "id": "780",
+          "country_code": "GB",
+          "publish": true,
+          "country": "GBR",
+          "address": "Portrush Service Station, 185 Bushmills Road",
+          "city": "Portrush, Co. Antrim",
+          "postal_code": "BT56 8JE",
+          "coordinates": {
+            "latitude": "55.20170990",
+            "longitude": "-6.64579270"
+          },
+          "state": null,
+          "last_updated": "2026-10-29T13:08:43Z",
+          "opening_times": {
+            "twentyfourseven": true
+          },
+          "name": "ESB ecars Portrush Service Station, 185 Bushmills Road, Portrush, Co. Antrim",
+          "time_zone": "Europe/London",
+          "owner": {
+            "name": "ESB ecars",
+            "website": "https://www.esb.ie/ecars"
+          },
+          "operator": {
+            "name": "ESB ecars",
+            "website": "https://www.esb.ie/ecars"
+          },
+          "energy_mix": {
+            "is_green_energy": true
+          },
+          "charging_when_closed": true,
+          "directions": [
+            {
+              "language": "en",
+              "text": ""
+            }
+          ],
+          "evses": [
+            {
+              "uid": "3819",
+              "status": "CHARGING",
+              "last_updated": "2026-10-29T13:08:43Z",
+              "evse_id": "IE*ESB*E2178*2",
+              "physical_reference": "C6J0B",
+              "floor_level": null,
+              "directions": null,
+              "parking_restrictions": null,
+              "capabilities": [
+                "CHARGING_PROFILE_CAPABLE",
+                "CREDIT_CARD_PAYABLE",
+                "DEBIT_CARD_PAYABLE",
+                "REMOTE_START_STOP_CAPABLE",
+                "RFID_READER",
+                "TOKEN_GROUP_CAPABLE"
+              ],
+              "connectors": [
+                {
+                  "id": "3819",
+                  "standard": "IEC_62196_T2",
+                  "format": "SOCKET",
+                  "power_type": "AC_3_PHASE",
+                  "last_updated": "2026-10-28T20:03:15Z",
+                  "max_amperage": 8,
+                  "max_voltage": 230,
+                  "max_electric_power": 22000,
+                  "tariff_ids": [
+                    "f5e536316a384cf17654864173b4a184"
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "party_id": "ESB",
+          "id": "609",
+          "country_code": "GB",
+          "publish": true,
+          "country": "GBR",
+          "address": "Fermanagh and Omagh District Council Car Park",
+          "city": "Maguiresbridge",
+          "postal_code": "BT94 4RZ",
+          "coordinates": {
+            "latitude": "54.29440000",
+            "longitude": "-7.46387100"
+          },
+          "state": null,
+          "last_updated": "2026-10-28T20:02:42Z",
+          "opening_times": {
+            "twentyfourseven": true
+          },
+          "name": "ESB ecars DRD Car Park, Boyhill Road (U9409), Off Main Street (U9409), Maguiresbridge, Fermanagh",
+          "time_zone": "Europe/London",
+          "owner": {
+            "name": "ESB ecars",
+            "website": "https://www.esb.ie/ecars"
+          },
+          "operator": {
+            "name": "ESB ecars",
+            "website": "https://www.esb.ie/ecars"
+          },
+          "energy_mix": {
+            "is_green_energy": true
+          },
+          "charging_when_closed": true,
+          "directions": [
+            {
+              "language": "en",
+              "text": ""
+            }
+          ],
+          "evses": [
+            {
+              "uid": "4474",
+              "status": "UNKNOWN",
+              "last_updated": "2026-10-28T13:39:40Z",
+              "evse_id": "IE*ESB*E2472*2",
+              "physical_reference": "NA06QL",
+              "floor_level": null,
+              "directions": null,
+              "parking_restrictions": null,
+              "capabilities": [
+                "REMOTE_START_STOP_CAPABLE",
+                "RFID_READER",
+                "TOKEN_GROUP_CAPABLE"
+              ],
+              "connectors": [
+                {
+                  "id": "4474",
+                  "standard": "IEC_62196_T2",
+                  "format": "SOCKET",
+                  "power_type": "AC_3_PHASE",
+                  "last_updated": "2026-10-28T20:02:42Z",
+                  "max_amperage": 32,
+                  "max_voltage": 230,
+                  "max_electric_power": 22000,
+                  "tariff_ids": [
+                    "f5e536316a384cf17654864173b4a184"
+                  ]
+                }
+              ]
+            },
+            {
+              "uid": "4473",
+              "status": "UNKNOWN",
+              "last_updated": "2026-10-28T13:39:40Z",
+              "evse_id": "IE*ESB*E2472*1",
+              "physical_reference": "NA06QL",
+              "floor_level": null,
+              "directions": null,
+              "parking_restrictions": null,
+              "capabilities": [
+                "REMOTE_START_STOP_CAPABLE",
+                "RFID_READER",
+                "TOKEN_GROUP_CAPABLE"
+              ],
+              "connectors": [
+                {
+                  "id": "4473",
+                  "standard": "IEC_62196_T2",
+                  "format": "SOCKET",
+                  "power_type": "AC_3_PHASE",
+                  "last_updated": "2026-10-28T20:02:42Z",
+                  "max_amperage": 32,
+                  "max_voltage": 230,
+                  "max_electric_power": 22000,
+                  "tariff_ids": [
+                    "f5e536316a384cf17654864173b4a184"
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  }
+}

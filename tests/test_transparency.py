@@ -342,6 +342,11 @@ def test_a_decision_to_add_vat_is_shown_with_what_was_seen_across_operators(page
         "clenergy_ev": ("2026-10-22", 20),
         "globe_ev": ("2026-10-23", 20),
         "roam": ("2026-10-26", 20),
+        "allego": ("2026-10-29", 20),
+        "blink_charging_uk": ("2026-10-29", 20),
+        "ev_point": ("2026-10-29", 20),
+        "lidl": ("2026-10-29", 20),
+        "raw_charging": ("2026-10-29", 20),
     }
     text = " ".join(page.split())
     assert "Prices that give no VAT rate have VAT at 20% added, by the owner's decision" in text
@@ -351,15 +356,23 @@ def test_a_decision_to_add_vat_is_shown_with_what_was_seen_across_operators(page
     assert "<li>Clenergy EV: 20%, decided 2026-10-22" in text
     assert "<li>Globe EV: 20%, decided 2026-10-23" in text
     assert "<li>Roam: 20%, decided 2026-10-26" in text
+    assert "<li>Allego: 20%, decided 2026-10-29" in text
+    assert "<li>RAW Charging: 20%, decided 2026-10-29" in text
 
 
 def test_a_decision_to_read_stated_vat_as_in_the_price_is_shown(page):
     data = json.loads(transparency.outputs()[transparency.JSON_PATH])
     decisions = {op["id"]: op["vat_in_price"] for op in data["operators"]}
-    assert {k: v["decided"] for k, v in decisions.items() if v} == {"bright_green": "2026-10-23"}
+    assert {k: v["decided"] for k, v in decisions.items() if v} == {
+        "bright_green": "2026-10-23",
+        "esb_ecars": "2026-10-29",
+        "esb_energy": "2026-10-29",
+        "pod": "2026-10-29",
+    }
     text = " ".join(page.split())
     assert "The VAT each price states is read as already in the price, so it is not" in text
     assert "<li>BrightGreen: decided 2026-10-23" in text
+    assert "<li>Pod: decided 2026-10-29" in text
 
 
 def test_a_decision_to_use_a_related_operators_tariffs_is_shown(page):

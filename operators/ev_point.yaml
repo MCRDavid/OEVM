@@ -1,8 +1,8 @@
 # yaml-language-server: $schema=schema.json
 id: ev_point
 display_name: evpoint
-ocpi_country_code: unknown
-ocpi_party_id: unknown
+ocpi_country_code: GB
+ocpi_party_id: CPI # Confirmed from the feed's own country_code and party_id on 2026-10-29.
 adapter: eco_movement_pcpr
 base_url: unknown
 endpoints:
@@ -84,6 +84,18 @@ licence:
     as a standing rule for operators whose data has no terms of its own, that such operators
     can be switched on without asking again.
   checked: 2026-10-29
+vat_not_stated:
+  decided: 2026-10-29
+  basis: >-
+    evpoint's four tariffs on Eco-Movement's PCPR API gave no VAT rate on 2026-10-29.
+    All four energy prices come to whole pence once 20% is added (0.625 pounds per kWh
+    becomes 75p, 0.5416 becomes 65p and 0.6666 becomes 80p), while none is whole pence
+    as published. This suggests prices with VAT at 20%, the UK standard rate on public
+    charging, taken off; that is inferred from the figures, not stated by evpoint. The
+    repository owner decided on 2026-10-29 that VAT at 20% is added, so prices on the
+    map all include VAT and can be compared.
+  evidence_url: https://open-chargepoints.com/api/ocpi/cpo/2.2.1/tariffs/
+  add_percent: 20
 engagement:
   status: key_on_request
   evidence:
@@ -147,14 +159,33 @@ sources:
       ChargePoint's "PCPR Data Request" Google form (read 2026-10-10, recorded in
       operators/chargepoint.yaml). Its network list includes ev-point, so a request through it
       may cover evpoint's data. Requests are shared with Eco-Movement.
-findings: []
+findings:
+  - date: 2026-10-29
+    kind: data_quality
+    summary: >-
+      No price gives a VAT rate. All 4 energy prices come to whole pence once 20% is
+      added, and none as published.
+    handling: >-
+      By the repository owner's decision of 2026-10-29 recorded in vat_not_stated, VAT
+      at 20% is added to every price that gives no VAT rate, and the price says this
+      project added it. Reading the prices as excluding VAT is inferred from the
+      figures and needs confirming by evpoint. The tariffs are published unchanged.
+    evidence_url: https://open-chargepoints.com/api/ocpi/cpo/2.2.1/tariffs/
+  - date: 2026-10-29
+    kind: data_quality
+    summary: >-
+      Two locations give time_zone "Europe/Jersey", although they are in Great
+      Britain, where the time zone is Europe/London.
+    handling: >-
+      The time zone is not used on the map, which shows every time in UK time. Nothing
+      is changed.
+    evidence_url: https://open-chargepoints.com/api/ocpi/cpo/2.2.1/locations/
 notes: >-
-  EG Group's charging network; its about page says the first evpoint location opened at a
-  petrol filling station in Burnley. No open data route was found on evpoint's own site on
-  2026-10-22. ChargePoint's data request form lists ev-point among the networks it covers,
-  so that form is a possible route; otherwise a written request to evpoint's support
-  address.
-  On 2026-10-26 Eco-Movement sent a token for this network's data on its PCPR API, so it
-  uses the eco_movement_pcpr adapter. What the token returns needs testing with one
-  recorded fetch before the network is switched on.
-enabled: false
+  Its regulation 10 data is served by Eco-Movement's PCPR API (eco_movement_pcpr adapter),
+  with a token Eco-Movement sent on 2026-10-26, kept as the GitHub Actions secret
+  EV_POINT_TOKEN. Every response on 2026-10-29 linked to a next page past the last record,
+  which the adapter does not follow. Eco-Movement's user guide says it creates the
+  location ids and may change them when it merges locations. On 2026-10-29 the feed
+  reported 38 locations and 4 tariffs. It uses the OCPI party GB CPI of ChargePoint's
+  platform, as do ChargePoint and RAW Charging.
+enabled: true

@@ -1,8 +1,8 @@
 # yaml-language-server: $schema=schema.json
 id: source_ev
 display_name: Source EV
-ocpi_country_code: unknown
-ocpi_party_id: unknown
+ocpi_country_code: GB
+ocpi_party_id: SGB # Confirmed from the feed's own country_code and party_id on 2026-10-29.
 adapter: eco_movement_pcpr
 base_url: unknown
 endpoints:
@@ -146,6 +146,16 @@ sources:
       planned use of the data, and its disclaimer says the request will be shared with
       Eco-Movement.
 findings:
+  - date: 2026-10-29
+    kind: spec_conformance
+    summary: >-
+      One of the two tariffs gives VAT as 0.2 on its energy price of 0.45 pounds per
+      kWh, while the other gives 20. OCPI 2.2.1 gives VAT as a percentage, so 0.2
+      reads as 0.2%.
+    handling: >-
+      The tariff is shown as published, with 0.2% VAT added (45.1p per kWh). It
+      probably means 20%, which needs confirming by Source EV.
+    evidence_url: https://open-chargepoints.com/api/ocpi/cpo/2.2.1/tariffs/
   - date: 2026-10-10
     kind: documentation
     summary: >-
@@ -155,16 +165,18 @@ findings:
       agreement or way to sign one was shown or linked on the page or in the linked request
       form when both were read.
     handling: >-
-      Which agreement is meant will be confirmed and the agreement read before any request
-      is sent, and the operator stays switched off until then.
+      The request of 2026-10-24 asked for a copy of the agreement. Eco-Movement sent
+      the token on 2026-10-26 with no agreement to sign, and on 2026-10-26 the
+      repository owner decided to use the data on the terms the page states,
+      attributing Source EV Ltd as the data provider.
     evidence_url: https://source-ev.com/legal/request-compliance-data
-    status: open
+    status: resolved
+    resolved_date: 2026-10-26
 notes: >-
-  The owner could ask Source EV which agreement it means (the terms and conditions on its
-  Request Compliance Data page or a separate document) and read it, then request access
-  through the form linked from that page. Requests are passed to Eco-Movement, so the
-  eco_movement_pcpr adapter may apply once access is given; this needs testing.
-  On 2026-10-26 Eco-Movement sent a token for this network's data on its PCPR API, so it
-  uses the eco_movement_pcpr adapter. What the token returns needs testing with one
-  recorded fetch before the network is switched on.
-enabled: false
+  Its regulation 10 data is served by Eco-Movement's PCPR API (eco_movement_pcpr adapter),
+  with a token Eco-Movement sent on 2026-10-26, kept as the GitHub Actions secret
+  SOURCE_EV_TOKEN. Every response on 2026-10-29 linked to a next page past the last
+  record, which the adapter does not follow. Eco-Movement's user guide says it creates the
+  location ids and may change them when it merges locations. On 2026-10-29 the feed
+  reported 37 locations and 2 tariffs.
+enabled: true

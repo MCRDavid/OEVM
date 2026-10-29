@@ -1,8 +1,8 @@
 # yaml-language-server: $schema=schema.json
 id: raw_charging
 display_name: RAW Charging
-ocpi_country_code: unknown
-ocpi_party_id: unknown
+ocpi_country_code: GB
+ocpi_party_id: CPI # Confirmed from the feed's own country_code and party_id on 2026-10-29.
 adapter: eco_movement_pcpr
 base_url: unknown
 endpoints:
@@ -84,6 +84,18 @@ licence:
     as a standing rule for operators whose data has no terms of its own, that such operators
     can be switched on without asking again.
   checked: 2026-10-29
+vat_not_stated:
+  decided: 2026-10-29
+  basis: >-
+    RAW Charging's tariffs on Eco-Movement's PCPR API gave no VAT rate on any price on
+    2026-10-29. Of the 67 energy prices in GBP, 55 come to whole pence once 20% is added
+    (for example 0.6417 pounds per kWh becomes 77p), while 31 are whole pence as
+    published. This suggests prices with VAT at 20%, the UK standard rate on public
+    charging, taken off; that is inferred from the figures, not stated by RAW Charging.
+    The repository owner decided on 2026-10-29 that VAT at 20% is added, so prices on
+    the map all include VAT and can be compared.
+  evidence_url: https://open-chargepoints.com/api/ocpi/cpo/2.2.1/tariffs/
+  add_percent: 20
 engagement:
   status: key_on_request
   evidence:
@@ -155,15 +167,43 @@ sources:
     note: Tried 2026-10-10. Shows RAW Charging's "Not Found" page.
   - url: https://rawcharging.com/pcpr
     note: Tried 2026-10-10. Shows RAW Charging's "Not Found" page.
-findings: []
+findings:
+  - date: 2026-10-29
+    kind: data_quality
+    summary: >-
+      No price gives a VAT rate. 55 of the 67 energy prices in GBP come to whole pence
+      once 20% is added, and 31 as published.
+    handling: >-
+      By the repository owner's decision of 2026-10-29 recorded in vat_not_stated, VAT
+      at 20% is added to every price that gives no VAT rate, and the price says this
+      project added it. Reading the prices as excluding VAT is inferred from the
+      figures and needs confirming by RAW Charging. The tariffs are published
+      unchanged.
+    evidence_url: https://open-chargepoints.com/api/ocpi/cpo/2.2.1/tariffs/
+  - date: 2026-10-29
+    kind: data_quality
+    summary: >-
+      1 tariff in US dollars, with every price zero, is the only tariff named by 29
+      connectors at 8 locations.
+    handling: >-
+      Only GBP tariffs are shown, so these connectors show "Price unknown". Nothing is
+      converted.
+    evidence_url: https://open-chargepoints.com/api/ocpi/cpo/2.2.1/tariffs/
+  - date: 2026-10-29
+    kind: data_quality
+    summary: >-
+      One location gives time_zone "Atlantic/St_Helena", although it is in Great
+      Britain, where the time zone is Europe/London.
+    handling: >-
+      The time zone is not used on the map, which shows every time in UK time. Nothing
+      is changed.
+    evidence_url: https://open-chargepoints.com/api/ocpi/cpo/2.2.1/locations/
 notes: >-
-  No open data feed or request route was found on RAW Charging's own website on 2026-10-10.
-  ChargePoint's own PCPR data request form (see the chargepoint file, read 2026-10-10) lists
-  Raw Charging among the networks whose data can be requested; RAW Charging's site does not
-  link that form, so whether it is its route needs confirming.
-  A written request could ask RAW Charging where its open data under regulation 10 is
-  published.
-  On 2026-10-26 Eco-Movement sent a token for this network's data on its PCPR API, so it
-  uses the eco_movement_pcpr adapter. What the token returns needs testing with one
-  recorded fetch before the network is switched on.
-enabled: false
+  Its regulation 10 data is served by Eco-Movement's PCPR API (eco_movement_pcpr adapter),
+  with a token Eco-Movement sent on 2026-10-26, kept as the GitHub Actions secret
+  RAW_CHARGING_TOKEN. Every response on 2026-10-29 linked to a next page past the last
+  record, which the adapter does not follow. Eco-Movement's user guide says it creates the
+  location ids and may change them when it merges locations. On 2026-10-29 the feed
+  reported 514 locations and 59 tariffs. It uses the OCPI party GB CPI of ChargePoint's
+  platform, as do ChargePoint and evpoint.
+enabled: true

@@ -1,8 +1,8 @@
 # yaml-language-server: $schema=schema.json
 id: ubitricity
 display_name: ubitricity
-ocpi_country_code: unknown
-ocpi_party_id: unknown
+ocpi_country_code: GB
+ocpi_party_id: UBI # Confirmed from the feed's own country_code and party_id on 2026-10-29.
 adapter: eco_movement_pcpr
 base_url: unknown
 endpoints:
@@ -146,6 +146,15 @@ sources:
       loads with a script and has not been read yet (checked 2026-10-08). Whether it covers
       this operator needs testing.
 findings:
+  - date: 2026-10-29
+    kind: spec_conformance
+    summary: >-
+      75 EVSEs give parking_restrictions as a single string, such as "ev_only", where
+      OCPI 2.2.1 has a list of values.
+    handling: >-
+      The value is not read and the EVSE's parking restrictions are shown as unknown.
+      Nothing else in the record changes.
+    evidence_url: https://open-chargepoints.com/api/ocpi/cpo/2.2.1/locations/
   - date: 2026-10-07
     kind: documentation
     summary: >-
@@ -166,12 +175,11 @@ findings:
       it.
     evidence_url: https://developers.eco-movement.com/v2.2.1/docs/eco-movement-pcpr-api-user-guide
 notes: >-
-  Uses the shared Eco-Movement PCPR endpoints; only the token differs between operators.
-  Authentication is an "Authorization: Token <token>" header (confirmed 2026-10-07).
-  Whether one token covers several operators is unverified, so this operator has its own
-  secret. How access is requested is not
-  recorded in the blueprint.
-  On 2026-10-26 Eco-Movement sent a token for this network's data on its PCPR API, so it
-  uses the eco_movement_pcpr adapter. What the token returns needs testing with one
-  recorded fetch before the network is switched on.
-enabled: false
+  Its regulation 10 data is served by Eco-Movement's PCPR API (eco_movement_pcpr adapter),
+  with a token Eco-Movement sent on 2026-10-26, kept as the GitHub Actions secret
+  UBITRICITY_TOKEN. Every response on 2026-10-29 linked to a next page past the last
+  record, which the adapter does not follow. Eco-Movement's user guide says it creates the
+  location ids and may change them when it merges locations. On 2026-10-29 the feed
+  reported 12,531 locations, in 13 pages of 1000, and 7 tariffs, each price with VAT 20.
+  Most are on-street chargers in lamp posts.
+enabled: true

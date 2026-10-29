@@ -1,8 +1,8 @@
 # yaml-language-server: $schema=schema.json
 id: allego
 display_name: Allego
-ocpi_country_code: unknown
-ocpi_party_id: unknown
+ocpi_country_code: GB
+ocpi_party_id: ALL # Confirmed from the feed's own country_code and party_id on 2026-10-29.
 adapter: eco_movement_pcpr
 base_url: unknown
 endpoints:
@@ -83,6 +83,19 @@ licence:
     2026-10-10 the repository owner decided, as a standing rule for operators whose data has
     no terms of its own, that such operators can be switched on without asking again.
   checked: 2026-10-29
+vat_not_stated:
+  decided: 2026-10-29
+  basis: >-
+    Allego's three tariffs on Eco-Movement's PCPR API gave no VAT rate on 2026-10-29.
+    One gives an energy price of 0.525 pounds per kWh with the text "Energy: 0.63
+    GBP/kWh", and another 0.7 pounds with "Energy: 0.84 GBP/kWh": each text price is the
+    feed price with 20% added, the UK standard rate of VAT on public charging. All three
+    energy prices come to whole pence once 20% is added. That the prices exclude VAT is
+    inferred from the figures, not stated by Allego. The repository owner decided on
+    2026-10-29 that VAT at 20% is added, so prices on the map all include VAT and can be
+    compared.
+  evidence_url: https://open-chargepoints.com/api/ocpi/cpo/2.2.1/tariffs/
+  add_percent: 20
 engagement:
   status: key_on_request
   evidence:
@@ -138,12 +151,42 @@ sources:
     note: >-
       Allego's "Charge Point Data" page (read 2026-10-10). Request form, and a statement of
       its network's reliability for 2025 (99.016%).
-findings: []
+findings:
+  - date: 2026-10-29
+    kind: data_quality
+    summary: >-
+      No price gives a VAT rate. The tariff text gives each energy price with 20%
+      added (0.525 pounds per kWh and "Energy: 0.63 GBP/kWh").
+    handling: >-
+      By the repository owner's decision of 2026-10-29 recorded in vat_not_stated, VAT
+      at 20% is added to every price that gives no VAT rate, and the price says this
+      project added it. Reading the prices as excluding VAT is inferred from the
+      figures and needs confirming by Allego. The tariffs are published unchanged.
+    evidence_url: https://open-chargepoints.com/api/ocpi/cpo/2.2.1/tariffs/
+  - date: 2026-10-29
+    kind: spec_conformance
+    summary: >-
+      240 EVSEs give parking_restrictions as a single string, such as
+      "ev_only,plugged", where OCPI 2.2.1 has a list of values.
+    handling: >-
+      The value is not read and the EVSE's parking restrictions are shown as unknown.
+      Nothing else in the record changes.
+    evidence_url: https://open-chargepoints.com/api/ocpi/cpo/2.2.1/locations/
+  - date: 2026-10-29
+    kind: data_quality
+    summary: >-
+      Every connector gives max_electric_power 0, which OCPI 2.2.1 defines as the
+      connector's maximum power in watts.
+    handling: >-
+      A power of 0 is not shown. As for any connector with no power figure, its power
+      is worked out from max_voltage and max_amperage, which Eco-Movement's
+      documentation says it validates and corrects.
+    evidence_url: https://open-chargepoints.com/api/ocpi/cpo/2.2.1/locations/
 notes: >-
-  Access could be requested through the form on Allego's Charge Point Data page, which its
-  page sitemap lists but its home page does not link. How the data is delivered, whether a
-  key is issued and what licence applies are unknown.
-  On 2026-10-26 Eco-Movement sent a token for this network's data on its PCPR API, so it
-  uses the eco_movement_pcpr adapter. What the token returns needs testing with one
-  recorded fetch before the network is switched on.
-enabled: false
+  Its regulation 10 data is served by Eco-Movement's PCPR API (eco_movement_pcpr adapter),
+  with a token Eco-Movement sent on 2026-10-26, kept as the GitHub Actions secret
+  ALLEGO_TOKEN. Every response on 2026-10-29 linked to a next page past the last record,
+  which the adapter does not follow. Eco-Movement's user guide says it creates the
+  location ids and may change them when it merges locations. On 2026-10-29 the feed
+  reported 77 locations and 3 tariffs.
+enabled: true

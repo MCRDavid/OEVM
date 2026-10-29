@@ -1,8 +1,8 @@
 # yaml-language-server: $schema=schema.json
 id: lidl
 display_name: Lidl
-ocpi_country_code: unknown
-ocpi_party_id: unknown
+ocpi_country_code: GB
+ocpi_party_id: LDL # Confirmed from the feed's own country_code and party_id on 2026-10-29.
 adapter: eco_movement_pcpr
 base_url: unknown
 endpoints:
@@ -84,6 +84,18 @@ licence:
     for operators whose data has no terms of its own, that such operators can be switched on
     without asking again.
   checked: 2026-10-29
+vat_not_stated:
+  decided: 2026-10-29
+  basis: >-
+    Lidl's two tariffs on Eco-Movement's PCPR API gave no VAT rate on 2026-10-29. Both
+    energy prices come to whole pence once 20% is added (0.6167 pounds per kWh becomes
+    74p and 0.4583 becomes 55p), while neither is whole pence as published. This
+    suggests prices with VAT at 20%, the UK standard rate on public charging, taken off;
+    that is inferred from the figures, not stated by Lidl. The repository owner decided
+    on 2026-10-29 that VAT at 20% is added, so prices on the map all include VAT and can
+    be compared.
+  evidence_url: https://open-chargepoints.com/api/ocpi/cpo/2.2.1/tariffs/
+  add_percent: 20
 engagement:
   status: key_on_request
   evidence:
@@ -138,15 +150,41 @@ sources:
       Lidl's page sitemap (read 2026-10-10), reached from its sitemap index. Its electric
       vehicle pages are the charging page, charging terms and a charging data protection
       policy; no open data, OCPI or data request page is listed.
-findings: []
+findings:
+  - date: 2026-10-29
+    kind: data_quality
+    summary: >-
+      No price gives a VAT rate. Both energy prices come to whole pence once 20% is
+      added (0.6167 pounds per kWh becomes 74p), and neither as published.
+    handling: >-
+      By the repository owner's decision of 2026-10-29 recorded in vat_not_stated, VAT
+      at 20% is added to every price that gives no VAT rate, and the price says this
+      project added it. Reading the prices as excluding VAT is inferred from the
+      figures and needs confirming by Lidl. The tariffs are published unchanged.
+    evidence_url: https://open-chargepoints.com/api/ocpi/cpo/2.2.1/tariffs/
+  - date: 2026-10-29
+    kind: spec_conformance
+    summary: >-
+      1408 EVSEs give parking_restrictions as a single string, such as "customers",
+      where OCPI 2.2.1 has a list of values.
+    handling: >-
+      The value is not read and the EVSE's parking restrictions are shown as unknown.
+      Nothing else in the record changes.
+    evidence_url: https://open-chargepoints.com/api/ocpi/cpo/2.2.1/locations/
+  - date: 2026-10-29
+    kind: data_quality
+    summary: >-
+      One location in Hull gives time_zone "Europe/Warsaw", where the time zone is
+      Europe/London.
+    handling: >-
+      The time zone is not used on the map, which shows every time in UK time. Nothing
+      is changed.
+    evidence_url: https://open-chargepoints.com/api/ocpi/cpo/2.2.1/locations/
 notes: >-
-  No open data feed or request route was found on Lidl's own website on 2026-10-10. Its FAQ
-  refers to the ChargePoint community for roaming, and ChargePoint's own PCPR data request
-  form (see the chargepoint file, read 2026-10-10) lists Lidl Great Britain Limited among
-  the networks whose data can be requested; Lidl's site does not link that form, so whether
-  it is Lidl's route needs confirming. A written request could ask where its open data under
-  regulation 10 is published.
-  On 2026-10-26 Eco-Movement sent a token for this network's data on its PCPR API, so it
-  uses the eco_movement_pcpr adapter. What the token returns needs testing with one
-  recorded fetch before the network is switched on.
-enabled: false
+  Its regulation 10 data is served by Eco-Movement's PCPR API (eco_movement_pcpr adapter),
+  with a token Eco-Movement sent on 2026-10-26, kept as the GitHub Actions secret
+  LIDL_TOKEN. Every response on 2026-10-29 linked to a next page past the last record,
+  which the adapter does not follow. Eco-Movement's user guide says it creates the
+  location ids and may change them when it merges locations. On 2026-10-29 the feed
+  reported 414 locations and 2 tariffs.
+enabled: true

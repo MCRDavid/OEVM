@@ -1,8 +1,8 @@
 # yaml-language-server: $schema=schema.json
 id: chargepoint
 display_name: ChargePoint
-ocpi_country_code: unknown
-ocpi_party_id: unknown
+ocpi_country_code: GB
+ocpi_party_id: CPI # Confirmed from the feed's own country_code and party_id on 2026-10-29.
 adapter: eco_movement_pcpr
 base_url: unknown
 endpoints:
@@ -180,14 +180,51 @@ sources:
       and "does not act as a Charge Point Operator beyond charging stations on its own
       premises". Its network list offers "ChargePoint platform CPOs", Raw Charging, ev-point
       and Lidl Great Britain Limited.
-findings: []
+findings:
+  - date: 2026-10-29
+    kind: data_quality
+    summary: >-
+      No price gives a VAT rate. Of the 167 energy prices in GBP, 120 are whole pence
+      as published and 106 once 20% is added, so whether they include VAT cannot be
+      told from the figures.
+    handling: >-
+      The prices are shown as published and marked "VAT not stated".
+    evidence_url: https://open-chargepoints.com/api/ocpi/cpo/2.2.1/tariffs/
+  - date: 2026-10-29
+    kind: data_quality
+    summary: >-
+      2 tariffs in US dollars, with every price zero, are the only tariffs named by
+      115 connectors at 37 locations.
+    handling: >-
+      Only GBP tariffs are shown, so these connectors show "Price unknown". Nothing is
+      converted.
+    evidence_url: https://open-chargepoints.com/api/ocpi/cpo/2.2.1/tariffs/
+  - date: 2026-10-29
+    kind: data_quality
+    summary: >-
+      Nine locations in England and Wales give time_zone "Europe/Jersey" (8) or
+      "Atlantic/St_Helena" (1), where the time zone is Europe/London.
+    handling: >-
+      The time zone is not used on the map, which shows every time in UK time. Nothing
+      is changed.
+    evidence_url: https://open-chargepoints.com/api/ocpi/cpo/2.2.1/locations/
+  - date: 2026-10-29
+    kind: data_quality
+    summary: >-
+      The same OCPI party, GB CPI, is used by three networks served from ChargePoint's
+      platform: ChargePoint's own feed, evpoint and RAW Charging, each with its own
+      token.
+    handling: >-
+      Each feed is shown under its own operator. Record ids start with the operator's
+      own id, so the three never share an id.
+    evidence_url: https://open-chargepoints.com/api/ocpi/cpo/2.2.1/locations/
 notes: >-
-  Access could be requested through the "PCPR Data Request" form linked from ChargePoint's UK
-  guide to the regulations. The form says ChargePoint is a technology provider rather than a
-  charge point operator, so this file records the route for networks on its platform.
-  Requests are shared with Eco-Movement, so the eco_movement_pcpr adapter may apply once
-  access is given, but the form does not say how the data is delivered; this needs testing.
-  On 2026-10-26 Eco-Movement sent a token for this network's data on its PCPR API, so it
-  uses the eco_movement_pcpr adapter. What the token returns needs testing with one
-  recorded fetch before the network is switched on.
-enabled: false
+  Its regulation 10 data is served by Eco-Movement's PCPR API (eco_movement_pcpr adapter),
+  with a token Eco-Movement sent on 2026-10-26, kept as the GitHub Actions secret
+  CHARGEPOINT_TOKEN. Every response on 2026-10-29 linked to a next page past the last
+  record, which the adapter does not follow. Eco-Movement's user guide says it creates the
+  location ids and may change them when it merges locations. On 2026-10-29 the feed
+  reported 331 locations and 149 tariffs. The network is the ChargePoint platform's own
+  CPOs; evpoint, Lidl and RAW Charging on the same platform each have their own token and
+  operator file.
+enabled: true

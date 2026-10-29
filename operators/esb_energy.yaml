@@ -1,8 +1,8 @@
 # yaml-language-server: $schema=schema.json
 id: esb_energy
 display_name: ESB Energy
-ocpi_country_code: unknown
-ocpi_party_id: unknown
+ocpi_country_code: GB
+ocpi_party_id: ESB # Confirmed from the feed's own country_code and party_id on 2026-10-29.
 adapter: eco_movement_pcpr
 base_url: unknown
 endpoints:
@@ -83,6 +83,16 @@ licence:
     whose data has no terms of its own, that such operators can be switched on without
     asking again.
   checked: 2026-10-29
+vat_in_price:
+  decided: 2026-10-29
+  basis: >-
+    ESB Energy's five tariffs on Eco-Movement's PCPR API give every energy price with
+    VAT 20 on 2026-10-29, and all 19 are whole pence as published (for example 0.80 and
+    0.40 pounds per kWh). Read as OCPI 2.2.1 says, with VAT added, 0.80 would be 96p per
+    kWh. That the stated VAT is already in the prices is inferred from the figures, not
+    stated by ESB Energy. The repository owner decided on 2026-10-29 that the prices are
+    read as already including VAT, so no VAT is added.
+  evidence_url: https://open-chargepoints.com/api/ocpi/cpo/2.2.1/tariffs/
 engagement:
   status: key_on_request
   evidence:
@@ -144,13 +154,24 @@ sources:
       The "PCPR Data Request - ESB" Google form (read 2026-10-10, not submitted). Its
       disclaimer says "Your request will be shared with Eco-Movement" and gives
       Eco-Movement's PCPR address for privacy questions.
-findings: []
+findings:
+  - date: 2026-10-29
+    kind: spec_conformance
+    summary: >-
+      Every energy price gives VAT 20, and all 19 are whole pence as published (for
+      example 80p per kWh); with VAT added as OCPI 2.2.1 says, 0.80 would be 96p.
+    handling: >-
+      By the repository owner's decision of 2026-10-29 recorded in vat_in_price, the
+      stated VAT is read as already in each price, so it is not added again. This is
+      inferred from the figures and needs confirming by ESB Energy. The tariffs are
+      published unchanged.
+    evidence_url: https://open-chargepoints.com/api/ocpi/cpo/2.2.1/tariffs/
 notes: >-
-  Access could be requested through the "PCPR Data Request" form linked from ESB Energy's
-  electric vehicle pages. Requests are shared with Eco-Movement, so the eco_movement_pcpr
-  adapter may apply once access is given, but the form does not say how the data is
-  delivered; this needs testing.
-  On 2026-10-26 Eco-Movement sent a token for this network's data on its PCPR API, so it
-  uses the eco_movement_pcpr adapter. What the token returns needs testing with one
-  recorded fetch before the network is switched on.
-enabled: false
+  Its regulation 10 data is served by Eco-Movement's PCPR API (eco_movement_pcpr adapter),
+  with a token Eco-Movement sent on 2026-10-26, kept as the GitHub Actions secret
+  ESB_ENERGY_TOKEN. Every response on 2026-10-29 linked to a next page past the last
+  record, which the adapter does not follow. Eco-Movement's user guide says it creates the
+  location ids and may change them when it merges locations. On 2026-10-29 the feed
+  reported 202 locations and 5 tariffs. ESB Energy and ESB ecars share the OCPI party GB
+  ESB, each with its own token.
+enabled: true

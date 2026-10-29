@@ -1,8 +1,8 @@
 # yaml-language-server: $schema=schema.json
 id: evyve
 display_name: evyve
-ocpi_country_code: unknown
-ocpi_party_id: unknown
+ocpi_country_code: GB
+ocpi_party_id: DRI # Confirmed from the feed's own country_code and party_id on 2026-10-29.
 adapter: eco_movement_pcpr
 base_url: unknown
 endpoints:
@@ -83,6 +83,21 @@ licence:
     standing rule for operators whose data has no terms of its own, that such operators can
     be switched on without asking again.
   checked: 2026-10-29
+own_feed_over_copies:
+  decided: 2026-10-29
+  basis: >-
+    Monta's open data feed carries evyve's locations under the party GB EVY, the code EV
+    Roam's ID register gives evyve, while evyve's own data on Eco-Movement's PCPR API
+    uses GB DRI. On 2026-10-29 both had 224 locations with the same 224 names, and none
+    of Monta's copies had a price, while evyve's own were all priced. The repository
+    owner decided that evyve's own feed is shown in their place, and that Monta's GB EVY
+    locations are left off while evyve's own locations, from the latest run or its last
+    good copy, are on the map.
+  evidence_url: https://open-chargepoints.com/api/ocpi/cpo/2.2.1/locations/
+  operators:
+    - monta
+  copies_country_code: GB
+  copies_party_id: EVY
 engagement:
   status: key_on_request
   evidence:
@@ -159,15 +174,24 @@ sources:
       Monta's help article on exporting open data (read 2026-10-17): a network exports a file
       for its whole operator from Monta Hub and publishes it itself. It names no file format,
       address or API.
-findings: []
+findings:
+  - date: 2026-10-29
+    kind: data_quality
+    summary: >-
+      evyve's own feed uses the OCPI party GB DRI, while EV Roam's ID register lists
+      evyve as GB*EVY and Monta's feed carries the same 224 locations under GB EVY,
+      with no prices.
+    handling: >-
+      evyve's own feed is shown, and Monta's GB EVY locations are left off while it is
+      on the map, by the repository owner's decision of 2026-10-29
+      (own_feed_over_copies above). The feed health page lists how many were left off.
+    evidence_url: https://open-chargepoints.com/api/ocpi/cpo/2.2.1/locations/
 notes: >-
-  Access could be requested through the Google form linked from the open data FAQ on
-  evyve's home page. Requests are passed to Eco-Movement, so the eco_movement_pcpr adapter
-  may apply once access is given, but the page does not say how the data is delivered;
-  this needs testing. Since January 2026 the network runs on Monta, whose operators export
-  their own open data file from Monta Hub; on 2026-10-17 the form was still the only route
-  found.
-  On 2026-10-26 Eco-Movement sent a token for this network's data on its PCPR API, so it
-  uses the eco_movement_pcpr adapter. What the token returns needs testing with one
-  recorded fetch before the network is switched on.
-enabled: false
+  Its regulation 10 data is served by Eco-Movement's PCPR API (eco_movement_pcpr adapter),
+  with a token Eco-Movement sent on 2026-10-26, kept as the GitHub Actions secret
+  EVYVE_TOKEN. Every response on 2026-10-29 linked to a next page past the last record,
+  which the adapter does not follow. Eco-Movement's user guide says it creates the
+  location ids and may change them when it merges locations. On 2026-10-29 the feed
+  reported 224 locations and 16 tariffs. Since January 2026 the network runs on Monta,
+  whose feed also carries its locations (see own_feed_over_copies).
+enabled: true
