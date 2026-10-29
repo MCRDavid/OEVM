@@ -1,10 +1,11 @@
-# Two requests answered: Fastned's key and Roam's open feed
+# Three requests answered: Fastned's key, Roam's feed and Connekt's emailed copy
 
-Two operators the project asked on 24 October 2026 have given it their data. Fastned sent a key
-minutes after its form was filled in. Roam replied by email on 26 October 2026 with two addresses
-that need no key. Roam's feed uses an older version of OCPI, allows five requests an hour and gives
-two connectors the same id at ten sites, which are left off the map. This post sets out what we
-found in each.
+Three operators the project asked on 24 October 2026 have given it their data, each in a different
+way. Fastned sent a key minutes after its form was filled in. Roam replied by email on 26 October
+2026 with two addresses that need no key; its feed uses an older version of OCPI, allows five
+requests an hour and gives two connectors the same id at ten sites, which are left off the map.
+Connekt also replied on 26 October 2026, with its data attached to an email and no address to fetch
+it from. This post sets out what we found in each.
 
 ## Fastned: a key within minutes
 
@@ -84,3 +85,30 @@ project added it.
 One connector at Norwood Hall Hotel, whose name in the feed reads "Schnieder French Test charger 2",
 names a tariff called free_tariff, whose only price is a fixed fee of 0. Its status was UNKNOWN on
 26 October 2026. It is shown as published, so the map lists it as free.
+
+## Connekt: the data as an email attachment
+
+Connekt offers its data under the regulations through a request form on its [Public Charge Point
+Regulations page](https://www.connektcharging.com/public-charge-point-regulations), which we found
+on 24 October 2026 and used the same day. Connekt replied by email on 26 October 2026 with two
+attached OCPI 2.2.1 responses, one for locations and one for tariffs, made at 14:22 UTC that day.
+The reply gave no web address and no key. The project is asking Connekt for an address it can fetch
+automatically.
+
+Regulation 10(5) asks for the data to be "made available to the public free of charge and in a
+machine readable format". It does not name an API or a live feed. The Department for Transport's
+guidance (updated 21 October 2024) calls an API "the most widely used method" and says "Other
+methods may be feasible".
+
+The emailed copy holds 362 locations under the party id GB CON, all marked for publishing and all
+inside the UK, with 1,048 chargers of one connector each. Its 326 tariffs are all in pounds, each a
+fixed fee plus a price per kWh, with VAT stated as 20%. 4 connectors name no tariff. In the city
+field, 15 locations give "undefined" and 18 give "Scotland", and 145 addresses repeat the postcode
+that is also in its own field.
+
+A copy sent once does not change, so on 29 October 2026 the project owner decided to show it on
+the map as an exception to the rule that no data on the map is more than 7 days old. Each location
+says it comes from a copy Connekt sent, made on 26 October 2026 and not updated, and every
+charger's status shows as unknown, because a status from that day says nothing about now. The
+[feed health page](status/) shows Connekt in yellow as not fetched. The two files are kept exactly
+as sent, gzipped, with their SHA-256 hashes, so anyone can check them.
