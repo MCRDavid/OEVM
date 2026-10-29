@@ -6206,7 +6206,7 @@
           "date": "2026-10-29",
           "kind": "spec_conformance",
           "kind_label": "Differs from OCPI 2.2.1",
-          "summary": "66 of the 67 tariffs give their description with HTML markup such as div, br and strong tags, while OCPI 2.2.1 says display text is \"Text to be displayed to a end user. No markup, html etc. allowed.\"",
+          "summary": "64 of the 67 tariffs give their description with HTML markup such as div, br and strong tags, while OCPI 2.2.1 says display text is \"Text to be displayed to a end user. No markup, html etc. allowed.\"",
           "handling": "The map shows each description with the tags taken out, as text only, and the operator's text exactly as sent next to it.",
           "evidence_url": "https://github.com/ocpi/ocpi/blob/2.2.1/types.asciidoc",
           "status": "open",
