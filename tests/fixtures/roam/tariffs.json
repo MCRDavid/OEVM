@@ -1,0 +1,211 @@
+{
+  "request": {
+    "method": "GET",
+    "url": "https://data.evc.ninja/public/v1/tariffs"
+  },
+  "response": {
+    "status_code": 200,
+    "headers": {
+      "content-type": "application/json; charset=utf-8",
+      "x-total-count": "8"
+    },
+    "body": {
+      "data": [
+        {
+          "id": "9sPuq9hYtbjEg5IpMmsX",
+          "currency": "GBP",
+          "elements": [
+            {
+              "price_components": [
+                {
+                  "type": "FLAT",
+                  "price": 0,
+                  "step_size": 1
+                }
+              ]
+            },
+            {
+              "price_components": [
+                {
+                  "type": "ENERGY",
+                  "price": 0.58,
+                  "step_size": 1
+                }
+              ]
+            }
+          ],
+          "last_updated": "2025-12-22T08:24:13.390Z"
+        },
+        {
+          "id": "EdffQOIJdpZBqYqQtHuF",
+          "currency": "GBP",
+          "elements": [
+            {
+              "price_components": [
+                {
+                  "type": "FLAT",
+                  "price": 0,
+                  "step_size": 1
+                }
+              ]
+            },
+            {
+              "price_components": [
+                {
+                  "type": "ENERGY",
+                  "price": 0.37,
+                  "step_size": 1
+                }
+              ]
+            }
+          ],
+          "last_updated": "2024-07-31T13:47:08.517Z"
+        },
+        {
+          "id": "Kb7A327aq9PEQ4mzttTJ",
+          "currency": "GBP",
+          "elements": [
+            {
+              "price_components": [
+                {
+                  "type": "FLAT",
+                  "price": 0,
+                  "step_size": 1
+                }
+              ]
+            },
+            {
+              "price_components": [
+                {
+                  "type": "ENERGY",
+                  "price": 0.45,
+                  "step_size": 1
+                }
+              ]
+            }
+          ],
+          "last_updated": "2024-01-18T10:26:10.366Z"
+        },
+        {
+          "id": "OGE68CmzgENlSPnLQcSZ",
+          "currency": "GBP",
+          "elements": [
+            {
+              "price_components": [
+                {
+                  "type": "FLAT",
+                  "price": 0,
+                  "step_size": 1
+                }
+              ]
+            },
+            {
+              "price_components": [
+                {
+                  "type": "ENERGY",
+                  "price": 0.45,
+                  "step_size": 1
+                }
+              ]
+            }
+          ],
+          "last_updated": "2024-06-14T14:01:42.692Z"
+        },
+        {
+          "id": "Rt3tiIkSSppod6Q1Exmw",
+          "currency": "GBP",
+          "elements": [
+            {
+              "price_components": [
+                {
+                  "type": "FLAT",
+                  "price": 0,
+                  "step_size": 1
+                }
+              ]
+            },
+            {
+              "price_components": [
+                {
+                  "type": "ENERGY",
+                  "price": 0.45,
+                  "step_size": 1
+                }
+              ]
+            }
+          ],
+          "last_updated": "2024-01-18T15:08:46.879Z"
+        },
+        {
+          "id": "T54LtC3Brgs9x63sdgxb",
+          "currency": "GBP",
+          "elements": [
+            {
+              "price_components": [
+                {
+                  "type": "FLAT",
+                  "price": 0,
+                  "step_size": 1
+                }
+              ]
+            },
+            {
+              "price_components": [
+                {
+                  "type": "ENERGY",
+                  "price": 0.45,
+                  "step_size": 1
+                }
+              ]
+            }
+          ],
+          "last_updated": "2024-11-28T11:19:26.884Z"
+        },
+        {
+          "id": "free_tariff",
+          "currency": "GBP",
+          "elements": [
+            {
+              "price_components": [
+                {
+                  "type": "FLAT",
+                  "price": 0,
+                  "step_size": 0
+                }
+              ]
+            }
+          ],
+          "last_updated": "2024-07-18T08:30:12.856Z"
+        },
+        {
+          "id": "maXuNtYv8oo0jFgIXqy2",
+          "currency": "GBP",
+          "elements": [
+            {
+              "price_components": [
+                {
+                  "type": "FLAT",
+                  "price": 0,
+                  "step_size": 1
+                }
+              ]
+            },
+            {
+              "price_components": [
+                {
+                  "type": "ENERGY",
+                  "price": 0.53,
+                  "step_size": 1
+                }
+              ]
+            }
+          ],
+          "last_updated": "2024-08-29T12:54:39.089Z"
+        }
+      ],
+      "status_code": 1000,
+      "status_message": 1000,
+      "timestamp": "2026-10-26T14:09:05.156Z"
+    }
+  }
+}
