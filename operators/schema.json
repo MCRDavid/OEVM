@@ -442,6 +442,15 @@
           "minLength": 1,
           "title": "Name",
           "type": "string"
+        },
+        "evse_uids": {
+          "description": "Only these EVSEs, by their exact uid, are left off, and the rest of the location stays on the map. Empty (the default) leaves off the whole location.",
+          "items": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "title": "Evse Uids",
+          "type": "array"
         }
       },
       "required": [
@@ -453,7 +462,7 @@
     },
     "ExcludedLocations": {
       "additionalProperties": false,
-      "description": "The repository owner's recorded decision to leave named locations off the map, such\nas test sites an operator's feed marks for publishing.\n\nOnly the listed OCPI location ids are left off, each logged as an issue in the run, and\nthe transparency page lists them. Without this decision every location the feed marks\nfor publishing is kept.",
+      "description": "The repository owner's recorded decision to leave named locations off the map, such\nas test sites an operator's feed marks for publishing, or only named EVSEs at them,\nsuch as a test charger at a site that is otherwise in use.\n\nOnly the listed OCPI location ids are left off, or, where a location lists evse_uids,\nonly those EVSEs. Each is logged as an issue in the run, and the transparency page\nlists them. Without this decision every location the feed marks for publishing is kept\nwhole.",
       "properties": {
         "decided": {
           "description": "Date the owner made the decision (YYYY-MM-DD).",

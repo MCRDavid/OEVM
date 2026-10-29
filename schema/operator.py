@@ -785,15 +785,28 @@ class SentCopy(_Model):
 class ExcludedLocation(_Model):
     id: str = Field(min_length=1, description="The location's OCPI id, exactly as sent.")
     name: str = Field(min_length=1, description="The location's name as the feed sends it.")
+    evse_uids: list[Annotated[str, Field(min_length=1)]] = Field(
+        default_factory=list,
+        description="Only these EVSEs, by their exact uid, are left off, and the rest of the "
+        "location stays on the map. Empty (the default) leaves off the whole location.",
+    )
+
+    @model_validator(mode="after")
+    def _unique_evses(self) -> "ExcludedLocation":
+        if len(set(self.evse_uids)) != len(self.evse_uids):
+            raise ValueError("each EVSE may be listed once")
+        return self
 
 
 class ExcludedLocations(_Model):
     """The repository owner's recorded decision to leave named locations off the map, such
-    as test sites an operator's feed marks for publishing.
+    as test sites an operator's feed marks for publishing, or only named EVSEs at them,
+    such as a test charger at a site that is otherwise in use.
 
-    Only the listed OCPI location ids are left off, each logged as an issue in the run, and
-    the transparency page lists them. Without this decision every location the feed marks
-    for publishing is kept.
+    Only the listed OCPI location ids are left off, or, where a location lists evse_uids,
+    only those EVSEs. Each is logged as an issue in the run, and the transparency page
+    lists them. Without this decision every location the feed marks for publishing is kept
+    whole.
     """
 
     decided: dt.date = Field(description="Date the owner made the decision (YYYY-MM-DD).")

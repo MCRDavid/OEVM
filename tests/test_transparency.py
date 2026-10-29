@@ -341,6 +341,7 @@ def test_a_decision_to_add_vat_is_shown_with_what_was_seen_across_operators(page
         "chargy": ("2026-10-22", 20),
         "clenergy_ev": ("2026-10-22", 20),
         "globe_ev": ("2026-10-23", 20),
+        "roam": ("2026-10-26", 20),
     }
     text = " ".join(page.split())
     assert "Prices that give no VAT rate have VAT at 20% added, by the owner's decision" in text
@@ -349,6 +350,7 @@ def test_a_decision_to_add_vat_is_shown_with_what_was_seen_across_operators(page
     assert "<li>char.gy: 20%, decided 2026-10-22" in text
     assert "<li>Clenergy EV: 20%, decided 2026-10-22" in text
     assert "<li>Globe EV: 20%, decided 2026-10-23" in text
+    assert "<li>Roam: 20%, decided 2026-10-26" in text
 
 
 def test_a_decision_to_read_stated_vat_as_in_the_price_is_shown(page):
