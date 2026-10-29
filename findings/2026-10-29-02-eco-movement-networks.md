@@ -31,6 +31,20 @@ Locations each feed listed on 29 October 2026 (its X-Total-Count), before the ma
 ChargePoint, evpoint and RAW Charging share the party GB CPI, each with its own token and feed.
 Each is shown under its own name, and their record ids never overlap.
 
+**Update, 29 October 2026:** nine more networks on the same platform were switched on that evening,
+so 22 are read from the daily run of 30 October 2026. Eco-Movement emailed tokens for eight of them
+on 27 October 2026, all under the OCPI party GB GFX: Aldi Stores Limited (266 locations listed on 29
+October 2026), drax-Ista (32), Travis Perkins (15), Volvo (3), GFX-GB Drax (2), WCCC Edgbaston (2),
+Drax Group (1) and Southampton Apartment Hotels (1). The emails do not say which request they
+answer; that they answer the project's request through Drax's form on 23 October 2026 is inferred
+from their names and the shared party. Drax's announcement of 10 June 2026 says Aldi "has
+transitioned around 1,200 electric vehicle (EV) chargers at more than 250 stores across the UK over
+to Drax". The ninth, Shell Recharge (GB TNM, 266 locations), came on 28 October 2026 in reply to the
+request for Shell's networks. None of the nine gives a VAT rate, and most of their prices come to
+whole pence once 20% is added (Aldi's 0.333 and 0.517 pounds per kWh are 40p and 62p), so by the
+owner's decision the map adds VAT at 20%. Shell's tariff texts give the price before VAT, such as
+"ALL: £0.74 per kWh" for a price of 0.7417.
+
 ## One platform, one rate limit
 
 Every feed comes from open-chargepoints.com as OCPI 2.2.1, with the network's token in an
