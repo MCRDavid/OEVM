@@ -1,0 +1,382 @@
+{
+  "request": {
+    "method": "GET",
+    "url": "https://open-chargepoints.com/api/ocpi/cpo/2.2.1/locations/?limit=1000"
+  },
+  "response": {
+    "status_code": 200,
+    "headers": {
+      "content-type": "application/json",
+      "link": "<https://open-chargepoints.com/api/ocpi/cpo/2.2.1/locations/?limit=1000&offset=3>; rel=\"next\"",
+      "x-total-count": "3",
+      "x-limit": "1000"
+    },
+    "body": {
+      "timestamp": "2026-10-29T13:17:43Z",
+      "status_code": 1000,
+      "status_message": "Success",
+      "data": [
+        {
+          "party_id": "ALL",
+          "id": "GBLOC000212",
+          "country_code": "GB",
+          "publish": true,
+          "country": "GBR",
+          "address": "Hollywood Bowl",
+          "city": "Shrewsbury",
+          "postal_code": "SY1 3AZ",
+          "coordinates": {
+            "latitude": "52.73775500",
+            "longitude": "-2.73033500"
+          },
+          "state": null,
+          "last_updated": "2026-10-29T13:07:23Z",
+          "opening_times": {
+            "twentyfourseven": true
+          },
+          "name": "Allego - Hollywood Bowl Shrewsbury",
+          "time_zone": "Europe/London",
+          "owner": {
+            "name": "Allego",
+            "website": "https://www.allego.eu"
+          },
+          "operator": {
+            "name": "Allego",
+            "website": "https://www.allego.eu"
+          },
+          "suboperator": {
+            "name": "Allego",
+            "website": "https://www.allego.eu"
+          },
+          "energy_mix": {
+            "is_green_energy": false
+          },
+          "charging_when_closed": true,
+          "directions": null,
+          "evses": [
+            {
+              "uid": "GBALLEGO0005101",
+              "status": "AVAILABLE",
+              "last_updated": "2026-10-29T11:21:09Z",
+              "evse_id": "GBALLEGO0005101",
+              "physical_reference": "GBALLEGO000510-1",
+              "floor_level": "Alle",
+              "directions": null,
+              "parking_restrictions": "ev_only,plugged",
+              "capabilities": [
+                "CREDIT_CARD_PAYABLE",
+                "REMOTE_START_STOP_CAPABLE",
+                "RFID_READER"
+              ],
+              "connectors": [
+                {
+                  "id": "1",
+                  "standard": "IEC_62196_T2_COMBO",
+                  "format": "CABLE",
+                  "power_type": "DC",
+                  "last_updated": "2026-10-28T09:14:50Z",
+                  "max_amperage": 300,
+                  "max_voltage": 1000,
+                  "max_electric_power": 0,
+                  "tariff_ids": [
+                    "01a11228-7692-701f-992b-97bc673e6f53"
+                  ]
+                }
+              ]
+            },
+            {
+              "uid": "GBALLEGO0005102",
+              "status": "AVAILABLE",
+              "last_updated": "2026-10-29T09:43:37Z",
+              "evse_id": "GBALLEGO0005102",
+              "physical_reference": "GBALLEGO000510-2",
+              "floor_level": "Alle",
+              "directions": null,
+              "parking_restrictions": "ev_only,plugged",
+              "capabilities": [
+                "CREDIT_CARD_PAYABLE",
+                "REMOTE_START_STOP_CAPABLE",
+                "RFID_READER"
+              ],
+              "connectors": [
+                {
+                  "id": "1",
+                  "standard": "IEC_62196_T2_COMBO",
+                  "format": "CABLE",
+                  "power_type": "DC",
+                  "last_updated": "2026-10-28T09:14:50Z",
+                  "max_amperage": 300,
+                  "max_voltage": 1000,
+                  "max_electric_power": 0,
+                  "tariff_ids": [
+                    "01a11228-7692-701f-992b-97bc673e6f53"
+                  ]
+                }
+              ]
+            },
+            {
+              "uid": "GBALLEGO0005111",
+              "status": "AVAILABLE",
+              "last_updated": "2026-10-29T13:07:23Z",
+              "evse_id": "GBALLEGO0005111",
+              "physical_reference": "GBALLEGO000511-1",
+              "floor_level": "Alle",
+              "directions": null,
+              "parking_restrictions": "ev_only,plugged",
+              "capabilities": [
+                "CREDIT_CARD_PAYABLE",
+                "REMOTE_START_STOP_CAPABLE",
+                "RFID_READER"
+              ],
+              "connectors": [
+                {
+                  "id": "1",
+                  "standard": "IEC_62196_T2_COMBO",
+                  "format": "CABLE",
+                  "power_type": "DC",
+                  "last_updated": "2026-10-28T09:14:50Z",
+                  "max_amperage": 300,
+                  "max_voltage": 1000,
+                  "max_electric_power": 0,
+                  "tariff_ids": [
+                    "01a11228-7692-701f-992b-97bc673e6f53"
+                  ]
+                }
+              ]
+            },
+            {
+              "uid": "GBALLEGO0005112",
+              "status": "AVAILABLE",
+              "last_updated": "2026-10-29T11:58:39Z",
+              "evse_id": "GBALLEGO0005112",
+              "physical_reference": "GBALLEGO000511-2",
+              "floor_level": "Alle",
+              "directions": null,
+              "parking_restrictions": "ev_only,plugged",
+              "capabilities": [
+                "CREDIT_CARD_PAYABLE",
+                "REMOTE_START_STOP_CAPABLE",
+                "RFID_READER"
+              ],
+              "connectors": [
+                {
+                  "id": "1",
+                  "standard": "IEC_62196_T2_COMBO",
+                  "format": "CABLE",
+                  "power_type": "DC",
+                  "last_updated": "2026-10-28T09:14:50Z",
+                  "max_amperage": 300,
+                  "max_voltage": 1000,
+                  "max_electric_power": 0,
+                  "tariff_ids": [
+                    "01a11228-7692-701f-992b-97bc673e6f53"
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "party_id": "ALL",
+          "id": "GBLOC000131",
+          "country_code": "GB",
+          "publish": true,
+          "country": "GBR",
+          "address": "Station Street",
+          "city": "London",
+          "postal_code": "E15 1DA",
+          "coordinates": {
+            "latitude": "51.53985900",
+            "longitude": "-0.00188400"
+          },
+          "state": null,
+          "last_updated": "2026-10-28T08:23:28Z",
+          "opening_times": {
+            "twentyfourseven": true
+          },
+          "name": "GB, Station Street, E15 1DA London",
+          "time_zone": "Europe/London",
+          "owner": {
+            "name": "Allego",
+            "website": "https://www.allego.eu"
+          },
+          "operator": {
+            "name": "Allego",
+            "website": "https://www.allego.eu"
+          },
+          "suboperator": {
+            "name": "Allego",
+            "website": "https://www.allego.eu"
+          },
+          "energy_mix": {
+            "is_green_energy": false
+          },
+          "charging_when_closed": true,
+          "directions": null,
+          "evses": [
+            {
+              "uid": "GBALLEGO0010351",
+              "status": "UNKNOWN",
+              "last_updated": "2026-04-21T07:47:26Z",
+              "evse_id": "GBALLEGO0010351",
+              "physical_reference": "GBALLEGO001035-1",
+              "floor_level": "GB, ",
+              "directions": null,
+              "parking_restrictions": "ev_only,plugged",
+              "capabilities": [
+                "CREDIT_CARD_PAYABLE",
+                "REMOTE_START_STOP_CAPABLE",
+                "RFID_READER"
+              ],
+              "connectors": [
+                {
+                  "id": "1",
+                  "standard": "IEC_62196_T2",
+                  "format": "SOCKET",
+                  "power_type": "AC_3_PHASE",
+                  "last_updated": "2026-10-28T08:23:28Z",
+                  "max_amperage": 32,
+                  "max_voltage": 230,
+                  "max_electric_power": 0,
+                  "tariff_ids": [
+                    "01a11228-7784-7064-ae86-06874f9eebb7"
+                  ]
+                }
+              ]
+            },
+            {
+              "uid": "GBALLEGO0010352",
+              "status": "UNKNOWN",
+              "last_updated": "2026-04-21T07:47:26Z",
+              "evse_id": "GBALLEGO0010352",
+              "physical_reference": "GBALLEGO001035-2",
+              "floor_level": "GB, ",
+              "directions": null,
+              "parking_restrictions": "ev_only,plugged",
+              "capabilities": [
+                "CREDIT_CARD_PAYABLE",
+                "REMOTE_START_STOP_CAPABLE",
+                "RFID_READER"
+              ],
+              "connectors": [
+                {
+                  "id": "2",
+                  "standard": "IEC_62196_T2",
+                  "format": "SOCKET",
+                  "power_type": "AC_3_PHASE",
+                  "last_updated": "2026-10-28T08:23:28Z",
+                  "max_amperage": 32,
+                  "max_voltage": 230,
+                  "max_electric_power": 0,
+                  "tariff_ids": [
+                    "01a11228-7784-7064-ae86-06874f9eebb7"
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "party_id": "ALL",
+          "id": "GBLOC000105",
+          "country_code": "GB",
+          "publish": true,
+          "country": "GBR",
+          "address": "BEVERLEY ROAD",
+          "city": "London",
+          "postal_code": "E6 3LH",
+          "coordinates": {
+            "latitude": "51.52608700",
+            "longitude": "0.04409700"
+          },
+          "state": null,
+          "last_updated": "2026-10-28T15:48:10Z",
+          "opening_times": {
+            "twentyfourseven": true
+          },
+          "name": "GB, BEVERLEY ROAD, E6 3LH London",
+          "time_zone": "Europe/London",
+          "owner": {
+            "name": "Allego",
+            "website": "https://www.allego.eu"
+          },
+          "operator": {
+            "name": "Allego",
+            "website": "https://www.allego.eu"
+          },
+          "suboperator": {
+            "name": "Allego",
+            "website": "https://www.allego.eu"
+          },
+          "energy_mix": {
+            "is_green_energy": false
+          },
+          "charging_when_closed": true,
+          "directions": null,
+          "evses": [
+            {
+              "uid": "GBALLEGO0010011",
+              "status": "AVAILABLE",
+              "last_updated": "2026-10-28T15:41:21Z",
+              "evse_id": "GBALLEGO0010011",
+              "physical_reference": "GBALLEGO001001-1",
+              "floor_level": "GB, ",
+              "directions": null,
+              "parking_restrictions": "ev_only,plugged",
+              "capabilities": [
+                "CREDIT_CARD_PAYABLE",
+                "REMOTE_START_STOP_CAPABLE",
+                "RFID_READER"
+              ],
+              "connectors": [
+                {
+                  "id": "1",
+                  "standard": "IEC_62196_T2",
+                  "format": "SOCKET",
+                  "power_type": "AC_3_PHASE",
+                  "last_updated": "2026-10-28T08:05:55Z",
+                  "max_amperage": 32,
+                  "max_voltage": 230,
+                  "max_electric_power": 0,
+                  "tariff_ids": [
+                    "01a11228-7784-7064-ae86-06874f9eebb7"
+                  ]
+                }
+              ]
+            },
+            {
+              "uid": "GBALLEGO0010012",
+              "status": "AVAILABLE",
+              "last_updated": "2026-10-27T23:38:57Z",
+              "evse_id": "GBALLEGO0010012",
+              "physical_reference": "GBALLEGO001001-2",
+              "floor_level": "GB, ",
+              "directions": null,
+              "parking_restrictions": "ev_only,plugged",
+              "capabilities": [
+                "CREDIT_CARD_PAYABLE",
+                "REMOTE_START_STOP_CAPABLE",
+                "RFID_READER"
+              ],
+              "connectors": [
+                {
+                  "id": "2",
+                  "standard": "IEC_62196_T2",
+                  "format": "SOCKET",
+                  "power_type": "AC_3_PHASE",
+                  "last_updated": "2026-10-28T08:05:55Z",
+                  "max_amperage": 32,
+                  "max_voltage": 230,
+                  "max_electric_power": 0,
+                  "tariff_ids": [
+                    "01a11228-7784-7064-ae86-06874f9eebb7"
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  }
+}

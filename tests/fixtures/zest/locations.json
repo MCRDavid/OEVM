@@ -1,0 +1,1022 @@
+{
+  "data": [
+    {
+      "id": "1918",
+      "name": "Gascoyne House Gascoyne Road",
+      "country_code": "GB",
+      "party_id": "ZST",
+      "publish": true,
+      "coordinates": {
+        "latitude": 51.5421474,
+        "longitude": -0.0406215
+      },
+      "address": "Gascoyne House Gascoyne Road",
+      "city": "London",
+      "country": "GBR",
+      "postal_code": "E9 7FA",
+      "opening_times": {
+        "twentyfourseven": true
+      },
+      "time_zone": "Europe/London",
+      "evses": [
+        {
+          "uid": "3692",
+          "evse_id": "GBZSTE3692",
+          "physical_reference": "cash-part-body",
+          "status": "AVAILABLE",
+          "connectors": [
+            {
+              "id": "3767",
+              "standard": "IEC_62196_T2",
+              "format": "SOCKET",
+              "power_type": "AC_1_PHASE",
+              "max_voltage": 400,
+              "max_amperage": 0,
+              "max_electric_power": 22000,
+              "tariff_ids": [
+                "530"
+              ],
+              "last_updated": "2026-10-22T13:42:22.000Z"
+            }
+          ],
+          "last_updated": "2026-10-22T13:42:22.000Z"
+        },
+        {
+          "uid": "3693",
+          "evse_id": "GBZSTE3693",
+          "physical_reference": "hand-rule-line",
+          "status": "AVAILABLE",
+          "connectors": [
+            {
+              "id": "3768",
+              "standard": "IEC_62196_T2",
+              "format": "SOCKET",
+              "power_type": "AC_1_PHASE",
+              "max_voltage": 400,
+              "max_amperage": 0,
+              "max_electric_power": 22000,
+              "tariff_ids": [
+                "530"
+              ],
+              "last_updated": "2026-10-22T13:42:22.000Z"
+            }
+          ],
+          "last_updated": "2026-10-22T13:42:22.000Z"
+        }
+      ],
+      "images": [
+        {
+          "url": "https://s3.eu-west-2.amazonaws.com/cdn.uk.charge/zest/media/142/6787e50062997a94e9a98204_Hackney-Ensto.jpeg",
+          "thumbnail": "https://s3.eu-west-2.amazonaws.com/cdn.uk.charge/zest/media/142/c/6787e50062997a94e9a98204_Hackney-Ensto-thumb.jpeg",
+          "category": "LOCATION",
+          "type": "jpeg"
+        }
+      ],
+      "last_updated": "2026-10-22T07:06:35.000Z"
+    },
+    {
+      "id": "1358",
+      "name": "5 Stamford Road",
+      "country_code": "GB",
+      "party_id": "ZST",
+      "publish": true,
+      "coordinates": {
+        "latitude": 51.5431506,
+        "longitude": -0.0795392
+      },
+      "address": "5 Stamford Road",
+      "city": "London",
+      "country": "GBR",
+      "postal_code": "N1 4JP",
+      "state": "undefined",
+      "opening_times": {
+        "twentyfourseven": true
+      },
+      "time_zone": "Europe/London",
+      "evses": [
+        {
+          "uid": "3389",
+          "evse_id": "GBZSTE3389",
+          "physical_reference": "path-king-side",
+          "status": "AVAILABLE",
+          "connectors": [
+            {
+              "id": "3464",
+              "standard": "IEC_62196_T2",
+              "format": "SOCKET",
+              "power_type": "AC_1_PHASE",
+              "max_voltage": 240,
+              "max_amperage": 20,
+              "max_electric_power": 5000,
+              "tariff_ids": [
+                "95"
+              ],
+              "last_updated": "2026-10-25T10:23:15.000Z"
+            }
+          ],
+          "last_updated": "2026-10-25T10:23:15.000Z"
+        }
+      ],
+      "images": [
+        {
+          "url": "https://s3.eu-west-2.amazonaws.com/cdn.uk.charge/zest/media/190/cityev_270825.jpg",
+          "thumbnail": "https://s3.eu-west-2.amazonaws.com/cdn.uk.charge/zest/media/190/c/cityev_270825-thumb.jpg",
+          "category": "LOCATION",
+          "type": "unknown"
+        }
+      ],
+      "last_updated": "2026-10-25T10:23:15.000Z"
+    },
+    {
+      "id": "2161",
+      "name": "Civic Centre",
+      "country_code": "GB",
+      "party_id": "ZST",
+      "publish": true,
+      "coordinates": {
+        "latitude": 51.5452659,
+        "longitude": 0.7085921
+      },
+      "address": "Civic Centre 19 Carnarvon Road",
+      "city": "Southend-on-Sea",
+      "country": "GBR",
+      "postal_code": "SS2 6LR",
+      "opening_times": {
+        "twentyfourseven": true
+      },
+      "time_zone": "Europe/London",
+      "evses": [
+        {
+          "uid": "4766",
+          "evse_id": "GBZSTE4766",
+          "physical_reference": "lack-skin-date",
+          "status": "AVAILABLE",
+          "connectors": [
+            {
+              "id": "4852",
+              "standard": "IEC_62196_T2",
+              "format": "SOCKET",
+              "power_type": "AC_1_PHASE",
+              "max_voltage": 240,
+              "max_amperage": 32,
+              "max_electric_power": 7000,
+              "tariff_ids": [
+                "542"
+              ],
+              "last_updated": "2026-10-26T00:03:20.000Z"
+            }
+          ],
+          "last_updated": "2026-10-26T00:03:20.000Z"
+        },
+        {
+          "uid": "4767",
+          "evse_id": "GBZSTE4767",
+          "physical_reference": "rest-site-part",
+          "status": "OUTOFORDER",
+          "connectors": [
+            {
+              "id": "4854",
+              "standard": "IEC_62196_T2",
+              "format": "SOCKET",
+              "power_type": "AC_1_PHASE",
+              "max_voltage": 240,
+              "max_amperage": 32,
+              "max_electric_power": 7000,
+              "tariff_ids": [
+                "542"
+              ],
+              "last_updated": "2026-10-26T00:03:20.000Z"
+            }
+          ],
+          "last_updated": "2026-10-26T00:03:20.000Z"
+        }
+      ],
+      "images": [
+        {
+          "url": "https://s3.eu-west-2.amazonaws.com/cdn.uk.charge/zest/media/431/2163_19-Carnavon-Road_main001_140526.jpg",
+          "thumbnail": "https://s3.eu-west-2.amazonaws.com/cdn.uk.charge/zest/media/431/c/2163_19-Carnavon-Road_main001_140526-thumb.jpg",
+          "category": "LOCATION",
+          "type": "unknown"
+        }
+      ],
+      "last_updated": "2026-10-25T20:15:17.000Z"
+    },
+    {
+      "id": "1987",
+      "name": "Gosterwood Street",
+      "country_code": "GB",
+      "party_id": "ZST",
+      "publish": true,
+      "coordinates": {
+        "latitude": 51.4849568,
+        "longitude": -0.0353854
+      },
+      "address": "18 Gosterwood Street",
+      "city": "London",
+      "country": "GBR",
+      "postal_code": "SE8 5PB",
+      "state": "undefined",
+      "opening_times": {
+        "twentyfourseven": true
+      },
+      "time_zone": "Europe/London",
+      "evses": [
+        {
+          "uid": "4894",
+          "evse_id": "GBZSTE4894",
+          "physical_reference": "fear-seat-mind",
+          "status": "AVAILABLE",
+          "connectors": [
+            {
+              "id": "4981",
+              "standard": "IEC_62196_T2",
+              "format": "SOCKET",
+              "power_type": "AC_1_PHASE",
+              "max_voltage": 400,
+              "max_amperage": 32,
+              "max_electric_power": 22000,
+              "tariff_ids": [
+                "428"
+              ],
+              "last_updated": "2026-10-26T01:58:10.000Z"
+            }
+          ],
+          "last_updated": "2026-10-26T01:58:10.000Z"
+        },
+        {
+          "uid": "4895",
+          "evse_id": "GBZSTE4895",
+          "physical_reference": "deal-care-test",
+          "status": "CHARGING",
+          "connectors": [
+            {
+              "id": "4982",
+              "standard": "IEC_62196_T2",
+              "format": "SOCKET",
+              "power_type": "AC_1_PHASE",
+              "max_voltage": 400,
+              "max_amperage": 32,
+              "max_electric_power": 22000,
+              "tariff_ids": [
+                "428"
+              ],
+              "last_updated": "2026-10-26T01:58:10.000Z"
+            }
+          ],
+          "last_updated": "2026-10-26T01:58:10.000Z"
+        }
+      ],
+      "images": [
+        {
+          "url": "https://s3.eu-west-2.amazonaws.com/cdn.uk.charge/zest/media/348/lewisham_generic_black_ensto_231225.jpg",
+          "thumbnail": "https://s3.eu-west-2.amazonaws.com/cdn.uk.charge/zest/media/348/c/lewisham_generic_black_ensto_231225-thumb.jpg",
+          "category": "LOCATION",
+          "type": "unknown"
+        }
+      ],
+      "last_updated": "2026-10-25T20:36:33.000Z"
+    },
+    {
+      "id": "1660",
+      "name": "Home Bargains Cardigan",
+      "country_code": "GB",
+      "party_id": "ZST",
+      "publish": true,
+      "coordinates": {
+        "latitude": 52.0861033,
+        "longitude": -4.6636143
+      },
+      "address": "7 Bron-Y-Dre",
+      "city": "Cardigan",
+      "country": "GBR",
+      "postal_code": "SA43 1LD",
+      "state": "Wales",
+      "opening_times": {
+        "twentyfourseven": true
+      },
+      "time_zone": "Europe/London",
+      "evses": [
+        {
+          "uid": "2794",
+          "evse_id": "GBZSTE2794",
+          "physical_reference": "step-room-call",
+          "status": "AVAILABLE",
+          "connectors": [
+            {
+              "id": "2859",
+              "standard": "IEC_62196_T2_COMBO",
+              "format": "CABLE",
+              "power_type": "DC",
+              "max_voltage": 400,
+              "max_amperage": 200,
+              "max_electric_power": 120000,
+              "tariff_ids": [
+                "473"
+              ],
+              "last_updated": "2026-10-25T20:45:14.000Z"
+            }
+          ],
+          "last_updated": "2026-10-25T20:45:14.000Z"
+        },
+        {
+          "uid": "2795",
+          "evse_id": "GBZSTE2795",
+          "physical_reference": "east-food-life",
+          "status": "INOPERATIVE",
+          "connectors": [
+            {
+              "id": "2860",
+              "standard": "IEC_62196_T2_COMBO",
+              "format": "CABLE",
+              "power_type": "DC",
+              "max_voltage": 400,
+              "max_amperage": 200,
+              "max_electric_power": 120000,
+              "tariff_ids": [
+                "473"
+              ],
+              "last_updated": "2026-10-25T20:45:14.000Z"
+            }
+          ],
+          "last_updated": "2026-10-25T20:45:14.000Z"
+        }
+      ],
+      "images": [
+        {
+          "url": "https://s3.eu-west-2.amazonaws.com/cdn.uk.charge/zest/media/352/1191_7-Bron-Y-Dre_homebargains_SA431LD_070125.jpg",
+          "thumbnail": "https://s3.eu-west-2.amazonaws.com/cdn.uk.charge/zest/media/352/c/1191_7-Bron-Y-Dre_homebargains_SA431LD_070125-thumb.jpg",
+          "category": "LOCATION",
+          "type": "unknown"
+        }
+      ],
+      "last_updated": "2026-10-25T20:45:43.000Z"
+    },
+    {
+      "id": "1879",
+      "name": "3 Barn Rise",
+      "country_code": "GB",
+      "party_id": "ZST",
+      "publish": true,
+      "coordinates": {
+        "latitude": 51.5658061,
+        "longitude": -0.2789705
+      },
+      "address": "3 Barn Rise",
+      "city": "Wembley",
+      "country": "GBR",
+      "postal_code": "HA9 9NA",
+      "state": "undefined",
+      "opening_times": {
+        "twentyfourseven": true
+      },
+      "time_zone": "Europe/London",
+      "evses": [
+        {
+          "uid": "3583",
+          "evse_id": "GBZSTE3583",
+          "physical_reference": "care-door-card",
+          "status": "AVAILABLE",
+          "connectors": [
+            {
+              "id": "3658",
+              "standard": "IEC_62196_T2",
+              "format": "SOCKET",
+              "power_type": "AC_1_PHASE",
+              "max_voltage": 400,
+              "max_amperage": 32,
+              "max_electric_power": 22000,
+              "tariff_ids": [
+                "93"
+              ],
+              "last_updated": "2026-10-26T02:06:05.000Z"
+            }
+          ],
+          "last_updated": "2026-10-26T02:06:05.000Z"
+        },
+        {
+          "uid": "3584",
+          "evse_id": "GBZSTE3584",
+          "physical_reference": "land-city-cash",
+          "status": "CHARGING",
+          "connectors": [
+            {
+              "id": "3659",
+              "standard": "IEC_62196_T2",
+              "format": "SOCKET",
+              "power_type": "AC_1_PHASE",
+              "max_voltage": 400,
+              "max_amperage": 32,
+              "max_electric_power": 22000,
+              "tariff_ids": [
+                "93"
+              ],
+              "last_updated": "2026-10-26T02:06:05.000Z"
+            }
+          ],
+          "last_updated": "2026-10-26T02:06:05.000Z"
+        }
+      ],
+      "images": [
+        {
+          "url": "https://s3.eu-west-2.amazonaws.com/cdn.uk.charge/zest/media/191/brent_22kh_270825.jpg",
+          "thumbnail": "https://s3.eu-west-2.amazonaws.com/cdn.uk.charge/zest/media/191/c/brent_22kh_270825-thumb.jpg",
+          "category": "LOCATION",
+          "type": "unknown"
+        }
+      ],
+      "last_updated": "2026-10-26T08:09:46.000Z"
+    },
+    {
+      "id": "1976",
+      "name": "Tower Hill Great Yarmouth",
+      "country_code": "GB",
+      "party_id": "ZST",
+      "publish": true,
+      "coordinates": {
+        "latitude": 52.6054707,
+        "longitude": 1.7283138
+      },
+      "address": "Tower Hill",
+      "city": "Great Yarmouth",
+      "country": "GBR",
+      "postal_code": "NR30 2PA",
+      "state": "undefined",
+      "opening_times": {
+        "twentyfourseven": true
+      },
+      "time_zone": "Europe/London",
+      "evses": [
+        {
+          "uid": "4215",
+          "evse_id": "GBZSTE4215",
+          "physical_reference": "risk-hill-east",
+          "status": "AVAILABLE",
+          "connectors": [
+            {
+              "id": "4291",
+              "standard": "IEC_62196_T2_COMBO",
+              "format": "CABLE",
+              "power_type": "DC",
+              "max_voltage": 400,
+              "max_amperage": 0,
+              "max_electric_power": 300000,
+              "tariff_ids": [
+                "430"
+              ],
+              "last_updated": "2026-10-19T23:22:02.000Z"
+            }
+          ],
+          "last_updated": "2026-10-19T23:22:02.000Z"
+        },
+        {
+          "uid": "4216",
+          "evse_id": "GBZSTE4216",
+          "physical_reference": "room-foot-room",
+          "status": "AVAILABLE",
+          "connectors": [
+            {
+              "id": "4292",
+              "standard": "IEC_62196_T2_COMBO",
+              "format": "CABLE",
+              "power_type": "DC",
+              "max_voltage": 400,
+              "max_amperage": 0,
+              "max_electric_power": 300000,
+              "tariff_ids": [
+                "430"
+              ],
+              "last_updated": "2026-10-19T23:22:02.000Z"
+            }
+          ],
+          "last_updated": "2026-10-19T23:22:02.000Z"
+        }
+      ],
+      "images": [
+        {
+          "url": "https://s3.eu-west-2.amazonaws.com/cdn.uk.charge/zest/media/367/1976_king_street_NR30-2PA_003_231225.jpg",
+          "thumbnail": "https://s3.eu-west-2.amazonaws.com/cdn.uk.charge/zest/media/367/c/1976_king_street_NR30-2PA_003_231225-thumb.jpg",
+          "category": "LOCATION",
+          "type": "unknown"
+        }
+      ],
+      "last_updated": "2026-10-26T10:08:27.000Z"
+    },
+    {
+      "id": "887",
+      "name": "11 Westbourne Gardens",
+      "country_code": "GB",
+      "party_id": "ZST",
+      "publish": true,
+      "coordinates": {
+        "latitude": 51.0771877,
+        "longitude": 1.163091
+      },
+      "address": "11 Westbourne Gardens",
+      "city": "Folkestone",
+      "country": "GBR",
+      "postal_code": "CT20 2HY",
+      "state": "England",
+      "opening_times": {
+        "twentyfourseven": true
+      },
+      "time_zone": "Europe/London",
+      "evses": [
+        {
+          "uid": "2173",
+          "evse_id": "GBZSTE2173",
+          "physical_reference": "year-park-type",
+          "status": "AVAILABLE",
+          "connectors": [
+            {
+              "id": "2231",
+              "standard": "IEC_62196_T2_COMBO",
+              "format": "CABLE",
+              "power_type": "DC",
+              "max_voltage": 400,
+              "max_amperage": 0,
+              "max_electric_power": 160000,
+              "tariff_ids": [
+                "472"
+              ],
+              "last_updated": "2026-10-26T00:58:12.000Z"
+            }
+          ],
+          "last_updated": "2026-10-26T00:58:12.000Z"
+        },
+        {
+          "uid": "2174",
+          "evse_id": "GBZSTE2174",
+          "physical_reference": "sort-door-idea",
+          "status": "AVAILABLE",
+          "connectors": [
+            {
+              "id": "2232",
+              "standard": "IEC_62196_T2_COMBO",
+              "format": "CABLE",
+              "power_type": "DC",
+              "max_voltage": 400,
+              "max_amperage": 0,
+              "max_electric_power": 160000,
+              "tariff_ids": [
+                "472"
+              ],
+              "last_updated": "2026-10-26T00:58:12.000Z"
+            }
+          ],
+          "last_updated": "2026-10-26T00:58:12.000Z"
+        },
+        {
+          "uid": "2175",
+          "evse_id": "GBZSTE2175",
+          "physical_reference": "tree-race-term",
+          "status": "AVAILABLE",
+          "connectors": [
+            {
+              "id": "2233",
+              "standard": "IEC_62196_T2",
+              "format": "SOCKET",
+              "power_type": "AC_1_PHASE",
+              "max_voltage": 400,
+              "max_amperage": 32,
+              "max_electric_power": 22000,
+              "tariff_ids": [
+                "428"
+              ],
+              "last_updated": "2026-10-26T10:14:16.000Z"
+            }
+          ],
+          "last_updated": "2026-10-26T10:14:16.000Z"
+        },
+        {
+          "uid": "2176",
+          "evse_id": "GBZSTE2176",
+          "physical_reference": "hall-fire-year",
+          "status": "AVAILABLE",
+          "connectors": [
+            {
+              "id": "2234",
+              "standard": "IEC_62196_T2",
+              "format": "SOCKET",
+              "power_type": "AC_1_PHASE",
+              "max_voltage": 400,
+              "max_amperage": 32,
+              "max_electric_power": 22000,
+              "tariff_ids": [
+                "428"
+              ],
+              "last_updated": "2026-10-26T10:14:16.000Z"
+            }
+          ],
+          "last_updated": "2026-10-26T10:14:16.000Z"
+        }
+      ],
+      "images": [
+        {
+          "url": "https://s3.eu-west-2.amazonaws.com/cdn.uk.charge/zest/media/161/887-11_westbourne_gardens_CT202HY_Zest_Main1_260825.jpg",
+          "thumbnail": "https://s3.eu-west-2.amazonaws.com/cdn.uk.charge/zest/media/161/c/887-11_westbourne_gardens_CT202HY_Zest_Main1_260825-thumb.jpg",
+          "category": "LOCATION",
+          "type": "unknown"
+        }
+      ],
+      "last_updated": "2026-10-26T10:14:20.000Z"
+    },
+    {
+      "id": "1987",
+      "name": "Gosterwood Street",
+      "country_code": "GB",
+      "party_id": "ZST",
+      "publish": true,
+      "coordinates": {
+        "latitude": 51.4849568,
+        "longitude": -0.0353854
+      },
+      "address": "18 Gosterwood Street",
+      "city": "London",
+      "country": "GBR",
+      "postal_code": "SE8 5PB",
+      "state": "undefined",
+      "opening_times": {
+        "twentyfourseven": true
+      },
+      "time_zone": "Europe/London",
+      "evses": [
+        {
+          "uid": "4894",
+          "evse_id": "GBZSTE4894",
+          "physical_reference": "fear-seat-mind",
+          "status": "AVAILABLE",
+          "connectors": [
+            {
+              "id": "4981",
+              "standard": "IEC_62196_T2",
+              "format": "SOCKET",
+              "power_type": "AC_1_PHASE",
+              "max_voltage": 400,
+              "max_amperage": 32,
+              "max_electric_power": 22000,
+              "tariff_ids": [
+                "428"
+              ],
+              "last_updated": "2026-10-26T01:58:10.000Z"
+            }
+          ],
+          "last_updated": "2026-10-26T01:58:10.000Z"
+        },
+        {
+          "uid": "4895",
+          "evse_id": "GBZSTE4895",
+          "physical_reference": "deal-care-test",
+          "status": "CHARGING",
+          "connectors": [
+            {
+              "id": "4982",
+              "standard": "IEC_62196_T2",
+              "format": "SOCKET",
+              "power_type": "AC_1_PHASE",
+              "max_voltage": 400,
+              "max_amperage": 32,
+              "max_electric_power": 22000,
+              "tariff_ids": [
+                "428"
+              ],
+              "last_updated": "2026-10-26T01:58:10.000Z"
+            }
+          ],
+          "last_updated": "2026-10-26T01:58:10.000Z"
+        }
+      ],
+      "images": [
+        {
+          "url": "https://s3.eu-west-2.amazonaws.com/cdn.uk.charge/zest/media/348/lewisham_generic_black_ensto_231225.jpg",
+          "thumbnail": "https://s3.eu-west-2.amazonaws.com/cdn.uk.charge/zest/media/348/c/lewisham_generic_black_ensto_231225-thumb.jpg",
+          "category": "LOCATION",
+          "type": "unknown"
+        }
+      ],
+      "last_updated": "2026-10-26T10:18:56.000Z"
+    },
+    {
+      "id": "1918",
+      "name": "Gascoyne House Gascoyne Road",
+      "country_code": "GB",
+      "party_id": "ZST",
+      "publish": true,
+      "coordinates": {
+        "latitude": 51.5421474,
+        "longitude": -0.0406215
+      },
+      "address": "Gascoyne House Gascoyne Road",
+      "city": "London",
+      "country": "GBR",
+      "postal_code": "E9 7FA",
+      "opening_times": {
+        "twentyfourseven": true
+      },
+      "time_zone": "Europe/London",
+      "evses": [
+        {
+          "uid": "3692",
+          "evse_id": "GBZSTE3692",
+          "physical_reference": "cash-part-body",
+          "status": "AVAILABLE",
+          "connectors": [
+            {
+              "id": "3767",
+              "standard": "IEC_62196_T2",
+              "format": "SOCKET",
+              "power_type": "AC_1_PHASE",
+              "max_voltage": 400,
+              "max_amperage": 0,
+              "max_electric_power": 22000,
+              "tariff_ids": [
+                "530"
+              ],
+              "last_updated": "2026-10-22T13:42:22.000Z"
+            }
+          ],
+          "last_updated": "2026-10-22T13:42:22.000Z"
+        },
+        {
+          "uid": "3693",
+          "evse_id": "GBZSTE3693",
+          "physical_reference": "hand-rule-line",
+          "status": "AVAILABLE",
+          "connectors": [
+            {
+              "id": "3768",
+              "standard": "IEC_62196_T2",
+              "format": "SOCKET",
+              "power_type": "AC_1_PHASE",
+              "max_voltage": 400,
+              "max_amperage": 0,
+              "max_electric_power": 22000,
+              "tariff_ids": [
+                "530"
+              ],
+              "last_updated": "2026-10-22T13:42:22.000Z"
+            }
+          ],
+          "last_updated": "2026-10-22T13:42:22.000Z"
+        }
+      ],
+      "images": [
+        {
+          "url": "https://s3.eu-west-2.amazonaws.com/cdn.uk.charge/zest/media/142/6787e50062997a94e9a98204_Hackney-Ensto.jpeg",
+          "thumbnail": "https://s3.eu-west-2.amazonaws.com/cdn.uk.charge/zest/media/142/c/6787e50062997a94e9a98204_Hackney-Ensto-thumb.jpeg",
+          "category": "LOCATION",
+          "type": "jpeg"
+        }
+      ],
+      "last_updated": "2026-10-26T10:19:33.000Z"
+    },
+    {
+      "id": "1660",
+      "name": "Home Bargains Cardigan",
+      "country_code": "GB",
+      "party_id": "ZST",
+      "publish": true,
+      "coordinates": {
+        "latitude": 52.0861033,
+        "longitude": -4.6636143
+      },
+      "address": "7 Bron-Y-Dre",
+      "city": "Cardigan",
+      "country": "GBR",
+      "postal_code": "SA43 1LD",
+      "state": "Wales",
+      "opening_times": {
+        "twentyfourseven": true
+      },
+      "time_zone": "Europe/London",
+      "evses": [
+        {
+          "uid": "2794",
+          "evse_id": "GBZSTE2794",
+          "physical_reference": "step-room-call",
+          "status": "AVAILABLE",
+          "connectors": [
+            {
+              "id": "2859",
+              "standard": "IEC_62196_T2_COMBO",
+              "format": "CABLE",
+              "power_type": "DC",
+              "max_voltage": 400,
+              "max_amperage": 200,
+              "max_electric_power": 120000,
+              "tariff_ids": [
+                "473"
+              ],
+              "last_updated": "2026-10-25T20:45:14.000Z"
+            }
+          ],
+          "last_updated": "2026-10-25T20:45:14.000Z"
+        },
+        {
+          "uid": "2795",
+          "evse_id": "GBZSTE2795",
+          "physical_reference": "east-food-life",
+          "status": "INOPERATIVE",
+          "connectors": [
+            {
+              "id": "2860",
+              "standard": "IEC_62196_T2_COMBO",
+              "format": "CABLE",
+              "power_type": "DC",
+              "max_voltage": 400,
+              "max_amperage": 200,
+              "max_electric_power": 120000,
+              "tariff_ids": [
+                "473"
+              ],
+              "last_updated": "2026-10-25T20:45:14.000Z"
+            }
+          ],
+          "last_updated": "2026-10-25T20:45:14.000Z"
+        }
+      ],
+      "images": [
+        {
+          "url": "https://s3.eu-west-2.amazonaws.com/cdn.uk.charge/zest/media/352/1191_7-Bron-Y-Dre_homebargains_SA431LD_070125.jpg",
+          "thumbnail": "https://s3.eu-west-2.amazonaws.com/cdn.uk.charge/zest/media/352/c/1191_7-Bron-Y-Dre_homebargains_SA431LD_070125-thumb.jpg",
+          "category": "LOCATION",
+          "type": "unknown"
+        }
+      ],
+      "last_updated": "2026-10-26T10:21:57.000Z"
+    },
+    {
+      "id": "1358",
+      "name": "5 Stamford Road",
+      "country_code": "GB",
+      "party_id": "ZST",
+      "publish": true,
+      "coordinates": {
+        "latitude": 51.5431506,
+        "longitude": -0.0795392
+      },
+      "address": "5 Stamford Road",
+      "city": "London",
+      "country": "GBR",
+      "postal_code": "N1 4JP",
+      "state": "undefined",
+      "opening_times": {
+        "twentyfourseven": true
+      },
+      "time_zone": "Europe/London",
+      "evses": [
+        {
+          "uid": "3389",
+          "evse_id": "GBZSTE3389",
+          "physical_reference": "path-king-side",
+          "status": "AVAILABLE",
+          "connectors": [
+            {
+              "id": "3464",
+              "standard": "IEC_62196_T2",
+              "format": "SOCKET",
+              "power_type": "AC_1_PHASE",
+              "max_voltage": 240,
+              "max_amperage": 20,
+              "max_electric_power": 5000,
+              "tariff_ids": [
+                "95"
+              ],
+              "last_updated": "2026-10-26T10:23:41.000Z"
+            }
+          ],
+          "last_updated": "2026-10-26T10:23:41.000Z"
+        }
+      ],
+      "images": [
+        {
+          "url": "https://s3.eu-west-2.amazonaws.com/cdn.uk.charge/zest/media/190/cityev_270825.jpg",
+          "thumbnail": "https://s3.eu-west-2.amazonaws.com/cdn.uk.charge/zest/media/190/c/cityev_270825-thumb.jpg",
+          "category": "LOCATION",
+          "type": "unknown"
+        }
+      ],
+      "last_updated": "2026-10-26T10:23:42.000Z"
+    },
+    {
+      "id": "1968",
+      "name": "40 Myrtle Walk",
+      "country_code": "GB",
+      "party_id": "ZST",
+      "publish": true,
+      "coordinates": {
+        "latitude": 51.530582,
+        "longitude": -0.0821072
+      },
+      "address": "40 Myrtle Walk",
+      "city": "London",
+      "country": "GBR",
+      "postal_code": "N1 6QB",
+      "state": "undefined",
+      "opening_times": {
+        "twentyfourseven": true
+      },
+      "time_zone": "Europe/London",
+      "evses": [
+        {
+          "uid": "4183",
+          "evse_id": "GBZSTE4183",
+          "physical_reference": "east-fear-help",
+          "status": "AVAILABLE",
+          "connectors": [
+            {
+              "id": "4259",
+              "standard": "IEC_62196_T2",
+              "format": "SOCKET",
+              "power_type": "AC_1_PHASE",
+              "max_voltage": 400,
+              "max_amperage": 0,
+              "max_electric_power": 22000,
+              "tariff_ids": [
+                "530"
+              ],
+              "last_updated": "2026-10-24T07:31:39.000Z"
+            }
+          ],
+          "last_updated": "2026-10-24T07:31:39.000Z"
+        },
+        {
+          "uid": "4184",
+          "evse_id": "GBZSTE4184",
+          "physical_reference": "user-band-jack",
+          "status": "AVAILABLE",
+          "connectors": [
+            {
+              "id": "4260",
+              "standard": "IEC_62196_T2",
+              "format": "SOCKET",
+              "power_type": "AC_1_PHASE",
+              "max_voltage": 400,
+              "max_amperage": 0,
+              "max_electric_power": 22000,
+              "tariff_ids": [
+                "530"
+              ],
+              "last_updated": "2026-10-24T07:31:39.000Z"
+            }
+          ],
+          "last_updated": "2026-10-24T07:31:39.000Z"
+        },
+        {
+          "uid": "4185",
+          "evse_id": "GBZSTE4185",
+          "physical_reference": "team-look-text",
+          "status": "UNKNOWN",
+          "connectors": [
+            {
+              "id": "4261",
+              "standard": "IEC_62196_T2",
+              "format": "SOCKET",
+              "power_type": "AC_1_PHASE",
+              "max_voltage": 400,
+              "max_amperage": 0,
+              "max_electric_power": 22000,
+              "tariff_ids": [
+                "530"
+              ],
+              "last_updated": "2026-10-26T10:30:43.000Z"
+            }
+          ],
+          "last_updated": "2026-10-26T10:30:43.000Z"
+        },
+        {
+          "uid": "4186",
+          "evse_id": "GBZSTE4186",
+          "physical_reference": "fear-foot-door",
+          "status": "UNKNOWN",
+          "connectors": [
+            {
+              "id": "4262",
+              "standard": "IEC_62196_T2",
+              "format": "SOCKET",
+              "power_type": "AC_1_PHASE",
+              "max_voltage": 400,
+              "max_amperage": 0,
+              "max_electric_power": 22000,
+              "tariff_ids": [
+                "530"
+              ],
+              "last_updated": "2026-10-26T10:30:43.000Z"
+            }
+          ],
+          "last_updated": "2026-10-26T10:30:43.000Z"
+        }
+      ],
+      "images": [
+        {
+          "url": "https://s3.eu-west-2.amazonaws.com/cdn.uk.charge/zest/media/142/6787e50062997a94e9a98204_Hackney-Ensto.jpeg",
+          "thumbnail": "https://s3.eu-west-2.amazonaws.com/cdn.uk.charge/zest/media/142/c/6787e50062997a94e9a98204_Hackney-Ensto-thumb.jpeg",
+          "category": "LOCATION",
+          "type": "jpeg"
+        }
+      ],
+      "last_updated": "2026-10-26T10:30:43.000Z"
+    }
+  ],
+  "status_code": 1000,
+  "timestamp": "2026-10-26T10:29:56.054Z"
+}

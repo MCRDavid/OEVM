@@ -1,0 +1,127 @@
+{
+  "request": {
+    "method": "GET",
+    "url": "https://open-chargepoints.com/api/ocpi/cpo/2.2.1/tariffs/?limit=1000"
+  },
+  "response": {
+    "status_code": 200,
+    "headers": {
+      "content-type": "application/json",
+      "link": "<https://open-chargepoints.com/api/ocpi/cpo/2.2.1/tariffs/?limit=1000&offset=2>; rel=\"next\"",
+      "x-total-count": "2",
+      "x-limit": "1000"
+    },
+    "body": {
+      "timestamp": "2026-10-29T13:19:49Z",
+      "status_code": 1000,
+      "status_message": "Success",
+      "data": [
+        {
+          "party_id": "ALL",
+          "id": "01a11228-7784-7064-ae86-06874f9eebb7",
+          "currency": "GBP",
+          "tariff_alt_url": null,
+          "tariff_alt_text": [
+            {
+              "language": "en",
+              "text": "Energy: 0.63 GBP/kWh"
+            }
+          ],
+          "last_updated": "2026-10-28T03:12:50Z",
+          "country_code": "GB",
+          "elements": [
+            {
+              "restrictions": null,
+              "price_components": [
+                {
+                  "type": "ENERGY",
+                  "price": 0.525,
+                  "vat": null,
+                  "step_size": 1
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "party_id": "ALL",
+          "id": "01a11228-7692-701f-992b-97bc673e6f53",
+          "currency": "GBP",
+          "tariff_alt_url": null,
+          "tariff_alt_text": [
+            {
+              "language": "en",
+              "text": "Energy: 0.84 GBP/kWh Idle fee: 0.216 GBP/min after 45 min, max 300 min"
+            },
+            {
+              "language": "en",
+              "text": "Energy: 0.84 GBP/kWh Idle fee: 0.216 GBP/min after 45 min, max 300 min"
+            },
+            {
+              "language": "en",
+              "text": "Energy: 0.84 GBP/kWh Idle fee: 0.216 GBP/min after 45 min, max 300 min"
+            },
+            {
+              "language": "en",
+              "text": "Energy: 0.84 GBP/kWh Idle fee: 0.216 GBP/min after 45 min, max 300 min"
+            }
+          ],
+          "last_updated": "2026-10-28T03:12:50Z",
+          "country_code": "GB",
+          "elements": [
+            {
+              "restrictions": {
+                "min_duration": 0
+              },
+              "price_components": [
+                {
+                  "type": "PARKING_TIME",
+                  "price": 0,
+                  "vat": null,
+                  "step_size": 1
+                }
+              ]
+            },
+            {
+              "restrictions": {
+                "min_duration": 2700
+              },
+              "price_components": [
+                {
+                  "type": "PARKING_TIME",
+                  "price": 10.8,
+                  "vat": null,
+                  "step_size": 60
+                }
+              ]
+            },
+            {
+              "restrictions": {
+                "min_duration": 20700
+              },
+              "price_components": [
+                {
+                  "type": "PARKING_TIME",
+                  "price": 0,
+                  "vat": null,
+                  "step_size": 1
+                }
+              ]
+            },
+            {
+              "restrictions": null,
+              "price_components": [
+                {
+                  "type": "ENERGY",
+                  "price": 0.7,
+                  "vat": null,
+                  "step_size": 1
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  }
+}

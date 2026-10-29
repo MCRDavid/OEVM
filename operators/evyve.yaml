@@ -1,26 +1,116 @@
 # yaml-language-server: $schema=schema.json
 id: evyve
 display_name: evyve
-ocpi_country_code: unknown
-ocpi_party_id: unknown
-adapter: unknown
+ocpi_country_code: GB
+ocpi_party_id: DRI # Confirmed from the feed's own country_code and party_id on 2026-10-29.
+adapter: eco_movement_pcpr
 base_url: unknown
-endpoints: {}
+endpoints:
+  locations:
+    url: https://open-chargepoints.com/api/ocpi/cpo/2.2.1/locations/
+    status: documented
+    note: >-
+      Confirmed in Eco-Movement's PCPR API reference on 2026-10-07. Written with the trailing
+      slash, as in the user guide's example request and the getting started page's paging
+      link (read 2026-10-26); without it the server answered HTTP 307 on 2026-10-29.
+  tariffs:
+    url: https://open-chargepoints.com/api/ocpi/cpo/2.2.1/tariffs/
+    status: documented
+  statuses:
+    url: https://open-chargepoints.com/api/statuses
+    status: documented
 auth:
-  method: unknown
-  name: null
-  secret_name: null
+  method: header
+  name: Authorization
+  scheme: Token
+  secret_name: EVYVE_TOKEN
 rate_limit:
-  min_seconds_between_requests: 2
-  limits: []
-  limits_checked: unknown
-  notes: null
+  min_seconds_between_requests: 125
+  limits:
+    - publisher: Eco-Movement
+      requests: 30
+      per_seconds: 3600
+      endpoint: locations
+      quote: The `locations` endpoint has a rate limit of 30 requests per 1 hour.
+      source_url: https://developers.eco-movement.com/v2.2.1/reference/get-all-locations-pcpr-api
+      checked: 2026-10-26
+    - publisher: Eco-Movement
+      requests: 30
+      per_seconds: 3600
+      endpoint: locations
+      scope: single location
+      quote: The `locations/{id}` endpoint has a rate limit of 30 requests per 1 hour.
+      source_url: https://developers.eco-movement.com/v2.2.1/reference/get-specific-location-pcpr-api
+      checked: 2026-10-26
+    - publisher: Eco-Movement
+      requests: 30
+      per_seconds: 3600
+      endpoint: tariffs
+      quote: The `tariffs` endpoint has a rate limit of 30 requests per 1 hour.
+      source_url: https://developers.eco-movement.com/reference/get-tariffs-pcpr-api
+      checked: 2026-10-26
+    - publisher: Eco-Movement
+      requests: 1
+      per_seconds: 30
+      endpoint: statuses
+      quote: The `statuses` endpoint has a rate limit of 1 request per 30 seconds.
+      source_url: https://developers.eco-movement.com/reference/get-statuses-pcpr-api
+      checked: 2026-10-26
+  limits_checked: 2026-10-26
+  notes: >-
+    A gap of 125 seconds (the 120 seconds the strictest limit needs, plus a safety
+    margin) is kept between any two requests with this network's token, so at most 29
+    requests in any hour are sent with it. By the repository owner's decision of
+    2026-10-29 (limits_per_key) the limits are read as applying to each token. Requests
+    to open-chargepoints.com are still sent one at a time, at least 2 seconds apart
+    whichever network they are for, and a request from the server to wait holds back
+    every network on it. Eco-Movement "strongly recommends limiting simultaneous GET
+    requests to a maximum of 5". It recommends retrieving the entire dataset once a day.
+limits_per_key:
+  decided: 2026-10-29
+  basis: >-
+    Eco-Movement publishes a limit of 30 requests an hour for each of the locations and
+    tariffs endpoints and gives each network its own token, but does not say whether the
+    limits count per token or per address. The repository owner decided on 2026-10-29
+    that they are read as applying to each token, so each network keeps its own 125
+    second gap, while requests to open-chargepoints.com are still sent one at a time.
+  evidence_url: https://developers.eco-movement.com/v2.2.1/docs/eco-movement-pcpr-api-user-guide
 supports_single_location: unknown
 cors: unknown
-attribution: null
-licence: null
+attribution: >-
+  Contains data from evyve published under the Public Charge Point Regulations 2023, used in
+  line with the Open Government Licence v3.0.
+licence:
+  name: OGL-3.0
+  url: https://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/
+  basis: >-
+    The open data answer in evyve's FAQs and the Google form it links (read 2026-10-10) name
+    no licence, terms, agreement, key or rate limit. Eco-Movement's email of 2026-10-26 with
+    the token, and its PCPR API user guide and reference (read 2026-10-26), state no licence
+    or terms either. Regulation 10(5) of the Public Charge Point Regulations 2023 requires
+    the data to be available "without any requirement to agree to terms and conditions
+    regarding the use of that data", and the DfT guidance says "Data must be open in line
+    with the Open Government Licence". On 2026-10-10 the repository owner decided, as a
+    standing rule for operators whose data has no terms of its own, that such operators can
+    be switched on without asking again.
+  checked: 2026-10-29
+own_feed_over_copies:
+  decided: 2026-10-29
+  basis: >-
+    Monta's open data feed carries evyve's locations under the party GB EVY, the code EV
+    Roam's ID register gives evyve, while evyve's own data on Eco-Movement's PCPR API
+    uses GB DRI. On 2026-10-29 both had 224 locations with the same 224 names, and none
+    of Monta's copies had a price, while evyve's own were all priced. The repository
+    owner decided that evyve's own feed is shown in their place, and that Monta's GB EVY
+    locations are left off while evyve's own locations, from the latest run or its last
+    good copy, are on the map.
+  evidence_url: https://open-chargepoints.com/api/ocpi/cpo/2.2.1/locations/
+  operators:
+    - monta
+  copies_country_code: GB
+  copies_party_id: EVY
 engagement:
-  status: requested_no_reply
+  status: key_on_request
   evidence:
     - date: 2026-10-10
       url: https://evyve.co.uk/
@@ -30,6 +120,12 @@ engagement:
         data will be provided "in 48 hours"; the form says an answer will come "within 5
         working days". Neither the FAQ answer nor the form names a licence, terms, agreement,
         key or rate limit.
+    - date: 2026-10-26
+      file: evidence/evyve/2026-10-26-token-email.md
+      note: >-
+        Eco-Movement's email with an expiring link to this network's token for its PCPR
+        API, sent as an "Authorization: Token" header to its OCPI 2.2.1 endpoints. The
+        token itself is not kept here.
   log:
     - date: 2026-10-10
       action: page_checked
@@ -59,8 +155,16 @@ engagement:
       channel: web_form
       summary: >-
         Requested access to evyve's PCPR data through its Google form, which is shared with Eco-Movement.
+    - date: 2026-10-26
+      action: key_granted
+      channel: email
+      summary: >-
+        Eco-Movement sent a token for this network's PCPR data by email, through an
+        expiring link, to be sent as an "Authorization: Token" header to its OCPI
+        2.2.1 endpoints. The token is kept as a GitHub Actions secret.
+      evidence_file: evidence/evyve/2026-10-26-token-email.md
 access_requested: 2026-10-23
-access_granted: null
+access_granted: 2026-10-26
 sources:
   - url: https://evyve.co.uk/
     note: >-
@@ -81,12 +185,24 @@ sources:
       Monta's help article on exporting open data (read 2026-10-17): a network exports a file
       for its whole operator from Monta Hub and publishes it itself. It names no file format,
       address or API.
-findings: []
+findings:
+  - date: 2026-10-29
+    kind: data_quality
+    summary: >-
+      evyve's own feed uses the OCPI party GB DRI, while EV Roam's ID register lists
+      evyve as GB*EVY and Monta's feed carries the same 224 locations under GB EVY,
+      with no prices.
+    handling: >-
+      evyve's own feed is shown, and Monta's GB EVY locations are left off while it is
+      on the map, by the repository owner's decision of 2026-10-29
+      (own_feed_over_copies above). The feed health page lists how many were left off.
+    evidence_url: https://open-chargepoints.com/api/ocpi/cpo/2.2.1/locations/
 notes: >-
-  Access could be requested through the Google form linked from the open data FAQ on
-  evyve's home page. Requests are passed to Eco-Movement, so the eco_movement_pcpr adapter
-  may apply once access is given, but the page does not say how the data is delivered;
-  this needs testing. Since January 2026 the network runs on Monta, whose operators export
-  their own open data file from Monta Hub; on 2026-10-17 the form was still the only route
-  found.
-enabled: false
+  Its regulation 10 data is served by Eco-Movement's PCPR API (eco_movement_pcpr adapter),
+  with a token Eco-Movement sent on 2026-10-26, kept as the GitHub Actions secret
+  EVYVE_TOKEN. Every response on 2026-10-29 linked to a next page past the last record,
+  which the adapter does not follow. Eco-Movement's user guide says it creates the
+  location ids and may change them when it merges locations. On 2026-10-29 the feed
+  reported 224 locations and 16 tariffs. Since January 2026 the network runs on Monta,
+  whose feed also carries its locations (see own_feed_over_copies).
+enabled: true

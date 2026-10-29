@@ -1,0 +1,193 @@
+{
+  "request": {
+    "method": "GET",
+    "url": "https://open-chargepoints.com/api/ocpi/cpo/2.2.1/tariffs/?limit=1000"
+  },
+  "response": {
+    "status_code": 200,
+    "headers": {
+      "content-type": "application/json",
+      "link": "<https://open-chargepoints.com/api/ocpi/cpo/2.2.1/tariffs/?limit=1000&offset=4>; rel=\"next\"",
+      "x-total-count": "4",
+      "x-limit": "1000"
+    },
+    "body": {
+      "timestamp": "2026-10-29T13:28:13Z",
+      "status_code": 1000,
+      "status_message": "Success",
+      "data": [
+        {
+          "party_id": "CPI",
+          "id": "NLCPIT2QP*1*0",
+          "currency": "USD",
+          "tariff_alt_url": null,
+          "tariff_alt_text": [
+            {
+              "language": "en",
+              "text": "Flat Fee   0 USD\n"
+            }
+          ],
+          "last_updated": "2018-07-20T10:23:41Z",
+          "country_code": "GB",
+          "elements": [
+            {
+              "restrictions": null,
+              "price_components": [
+                {
+                  "type": "FLAT",
+                  "price": 0,
+                  "vat": null,
+                  "step_size": 0
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "party_id": "CPI",
+          "id": "NLCPITWm1*3*0",
+          "currency": "GBP",
+          "tariff_alt_url": null,
+          "tariff_alt_text": [
+            {
+              "language": "en",
+              "text": "Energy\n   0.65 GBP per kWh\nParking \n   0.42 GBP per hour for first 240 mins  \nParking\n   4.17 GBP per hour after 240 mins\n"
+            },
+            {
+              "language": "en",
+              "text": "Energy\n   0.65 GBP per kWh\nParking \n   0.42 GBP per hour for first 240 mins  \nParking\n   4.17 GBP per hour after 240 mins\n"
+            },
+            {
+              "language": "en",
+              "text": "Energy\n   0.65 GBP per kWh\nParking \n   0.42 GBP per hour for first 240 mins  \nParking\n   4.17 GBP per hour after 240 mins\n"
+            },
+            {
+              "language": "en",
+              "text": "Energy\n   0.65 GBP per kWh\nParking \n   0.42 GBP per hour for first 240 mins  \nParking\n   4.17 GBP per hour after 240 mins\n"
+            },
+            {
+              "language": "en",
+              "text": "Energy\n   0.65 GBP per kWh\nParking \n   0.42 GBP per hour for first 240 mins  \nParking\n   4.17 GBP per hour after 240 mins\n"
+            }
+          ],
+          "last_updated": "2025-06-05T08:18:17Z",
+          "country_code": "GB",
+          "elements": [
+            {
+              "restrictions": {
+                "end_time": "23:59",
+                "start_time": "00:00"
+              },
+              "price_components": [
+                {
+                  "type": "ENERGY",
+                  "price": 0.65,
+                  "vat": null,
+                  "step_size": 1
+                }
+              ]
+            },
+            {
+              "restrictions": null,
+              "price_components": [
+                {
+                  "type": "TIME",
+                  "price": 0.42,
+                  "vat": null,
+                  "step_size": 1
+                },
+                {
+                  "type": "PARKING_TIME",
+                  "price": 0.42,
+                  "vat": null,
+                  "step_size": 1
+                }
+              ]
+            },
+            {
+              "restrictions": {
+                "end_time": "23:59",
+                "min_duration": 14400,
+                "start_time": "00:00"
+              },
+              "price_components": [
+                {
+                  "type": "TIME",
+                  "price": 4.17,
+                  "vat": null,
+                  "step_size": 1
+                },
+                {
+                  "type": "PARKING_TIME",
+                  "price": 4.17,
+                  "vat": null,
+                  "step_size": 1
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "party_id": "CPI",
+          "id": "NLCPIT1asZ*4*0",
+          "currency": "GBP",
+          "tariff_alt_url": null,
+          "tariff_alt_text": [
+            {
+              "language": "en",
+              "text": "Energy\n   0.42 GBP per kWh\n"
+            }
+          ],
+          "last_updated": "2026-07-07T08:24:53Z",
+          "country_code": "GB",
+          "elements": [
+            {
+              "restrictions": {
+                "end_time": "23:59",
+                "start_time": "00:00"
+              },
+              "price_components": [
+                {
+                  "type": "ENERGY",
+                  "price": 0.42,
+                  "vat": null,
+                  "step_size": 1
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "party_id": "CPI",
+          "id": "NLCPIT2lrt*3*0",
+          "currency": "GBP",
+          "tariff_alt_url": null,
+          "tariff_alt_text": [
+            {
+              "language": "en",
+              "text": "Energy\n   0.49 GBP per kWh\n"
+            }
+          ],
+          "last_updated": "2024-05-03T07:12:49Z",
+          "country_code": "GB",
+          "elements": [
+            {
+              "restrictions": {
+                "end_time": "23:59",
+                "start_time": "00:00"
+              },
+              "price_components": [
+                {
+                  "type": "ENERGY",
+                  "price": 0.49,
+                  "vat": null,
+                  "step_size": 1
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  }
+}

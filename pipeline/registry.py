@@ -110,6 +110,7 @@ def load_registry(directory: Path = OPERATORS_DIR) -> dict[str, OperatorConfig]:
 
     problems += _related_problems(operators)
     problems += _copies_problems(operators)
+    problems += _per_key_problems(operators)
     if problems:
         raise RegistryError(problems)
     return operators
@@ -145,6 +146,20 @@ def _copies_problems(operators: dict[str, OperatorConfig]) -> list[str]:
         if config.own_feed_over_copies is not None
         for other in config.own_feed_over_copies.operators
         if other not in operators
+    ]
+
+
+def _per_key_problems(operators: dict[str, OperatorConfig]) -> list[str]:
+    """Check that operators sharing a feed host all read its limits per key, or none do,
+    so no operator's shared gap is shortened by others' per-key gaps."""
+    by_host: dict[str, set[bool]] = {}
+    for config in operators.values():
+        for host in feed_hosts(config):
+            by_host.setdefault(host, set()).add(config.limits_per_key is not None)
+    return [
+        f"operators on {host} must all record limits_per_key, or none of them"
+        for host, readings in sorted(by_host.items())
+        if len(readings) > 1
     ]
 
 

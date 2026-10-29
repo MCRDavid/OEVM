@@ -1,0 +1,169 @@
+{
+  "request": {
+    "method": "GET",
+    "url": "https://open-chargepoints.com/api/ocpi/cpo/2.2.1/tariffs/?limit=1000"
+  },
+  "response": {
+    "status_code": 200,
+    "headers": {
+      "content-type": "application/json",
+      "link": "<https://open-chargepoints.com/api/ocpi/cpo/2.2.1/tariffs/?limit=1000&offset=5>; rel=\"next\"",
+      "x-total-count": "5",
+      "x-limit": "1000"
+    },
+    "body": {
+      "timestamp": "2026-10-29T13:42:53Z",
+      "status_code": 1000,
+      "status_message": "Success",
+      "data": [
+        {
+          "party_id": "CPI",
+          "id": "NLCPIT2QP*1*0",
+          "currency": "USD",
+          "tariff_alt_url": null,
+          "tariff_alt_text": [
+            {
+              "language": "en",
+              "text": "Flat Fee   0 USD\n"
+            }
+          ],
+          "last_updated": "2018-07-20T10:23:41Z",
+          "country_code": "GB",
+          "elements": [
+            {
+              "restrictions": null,
+              "price_components": [
+                {
+                  "type": "FLAT",
+                  "price": 0,
+                  "vat": null,
+                  "step_size": 0
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "party_id": "CPI",
+          "id": "NLCPIT1y0l*K*0",
+          "currency": "GBP",
+          "tariff_alt_url": null,
+          "tariff_alt_text": [
+            {
+              "language": "en",
+              "text": "Energy\n   0.5 GBP per kWh\n"
+            }
+          ],
+          "last_updated": "2026-09-23T12:21:55Z",
+          "country_code": "GB",
+          "elements": [
+            {
+              "restrictions": {
+                "end_time": "23:59",
+                "start_time": "00:00"
+              },
+              "price_components": [
+                {
+                  "type": "ENERGY",
+                  "price": 0.5,
+                  "vat": null,
+                  "step_size": 1
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "party_id": "CPI",
+          "id": "NLCPIT3BNL*6*0",
+          "currency": "GBP",
+          "tariff_alt_url": null,
+          "tariff_alt_text": [
+            {
+              "language": "en",
+              "text": "Energy\n   0.5 GBP per kWh\n"
+            }
+          ],
+          "last_updated": "2026-10-16T12:18:26Z",
+          "country_code": "GB",
+          "elements": [
+            {
+              "restrictions": {
+                "end_time": "23:59",
+                "start_time": "00:00"
+              },
+              "price_components": [
+                {
+                  "type": "ENERGY",
+                  "price": 0.5,
+                  "vat": null,
+                  "step_size": 1
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "party_id": "CPI",
+          "id": "NLCPIT2nrH*5*0",
+          "currency": "GBP",
+          "tariff_alt_url": null,
+          "tariff_alt_text": [
+            {
+              "language": "en",
+              "text": "Energy\n   0.4083 GBP per kWh\n"
+            }
+          ],
+          "last_updated": "2025-05-14T15:09:07Z",
+          "country_code": "GB",
+          "elements": [
+            {
+              "restrictions": {
+                "end_time": "23:59",
+                "start_time": "00:00"
+              },
+              "price_components": [
+                {
+                  "type": "ENERGY",
+                  "price": 0.4083,
+                  "vat": null,
+                  "step_size": 1
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "party_id": "CPI",
+          "id": "NLCPIT1yKb*3*0",
+          "currency": "GBP",
+          "tariff_alt_url": null,
+          "tariff_alt_text": [
+            {
+              "language": "en",
+              "text": "Energy\n   0.6417 GBP per kWh\n"
+            }
+          ],
+          "last_updated": "2025-08-19T10:46:53Z",
+          "country_code": "GB",
+          "elements": [
+            {
+              "restrictions": {
+                "end_time": "23:59",
+                "start_time": "00:00"
+              },
+              "price_components": [
+                {
+                  "type": "ENERGY",
+                  "price": 0.6417,
+                  "vat": null,
+                  "step_size": 1
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  }
+}

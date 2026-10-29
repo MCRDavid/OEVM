@@ -43,10 +43,10 @@ BROWSER_ARGS = [
 # In the fixtures (recorded, and Monta's made-up ones), without the two hidden unless
 # asked for (ADR 0023): Evolt Network's "Arthur House - Private Use Only" and PoGo
 # Charge's taxi-only "Swales Central Avenue".
-LOCATIONS = 130
+LOCATIONS = 181
 PRIVATE = "Arthur House - Private Use Only"
 TAXIS = "Swales Central Avenue"
-OUT_OF_SERVICE = 11  # fixture locations with every charger reported out of service
+OUT_OF_SERVICE = 12  # fixture locations with every charger reported out of service
 SERVED: list[str] = []  # every path the test server was asked for
 # MapLibre writes the map position after the # a moment after the map settles, starting
 # from 0/0/0.
@@ -260,9 +260,13 @@ def test_details_list_every_tariff_with_the_lowest_energy_price(visit):
     for n in range(buttons.count()):
         buttons.nth(n).click()
         expect(page.locator("#detail-heading")).to_be_focused()
-        # Some feeds (Connekt's copy among them) do not say how each tariff is paid.
+        # Some feeds (Connekt's copy among them) do not say how each tariff is paid, and
+        # some sites (Zest's among them) list several tariffs all paid at the charger.
         body = page.text_content("#detail-body")
-        if "Lowest energy price listed here" in body and "Pay at the charger" in body:
+        if "Lowest energy price listed here" in body and all(
+            kind in body
+            for kind in ("Pay at the charger", "With an account, app or card from a charging")
+        ):
             break
         page.keyboard.press("Escape")
     else:

@@ -119,6 +119,33 @@ def fetch(
 ) -> AdapterResult:
     if config.adapter != "ocpi_221":
         raise FeedError(f"{config.id} uses the {config.adapter} adapter, not ocpi_221")
+    return fetch_feed(
+        config,
+        client,
+        date_from=date_from,
+        page_size=page_size,
+        max_pages=max_pages,
+        now=now,
+        progress=progress,
+    )
+
+
+def fetch_feed(
+    config: OperatorConfig,
+    client: PoliteClient,
+    *,
+    date_from: datetime | None = None,
+    page_size: int | None = None,
+    max_pages: int | None = None,
+    now: datetime | None = None,
+    progress: PageProgress = NO_PROGRESS,
+    stop_at_total: bool = False,
+) -> AdapterResult:
+    """Fetch and convert an OCPI 2.2.1 feed, whatever the operator file's adapter name.
+
+    For adapters that are a thin layer over this one, such as eco_movement_pcpr.
+    stop_at_total is passed to fetch_module.
+    """
     fetched_at = now or datetime.now(UTC).replace(microsecond=0)
     fetched: dict[str, list[ModuleFetch]] = {module: [] for module in MODULES}
     # One URL answers every module (response_envelope by_module): request it once.
@@ -137,6 +164,7 @@ def fetch(
                         progress=progress,
                         envelope=config.response_envelope,
                         responses=responses,
+                        stop_at_total=stop_at_total,
                     )
                 )
         except FeedError as exc:

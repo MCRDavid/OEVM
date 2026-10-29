@@ -1,0 +1,904 @@
+{
+  "request": {
+    "method": "GET",
+    "url": "https://open-chargepoints.com/api/ocpi/cpo/2.2.1/locations/?limit=1000"
+  },
+  "response": {
+    "status_code": 200,
+    "headers": {
+      "content-type": "application/json",
+      "link": "<https://open-chargepoints.com/api/ocpi/cpo/2.2.1/locations/?limit=1000&offset=3>; rel=\"next\"",
+      "x-total-count": "3",
+      "x-limit": "1000"
+    },
+    "body": {
+      "timestamp": "2026-10-29T14:05:58Z",
+      "status_code": 1000,
+      "status_message": "Success",
+      "data": [
+        {
+          "party_id": "SGB",
+          "id": "gapton_hall_ev_hub",
+          "country_code": "GB",
+          "publish": true,
+          "country": "GBR",
+          "address": "Gapton Hall Road",
+          "city": "GREAT YARMOUTH",
+          "postal_code": "NR31 0LZ",
+          "coordinates": {
+            "latitude": "52.59760300",
+            "longitude": "1.71220500"
+          },
+          "state": null,
+          "last_updated": "2026-10-29T14:02:39Z",
+          "opening_times": {
+            "twentyfourseven": true
+          },
+          "name": "source_ev_uk Great Yarmouth, Gapton Hall Retail Park",
+          "time_zone": "Europe/London",
+          "owner": {
+            "name": "Source EV",
+            "website": "https://source-ev.com/"
+          },
+          "operator": {
+            "name": "Source EV",
+            "website": "https://source-ev.com/"
+          },
+          "energy_mix": null,
+          "charging_when_closed": true,
+          "directions": null,
+          "evses": [
+            {
+              "uid": "sgb0005-01",
+              "status": "AVAILABLE",
+              "last_updated": "2026-10-29T13:45:03Z",
+              "evse_id": "GB*SGB*E000005*01",
+              "physical_reference": "SGB0005-01",
+              "floor_level": null,
+              "directions": null,
+              "parking_restrictions": null,
+              "capabilities": [
+                "CREDIT_CARD_PAYABLE",
+                "REMOTE_START_STOP_CAPABLE",
+                "RFID_READER"
+              ],
+              "connectors": [
+                {
+                  "id": "1",
+                  "standard": "IEC_62196_T2_COMBO",
+                  "format": "CABLE",
+                  "power_type": "DC",
+                  "last_updated": "2026-10-28T20:30:49Z",
+                  "max_amperage": 150,
+                  "max_voltage": 1000,
+                  "max_electric_power": 150000,
+                  "tariff_ids": [
+                    "GB*SGB_02"
+                  ]
+                }
+              ]
+            },
+            {
+              "uid": "sgb0004-01",
+              "status": "AVAILABLE",
+              "last_updated": "2026-10-29T13:24:18Z",
+              "evse_id": "GB*SGB*E000004*01",
+              "physical_reference": "SGB0004-01",
+              "floor_level": null,
+              "directions": null,
+              "parking_restrictions": null,
+              "capabilities": [
+                "CREDIT_CARD_PAYABLE",
+                "REMOTE_START_STOP_CAPABLE",
+                "RFID_READER"
+              ],
+              "connectors": [
+                {
+                  "id": "1",
+                  "standard": "IEC_62196_T2_COMBO",
+                  "format": "CABLE",
+                  "power_type": "DC",
+                  "last_updated": "2026-10-28T20:30:49Z",
+                  "max_amperage": 150,
+                  "max_voltage": 1000,
+                  "max_electric_power": 150000,
+                  "tariff_ids": [
+                    "GB*SGB_02"
+                  ]
+                }
+              ]
+            },
+            {
+              "uid": "sgb0007-02",
+              "status": "CHARGING",
+              "last_updated": "2026-10-29T13:56:32Z",
+              "evse_id": "GB*SGB*E000007*02",
+              "physical_reference": "SGB0007-02",
+              "floor_level": null,
+              "directions": null,
+              "parking_restrictions": null,
+              "capabilities": [
+                "CREDIT_CARD_PAYABLE",
+                "REMOTE_START_STOP_CAPABLE",
+                "RFID_READER"
+              ],
+              "connectors": [
+                {
+                  "id": "2",
+                  "standard": "IEC_62196_T2_COMBO",
+                  "format": "CABLE",
+                  "power_type": "DC",
+                  "last_updated": "2026-10-28T20:30:48Z",
+                  "max_amperage": 150,
+                  "max_voltage": 1000,
+                  "max_electric_power": 150000,
+                  "tariff_ids": [
+                    "GB*SGB_02"
+                  ]
+                }
+              ]
+            },
+            {
+              "uid": "sgb0006-02",
+              "status": "AVAILABLE",
+              "last_updated": "2026-10-29T13:53:52Z",
+              "evse_id": "GB*SGB*E000006*02",
+              "physical_reference": "SGB0006-02",
+              "floor_level": null,
+              "directions": null,
+              "parking_restrictions": null,
+              "capabilities": [
+                "CREDIT_CARD_PAYABLE",
+                "REMOTE_START_STOP_CAPABLE",
+                "RFID_READER"
+              ],
+              "connectors": [
+                {
+                  "id": "2",
+                  "standard": "IEC_62196_T2_COMBO",
+                  "format": "CABLE",
+                  "power_type": "DC",
+                  "last_updated": "2026-10-28T20:30:48Z",
+                  "max_amperage": 150,
+                  "max_voltage": 1000,
+                  "max_electric_power": 150000,
+                  "tariff_ids": [
+                    "GB*SGB_02"
+                  ]
+                }
+              ]
+            },
+            {
+              "uid": "sgb0005-02",
+              "status": "CHARGING",
+              "last_updated": "2026-10-29T14:02:39Z",
+              "evse_id": "GB*SGB*E000005*02",
+              "physical_reference": "SGB0005-02",
+              "floor_level": null,
+              "directions": null,
+              "parking_restrictions": null,
+              "capabilities": [
+                "CREDIT_CARD_PAYABLE",
+                "REMOTE_START_STOP_CAPABLE",
+                "RFID_READER"
+              ],
+              "connectors": [
+                {
+                  "id": "2",
+                  "standard": "IEC_62196_T2_COMBO",
+                  "format": "CABLE",
+                  "power_type": "DC",
+                  "last_updated": "2026-10-28T20:30:49Z",
+                  "max_amperage": 150,
+                  "max_voltage": 1000,
+                  "max_electric_power": 150000,
+                  "tariff_ids": [
+                    "GB*SGB_02"
+                  ]
+                }
+              ]
+            },
+            {
+              "uid": "sgbac0001-01",
+              "status": "AVAILABLE",
+              "last_updated": "2026-10-29T13:59:05Z",
+              "evse_id": "GB*SGB*EAC0001*01",
+              "physical_reference": "SGBAC0001-01",
+              "floor_level": null,
+              "directions": null,
+              "parking_restrictions": null,
+              "capabilities": [
+                "CREDIT_CARD_PAYABLE",
+                "REMOTE_START_STOP_CAPABLE",
+                "RFID_READER"
+              ],
+              "connectors": [
+                {
+                  "id": "1",
+                  "standard": "IEC_62196_T2",
+                  "format": "SOCKET",
+                  "power_type": "AC_3_PHASE",
+                  "last_updated": "2026-10-28T20:30:48Z",
+                  "max_amperage": 32,
+                  "max_voltage": 230,
+                  "max_electric_power": 22000,
+                  "tariff_ids": [
+                    "GB*SGB_02_22Kw_AC"
+                  ]
+                }
+              ]
+            },
+            {
+              "uid": "sgb0007-01",
+              "status": "AVAILABLE",
+              "last_updated": "2026-10-29T13:25:12Z",
+              "evse_id": "GB*SGB*E000007*01",
+              "physical_reference": "SGB0007-01",
+              "floor_level": null,
+              "directions": null,
+              "parking_restrictions": null,
+              "capabilities": [
+                "CREDIT_CARD_PAYABLE",
+                "REMOTE_START_STOP_CAPABLE",
+                "RFID_READER"
+              ],
+              "connectors": [
+                {
+                  "id": "1",
+                  "standard": "IEC_62196_T2_COMBO",
+                  "format": "CABLE",
+                  "power_type": "DC",
+                  "last_updated": "2026-10-28T20:30:48Z",
+                  "max_amperage": 150,
+                  "max_voltage": 1000,
+                  "max_electric_power": 150000,
+                  "tariff_ids": [
+                    "GB*SGB_02"
+                  ]
+                }
+              ]
+            },
+            {
+              "uid": "sgb0006-01",
+              "status": "CHARGING",
+              "last_updated": "2026-10-29T13:18:11Z",
+              "evse_id": "GB*SGB*E000006*01",
+              "physical_reference": "SGB0006-01",
+              "floor_level": null,
+              "directions": null,
+              "parking_restrictions": null,
+              "capabilities": [
+                "CREDIT_CARD_PAYABLE",
+                "REMOTE_START_STOP_CAPABLE",
+                "RFID_READER"
+              ],
+              "connectors": [
+                {
+                  "id": "1",
+                  "standard": "IEC_62196_T2_COMBO",
+                  "format": "CABLE",
+                  "power_type": "DC",
+                  "last_updated": "2026-10-28T20:30:48Z",
+                  "max_amperage": 150,
+                  "max_voltage": 1000,
+                  "max_electric_power": 150000,
+                  "tariff_ids": [
+                    "GB*SGB_02"
+                  ]
+                }
+              ]
+            },
+            {
+              "uid": "sgbac0001-02",
+              "status": "AVAILABLE",
+              "last_updated": "2026-10-29T13:00:21Z",
+              "evse_id": "GB*SGB*EAC0001*02",
+              "physical_reference": "SGBAC0001-02",
+              "floor_level": null,
+              "directions": null,
+              "parking_restrictions": null,
+              "capabilities": [
+                "CREDIT_CARD_PAYABLE",
+                "REMOTE_START_STOP_CAPABLE",
+                "RFID_READER"
+              ],
+              "connectors": [
+                {
+                  "id": "2",
+                  "standard": "IEC_62196_T2",
+                  "format": "SOCKET",
+                  "power_type": "AC_3_PHASE",
+                  "last_updated": "2026-10-28T20:30:48Z",
+                  "max_amperage": 32,
+                  "max_voltage": 230,
+                  "max_electric_power": 22000,
+                  "tariff_ids": [
+                    "GB*SGB_02_22Kw_AC"
+                  ]
+                }
+              ]
+            },
+            {
+              "uid": "sgb0004-02",
+              "status": "CHARGING",
+              "last_updated": "2026-10-29T13:38:22Z",
+              "evse_id": "GB*SGB*E000004*02",
+              "physical_reference": "SGB0004-02",
+              "floor_level": null,
+              "directions": null,
+              "parking_restrictions": null,
+              "capabilities": [
+                "CREDIT_CARD_PAYABLE",
+                "REMOTE_START_STOP_CAPABLE",
+                "RFID_READER"
+              ],
+              "connectors": [
+                {
+                  "id": "2",
+                  "standard": "IEC_62196_T2_COMBO",
+                  "format": "CABLE",
+                  "power_type": "DC",
+                  "last_updated": "2026-10-28T20:30:49Z",
+                  "max_amperage": 150,
+                  "max_voltage": 1000,
+                  "max_electric_power": 150000,
+                  "tariff_ids": [
+                    "GB*SGB_02"
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "party_id": "SGB",
+          "id": "constitution_street_ev_hub",
+          "country_code": "GB",
+          "publish": true,
+          "country": "GBR",
+          "address": "Constitution Street",
+          "city": "Inverurie",
+          "postal_code": "AB51 4SQ",
+          "coordinates": {
+            "latitude": "57.28518700",
+            "longitude": "-2.37634000"
+          },
+          "state": null,
+          "last_updated": "2026-10-29T14:04:13Z",
+          "opening_times": {
+            "twentyfourseven": true
+          },
+          "name": "source_ev_uk Inverurie, Constitution Street",
+          "time_zone": "Europe/London",
+          "owner": {
+            "name": "Source EV",
+            "website": "https://source-ev.com/"
+          },
+          "operator": {
+            "name": "Source EV",
+            "website": "https://source-ev.com/"
+          },
+          "energy_mix": null,
+          "charging_when_closed": true,
+          "directions": null,
+          "evses": [
+            {
+              "uid": "sgb0155-01",
+              "status": "AVAILABLE",
+              "last_updated": "2026-10-28T16:42:43Z",
+              "evse_id": "GB*SGB*E000155*01",
+              "physical_reference": "SGB0155-CCS1",
+              "floor_level": null,
+              "directions": null,
+              "parking_restrictions": null,
+              "capabilities": [
+                "CREDIT_CARD_PAYABLE",
+                "REMOTE_START_STOP_CAPABLE",
+                "RFID_READER"
+              ],
+              "connectors": [
+                {
+                  "id": "1",
+                  "standard": "IEC_62196_T2_COMBO",
+                  "format": "CABLE",
+                  "power_type": "DC",
+                  "last_updated": "2026-10-28T20:30:24Z",
+                  "max_amperage": 160,
+                  "max_voltage": 1000,
+                  "max_electric_power": 160000,
+                  "tariff_ids": [
+                    "GB*SGB_02"
+                  ]
+                }
+              ]
+            },
+            {
+              "uid": "sgb0154-01",
+              "status": "AVAILABLE",
+              "last_updated": "2026-10-29T14:04:13Z",
+              "evse_id": "GB*SGB*E000154*01",
+              "physical_reference": "SGB0154-CCS1",
+              "floor_level": null,
+              "directions": null,
+              "parking_restrictions": null,
+              "capabilities": [
+                "CREDIT_CARD_PAYABLE",
+                "REMOTE_START_STOP_CAPABLE",
+                "RFID_READER"
+              ],
+              "connectors": [
+                {
+                  "id": "1",
+                  "standard": "IEC_62196_T2_COMBO",
+                  "format": "CABLE",
+                  "power_type": "DC",
+                  "last_updated": "2026-10-28T20:30:24Z",
+                  "max_amperage": 160,
+                  "max_voltage": 1000,
+                  "max_electric_power": 160000,
+                  "tariff_ids": [
+                    "GB*SGB_02"
+                  ]
+                }
+              ]
+            },
+            {
+              "uid": "sgb0153-01",
+              "status": "OUTOFORDER",
+              "last_updated": "2026-10-29T13:07:24Z",
+              "evse_id": "GB*SGB*E000153*01",
+              "physical_reference": "SGB0153-CCS1",
+              "floor_level": null,
+              "directions": null,
+              "parking_restrictions": null,
+              "capabilities": [
+                "CREDIT_CARD_PAYABLE",
+                "REMOTE_START_STOP_CAPABLE",
+                "RFID_READER"
+              ],
+              "connectors": [
+                {
+                  "id": "1",
+                  "standard": "IEC_62196_T2_COMBO",
+                  "format": "CABLE",
+                  "power_type": "DC",
+                  "last_updated": "2026-10-28T20:30:24Z",
+                  "max_amperage": 160,
+                  "max_voltage": 1000,
+                  "max_electric_power": 160000,
+                  "tariff_ids": [
+                    "GB*SGB_02"
+                  ]
+                }
+              ]
+            },
+            {
+              "uid": "sgb0156-02",
+              "status": "AVAILABLE",
+              "last_updated": "2026-10-29T08:28:44Z",
+              "evse_id": "GB*SGB*E000156*02",
+              "physical_reference": "SGB0156-CCS2",
+              "floor_level": null,
+              "directions": null,
+              "parking_restrictions": null,
+              "capabilities": [
+                "CREDIT_CARD_PAYABLE",
+                "REMOTE_START_STOP_CAPABLE",
+                "RFID_READER"
+              ],
+              "connectors": [
+                {
+                  "id": "2",
+                  "standard": "IEC_62196_T2_COMBO",
+                  "format": "CABLE",
+                  "power_type": "DC",
+                  "last_updated": "2026-10-28T20:30:23Z",
+                  "max_amperage": 160,
+                  "max_voltage": 1000,
+                  "max_electric_power": 160000,
+                  "tariff_ids": [
+                    "GB*SGB_02"
+                  ]
+                }
+              ]
+            },
+            {
+              "uid": "sgb0155-02",
+              "status": "AVAILABLE",
+              "last_updated": "2026-10-29T11:56:03Z",
+              "evse_id": "GB*SGB*E000155*02",
+              "physical_reference": "SGB0155-CCS2",
+              "floor_level": null,
+              "directions": null,
+              "parking_restrictions": null,
+              "capabilities": [
+                "CREDIT_CARD_PAYABLE",
+                "REMOTE_START_STOP_CAPABLE",
+                "RFID_READER"
+              ],
+              "connectors": [
+                {
+                  "id": "2",
+                  "standard": "IEC_62196_T2_COMBO",
+                  "format": "CABLE",
+                  "power_type": "DC",
+                  "last_updated": "2026-10-28T20:30:23Z",
+                  "max_amperage": 160,
+                  "max_voltage": 1000,
+                  "max_electric_power": 160000,
+                  "tariff_ids": [
+                    "GB*SGB_02"
+                  ]
+                }
+              ]
+            },
+            {
+              "uid": "sgb0154-02",
+              "status": "AVAILABLE",
+              "last_updated": "2026-10-29T13:58:59Z",
+              "evse_id": "GB*SGB*E000154*02",
+              "physical_reference": "SGB0154-CCS2",
+              "floor_level": null,
+              "directions": null,
+              "parking_restrictions": null,
+              "capabilities": [
+                "CREDIT_CARD_PAYABLE",
+                "REMOTE_START_STOP_CAPABLE",
+                "RFID_READER"
+              ],
+              "connectors": [
+                {
+                  "id": "2",
+                  "standard": "IEC_62196_T2_COMBO",
+                  "format": "CABLE",
+                  "power_type": "DC",
+                  "last_updated": "2026-10-28T20:30:24Z",
+                  "max_amperage": 160,
+                  "max_voltage": 1000,
+                  "max_electric_power": 160000,
+                  "tariff_ids": [
+                    "GB*SGB_02"
+                  ]
+                }
+              ]
+            },
+            {
+              "uid": "sgb0153-02",
+              "status": "AVAILABLE",
+              "last_updated": "2026-10-29T13:11:09Z",
+              "evse_id": "GB*SGB*E000153*02",
+              "physical_reference": "SGB0153-CCS2",
+              "floor_level": null,
+              "directions": null,
+              "parking_restrictions": null,
+              "capabilities": [
+                "CREDIT_CARD_PAYABLE",
+                "REMOTE_START_STOP_CAPABLE",
+                "RFID_READER"
+              ],
+              "connectors": [
+                {
+                  "id": "2",
+                  "standard": "IEC_62196_T2_COMBO",
+                  "format": "CABLE",
+                  "power_type": "DC",
+                  "last_updated": "2026-10-28T20:30:24Z",
+                  "max_amperage": 160,
+                  "max_voltage": 1000,
+                  "max_electric_power": 160000,
+                  "tariff_ids": [
+                    "GB*SGB_02"
+                  ]
+                }
+              ]
+            },
+            {
+              "uid": "sgb0156-01",
+              "status": "AVAILABLE",
+              "last_updated": "2026-10-29T13:39:37Z",
+              "evse_id": "GB*SGB*E000156*01",
+              "physical_reference": "SGB0156-CCS1",
+              "floor_level": null,
+              "directions": null,
+              "parking_restrictions": null,
+              "capabilities": [
+                "CREDIT_CARD_PAYABLE",
+                "REMOTE_START_STOP_CAPABLE",
+                "RFID_READER"
+              ],
+              "connectors": [
+                {
+                  "id": "1",
+                  "standard": "IEC_62196_T2_COMBO",
+                  "format": "CABLE",
+                  "power_type": "DC",
+                  "last_updated": "2026-10-28T20:30:23Z",
+                  "max_amperage": 160,
+                  "max_voltage": 1000,
+                  "max_electric_power": 160000,
+                  "tariff_ids": [
+                    "GB*SGB_02"
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "party_id": "SGB",
+          "id": "kingsway_west_ev_hub",
+          "country_code": "GB",
+          "publish": true,
+          "country": "GBR",
+          "address": "11 Broomhill road",
+          "city": "Dundee",
+          "postal_code": "DD2 3WT",
+          "coordinates": {
+            "latitude": "56.48129700",
+            "longitude": "-3.01646100"
+          },
+          "state": null,
+          "last_updated": "2026-10-29T13:42:05Z",
+          "opening_times": {
+            "twentyfourseven": true
+          },
+          "name": "source_ev_uk Dundee, Broomhill Road",
+          "time_zone": "Europe/London",
+          "owner": {
+            "name": "Source EV",
+            "website": "https://source-ev.com/"
+          },
+          "operator": {
+            "name": "Source EV",
+            "website": "https://source-ev.com/"
+          },
+          "energy_mix": null,
+          "charging_when_closed": true,
+          "directions": null,
+          "evses": [
+            {
+              "uid": "sgb0039-02",
+              "status": "CHARGING",
+              "last_updated": "2026-10-29T13:42:05Z",
+              "evse_id": "GB*SGB*E000039*02",
+              "physical_reference": "SGB0039-02",
+              "floor_level": null,
+              "directions": null,
+              "parking_restrictions": null,
+              "capabilities": [
+                "CREDIT_CARD_PAYABLE",
+                "REMOTE_START_STOP_CAPABLE",
+                "RFID_READER"
+              ],
+              "connectors": [
+                {
+                  "id": "2",
+                  "standard": "IEC_62196_T2_COMBO",
+                  "format": "CABLE",
+                  "power_type": "DC",
+                  "last_updated": "2026-10-28T20:30:41Z",
+                  "max_amperage": 150,
+                  "max_voltage": 1000,
+                  "max_electric_power": 150000,
+                  "tariff_ids": [
+                    "GB*SGB_02"
+                  ]
+                }
+              ]
+            },
+            {
+              "uid": "sgb0040-01",
+              "status": "AVAILABLE",
+              "last_updated": "2026-10-29T11:32:38Z",
+              "evse_id": "GB*SGB*E000040*01",
+              "physical_reference": "SGB0040-01",
+              "floor_level": null,
+              "directions": null,
+              "parking_restrictions": null,
+              "capabilities": [
+                "CREDIT_CARD_PAYABLE",
+                "REMOTE_START_STOP_CAPABLE",
+                "RFID_READER"
+              ],
+              "connectors": [
+                {
+                  "id": "1",
+                  "standard": "IEC_62196_T2_COMBO",
+                  "format": "CABLE",
+                  "power_type": "DC",
+                  "last_updated": "2026-10-28T20:30:41Z",
+                  "max_amperage": 150,
+                  "max_voltage": 1000,
+                  "max_electric_power": 150000,
+                  "tariff_ids": [
+                    "GB*SGB_02"
+                  ]
+                }
+              ]
+            },
+            {
+              "uid": "sgb0039-01",
+              "status": "AVAILABLE",
+              "last_updated": "2026-10-29T11:29:39Z",
+              "evse_id": "GB*SGB*E000039*01",
+              "physical_reference": "SGB0039-01",
+              "floor_level": null,
+              "directions": null,
+              "parking_restrictions": null,
+              "capabilities": [
+                "CREDIT_CARD_PAYABLE",
+                "REMOTE_START_STOP_CAPABLE",
+                "RFID_READER"
+              ],
+              "connectors": [
+                {
+                  "id": "1",
+                  "standard": "IEC_62196_T2_COMBO",
+                  "format": "CABLE",
+                  "power_type": "DC",
+                  "last_updated": "2026-10-28T20:30:41Z",
+                  "max_amperage": 150,
+                  "max_voltage": 1000,
+                  "max_electric_power": 150000,
+                  "tariff_ids": [
+                    "GB*SGB_02"
+                  ]
+                }
+              ]
+            },
+            {
+              "uid": "sgb0038-01",
+              "status": "CHARGING",
+              "last_updated": "2026-10-29T13:16:34Z",
+              "evse_id": "GB*SGB*E000038*01",
+              "physical_reference": "SGB0038-01",
+              "floor_level": null,
+              "directions": null,
+              "parking_restrictions": null,
+              "capabilities": [
+                "CREDIT_CARD_PAYABLE",
+                "REMOTE_START_STOP_CAPABLE",
+                "RFID_READER"
+              ],
+              "connectors": [
+                {
+                  "id": "1",
+                  "standard": "IEC_62196_T2_COMBO",
+                  "format": "CABLE",
+                  "power_type": "DC",
+                  "last_updated": "2026-10-28T20:30:41Z",
+                  "max_amperage": 150,
+                  "max_voltage": 1000,
+                  "max_electric_power": 150000,
+                  "tariff_ids": [
+                    "GB*SGB_02"
+                  ]
+                }
+              ]
+            },
+            {
+              "uid": "sgb0037-01",
+              "status": "AVAILABLE",
+              "last_updated": "2026-10-29T13:02:21Z",
+              "evse_id": "GB*SGB*E000037*01",
+              "physical_reference": "SGB0037-01",
+              "floor_level": null,
+              "directions": null,
+              "parking_restrictions": null,
+              "capabilities": [
+                "CREDIT_CARD_PAYABLE",
+                "REMOTE_START_STOP_CAPABLE",
+                "RFID_READER"
+              ],
+              "connectors": [
+                {
+                  "id": "1",
+                  "standard": "IEC_62196_T2_COMBO",
+                  "format": "CABLE",
+                  "power_type": "DC",
+                  "last_updated": "2026-10-28T20:30:41Z",
+                  "max_amperage": 150,
+                  "max_voltage": 1000,
+                  "max_electric_power": 150000,
+                  "tariff_ids": [
+                    "GB*SGB_02"
+                  ]
+                }
+              ]
+            },
+            {
+              "uid": "sgb0038-02",
+              "status": "AVAILABLE",
+              "last_updated": "2026-10-29T12:33:52Z",
+              "evse_id": "GB*SGB*E000038*02",
+              "physical_reference": "SGB0038-02",
+              "floor_level": null,
+              "directions": null,
+              "parking_restrictions": null,
+              "capabilities": [
+                "CREDIT_CARD_PAYABLE",
+                "REMOTE_START_STOP_CAPABLE",
+                "RFID_READER"
+              ],
+              "connectors": [
+                {
+                  "id": "2",
+                  "standard": "IEC_62196_T2_COMBO",
+                  "format": "CABLE",
+                  "power_type": "DC",
+                  "last_updated": "2026-10-28T20:30:41Z",
+                  "max_amperage": 150,
+                  "max_voltage": 1000,
+                  "max_electric_power": 150000,
+                  "tariff_ids": [
+                    "GB*SGB_02"
+                  ]
+                }
+              ]
+            },
+            {
+              "uid": "sgb0037-02",
+              "status": "AVAILABLE",
+              "last_updated": "2026-10-29T10:05:02Z",
+              "evse_id": "GB*SGB*E000037*02",
+              "physical_reference": "SGB0037-02",
+              "floor_level": null,
+              "directions": null,
+              "parking_restrictions": null,
+              "capabilities": [
+                "CREDIT_CARD_PAYABLE",
+                "REMOTE_START_STOP_CAPABLE",
+                "RFID_READER"
+              ],
+              "connectors": [
+                {
+                  "id": "2",
+                  "standard": "IEC_62196_T2_COMBO",
+                  "format": "CABLE",
+                  "power_type": "DC",
+                  "last_updated": "2026-10-28T20:30:41Z",
+                  "max_amperage": 150,
+                  "max_voltage": 1000,
+                  "max_electric_power": 150000,
+                  "tariff_ids": [
+                    "GB*SGB_02"
+                  ]
+                }
+              ]
+            },
+            {
+              "uid": "sgb0040-02",
+              "status": "AVAILABLE",
+              "last_updated": "2026-10-26T13:43:16Z",
+              "evse_id": "GB*SGB*E000040*02",
+              "physical_reference": "SGB0040-02",
+              "floor_level": null,
+              "directions": null,
+              "parking_restrictions": null,
+              "capabilities": [
+                "CREDIT_CARD_PAYABLE",
+                "REMOTE_START_STOP_CAPABLE",
+                "RFID_READER"
+              ],
+              "connectors": [
+                {
+                  "id": "2",
+                  "standard": "CHADEMO",
+                  "format": "CABLE",
+                  "power_type": "DC",
+                  "last_updated": "2026-10-28T20:30:41Z",
+                  "max_amperage": 100,
+                  "max_voltage": 1000,
+                  "max_electric_power": 100000,
+                  "tariff_ids": [
+                    "GB*SGB_02"
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  }
+}
