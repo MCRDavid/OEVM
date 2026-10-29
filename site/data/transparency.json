@@ -1,5 +1,5 @@
 {
-  "last_reviewed": "2026-10-26",
+  "last_reviewed": "2026-10-29",
   "disclaimer": "OEVM is a personal, experimental project for learning about AI tools. Much of its code and text was written with an AI assistant, and it will contain mistakes. Charger data comes from the operators and other sources credited on every record, and remains their work. Everything is provided \"as is\", with no warranty or guarantee of any kind. Always check prices and availability at the charger.",
   "regulation": {
     "summary": "The Public Charge Point Regulations 2023 set no limit on how often data users may request the data. Regulation 10(5) requires the data to be available free of charge without terms on its use. DfT's guidance allows terms covering the means of access, which is where operators' rate limits come from.",
@@ -152,6 +152,7 @@
       "relay": null,
       "expired_certificate": null,
       "excluded_locations": null,
+      "sent_copy": null,
       "rate_limit": {
         "our_gap_seconds": 31.0,
         "our_max_per_hour": 117,
@@ -280,6 +281,7 @@
       "relay": null,
       "expired_certificate": null,
       "excluded_locations": null,
+      "sent_copy": null,
       "rate_limit": {
         "our_gap_seconds": 31.0,
         "our_max_per_hour": 117,
@@ -424,6 +426,7 @@
       "relay": null,
       "expired_certificate": null,
       "excluded_locations": null,
+      "sent_copy": null,
       "rate_limit": {
         "our_gap_seconds": 2.0,
         "our_max_per_hour": 1800,
@@ -581,6 +584,7 @@
       "relay": null,
       "expired_certificate": null,
       "excluded_locations": null,
+      "sent_copy": null,
       "rate_limit": {
         "our_gap_seconds": 6.0,
         "our_max_per_hour": 600,
@@ -770,6 +774,7 @@
       "relay": null,
       "expired_certificate": null,
       "excluded_locations": null,
+      "sent_copy": null,
       "rate_limit": {
         "our_gap_seconds": 2.0,
         "our_max_per_hour": 1800,
@@ -907,6 +912,7 @@
       "relay": null,
       "expired_certificate": null,
       "excluded_locations": null,
+      "sent_copy": null,
       "rate_limit": {
         "our_gap_seconds": 11.0,
         "our_max_per_hour": 328,
@@ -1021,6 +1027,134 @@
       ]
     },
     {
+      "id": "connekt",
+      "name": "Connekt",
+      "enabled": true,
+      "adapter": "sent_copy",
+      "engagement": {
+        "status": "no_public_feed_found",
+        "label": "No public feed found",
+        "headline": "No public feed found (as of 2026-10-26)",
+        "as_of": "2026-10-26",
+        "last_request": "2026-10-24",
+        "last_response": {
+          "date": "2026-10-26",
+          "action": "reply_received"
+        },
+        "last_response_text": "2026-10-26 (Reply received)",
+        "evidence": [
+          {
+            "date": "2026-10-10",
+            "url": "https://www.connektcharging.com/",
+            "file": null,
+            "note": "Connekt's home page has no open data, regulations or charge point data link. Its sitemap, driver support page and FAQ page list or give no open data feed or route for requesting open data."
+          },
+          {
+            "date": "2026-10-24",
+            "url": "https://www.connektcharging.com/public-charge-point-regulations",
+            "file": null,
+            "note": "Connekt's \"Public Charge Point Regulations\" page offers its open data through a request form that asks for contact details only, and says \"We review your request and send the data to you in a suitable format.\""
+          },
+          {
+            "date": "2026-10-26",
+            "url": null,
+            "file": "evidence/connekt/2026-10-26-reply.md",
+            "note": "Connekt's emailed reply, with its location and tariff data attached as two OCPI 2.2.1 JSON files and no web address or key for fetching the data."
+          }
+        ],
+        "log": [
+          {
+            "date": "2026-10-10",
+            "action": "feed_searched",
+            "action_label": "Searched for a feed",
+            "channel": null,
+            "channel_label": null,
+            "summary": "Connekt's home page, sitemap, driver support page and FAQ page were read, and no open data feed or route for requesting open data was found.",
+            "quote": null,
+            "evidence_url": "https://www.connektcharging.com/",
+            "evidence_file": null
+          },
+          {
+            "date": "2026-10-24",
+            "action": "request_sent",
+            "action_label": "Access requested",
+            "channel": "web_form",
+            "channel_label": "Web form",
+            "summary": "Requested Connekt's open data through the request form on its Public Charge Point Regulations page, which asks for contact details only.",
+            "quote": null,
+            "evidence_url": "https://www.connektcharging.com/public-charge-point-regulations",
+            "evidence_file": null
+          },
+          {
+            "date": "2026-10-26",
+            "action": "reply_received",
+            "action_label": "Reply received",
+            "channel": "email",
+            "channel_label": "Email",
+            "summary": "Connekt replied by email with its location and tariff data attached as two OCPI 2.2.1 JSON files, with no web address or key for fetching the data.",
+            "quote": null,
+            "evidence_url": null,
+            "evidence_file": "evidence/connekt/2026-10-26-reply.md"
+          }
+        ]
+      },
+      "access_requested": "2026-10-24",
+      "access_granted": null,
+      "feeds": [],
+      "licence": {
+        "name": "OGL-3.0",
+        "url": "https://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/",
+        "checked": "2026-10-29"
+      },
+      "attribution": "Contains data from Connekt provided under the Public Charge Point Regulations 2023, used in line with the Open Government Licence v3.0.",
+      "missing_publish_flag": null,
+      "swapped_coordinates": null,
+      "nonstandard_statuses": null,
+      "tariffs_from": null,
+      "nonstandard_parking_restrictions": null,
+      "zero_price_tariffs": null,
+      "vat_not_stated": null,
+      "vat_in_price": null,
+      "own_feed_over_copies": null,
+      "relay": null,
+      "expired_certificate": null,
+      "excluded_locations": null,
+      "sent_copy": {
+        "decided": "2026-10-29",
+        "basis": "Connekt answered a request through its open data form by emailing its location and tariff data as two OCPI 2.2.1 files, with no address to fetch them from. On 2026-10-29 the repository owner decided to show that copy on the map, dated as made and with charge point status unknown, while Connekt is asked for an address that can be fetched, and to replace it with Connekt's feed if one is published.",
+        "evidence_file": "evidence/connekt/2026-10-26-reply.md",
+        "channel": "email",
+        "received": "2026-10-26",
+        "made_at": "2026-10-26 14:22 UTC",
+        "files": [
+          "sent_copies/connekt/2026-10-26-locations.json.gz",
+          "sent_copies/connekt/2026-10-26-tariffs.json.gz"
+        ]
+      },
+      "rate_limit": {
+        "our_gap_seconds": 2.0,
+        "our_max_per_hour": 1800,
+        "ours": "At least 2 s between requests to the operator's host, measured from the end of the previous request (at most 1800 in any hour), retries included.",
+        "published": [],
+        "limits_checked": "2026-10-26",
+        "comparison": "No limit published (checked 2026-10-26). The gap is our own choice.",
+        "difference_from_regulations": "Neither the operator nor the regulations set a limit.",
+        "notes": "No requests are made: the map shows a copy of Connekt's data that it sent by email on 2026-10-26 (sent_copy below). Connekt's open data page and its reply state no rate limit. The 2 second gap is this project's own choice, for a feed if one is published."
+      },
+      "findings": [
+        {
+          "date": "2026-10-26",
+          "kind": "access",
+          "kind_label": "Access",
+          "summary": "Connekt offers its open data through a request form, and its reply to a request on 2026-10-24 was the data as two files attached to an email, with no web address for fetching it.",
+          "handling": "By the repository owner's decision of 2026-10-29, the map shows the emailed copy as sent, dated 2026-10-26 14:22 UTC when it was made, says it is a copy that is not updated, and shows every charge point status as unknown. The project is asking Connekt for an address that can be fetched automatically.",
+          "evidence_url": "https://www.connektcharging.com/public-charge-point-regulations",
+          "status": "open",
+          "resolved_date": null
+        }
+      ]
+    },
+    {
       "id": "enfield_council",
       "name": "Enfield Council",
       "enabled": true,
@@ -1098,6 +1232,7 @@
       "relay": null,
       "expired_certificate": null,
       "excluded_locations": null,
+      "sent_copy": null,
       "rate_limit": {
         "our_gap_seconds": 31.0,
         "our_max_per_hour": 117,
@@ -1258,6 +1393,7 @@
       "relay": null,
       "expired_certificate": null,
       "excluded_locations": null,
+      "sent_copy": null,
       "rate_limit": {
         "our_gap_seconds": 2.0,
         "our_max_per_hour": 1800,
@@ -1460,6 +1596,7 @@
       "relay": null,
       "expired_certificate": null,
       "excluded_locations": null,
+      "sent_copy": null,
       "rate_limit": {
         "our_gap_seconds": 2.0,
         "our_max_per_hour": 1800,
@@ -1566,6 +1703,7 @@
       },
       "expired_certificate": null,
       "excluded_locations": null,
+      "sent_copy": null,
       "rate_limit": {
         "our_gap_seconds": 2.0,
         "our_max_per_hour": 1800,
@@ -1731,6 +1869,7 @@
       "relay": null,
       "expired_certificate": null,
       "excluded_locations": null,
+      "sent_copy": null,
       "rate_limit": {
         "our_gap_seconds": 11.0,
         "our_max_per_hour": 328,
@@ -1869,6 +2008,7 @@
       "relay": null,
       "expired_certificate": null,
       "excluded_locations": null,
+      "sent_copy": null,
       "rate_limit": {
         "our_gap_seconds": 2.0,
         "our_max_per_hour": 1800,
@@ -2069,6 +2209,7 @@
       "relay": null,
       "expired_certificate": null,
       "excluded_locations": null,
+      "sent_copy": null,
       "rate_limit": {
         "our_gap_seconds": 2.0,
         "our_max_per_hour": 1800,
@@ -2177,6 +2318,7 @@
       "relay": null,
       "expired_certificate": null,
       "excluded_locations": null,
+      "sent_copy": null,
       "rate_limit": {
         "our_gap_seconds": 2.0,
         "our_max_per_hour": 1800,
@@ -2297,6 +2439,7 @@
       "relay": null,
       "expired_certificate": null,
       "excluded_locations": null,
+      "sent_copy": null,
       "rate_limit": {
         "our_gap_seconds": 7.0,
         "our_max_per_hour": 515,
@@ -2503,6 +2646,7 @@
           }
         ]
       },
+      "sent_copy": null,
       "rate_limit": {
         "our_gap_seconds": 2.0,
         "our_max_per_hour": 1800,
@@ -2773,6 +2917,7 @@
       "relay": null,
       "expired_certificate": null,
       "excluded_locations": null,
+      "sent_copy": null,
       "rate_limit": {
         "our_gap_seconds": 2.0,
         "our_max_per_hour": 1800,
@@ -2927,6 +3072,7 @@
       "relay": null,
       "expired_certificate": null,
       "excluded_locations": null,
+      "sent_copy": null,
       "rate_limit": {
         "our_gap_seconds": 2.0,
         "our_max_per_hour": 1800,
@@ -3063,6 +3209,7 @@
       "relay": null,
       "expired_certificate": null,
       "excluded_locations": null,
+      "sent_copy": null,
       "rate_limit": {
         "our_gap_seconds": 31.0,
         "our_max_per_hour": 117,
@@ -3225,6 +3372,7 @@
       "relay": null,
       "expired_certificate": null,
       "excluded_locations": null,
+      "sent_copy": null,
       "rate_limit": {
         "our_gap_seconds": 2.0,
         "our_max_per_hour": 1800,
@@ -3342,6 +3490,7 @@
       "relay": null,
       "expired_certificate": null,
       "excluded_locations": null,
+      "sent_copy": null,
       "rate_limit": {
         "our_gap_seconds": 2.0,
         "our_max_per_hour": 1800,
@@ -3406,6 +3555,7 @@
       "relay": null,
       "expired_certificate": null,
       "excluded_locations": null,
+      "sent_copy": null,
       "rate_limit": {
         "our_gap_seconds": 31.0,
         "our_max_per_hour": 117,
@@ -3481,6 +3631,7 @@
       "relay": null,
       "expired_certificate": null,
       "excluded_locations": null,
+      "sent_copy": null,
       "rate_limit": {
         "our_gap_seconds": 2.0,
         "our_max_per_hour": 1800,
@@ -3545,6 +3696,7 @@
       "relay": null,
       "expired_certificate": null,
       "excluded_locations": null,
+      "sent_copy": null,
       "rate_limit": {
         "our_gap_seconds": 2.0,
         "our_max_per_hour": 1800,
@@ -3602,6 +3754,7 @@
       "relay": null,
       "expired_certificate": null,
       "excluded_locations": null,
+      "sent_copy": null,
       "rate_limit": {
         "our_gap_seconds": 2.0,
         "our_max_per_hour": 1800,
@@ -3677,6 +3830,7 @@
       "relay": null,
       "expired_certificate": null,
       "excluded_locations": null,
+      "sent_copy": null,
       "rate_limit": {
         "our_gap_seconds": 2.0,
         "our_max_per_hour": 1800,
@@ -3777,6 +3931,7 @@
       "relay": null,
       "expired_certificate": null,
       "excluded_locations": null,
+      "sent_copy": null,
       "rate_limit": {
         "our_gap_seconds": 865.0,
         "our_max_per_hour": 5,
@@ -3894,6 +4049,7 @@
       "relay": null,
       "expired_certificate": null,
       "excluded_locations": null,
+      "sent_copy": null,
       "rate_limit": {
         "our_gap_seconds": 2.0,
         "our_max_per_hour": 1800,
@@ -3985,6 +4141,7 @@
       "relay": null,
       "expired_certificate": null,
       "excluded_locations": null,
+      "sent_copy": null,
       "rate_limit": {
         "our_gap_seconds": 125.0,
         "our_max_per_hour": 29,
@@ -4110,6 +4267,7 @@
       "relay": null,
       "expired_certificate": null,
       "excluded_locations": null,
+      "sent_copy": null,
       "rate_limit": {
         "our_gap_seconds": 2.0,
         "our_max_per_hour": 1800,
@@ -4219,6 +4377,7 @@
       "relay": null,
       "expired_certificate": null,
       "excluded_locations": null,
+      "sent_copy": null,
       "rate_limit": {
         "our_gap_seconds": 2.0,
         "our_max_per_hour": 1800,
@@ -4283,6 +4442,7 @@
       "relay": null,
       "expired_certificate": null,
       "excluded_locations": null,
+      "sent_copy": null,
       "rate_limit": {
         "our_gap_seconds": 2.0,
         "our_max_per_hour": 1800,
@@ -4367,6 +4527,7 @@
       "relay": null,
       "expired_certificate": null,
       "excluded_locations": null,
+      "sent_copy": null,
       "rate_limit": {
         "our_gap_seconds": 125.0,
         "our_max_per_hour": 29,
@@ -4474,6 +4635,7 @@
       "relay": null,
       "expired_certificate": null,
       "excluded_locations": null,
+      "sent_copy": null,
       "rate_limit": {
         "our_gap_seconds": 2.0,
         "our_max_per_hour": 1800,
@@ -4485,118 +4647,6 @@
         "notes": null
       },
       "findings": []
-    },
-    {
-      "id": "connekt",
-      "name": "Connekt",
-      "enabled": false,
-      "adapter": "unknown",
-      "engagement": {
-        "status": "no_public_feed_found",
-        "label": "No public feed found",
-        "headline": "No public feed found (as of 2026-10-26)",
-        "as_of": "2026-10-26",
-        "last_request": "2026-10-24",
-        "last_response": {
-          "date": "2026-10-26",
-          "action": "reply_received"
-        },
-        "last_response_text": "2026-10-26 (Reply received)",
-        "evidence": [
-          {
-            "date": "2026-10-10",
-            "url": "https://www.connektcharging.com/",
-            "file": null,
-            "note": "Connekt's home page has no open data, regulations or charge point data link. Its sitemap, driver support page and FAQ page list or give no open data feed or route for requesting open data."
-          },
-          {
-            "date": "2026-10-24",
-            "url": "https://www.connektcharging.com/public-charge-point-regulations",
-            "file": null,
-            "note": "Connekt's \"Public Charge Point Regulations\" page offers its open data through a request form that asks for contact details only, and says \"We review your request and send the data to you in a suitable format.\""
-          },
-          {
-            "date": "2026-10-26",
-            "url": null,
-            "file": "evidence/connekt/2026-10-26-reply.md",
-            "note": "Connekt's emailed reply, with its location and tariff data attached as two OCPI 2.2.1 JSON files and no web address or key for fetching the data."
-          }
-        ],
-        "log": [
-          {
-            "date": "2026-10-10",
-            "action": "feed_searched",
-            "action_label": "Searched for a feed",
-            "channel": null,
-            "channel_label": null,
-            "summary": "Connekt's home page, sitemap, driver support page and FAQ page were read, and no open data feed or route for requesting open data was found.",
-            "quote": null,
-            "evidence_url": "https://www.connektcharging.com/",
-            "evidence_file": null
-          },
-          {
-            "date": "2026-10-24",
-            "action": "request_sent",
-            "action_label": "Access requested",
-            "channel": "web_form",
-            "channel_label": "Web form",
-            "summary": "Requested Connekt's open data through the request form on its Public Charge Point Regulations page, which asks for contact details only.",
-            "quote": null,
-            "evidence_url": "https://www.connektcharging.com/public-charge-point-regulations",
-            "evidence_file": null
-          },
-          {
-            "date": "2026-10-26",
-            "action": "reply_received",
-            "action_label": "Reply received",
-            "channel": "email",
-            "channel_label": "Email",
-            "summary": "Connekt replied by email with its location and tariff data attached as two OCPI 2.2.1 JSON files, with no web address or key for fetching the data.",
-            "quote": null,
-            "evidence_url": null,
-            "evidence_file": "evidence/connekt/2026-10-26-reply.md"
-          }
-        ]
-      },
-      "access_requested": "2026-10-24",
-      "access_granted": null,
-      "feeds": [],
-      "licence": null,
-      "attribution": null,
-      "missing_publish_flag": null,
-      "swapped_coordinates": null,
-      "nonstandard_statuses": null,
-      "tariffs_from": null,
-      "nonstandard_parking_restrictions": null,
-      "zero_price_tariffs": null,
-      "vat_not_stated": null,
-      "vat_in_price": null,
-      "own_feed_over_copies": null,
-      "relay": null,
-      "expired_certificate": null,
-      "excluded_locations": null,
-      "rate_limit": {
-        "our_gap_seconds": 2.0,
-        "our_max_per_hour": 1800,
-        "ours": "At least 2 s between requests to the operator's host, measured from the end of the previous request (at most 1800 in any hour), retries included.",
-        "published": [],
-        "limits_checked": "unknown",
-        "comparison": "The operator's pages have not been checked for limits yet.",
-        "difference_from_regulations": "Not known yet.",
-        "notes": null
-      },
-      "findings": [
-        {
-          "date": "2026-10-26",
-          "kind": "access",
-          "kind_label": "Access",
-          "summary": "Connekt offers its open data through a request form, and its reply to a request on 2026-10-24 was the data as two files attached to an email, with no web address for fetching it.",
-          "handling": "The emailed files are not shown on the map, because a copy sent once cannot be fetched again each day and its statuses and prices would go out of date. The project is asking Connekt for a web address that can be fetched automatically.",
-          "evidence_url": "https://www.connektcharging.com/public-charge-point-regulations",
-          "status": "open",
-          "resolved_date": null
-        }
-      ]
     },
     {
       "id": "dragon_charging",
@@ -4650,6 +4700,7 @@
       "relay": null,
       "expired_certificate": null,
       "excluded_locations": null,
+      "sent_copy": null,
       "rate_limit": {
         "our_gap_seconds": 2.0,
         "our_max_per_hour": 1800,
@@ -4725,6 +4776,7 @@
       "relay": null,
       "expired_certificate": null,
       "excluded_locations": null,
+      "sent_copy": null,
       "rate_limit": {
         "our_gap_seconds": 2.0,
         "our_max_per_hour": 1800,
@@ -4789,6 +4841,7 @@
       "relay": null,
       "expired_certificate": null,
       "excluded_locations": null,
+      "sent_copy": null,
       "rate_limit": {
         "our_gap_seconds": 2.0,
         "our_max_per_hour": 1800,
@@ -4853,6 +4906,7 @@
       "relay": null,
       "expired_certificate": null,
       "excluded_locations": null,
+      "sent_copy": null,
       "rate_limit": {
         "our_gap_seconds": 2.0,
         "our_max_per_hour": 1800,
@@ -4917,6 +4971,7 @@
       "relay": null,
       "expired_certificate": null,
       "excluded_locations": null,
+      "sent_copy": null,
       "rate_limit": {
         "our_gap_seconds": 2.0,
         "our_max_per_hour": 1800,
@@ -4981,6 +5036,7 @@
       "relay": null,
       "expired_certificate": null,
       "excluded_locations": null,
+      "sent_copy": null,
       "rate_limit": {
         "our_gap_seconds": 2.0,
         "our_max_per_hour": 1800,
@@ -5049,6 +5105,7 @@
       "relay": null,
       "expired_certificate": null,
       "excluded_locations": null,
+      "sent_copy": null,
       "rate_limit": {
         "our_gap_seconds": 2.0,
         "our_max_per_hour": 1800,
@@ -5113,6 +5170,7 @@
       "relay": null,
       "expired_certificate": null,
       "excluded_locations": null,
+      "sent_copy": null,
       "rate_limit": {
         "our_gap_seconds": 2.0,
         "our_max_per_hour": 1800,
@@ -5181,6 +5239,7 @@
       "relay": null,
       "expired_certificate": null,
       "excluded_locations": null,
+      "sent_copy": null,
       "rate_limit": {
         "our_gap_seconds": 2.0,
         "our_max_per_hour": 1800,
@@ -5245,6 +5304,7 @@
       "relay": null,
       "expired_certificate": null,
       "excluded_locations": null,
+      "sent_copy": null,
       "rate_limit": {
         "our_gap_seconds": 2.0,
         "our_max_per_hour": 1800,
@@ -5309,6 +5369,7 @@
       "relay": null,
       "expired_certificate": null,
       "excluded_locations": null,
+      "sent_copy": null,
       "rate_limit": {
         "our_gap_seconds": 2.0,
         "our_max_per_hour": 1800,
@@ -5395,6 +5456,7 @@
       "relay": null,
       "expired_certificate": null,
       "excluded_locations": null,
+      "sent_copy": null,
       "rate_limit": {
         "our_gap_seconds": 2.0,
         "our_max_per_hour": 1800,
@@ -5459,6 +5521,7 @@
       "relay": null,
       "expired_certificate": null,
       "excluded_locations": null,
+      "sent_copy": null,
       "rate_limit": {
         "our_gap_seconds": 2.0,
         "our_max_per_hour": 1800,
@@ -5523,6 +5586,7 @@
       "relay": null,
       "expired_certificate": null,
       "excluded_locations": null,
+      "sent_copy": null,
       "rate_limit": {
         "our_gap_seconds": 2.0,
         "our_max_per_hour": 1800,
@@ -5587,6 +5651,7 @@
       "relay": null,
       "expired_certificate": null,
       "excluded_locations": null,
+      "sent_copy": null,
       "rate_limit": {
         "our_gap_seconds": 2.0,
         "our_max_per_hour": 1800,
@@ -5651,6 +5716,7 @@
       "relay": null,
       "expired_certificate": null,
       "excluded_locations": null,
+      "sent_copy": null,
       "rate_limit": {
         "our_gap_seconds": 2.0,
         "our_max_per_hour": 1800,
@@ -5726,6 +5792,7 @@
       "relay": null,
       "expired_certificate": null,
       "excluded_locations": null,
+      "sent_copy": null,
       "rate_limit": {
         "our_gap_seconds": 2.0,
         "our_max_per_hour": 1800,
@@ -5812,6 +5879,7 @@
       "relay": null,
       "expired_certificate": null,
       "excluded_locations": null,
+      "sent_copy": null,
       "rate_limit": {
         "our_gap_seconds": 2.0,
         "our_max_per_hour": 1800,
@@ -5876,6 +5944,7 @@
       "relay": null,
       "expired_certificate": null,
       "excluded_locations": null,
+      "sent_copy": null,
       "rate_limit": {
         "our_gap_seconds": 2.0,
         "our_max_per_hour": 1800,
@@ -5940,6 +6009,7 @@
       "relay": null,
       "expired_certificate": null,
       "excluded_locations": null,
+      "sent_copy": null,
       "rate_limit": {
         "our_gap_seconds": 2.0,
         "our_max_per_hour": 1800,
@@ -6004,6 +6074,7 @@
       "relay": null,
       "expired_certificate": null,
       "excluded_locations": null,
+      "sent_copy": null,
       "rate_limit": {
         "our_gap_seconds": 31.0,
         "our_max_per_hour": 117,
@@ -6068,6 +6139,7 @@
       "relay": null,
       "expired_certificate": null,
       "excluded_locations": null,
+      "sent_copy": null,
       "rate_limit": {
         "our_gap_seconds": 2.0,
         "our_max_per_hour": 1800,
@@ -6143,6 +6215,7 @@
       "relay": null,
       "expired_certificate": null,
       "excluded_locations": null,
+      "sent_copy": null,
       "rate_limit": {
         "our_gap_seconds": 2.0,
         "our_max_per_hour": 1800,
@@ -6207,6 +6280,7 @@
       "relay": null,
       "expired_certificate": null,
       "excluded_locations": null,
+      "sent_copy": null,
       "rate_limit": {
         "our_gap_seconds": 2.0,
         "our_max_per_hour": 1800,
@@ -6282,6 +6356,7 @@
       "relay": null,
       "expired_certificate": null,
       "excluded_locations": null,
+      "sent_copy": null,
       "rate_limit": {
         "our_gap_seconds": 2.0,
         "our_max_per_hour": 1800,
@@ -6350,6 +6425,7 @@
       "relay": null,
       "expired_certificate": null,
       "excluded_locations": null,
+      "sent_copy": null,
       "rate_limit": {
         "our_gap_seconds": 2,
         "our_max_per_hour": 1800,
@@ -6414,6 +6490,7 @@
       "relay": null,
       "expired_certificate": null,
       "excluded_locations": null,
+      "sent_copy": null,
       "rate_limit": {
         "our_gap_seconds": 2.0,
         "our_max_per_hour": 1800,
@@ -6481,6 +6558,7 @@
       "relay": null,
       "expired_certificate": null,
       "excluded_locations": null,
+      "sent_copy": null,
       "rate_limit": {
         "our_gap_seconds": 31.0,
         "our_max_per_hour": 117,
@@ -6598,6 +6676,7 @@
       "relay": null,
       "expired_certificate": null,
       "excluded_locations": null,
+      "sent_copy": null,
       "rate_limit": {
         "our_gap_seconds": 2.0,
         "our_max_per_hour": 1800,
@@ -6662,6 +6741,7 @@
       "relay": null,
       "expired_certificate": null,
       "excluded_locations": null,
+      "sent_copy": null,
       "rate_limit": {
         "our_gap_seconds": 2,
         "our_max_per_hour": 1800,
@@ -6737,6 +6817,7 @@
       "relay": null,
       "expired_certificate": null,
       "excluded_locations": null,
+      "sent_copy": null,
       "rate_limit": {
         "our_gap_seconds": 2.0,
         "our_max_per_hour": 1800,
@@ -6816,6 +6897,7 @@
       "relay": null,
       "expired_certificate": null,
       "excluded_locations": null,
+      "sent_copy": null,
       "rate_limit": {
         "our_gap_seconds": 2.0,
         "our_max_per_hour": 1800,
@@ -6880,6 +6962,7 @@
       "relay": null,
       "expired_certificate": null,
       "excluded_locations": null,
+      "sent_copy": null,
       "rate_limit": {
         "our_gap_seconds": 2.0,
         "our_max_per_hour": 1800,
@@ -6937,6 +7020,7 @@
       "relay": null,
       "expired_certificate": null,
       "excluded_locations": null,
+      "sent_copy": null,
       "rate_limit": {
         "our_gap_seconds": 2.0,
         "our_max_per_hour": 1800,
@@ -7012,6 +7096,7 @@
       "relay": null,
       "expired_certificate": null,
       "excluded_locations": null,
+      "sent_copy": null,
       "rate_limit": {
         "our_gap_seconds": 2.0,
         "our_max_per_hour": 1800,
@@ -7076,6 +7161,7 @@
       "relay": null,
       "expired_certificate": null,
       "excluded_locations": null,
+      "sent_copy": null,
       "rate_limit": {
         "our_gap_seconds": 2.0,
         "our_max_per_hour": 1800,
@@ -7140,6 +7226,7 @@
       "relay": null,
       "expired_certificate": null,
       "excluded_locations": null,
+      "sent_copy": null,
       "rate_limit": {
         "our_gap_seconds": 2.0,
         "our_max_per_hour": 1800,
@@ -7204,6 +7291,7 @@
       "relay": null,
       "expired_certificate": null,
       "excluded_locations": null,
+      "sent_copy": null,
       "rate_limit": {
         "our_gap_seconds": 2.0,
         "our_max_per_hour": 1800,
@@ -7268,6 +7356,7 @@
       "relay": null,
       "expired_certificate": null,
       "excluded_locations": null,
+      "sent_copy": null,
       "rate_limit": {
         "our_gap_seconds": 2.0,
         "our_max_per_hour": 1800,
@@ -7332,6 +7421,7 @@
       "relay": null,
       "expired_certificate": null,
       "excluded_locations": null,
+      "sent_copy": null,
       "rate_limit": {
         "our_gap_seconds": 2.0,
         "our_max_per_hour": 1800,
@@ -7413,6 +7503,7 @@
       "relay": null,
       "expired_certificate": null,
       "excluded_locations": null,
+      "sent_copy": null,
       "rate_limit": {
         "our_gap_seconds": 2.0,
         "our_max_per_hour": 1800,
@@ -7481,6 +7572,7 @@
       "relay": null,
       "expired_certificate": null,
       "excluded_locations": null,
+      "sent_copy": null,
       "rate_limit": {
         "our_gap_seconds": 2.0,
         "our_max_per_hour": 1800,
@@ -7555,6 +7647,7 @@
       "relay": null,
       "expired_certificate": null,
       "excluded_locations": null,
+      "sent_copy": null,
       "rate_limit": {
         "our_gap_seconds": 2.0,
         "our_max_per_hour": 1800,
@@ -7619,6 +7712,7 @@
       "relay": null,
       "expired_certificate": null,
       "excluded_locations": null,
+      "sent_copy": null,
       "rate_limit": {
         "our_gap_seconds": 2.0,
         "our_max_per_hour": 1800,
@@ -7683,6 +7777,7 @@
       "relay": null,
       "expired_certificate": null,
       "excluded_locations": null,
+      "sent_copy": null,
       "rate_limit": {
         "our_gap_seconds": 2.0,
         "our_max_per_hour": 1800,
@@ -7740,6 +7835,7 @@
       "relay": null,
       "expired_certificate": null,
       "excluded_locations": null,
+      "sent_copy": null,
       "rate_limit": {
         "our_gap_seconds": 2.0,
         "our_max_per_hour": 1800,
@@ -7815,6 +7911,7 @@
       "relay": null,
       "expired_certificate": null,
       "excluded_locations": null,
+      "sent_copy": null,
       "rate_limit": {
         "our_gap_seconds": 2.0,
         "our_max_per_hour": 1800,
@@ -7879,6 +7976,7 @@
       "relay": null,
       "expired_certificate": null,
       "excluded_locations": null,
+      "sent_copy": null,
       "rate_limit": {
         "our_gap_seconds": 2.0,
         "our_max_per_hour": 1800,
@@ -7943,6 +8041,7 @@
       "relay": null,
       "expired_certificate": null,
       "excluded_locations": null,
+      "sent_copy": null,
       "rate_limit": {
         "our_gap_seconds": 2.0,
         "our_max_per_hour": 1800,
@@ -8034,6 +8133,7 @@
       "relay": null,
       "expired_certificate": null,
       "excluded_locations": null,
+      "sent_copy": null,
       "rate_limit": {
         "our_gap_seconds": 125.0,
         "our_max_per_hour": 29,
@@ -8148,6 +8248,7 @@
       "relay": null,
       "expired_certificate": null,
       "excluded_locations": null,
+      "sent_copy": null,
       "rate_limit": {
         "our_gap_seconds": 2.0,
         "our_max_per_hour": 1800,
@@ -8212,6 +8313,7 @@
       "relay": null,
       "expired_certificate": null,
       "excluded_locations": null,
+      "sent_copy": null,
       "rate_limit": {
         "our_gap_seconds": 2.0,
         "our_max_per_hour": 1800,
@@ -8291,6 +8393,7 @@
       "relay": null,
       "expired_certificate": null,
       "excluded_locations": null,
+      "sent_copy": null,
       "rate_limit": {
         "our_gap_seconds": 2.0,
         "our_max_per_hour": 1800,
@@ -8388,6 +8491,7 @@
       "relay": null,
       "expired_certificate": null,
       "excluded_locations": null,
+      "sent_copy": null,
       "rate_limit": {
         "our_gap_seconds": 2.0,
         "our_max_per_hour": 1800,
@@ -8466,6 +8570,7 @@
       "relay": null,
       "expired_certificate": null,
       "excluded_locations": null,
+      "sent_copy": null,
       "rate_limit": {
         "our_gap_seconds": 2.0,
         "our_max_per_hour": 1800,
@@ -8523,6 +8628,7 @@
       "relay": null,
       "expired_certificate": null,
       "excluded_locations": null,
+      "sent_copy": null,
       "rate_limit": {
         "our_gap_seconds": 2.0,
         "our_max_per_hour": 1800,
@@ -8614,6 +8720,7 @@
       "relay": null,
       "expired_certificate": null,
       "excluded_locations": null,
+      "sent_copy": null,
       "rate_limit": {
         "our_gap_seconds": 125.0,
         "our_max_per_hour": 29,
@@ -8728,6 +8835,7 @@
       "relay": null,
       "expired_certificate": null,
       "excluded_locations": null,
+      "sent_copy": null,
       "rate_limit": {
         "our_gap_seconds": 2.0,
         "our_max_per_hour": 1800,
@@ -8785,6 +8893,7 @@
       "relay": null,
       "expired_certificate": null,
       "excluded_locations": null,
+      "sent_copy": null,
       "rate_limit": {
         "our_gap_seconds": 2.0,
         "our_max_per_hour": 1800,
@@ -8849,6 +8958,7 @@
       "relay": null,
       "expired_certificate": null,
       "excluded_locations": null,
+      "sent_copy": null,
       "rate_limit": {
         "our_gap_seconds": 31.0,
         "our_max_per_hour": 117,
@@ -8913,6 +9023,7 @@
       "relay": null,
       "expired_certificate": null,
       "excluded_locations": null,
+      "sent_copy": null,
       "rate_limit": {
         "our_gap_seconds": 2.0,
         "our_max_per_hour": 1800,
@@ -8988,6 +9099,7 @@
       "relay": null,
       "expired_certificate": null,
       "excluded_locations": null,
+      "sent_copy": null,
       "rate_limit": {
         "our_gap_seconds": 2.0,
         "our_max_per_hour": 1800,
@@ -9063,6 +9175,7 @@
       "relay": null,
       "expired_certificate": null,
       "excluded_locations": null,
+      "sent_copy": null,
       "rate_limit": {
         "our_gap_seconds": 31.0,
         "our_max_per_hour": 117,
@@ -9127,6 +9240,7 @@
       "relay": null,
       "expired_certificate": null,
       "excluded_locations": null,
+      "sent_copy": null,
       "rate_limit": {
         "our_gap_seconds": 2.0,
         "our_max_per_hour": 1800,
@@ -9191,6 +9305,7 @@
       "relay": null,
       "expired_certificate": null,
       "excluded_locations": null,
+      "sent_copy": null,
       "rate_limit": {
         "our_gap_seconds": 2.0,
         "our_max_per_hour": 1800,
@@ -9266,6 +9381,7 @@
       "relay": null,
       "expired_certificate": null,
       "excluded_locations": null,
+      "sent_copy": null,
       "rate_limit": {
         "our_gap_seconds": 2.0,
         "our_max_per_hour": 1800,

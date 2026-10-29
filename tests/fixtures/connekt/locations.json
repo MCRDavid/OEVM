@@ -1,0 +1,699 @@
+{
+  "data": [
+    {
+      "country_code": "GB",
+      "party_id": "CON",
+      "id": "5",
+      "publish": true,
+      "name": "51 St Meddans Street",
+      "address": "51 St Meddans Troon",
+      "city": "Troon",
+      "postal_code": "KA10 6HL",
+      "country": "GBR",
+      "coordinates": {
+        "latitude": "55.544691",
+        "longitude": "-4.65586"
+      },
+      "operator": {
+        "name": "Connekt Charging",
+        "website": "https://www.connektcharging.com/"
+      },
+      "time_zone": "Europe/London",
+      "opening_times": {
+        "twentyfourseven": true
+      },
+      "last_updated": "2026-10-26T02:07:15+00:00",
+      "evses": [
+        {
+          "uid": "685",
+          "evse_id": "GB*CON*EC0274",
+          "status": "AVAILABLE",
+          "connectors": [
+            {
+              "id": "376",
+              "standard": "IEC_62196_T2",
+              "format": "CABLE",
+              "power_type": "AC_1_PHASE",
+              "max_voltage": 240,
+              "max_amperage": 32,
+              "max_electric_power": 7400,
+              "tariff_ids": [
+                "572"
+              ],
+              "terms_and_conditions": "https://www.connektcharging.com/terms-and-conditions/",
+              "last_updated": "2026-10-21T20:21:41+00:00"
+            }
+          ],
+          "coordinates": {
+            "latitude": "55.544691",
+            "longitude": "-4.65586"
+          },
+          "physical_reference": "C0274",
+          "last_updated": "2026-10-21T20:21:41+00:00"
+        },
+        {
+          "uid": "686",
+          "evse_id": "GB*CON*EC0275",
+          "status": "AVAILABLE",
+          "connectors": [
+            {
+              "id": "487",
+              "standard": "IEC_62196_T2",
+              "format": "CABLE",
+              "power_type": "AC_1_PHASE",
+              "max_voltage": 240,
+              "max_amperage": 32,
+              "max_electric_power": 7400,
+              "tariff_ids": [
+                "572"
+              ],
+              "terms_and_conditions": "https://www.connektcharging.com/terms-and-conditions/",
+              "last_updated": "2026-10-18T13:02:44+00:00"
+            }
+          ],
+          "coordinates": {
+            "latitude": "55.544691",
+            "longitude": "-4.65586"
+          },
+          "physical_reference": "C0275",
+          "last_updated": "2026-10-18T13:02:44+00:00"
+        }
+      ]
+    },
+    {
+      "country_code": "GB",
+      "party_id": "CON",
+      "id": "103",
+      "publish": true,
+      "name": "Link Group Watling House",
+      "address": "Watling House, Callendar Business Park",
+      "city": "Falkirk",
+      "postal_code": "FK11XR",
+      "country": "GBR",
+      "coordinates": {
+        "latitude": "55.99477",
+        "longitude": "-3.76077"
+      },
+      "operator": {
+        "name": "Connekt Charging",
+        "website": "https://www.connektcharging.com/"
+      },
+      "time_zone": "Europe/London",
+      "opening_times": {
+        "twentyfourseven": true
+      },
+      "last_updated": "2026-10-26T13:31:07+00:00",
+      "evses": [
+        {
+          "uid": "497",
+          "evse_id": "GB*CON*EC0071",
+          "status": "CHARGING",
+          "connectors": [
+            {
+              "id": "491",
+              "standard": "IEC_62196_T2",
+              "format": "CABLE",
+              "power_type": "AC_1_PHASE",
+              "max_voltage": 240,
+              "max_amperage": 32,
+              "max_electric_power": 7400,
+              "tariff_ids": [
+                "561"
+              ],
+              "terms_and_conditions": "https://www.connektcharging.com/terms-and-conditions/",
+              "last_updated": "2026-10-26T13:31:11+00:00"
+            }
+          ],
+          "coordinates": {
+            "latitude": "55.99477",
+            "longitude": "-3.76077"
+          },
+          "physical_reference": "C0071",
+          "last_updated": "2026-10-26T13:31:11+00:00"
+        },
+        {
+          "uid": "1079",
+          "evse_id": "GB*CON*EC0677",
+          "status": "CHARGING",
+          "connectors": [
+            {
+              "id": "1042",
+              "standard": "IEC_62196_T2",
+              "format": "CABLE",
+              "power_type": "AC_1_PHASE",
+              "max_voltage": 240,
+              "max_amperage": 32,
+              "max_electric_power": 7400,
+              "tariff_ids": [
+                "561"
+              ],
+              "terms_and_conditions": "https://www.connektcharging.com/terms-and-conditions/",
+              "last_updated": "2026-10-26T13:24:43+00:00"
+            }
+          ],
+          "coordinates": {
+            "latitude": "55.99477",
+            "longitude": "-3.76077"
+          },
+          "physical_reference": "C0677",
+          "last_updated": "2026-10-26T13:24:43+00:00"
+        },
+        {
+          "uid": "1080",
+          "evse_id": "GB*CON*EC0953",
+          "status": "OUTOFORDER",
+          "connectors": [
+            {
+              "id": "1043",
+              "standard": "IEC_62196_T2",
+              "format": "CABLE",
+              "power_type": "AC_1_PHASE",
+              "max_voltage": 240,
+              "max_amperage": 32,
+              "max_electric_power": 7400,
+              "tariff_ids": [
+                "561"
+              ],
+              "terms_and_conditions": "https://www.connektcharging.com/terms-and-conditions/",
+              "last_updated": "2026-09-28T09:13:58+00:00"
+            }
+          ],
+          "coordinates": {
+            "latitude": "55.99477",
+            "longitude": "-3.76077"
+          },
+          "physical_reference": "C0953",
+          "last_updated": "2026-09-28T09:13:58+00:00"
+        }
+      ]
+    },
+    {
+      "country_code": "GB",
+      "party_id": "CON",
+      "id": "149",
+      "publish": true,
+      "name": "Connekt Assets - Cameron House Rapids",
+      "address": "Cameron House, A82, Alexandria G83 8QZ, UK",
+      "city": "Balloch",
+      "postal_code": "G83 8QZ",
+      "country": "GBR",
+      "coordinates": {
+        "latitude": "56.0109238",
+        "longitude": "-4.6030393"
+      },
+      "operator": {
+        "name": "Connekt Charging",
+        "website": "https://www.connektcharging.com/"
+      },
+      "time_zone": "Europe/London",
+      "opening_times": {
+        "twentyfourseven": true
+      },
+      "last_updated": "2026-10-26T13:46:47+00:00",
+      "evses": [
+        {
+          "uid": "855",
+          "evse_id": "GB*CON*EC0477",
+          "status": "AVAILABLE",
+          "connectors": [
+            {
+              "id": "794",
+              "standard": "IEC_62196_T2_COMBO",
+              "format": "CABLE",
+              "power_type": "DC",
+              "max_voltage": 400,
+              "max_amperage": 170,
+              "max_electric_power": 120000,
+              "tariff_ids": [
+                "511"
+              ],
+              "terms_and_conditions": "https://www.connektcharging.com/terms-and-conditions/",
+              "last_updated": "2026-10-26T11:55:57+00:00"
+            }
+          ],
+          "coordinates": {
+            "latitude": "56.0109238",
+            "longitude": "-4.6030393"
+          },
+          "physical_reference": "C0477",
+          "last_updated": "2026-10-26T11:55:57+00:00"
+        },
+        {
+          "uid": "856",
+          "evse_id": "GB*CON*EC0478",
+          "status": "AVAILABLE",
+          "connectors": [
+            {
+              "id": "793",
+              "standard": "IEC_62196_T2_COMBO",
+              "format": "CABLE",
+              "power_type": "DC",
+              "max_voltage": 400,
+              "max_amperage": 170,
+              "max_electric_power": 120000,
+              "tariff_ids": [
+                "511"
+              ],
+              "terms_and_conditions": "https://www.connektcharging.com/terms-and-conditions/",
+              "last_updated": "2026-10-26T13:01:34+00:00"
+            }
+          ],
+          "coordinates": {
+            "latitude": "56.0109238",
+            "longitude": "-4.6030393"
+          },
+          "physical_reference": "C0478",
+          "last_updated": "2026-10-26T13:01:34+00:00"
+        },
+        {
+          "uid": "857",
+          "evse_id": "GB*CON*EC0479",
+          "status": "AVAILABLE",
+          "connectors": [
+            {
+              "id": "796",
+              "standard": "IEC_62196_T2_COMBO",
+              "format": "CABLE",
+              "power_type": "DC",
+              "max_voltage": 400,
+              "max_amperage": 91,
+              "max_electric_power": 60000,
+              "tariff_ids": [
+                "510"
+              ],
+              "terms_and_conditions": "https://www.connektcharging.com/terms-and-conditions/",
+              "last_updated": "2026-10-26T12:39:56+00:00"
+            }
+          ],
+          "coordinates": {
+            "latitude": "56.0109238",
+            "longitude": "-4.6030393"
+          },
+          "physical_reference": "C0479",
+          "last_updated": "2026-10-26T12:39:56+00:00"
+        },
+        {
+          "uid": "858",
+          "evse_id": "GB*CON*EC0480",
+          "status": "AVAILABLE",
+          "connectors": [
+            {
+              "id": "795",
+              "standard": "IEC_62196_T2_COMBO",
+              "format": "CABLE",
+              "power_type": "DC",
+              "max_voltage": 400,
+              "max_amperage": 91,
+              "max_electric_power": 60000,
+              "tariff_ids": [
+                "510"
+              ],
+              "terms_and_conditions": "https://www.connektcharging.com/terms-and-conditions/",
+              "last_updated": "2026-10-26T12:39:53+00:00"
+            }
+          ],
+          "coordinates": {
+            "latitude": "56.0109238",
+            "longitude": "-4.6030393"
+          },
+          "physical_reference": "C0480",
+          "last_updated": "2026-10-26T12:39:53+00:00"
+        }
+      ]
+    },
+    {
+      "country_code": "GB",
+      "party_id": "CON",
+      "id": "215",
+      "publish": true,
+      "name": "Arisaig Community Trust",
+      "address": "Land Sea & Island Centre, Arisaig PH39 4NJ",
+      "city": "undefined",
+      "postal_code": "PH39 4NJ",
+      "country": "GBR",
+      "coordinates": {
+        "latitude": "56.9090828",
+        "longitude": "-5.8443564"
+      },
+      "operator": {
+        "name": "Connekt Charging",
+        "website": "https://www.connektcharging.com/"
+      },
+      "time_zone": "Europe/London",
+      "opening_times": {
+        "twentyfourseven": true
+      },
+      "last_updated": "2026-10-24T16:54:25+00:00",
+      "evses": [
+        {
+          "uid": "1269",
+          "evse_id": "GB*CON*EC0746",
+          "status": "AVAILABLE",
+          "connectors": [
+            {
+              "id": "1260",
+              "standard": "IEC_62196_T2_COMBO",
+              "format": "CABLE",
+              "power_type": "DC",
+              "max_voltage": 400,
+              "max_amperage": 63,
+              "max_electric_power": 40000,
+              "tariff_ids": [
+                "744"
+              ],
+              "terms_and_conditions": "https://www.connektcharging.com/terms-and-conditions/",
+              "last_updated": "2026-10-24T11:06:56+00:00"
+            }
+          ],
+          "coordinates": {
+            "latitude": "56.9090828",
+            "longitude": "-5.8443564"
+          },
+          "physical_reference": "C0746",
+          "last_updated": "2026-10-24T11:06:56+00:00"
+        },
+        {
+          "uid": "1271",
+          "evse_id": "GB*CON*EC0744",
+          "status": "AVAILABLE",
+          "connectors": [
+            {
+              "id": "1258",
+              "standard": "IEC_62196_T2_COMBO",
+              "format": "CABLE",
+              "power_type": "DC",
+              "max_voltage": 400,
+              "max_amperage": 63,
+              "max_electric_power": 40000,
+              "tariff_ids": [
+                "744"
+              ],
+              "terms_and_conditions": "https://www.connektcharging.com/terms-and-conditions/",
+              "last_updated": "2026-10-24T16:54:05+00:00"
+            }
+          ],
+          "coordinates": {
+            "latitude": "56.9090828",
+            "longitude": "-5.8443564"
+          },
+          "physical_reference": "C0744",
+          "last_updated": "2026-10-24T16:54:05+00:00"
+        },
+        {
+          "uid": "1272",
+          "evse_id": "GB*CON*EC0745",
+          "status": "AVAILABLE",
+          "connectors": [
+            {
+              "id": "1257",
+              "standard": "IEC_62196_T2_COMBO",
+              "format": "CABLE",
+              "power_type": "DC",
+              "max_voltage": 400,
+              "max_amperage": 63,
+              "max_electric_power": 40000,
+              "tariff_ids": [
+                "744"
+              ],
+              "terms_and_conditions": "https://www.connektcharging.com/terms-and-conditions/",
+              "last_updated": "2026-10-24T13:37:11+00:00"
+            }
+          ],
+          "coordinates": {
+            "latitude": "56.9090828",
+            "longitude": "-5.8443564"
+          },
+          "physical_reference": "C0745",
+          "last_updated": "2026-10-24T13:37:11+00:00"
+        }
+      ]
+    },
+    {
+      "country_code": "GB",
+      "party_id": "CON",
+      "id": "332",
+      "publish": true,
+      "name": "Angus Alchemy",
+      "address": "Halfway House, Carnoustie DD7 7SD, UK",
+      "city": "undefined",
+      "postal_code": "DD7 7SD",
+      "country": "GBR",
+      "coordinates": {
+        "latitude": "56.5060431",
+        "longitude": "-2.7891701"
+      },
+      "operator": {
+        "name": "Connekt Charging",
+        "website": "https://www.connektcharging.com/"
+      },
+      "time_zone": "Europe/London",
+      "opening_times": {
+        "twentyfourseven": true
+      },
+      "last_updated": "2026-10-26T00:18:42+00:00",
+      "evses": [
+        {
+          "uid": "1670",
+          "evse_id": "GB*CON*EC1155",
+          "status": "AVAILABLE",
+          "connectors": [
+            {
+              "id": "1771",
+              "standard": "IEC_62196_T2",
+              "format": "SOCKET",
+              "power_type": "AC_3_PHASE",
+              "max_voltage": 400,
+              "max_amperage": 32,
+              "max_electric_power": 22000,
+              "tariff_ids": [
+                "1115"
+              ],
+              "terms_and_conditions": "https://www.connektcharging.com/terms-and-conditions/",
+              "last_updated": "2026-05-27T15:42:52+00:00"
+            }
+          ],
+          "coordinates": {
+            "latitude": "56.5060431",
+            "longitude": "-2.7891701"
+          },
+          "physical_reference": "C1155",
+          "last_updated": "2026-05-27T15:42:52+00:00"
+        },
+        {
+          "uid": "1671",
+          "evse_id": "GB*CON*EC1156",
+          "status": "AVAILABLE",
+          "connectors": [
+            {
+              "id": "1772",
+              "standard": "IEC_62196_T2",
+              "format": "SOCKET",
+              "power_type": "AC_3_PHASE",
+              "max_voltage": 400,
+              "max_amperage": 32,
+              "max_electric_power": 22000,
+              "tariff_ids": [
+                "1115"
+              ],
+              "terms_and_conditions": "https://www.connektcharging.com/terms-and-conditions/",
+              "last_updated": "2026-09-25T21:21:04+00:00"
+            }
+          ],
+          "coordinates": {
+            "latitude": "56.5060431",
+            "longitude": "-2.7891701"
+          },
+          "physical_reference": "C1156",
+          "last_updated": "2026-09-25T21:21:04+00:00"
+        },
+        {
+          "uid": "1711",
+          "evse_id": "GB*CON*EC1157",
+          "status": "AVAILABLE",
+          "connectors": [
+            {
+              "id": "1817",
+              "standard": "IEC_62196_T2_COMBO",
+              "format": "CABLE",
+              "power_type": "DC",
+              "max_voltage": 400,
+              "max_amperage": 63,
+              "max_electric_power": 50000,
+              "tariff_ids": [
+                "1135"
+              ],
+              "terms_and_conditions": "https://www.connektcharging.com/terms-and-conditions/",
+              "last_updated": "2026-10-24T17:58:59+00:00"
+            }
+          ],
+          "coordinates": {
+            "latitude": "56.5060431",
+            "longitude": "-2.7891701"
+          },
+          "physical_reference": "C1157",
+          "last_updated": "2026-10-24T17:58:59+00:00"
+        },
+        {
+          "uid": "1712",
+          "evse_id": "GB*CON*EC1158",
+          "status": "AVAILABLE",
+          "connectors": [
+            {
+              "id": "1818",
+              "standard": "IEC_62196_T2_COMBO",
+              "format": "CABLE",
+              "power_type": "DC",
+              "max_voltage": 400,
+              "max_amperage": 63,
+              "max_electric_power": 50000,
+              "tariff_ids": [
+                "1135"
+              ],
+              "terms_and_conditions": "https://www.connektcharging.com/terms-and-conditions/",
+              "last_updated": "2026-10-04T15:40:52+00:00"
+            }
+          ],
+          "coordinates": {
+            "latitude": "56.5060431",
+            "longitude": "-2.7891701"
+          },
+          "physical_reference": "C1158",
+          "last_updated": "2026-10-04T15:40:52+00:00"
+        }
+      ]
+    },
+    {
+      "country_code": "GB",
+      "party_id": "CON",
+      "id": "446",
+      "publish": true,
+      "name": "Colvend Golf Club",
+      "address": "Sandyhills, Dalbeattie DG5 4PY, UK",
+      "city": "Sandyhills",
+      "postal_code": "DG5 4PY",
+      "country": "GBR",
+      "coordinates": {
+        "latitude": "54.8764334",
+        "longitude": "-3.7381722"
+      },
+      "operator": {
+        "name": "Connekt Charging",
+        "website": "https://www.connektcharging.com/"
+      },
+      "time_zone": "Europe/London",
+      "opening_times": {
+        "twentyfourseven": true
+      },
+      "last_updated": "2026-10-26T09:38:42+00:00",
+      "evses": [
+        {
+          "uid": "2009",
+          "evse_id": "GB*CON*EC1474",
+          "status": "AVAILABLE",
+          "connectors": [
+            {
+              "id": "2215",
+              "standard": "IEC_62196_T2",
+              "format": "SOCKET",
+              "power_type": "AC_3_PHASE",
+              "max_voltage": 400,
+              "max_amperage": 32,
+              "max_electric_power": 22000,
+              "tariff_ids": [],
+              "terms_and_conditions": "https://www.connektcharging.com/terms-and-conditions/",
+              "last_updated": "2026-10-22T14:08:38+00:00"
+            }
+          ],
+          "coordinates": {
+            "latitude": "54.8764334",
+            "longitude": "-3.7381722"
+          },
+          "physical_reference": "C1474",
+          "last_updated": "2026-10-22T14:08:38+00:00"
+        },
+        {
+          "uid": "2010",
+          "evse_id": "GB*CON*EC1475",
+          "status": "AVAILABLE",
+          "connectors": [
+            {
+              "id": "2217",
+              "standard": "IEC_62196_T2",
+              "format": "SOCKET",
+              "power_type": "AC_3_PHASE",
+              "max_voltage": 400,
+              "max_amperage": 32,
+              "max_electric_power": 22000,
+              "tariff_ids": [],
+              "terms_and_conditions": "https://www.connektcharging.com/terms-and-conditions/",
+              "last_updated": "2026-10-22T14:08:38+00:00"
+            }
+          ],
+          "coordinates": {
+            "latitude": "54.8764334",
+            "longitude": "-3.7381722"
+          },
+          "physical_reference": "C1475",
+          "last_updated": "2026-10-22T14:08:38+00:00"
+        },
+        {
+          "uid": "2011",
+          "evse_id": "GB*CON*EC1476",
+          "status": "AVAILABLE",
+          "connectors": [
+            {
+              "id": "2218",
+              "standard": "IEC_62196_T2_COMBO",
+              "format": "CABLE",
+              "power_type": "DC",
+              "max_voltage": 400,
+              "max_amperage": 63,
+              "max_electric_power": 40000,
+              "tariff_ids": [
+                "1486"
+              ],
+              "terms_and_conditions": "https://www.connektcharging.com/terms-and-conditions/",
+              "last_updated": "2026-10-25T14:39:40+00:00"
+            }
+          ],
+          "coordinates": {
+            "latitude": "54.8764334",
+            "longitude": "-3.7381722"
+          },
+          "physical_reference": "C1476",
+          "last_updated": "2026-10-25T14:39:40+00:00"
+        },
+        {
+          "uid": "2012",
+          "evse_id": "GB*CON*EC1477",
+          "status": "AVAILABLE",
+          "connectors": [
+            {
+              "id": "2220",
+              "standard": "IEC_62196_T2_COMBO",
+              "format": "CABLE",
+              "power_type": "DC",
+              "max_voltage": 400,
+              "max_amperage": 63,
+              "max_electric_power": 40000,
+              "tariff_ids": [
+                "1486"
+              ],
+              "terms_and_conditions": "https://www.connektcharging.com/terms-and-conditions/",
+              "last_updated": "2026-10-24T12:20:19+00:00"
+            }
+          ],
+          "coordinates": {
+            "latitude": "54.8764334",
+            "longitude": "-3.7381722"
+          },
+          "physical_reference": "C1477",
+          "last_updated": "2026-10-24T12:20:19+00:00"
+        }
+      ]
+    }
+  ],
+  "status_code": 1000,
+  "status_message": "Operation successful",
+  "timestamp": "2026-10-26T14:22:52.378Z"
+}
