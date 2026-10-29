@@ -786,11 +786,20 @@ def test_only_the_operators_the_owner_named_carry_a_vat_decision_at_20_percent()
         "globe_ev": ("2026-10-23", 20),
         "roam": ("2026-10-26", 20),
         # Eco-Movement networks whose prices give no VAT rate (owner's decision, 29 Oct 2026).
+        "aldi": ("2026-10-29", 20),
         "allego": ("2026-10-29", 20),
         "blink_charging_uk": ("2026-10-29", 20),
+        "drax_group": ("2026-10-29", 20),
+        "drax_ista": ("2026-10-29", 20),
         "ev_point": ("2026-10-29", 20),
+        "gfx_gb_drax": ("2026-10-29", 20),
         "lidl": ("2026-10-29", 20),
         "raw_charging": ("2026-10-29", 20),
+        "shell_recharge": ("2026-10-29", 20),
+        "southampton_apartment_hotels": ("2026-10-29", 20),
+        "travis_perkins": ("2026-10-29", 20),
+        "volvo": ("2026-10-29", 20),
+        "wccc_edgbaston": ("2026-10-29", 20),
     }
 
 

@@ -73,3 +73,9 @@ own requests (26 gaps in all), so the group takes about 55 minutes rather than a
 with one shared gap. The fetch job's time limit goes from 60 to 150 minutes, leaving room
 for retries and more networks, and the map is published at about 05:15 UTC rather than
 soon after the 04:17 UTC start.
+
+Amended again 29 October 2026: with nine more networks switched on there (Drax's eight,
+from Eco-Movement's emails of 27 October 2026, and Shell Recharge), open-chargepoints.com
+serves 22 networks and a full fetch is 57 requests, 35 of them after a 125 second gap, so
+the group takes about 75 minutes and the map is published at about 05:35 UTC. The 150
+minute limit still applies.

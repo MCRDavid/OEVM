@@ -1,8 +1,8 @@
 # yaml-language-server: $schema=schema.json
 id: travis_perkins
 display_name: Travis Perkins
-ocpi_country_code: unknown
-ocpi_party_id: unknown
+ocpi_country_code: GB
+ocpi_party_id: GFX # Confirmed from the feed's own country_code and party_id on 2026-10-29.
 adapter: eco_movement_pcpr
 base_url: unknown
 endpoints:
@@ -77,7 +77,37 @@ limits_per_key:
   evidence_url: https://developers.eco-movement.com/v2.2.1/docs/eco-movement-pcpr-api-user-guide
 supports_single_location: supported
 cors: needs_testing
-attribution: null
+attribution: >-
+  Contains data from Travis Perkins published under the Public Charge Point Regulations
+  2023, used in line with the Open Government Licence v3.0.
+licence:
+  name: OGL-3.0
+  url: https://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/
+  basis: >-
+    The data was requested through Drax's "Public Charge Point Regulations (PCPR) RFI
+    Files" page, which offers data on "the Drax managed Public Charge Point Network" and
+    names no licence, terms or rate limit for it (read 2026-10-23 and 2026-10-29); its
+    only conditions are about sharing the request with Eco-Movement and processing the
+    requester's personal data. Eco-Movement's emails of 2026-10-27 with the token, and
+    its PCPR API user guide and reference (read 2026-10-26), state no licence or terms
+    either. Regulation 10(5) of the Public Charge Point Regulations 2023 requires the
+    data to be available "without any requirement to agree to terms and conditions
+    regarding the use of that data", and the DfT guidance says "Data must be open in
+    line with the Open Government Licence". On 2026-10-10 the repository owner decided,
+    as a standing rule for operators whose data has no terms of its own, that such
+    operators can be switched on without asking again.
+  checked: 2026-10-29
+vat_not_stated:
+  decided: 2026-10-29
+  basis: >-
+    Travis Perkins's 2 tariffs on Eco-Movement's PCPR API gave no VAT rate on
+    2026-10-29. Its energy prices are 0.317 pounds per kWh, which is 38p with 20% added,
+    the UK standard rate of VAT on public charging. That the prices exclude VAT is
+    inferred from the figures, not stated in the feed. The repository owner decided on
+    2026-10-29 that VAT at 20% is added, so prices on the map all include VAT and can be
+    compared.
+  evidence_url: https://open-chargepoints.com/api/ocpi/cpo/2.2.1/tariffs/
+  add_percent: 20
 engagement:
   status: key_on_request
   evidence:
@@ -115,11 +145,35 @@ sources:
       Network within the United Kingdom", whose requests are shared with Eco-Movement. The
       project requested data there on 2026-10-23; that this network's token answers that
       request is inferred, not stated.
-findings: []
+findings:
+  - date: 2026-10-29
+    kind: data_quality
+    summary: >-
+      No price gives a VAT rate. The energy prices are 0.317 pounds per kWh, which is
+      38p with 20% added.
+    handling: >-
+      By the repository owner's decision of 2026-10-29 recorded in vat_not_stated, VAT
+      at 20% is added to every price that gives no VAT rate, and the price says this
+      project added it. Reading the prices as excluding VAT is inferred from the
+      figures and needs confirming by the network's operator. The tariffs are
+      published unchanged.
+    evidence_url: https://open-chargepoints.com/api/ocpi/cpo/2.2.1/tariffs/
+  - date: 2026-10-29
+    kind: spec_conformance
+    summary: >-
+      5 EVSEs give parking_restrictions as the single string "customers", where OCPI
+      2.2.1 has a list of values (CUSTOMERS is one).
+    handling: >-
+      The value is not read and the EVSE's parking restrictions are shown as unknown.
+      Nothing else in the record changes.
+    evidence_url: https://open-chargepoints.com/api/ocpi/cpo/2.2.1/locations/
 notes: >-
-  Named "Travis Perkins" in Eco-Movement's emails of 2026-10-27, which gave tokens for eight
-  networks (Drax Group, GFX-GB Drax, drax-Ista, Aldi Stores Limited, Travis Perkins, Volvo,
-  WCCC Edgbaston and Southampton Apartment Hotels). Who operates its chargers, and its
-  OCPI codes, are to be confirmed from its data. The token is kept as the GitHub Actions
-  secret TRAVIS_PERKINS_TOKEN.
-enabled: false
+  Its regulation 10 data is served by Eco-Movement's PCPR API (eco_movement_pcpr adapter),
+  one of eight networks for which Eco-Movement emailed tokens on 2026-10-27, all published
+  under the OCPI party GB GFX. Its token is kept as the GitHub Actions secret
+  TRAVIS_PERKINS_TOKEN. The emails do not say which request they answer; that they answer
+  the request made through Drax's PCPR form on 2026-10-23 is inferred from the labels and
+  the shared party. Every location names the network as both operator and owner. The
+  response on 2026-10-29 linked to a next page past the last record, which the adapter
+  does not follow. On 2026-10-29 the feed reported 15 locations and 2 tariffs.
+enabled: true

@@ -129,6 +129,13 @@ engagement:
         expiring link, to be sent as an "Authorization: Token" header to its OCPI
         2.2.1 endpoints. The token is kept as a GitHub Actions secret.
       evidence_file: evidence/ubitricity/2026-10-26-token-email.md
+    - date: 2026-10-28
+      action: reply_received
+      channel: email
+      summary: >-
+        Eco-Movement's reply to the request for all Shell networks also gave a token for
+        ubitricity. The token of 2026-10-26 is still used and the second was not saved.
+      evidence_file: evidence/ubitricity/2026-10-28-token-email.md
 access_requested: 2026-10-23
 access_granted: 2026-10-26
 sources:

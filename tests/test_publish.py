@@ -39,7 +39,7 @@ def test_every_output_validates_against_its_exported_schema(results, tmp_path):
     jsonschema.validate(layer, schema("map-layer"))
     jsonschema.validate(json.loads((data / "manifest.json").read_text()), schema("manifest"))
     details = sorted((data / "loc").glob("*/*.json"))
-    assert len(details) == len(layer["features"]) == 174
+    assert len(details) == len(layer["features"]) == 196
     for path in details:
         jsonschema.validate(json.loads(path.read_text()), schema("location-detail"))
 
@@ -62,6 +62,7 @@ def test_the_manifest_records_operators_attribution_and_sizes(results, tmp_path)
     out = published(results, tmp_path)
     manifest = out.manifest
     assert set(manifest.operators) == {
+        "aldi",
         "allego",
         "arnold_clark_charge",
         "blink_charging_uk",
@@ -71,6 +72,8 @@ def test_the_manifest_records_operators_attribution_and_sizes(results, tmp_path)
         "chargy",
         "clenergy_ev",
         "connekt",
+        "drax_group",
+        "drax_ista",
         "enfield_council",
         "esb_ecars",
         "esb_energy",
@@ -79,6 +82,7 @@ def test_the_manifest_records_operators_attribution_and_sizes(results, tmp_path)
         "evyve",
         "fastned",
         "geniepoint",
+        "gfx_gb_drax",
         "globe_ev",
         "ionity",
         "jolt",
@@ -93,10 +97,15 @@ def test_the_manifest_records_operators_attribution_and_sizes(results, tmp_path)
         "raw_charging",
         "roam",
         "scottishpower_recharge",
+        "shell_recharge",
         "source_ev",
+        "southampton_apartment_hotels",
         "three_ti",
+        "travis_perkins",
         "ubitricity",
         "urban_fox",
+        "volvo",
+        "wccc_edgbaston",
     }
     for operator_id, entry in manifest.operators.items():
         config = load_registry()[operator_id]
@@ -104,7 +113,7 @@ def test_the_manifest_records_operators_attribution_and_sizes(results, tmp_path)
         assert entry.licence == "OGL-3.0"
     sizes = {f.path: f for f in manifest.files}
     assert sizes["data/locations.geojson"].bytes > sizes["data/locations.geojson"].gzip_bytes > 0
-    assert sizes["data/loc/"].files == 174
+    assert sizes["data/loc/"].files == 196
     assert any("gzipped" in line for line in out.report)
 
 
@@ -525,15 +534,24 @@ def test_vat_is_added_only_where_the_owner_decided_and_the_tariffs_stay_as_publi
 ):
     decided = {i for i, c in load_registry().items() if c.vat_not_stated}
     assert decided == {
+        "aldi",
         "allego",
         "blink_charging_uk",
         "chargy",
         "clenergy_ev",
+        "drax_group",
+        "drax_ista",
         "ev_point",
+        "gfx_gb_drax",
         "globe_ev",
         "lidl",
         "raw_charging",
         "roam",
+        "shell_recharge",
+        "southampton_apartment_hotels",
+        "travis_perkins",
+        "volvo",
+        "wccc_edgbaston",
     }
     for properties, detail in _layer_and_details(results, tmp_path):
         texts = [o["text"] for o in detail["tariff_options"] if o["state"] == "priced"]

@@ -1,0 +1,379 @@
+{
+  "request": {
+    "method": "GET",
+    "url": "https://open-chargepoints.com/api/ocpi/cpo/2.2.1/locations/?limit=1000"
+  },
+  "response": {
+    "status_code": 200,
+    "headers": {
+      "content-type": "application/json",
+      "link": "<https://open-chargepoints.com/api/ocpi/cpo/2.2.1/locations/?limit=1000&offset=3>; rel=\"next\"",
+      "x-total-count": "3",
+      "x-limit": "1000"
+    },
+    "body": {
+      "timestamp": "2026-10-29T18:03:48Z",
+      "status_code": 1000,
+      "status_message": "Success",
+      "data": [
+        {
+          "party_id": "GFX",
+          "id": "bb911cd6-0953-4a72-85c8-8ead51336780",
+          "country_code": "GB",
+          "publish": true,
+          "country": "GBR",
+          "address": "Teal Park",
+          "city": "Lincoln",
+          "postal_code": "LN6 3AG",
+          "coordinates": {
+            "latitude": "53.19763700",
+            "longitude": "-0.61404500"
+          },
+          "state": null,
+          "last_updated": "2026-10-27T23:59:16Z",
+          "opening_times": {
+            "regular_hours": [
+              {
+                "period_begin": "08:00",
+                "period_end": "12:00",
+                "weekday": 6
+              },
+              {
+                "period_begin": "07:00",
+                "period_end": "17:00",
+                "weekday": 5
+              },
+              {
+                "period_begin": "07:00",
+                "period_end": "17:00",
+                "weekday": 4
+              },
+              {
+                "period_begin": "07:00",
+                "period_end": "17:00",
+                "weekday": 3
+              },
+              {
+                "period_begin": "07:00",
+                "period_end": "17:00",
+                "weekday": 2
+              },
+              {
+                "period_begin": "07:00",
+                "period_end": "17:00",
+                "weekday": 1
+              }
+            ],
+            "twentyfourseven": false
+          },
+          "name": "Travis Perkins - Lincoln South",
+          "time_zone": "Europe/London",
+          "owner": {
+            "name": "Travis Perkins",
+            "website": ""
+          },
+          "operator": {
+            "name": "Travis Perkins",
+            "website": ""
+          },
+          "suboperator": {
+            "name": "Travis Perkins",
+            "website": ""
+          },
+          "energy_mix": null,
+          "charging_when_closed": true,
+          "directions": null,
+          "evses": [
+            {
+              "uid": "GB-GFX-EDRAX00808-1",
+              "status": "AVAILABLE",
+              "last_updated": "2026-09-11T09:48:47Z",
+              "evse_id": "GB*GFX*EDRAX00808*1",
+              "physical_reference": "DRAX00808",
+              "floor_level": null,
+              "directions": null,
+              "parking_restrictions": null,
+              "capabilities": [
+                "REMOTE_START_STOP_CAPABLE",
+                "RFID_READER"
+              ],
+              "connectors": [
+                {
+                  "id": "1",
+                  "standard": "IEC_62196_T2",
+                  "format": "SOCKET",
+                  "power_type": "AC_3_PHASE",
+                  "last_updated": "2026-10-27T23:59:16Z",
+                  "max_amperage": 32,
+                  "max_voltage": 230,
+                  "max_electric_power": 3700,
+                  "tariff_ids": [
+                    "53f76568be8d4225b2fb578c98fe1db6"
+                  ]
+                }
+              ]
+            },
+            {
+              "uid": "GB-GFX-EDRAX00808-2",
+              "status": "AVAILABLE",
+              "last_updated": "2026-08-29T03:37:19Z",
+              "evse_id": "GB*GFX*EDRAX00808*2",
+              "physical_reference": "DRAX00808",
+              "floor_level": null,
+              "directions": null,
+              "parking_restrictions": null,
+              "capabilities": [
+                "REMOTE_START_STOP_CAPABLE",
+                "RFID_READER"
+              ],
+              "connectors": [
+                {
+                  "id": "2",
+                  "standard": "IEC_62196_T2",
+                  "format": "SOCKET",
+                  "power_type": "AC_3_PHASE",
+                  "last_updated": "2026-10-27T23:59:16Z",
+                  "max_amperage": 32,
+                  "max_voltage": 230,
+                  "max_electric_power": 3700,
+                  "tariff_ids": [
+                    "53f76568be8d4225b2fb578c98fe1db6"
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "party_id": "GFX",
+          "id": "c684d828-fed6-47bc-9fc2-3ffa835ab9c7",
+          "country_code": "GB",
+          "publish": true,
+          "country": "GBR",
+          "address": "The Paddocks",
+          "city": "London",
+          "postal_code": "W54PA",
+          "coordinates": {
+            "latitude": "51.49882200",
+            "longitude": "-0.30242200"
+          },
+          "state": null,
+          "last_updated": "2026-10-28T00:25:36Z",
+          "opening_times": {
+            "regular_hours": [
+              {
+                "period_begin": "08:00",
+                "period_end": "12:00",
+                "weekday": 7
+              },
+              {
+                "period_begin": "08:00",
+                "period_end": "12:00",
+                "weekday": 6
+              },
+              {
+                "period_begin": "06:30",
+                "period_end": "16:30",
+                "weekday": 5
+              },
+              {
+                "period_begin": "06:30",
+                "period_end": "16:30",
+                "weekday": 4
+              },
+              {
+                "period_begin": "06:30",
+                "period_end": "16:30",
+                "weekday": 3
+              },
+              {
+                "period_begin": "06:30",
+                "period_end": "16:30",
+                "weekday": 2
+              },
+              {
+                "period_begin": "06:30",
+                "period_end": "16:30",
+                "weekday": 1
+              }
+            ],
+            "twentyfourseven": false
+          },
+          "name": "Travis Perkins - Ealing",
+          "time_zone": "Europe/London",
+          "owner": {
+            "name": "Travis Perkins",
+            "website": ""
+          },
+          "operator": {
+            "name": "Travis Perkins",
+            "website": ""
+          },
+          "suboperator": {
+            "name": "Travis Perkins",
+            "website": ""
+          },
+          "energy_mix": null,
+          "charging_when_closed": true,
+          "directions": null,
+          "evses": [
+            {
+              "uid": "GB-GFX-EDRAX00881-1",
+              "status": "OUTOFORDER",
+              "last_updated": "2026-10-14T10:54:16Z",
+              "evse_id": "GB*GFX*EDRAX00881*1",
+              "physical_reference": "DRAX00881",
+              "floor_level": null,
+              "directions": null,
+              "parking_restrictions": null,
+              "capabilities": [
+                "REMOTE_START_STOP_CAPABLE",
+                "RFID_READER"
+              ],
+              "connectors": [
+                {
+                  "id": "1",
+                  "standard": "IEC_62196_T2",
+                  "format": "SOCKET",
+                  "power_type": "AC_1_PHASE",
+                  "last_updated": "2026-10-28T00:25:36Z",
+                  "max_amperage": 32,
+                  "max_voltage": 230,
+                  "max_electric_power": 7400,
+                  "tariff_ids": [
+                    "53f76568be8d4225b2fb578c98fe1db6"
+                  ]
+                }
+              ]
+            },
+            {
+              "uid": "GB-GFX-EDRAX00882-1",
+              "status": "OUTOFORDER",
+              "last_updated": "2026-10-14T10:54:28Z",
+              "evse_id": "GB*GFX*EDRAX00882*1",
+              "physical_reference": "DRAX00882",
+              "floor_level": null,
+              "directions": null,
+              "parking_restrictions": null,
+              "capabilities": [
+                "REMOTE_START_STOP_CAPABLE",
+                "RFID_READER"
+              ],
+              "connectors": [
+                {
+                  "id": "1",
+                  "standard": "IEC_62196_T2",
+                  "format": "SOCKET",
+                  "power_type": "AC_1_PHASE",
+                  "last_updated": "2026-10-28T00:25:36Z",
+                  "max_amperage": 32,
+                  "max_voltage": 230,
+                  "max_electric_power": 7400,
+                  "tariff_ids": [
+                    "53f76568be8d4225b2fb578c98fe1db6"
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "party_id": "GFX",
+          "id": "e179178b-8c95-45cc-be00-900bd25550df",
+          "country_code": "GB",
+          "publish": true,
+          "country": "GBR",
+          "address": "Maskew Avenue",
+          "city": "Peterborough",
+          "postal_code": "PE1 2FG",
+          "coordinates": {
+            "latitude": "52.58494100",
+            "longitude": "-0.25381900"
+          },
+          "state": null,
+          "last_updated": "2026-10-27T23:43:30Z",
+          "opening_times": {
+            "twentyfourseven": true
+          },
+          "name": "Travis Perkins - Peterborough",
+          "time_zone": "Europe/London",
+          "owner": {
+            "name": "Travis Perkins",
+            "website": ""
+          },
+          "operator": {
+            "name": "Travis Perkins",
+            "website": ""
+          },
+          "suboperator": {
+            "name": "Travis Perkins",
+            "website": ""
+          },
+          "energy_mix": null,
+          "charging_when_closed": true,
+          "directions": null,
+          "evses": [
+            {
+              "uid": "GB-GFX-EDRAX00722-1",
+              "status": "AVAILABLE",
+              "last_updated": "2026-10-23T19:23:40Z",
+              "evse_id": "GB*GFX*EDRAX00722*1",
+              "physical_reference": "DRAX00722",
+              "floor_level": null,
+              "directions": null,
+              "parking_restrictions": "customers",
+              "capabilities": [
+                "REMOTE_START_STOP_CAPABLE",
+                "RFID_READER"
+              ],
+              "connectors": [
+                {
+                  "id": "1",
+                  "standard": "IEC_62196_T2",
+                  "format": "SOCKET",
+                  "power_type": "AC_1_PHASE",
+                  "last_updated": "2026-10-27T23:43:30Z",
+                  "max_amperage": 32,
+                  "max_voltage": 230,
+                  "max_electric_power": 7400,
+                  "tariff_ids": [
+                    "ce4b534436674e21b5d3d6f82a67c60d"
+                  ]
+                }
+              ]
+            },
+            {
+              "uid": "GB-GFX-EDRAX00722-2",
+              "status": "AVAILABLE",
+              "last_updated": "2026-10-23T14:08:49Z",
+              "evse_id": "GB*GFX*EDRAX00722*2",
+              "physical_reference": "DRAX00722",
+              "floor_level": null,
+              "directions": null,
+              "parking_restrictions": "customers",
+              "capabilities": [
+                "REMOTE_START_STOP_CAPABLE",
+                "RFID_READER"
+              ],
+              "connectors": [
+                {
+                  "id": "2",
+                  "standard": "IEC_62196_T2",
+                  "format": "SOCKET",
+                  "power_type": "AC_1_PHASE",
+                  "last_updated": "2026-10-27T23:43:30Z",
+                  "max_amperage": 32,
+                  "max_voltage": 230,
+                  "max_electric_power": 7400,
+                  "tariff_ids": [
+                    "ce4b534436674e21b5d3d6f82a67c60d"
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  }
+}

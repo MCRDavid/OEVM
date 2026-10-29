@@ -1,8 +1,8 @@
 # yaml-language-server: $schema=schema.json
 id: shell_recharge
 display_name: Shell Recharge
-ocpi_country_code: unknown
-ocpi_party_id: unknown
+ocpi_country_code: GB
+ocpi_party_id: TNM # Confirmed from the feed's own country_code and party_id on 2026-10-29.
 adapter: eco_movement_pcpr
 base_url: unknown
 endpoints:
@@ -77,9 +77,37 @@ limits_per_key:
   evidence_url: https://developers.eco-movement.com/v2.2.1/docs/eco-movement-pcpr-api-user-guide
 supports_single_location: supported
 cors: needs_testing
-attribution: null
+attribution: >-
+  Contains data from Shell Recharge published under the Public Charge Point Regulations
+  2023, used in line with the Open Government Licence v3.0.
+licence:
+  name: OGL-3.0
+  url: https://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/
+  basis: >-
+    Shell's open data request page and its Public Charge Point Regulations page (read in
+    a browser by the repository owner on 2026-10-09) carry a request form that names no
+    licence, terms, key, agreement or rate limit. Eco-Movement's email of 2026-10-28
+    with the token, and its PCPR API user guide and reference (read 2026-10-26), state
+    no licence or terms either. Regulation 10(5) of the Public Charge Point Regulations
+    2023 requires the data to be available "without any requirement to agree to terms
+    and conditions regarding the use of that data", and the DfT guidance says "Data must
+    be open in line with the Open Government Licence". On 2026-10-10 the repository
+    owner decided, as a standing rule for operators whose data has no terms of its own,
+    that such operators can be switched on without asking again.
+  checked: 2026-10-29
+vat_not_stated:
+  decided: 2026-10-29
+  basis: >-
+    Shell Recharge's 308 tariffs on Eco-Movement's PCPR API gave no VAT rate on
+    2026-10-29. Its energy prices are 0.7417, 0.6583, 0.7083, 0.575 and 0.625 pounds per
+    kWh, which are 89p, 79p, 85p, 69p and 75p with 20% added, the UK standard rate of
+    VAT on public charging. That the prices exclude VAT is inferred from the figures,
+    not stated by Shell. The repository owner decided on 2026-10-29 that VAT at 20% is
+    added, so prices on the map all include VAT and can be compared.
+  evidence_url: https://open-chargepoints.com/api/ocpi/cpo/2.2.1/tariffs/
+  add_percent: 20
 engagement:
-  status: requested_no_reply
+  status: key_on_request
   evidence:
     - date: 2026-10-09
       url: https://www.shell.co.uk/electric-vehicle-charging/shell-recharge-open-data-request.html
@@ -87,6 +115,12 @@ engagement:
         Read in a browser by the repository owner. A request form asks for contact details,
         organisation, the network wanted and the planned use, and names no licence, terms,
         key, agreement or rate limit.
+    - date: 2026-10-28
+      file: evidence/shell_recharge/2026-10-28-token-email.md
+      note: >-
+        Eco-Movement's email with an expiring link to a note holding tokens for Shell
+        Recharge and ubitricity, in reply to the request for all Shell networks. The token
+        itself is not kept here.
   log:
     - date: 2026-10-09
       action: page_checked
@@ -104,8 +138,17 @@ engagement:
       channel: web_form
       summary: >-
         Requested access to PCPR data for all Shell networks through Shell's open data request form (choice "All Networks").
+    - date: 2026-10-28
+      action: key_granted
+      channel: email
+      summary: >-
+        Eco-Movement sent tokens for Shell Recharge and ubitricity by email, through an
+        expiring link, in reply to the request for all Shell networks; none was given for
+        Community by Shell Recharge. The Shell Recharge token is kept as a GitHub Actions
+        secret.
+      evidence_file: evidence/shell_recharge/2026-10-28-token-email.md
 access_requested: 2026-10-23
-access_granted: null
+access_granted: 2026-10-28
 sources:
   - url: https://wiki.openstreetmap.org/wiki/EV_charge_points_in_the_United_Kingdom
     note: The blueprint cites this page for this operator using Eco-Movement's PCPR API.
@@ -129,9 +172,30 @@ sources:
     note: >-
       Shell UK page titled "Public Charge Point Regulations", described as "Request data on
       Shell Recharge including location and usage of our charge points". Its main content
-      loads with a script and has not been read yet (checked 2026-10-08). Whether it covers
-      this operator needs testing.
+      loads with a script; the repository owner read it in a browser on 2026-10-09 (see
+      engagement), and the token it led to covers this operator (2026-10-28).
 findings:
+  - date: 2026-10-29
+    kind: data_quality
+    summary: >-
+      No price gives a VAT rate. The energy prices are 0.7417, 0.6583, 0.7083, 0.575
+      and 0.625 pounds per kWh, which are 89p, 79p, 85p, 69p and 75p with 20% added.
+    handling: >-
+      By the repository owner's decision of 2026-10-29 recorded in vat_not_stated, VAT
+      at 20% is added to every price that gives no VAT rate, and the price says this
+      project added it. Reading the prices as excluding VAT is inferred from the
+      figures and needs confirming by Shell. The tariffs are published unchanged.
+    evidence_url: https://open-chargepoints.com/api/ocpi/cpo/2.2.1/tariffs/
+  - date: 2026-10-29
+    kind: data_quality
+    summary: >-
+      Each tariff's text gives its energy price before VAT, rounded to the penny, such
+      as "ALL: £0.74 per kWh" for a price of 0.7417 pounds per kWh. 238 of the 308
+      tariffs also have a parking price of 0, restricted to times when the power is 0.
+    handling: >-
+      The text is passed on as published; the map's price comes from the price
+      components, with VAT added as above.
+    evidence_url: https://open-chargepoints.com/api/ocpi/cpo/2.2.1/tariffs/
   - date: 2026-10-07
     kind: documentation
     summary: >-
@@ -154,9 +218,11 @@ findings:
       endpoints, with requests to the host still sent one at a time.
     evidence_url: https://developers.eco-movement.com/v2.2.1/docs/eco-movement-pcpr-api-user-guide
 notes: >-
-  Uses the shared Eco-Movement PCPR endpoints; only the token differs between operators.
-  Authentication is an "Authorization: Token <token>" header (confirmed 2026-10-07).
-  Whether one token covers several operators is unverified, so this operator has its own
-  secret. How access is requested is not
-  recorded in the blueprint.
-enabled: false
+  Its regulation 10 data is served by Eco-Movement's PCPR API (eco_movement_pcpr adapter),
+  with a token Eco-Movement sent on 2026-10-28 in reply to the request for all Shell
+  networks, kept as the GitHub Actions secret SHELL_RECHARGE_TOKEN. The same note held a
+  token for ubitricity, whose own token of 2026-10-26 is used, and none for Community by
+  Shell Recharge. The response on 2026-10-29 linked to a next page past the last record,
+  which the adapter does not follow. On 2026-10-29 the feed reported 266 locations and 308
+  tariffs.
+enabled: true

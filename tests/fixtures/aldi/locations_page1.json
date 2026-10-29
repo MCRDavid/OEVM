@@ -1,0 +1,833 @@
+{
+  "request": {
+    "method": "GET",
+    "url": "https://open-chargepoints.com/api/ocpi/cpo/2.2.1/locations/?limit=1000"
+  },
+  "response": {
+    "status_code": 200,
+    "headers": {
+      "content-type": "application/json",
+      "link": "<https://open-chargepoints.com/api/ocpi/cpo/2.2.1/locations/?limit=1000&offset=3>; rel=\"next\"",
+      "x-total-count": "3",
+      "x-limit": "1000"
+    },
+    "body": {
+      "timestamp": "2026-10-29T18:01:40Z",
+      "status_code": 1000,
+      "status_message": "Success",
+      "data": [
+        {
+          "party_id": "GFX",
+          "id": "e105cdba-1d10-4612-a7d9-8b6e43ca23e2",
+          "country_code": "GB",
+          "publish": true,
+          "country": "GBR",
+          "address": "Park Road",
+          "city": "Diss",
+          "postal_code": "IP22 4AS",
+          "coordinates": {
+            "latitude": "52.37369700",
+            "longitude": "1.10483400"
+          },
+          "state": null,
+          "last_updated": "2026-10-28T16:17:29Z",
+          "opening_times": {
+            "regular_hours": [
+              {
+                "period_begin": "10:00",
+                "period_end": "16:00",
+                "weekday": 7
+              },
+              {
+                "period_begin": "08:00",
+                "period_end": "22:00",
+                "weekday": 6
+              },
+              {
+                "period_begin": "08:00",
+                "period_end": "22:00",
+                "weekday": 5
+              },
+              {
+                "period_begin": "08:00",
+                "period_end": "22:00",
+                "weekday": 4
+              },
+              {
+                "period_begin": "08:00",
+                "period_end": "22:00",
+                "weekday": 3
+              },
+              {
+                "period_begin": "08:00",
+                "period_end": "22:00",
+                "weekday": 2
+              },
+              {
+                "period_begin": "08:00",
+                "period_end": "22:00",
+                "weekday": 1
+              }
+            ],
+            "twentyfourseven": false
+          },
+          "name": "Aldi - Diss",
+          "time_zone": "Europe/London",
+          "owner": {
+            "name": "Aldi Stores Limited",
+            "website": ""
+          },
+          "operator": {
+            "name": "Aldi Stores Limited",
+            "website": ""
+          },
+          "suboperator": {
+            "name": "Aldi Stores Limited",
+            "website": ""
+          },
+          "energy_mix": null,
+          "charging_when_closed": true,
+          "directions": null,
+          "evses": [
+            {
+              "uid": "GB-GFX-ECHE53AC02-1",
+              "status": "OUTOFORDER",
+              "last_updated": "2026-10-25T10:11:33Z",
+              "evse_id": "GB*GFX*ECHE53AC02*1",
+              "physical_reference": "CHE53AC02",
+              "floor_level": null,
+              "directions": null,
+              "parking_restrictions": null,
+              "capabilities": [
+                "REMOTE_START_STOP_CAPABLE",
+                "RFID_READER"
+              ],
+              "connectors": [
+                {
+                  "id": "1",
+                  "standard": "IEC_62196_T2",
+                  "format": "SOCKET",
+                  "power_type": "AC_1_PHASE",
+                  "last_updated": "2026-10-27T23:43:07Z",
+                  "max_amperage": 32,
+                  "max_voltage": 230,
+                  "max_electric_power": 7400,
+                  "tariff_ids": [
+                    "af4aecc24bbd47a88172d053c306460c"
+                  ]
+                }
+              ]
+            },
+            {
+              "uid": "GB-GFX-ECHE53AC04-1",
+              "status": "AVAILABLE",
+              "last_updated": "2026-08-29T07:34:46Z",
+              "evse_id": "GB*GFX*ECHE53AC04*1",
+              "physical_reference": "CHE53AC04",
+              "floor_level": null,
+              "directions": null,
+              "parking_restrictions": null,
+              "capabilities": [
+                "REMOTE_START_STOP_CAPABLE",
+                "RFID_READER"
+              ],
+              "connectors": [
+                {
+                  "id": "1",
+                  "standard": "IEC_62196_T2",
+                  "format": "SOCKET",
+                  "power_type": "AC_1_PHASE",
+                  "last_updated": "2026-10-27T23:43:08Z",
+                  "max_amperage": 32,
+                  "max_voltage": 230,
+                  "max_electric_power": 7400,
+                  "tariff_ids": [
+                    "af4aecc24bbd47a88172d053c306460c"
+                  ]
+                }
+              ]
+            },
+            {
+              "uid": "GB-GFX-EDRAX00663-1",
+              "status": "AVAILABLE",
+              "last_updated": "2026-10-28T15:40:42Z",
+              "evse_id": "GB*GFX*EDRAX00663*1",
+              "physical_reference": "CHE053DC01-01",
+              "floor_level": null,
+              "directions": null,
+              "parking_restrictions": null,
+              "capabilities": [
+                "CREDIT_CARD_PAYABLE",
+                "REMOTE_START_STOP_CAPABLE",
+                "RFID_READER"
+              ],
+              "connectors": [
+                {
+                  "id": "1",
+                  "standard": "IEC_62196_T2_COMBO",
+                  "format": "CABLE",
+                  "power_type": "DC",
+                  "last_updated": "2026-10-27T23:43:08Z",
+                  "max_amperage": 160,
+                  "max_voltage": 1000,
+                  "max_electric_power": 160000,
+                  "tariff_ids": [
+                    "30ae7f38d58f47c9b28669a4f7596039"
+                  ]
+                }
+              ]
+            },
+            {
+              "uid": "GB-GFX-E18B14445-1",
+              "status": "AVAILABLE",
+              "last_updated": "2026-10-26T13:20:58Z",
+              "evse_id": "GB*GFX*E18B14445*1",
+              "physical_reference": "18B14445",
+              "floor_level": null,
+              "directions": null,
+              "parking_restrictions": null,
+              "capabilities": [
+                "REMOTE_START_STOP_CAPABLE",
+                "RFID_READER"
+              ],
+              "connectors": [
+                {
+                  "id": "1",
+                  "standard": "IEC_62196_T2",
+                  "format": "SOCKET",
+                  "power_type": "AC_1_PHASE",
+                  "last_updated": "2026-10-27T23:43:07Z",
+                  "max_amperage": 32,
+                  "max_voltage": 230,
+                  "max_electric_power": 7400,
+                  "tariff_ids": [
+                    "af4aecc24bbd47a88172d053c306460c"
+                  ]
+                }
+              ]
+            },
+            {
+              "uid": "GB-GFX-E18B14537-1",
+              "status": "AVAILABLE",
+              "last_updated": "2026-10-26T18:39:11Z",
+              "evse_id": "GB*GFX*E18B14537*1",
+              "physical_reference": "18B14537",
+              "floor_level": null,
+              "directions": null,
+              "parking_restrictions": null,
+              "capabilities": [
+                "REMOTE_START_STOP_CAPABLE",
+                "RFID_READER"
+              ],
+              "connectors": [
+                {
+                  "id": "1",
+                  "standard": "IEC_62196_T2",
+                  "format": "SOCKET",
+                  "power_type": "AC_1_PHASE",
+                  "last_updated": "2026-10-27T23:43:07Z",
+                  "max_amperage": 32,
+                  "max_voltage": 230,
+                  "max_electric_power": 7400,
+                  "tariff_ids": [
+                    "af4aecc24bbd47a88172d053c306460c"
+                  ]
+                }
+              ]
+            },
+            {
+              "uid": "GB-GFX-E18B14543-1",
+              "status": "AVAILABLE",
+              "last_updated": "2026-10-27T12:07:29Z",
+              "evse_id": "GB*GFX*E18B14543*1",
+              "physical_reference": "18B14543",
+              "floor_level": null,
+              "directions": null,
+              "parking_restrictions": null,
+              "capabilities": [
+                "REMOTE_START_STOP_CAPABLE",
+                "RFID_READER"
+              ],
+              "connectors": [
+                {
+                  "id": "1",
+                  "standard": "IEC_62196_T2",
+                  "format": "SOCKET",
+                  "power_type": "AC_1_PHASE",
+                  "last_updated": "2026-10-27T23:43:07Z",
+                  "max_amperage": 32,
+                  "max_voltage": 230,
+                  "max_electric_power": 7400,
+                  "tariff_ids": [
+                    "af4aecc24bbd47a88172d053c306460c"
+                  ]
+                }
+              ]
+            },
+            {
+              "uid": "GB-GFX-E18B14552-1",
+              "status": "AVAILABLE",
+              "last_updated": "2026-10-16T11:54:16Z",
+              "evse_id": "GB*GFX*E18B14552*1",
+              "physical_reference": "18B14552",
+              "floor_level": null,
+              "directions": null,
+              "parking_restrictions": null,
+              "capabilities": [
+                "REMOTE_START_STOP_CAPABLE",
+                "RFID_READER"
+              ],
+              "connectors": [
+                {
+                  "id": "1",
+                  "standard": "IEC_62196_T2",
+                  "format": "SOCKET",
+                  "power_type": "AC_1_PHASE",
+                  "last_updated": "2026-10-27T23:43:07Z",
+                  "max_amperage": 32,
+                  "max_voltage": 230,
+                  "max_electric_power": 7400,
+                  "tariff_ids": [
+                    "af4aecc24bbd47a88172d053c306460c"
+                  ]
+                }
+              ]
+            },
+            {
+              "uid": "GB-GFX-ECHE53AC01-1",
+              "status": "AVAILABLE",
+              "last_updated": "2026-10-18T10:41:12Z",
+              "evse_id": "GB*GFX*ECHE53AC01*1",
+              "physical_reference": "CHE53AC01",
+              "floor_level": null,
+              "directions": null,
+              "parking_restrictions": null,
+              "capabilities": [
+                "REMOTE_START_STOP_CAPABLE",
+                "RFID_READER"
+              ],
+              "connectors": [
+                {
+                  "id": "1",
+                  "standard": "IEC_62196_T2",
+                  "format": "SOCKET",
+                  "power_type": "AC_1_PHASE",
+                  "last_updated": "2026-10-27T23:43:07Z",
+                  "max_amperage": 32,
+                  "max_voltage": 230,
+                  "max_electric_power": 7400,
+                  "tariff_ids": [
+                    "af4aecc24bbd47a88172d053c306460c"
+                  ]
+                }
+              ]
+            },
+            {
+              "uid": "GB-GFX-ECHE53AC03-1",
+              "status": "AVAILABLE",
+              "last_updated": "2026-09-21T14:05:44Z",
+              "evse_id": "GB*GFX*ECHE53AC03*1",
+              "physical_reference": "CHE53AC03",
+              "floor_level": null,
+              "directions": null,
+              "parking_restrictions": null,
+              "capabilities": [
+                "REMOTE_START_STOP_CAPABLE",
+                "RFID_READER"
+              ],
+              "connectors": [
+                {
+                  "id": "1",
+                  "standard": "IEC_62196_T2",
+                  "format": "SOCKET",
+                  "power_type": "AC_1_PHASE",
+                  "last_updated": "2026-10-27T23:43:07Z",
+                  "max_amperage": 32,
+                  "max_voltage": 230,
+                  "max_electric_power": 7400,
+                  "tariff_ids": [
+                    "af4aecc24bbd47a88172d053c306460c"
+                  ]
+                }
+              ]
+            },
+            {
+              "uid": "GB-GFX-EDRAX00663-2",
+              "status": "AVAILABLE",
+              "last_updated": "2026-10-28T16:17:28Z",
+              "evse_id": "GB*GFX*EDRAX00663*2",
+              "physical_reference": "CHE053DC01-02",
+              "floor_level": null,
+              "directions": null,
+              "parking_restrictions": null,
+              "capabilities": [
+                "CREDIT_CARD_PAYABLE",
+                "REMOTE_START_STOP_CAPABLE",
+                "RFID_READER"
+              ],
+              "connectors": [
+                {
+                  "id": "2",
+                  "standard": "IEC_62196_T2_COMBO",
+                  "format": "CABLE",
+                  "power_type": "DC",
+                  "last_updated": "2026-10-27T23:43:08Z",
+                  "max_amperage": 160,
+                  "max_voltage": 1000,
+                  "max_electric_power": 160000,
+                  "tariff_ids": [
+                    "30ae7f38d58f47c9b28669a4f7596039"
+                  ]
+                }
+              ]
+            },
+            {
+              "uid": "GB-GFX-E18B14441-1",
+              "status": "AVAILABLE",
+              "last_updated": "2026-10-24T14:19:11Z",
+              "evse_id": "GB*GFX*E18B14441*1",
+              "physical_reference": "18B14441",
+              "floor_level": null,
+              "directions": null,
+              "parking_restrictions": null,
+              "capabilities": [
+                "REMOTE_START_STOP_CAPABLE",
+                "RFID_READER"
+              ],
+              "connectors": [
+                {
+                  "id": "1",
+                  "standard": "IEC_62196_T2",
+                  "format": "SOCKET",
+                  "power_type": "AC_1_PHASE",
+                  "last_updated": "2026-10-27T23:43:07Z",
+                  "max_amperage": 32,
+                  "max_voltage": 230,
+                  "max_electric_power": 7400,
+                  "tariff_ids": [
+                    "af4aecc24bbd47a88172d053c306460c"
+                  ]
+                }
+              ]
+            },
+            {
+              "uid": "GB-GFX-E18B14545-1",
+              "status": "AVAILABLE",
+              "last_updated": "2026-10-01T17:02:04Z",
+              "evse_id": "GB*GFX*E18B14545*1",
+              "physical_reference": "18B14545",
+              "floor_level": null,
+              "directions": null,
+              "parking_restrictions": null,
+              "capabilities": [
+                "REMOTE_START_STOP_CAPABLE",
+                "RFID_READER"
+              ],
+              "connectors": [
+                {
+                  "id": "1",
+                  "standard": "IEC_62196_T2",
+                  "format": "SOCKET",
+                  "power_type": "AC_1_PHASE",
+                  "last_updated": "2026-10-27T23:43:07Z",
+                  "max_amperage": 32,
+                  "max_voltage": 230,
+                  "max_electric_power": 7400,
+                  "tariff_ids": [
+                    "af4aecc24bbd47a88172d053c306460c"
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "party_id": "GFX",
+          "id": "96662c56-a2ee-49d4-919c-99da1a555696",
+          "country_code": "GB",
+          "publish": true,
+          "country": "GBR",
+          "address": "Preston Road",
+          "city": "Lytham Saint Annes",
+          "postal_code": "FY8 5AT",
+          "coordinates": {
+            "latitude": "53.74530000",
+            "longitude": "-2.93799500"
+          },
+          "state": null,
+          "last_updated": "2026-10-27T23:04:00Z",
+          "opening_times": {
+            "regular_hours": [
+              {
+                "period_begin": "10:00",
+                "period_end": "16:00",
+                "weekday": 7
+              },
+              {
+                "period_begin": "08:00",
+                "period_end": "22:00",
+                "weekday": 6
+              },
+              {
+                "period_begin": "08:00",
+                "period_end": "22:00",
+                "weekday": 5
+              },
+              {
+                "period_begin": "08:00",
+                "period_end": "22:00",
+                "weekday": 4
+              },
+              {
+                "period_begin": "08:00",
+                "period_end": "22:00",
+                "weekday": 3
+              },
+              {
+                "period_begin": "08:00",
+                "period_end": "22:00",
+                "weekday": 2
+              },
+              {
+                "period_begin": "08:00",
+                "period_end": "22:00",
+                "weekday": 1
+              }
+            ],
+            "twentyfourseven": false
+          },
+          "name": "Aldi - Lytham St Annes",
+          "time_zone": "Europe/London",
+          "owner": {
+            "name": "Aldi Stores Limited",
+            "website": ""
+          },
+          "operator": {
+            "name": "Aldi Stores Limited",
+            "website": ""
+          },
+          "suboperator": {
+            "name": "Aldi Stores Limited",
+            "website": ""
+          },
+          "energy_mix": null,
+          "charging_when_closed": true,
+          "directions": null,
+          "evses": [
+            {
+              "uid": "GB-GFX-EBOL87AC01-1",
+              "status": "AVAILABLE",
+              "last_updated": "2026-10-27T21:05:59Z",
+              "evse_id": "GB*GFX*EBOL87AC01*1",
+              "physical_reference": "BOL87AC01",
+              "floor_level": null,
+              "directions": null,
+              "parking_restrictions": null,
+              "capabilities": [
+                "REMOTE_START_STOP_CAPABLE",
+                "RFID_READER"
+              ],
+              "connectors": [
+                {
+                  "id": "1",
+                  "standard": "IEC_62196_T2",
+                  "format": "SOCKET",
+                  "power_type": "AC_1_PHASE",
+                  "last_updated": "2026-10-27T23:04:00Z",
+                  "max_amperage": 32,
+                  "max_voltage": 230,
+                  "max_electric_power": 7400,
+                  "tariff_ids": [
+                    "af4aecc24bbd47a88172d053c306460c"
+                  ]
+                }
+              ]
+            },
+            {
+              "uid": "GB-GFX-E18B13687-1",
+              "status": "AVAILABLE",
+              "last_updated": "2026-10-26T18:49:59Z",
+              "evse_id": "GB*GFX*E18B13687*1",
+              "physical_reference": "18B13687",
+              "floor_level": null,
+              "directions": null,
+              "parking_restrictions": null,
+              "capabilities": [
+                "REMOTE_START_STOP_CAPABLE",
+                "RFID_READER"
+              ],
+              "connectors": [
+                {
+                  "id": "1",
+                  "standard": "IEC_62196_T2",
+                  "format": "SOCKET",
+                  "power_type": "AC_1_PHASE",
+                  "last_updated": "2026-10-27T23:03:59Z",
+                  "max_amperage": 32,
+                  "max_voltage": 230,
+                  "max_electric_power": 7400,
+                  "tariff_ids": [
+                    "af4aecc24bbd47a88172d053c306460c"
+                  ]
+                }
+              ]
+            },
+            {
+              "uid": "GB-GFX-E18B13690-1",
+              "status": "AVAILABLE",
+              "last_updated": "2026-10-19T14:34:29Z",
+              "evse_id": "GB*GFX*E18B13690*1",
+              "physical_reference": "18B13690",
+              "floor_level": null,
+              "directions": null,
+              "parking_restrictions": null,
+              "capabilities": [
+                "REMOTE_START_STOP_CAPABLE",
+                "RFID_READER"
+              ],
+              "connectors": [
+                {
+                  "id": "1",
+                  "standard": "IEC_62196_T2",
+                  "format": "SOCKET",
+                  "power_type": "AC_1_PHASE",
+                  "last_updated": "2026-10-27T23:04:00Z",
+                  "max_amperage": 32,
+                  "max_voltage": 230,
+                  "max_electric_power": 7400,
+                  "tariff_ids": [
+                    "af4aecc24bbd47a88172d053c306460c"
+                  ]
+                }
+              ]
+            },
+            {
+              "uid": "GB-GFX-E18B13693-1",
+              "status": "AVAILABLE",
+              "last_updated": "2026-10-25T10:46:11Z",
+              "evse_id": "GB*GFX*E18B13693*1",
+              "physical_reference": "18B13693",
+              "floor_level": null,
+              "directions": null,
+              "parking_restrictions": null,
+              "capabilities": [
+                "REMOTE_START_STOP_CAPABLE",
+                "RFID_READER"
+              ],
+              "connectors": [
+                {
+                  "id": "1",
+                  "standard": "IEC_62196_T2",
+                  "format": "SOCKET",
+                  "power_type": "AC_1_PHASE",
+                  "last_updated": "2026-10-27T23:04:00Z",
+                  "max_amperage": 32,
+                  "max_voltage": 230,
+                  "max_electric_power": 7400,
+                  "tariff_ids": [
+                    "af4aecc24bbd47a88172d053c306460c"
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "party_id": "GFX",
+          "id": "f23f99ec-9ed7-420e-97f0-33509add7f6e",
+          "country_code": "GB",
+          "publish": true,
+          "country": "GBR",
+          "address": "Crow Lane",
+          "city": "Bristol",
+          "postal_code": "BS10 7EN",
+          "coordinates": {
+            "latitude": "51.50854900",
+            "longitude": "-2.62290200"
+          },
+          "state": null,
+          "last_updated": "2026-10-28T00:13:53Z",
+          "opening_times": {
+            "regular_hours": [
+              {
+                "period_begin": "10:00",
+                "period_end": "16:00",
+                "weekday": 7
+              },
+              {
+                "period_begin": "08:00",
+                "period_end": "22:00",
+                "weekday": 6
+              },
+              {
+                "period_begin": "08:00",
+                "period_end": "22:00",
+                "weekday": 5
+              },
+              {
+                "period_begin": "08:00",
+                "period_end": "22:00",
+                "weekday": 4
+              },
+              {
+                "period_begin": "08:00",
+                "period_end": "22:00",
+                "weekday": 3
+              },
+              {
+                "period_begin": "08:00",
+                "period_end": "22:00",
+                "weekday": 2
+              },
+              {
+                "period_begin": "08:00",
+                "period_end": "22:00",
+                "weekday": 1
+              }
+            ],
+            "twentyfourseven": false
+          },
+          "name": "Aldi - Henbury",
+          "time_zone": "Europe/London",
+          "owner": {
+            "name": "Aldi Stores Limited",
+            "website": ""
+          },
+          "operator": {
+            "name": "Aldi Stores Limited",
+            "website": ""
+          },
+          "suboperator": {
+            "name": "Aldi Stores Limited",
+            "website": ""
+          },
+          "energy_mix": null,
+          "charging_when_closed": true,
+          "directions": null,
+          "evses": [
+            {
+              "uid": "GB-GFX-ECRD18AC01-1",
+              "status": "AVAILABLE",
+              "last_updated": "2026-10-26T09:53:59Z",
+              "evse_id": "GB*GFX*ECRD18AC01*1",
+              "physical_reference": "CRD18AC01",
+              "floor_level": null,
+              "directions": null,
+              "parking_restrictions": null,
+              "capabilities": [
+                "CREDIT_CARD_PAYABLE",
+                "REMOTE_START_STOP_CAPABLE",
+                "RFID_READER"
+              ],
+              "connectors": [
+                {
+                  "id": "1",
+                  "standard": "IEC_62196_T2",
+                  "format": "SOCKET",
+                  "power_type": "AC_3_PHASE",
+                  "last_updated": "2026-10-28T00:13:53Z",
+                  "max_amperage": 32,
+                  "max_voltage": 400,
+                  "max_electric_power": 22000,
+                  "tariff_ids": [
+                    "af4aecc24bbd47a88172d053c306460c"
+                  ]
+                }
+              ]
+            },
+            {
+              "uid": "GB-GFX-ECRD18AC01-2",
+              "status": "AVAILABLE",
+              "last_updated": "2026-10-22T15:54:06Z",
+              "evse_id": "GB*GFX*ECRD18AC01*2",
+              "physical_reference": "CRD18AC01",
+              "floor_level": null,
+              "directions": null,
+              "parking_restrictions": null,
+              "capabilities": [
+                "CREDIT_CARD_PAYABLE",
+                "REMOTE_START_STOP_CAPABLE",
+                "RFID_READER"
+              ],
+              "connectors": [
+                {
+                  "id": "2",
+                  "standard": "IEC_62196_T2",
+                  "format": "SOCKET",
+                  "power_type": "AC_3_PHASE",
+                  "last_updated": "2026-10-28T00:13:53Z",
+                  "max_amperage": 32,
+                  "max_voltage": 400,
+                  "max_electric_power": 22000,
+                  "tariff_ids": [
+                    "af4aecc24bbd47a88172d053c306460c"
+                  ]
+                }
+              ]
+            },
+            {
+              "uid": "GB-GFX-ECRD18AC02-1",
+              "status": "UNKNOWN",
+              "last_updated": "2026-10-26T09:00:22Z",
+              "evse_id": "GB*GFX*ECRD18AC02*1",
+              "physical_reference": "CRD18AC02",
+              "floor_level": null,
+              "directions": null,
+              "parking_restrictions": null,
+              "capabilities": [
+                "CREDIT_CARD_PAYABLE",
+                "REMOTE_START_STOP_CAPABLE",
+                "RFID_READER"
+              ],
+              "connectors": [
+                {
+                  "id": "1",
+                  "standard": "IEC_62196_T2",
+                  "format": "SOCKET",
+                  "power_type": "AC_3_PHASE",
+                  "last_updated": "2026-10-28T00:13:53Z",
+                  "max_amperage": 32,
+                  "max_voltage": 400,
+                  "max_electric_power": 22000,
+                  "tariff_ids": [
+                    "af4aecc24bbd47a88172d053c306460c"
+                  ]
+                }
+              ]
+            },
+            {
+              "uid": "GB-GFX-ECRD18AC02-2",
+              "status": "UNKNOWN",
+              "last_updated": "2026-10-26T09:00:22Z",
+              "evse_id": "GB*GFX*ECRD18AC02*2",
+              "physical_reference": "CRD18AC02",
+              "floor_level": null,
+              "directions": null,
+              "parking_restrictions": null,
+              "capabilities": [
+                "CREDIT_CARD_PAYABLE",
+                "REMOTE_START_STOP_CAPABLE",
+                "RFID_READER"
+              ],
+              "connectors": [
+                {
+                  "id": "2",
+                  "standard": "IEC_62196_T2",
+                  "format": "SOCKET",
+                  "power_type": "AC_3_PHASE",
+                  "last_updated": "2026-10-28T00:13:53Z",
+                  "max_amperage": 32,
+                  "max_voltage": 400,
+                  "max_electric_power": 22000,
+                  "tariff_ids": [
+                    "af4aecc24bbd47a88172d053c306460c"
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  }
+}

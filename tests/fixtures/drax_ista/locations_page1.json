@@ -1,0 +1,555 @@
+{
+  "request": {
+    "method": "GET",
+    "url": "https://open-chargepoints.com/api/ocpi/cpo/2.2.1/locations/?limit=1000"
+  },
+  "response": {
+    "status_code": 200,
+    "headers": {
+      "content-type": "application/json",
+      "link": "<https://open-chargepoints.com/api/ocpi/cpo/2.2.1/locations/?limit=1000&offset=4>; rel=\"next\"",
+      "x-total-count": "4",
+      "x-limit": "1000"
+    },
+    "body": {
+      "timestamp": "2026-10-29T17:59:32Z",
+      "status_code": 1000,
+      "status_message": "Success",
+      "data": [
+        {
+          "party_id": "GFX",
+          "id": "b7e79f37-eaef-4516-a113-20b0f8438f6d",
+          "country_code": "GB",
+          "publish": true,
+          "country": "GBR",
+          "address": "Peat Road 320",
+          "city": "Glasgow",
+          "postal_code": "G53 6SB",
+          "coordinates": {
+            "latitude": "55.81583800",
+            "longitude": "-4.35683000"
+          },
+          "state": null,
+          "last_updated": "2026-10-28T15:24:23Z",
+          "opening_times": {
+            "regular_hours": [
+              {
+                "period_begin": "09:00",
+                "period_end": "17:00",
+                "weekday": 1
+              },
+              {
+                "period_begin": "09:00",
+                "period_end": "17:00",
+                "weekday": 2
+              },
+              {
+                "period_begin": "09:00",
+                "period_end": "17:00",
+                "weekday": 3
+              },
+              {
+                "period_begin": "09:00",
+                "period_end": "17:00",
+                "weekday": 4
+              },
+              {
+                "period_begin": "09:00",
+                "period_end": "17:00",
+                "weekday": 5
+              }
+            ],
+            "twentyfourseven": false
+          },
+          "name": "Farmfoods - Glasgow",
+          "time_zone": "Europe/London",
+          "owner": {
+            "name": "drax-Ista",
+            "website": ""
+          },
+          "operator": {
+            "name": "drax-Ista",
+            "website": ""
+          },
+          "suboperator": {
+            "name": "drax-Ista",
+            "website": ""
+          },
+          "energy_mix": null,
+          "charging_when_closed": true,
+          "directions": null,
+          "evses": [
+            {
+              "uid": "GB-GFX-EDRAX00132-1",
+              "status": "AVAILABLE",
+              "last_updated": "2026-10-17T15:23:48Z",
+              "evse_id": "GB*GFX*EDRAX00132*1",
+              "physical_reference": "DRAX00132",
+              "floor_level": null,
+              "directions": null,
+              "parking_restrictions": null,
+              "capabilities": [
+                "REMOTE_START_STOP_CAPABLE",
+                "RFID_READER"
+              ],
+              "connectors": [
+                {
+                  "id": "1",
+                  "standard": "IEC_62196_T2",
+                  "format": "SOCKET",
+                  "power_type": "AC_3_PHASE",
+                  "last_updated": "2026-10-27T23:18:52Z",
+                  "max_amperage": 32,
+                  "max_voltage": 230,
+                  "max_electric_power": 22000,
+                  "tariff_ids": [
+                    "b73456768b4544b8af81329e60284395"
+                  ]
+                }
+              ]
+            },
+            {
+              "uid": "GB-GFX-EDRAX00132-2",
+              "status": "CHARGING",
+              "last_updated": "2026-10-28T15:24:23Z",
+              "evse_id": "GB*GFX*EDRAX00132*2",
+              "physical_reference": "DRAX00132",
+              "floor_level": null,
+              "directions": null,
+              "parking_restrictions": null,
+              "capabilities": [
+                "REMOTE_START_STOP_CAPABLE",
+                "RFID_READER"
+              ],
+              "connectors": [
+                {
+                  "id": "2",
+                  "standard": "IEC_62196_T2",
+                  "format": "SOCKET",
+                  "power_type": "AC_3_PHASE",
+                  "last_updated": "2026-10-27T23:18:52Z",
+                  "max_amperage": 32,
+                  "max_voltage": 230,
+                  "max_electric_power": 22000,
+                  "tariff_ids": [
+                    "b73456768b4544b8af81329e60284395"
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "party_id": "GFX",
+          "id": "298e7d66-b65e-4b0b-b39f-7da91c0fa0ba",
+          "country_code": "GB",
+          "publish": true,
+          "country": "GBR",
+          "address": "Off Runcorn Rd",
+          "city": "Lincoln",
+          "postal_code": "LN6 3QZ",
+          "coordinates": {
+            "latitude": "53.20093500",
+            "longitude": "-0.61578900"
+          },
+          "state": null,
+          "last_updated": "2026-10-27T22:17:37Z",
+          "opening_times": {
+            "twentyfourseven": true
+          },
+          "name": "Garner Hotel Lincoln",
+          "time_zone": "Europe/London",
+          "owner": {
+            "name": "drax-Ista",
+            "website": ""
+          },
+          "operator": {
+            "name": "drax-Ista",
+            "website": ""
+          },
+          "suboperator": {
+            "name": "drax-Ista",
+            "website": ""
+          },
+          "energy_mix": null,
+          "charging_when_closed": true,
+          "directions": [
+            {
+              "language": "en",
+              "text": "A46, Off Runcorn Rd, Whisby Rd, Lincoln LN6 3QZ"
+            }
+          ],
+          "evses": [
+            {
+              "uid": "GB-GFX-EDRAX00463-1",
+              "status": "OUTOFORDER",
+              "last_updated": "2026-08-31T13:37:46Z",
+              "evse_id": "GB*GFX*EDRAX00463*1",
+              "physical_reference": "DRAX00463",
+              "floor_level": null,
+              "directions": null,
+              "parking_restrictions": null,
+              "capabilities": [
+                "REMOTE_START_STOP_CAPABLE",
+                "RFID_READER"
+              ],
+              "connectors": [
+                {
+                  "id": "1",
+                  "standard": "IEC_62196_T2",
+                  "format": "SOCKET",
+                  "power_type": "AC_3_PHASE",
+                  "last_updated": "2026-10-27T22:17:36Z",
+                  "max_amperage": 32,
+                  "max_voltage": 230,
+                  "max_electric_power": 22000,
+                  "tariff_ids": [
+                    "ec347ac1e79d4d7b8dc6341951b118e0"
+                  ]
+                }
+              ]
+            },
+            {
+              "uid": "GB-GFX-EDRAX00463-2",
+              "status": "AVAILABLE",
+              "last_updated": "2026-08-31T13:15:42Z",
+              "evse_id": "GB*GFX*EDRAX00463*2",
+              "physical_reference": "DRAX00463",
+              "floor_level": null,
+              "directions": null,
+              "parking_restrictions": null,
+              "capabilities": [
+                "REMOTE_START_STOP_CAPABLE",
+                "RFID_READER"
+              ],
+              "connectors": [
+                {
+                  "id": "2",
+                  "standard": "IEC_62196_T2",
+                  "format": "SOCKET",
+                  "power_type": "AC_3_PHASE",
+                  "last_updated": "2026-10-27T22:17:37Z",
+                  "max_amperage": 32,
+                  "max_voltage": 230,
+                  "max_electric_power": 22000,
+                  "tariff_ids": [
+                    "ec347ac1e79d4d7b8dc6341951b118e0"
+                  ]
+                }
+              ]
+            },
+            {
+              "uid": "GB-GFX-EDRAX00464-1",
+              "status": "AVAILABLE",
+              "last_updated": "2026-10-22T06:39:13Z",
+              "evse_id": "GB*GFX*EDRAX00464*1",
+              "physical_reference": "DRAX00464",
+              "floor_level": null,
+              "directions": null,
+              "parking_restrictions": null,
+              "capabilities": [
+                "REMOTE_START_STOP_CAPABLE",
+                "RFID_READER"
+              ],
+              "connectors": [
+                {
+                  "id": "1",
+                  "standard": "IEC_62196_T2",
+                  "format": "SOCKET",
+                  "power_type": "AC_3_PHASE",
+                  "last_updated": "2026-10-27T22:17:37Z",
+                  "max_amperage": 32,
+                  "max_voltage": 230,
+                  "max_electric_power": 22000,
+                  "tariff_ids": [
+                    "ec347ac1e79d4d7b8dc6341951b118e0"
+                  ]
+                }
+              ]
+            },
+            {
+              "uid": "GB-GFX-EDRAX00464-2",
+              "status": "AVAILABLE",
+              "last_updated": "2026-10-25T09:23:52Z",
+              "evse_id": "GB*GFX*EDRAX00464*2",
+              "physical_reference": "DRAX00464",
+              "floor_level": null,
+              "directions": null,
+              "parking_restrictions": null,
+              "capabilities": [
+                "REMOTE_START_STOP_CAPABLE",
+                "RFID_READER"
+              ],
+              "connectors": [
+                {
+                  "id": "2",
+                  "standard": "IEC_62196_T2",
+                  "format": "SOCKET",
+                  "power_type": "AC_3_PHASE",
+                  "last_updated": "2026-10-27T22:17:37Z",
+                  "max_amperage": 32,
+                  "max_voltage": 230,
+                  "max_electric_power": 22000,
+                  "tariff_ids": [
+                    "ec347ac1e79d4d7b8dc6341951b118e0"
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "party_id": "GFX",
+          "id": "4997c022-a0bb-4a66-8a59-3696ac7b4af1",
+          "country_code": "GB",
+          "publish": true,
+          "country": "GBR",
+          "address": "Solopark Trading Estate 3A",
+          "city": "Cambridge",
+          "postal_code": "CB22 3FF",
+          "coordinates": {
+            "latitude": "52.11657000",
+            "longitude": "0.21451000"
+          },
+          "state": null,
+          "last_updated": "2026-10-27T22:31:01Z",
+          "opening_times": {
+            "regular_hours": [
+              {
+                "period_begin": "08:00",
+                "period_end": "12:00",
+                "weekday": 6
+              },
+              {
+                "period_begin": "08:00",
+                "period_end": "18:00",
+                "weekday": 5
+              },
+              {
+                "period_begin": "08:00",
+                "period_end": "18:00",
+                "weekday": 4
+              },
+              {
+                "period_begin": "08:00",
+                "period_end": "18:00",
+                "weekday": 3
+              },
+              {
+                "period_begin": "08:00",
+                "period_end": "18:00",
+                "weekday": 2
+              },
+              {
+                "period_begin": "08:00",
+                "period_end": "18:00",
+                "weekday": 1
+              }
+            ],
+            "twentyfourseven": false
+          },
+          "name": "Solopark",
+          "time_zone": "Europe/London",
+          "owner": {
+            "name": "drax-Ista",
+            "website": ""
+          },
+          "operator": {
+            "name": "drax-Ista",
+            "website": ""
+          },
+          "suboperator": {
+            "name": "drax-Ista",
+            "website": ""
+          },
+          "energy_mix": null,
+          "charging_when_closed": true,
+          "directions": null,
+          "evses": [
+            {
+              "uid": "GB-GFX-EDRAX00152-1",
+              "status": "AVAILABLE",
+              "last_updated": "2026-10-16T10:24:40Z",
+              "evse_id": "GB*GFX*EDRAX00152*1",
+              "physical_reference": "DRAX00152",
+              "floor_level": null,
+              "directions": null,
+              "parking_restrictions": "customers",
+              "capabilities": [
+                "REMOTE_START_STOP_CAPABLE",
+                "RFID_READER"
+              ],
+              "connectors": [
+                {
+                  "id": "1",
+                  "standard": "IEC_62196_T2",
+                  "format": "SOCKET",
+                  "power_type": "AC_1_PHASE",
+                  "last_updated": "2026-10-27T22:31:01Z",
+                  "max_amperage": 30,
+                  "max_voltage": 230,
+                  "max_electric_power": 7400,
+                  "tariff_ids": null
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "party_id": "GFX",
+          "id": "7c82e973-fda3-4ef8-adfe-e2c324a82c3a",
+          "country_code": "GB",
+          "publish": true,
+          "country": "GBR",
+          "address": "Rockingham Road",
+          "city": "Corby",
+          "postal_code": "NN17 2AE",
+          "coordinates": {
+            "latitude": "52.50875400",
+            "longitude": "-0.71373800"
+          },
+          "state": null,
+          "last_updated": "2026-10-27T22:52:20Z",
+          "opening_times": {
+            "twentyfourseven": true
+          },
+          "name": "Best Western Rockingham",
+          "time_zone": "Europe/London",
+          "owner": {
+            "name": "drax-Ista",
+            "website": ""
+          },
+          "operator": {
+            "name": "drax-Ista",
+            "website": ""
+          },
+          "suboperator": {
+            "name": "drax-Ista",
+            "website": ""
+          },
+          "energy_mix": null,
+          "charging_when_closed": true,
+          "directions": null,
+          "evses": [
+            {
+              "uid": "GB-GFX-EDRAX00138-1",
+              "status": "UNKNOWN",
+              "last_updated": "2026-10-02T15:45:02Z",
+              "evse_id": "GB*GFX*EDRAX00138*1",
+              "physical_reference": "DRAX00138",
+              "floor_level": null,
+              "directions": null,
+              "parking_restrictions": null,
+              "capabilities": [
+                "REMOTE_START_STOP_CAPABLE",
+                "RFID_READER"
+              ],
+              "connectors": [
+                {
+                  "id": "1",
+                  "standard": "IEC_62196_T2",
+                  "format": "SOCKET",
+                  "power_type": "AC_3_PHASE",
+                  "last_updated": "2026-10-27T22:52:20Z",
+                  "max_amperage": 32,
+                  "max_voltage": 230,
+                  "max_electric_power": 22000,
+                  "tariff_ids": [
+                    "3e4c7e71f7324e52b50dc9408d97a1b6"
+                  ]
+                }
+              ]
+            },
+            {
+              "uid": "GB-GFX-EDRAX00138-2",
+              "status": "UNKNOWN",
+              "last_updated": "2026-10-02T15:45:02Z",
+              "evse_id": "GB*GFX*EDRAX00138*2",
+              "physical_reference": "DRAX00138",
+              "floor_level": null,
+              "directions": null,
+              "parking_restrictions": null,
+              "capabilities": [
+                "REMOTE_START_STOP_CAPABLE",
+                "RFID_READER"
+              ],
+              "connectors": [
+                {
+                  "id": "2",
+                  "standard": "IEC_62196_T2",
+                  "format": "SOCKET",
+                  "power_type": "AC_3_PHASE",
+                  "last_updated": "2026-10-27T22:52:20Z",
+                  "max_amperage": 32,
+                  "max_voltage": 230,
+                  "max_electric_power": 22000,
+                  "tariff_ids": [
+                    "3e4c7e71f7324e52b50dc9408d97a1b6"
+                  ]
+                }
+              ]
+            },
+            {
+              "uid": "GB-GFX-EDRAX00139-1",
+              "status": "UNKNOWN",
+              "last_updated": "2026-10-02T15:45:12Z",
+              "evse_id": "GB*GFX*EDRAX00139*1",
+              "physical_reference": "DRAX00139",
+              "floor_level": null,
+              "directions": null,
+              "parking_restrictions": null,
+              "capabilities": [
+                "REMOTE_START_STOP_CAPABLE",
+                "RFID_READER"
+              ],
+              "connectors": [
+                {
+                  "id": "1",
+                  "standard": "IEC_62196_T2",
+                  "format": "SOCKET",
+                  "power_type": "AC_3_PHASE",
+                  "last_updated": "2026-10-27T22:52:20Z",
+                  "max_amperage": 32,
+                  "max_voltage": 230,
+                  "max_electric_power": 22000,
+                  "tariff_ids": [
+                    "3e4c7e71f7324e52b50dc9408d97a1b6"
+                  ]
+                }
+              ]
+            },
+            {
+              "uid": "GB-GFX-EDRAX00139-2",
+              "status": "UNKNOWN",
+              "last_updated": "2026-10-02T15:45:12Z",
+              "evse_id": "GB*GFX*EDRAX00139*2",
+              "physical_reference": "DRAX00139",
+              "floor_level": null,
+              "directions": null,
+              "parking_restrictions": null,
+              "capabilities": [
+                "REMOTE_START_STOP_CAPABLE",
+                "RFID_READER"
+              ],
+              "connectors": [
+                {
+                  "id": "2",
+                  "standard": "IEC_62196_T2",
+                  "format": "SOCKET",
+                  "power_type": "AC_3_PHASE",
+                  "last_updated": "2026-10-27T22:52:20Z",
+                  "max_amperage": 32,
+                  "max_voltage": 230,
+                  "max_electric_power": 22000,
+                  "tariff_ids": [
+                    "3e4c7e71f7324e52b50dc9408d97a1b6"
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  }
+}

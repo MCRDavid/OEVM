@@ -1,0 +1,478 @@
+{
+  "request": {
+    "method": "GET",
+    "url": "https://open-chargepoints.com/api/ocpi/cpo/2.2.1/locations/?limit=1000"
+  },
+  "response": {
+    "status_code": 200,
+    "headers": {
+      "content-type": "application/json",
+      "link": "<https://open-chargepoints.com/api/ocpi/cpo/2.2.1/locations/?limit=1000&offset=3>; rel=\"next\"",
+      "x-total-count": "3",
+      "x-limit": "1000"
+    },
+    "body": {
+      "timestamp": "2026-10-29T18:12:18Z",
+      "status_code": 1000,
+      "status_message": "Success",
+      "data": [
+        {
+          "party_id": "TNM",
+          "id": "5057",
+          "country_code": "GB",
+          "publish": true,
+          "country": "GBR",
+          "address": "A429, Avon Mills",
+          "city": "Malmesbury",
+          "postal_code": "SN16 9FN",
+          "coordinates": {
+            "latitude": "51.58057500",
+            "longitude": "-2.09330400"
+          },
+          "state": null,
+          "last_updated": "2026-10-29T18:12:06Z",
+          "opening_times": {
+            "twentyfourseven": true
+          },
+          "name": "Shell Recharge EV Waitrose Malmesbury",
+          "time_zone": "Europe/London",
+          "owner": {
+            "name": "Shell Recharge",
+            "website": ""
+          },
+          "operator": {
+            "name": "Shell Recharge",
+            "website": ""
+          },
+          "energy_mix": null,
+          "charging_when_closed": true,
+          "directions": [
+            {
+              "language": "en",
+              "text": "Waitrose"
+            }
+          ],
+          "evses": [
+            {
+              "uid": "c624ea57df484eaa925b1090e0d44b08",
+              "status": "AVAILABLE",
+              "last_updated": "2026-10-29T13:24:40Z",
+              "evse_id": "GB*TNM*EGL44*03*3120*03",
+              "physical_reference": "03",
+              "floor_level": null,
+              "directions": null,
+              "parking_restrictions": null,
+              "capabilities": [
+                "REMOTE_START_STOP_CAPABLE"
+              ],
+              "connectors": [
+                {
+                  "id": "69217",
+                  "standard": "IEC_62196_T2_COMBO",
+                  "format": "CABLE",
+                  "power_type": "DC",
+                  "last_updated": "2026-10-28T21:34:29Z",
+                  "max_amperage": 125,
+                  "max_voltage": 400,
+                  "max_electric_power": 50000,
+                  "tariff_ids": [
+                    "PP359124541_999999"
+                  ]
+                }
+              ]
+            },
+            {
+              "uid": "1409468913be4ceea57fc03ead9dd40e",
+              "status": "AVAILABLE",
+              "last_updated": "2026-10-29T18:12:06Z",
+              "evse_id": "GB*TNM*EGL44*03*3120*01",
+              "physical_reference": "01",
+              "floor_level": null,
+              "directions": null,
+              "parking_restrictions": null,
+              "capabilities": [
+                "REMOTE_START_STOP_CAPABLE"
+              ],
+              "connectors": [
+                {
+                  "id": "69215",
+                  "standard": "IEC_62196_T2_COMBO",
+                  "format": "CABLE",
+                  "power_type": "DC",
+                  "last_updated": "2026-10-28T21:34:29Z",
+                  "max_amperage": 125,
+                  "max_voltage": 400,
+                  "max_electric_power": 50000,
+                  "tariff_ids": [
+                    "PP359124541_999999"
+                  ]
+                }
+              ]
+            },
+            {
+              "uid": "7e964d0bc7194a8a8574b660556402cf",
+              "status": "AVAILABLE",
+              "last_updated": "2026-10-29T16:15:01Z",
+              "evse_id": "GB*TNM*EGL44*03*3120*02",
+              "physical_reference": "02",
+              "floor_level": null,
+              "directions": null,
+              "parking_restrictions": null,
+              "capabilities": [
+                "REMOTE_START_STOP_CAPABLE"
+              ],
+              "connectors": [
+                {
+                  "id": "69216",
+                  "standard": "IEC_62196_T2_COMBO",
+                  "format": "CABLE",
+                  "power_type": "DC",
+                  "last_updated": "2026-10-28T21:34:29Z",
+                  "max_amperage": 125,
+                  "max_voltage": 400,
+                  "max_electric_power": 50000,
+                  "tariff_ids": [
+                    "PP359124541_999999"
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "party_id": "TNM",
+          "id": "241",
+          "country_code": "GB",
+          "publish": true,
+          "country": "GBR",
+          "address": "Bridge Road",
+          "city": "Welwyn Garden City",
+          "postal_code": "AL8 6AB",
+          "coordinates": {
+            "latitude": "51.80384600",
+            "longitude": "-0.20353100"
+          },
+          "state": null,
+          "last_updated": "2026-10-29T18:11:59Z",
+          "opening_times": {
+            "twentyfourseven": true
+          },
+          "name": "Shell Recharge EV Waitrose - Welwyn Garden City",
+          "time_zone": "Europe/London",
+          "owner": {
+            "name": "Shell Recharge",
+            "website": ""
+          },
+          "operator": {
+            "name": "Shell Recharge",
+            "website": ""
+          },
+          "energy_mix": null,
+          "charging_when_closed": true,
+          "directions": null,
+          "evses": [
+            {
+              "uid": "TERRA_124_017-2",
+              "status": "UNKNOWN",
+              "last_updated": "2026-10-29T18:11:59Z",
+              "evse_id": "GB*TNM*EGL44*03*2887*01*2",
+              "physical_reference": "01-2",
+              "floor_level": null,
+              "directions": null,
+              "parking_restrictions": null,
+              "capabilities": [
+                "REMOTE_START_STOP_CAPABLE"
+              ],
+              "connectors": [
+                {
+                  "id": "68847",
+                  "standard": "CHADEMO",
+                  "format": "CABLE",
+                  "power_type": "DC",
+                  "last_updated": "2026-10-28T21:31:35Z",
+                  "max_amperage": 150,
+                  "max_voltage": 400,
+                  "max_electric_power": 60000,
+                  "tariff_ids": [
+                    "PP359125645_999999"
+                  ]
+                }
+              ]
+            },
+            {
+              "uid": "44_SATURN_22_012-1",
+              "status": "AVAILABLE",
+              "last_updated": "2026-10-29T15:04:33Z",
+              "evse_id": "GB*TNM*EGL44*SATURN*22*012*1",
+              "physical_reference": "44_SATURN_22_012",
+              "floor_level": null,
+              "directions": null,
+              "parking_restrictions": null,
+              "capabilities": [
+                "REMOTE_START_STOP_CAPABLE"
+              ],
+              "connectors": [
+                {
+                  "id": "1169",
+                  "standard": "IEC_62196_T2",
+                  "format": "CABLE",
+                  "power_type": "AC_3_PHASE",
+                  "last_updated": "2026-10-28T21:31:35Z",
+                  "max_amperage": 32,
+                  "max_voltage": 230,
+                  "max_electric_power": 7360,
+                  "tariff_ids": [
+                    "PP359125626_999999"
+                  ]
+                }
+              ]
+            },
+            {
+              "uid": "44_SATURN_22_012-2",
+              "status": "CHARGING",
+              "last_updated": "2026-10-29T15:57:47Z",
+              "evse_id": "GB*TNM*EGL44*SATURN*22*012*2",
+              "physical_reference": "44_SATURN_22_012",
+              "floor_level": null,
+              "directions": null,
+              "parking_restrictions": null,
+              "capabilities": [
+                "REMOTE_START_STOP_CAPABLE"
+              ],
+              "connectors": [
+                {
+                  "id": "1170",
+                  "standard": "IEC_62196_T2",
+                  "format": "CABLE",
+                  "power_type": "AC_3_PHASE",
+                  "last_updated": "2026-10-28T21:31:35Z",
+                  "max_amperage": 32,
+                  "max_voltage": 230,
+                  "max_electric_power": 7360,
+                  "tariff_ids": [
+                    "PP359125626_999999"
+                  ]
+                }
+              ]
+            },
+            {
+              "uid": "44_SATURN_22_013-1",
+              "status": "OUTOFORDER",
+              "last_updated": "2026-10-26T01:30:43Z",
+              "evse_id": "GB*TNM*EGL44*SATURN*22*013*1",
+              "physical_reference": "44_SATURN_22_013",
+              "floor_level": null,
+              "directions": null,
+              "parking_restrictions": null,
+              "capabilities": [
+                "REMOTE_START_STOP_CAPABLE"
+              ],
+              "connectors": [
+                {
+                  "id": "1171",
+                  "standard": "IEC_62196_T2",
+                  "format": "CABLE",
+                  "power_type": "AC_3_PHASE",
+                  "last_updated": "2026-10-28T21:31:35Z",
+                  "max_amperage": 32,
+                  "max_voltage": 230,
+                  "max_electric_power": 7360,
+                  "tariff_ids": [
+                    "PP359125626_999999"
+                  ]
+                }
+              ]
+            },
+            {
+              "uid": "44_SATURN_22_013-2",
+              "status": "AVAILABLE",
+              "last_updated": "2026-10-26T01:30:43Z",
+              "evse_id": "GB*TNM*EGL44*SATURN*22*013*2",
+              "physical_reference": "44_SATURN_22_013",
+              "floor_level": null,
+              "directions": null,
+              "parking_restrictions": null,
+              "capabilities": [
+                "REMOTE_START_STOP_CAPABLE"
+              ],
+              "connectors": [
+                {
+                  "id": "1172",
+                  "standard": "IEC_62196_T2",
+                  "format": "CABLE",
+                  "power_type": "AC_3_PHASE",
+                  "last_updated": "2026-10-28T21:31:35Z",
+                  "max_amperage": 32,
+                  "max_voltage": 230,
+                  "max_electric_power": 7360,
+                  "tariff_ids": [
+                    "PP359125626_999999"
+                  ]
+                }
+              ]
+            },
+            {
+              "uid": "44_SATURN_22_011-1",
+              "status": "AVAILABLE",
+              "last_updated": "2026-10-29T15:32:23Z",
+              "evse_id": "GB*TNM*EGL44*SATURN*22*011*1",
+              "physical_reference": "44_SATURN_22_011",
+              "floor_level": null,
+              "directions": null,
+              "parking_restrictions": null,
+              "capabilities": [
+                "REMOTE_START_STOP_CAPABLE"
+              ],
+              "connectors": [
+                {
+                  "id": "1167",
+                  "standard": "IEC_62196_T2",
+                  "format": "CABLE",
+                  "power_type": "AC_3_PHASE",
+                  "last_updated": "2026-10-28T21:31:35Z",
+                  "max_amperage": 32,
+                  "max_voltage": 230,
+                  "max_electric_power": 7360,
+                  "tariff_ids": [
+                    "PP359125626_999999"
+                  ]
+                }
+              ]
+            },
+            {
+              "uid": "44_SATURN_22_011-2",
+              "status": "AVAILABLE",
+              "last_updated": "2026-10-29T15:01:38Z",
+              "evse_id": "GB*TNM*EGL44*SATURN*22*011*2",
+              "physical_reference": "44_SATURN_22_011",
+              "floor_level": null,
+              "directions": null,
+              "parking_restrictions": null,
+              "capabilities": [
+                "REMOTE_START_STOP_CAPABLE"
+              ],
+              "connectors": [
+                {
+                  "id": "1168",
+                  "standard": "IEC_62196_T2",
+                  "format": "CABLE",
+                  "power_type": "AC_3_PHASE",
+                  "last_updated": "2026-10-28T21:31:35Z",
+                  "max_amperage": 32,
+                  "max_voltage": 230,
+                  "max_electric_power": 7360,
+                  "tariff_ids": [
+                    "PP359125626_999999"
+                  ]
+                }
+              ]
+            },
+            {
+              "uid": "TERRA_124_017-1",
+              "status": "UNKNOWN",
+              "last_updated": "2026-10-29T18:11:59Z",
+              "evse_id": "GB*TNM*EGL44*03*2887*01*1",
+              "physical_reference": "01-1",
+              "floor_level": null,
+              "directions": null,
+              "parking_restrictions": null,
+              "capabilities": [
+                "REMOTE_START_STOP_CAPABLE"
+              ],
+              "connectors": [
+                {
+                  "id": "68846",
+                  "standard": "IEC_62196_T2_COMBO",
+                  "format": "CABLE",
+                  "power_type": "DC",
+                  "last_updated": "2026-10-28T21:31:35Z",
+                  "max_amperage": 200,
+                  "max_voltage": 600,
+                  "max_electric_power": 120000,
+                  "tariff_ids": [
+                    "PP359125645_999999"
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "party_id": "TNM",
+          "id": "879",
+          "country_code": "GB",
+          "publish": true,
+          "country": "GBR",
+          "address": "WINTHORPE ROUNDABOUT",
+          "city": "Newark",
+          "postal_code": "NG24 2NY",
+          "coordinates": {
+            "latitude": "53.09507400",
+            "longitude": "-0.78266100"
+          },
+          "state": null,
+          "last_updated": "2026-10-29T17:58:38Z",
+          "opening_times": {
+            "twentyfourseven": true
+          },
+          "name": "Shell Recharge Shell Little Waitrose Newark",
+          "time_zone": "Europe/London",
+          "owner": {
+            "name": "Shell Recharge",
+            "website": ""
+          },
+          "operator": {
+            "name": "Shell Recharge",
+            "website": ""
+          },
+          "energy_mix": null,
+          "charging_when_closed": true,
+          "directions": null,
+          "evses": [
+            {
+              "uid": "08727e81690b4e49babd298ed33b6cb5",
+              "status": "AVAILABLE",
+              "last_updated": "2026-10-29T17:58:38Z",
+              "evse_id": "GB*TNM*EGL44*01*2518*01",
+              "physical_reference": "01",
+              "floor_level": null,
+              "directions": null,
+              "parking_restrictions": null,
+              "capabilities": [
+                "REMOTE_START_STOP_CAPABLE"
+              ],
+              "connectors": [
+                {
+                  "id": "68568",
+                  "standard": "IEC_62196_T2_COMBO",
+                  "format": "CABLE",
+                  "power_type": "DC",
+                  "last_updated": "2026-10-28T21:42:31Z",
+                  "max_amperage": 300,
+                  "max_voltage": 600,
+                  "max_electric_power": 180000,
+                  "tariff_ids": [
+                    "PP359125611_999999"
+                  ]
+                },
+                {
+                  "id": "68569",
+                  "standard": "CHADEMO",
+                  "format": "CABLE",
+                  "power_type": "DC",
+                  "last_updated": "2026-10-28T21:42:31Z",
+                  "max_amperage": 150,
+                  "max_voltage": 400,
+                  "max_electric_power": 60000,
+                  "tariff_ids": [
+                    "PP359125611_999999"
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  }
+}

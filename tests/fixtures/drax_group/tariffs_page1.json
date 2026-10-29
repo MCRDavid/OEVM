@@ -1,0 +1,46 @@
+{
+  "request": {
+    "method": "GET",
+    "url": "https://open-chargepoints.com/api/ocpi/cpo/2.2.1/tariffs/?limit=1000"
+  },
+  "response": {
+    "status_code": 200,
+    "headers": {
+      "content-type": "application/json",
+      "link": "<https://open-chargepoints.com/api/ocpi/cpo/2.2.1/tariffs/?limit=1000&offset=1>; rel=\"next\"",
+      "x-total-count": "1",
+      "x-limit": "1000"
+    },
+    "body": {
+      "timestamp": "2026-10-29T17:57:21Z",
+      "status_code": 1000,
+      "status_message": "Success",
+      "data": [
+        {
+          "party_id": "GFX",
+          "id": "0b48f08745ed495e94daef8edceb764e",
+          "currency": "GBP",
+          "tariff_alt_url": null,
+          "tariff_alt_text": null,
+          "last_updated": "2025-11-19T12:39:47Z",
+          "country_code": "GB",
+          "elements": [
+            {
+              "restrictions": {
+                "start_date": "2025-11-19"
+              },
+              "price_components": [
+                {
+                  "type": "ENERGY",
+                  "price": 0.25,
+                  "vat": null,
+                  "step_size": 1
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  }
+}

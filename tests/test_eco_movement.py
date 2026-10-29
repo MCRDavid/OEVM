@@ -230,21 +230,30 @@ def prices_shown(operator_id: str, out: Path) -> list[str]:
     ]
 
 
-def test_the_thirteen_networks_with_tokens_are_switched_on():
+def test_the_networks_with_tokens_are_switched_on():
     assert SWITCHED_ON == [
+        "aldi",
         "allego",
         "blink_charging_uk",
         "chargepoint",
+        "drax_group",
+        "drax_ista",
         "esb_ecars",
         "esb_energy",
         "ev_point",
         "evyve",
+        "gfx_gb_drax",
         "ionity",
         "lidl",
         "pod",
         "raw_charging",
+        "shell_recharge",
         "source_ev",
+        "southampton_apartment_hotels",
+        "travis_perkins",
         "ubitricity",
+        "volvo",
+        "wccc_edgbaston",
     ]
 
 
