@@ -763,7 +763,7 @@ def test_a_vat_decision_needs_a_rate_above_zero_and_up_to_100(rate):
         OperatorConfig.model_validate(enabled_open(vat_not_stated=decision))
 
 
-def test_only_chargy_clenergy_and_globe_ev_carry_a_vat_decision_at_20_percent():
+def test_only_chargy_clenergy_globe_ev_and_roam_carry_a_vat_decision_at_20_percent():
     operators = registry.load_registry(OPERATORS_DIR)
     decisions = {
         i: (str(c.vat_not_stated.decided), c.vat_not_stated.add_percent)
@@ -774,6 +774,7 @@ def test_only_chargy_clenergy_and_globe_ev_carry_a_vat_decision_at_20_percent():
         "chargy": ("2026-10-22", 20),
         "clenergy_ev": ("2026-10-22", 20),
         "globe_ev": ("2026-10-23", 20),
+        "roam": ("2026-10-26", 20),
     }
 
 

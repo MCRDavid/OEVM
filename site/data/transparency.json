@@ -2981,6 +2981,225 @@
       ]
     },
     {
+      "id": "roam",
+      "name": "Roam",
+      "enabled": true,
+      "adapter": "custom",
+      "engagement": {
+        "status": "open_anonymous",
+        "label": "Open, no registration",
+        "headline": "Open, no registration (as of 2026-10-26)",
+        "as_of": "2026-10-26",
+        "last_request": "2026-10-24",
+        "last_response": {
+          "date": "2026-10-26",
+          "action": "reply_received"
+        },
+        "last_response_text": "2026-10-26 (Reply received)",
+        "evidence": [
+          {
+            "date": "2026-10-10",
+            "url": "https://www.roamcharging.com/",
+            "file": null,
+            "note": "Roam's home page has no open data, regulations or charge point data link. Its sitemap and FAQ page list or give no open data feed or route for requesting open data."
+          },
+          {
+            "date": "2026-10-26",
+            "url": null,
+            "file": "evidence/roam/2026-10-26-reply-email.md",
+            "note": "Roam's reply email, giving the locations and tariffs addresses on data.evc.ninja, which need no key."
+          }
+        ],
+        "log": [
+          {
+            "date": "2026-10-10",
+            "action": "feed_searched",
+            "action_label": "Searched for a feed",
+            "channel": null,
+            "channel_label": null,
+            "summary": "Roam's home page, sitemap and FAQ page were read, and no open data feed or route for requesting open data was found.",
+            "quote": null,
+            "evidence_url": "https://www.roamcharging.com/",
+            "evidence_file": null
+          },
+          {
+            "date": "2026-10-24",
+            "action": "request_sent",
+            "action_label": "Access requested",
+            "channel": "web_form",
+            "channel_label": "Web form",
+            "summary": "Asked through the contact form on Roam's website where its open data under regulation 10 is published, saying how the data would be attributed and that published rate limits would be followed.",
+            "quote": null,
+            "evidence_url": "https://www.roamcharging.com/help-and-advice/contact-us",
+            "evidence_file": null
+          },
+          {
+            "date": "2026-10-26",
+            "action": "reply_received",
+            "action_label": "Reply received",
+            "channel": "email",
+            "channel_label": "Email",
+            "summary": "Roam replied with the addresses of its locations and tariffs data on data.evc.ninja, which need no key.",
+            "quote": null,
+            "evidence_url": null,
+            "evidence_file": "evidence/roam/2026-10-26-reply-email.md"
+          },
+          {
+            "date": "2026-10-26",
+            "action": "page_checked",
+            "action_label": "Operator's page checked",
+            "channel": null,
+            "channel_label": null,
+            "summary": "Both addresses were read once. They give OCPI response objects with no key, and the locations address sends a RateLimit-Policy header allowing 5 requests an hour. The data server and Roam's website state no terms for the data.",
+            "quote": null,
+            "evidence_url": "https://data.evc.ninja/public/v1/data",
+            "evidence_file": null
+          }
+        ]
+      },
+      "access_requested": "2026-10-24",
+      "access_granted": null,
+      "feeds": [
+        {
+          "kind": "locations",
+          "url": "https://data.evc.ninja/public/v1/data",
+          "status": "documented"
+        },
+        {
+          "kind": "tariffs",
+          "url": "https://data.evc.ninja/public/v1/tariffs",
+          "status": "documented"
+        }
+      ],
+      "licence": {
+        "name": "OGL-3.0",
+        "url": "https://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/",
+        "checked": "2026-10-26"
+      },
+      "attribution": "Contains data from Roam published under the Public Charge Point Regulations 2023, used in line with the Open Government Licence v3.0.",
+      "missing_publish_flag": {
+        "decided": "2026-10-26",
+        "basis": "Roam gave these addresses by email on 2026-10-26 in reply to a request for its open data under regulation 10 of the Public Charge Point Regulations 2023 (evidence/roam/2026-10-26-reply-email.md), and the addresses sit under /public/ and need no key. None of its 438 locations has a publish flag. The repository owner decided that locations with no flag may be shown. A flag set to false would still be respected.",
+        "evidence_url": "https://data.evc.ninja/public/v1/data"
+      },
+      "swapped_coordinates": null,
+      "nonstandard_statuses": null,
+      "tariffs_from": null,
+      "nonstandard_parking_restrictions": null,
+      "zero_price_tariffs": null,
+      "vat_not_stated": {
+        "decided": "2026-10-26",
+        "basis": "Roam's tariffs give no VAT rate on any price. Roam's membership guide (read 26 October 2026) says pay-as-you-go prices vary by location but \"most commonly will be 54p per kWh for fast charging (22kW and below) and 66p per kWh for rapid charging\". In the tariffs of 26 October 2026 the most common energy price for AC connectors is 0.45 GBP per kWh (1,199 of 1,963 AC connectors), and 0.45 plus VAT at 20% is 54p. The most common DC price is 0.58 (150 of 213 DC connectors), which comes to about 70p with VAT, not the guide's 66p, so the guide may be older than the tariffs. This suggests prices with VAT at 20%, the UK standard rate on public charging, taken off; that is inferred from the figures, not stated by Roam. The repository owner decided that VAT at 20% is added, so prices on the map all include VAT and can be compared.",
+        "evidence_url": "https://data.evc.ninja/public/v1/tariffs",
+        "add_percent": 20.0
+      },
+      "vat_in_price": null,
+      "own_feed_over_copies": null,
+      "relay": null,
+      "expired_certificate": null,
+      "excluded_locations": null,
+      "rate_limit": {
+        "our_gap_seconds": 721.0,
+        "our_max_per_hour": 5,
+        "ours": "At least 721 s between requests to the operator's host, measured from the end of the previous request (at most 5 in any hour), retries included.",
+        "published": [
+          {
+            "text": "5 per 1 hour for the locations endpoint",
+            "publisher": "Roam's data server, data.evc.ninja (RateLimit-Policy response header)",
+            "quote": "ratelimit-policy: 5;w=3600",
+            "source_url": "https://data.evc.ninja/public/v1/data",
+            "checked": "2026-10-26"
+          }
+        ],
+        "limits_checked": "2026-10-26",
+        "comparison": "Within every published limit. The strictest needs 720 s between requests; this project waits 721 s, which includes a safety margin.",
+        "difference_from_regulations": "The operator sets a limit; the regulations set none. DfT guidance allows such terms on access.",
+        "notes": "The locations address answers with the RateLimit-Policy header \"5;w=3600\", which allows 5 requests in a 3,600 second window; the tariffs address sent no such header on 2026-10-26. Roam's reply email and website state no limit. The 721 second gap (3,600 / 5 plus a 1 second margin) applies to every request to the host, so a run makes its two requests about 12 minutes apart."
+      },
+      "findings": [
+        {
+          "date": "2026-10-26",
+          "kind": "spec_conformance",
+          "kind_label": "Differs from OCPI 2.2.1",
+          "summary": "Records come in OCPI response objects but use OCPI 2.1.1 field names: locations give type rather than parking_type, and connectors give one tariff_id, voltage and amperage rather than tariff_ids, max_voltage and max_amperage. No location or tariff has a country_code or party_id.",
+          "handling": "A custom adapter gives each connector the OCPI 2.2.1 names, which have the same meanings, then converts the records as usual. The country code GB and party id EVC come from the operator file, read from the EVSE ids.",
+          "evidence_url": "https://data.evc.ninja/public/v1/data",
+          "status": "open",
+          "resolved_date": null
+        },
+        {
+          "date": "2026-10-26",
+          "kind": "spec_conformance",
+          "kind_label": "Differs from OCPI 2.2.1",
+          "summary": "Each connector carries its own uid, evse id and status, which OCPI does not define for connectors, and each EVSE's status matches its first connector's. The two connectors' statuses differed in 212 of 1,039 EVSEs with two connectors on 2026-10-26.",
+          "handling": "Each EVSE's status is shown as sent. The connectors' own uid, evse id and status are not used.",
+          "evidence_url": "https://data.evc.ninja/public/v1/data",
+          "status": "open",
+          "resolved_date": null
+        },
+        {
+          "date": "2026-10-26",
+          "kind": "spec_conformance",
+          "kind_label": "Differs from OCPI 2.2.1",
+          "summary": "In 12 EVSEs at 10 locations both connectors have the id 1, while OCPI 2.2.1 requires connector ids to differ within an EVSE (2026-10-26).",
+          "handling": "Those 10 locations are not shown, as with any feed, and each is named in the run's issues on the feed health page.",
+          "evidence_url": "https://data.evc.ninja/public/v1/data",
+          "status": "open",
+          "resolved_date": null
+        },
+        {
+          "date": "2026-10-26",
+          "kind": "spec_conformance",
+          "kind_label": "Differs from OCPI 2.2.1",
+          "summary": "Locations have no publish flag, which OCPI 2.2.1 requires (none of 438 on 2026-10-26).",
+          "handling": "Shown under the repository owner's decision recorded in missing_publish_flag, because Roam gave the feed as its open data under the regulations. A flag set to false would always be respected.",
+          "evidence_url": "https://data.evc.ninja/public/v1/data",
+          "status": "open",
+          "resolved_date": null
+        },
+        {
+          "date": "2026-10-26",
+          "kind": "access",
+          "kind_label": "Access",
+          "summary": "The locations address sends the RateLimit-Policy header \"5;w=3600\" (5 requests an hour); neither Roam's reply nor its website states a limit.",
+          "handling": "Requests to the host are spaced 721 seconds apart, so a run makes its two requests about 12 minutes apart.",
+          "evidence_url": "https://data.evc.ninja/public/v1/data",
+          "status": "open",
+          "resolved_date": null
+        },
+        {
+          "date": "2026-10-26",
+          "kind": "data_quality",
+          "kind_label": "Data quirk",
+          "summary": "Tariff prices give no VAT rate. The most common energy price for AC connectors is 0.45 GBP per kWh (1,199 of 1,963 on 2026-10-26); Roam's own guide says pay-as-you-go is \"most commonly\" 54p per kWh for fast charging, which is 0.45 plus VAT at 20%.",
+          "handling": "VAT at 20% is added under the repository owner's decision recorded in vat_not_stated, and each price says this project added it.",
+          "evidence_url": "https://data.evc.ninja/public/v1/tariffs",
+          "status": "open",
+          "resolved_date": null
+        },
+        {
+          "date": "2026-10-26",
+          "kind": "data_quality",
+          "kind_label": "Data quirk",
+          "summary": "One connector, on an EVSE at Norwood Hall Hotel whose connector charger_name reads \"Schnieder French Test charger 2\", names the tariff free_tariff, whose only price is a flat fee of 0. Its EVSE status was UNKNOWN on 2026-10-26.",
+          "handling": "Shown as published.",
+          "evidence_url": "https://data.evc.ninja/public/v1/tariffs",
+          "status": "open",
+          "resolved_date": null
+        },
+        {
+          "date": "2026-10-26",
+          "kind": "data_quality",
+          "kind_label": "Data quirk",
+          "summary": "Five of 438 locations list no EVSEs (2026-10-26).",
+          "handling": "Shown as published, with no chargers listed.",
+          "evidence_url": "https://data.evc.ninja/public/v1/data",
+          "status": "open",
+          "resolved_date": null
+        }
+      ]
+    },
+    {
       "id": "scottishpower_recharge",
       "name": "ScottishPower Recharge",
       "enabled": true,
@@ -7799,70 +8018,6 @@
         ]
       },
       "access_requested": "2026-10-23",
-      "access_granted": null,
-      "feeds": [],
-      "licence": null,
-      "attribution": null,
-      "missing_publish_flag": null,
-      "swapped_coordinates": null,
-      "nonstandard_statuses": null,
-      "tariffs_from": null,
-      "nonstandard_parking_restrictions": null,
-      "zero_price_tariffs": null,
-      "vat_not_stated": null,
-      "vat_in_price": null,
-      "own_feed_over_copies": null,
-      "relay": null,
-      "expired_certificate": null,
-      "excluded_locations": null,
-      "rate_limit": {
-        "our_gap_seconds": 2.0,
-        "our_max_per_hour": 1800,
-        "ours": "At least 2 s between requests to the operator's host, measured from the end of the previous request (at most 1800 in any hour), retries included.",
-        "published": [],
-        "limits_checked": "unknown",
-        "comparison": "The operator's pages have not been checked for limits yet.",
-        "difference_from_regulations": "Not known yet.",
-        "notes": null
-      },
-      "findings": []
-    },
-    {
-      "id": "roam",
-      "name": "Roam",
-      "enabled": false,
-      "adapter": "unknown",
-      "engagement": {
-        "status": "no_public_feed_found",
-        "label": "No public feed found",
-        "headline": "No public feed found (as of 2026-10-10)",
-        "as_of": "2026-10-10",
-        "last_request": null,
-        "last_response": null,
-        "last_response_text": "No request sent",
-        "evidence": [
-          {
-            "date": "2026-10-10",
-            "url": "https://www.roamcharging.com/",
-            "file": null,
-            "note": "Roam's home page has no open data, regulations or charge point data link. Its sitemap and FAQ page list or give no open data feed or route for requesting open data."
-          }
-        ],
-        "log": [
-          {
-            "date": "2026-10-10",
-            "action": "feed_searched",
-            "action_label": "Searched for a feed",
-            "channel": null,
-            "channel_label": null,
-            "summary": "Roam's home page, sitemap and FAQ page were read, and no open data feed or route for requesting open data was found.",
-            "quote": null,
-            "evidence_url": "https://www.roamcharging.com/",
-            "evidence_file": null
-          }
-        ]
-      },
-      "access_requested": null,
       "access_granted": null,
       "feeds": [],
       "licence": null,

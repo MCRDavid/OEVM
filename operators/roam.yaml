@@ -63,6 +63,30 @@ licence:
     decided, as a standing rule for operators whose data has no terms of its own, to read
     general website, app or charging terms as not covering the open data.
   checked: 2026-10-26
+missing_publish_flag:
+  decided: 2026-10-26
+  basis: >-
+    Roam gave these addresses by email on 2026-10-26 in reply to a request for its open data
+    under regulation 10 of the Public Charge Point Regulations 2023
+    (evidence/roam/2026-10-26-reply-email.md), and the addresses sit under /public/ and
+    need no key. None of its 438 locations has a publish flag. The repository owner decided
+    that locations with no flag may be shown. A flag set to false would still be respected.
+  evidence_url: https://data.evc.ninja/public/v1/data
+vat_not_stated:
+  decided: 2026-10-26
+  basis: >-
+    Roam's tariffs give no VAT rate on any price. Roam's membership guide (read 26 October
+    2026) says pay-as-you-go prices vary by location but "most commonly will be 54p per kWh
+    for fast charging (22kW and below) and 66p per kWh for rapid charging". In the tariffs
+    of 26 October 2026 the most common energy price for AC connectors is 0.45 GBP per kWh
+    (1,199 of 1,963 AC connectors), and 0.45 plus VAT at 20% is 54p. The most common DC
+    price is 0.58 (150 of 213 DC connectors), which comes to about 70p with VAT, not the
+    guide's 66p, so the guide may be older than the tariffs. This suggests prices with VAT
+    at 20%, the UK standard rate on public charging, taken off; that is inferred from the
+    figures, not stated by Roam. The repository owner decided that VAT at 20% is added, so
+    prices on the map all include VAT and can be compared.
+  evidence_url: https://data.evc.ninja/public/v1/tariffs
+  add_percent: 20
 engagement:
   status: open_anonymous
   evidence:
@@ -177,8 +201,9 @@ findings:
       Locations have no publish flag, which OCPI 2.2.1 requires (none of 438 on
       2026-10-26).
     handling: >-
-      No location is shown unless the repository owner decides that locations with no flag
-      may be shown. Roam stays switched off until then.
+      Shown under the repository owner's decision recorded in missing_publish_flag, because
+      Roam gave the feed as its open data under the regulations. A flag set to false would
+      always be respected.
     evidence_url: https://data.evc.ninja/public/v1/data
   - date: 2026-10-26
     kind: access
@@ -196,8 +221,8 @@ findings:
       0.45 GBP per kWh (1,199 of 1,963 on 2026-10-26); Roam's own guide says pay-as-you-go
       is "most commonly" 54p per kWh for fast charging, which is 0.45 plus VAT at 20%.
     handling: >-
-      Prices show as excluding VAT, VAT not stated, unless the repository owner records a
-      decision on VAT.
+      VAT at 20% is added under the repository owner's decision recorded in vat_not_stated,
+      and each price says this project added it.
     evidence_url: https://data.evc.ninja/public/v1/tariffs
   - date: 2026-10-26
     kind: data_quality
@@ -215,6 +240,6 @@ findings:
 notes: >-
   Roam was called EVC until November 2024. Its data was given by email on 2026-10-26 in
   reply to a request; no open data page has been found on its website. Fetched by the
-  custom adapter in adapters/roam.py. Switched off until the repository owner decides on
-  locations with no publish flag and on VAT.
-enabled: false
+  custom adapter in adapters/roam.py. Switched on 2026-10-26 after the repository owner's
+  decisions on locations with no publish flag and on VAT.
+enabled: true
