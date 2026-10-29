@@ -158,8 +158,9 @@ feed health page on the site says which one.
 
 To watch a run while it fetches, open it, then the **Fetch operator feeds** job, then the
 **Fetch every enabled operator, never two on one host at once** step. Operators on
-different hosts are fetched at the same time, so their lines are interleaved; each line
-starts with the operator's id. It prints a line as each operator starts and finishes, and every ten pages in between, with the page reached, the
+different hosts are fetched at the same time, and so are the Eco-Movement networks, which
+take turns for each request, so their lines are interleaved; each line starts with the
+operator's id. It prints a line as each operator starts and finishes, and every ten pages in between, with the page reached, the
 percentage done and an estimate of the time left where the feed gives its total.
 
 Source: https://docs.github.com/en/pages/getting-started-with-github-pages/configuring-a-publishing-source-for-your-github-pages-site

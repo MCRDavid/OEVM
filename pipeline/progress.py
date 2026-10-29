@@ -19,7 +19,7 @@ summary line says how many operators have finished and where the others have got
 import sys
 import threading
 import time
-from collections.abc import Callable
+from collections.abc import Callable, Collection
 from typing import TextIO
 
 from adapters.http import relay_route, required_gap
@@ -107,20 +107,30 @@ class RunProgress:
         )
         return f"{line}; still fetching: {', '.join(running)}" if running else None
 
-    def run_started(self, groups: list[list[str]]) -> None:
-        """groups: operator ids that share a host, fetched one after another."""
+    def run_started(self, groups: list[list[str]], turns: Collection[int] = ()) -> None:
+        """groups: operator ids that share a host, fetched one after another, except the
+        groups numbered (from 0) in turns, whose operators are fetched together, taking
+        turns for each request, as the owner reads their limits per key."""
         self._run_started = self._last_summary = self._clock()
         count = self._count = sum(len(group) for group in groups)
+        together = "".join(
+            f" The {len(groups[n])} operators in the group with {groups[n][0]} are fetched "
+            "together, one request at a time, as their limits are read per key."
+            for n in sorted(turns)
+        )
         if len(groups) <= 1:
             self._say(
                 f"Fetching {_plural(count, 'operator')}, one at a time: "
                 + ", ".join(id_ for group in groups for id_ in group)
+                + ("." + together if together else "")
             )
             return
         self._say(
             f"Fetching {_plural(count, 'operator')} in {len(groups)} groups at the same "
             "time, one operator at a time within each group, as no two groups share a "
-            "host: " + "; ".join(", ".join(group) for group in groups)
+            "host: "
+            + "; ".join(", ".join(group) for group in groups)
+            + ("." + together if together else "")
         )
 
     def operator_started(

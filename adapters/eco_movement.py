@@ -20,7 +20,8 @@ The records are read by the ocpi_221 adapter, with two differences:
 The host's rate limits are kept by the operator files' rate_limit. By the owner's
 decision recorded in each file's limits_per_key (29 October 2026), the limits are read per
 token: each network keeps its own gap, and adapters.http still sends the host one request
-at a time, at least SHARED_HOST_SECONDS apart.
+at a time, at least SHARED_HOST_SECONDS apart. The networks are fetched together, taking
+turns at the host (pipeline.run.takes_turns; the owner's decision of the same evening).
 """
 
 from datetime import datetime

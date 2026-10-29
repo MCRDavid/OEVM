@@ -47,7 +47,8 @@ raised from 2 to 6 seconds after it answered HTTP 403 part-way through the first
   in one group, so the relay never carries two fetches at once. Operators with no known
   host share one group.
 - **Each group runs in its own thread**, one operator at a time within the group, in
-  registry order. Gaps, Retry-After holds and timers are unchanged and still per host
+  registry order (since 29 October 2026, operators that all read their limits per key are
+  fetched together, taking turns for each request: ADR 0003, amended). Gaps, Retry-After holds and timers are unchanged and still per host
   (`adapters/http.py`), so no host sees any more requests, or any sooner, than before.
 - **Results, logs and the report** keep registry order whatever order groups finish in.
   A failure still fails only that operator.
@@ -79,3 +80,9 @@ from Eco-Movement's emails of 27 October 2026, and Shell Recharge), open-chargep
 serves 22 networks and a full fetch is 57 requests, 35 of them after a 125 second gap, so
 the group takes about 75 minutes and the map is published at about 05:35 UTC. The 150
 minute limit still applies.
+
+Amended a third time 29 October 2026: by the repository owner's decision that evening
+(ADR 0003, amended), the 22 networks on open-chargepoints.com are fetched together, taking
+turns for each request, still one request at a time and at least 2 seconds apart. The
+group takes about as long as its slowest network, ubitricity (14 requests, about 28
+minutes), so about 30 minutes in all, and the map is published at about 04:50 UTC.

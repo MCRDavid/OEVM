@@ -11,7 +11,10 @@ have been checked.
 
 --live all fetches every enabled operator (the daily workflow). Operators that share a
 host are fetched one after another; groups that share no host are fetched at the same
-time, so a slow feed no longer holds up the others. If one operator fails, its failure
+time, so a slow feed no longer holds up the others. Where every operator in a group has
+the owner's limits_per_key decision, they are fetched together instead: each keeps its own
+key's gap and they take turns at the host, one request at a time (adapters.http; the
+owner's decision of 29 October 2026, ADR 0003). If one operator fails, its failure
 is logged, the others are still fetched and published, and the map keeps showing the
 failed operator's last good copy from --previous (the files last published) when there is
 one (ADR 0018). The exit code is 3 when every failed operator kept its last good copy,
@@ -89,6 +92,13 @@ def host_groups(configs: list[OperatorConfig]) -> list[list[OperatorConfig]]:
     order = {config.id: number for number, config in enumerate(configs)}
     ordered = [sorted(members, key=lambda c: order[c.id]) for _, members in groups]
     return sorted(ordered, key=lambda members: order[members[0].id])
+
+
+def takes_turns(group: list[OperatorConfig]) -> bool:
+    """Whether a host group's operators may be fetched together: only when every one has
+    the owner's limits_per_key decision. Their client still sends the host one request at
+    a time, at least SHARED_HOST_SECONDS apart, each key keeping its own gap."""
+    return len(group) > 1 and all(config.limits_per_key is not None for config in group)
 
 
 def run_operator(
@@ -356,47 +366,55 @@ def main(argv: list[str] | None = None) -> int:
                 configs = [config]
             progress = RunProgress(max_pages=args.max_pages)
             groups = host_groups(configs)
-            progress.run_started([[config.id for config in group] for group in groups])
+            progress.run_started(
+                [[config.id for config in group] for group in groups],
+                turns=[n for n, group in enumerate(groups) if takes_turns(group)],
+            )
             numbers = {config.id: number for number, config in enumerate(configs, start=1)}
 
+            def fetch_one(config: OperatorConfig) -> AdapterResult | str:
+                """Fetch one operator. A failure comes back as its id."""
+                try:
+                    reporter = progress.operator_started(
+                        config, number=numbers[config.id], count=len(configs)
+                    )
+                    result = run_operator(
+                        config,
+                        date_from=args.date_from,
+                        page_size=args.page_size,
+                        max_pages=args.max_pages,
+                        progress=reporter,
+                        notice=lambda text, i=config.id: print(f"{i}: {text}", flush=True),
+                    )
+                except FeedError as exc:
+                    progress.operator_failed(config.id)
+                    when = datetime.now(UTC)
+                    failures[config.id] = (
+                        str(exc),
+                        when,
+                        exc.modules or {},
+                        getattr(exc, "requests", None),
+                    )
+                    if args.log_dir:
+                        write_log(args.log_dir, _failure_log(config.id, mode, failures))
+                    if len(configs) == 1:
+                        raise
+                    print(f"Error: {exc}", file=sys.stderr, flush=True)
+                    return config.id
+                progress.operator_done(config.id, requests=result.requests)
+                return result
+
             def fetch_group(group: list[OperatorConfig]) -> list[AdapterResult | str]:
-                """Fetch one group, one operator at a time. Failures come back as ids."""
-                outcomes: list[AdapterResult | str] = []
-                for config in group:
-                    try:
-                        reporter = progress.operator_started(
-                            config, number=numbers[config.id], count=len(configs)
-                        )
-                        result = run_operator(
-                            config,
-                            date_from=args.date_from,
-                            page_size=args.page_size,
-                            max_pages=args.max_pages,
-                            progress=reporter,
-                            notice=lambda text, i=config.id: print(f"{i}: {text}", flush=True),
-                        )
-                    except FeedError as exc:
-                        progress.operator_failed(config.id)
-                        when = datetime.now(UTC)
-                        failures[config.id] = (
-                            str(exc),
-                            when,
-                            exc.modules or {},
-                            getattr(exc, "requests", None),
-                        )
-                        if args.log_dir:
-                            write_log(args.log_dir, _failure_log(config.id, mode, failures))
-                        if len(configs) == 1:
-                            raise
-                        print(f"Error: {exc}", file=sys.stderr, flush=True)
-                        outcomes.append(config.id)
-                    else:
-                        progress.operator_done(config.id, requests=result.requests)
-                        outcomes.append(result)
-                return outcomes
+                """Fetch one group: one operator at a time, or together where they take
+                turns at the host (takes_turns)."""
+                if takes_turns(group):
+                    with ThreadPoolExecutor(max_workers=len(group)) as pool:
+                        return list(pool.map(fetch_one, group))
+                return [fetch_one(config) for config in group]
 
             # Groups share no host, so they run at the same time; within a group, one
-            # operator at a time (CLAUDE.md, rate limits).
+            # operator at a time, unless the owner reads every one's limits per key, when
+            # their requests take turns (CLAUDE.md, rate limits).
             with ThreadPoolExecutor(max_workers=len(groups)) as pool:
                 outcomes = [o for group in pool.map(fetch_group, groups) for o in group]
             fetched = {o.operator_id: o for o in outcomes if not isinstance(o, str)}

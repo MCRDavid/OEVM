@@ -254,6 +254,17 @@ def test_operator_and_run_lines(registry, no_relay):
     ]
 
 
+def test_the_run_line_says_which_group_takes_turns():
+    reporter, out, _ = progress()
+    reporter.run_started([["chargy"], ["allego", "pod", "ubitricity"]], turns=[1])
+    assert lines(out) == [
+        "Fetching 4 operators in 2 groups at the same time, one operator at a time within "
+        "each group, as no two groups share a host: chargy; allego, pod, ubitricity. The 3 "
+        "operators in the group with allego are fetched together, one request at a time, as "
+        "their limits are read per key."
+    ]
+
+
 def test_every_line_is_flushed_at_once(registry, no_relay):
     out = Flushes()
     reporter = RunProgress(out=out, clock=FakeClock())

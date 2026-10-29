@@ -25,6 +25,7 @@ import httpx
 import pytest
 from pydantic import ValidationError
 
+from adapters import http
 from adapters.http import (
     SHARED_HOST_SECONDS,
     FeedError,
@@ -336,6 +337,63 @@ def test_a_wait_the_server_asks_of_one_key_holds_back_every_key_on_the_host():
     assert len(server.arrivals) == 1
 
 
+def test_keys_fetched_together_take_turns_at_the_host(monkeypatch):
+    """Real threads, one per key, as pipeline.run fetches per-key operators together.
+
+    Gaps are scaled down so the test is quick: requests never overlap, each starts at least
+    the host floor after the last one finished, each key keeps its own gap, and the keys
+    interleave rather than waiting for one another to finish."""
+    monkeypatch.setattr(http, "SHARED_HOST_SECONDS", 0.02)
+    gap, keys, per_key = 0.3, ECO[:4], 3
+    lock, seen = threading.Lock(), []
+
+    def answer(request: httpx.Request) -> httpx.Response:
+        start = time.monotonic()
+        time.sleep(0.005)
+        with lock:
+            seen.append((start, time.monotonic(), request.headers["authorization"]))
+        return httpx.Response(200, json={})
+
+    def fetch(config):
+        with PoliteClient(
+            config, transport=httpx.MockTransport(answer), key=f"made-up-{config.id}"
+        ) as client:
+            client.min_interval = gap
+            for _ in range(per_key):
+                client.get(config.endpoints["locations"].url)
+
+    began = time.monotonic()
+    threads = [threading.Thread(target=fetch, args=(config,)) for config in keys]
+    for thread in threads:
+        thread.start()
+    for thread in threads:
+        thread.join()
+    took = time.monotonic() - began
+    seen.sort()
+    assert len(seen) == len(keys) * per_key
+    for (_, finished, _), (started, _, _) in pairwise(seen):
+        assert started >= finished + 0.02 - 1e-3
+    for config in keys:
+        own = [(s, f) for s, f, k in seen if k == f"Token made-up-{config.id}"]
+        assert len(own) == per_key
+        for (_, finished), (started, _) in pairwise(own):
+            assert started >= finished + gap - 1e-3
+    # One key after another would take at least len(keys) * (per_key - 1) gaps.
+    assert took < len(keys) * (per_key - 1) * gap
+
+
+def test_only_groups_whose_every_operator_reads_limits_per_key_take_turns():
+    eco = [c for c in ECO if c.enabled]
+    assert run.takes_turns(eco)
+    assert not run.takes_turns(eco[:1])
+    mixed = [eco[0].model_copy(update={"limits_per_key": None}), *eco[1:]]
+    assert not run.takes_turns(mixed)
+    groups = run.host_groups([c for c in OPERATORS.values() if c.enabled])
+    assert [sorted(c.id for c in g) for g in groups if run.takes_turns(g)] == [
+        sorted(c.id for c in eco)
+    ]
+
+
 def test_per_key_limits_need_a_key_and_every_operator_on_the_host_to_agree():
     config = OPERATORS["ubitricity"]
     with pytest.raises(ValidationError, match="limits_per_key needs a key"):
@@ -523,29 +581,42 @@ def test_a_host_shared_through_a_third_operator_joins_the_groups():
 
 
 def test_the_live_run_never_fetches_one_host_twice_at_once(monkeypatch, capsys):
-    """Every operator in the registry switched on, with each fetch taking a little while."""
+    """Every operator in the registry switched on, with each fetch taking a little while.
+
+    Operators whose limits the owner reads per key are the one exception: they are
+    fetched together, and their client sends the host one request at a time (tested
+    below with real threads)."""
     everyone = {i: c.model_copy(update={"enabled": True}) for i, c in OPERATORS.items()}
     monkeypatch.setattr(run, "load_registry", lambda: everyone)
-    lock, busy, most = threading.Lock(), set(), [0]
+    lock, busy, most, together = threading.Lock(), set(), [0], [0, 0]
     replayed = {r.operator_id: r for r in run.run_fixtures(OPERATORS)}
 
     def fake(config, **kwargs):
         hosts = operator_hosts(config)
+        per_key = config.limits_per_key is not None
         with lock:
-            assert not busy & hosts, f"{config.id} started while its host was in use"
-            busy.update(hosts)
+            if per_key:
+                together[0] += 1
+                together[1] = max(together[1], together[0])
+            else:
+                assert not busy & hosts, f"{config.id} started while its host was in use"
+                busy.update(hosts)
             most[0] = max(most[0], len(busy))
         time.sleep(0.02)
         with lock:
-            busy.difference_update(hosts)
+            if per_key:
+                together[0] -= 1
+            else:
+                busy.difference_update(hosts)
         if config.id in replayed:
             return replayed[config.id]
         raise FeedError(f"{config.id}: not recorded")
 
     monkeypatch.setattr(run, "run_operator", fake)
     assert run.main(["--live", "all"]) == run.EXIT_SOME_FAILED
-    # Groups really did run at the same time.
+    # Groups really did run at the same time, and the per-key operators together.
     assert most[0] > len(operator_hosts(OPERATORS["chargy"]))
+    assert together[1] > 1
     shown = capsys.readouterr()
     # Results are reported in registry order, whatever order the groups finish in.
     reported = [line.split(":")[0] for line in shown.out.splitlines() if ": fetched " in line]
