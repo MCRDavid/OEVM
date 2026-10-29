@@ -826,7 +826,7 @@
     },
     "OwnFeedOverCopies": {
       "additionalProperties": false,
-      "description": "The repository owner's recorded decision that this operator's own feed is shown in\nplace of copies of its locations in other operators' feeds (ADR 0027).\n\nA platform's feed can carry a network's locations under the network's own OCPI country\nand party codes, while the network publishes them itself too. While this operator's own\nlocations are on the map, from this run or its last good copy, every location that a\nnamed operator's feed sends under this operator's ocpi_country_code and ocpi_party_id\nis left off the map. Each is counted and listed on the feed health page; nothing in\neither feed is changed. When this operator has nothing on the map, the copies are shown.",
+      "description": "The repository owner's recorded decision that this operator's own feed is shown in\nplace of copies of its locations in other operators' feeds (ADR 0027).\n\nA platform's feed can carry a network's locations under the network's own OCPI country\nand party codes, while the network publishes them itself too. While this operator's own\nlocations are on the map, from this run or its last good copy, every location that a\nnamed operator's feed sends under this operator's ocpi_country_code and ocpi_party_id\nis left off the map. Each is counted and listed on the feed health page; nothing in\neither feed is changed. When this operator has nothing on the map, the copies are shown.\nWhere the copies are sent under other codes than this operator's own feed uses, such as\nthe network's registered party while its own feed uses another, copies_country_code\nand copies_party_id name them (amended 29 October 2026).",
       "properties": {
         "decided": {
           "description": "Date the owner made the decision (YYYY-MM-DD).",
@@ -854,6 +854,34 @@
           "minItems": 1,
           "title": "Operators",
           "type": "array"
+        },
+        "copies_country_code": {
+          "anyOf": [
+            {
+              "pattern": "^[A-Z]{2}$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "The OCPI country code the copies are sent under, where it differs from this operator's own; given with copies_party_id. Null means this operator's own.",
+          "title": "Copies Country Code"
+        },
+        "copies_party_id": {
+          "anyOf": [
+            {
+              "pattern": "^[A-Z0-9]{3}$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "The OCPI party id the copies are sent under, where it differs from this operator's own; given with copies_country_code. Null means this operator's own.",
+          "title": "Copies Party Id"
         }
       },
       "required": [
@@ -1172,7 +1200,7 @@
     },
     "VatInPrice": {
       "additionalProperties": false,
-      "description": "The repository owner's recorded decision that the VAT this operator's feed states is\nalready in its prices, so it is not added again (ADR 0003, amended 23 October 2026).\n\nOCPI 2.2.1 prices exclude VAT, and each price component can give the VAT rate to add.\nSome feeds also show the price drivers see, and it can equal the price with no VAT\nadded. Without this decision VAT at the stated rate is added, as OCPI says. With it,\neach price is shown as published, marked as read from the operator's display price.\nThe tariffs themselves are published unchanged.",
+      "description": "The repository owner's recorded decision that the VAT this operator's feed states is\nalready in its prices, so it is not added again (ADR 0003, amended 23 October 2026).\n\nOCPI 2.2.1 prices exclude VAT, and each price component can give the VAT rate to add.\nSome feeds also show the price drivers see, and it can equal the price with no VAT\nadded, or every price can be whole pence as published. Without this decision VAT at\nthe stated rate is added, as OCPI says. With it, each price is shown as published,\nmarked as reading the stated VAT as already in the price.\nThe tariffs themselves are published unchanged.",
       "properties": {
         "decided": {
           "description": "Date the owner made the decision (YYYY-MM-DD).",

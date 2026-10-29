@@ -97,12 +97,24 @@ Date: 2026-10-07. Status: accepted.
 - The owner decided the prices are read as the display price shows them. The decision is
   recorded per operator in `vat_in_price` (decided, basis, evidence). Where it is
   recorded, `pipeline/pricing.py` adds nothing to a price component that states its VAT,
-  and the price says "including VAT, read as the operator's display price shows it". A
+  and the price says "including VAT, read as the operator's display price shows it"
+  (since 29 October 2026, "including VAT, reading the VAT rate the feed states as already
+  in the price", so the words also fit feeds with no display price). A
   component that gives no rate is still marked "VAT not stated"; this decision never
   supplies a rate. A minimum charge is read the same way.
 - An operator cannot record both `vat_in_price` and `vat_not_stated`. The tariffs are
   published unchanged, the transparency page shows the decision in the operator's row and
   in its "VAT in prices" section, and only the owner adds one.
+
+### Amendment, 29 October 2026: Eco-Movement networks
+
+On 29 October 2026 the owner recorded `vat_not_stated` at 20% for five networks on
+Eco-Movement's PCPR API (Allego, Blink Charging, evpoint, Lidl and RAW Charging), whose
+prices give no VAT rate and come to whole pence once 20% is added, and `vat_in_price` for
+three (Pod, ESB Energy and ESB ecars), whose prices state VAT 20 but are all whole pence as
+published. Both readings are inferred from the figures and recorded as findings in each
+operator file. The words a `vat_in_price` price carries were made general, as these feeds
+have no display price.
 
 ## Security
 

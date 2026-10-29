@@ -60,7 +60,7 @@ UNSTATED_KIND = "How to pay is not stated"
 # `added_vat` when the operator file records vat_in_price: stated VAT is already in prices.
 VAT_IN_PRICE: Literal["in_price"] = "in_price"
 VatReading = float | Literal["in_price"] | None
-IN_PRICE_NOTE = "including VAT, read as the operator's display price shows it"
+IN_PRICE_NOTE = "including VAT, reading the VAT rate the feed states as already in the price"
 WEEK = ("monday", "tuesday", "wednesday", "thursday", "friday", "saturday", "sunday")
 
 

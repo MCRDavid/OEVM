@@ -83,12 +83,14 @@ VAT_RULE = {
         "unchanged."
     ),
     "in_price": (
-        "A feed can also give each price as drivers see it. Where that display price equals "
-        "the price with no VAT added, although the feed states a VAT rate, adding the rate "
-        "would show a price higher than the operator displays. On 23 October 2026 the "
-        "repository owner decided that for each operator listed here, the VAT its feed "
-        "states is read as already in its prices: each price is shown as published, "
-        "including VAT, and says it was read as the operator's display price shows it."
+        "A feed can state a VAT rate on prices that seem to include VAT already: "
+        "BrightGreen's display price equals the price with no VAT added, and some feeds "
+        "give every price in whole pence as published, which adding the rate would not. "
+        "Adding the rate would then show a price higher than the operator seems to charge. "
+        "On 23 and 29 October 2026 the repository owner decided that for each operator "
+        "listed here, the VAT its feed states is read as already in its prices: each price "
+        "is shown as published, including VAT, and says so. This is inferred from the "
+        "figures, not stated by the operators."
     ),
 }
 
@@ -384,6 +386,12 @@ def operator_view(config: OperatorConfig) -> dict:
                 "basis": config.own_feed_over_copies.basis,
                 "evidence_url": config.own_feed_over_copies.evidence_url,
                 "operators": list(config.own_feed_over_copies.operators),
+                "codes": " ".join(
+                    config.own_feed_over_copies.copies_codes(
+                        config.ocpi_country_code, config.ocpi_party_id
+                    )
+                ),
+                "own_codes": config.own_feed_over_copies.copies_party_id is None,
             }
             if config.own_feed_over_copies
             else None
@@ -649,8 +657,13 @@ def _sources_table(data: dict) -> str:
             fetched = fetched.rstrip(".")
             fetched += (
                 f". While its own locations are on the map, the locations {names} "
-                f"{'sends' if len(copies['operators']) == 1 else 'send'} under its country "
-                "and party codes are left off and listed on the feed health page, by the "
+                f"{'sends' if len(copies['operators']) == 1 else 'send'} under "
+                + (
+                    "its country and party codes"
+                    if copies["own_codes"]
+                    else f"the country and party codes {_e(copies['codes'])}"
+                )
+                + " are left off and listed on the feed health page, by the "
                 f"owner's decision of {_e(copies['decided'])}: {_e(copies['basis'])} "
                 f"({_link(copies['evidence_url'], 'evidence')})"
             )

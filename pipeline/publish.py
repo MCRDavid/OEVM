@@ -43,7 +43,8 @@ Rules:
   the VAT that operator's feed states is read as already in its prices.
 - Where the owner has recorded own_feed_over_copies in an operator's file (ADR 0027) and
   that operator's own locations are on the map, the locations a named operator's feed
-  sends under its country and party codes are left off, counted in the manifest and
+  sends under its country and party codes (or the codes the decision names for the
+  copies) are left off, counted in the manifest and
   listed on the feed health page. Nothing in either feed is changed.
 - A location whose name marks it private or restricted (pipeline/access.py, ADR 0023)
   carries those words in the map file, and one where every charge point is marked for
@@ -553,14 +554,16 @@ def _own_feeds_over_copies(
     """The features without the copies another operator's feed sends of an operator whose
     own locations are on the map, where that operator's file records own_feed_over_copies
     (ADR 0027). A copy is a location the named operator sends under the owner's country
-    and party codes. Their detail files are dropped and each is counted in its entry."""
+    and party codes, or the codes the decision names for the copies. Their detail files are
+    dropped and each is counted in its entry."""
     on_map = {f.properties.op for f in features}
     for owner_id, config in sorted(operators.items()):
         decision = config.own_feed_over_copies
         if decision is None or not config.enabled or owner_id not in on_map:
             continue
         for other in decision.operators:
-            prefix = f"{other}:{config.ocpi_country_code}:{config.ocpi_party_id}:"
+            country, party = decision.copies_codes(config.ocpi_country_code, config.ocpi_party_id)
+            prefix = f"{other}:{country}:{party}:"
             copies = [
                 f
                 for f in features
@@ -787,8 +790,9 @@ def publish(
             else ""
         )
         copies = (
-            f", {entry.replaced} left off as copies of {', '.join(sorted(entry.replaced_by))}'s "
-            "own feed"
+            f", {entry.replaced} left off as copies of "
+            + " and ".join(f"{owner}'s" for owner in sorted(entry.replaced_by))
+            + (" own feed" if len(entry.replaced_by) == 1 else " own feeds")
             if entry.replaced
             else ""
         )

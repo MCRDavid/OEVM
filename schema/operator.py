@@ -591,8 +591,9 @@ class VatInPrice(_Model):
 
     OCPI 2.2.1 prices exclude VAT, and each price component can give the VAT rate to add.
     Some feeds also show the price drivers see, and it can equal the price with no VAT
-    added. Without this decision VAT at the stated rate is added, as OCPI says. With it,
-    each price is shown as published, marked as read from the operator's display price.
+    added, or every price can be whole pence as published. Without this decision VAT at
+    the stated rate is added, as OCPI says. With it, each price is shown as published,
+    marked as reading the stated VAT as already in the price.
     The tariffs themselves are published unchanged.
     """
 
@@ -613,6 +614,9 @@ class OwnFeedOverCopies(_Model):
     named operator's feed sends under this operator's ocpi_country_code and ocpi_party_id
     is left off the map. Each is counted and listed on the feed health page; nothing in
     either feed is changed. When this operator has nothing on the map, the copies are shown.
+    Where the copies are sent under other codes than this operator's own feed uses, such as
+    the network's registered party while its own feed uses another, copies_country_code
+    and copies_party_id name them (amended 29 October 2026).
     """
 
     decided: dt.date = Field(description="Date the owner made the decision (YYYY-MM-DD).")
@@ -626,6 +630,18 @@ class OwnFeedOverCopies(_Model):
         description="Ids of the operators whose feeds carry the copies. Each must be in the "
         "registry.",
     )
+    copies_country_code: str | None = Field(
+        default=None,
+        pattern=r"^[A-Z]{2}$",
+        description="The OCPI country code the copies are sent under, where it differs from "
+        "this operator's own; given with copies_party_id. Null means this operator's own.",
+    )
+    copies_party_id: str | None = Field(
+        default=None,
+        pattern=r"^[A-Z0-9]{3}$",
+        description="The OCPI party id the copies are sent under, where it differs from this "
+        "operator's own; given with copies_country_code. Null means this operator's own.",
+    )
 
     @model_validator(mode="after")
     def _ids(self) -> "OwnFeedOverCopies":
@@ -634,7 +650,15 @@ class OwnFeedOverCopies(_Model):
                 raise ValueError(f"{item!r} is not an operator id")
         if len(set(self.operators)) != len(self.operators):
             raise ValueError("each operator may be named once")
+        if (self.copies_country_code is None) != (self.copies_party_id is None):
+            raise ValueError("copies_country_code and copies_party_id are given together")
         return self
+
+    def copies_codes(self, country_code: str, party_id: str) -> tuple[str, str]:
+        """The country and party codes the copies are sent under, given the operator's own."""
+        if self.copies_country_code and self.copies_party_id:
+            return self.copies_country_code, self.copies_party_id
+        return country_code, party_id
 
 
 class Relay(_Model):
