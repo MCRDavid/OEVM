@@ -688,6 +688,52 @@
       "title": "Licence",
       "type": "object"
     },
+    "LimitsAsAllowance": {
+      "additionalProperties": false,
+      "description": "The repository owner's recorded decision that this operator's published limits of so\nmany requests in a period are an allowance for its key to keep within, not a spacing\n(ADR 0003, amended 29 October 2026).\n\nWithout this decision a limit of 30 requests an hour means one request every 120\nseconds plus the margin. With it, the key may send its requests close together, each\nat least the floor plus the margin after its last one finished, as long as no period\nof the limit's length plus the margin holds more than one request fewer than the limit\nallows (a limit of one request stays a spacing). Requests to the host, from whichever\nkey, are sent at most at_once at a time, their starts at least the floor apart. Any\nretry, wait the server asks for or refusal puts every key on the host back to its\nspacing, one request at a time, for the rest of the run. Only with limits_per_key.",
+      "properties": {
+        "decided": {
+          "description": "Date the owner made the decision (YYYY-MM-DD).",
+          "format": "date",
+          "title": "Decided",
+          "type": "string"
+        },
+        "basis": {
+          "description": "Why the limits are read as an allowance, and what the publisher says.",
+          "minLength": 1,
+          "title": "Basis",
+          "type": "string"
+        },
+        "at_once": {
+          "description": "Most requests sent to the host at the same time, whichever key each uses. Every operator on the host records the same number.",
+          "maximum": 5,
+          "minimum": 1,
+          "title": "At Once",
+          "type": "integer"
+        },
+        "at_once_source": {
+          "description": "Where the number comes from, quoted from the publisher where it says.",
+          "minLength": 1,
+          "title": "At Once Source",
+          "type": "string"
+        },
+        "evidence_url": {
+          "description": "Where the limits are published.",
+          "pattern": "^https?://\\S+$",
+          "title": "Evidence Url",
+          "type": "string"
+        }
+      },
+      "required": [
+        "decided",
+        "basis",
+        "at_once",
+        "at_once_source",
+        "evidence_url"
+      ],
+      "title": "LimitsAsAllowance",
+      "type": "object"
+    },
     "LimitsPerKey": {
       "additionalProperties": false,
       "description": "The repository owner's recorded decision that this operator's published rate limits\napply to each key, not to everyone using its host (ADR 0003, amended 29 October 2026).\n\nA platform can serve many networks from one host, each with its own key, and publish\nlimits without saying whether they count per key or per address. Without this decision\nevery operator on the host shares one gap, the strictest reading. With it, this\noperator's gap is kept for its own key; requests to the host, from whichever operator,\nare still sent one at a time and at least the floor plus the margin apart, and a\nserver's request to wait still holds back every key on the host.",
@@ -1608,6 +1654,18 @@
       ],
       "default": null,
       "description": "Only by the repository owner's decision: read the published rate limits as applying to this operator's own key, so its gap is not shared with other operators on the host. Null means every operator on the host shares one gap."
+    },
+    "limits_as_allowance": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/LimitsAsAllowance"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "description": "Only by the repository owner's decision, and only with limits_per_key: read each published limit as an allowance the key keeps within, so its requests may come close together, at most at_once at a time on the host. Null means each limit is kept as an even spacing."
     },
     "expired_certificate": {
       "anyOf": [

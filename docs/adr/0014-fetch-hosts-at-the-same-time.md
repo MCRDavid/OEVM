@@ -86,3 +86,13 @@ Amended a third time 29 October 2026: by the repository owner's decision that ev
 turns for each request, still one request at a time and at least 2 seconds apart. The
 group takes about as long as its slowest network, ubitricity (14 requests, about 28
 minutes), so about 30 minutes in all, and the map is published at about 04:50 UTC.
+
+Amended a fourth time 29 October 2026: by the repository owner's decision late that
+evening (ADR 0003, amended), each network's token keeps its limits as an hourly allowance
+rather than a spacing, with at most 5 requests at once to open-chargepoints.com. The
+group should then take about a minute (each network's requests at least 2 seconds apart,
+ubitricity's 14 the most), so the slowest groups are Roam (2 requests, 721 seconds apart)
+and char.gy (122 requests, 6 seconds apart), about 12 minutes each, and the map should be
+published at about 04:35 UTC (estimates). If anything goes wrong at open-chargepoints.com,
+its networks go back to their 125 second gaps for the rest of the run, so the 150 minute
+limit stays.

@@ -405,4 +405,20 @@ def test_limits_read_per_key_are_shown_with_the_owners_decision(page):
     assert {per_key[i]["decided"] for i in decided} == {"2026-10-29"}
     text = " ".join(page.split())
     assert "Limits read per key by the owner's decision of 2026-10-29" in text
-    assert "requests to the host are still sent one at a time, at least 2 s apart" in text
+
+
+def test_limits_read_as_an_allowance_are_shown_with_the_owners_decision(page):
+    data = json.loads(transparency.outputs()[transparency.JSON_PATH])
+    allowance = {op["id"]: op["rate_limit"]["allowance"] for op in data["operators"]}
+    decided = {i for i, v in allowance.items() if v}
+    assert "ubitricity" in decided and "chargy" not in decided
+    assert {(allowance[i]["decided"], allowance[i]["at_once"]) for i in decided} == {
+        ("2026-10-29", 5)
+    }
+    text = " ".join(page.split())
+    assert (
+        "Limits read as an allowance, at most 5 requests at once, by the owner's decision of "
+        "2026-10-29" in text
+    )
+    assert "At most 5 requests go to the host at the same time, started at least 1 s apart" in text
+    assert "brings back 125 s between requests with each key" in text

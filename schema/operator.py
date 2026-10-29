@@ -680,6 +680,37 @@ class LimitsPerKey(_Model):
     evidence_url: SafeUrl = Field(description="Where the limits are published.")
 
 
+class LimitsAsAllowance(_Model):
+    """The repository owner's recorded decision that this operator's published limits of so
+    many requests in a period are an allowance for its key to keep within, not a spacing
+    (ADR 0003, amended 29 October 2026).
+
+    Without this decision a limit of 30 requests an hour means one request every 120
+    seconds plus the margin. With it, the key may send its requests close together, each
+    at least the floor plus the margin after its last one finished, as long as no period
+    of the limit's length plus the margin holds more than one request fewer than the limit
+    allows (a limit of one request stays a spacing). Requests to the host, from whichever
+    key, are sent at most at_once at a time, their starts at least the floor apart. Any
+    retry, wait the server asks for or refusal puts every key on the host back to its
+    spacing, one request at a time, for the rest of the run. Only with limits_per_key.
+    """
+
+    decided: dt.date = Field(description="Date the owner made the decision (YYYY-MM-DD).")
+    basis: NeutralText = Field(
+        description="Why the limits are read as an allowance, and what the publisher says."
+    )
+    at_once: int = Field(
+        ge=1,
+        le=5,
+        description="Most requests sent to the host at the same time, whichever key each "
+        "uses. Every operator on the host records the same number.",
+    )
+    at_once_source: NeutralText = Field(
+        description="Where the number comes from, quoted from the publisher where it says."
+    )
+    evidence_url: SafeUrl = Field(description="Where the limits are published.")
+
+
 class Relay(_Model):
     """The repository owner's recorded decision to fetch this operator through a relay the
     project runs, because the operator's server refused requests from the daily run.
@@ -1059,6 +1090,13 @@ class OperatorConfig(_Model):
         "limits as applying to this operator's own key, so its gap is not shared with other "
         "operators on the host. Null means every operator on the host shares one gap.",
     )
+    limits_as_allowance: LimitsAsAllowance | None = Field(
+        default=None,
+        description="Only by the repository owner's decision, and only with limits_per_key: "
+        "read each published limit as an allowance the key keeps within, so its requests "
+        "may come close together, at most at_once at a time on the host. Null means each "
+        "limit is kept as an even spacing.",
+    )
     expired_certificate: ExpiredCertificate | None = Field(
         default=None,
         description="Only by the repository owner's decision: read the feed past one "
@@ -1191,6 +1229,8 @@ class OperatorConfig(_Model):
             self.auth.method == "none" or not self.auth.secret_name
         ):
             problems.append("limits_per_key needs a key of the operator's own (auth.secret_name)")
+        if self.limits_as_allowance is not None and self.limits_per_key is None:
+            problems.append("limits_as_allowance needs limits_per_key")
         if self.expired_certificate is not None:
             if self.auth.method != "none":
                 problems.append("only a feed that needs no key may be read past a certificate")

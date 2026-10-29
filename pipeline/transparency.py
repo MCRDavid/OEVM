@@ -27,6 +27,8 @@ from schema.operator import (
     CHANNELS,
     ENGAGEMENT_ACTIONS,
     ENGAGEMENT_LABELS,
+    LIMIT_MARGIN_SECONDS,
+    MIN_SECONDS_BETWEEN_REQUESTS,
     DocumentedLimit,
     Engagement,
     OperatorConfig,
@@ -190,12 +192,33 @@ def rate_limit_view(config: OperatorConfig) -> dict:
             f"decision of {per_key.decided}; requests to the host are still sent one at a "
             f"time, at least {SHARED_HOST_SECONDS:g} s apart."
         )
+    allowance = config.limits_as_allowance
+    if per_key is not None and allowance is not None:
+        ours = (
+            f"Each published limit is kept as an allowance for the operator's own key, by "
+            f"the owner's decisions of {per_key.decided} (limits per key) and "
+            f"{allowance.decided} (an allowance): no period of a limit's length plus "
+            f"{LIMIT_MARGIN_SECONDS:g} s holds more than one request fewer than it allows, "
+            f"retries included, and each request with the key starts at least "
+            f"{SHARED_HOST_SECONDS:g} s after its last one finished. At most "
+            f"{allowance.at_once} requests go to the host at the same time, started at least "
+            f"{MIN_SECONDS_BETWEEN_REQUESTS:g} s apart. Any retry, wait the server asks for "
+            f"or refusal brings back {gap:g} s between requests with each key (at most "
+            f"{per_hour} in any hour with it), one request at a time at the host, for the "
+            "rest of the run."
+        )
     if rate.limits:
         needed = max(limit.min_interval for limit in rate.limits)
         comparison = (
             f"Within every published limit. The strictest needs {needed:g} s between "
             f"requests; this project waits {gap:g} s, which includes a safety margin."
         )
+        if allowance is not None:
+            comparison = (
+                "Within every published limit, keeping one request in hand in each limit's "
+                f"period as a safety margin; after any sign of trouble, {gap:g} s between "
+                "requests, which includes a safety margin."
+            )
         difference = (
             "The operator sets a limit; the regulations set none. DfT guidance allows such "
             "terms on access."
@@ -233,6 +256,17 @@ def rate_limit_view(config: OperatorConfig) -> dict:
                 "evidence_url": per_key.evidence_url,
             }
             if per_key
+            else None
+        ),
+        "allowance": (
+            {
+                "decided": str(allowance.decided),
+                "basis": allowance.basis,
+                "at_once": allowance.at_once,
+                "at_once_source": allowance.at_once_source,
+                "evidence_url": allowance.evidence_url,
+            }
+            if per_key and allowance
             else None
         ),
     }
@@ -821,6 +855,15 @@ def _rate_table(data: dict) -> str:
             notes += (
                 f"<br>Limits read per key by the owner's decision of {_e(per_key['decided'])}: "
                 f"{_e(per_key['basis'])} ({_link(per_key['evidence_url'], 'evidence')})"
+            )
+        if rate["allowance"]:
+            allowance = rate["allowance"]
+            notes += (
+                "<br>Limits read as an allowance, at most "
+                f"{_e(str(allowance['at_once']))} requests at once, by the owner's decision of "
+                f"{_e(allowance['decided'])}: {_e(allowance['basis'])} "
+                f"{_e(allowance['at_once_source'])} "
+                f"({_link(allowance['evidence_url'], 'evidence')})"
             )
         rows.append(
             "<tr>"

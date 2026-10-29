@@ -3,7 +3,9 @@
 Rules for every request, enforced per host:
 
 1. Project floor: at least 1 second between requests (MIN_SECONDS_BETWEEN_REQUESTS).
-2. Every limit the operator publishes, plus a 1 second safety margin (LIMIT_MARGIN_SECONDS).
+2. Every limit the operator publishes, plus a 1 second safety margin (LIMIT_MARGIN_SECONDS),
+   or, where the owner reads the limits as an allowance for each key, one request in hand
+   in each limit's period plus that margin, at most at_once requests at once at the host.
 3. Never contact a server sooner than a Retry-After it sent.
 
 The Public Charge Point Regulations 2023 set no limit for data users (see the transparency
@@ -41,6 +43,7 @@ from schema.operator import (
     LIMIT_MARGIN_SECONDS,
     MIN_SECONDS_BETWEEN_REQUESTS,
     Auth,
+    LimitsAsAllowance,
     OperatorConfig,
     RateLimit,
 )
@@ -102,12 +105,26 @@ def without_keys(config: OperatorConfig) -> OperatorConfig:
     return config.model_copy(update={"auth": Auth(method="none")})
 
 
-def assert_within_limits(config: OperatorConfig, arrivals: list[float]) -> None:
-    """Check request arrival times at the server against the gap and every limit."""
+def reads_an_allowance(config: OperatorConfig) -> bool:
+    return config.limits_per_key is not None and config.limits_as_allowance is not None
+
+
+def assert_within_limits(
+    config: OperatorConfig, arrivals: list[float], endpoint: str | None = None
+) -> None:
+    """Check request arrival times at the server against the gap and every limit.
+
+    Limits read as an allowance (limits_as_allowance) keep SHARED_HOST_SECONDS between one
+    key's requests rather than the gap; with endpoint given, every request was to that
+    endpoint, so only the limits that name it, or all endpoints, are checked."""
     gap = config.rate_limit.min_seconds_between_requests
+    if reads_an_allowance(config):
+        gap = SHARED_HOST_SECONDS
     for earlier, later in pairwise(arrivals):
         assert later - earlier >= gap - 1e-9, f"requests arrived {later - earlier:g} s apart"
     for documented in config.rate_limit.limits:
+        if endpoint is not None and documented.endpoint not in ("all", endpoint):
+            continue
         for start in arrivals:
             window = [t for t in arrivals if start <= t <= start + documented.per_seconds]
             assert len(window) <= documented.requests, (
@@ -288,6 +305,9 @@ def keyed_client_for(config, clock, server) -> PoliteClient:
 
 
 ECO = [c for c in OPERATORS.values() if c.adapter == "eco_movement_pcpr"]
+# The same networks with their limits read per key but kept as a spacing, as before the
+# owner's allowance decision, and as every key falls back to after any sign of trouble.
+PER_KEY = [c.model_copy(update={"limits_as_allowance": None}) for c in ECO]
 
 
 def test_every_eco_movement_network_reads_its_limits_per_token_by_the_owners_decision():
@@ -297,23 +317,23 @@ def test_every_eco_movement_network_reads_its_limits_per_token_by_the_owners_dec
 
 def test_per_key_limits_keep_each_tokens_gap_and_the_host_one_request_at_a_time():
     clock = FakeClock()
-    server = KeyServer(clock, [httpx.Response(200, json={})] * 5 * len(ECO), UNEVEN_DELAYS)
-    for config in ECO:
+    server = KeyServer(clock, [httpx.Response(200, json={})] * 5 * len(PER_KEY), UNEVEN_DELAYS)
+    for config in PER_KEY:
         with keyed_client_for(config, clock, server) as client:
             for _ in range(5):
                 client.get(config.endpoints["tariffs"].url)
-    for config in ECO:
+    for config in PER_KEY:
         own = server.arrivals_for(f"made-up-{config.id}")
         assert len(own) == 5
         assert_within_limits(config, own)
     for earlier, later in pairwise(server.arrivals):
         assert later - earlier >= SHARED_HOST_SECONDS - 1e-9
     # Each network waits only for its own gap: 4 gaps each, one network after another.
-    assert server.arrivals[-1] < len(ECO) * 4 * 125 + len(ECO) * 10
+    assert server.arrivals[-1] < len(PER_KEY) * 4 * 125 + len(PER_KEY) * 10
 
 
 def test_per_key_clients_used_in_turn_still_keep_the_host_floor_and_each_gap():
-    first, second = ECO[0], ECO[1]
+    first, second = PER_KEY[0], PER_KEY[1]
     clock = FakeClock()
     server = KeyServer(clock, [httpx.Response(200, json={})] * 6)
     with keyed_client_for(first, clock, server) as a, keyed_client_for(second, clock, server) as b:
@@ -344,7 +364,7 @@ def test_keys_fetched_together_take_turns_at_the_host(monkeypatch):
     the host floor after the last one finished, each key keeps its own gap, and the keys
     interleave rather than waiting for one another to finish."""
     monkeypatch.setattr(http, "SHARED_HOST_SECONDS", 0.02)
-    gap, keys, per_key = 0.3, ECO[:4], 3
+    gap, keys, per_key = 0.3, PER_KEY[:4], 3
     lock, seen = threading.Lock(), []
 
     def answer(request: httpx.Request) -> httpx.Response:
@@ -404,6 +424,163 @@ def test_per_key_limits_need_a_key_and_every_operator_on_the_host_to_agree():
     assert registry._per_key_problems(operators) == [
         "operators on open-chargepoints.com must all record limits_per_key, or none of them"
     ]
+
+
+def test_every_eco_movement_network_reads_its_limits_as_an_allowance_by_the_owners_decision():
+    assert all(c.limits_as_allowance is not None for c in ECO)
+    assert {(str(c.limits_as_allowance.decided), c.limits_as_allowance.at_once) for c in ECO} == {
+        ("2026-10-29", 5)
+    }
+
+
+def test_an_allowance_lets_a_key_send_its_pages_close_together_but_no_more_than_it_allows():
+    config = OPERATORS["ubitricity"]
+    clock = FakeClock()
+    server = KeyServer(clock, [httpx.Response(200, json={})] * 40, UNEVEN_DELAYS)
+    with keyed_client_for(config, clock, server) as client:
+        for _ in range(40):
+            client.get(config.endpoints["locations"].url)
+    arrivals = server.arrivals
+    assert_within_limits(config, arrivals, "locations")
+    # 29 of the 30 an hour come close together; the 30th waits for the hour to pass.
+    assert arrivals[28] < 29 * 5
+    assert arrivals[29] - arrivals[0] > 3600
+
+
+def test_an_allowance_is_counted_for_each_endpoint_its_limit_names():
+    config = OPERATORS["ubitricity"]
+    clock = FakeClock()
+    server = KeyServer(clock, [httpx.Response(200, json={})] * 32)
+    with keyed_client_for(config, clock, server) as client:
+        for _ in range(29):
+            client.get(config.endpoints["locations"].url)
+        client.get(config.endpoints["tariffs"].url)
+        client.get(config.endpoints["statuses"].url)
+        # A request to none of the operator file's endpoints counts towards every limit.
+        client.get("https://open-chargepoints.com/api/other")
+    arrivals = server.arrivals
+    assert arrivals[29] - arrivals[28] == pytest.approx(SHARED_HOST_SECONDS)
+    assert arrivals[30] - arrivals[29] == pytest.approx(SHARED_HOST_SECONDS)
+    assert arrivals[31] - arrivals[0] > 3600
+
+
+def test_a_key_reading_its_limits_as_an_allowance_keeps_them_through_errors_and_waits():
+    config = OPERATORS["ubitricity"]
+    clock = FakeClock()
+    server = KeyServer(clock, busy_responses(), UNEVEN_DELAYS)
+    with keyed_client_for(config, clock, server) as client:
+        while server.responses:
+            sent_before = len(server.arrivals)
+            try:
+                client.get(config.endpoints["locations"].url)
+            except FeedError:
+                if len(server.arrivals) == sent_before:
+                    clock.sleep(60)
+    assert len(server.arrivals) == len(busy_responses())
+    assert_within_limits(config, server.arrivals, "locations")
+
+
+def test_any_sign_of_trouble_puts_every_key_back_to_its_gap_for_the_rest_of_the_run():
+    first, second = ECO[0], ECO[1]
+    clock = FakeClock()
+    ok = httpx.Response(200, json={})
+    server = KeyServer(clock, [ok, httpx.Response(503), ok, ok, ok, ok])
+    with keyed_client_for(first, clock, server) as a, keyed_client_for(second, clock, server) as b:
+        a.get(first.endpoints["locations"].url)
+        a.get(first.endpoints["locations"].url)  # HTTP 503, then a retry
+        b.get(second.endpoints["locations"].url)
+        b.get(second.endpoints["locations"].url)
+        a.get(first.endpoints["locations"].url)
+    own_a = server.arrivals_for(f"made-up-{first.id}")
+    own_b = server.arrivals_for(f"made-up-{second.id}")
+    assert own_a[1] - own_a[0] == pytest.approx(SHARED_HOST_SECONDS)
+    assert own_a[2] - own_a[1] >= 125 - 1e-9
+    assert own_a[3] - own_a[2] >= 125 - 1e-9
+    assert own_b[1] - own_b[0] >= 125 - 1e-9
+    for earlier, later in pairwise(server.arrivals):
+        assert later - earlier >= SHARED_HOST_SECONDS - 1e-9
+
+
+def test_a_refusal_not_retried_still_ends_the_allowance_for_every_key():
+    first, second = ECO[0], ECO[1]
+    clock = FakeClock()
+    ok = httpx.Response(200, json={})
+    server = KeyServer(clock, [httpx.Response(403), ok, ok])
+    with keyed_client_for(first, clock, server) as a, keyed_client_for(second, clock, server) as b:
+        assert a.get(first.endpoints["locations"].url).status_code == 403
+        b.get(second.endpoints["locations"].url)
+        b.get(second.endpoints["locations"].url)
+    own_b = server.arrivals_for(f"made-up-{second.id}")
+    assert own_b[1] - own_b[0] >= 125 - 1e-9
+
+
+def test_keys_fetched_together_within_their_allowance_send_at_most_five_at_once(monkeypatch):
+    """Real threads, one per key, as pipeline.run fetches them. Floors are scaled down so
+    the test is quick: requests overlap, never more than five at once, their starts at
+    least the floor apart, and each key's next request waits for its last one to finish."""
+    monkeypatch.setattr(http, "SHARED_HOST_SECONDS", 0.02)
+    monkeypatch.setattr(http, "MIN_SECONDS_BETWEEN_REQUESTS", 0.005)
+    keys, per_key, answer_seconds = ECO[:8], 3, 0.1
+    lock, seen, busy, most = threading.Lock(), [], [0], [0]
+
+    def answer(request: httpx.Request) -> httpx.Response:
+        start = time.monotonic()
+        with lock:
+            busy[0] += 1
+            most[0] = max(most[0], busy[0])
+        time.sleep(answer_seconds)
+        with lock:
+            busy[0] -= 1
+            seen.append((start, time.monotonic(), request.headers["authorization"]))
+        return httpx.Response(200, json={})
+
+    def fetch(config):
+        with PoliteClient(
+            config, transport=httpx.MockTransport(answer), key=f"made-up-{config.id}"
+        ) as client:
+            for _ in range(per_key):
+                client.get(config.endpoints["locations"].url)
+
+    began = time.monotonic()
+    threads = [threading.Thread(target=fetch, args=(config,)) for config in keys]
+    for thread in threads:
+        thread.start()
+    for thread in threads:
+        thread.join()
+    took = time.monotonic() - began
+    assert len(seen) == len(keys) * per_key
+    assert 1 < most[0] <= 5
+    starts = sorted(start for start, _, _ in seen)
+    for earlier, later in pairwise(starts):
+        assert later - earlier >= 0.005 - 1e-3
+    for config in keys:
+        own = sorted((s, f) for s, f, k in seen if k == f"Token made-up-{config.id}")
+        assert len(own) == per_key
+        for (_, finished), (started, _) in pairwise(own):
+            assert started >= finished + 0.02 - 1e-3
+    # One request at a time would take at least every answer's time, one after another.
+    assert took < len(keys) * per_key * answer_seconds
+
+
+def test_an_allowance_needs_limits_per_key_and_every_operator_on_the_host_to_agree():
+    config = OPERATORS["ubitricity"]
+    with pytest.raises(ValidationError, match="limits_as_allowance needs limits_per_key"):
+        OperatorConfig.model_validate(config.model_dump(mode="json") | {"limits_per_key": None})
+    with pytest.raises(ValidationError, match="less than or equal to 5"):
+        LimitsAsAllowance.model_validate(
+            config.limits_as_allowance.model_dump(mode="json") | {"at_once": 6}
+        )
+    operators = load_registry()
+    assert registry._per_key_problems(operators) == []
+    problem = (
+        "operators on open-chargepoints.com must all record limits_as_allowance with the "
+        "same at_once, or none of them"
+    )
+    operators["pod"] = operators["pod"].model_copy(update={"limits_as_allowance": None})
+    assert registry._per_key_problems(operators) == [problem]
+    four = config.limits_as_allowance.model_copy(update={"at_once": 4})
+    operators["pod"] = operators["pod"].model_copy(update={"limits_as_allowance": four})
+    assert registry._per_key_problems(operators) == [problem]
 
 
 def test_a_strict_hourly_limit_holds_at_the_boundary_with_network_delays():

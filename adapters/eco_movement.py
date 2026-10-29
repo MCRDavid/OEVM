@@ -22,6 +22,9 @@ decision recorded in each file's limits_per_key (29 October 2026), the limits ar
 token: each network keeps its own gap, and adapters.http still sends the host one request
 at a time, at least SHARED_HOST_SECONDS apart. The networks are fetched together, taking
 turns at the host (pipeline.run.takes_turns; the owner's decision of the same evening).
+Under limits_as_allowance (decided later that evening) each token keeps its limits as an
+hourly allowance instead, with at most 5 requests at once to the host, until anything goes
+wrong there (adapters.http).
 """
 
 from datetime import datetime

@@ -69,8 +69,10 @@ and 1 per 30 seconds for statuses. The operator files first took the strictest r
 allowance shared by every endpoint and every operator on the host, so 125 seconds between
 any two requests to it. Since 29 October 2026, by the owner's decision (`limits_per_key`),
 each token keeps its own 125 second gap, shared by its endpoints, and the host still gets
-one request at a time, at least 2 seconds apart. Requests are never sent in parallel; since
-the evening of 29 October 2026 the networks take turns (ADR 0003, amended).
+one request at a time, at least 2 seconds apart. Since the evening of 29 October 2026 the
+networks are fetched together, and since later that evening (`limits_as_allowance`) each
+token keeps its limits as an hourly allowance, at most 5 requests at once to the host, back
+to the 125 second gaps on any sign of trouble (ADR 0003, amended).
 
 **Main risk:** at 125 seconds a request, the daily job's 60 minute limit fits about 28
 requests to this host across all four operators. The page size and record counts are

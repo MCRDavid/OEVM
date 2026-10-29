@@ -158,8 +158,8 @@ feed health page on the site says which one.
 
 To watch a run while it fetches, open it, then the **Fetch operator feeds** job, then the
 **Fetch every enabled operator, never two on one host at once** step. Operators on
-different hosts are fetched at the same time, and so are the Eco-Movement networks, which
-take turns for each request, so their lines are interleaved; each line starts with the
+different hosts are fetched at the same time, and so are the Eco-Movement networks, up to
+five requests at once, so their lines are interleaved; each line starts with the
 operator's id. It prints a line as each operator starts and finishes, and every ten pages in between, with the page reached, the
 percentage done and an estimate of the time left where the feed gives its total.
 

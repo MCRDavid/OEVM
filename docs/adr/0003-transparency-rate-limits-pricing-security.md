@@ -94,6 +94,36 @@ are fetched together, taking turns at the host, rather than one after another.
   minutes rather than about 75. If Eco-Movement refuses requests, this and the per-key
   reading are revisited.
 
+### Amendment, 29 October 2026 (late evening): limits read as an allowance
+
+Eco-Movement publishes its limits as numbers of requests an hour ("The `locations`
+endpoint has a rate limit of 30 requests per 1 hour", and the same for tariffs) and does
+not say they must be spread evenly. Its user guide "strongly recommends limiting
+simultaneous GET requests to a maximum of 5" without saying whether that counts per token
+or in total. The daily fetch runs as one job on one GitHub runner, so every request comes
+from one address. The repository owner decided at 22:36 UTC that each network's token may
+use its hourly allowance close together, with at most 5 requests at once in total, which
+keeps within either reading of the guide (`limits_as_allowance` in each operator file).
+
+- **Only where every operator on a host records `limits_as_allowance`**, with the same
+  `at_once`, and `limits_per_key` (registry and schema checks). Every other host keeps
+  its spacing.
+- **Within each limit, with one request in hand.** With a key, no period of a limit's
+  length plus the 1 second margin holds more than one request fewer than the limit,
+  retries included, counted for the endpoint the limit names (a request to none of the
+  file's endpoints counts towards every limit). A limit of one request stays a spacing.
+  Each request with the key starts at least 2 seconds after its last one finished.
+- **At most 5 at once.** Requests to the host, from whichever key, are at most `at_once`
+  at the same time (a semaphore per host in `adapters/http.py`), their starts at least
+  the 1 second floor apart.
+- **Back to spacing on any sign of trouble.** Any retry, wait the server asks for or
+  refusal puts every key on the host back to its 125 second gap, one request at a time
+  and at least 2 seconds apart, for the rest of the run; holds still apply to every key.
+- One address, the project User-Agent and the once-a-day full fetch Eco-Movement
+  recommends are unchanged. The whole dataset (57 requests; ubitricity's 14 the most for
+  one token) fits within each token's hourly allowance, so the group should take about a
+  minute and the whole fetch about 12 minutes, set by Roam and char.gy (estimates).
+
 ## Prices
 
 - `pipeline/pricing.py` is the only way prices are shown: pounds and pence, GBP tariffs
