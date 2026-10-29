@@ -1,8 +1,8 @@
 # yaml-language-server: $schema=schema.json
 id: connekt
 display_name: Connekt
-ocpi_country_code: unknown
-ocpi_party_id: unknown
+ocpi_country_code: GB
+ocpi_party_id: CON
 adapter: unknown
 base_url: unknown
 endpoints: {}
@@ -28,6 +28,17 @@ engagement:
         Connekt's home page has no open data, regulations or charge point data link. Its
         sitemap, driver support page and FAQ page list or give no open data feed or route for
         requesting open data.
+    - date: 2026-10-24
+      url: https://www.connektcharging.com/public-charge-point-regulations
+      note: >-
+        Connekt's "Public Charge Point Regulations" page offers its open data through a request
+        form that asks for contact details only, and says "We review your request and send the
+        data to you in a suitable format."
+    - date: 2026-10-26
+      file: evidence/connekt/2026-10-26-reply.md
+      note: >-
+        Connekt's emailed reply, with its location and tariff data attached as two OCPI 2.2.1
+        JSON files and no web address or key for fetching the data.
   log:
     - date: 2026-10-10
       action: feed_searched
@@ -35,11 +46,30 @@ engagement:
         Connekt's home page, sitemap, driver support page and FAQ page were read, and no open
         data feed or route for requesting open data was found.
       evidence_url: https://www.connektcharging.com/
-access_requested: null
+    - date: 2026-10-24
+      action: request_sent
+      channel: web_form
+      summary: >-
+        Requested Connekt's open data through the request form on its Public Charge Point
+        Regulations page, which asks for contact details only.
+      evidence_url: https://www.connektcharging.com/public-charge-point-regulations
+    - date: 2026-10-26
+      action: reply_received
+      channel: email
+      summary: >-
+        Connekt replied by email with its location and tariff data attached as two OCPI 2.2.1
+        JSON files, with no web address or key for fetching the data.
+      evidence_file: evidence/connekt/2026-10-26-reply.md
+access_requested: 2026-10-24
 access_granted: null
 sources:
   - url: https://www.connektcharging.com/
     note: Connekt's home page (read 2026-10-10). No open data link.
+  - url: https://www.connektcharging.com/public-charge-point-regulations
+    note: >-
+      Connekt's "Public Charge Point Regulations | Open Data" page (read 2026-10-24 and
+      2026-10-26), with its open data request form. Not listed in the sitemap read on
+      2026-10-10.
   - url: https://www.connektcharging.com/sitemap.xml
     note: Connekt's sitemap (read 2026-10-10). No open data, OCPI or data request page is listed.
   - url: https://www.connektcharging.com/driver-support
@@ -48,8 +78,21 @@ sources:
     note: >-
       Connekt's FAQ page (read 2026-10-10). Gives a network uptime of 99.13%; no open data
       link.
-findings: []
+findings:
+  - date: 2026-10-26
+    kind: access
+    summary: >-
+      Connekt offers its open data through a request form, and its reply to a request on
+      2026-10-24 was the data as two files attached to an email, with no web address for
+      fetching it.
+    handling: >-
+      The emailed files are not shown on the map, because a copy sent once cannot be fetched
+      again each day and its statuses and prices would go out of date. The project is asking
+      Connekt for a web address that can be fetched automatically.
+    evidence_url: https://www.connektcharging.com/public-charge-point-regulations
 notes: >-
   No open data feed or request route was found on Connekt's own website on 2026-10-10. A
-  written request could ask where its open data under regulation 10 is published.
+  request form was found on its Public Charge Point Regulations page on 2026-10-24 and used the
+  same day. Connekt replied on 2026-10-26 with its data as emailed files (362 locations under
+  GB CON), which are not on the map.
 enabled: false
