@@ -8,7 +8,9 @@
   from the same host share one gap and one Retry-After. Where the owner has recorded
   limits_per_key in an operator file, that operator's gap is kept for its own key instead,
   while the host still gets one request at a time, at least SHARED_HOST_SECONDS apart, and
-  any wait the server asks for holds back every key on it (ADR 0003, amended).
+  any wait the server asks for holds back every key on it (ADR 0003, amended). Such
+  operators may be fetched at the same time (pipeline.run): each waits for its own key's
+  gap, then takes the host's turn, so their requests never overlap.
 - Retries connection errors, timeouts, HTTP 429 and HTTP 5xx with exponential backoff.
 - Honours every Retry-After header, in seconds or as an HTTP date, on any attempt. One
   that cannot be read is treated as a long wait. If the wait is longer than this project
@@ -51,7 +53,8 @@ import ssl
 import threading
 import time
 from collections.abc import Callable, Iterable
-from dataclasses import dataclass
+from contextlib import nullcontext
+from dataclasses import dataclass, field
 from datetime import UTC, datetime
 from email.utils import parsedate_to_datetime
 from urllib.parse import parse_qsl, quote, quote_plus, urlencode, urlsplit, urlunsplit
@@ -286,13 +289,16 @@ class HostTimer:
     """When the last request to one host finished, and the earliest the next may start.
 
     slow_down widens the gap after the host refused a request part-way through a run;
-    answered says the host has answered at least once in this run.
+    answered says the host has answered at least once in this run. turn is held from the
+    wait before a request until its answer has been read, so clients that share the
+    timer from different threads send one request at a time.
     """
 
     last_finished_at: float | None = None
     not_before: float | None = None
     slow_down: float = 1.0
     answered: bool = False
+    turn: threading.Lock = field(default_factory=threading.Lock, repr=False, compare=False)
 
     def hold_until(self, moment: float) -> None:
         self.not_before = moment if self.not_before is None else max(self.not_before, moment)
@@ -646,58 +652,70 @@ class PoliteClient:
         while True:
             for each in timers:
                 self._refuse_if_held(each, url)
-            self._wait_turn(timer, host)
-            self.requests_made += 1
-            response = None
-            try:
-                response = self._send(method, request_url, headers, body)
-            except httpx.TransportError as exc:
-                problem, retry_after = type(exc).__name__, None
-            finally:
-                timer.last_finished_at = self._clock()
+            if host is not None:
+                # This key's own gap first, so a key that is waiting never holds the host.
+                self._wait_turn(timer, None)
+            # The host's turn, for clients of keys on one host fetched at the same time:
+            # held until the answer, and any wait it asks for, has been recorded.
+            with host.turn if host is not None else nullcontext():
                 if host is not None:
-                    host.last_finished_at = timer.last_finished_at
-            now = timer.last_finished_at
-            if response is not None:
-                wall = self._wall_clock()
-                remaining, reset = rate_limit_state(response, wall)
-                if remaining == 0 and reset is not None:
-                    hold_until(now + reset + LIMIT_MARGIN_SECONDS)
-                retry_after = retry_after_seconds(response, wall)
-                if retry_after is None and response.status_code >= 400 and reset is not None:
-                    retry_after = reset + LIMIT_MARGIN_SECONDS
-                status = response.status_code
-                if status == REFUSAL_STATUS and timer.answered and refusals < MAX_REFUSAL_RETRIES:
-                    refusals += 1
-                    wait = REFUSAL_COOL_DOWN_SECONDS if retry_after is None else retry_after
-                    hold_until(now + wait)
-                    timer.slow_down *= REFUSAL_SLOW_DOWN
-                    gap = self.min_interval * timer.slow_down
-                    event = (
-                        f"refused {redact_url(url)}{via} with HTTP 403 part-way through; "
-                        f"waited {wait:g} s and went on with {gap:g} s between requests"
-                    )
-                    self.events.append(event)
-                    self._notice(event)
-                    continue
-                if status not in RETRY_STATUSES or status in return_at_once:
-                    if status < 400:
-                        timer.answered = True
-                    return response
-                problem = f"HTTP {status}"
+                    self._refuse_if_held(host, url)
+                self._wait_turn(timer, host)
+                self.requests_made += 1
+                response = None
+                try:
+                    response = self._send(method, request_url, headers, body)
+                except httpx.TransportError as exc:
+                    problem, retry_after = type(exc).__name__, None
+                finally:
+                    timer.last_finished_at = self._clock()
+                    if host is not None:
+                        host.last_finished_at = timer.last_finished_at
+                now = timer.last_finished_at
+                if response is not None:
+                    wall = self._wall_clock()
+                    remaining, reset = rate_limit_state(response, wall)
+                    if remaining == 0 and reset is not None:
+                        hold_until(now + reset + LIMIT_MARGIN_SECONDS)
+                    retry_after = retry_after_seconds(response, wall)
+                    if retry_after is None and response.status_code >= 400 and reset is not None:
+                        retry_after = reset + LIMIT_MARGIN_SECONDS
+                    status = response.status_code
+                    if (
+                        status == REFUSAL_STATUS
+                        and timer.answered
+                        and refusals < MAX_REFUSAL_RETRIES
+                    ):
+                        refusals += 1
+                        wait = REFUSAL_COOL_DOWN_SECONDS if retry_after is None else retry_after
+                        hold_until(now + wait)
+                        timer.slow_down *= REFUSAL_SLOW_DOWN
+                        gap = self.min_interval * timer.slow_down
+                        event = (
+                            f"refused {redact_url(url)}{via} with HTTP 403 part-way through; "
+                            f"waited {wait:g} s and went on with {gap:g} s between requests"
+                        )
+                        self.events.append(event)
+                        self._notice(event)
+                        continue
+                    if status not in RETRY_STATUSES or status in return_at_once:
+                        if status < 400:
+                            timer.answered = True
+                        return response
+                    problem = f"HTTP {status}"
 
-            if retry_after is not None:
-                hold_until(now + retry_after)
-            if attempt == self.max_retries:
-                asked = (
-                    f"; the server asked to wait {retry_after:g} s"
-                    if retry_after is not None
-                    else ""
-                )
-                raise FeedError(
-                    f"gave up on {redact_url(url)}{via} after {attempt + 1} attempts: "
-                    f"{problem}{asked}"
-                )
-            if retry_after is None:
-                hold_until(now + self.backoff_seconds * 2**attempt)
-            attempt += 1
+                if retry_after is not None:
+                    hold_until(now + retry_after)
+                if attempt == self.max_retries:
+                    asked = (
+                        f"; the server asked to wait {retry_after:g} s"
+                        if retry_after is not None
+                        else ""
+                    )
+                    raise FeedError(
+                        f"gave up on {redact_url(url)}{via} after {attempt + 1} attempts: "
+                        f"{problem}{asked}"
+                    )
+                if retry_after is None:
+                    hold_until(now + self.backoff_seconds * 2**attempt)
+                attempt += 1
