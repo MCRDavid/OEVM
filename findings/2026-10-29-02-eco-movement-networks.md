@@ -3,8 +3,8 @@
 On 26 October 2026 Eco-Movement, which serves the regulation 10 data of many UK networks from one
 platform, sent the project a token for each of 13 networks, after the project's requests through the
 networks' own forms on 23 and 24 October 2026. On 29 October 2026 the 13 feeds listed about 17,300 locations,
-nearly three quarters of them ubitricity's. One rate limit covers the whole platform, so reading
-them takes over an hour a day. The feeds show three different ways of handling VAT, prices of zero,
+nearly three quarters of them ubitricity's. The platform's rate limit makes reading them all take
+nearly an hour a day. The feeds show three different ways of handling VAT, prices of zero,
 tariffs in US dollars, a field in the wrong shape and time zones from far outside the UK. This post
 sets out what we found.
 
@@ -37,9 +37,11 @@ Every feed comes from open-chargepoints.com as OCPI 2.2.1, with the network's to
 "Authorization: Token" header. Eco-Movement's documentation says "The `locations` endpoint has a
 rate limit of 30 requests per 1 hour", and says the same of the `tariffs` endpoint. It does not say whether a
 limit applies to each token or to each address, what kind of time window is used, or what happens
-when a limit is reached. The project takes the strictest reading, one allowance shared by every
-network on the host, and waits 125 seconds between any two requests to it. A full read takes 26
-pages of locations and 13 of tariffs, 39 requests in about 80 minutes.
+when a limit is reached. Each network has its own token, so the project owner decided on 29
+October 2026 to read the limits as applying to each token: each network keeps 125 seconds between
+its own requests, the networks are read one after another, and any two requests to the platform are
+at least 2 seconds apart. A full read takes 26 pages of locations and 13 of tariffs, 39 requests in
+about 55 minutes. Read as one allowance shared by every network, it would take about 80.
 
 Every response recorded on 29 October 2026 linked to a next page that starts after the last record,
 for example at offset 77 when the total was 77. The project stops once the stated total has
@@ -73,8 +75,9 @@ by Source EV.
 
 Two of Pod's tariffs have every price zero. In the first 1,000 of its locations, 163 connectors at
 63 locations name one of them, at sites such as Sainsbury's stores, a McDonald's and schools. The
-feed gives no charge, so these connectors show as free. Whether drivers pay nothing there needs
-confirming by Pod.
+feed gives no charge, and on 29 October 2026 the project owner decided these connectors are shown
+as published, so they show as free rather than "Price unknown". Whether drivers pay nothing at every
+one of these sites needs confirming by Pod.
 
 ChargePoint has two tariffs in US dollars, every price zero, and they are the only tariffs named by
 115 connectors at 37 locations. RAW Charging has one such tariff, named by 29 connectors at 8
