@@ -437,6 +437,23 @@ def test_details_say_when_tariffs_come_from_a_related_networks_feed(visit):
     expect(link).to_have_attribute("href", href)
 
 
+def test_details_of_a_copy_an_operator_sent_give_its_date_and_no_status(visit):
+    page = visit().open("?view=list", map_ready=False)
+    expect(page.locator("#list-items li")).to_have_count(LOCATIONS)
+    page.locator("#list-items button", has_text="Colvend Golf Club").click()
+    body = page.locator("#detail-body")
+    note = body.locator(".sent-copy")
+    expect(note).to_contain_text("Connekt sent this data by email on 26 October 2026")
+    expect(note).to_contain_text("charge point status is not shown")
+    expect(body).to_contain_text("Not shown: this operator's data is a copy it sent")
+    expect(body.locator(".status-chips")).to_have_count(0)
+    expect(body).to_contain_text("Prices are as in the copy the operator sent")
+    expect(body).not_to_contain_text("Fetched ")
+    link = body.get_by_role("link", name="the files the operator sent")
+    expect(link).to_have_attribute("href", f"{REPOSITORY_URL}/tree/main/sent_copies/connekt")
+    expect(body).to_contain_text("Contains data from Connekt")
+
+
 def test_a_phone_opening_in_the_list_starts_the_map_when_first_shown(visit):
     page = visit().open("?view=list", map_ready=False)
     expect(page.locator("#list-items li")).to_have_count(LOCATIONS)
