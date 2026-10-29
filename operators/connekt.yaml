@@ -3,22 +3,59 @@ id: connekt
 display_name: Connekt
 ocpi_country_code: GB
 ocpi_party_id: CON
-adapter: unknown
+adapter: sent_copy
 base_url: unknown
 endpoints: {}
 auth:
-  method: unknown
+  method: none
   name: null
   secret_name: null
 rate_limit:
   min_seconds_between_requests: 2
   limits: []
-  limits_checked: unknown
-  notes: null
+  limits_checked: 2026-10-26
+  notes: >-
+    No requests are made: the map shows a copy of Connekt's data that it sent by email on
+    2026-10-26 (sent_copy below). Connekt's open data page and its reply state no rate
+    limit. The 2 second gap is this project's own choice, for a feed if one is published.
 supports_single_location: unknown
 cors: unknown
-attribution: null
-licence: null
+attribution: >-
+  Contains data from Connekt provided under the Public Charge Point Regulations 2023, used in
+  line with the Open Government Licence v3.0.
+licence:
+  name: OGL-3.0
+  url: https://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/
+  basis: >-
+    Connekt's "Public Charge Point Regulations | Open Data" page says "Open data is
+    information about our public charge points that anyone can access free of charge" and
+    "There is no charge for a request", and its request form asks for contact details only.
+    The page states no licence or terms for the data, and Connekt's reply of 2026-10-26,
+    which sent the data, states none either. The terms linked from Connekt's website footer
+    and from each connector in the data ("Connekt Charging General Terms & Conditions",
+    https://www.connektcharging.com/terms-and-conditions) lead to a PDF headed "Management
+    Terms and Conditions", which covers the services Connekt supplies to its customers and
+    does not mention charge point open data (read 2026-10-29). Regulation 10(5) of the
+    Public Charge Point Regulations 2023 requires the data to be available without terms on
+    its use, and DfT's guidance says "Data must be open in line with the Open Government
+    Licence". On 2026-10-10 the repository owner decided, as a standing rule for operators
+    whose data has no terms of its own, that such operators can be switched on without
+    asking again.
+  checked: 2026-10-29
+sent_copy:
+  decided: 2026-10-29
+  basis: >-
+    Connekt answered a request through its open data form by emailing its location and
+    tariff data as two OCPI 2.2.1 files, with no address to fetch them from. On 2026-10-29
+    the repository owner decided to show that copy on the map, dated as made and with
+    charge point status unknown, while Connekt is asked for an address that can be fetched,
+    and to replace it with Connekt's feed if one is published.
+  evidence_file: evidence/connekt/2026-10-26-reply.md
+  channel: email
+  received: 2026-10-26
+  made_at: 2026-10-26T14:22:52Z
+  locations: sent_copies/connekt/2026-10-26-locations.json.gz
+  tariffs: sent_copies/connekt/2026-10-26-tariffs.json.gz
 engagement:
   status: no_public_feed_found
   evidence:
@@ -86,13 +123,15 @@ findings:
       2026-10-24 was the data as two files attached to an email, with no web address for
       fetching it.
     handling: >-
-      The emailed files are not shown on the map, because a copy sent once cannot be fetched
-      again each day and its statuses and prices would go out of date. The project is asking
-      Connekt for a web address that can be fetched automatically.
+      By the repository owner's decision of 2026-10-29, the map shows the emailed copy as
+      sent, dated 2026-10-26 14:22 UTC when it was made, says it is a copy that is not
+      updated, and shows every charge point status as unknown. The project is asking
+      Connekt for an address that can be fetched automatically.
     evidence_url: https://www.connektcharging.com/public-charge-point-regulations
 notes: >-
   No open data feed or request route was found on Connekt's own website on 2026-10-10. A
   request form was found on its Public Charge Point Regulations page on 2026-10-24 and used the
   same day. Connekt replied on 2026-10-26 with its data as emailed files (362 locations under
-  GB CON), which are not on the map.
-enabled: false
+  GB CON). The map shows that copy by the owner's decision of 2026-10-29 (sent_copy, ADR
+  0029), with charge point status unknown, until Connekt's data can be fetched.
+enabled: true

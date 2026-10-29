@@ -21,6 +21,7 @@ section filled in.
 | A7 | One-response option for `ocpi_221` | Mer UK | Nothing | Built: `response_envelope: by_module` |
 | A8 | Several files option for `ocpi_221` | 3ti | Nothing | Built: `more_endpoints` |
 | A5 | Basic auth for `ocpi_221` | Osprey | Osprey confirming the method and granting credentials | When credentials arrive |
+| A9 | `sent_copy` | Connekt (OCPI files sent by email) | Nothing | Built: ADR 0029 |
 
 Operators that need no new adapter, so are not tasks here: Pod (`ocpi_221` once a token
 is granted; how tokens are sent is unknown), GeniePoint (already on `ocpi_221`). InstaVolt
@@ -246,6 +247,20 @@ fetch fails as it would for a single feed, and the map keeps the last good copy.
 
 **Access:** none needed. **Rate limits:** 31 seconds between requests on Fuuse's host,
 as for Arnold Clark Charge and ScottishPower Recharge; 12 requests a run.
+
+## A9: `sent_copy` (Connekt)
+
+**Unlocks:** Connekt, which answered the project's request on 26 October 2026 by emailing
+two OCPI 2.2.1 responses (locations and tariffs) with no address to fetch them from.
+
+**Feed format:** OCPI 2.2.1 response files kept in the repository exactly as sent,
+gzipped, under `sent_copies/<operator id>/`, and named in the operator file's `sent_copy`
+section. The records go through the `ocpi_221` conversion.
+
+**Access, rate limits and licence:** no request is made. Every record is dated when the
+operator made the copy and every status is shown as unknown. Built after the owner decided
+on 29 October 2026 to show Connekt's copy (ADR 0029); any other operator needs its own
+decision.
 
 ## Suggested order
 

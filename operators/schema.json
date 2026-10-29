@@ -967,6 +967,78 @@
       "title": "Relay",
       "type": "object"
     },
+    "SentCopy": {
+      "additionalProperties": false,
+      "description": "The repository owner's recorded decision to show a copy of this operator's data that\nit sent to this project, because it publishes none at an address that can be fetched\n(ADR 0029). Used with the sent_copy adapter.\n\nThe copy is OCPI 2.2.1 location and tariff responses, kept in the repository exactly\nas sent (gzipped) and read as they are on every run, with no request to the operator.\nIts records carry the time the operator made the copy, never the time of the run, so\nnothing looks newer than it is, and the map says the data is a copy, when it was sent\nand that it is not updated. Every charge point status is shown as unknown, because a\nstatus from a file sent once says nothing about now. Without this decision a copy an\noperator sends is kept as evidence only and never shown.",
+      "properties": {
+        "decided": {
+          "description": "Date the owner made the decision (YYYY-MM-DD).",
+          "format": "date",
+          "title": "Decided",
+          "type": "string"
+        },
+        "basis": {
+          "description": "Why the copy may be shown, and until when.",
+          "minLength": 1,
+          "title": "Basis",
+          "type": "string"
+        },
+        "evidence_file": {
+          "description": "The operator's message that came with the copy, saved under evidence/<operator id>/ with names and addresses removed.",
+          "pattern": "^evidence/[a-z0-9_]+/[^/].*$",
+          "title": "Evidence File",
+          "type": "string"
+        },
+        "channel": {
+          "description": "How the copy came, for example 'email'.",
+          "enum": [
+            "web_form",
+            "email",
+            "support_ticket",
+            "post",
+            "other"
+          ],
+          "title": "Channel",
+          "type": "string"
+        },
+        "received": {
+          "description": "Date the copy came (YYYY-MM-DD).",
+          "format": "date",
+          "title": "Received",
+          "type": "string"
+        },
+        "made_at": {
+          "description": "When the operator made the copy, to the second, with its time zone: the timestamp its OCPI responses carry. Shown as the date of the data.",
+          "format": "date-time",
+          "title": "Made At",
+          "type": "string"
+        },
+        "locations": {
+          "description": "The OCPI 2.2.1 locations response.",
+          "pattern": "^sent_copies/[a-z0-9_]+/[^/]+\\.json\\.gz$",
+          "title": "Locations",
+          "type": "string"
+        },
+        "tariffs": {
+          "description": "The OCPI 2.2.1 tariffs response.",
+          "pattern": "^sent_copies/[a-z0-9_]+/[^/]+\\.json\\.gz$",
+          "title": "Tariffs",
+          "type": "string"
+        }
+      },
+      "required": [
+        "decided",
+        "basis",
+        "evidence_file",
+        "channel",
+        "received",
+        "made_at",
+        "locations",
+        "tariffs"
+      ],
+      "title": "SentCopy",
+      "type": "object"
+    },
     "SignMissingLocation": {
       "additionalProperties": false,
       "description": "A location the owner found to be missing its longitude's minus sign by its postcode.\n\nIts minus sign is added only while the feed still sends this postcode and a positive\nlongitude, and the point west of the Greenwich meridian is on the UK's land or within\n2 km of its coast.",
@@ -1236,6 +1308,7 @@
     "adapter": {
       "enum": [
         "ocpi_221",
+        "sent_copy",
         "eco_movement_pcpr",
         "gridserve",
         "static_file",
@@ -1488,6 +1561,18 @@
       ],
       "default": null,
       "description": "Only by the repository owner's decision: OCPI location ids to leave off the map, such as test sites. Null means every location marked for publishing is kept."
+    },
+    "sent_copy": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/SentCopy"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "description": "Only by the repository owner's decision, with the sent_copy adapter: show a copy of the operator's data that it sent, dated as made, with every charge point status unknown (ADR 0029). Null means a sent copy is never shown."
     },
     "engagement": {
       "$ref": "#/$defs/Engagement"

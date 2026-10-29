@@ -76,6 +76,7 @@ Fill in, from step 1 only:
 | `custom` | built | Non-standard feeds, one module per operator id in `pipeline/run.py` `CUSTOM_ADAPTERS` |
 | `eco_movement_pcpr` | not built yet | bp pulse, Shell Recharge, ubitricity and others hosted by Eco-Movement |
 | `gridserve` | not built yet | Gridserve's API |
+| `sent_copy` | built | No feed: the operator sent its OCPI 2.2.1 locations and tariffs responses as files, for example by email. Only with the owner's decision in `sent_copy` (ADR 0029): keep the files exactly as sent, gzipped, in `sent_copies/<id>/` with a README, set `made_at` from the responses' timestamp, `auth.method: none` and no URLs. The fixture's `manifest.json` names its trimmed files under `sent_copy`. Never use it for a feed that can be fetched |
 | `static_file` | not built yet | Downloads that are not OCPI (CSV and similar) |
 | `unknown` | | Not yet known |
 

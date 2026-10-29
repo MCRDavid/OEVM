@@ -43,7 +43,7 @@ BROWSER_ARGS = [
 # In the fixtures (recorded, and Monta's made-up ones), without the two hidden unless
 # asked for (ADR 0023): Evolt Network's "Arthur House - Private Use Only" and PoGo
 # Charge's taxi-only "Swales Central Avenue".
-LOCATIONS = 124
+LOCATIONS = 130
 PRIVATE = "Arthur House - Private Use Only"
 TAXIS = "Swales Central Avenue"
 OUT_OF_SERVICE = 11  # fixture locations with every charger reported out of service
@@ -260,11 +260,13 @@ def test_details_list_every_tariff_with_the_lowest_energy_price(visit):
     for n in range(buttons.count()):
         buttons.nth(n).click()
         expect(page.locator("#detail-heading")).to_be_focused()
-        if "Lowest energy price listed here" in page.text_content("#detail-body"):
+        # Some feeds (Connekt's copy among them) do not say how each tariff is paid.
+        body = page.text_content("#detail-body")
+        if "Lowest energy price listed here" in body and "Pay at the charger" in body:
             break
         page.keyboard.press("Escape")
     else:
-        raise AssertionError("no location compares its tariffs")
+        raise AssertionError("no location compares tariffs paid in different ways")
     tariffs = page.locator("ul.tariffs > li")
     assert tariffs.count() >= 2
     body = page.text_content("ul.tariffs")
@@ -435,6 +437,23 @@ def test_details_say_when_tariffs_come_from_a_related_networks_feed(visit):
     link = body.get_by_role("link", name="Evolt Network's tariff feed")
     href = "https://info.smartcharging.uk/public_feed/locations/3666/tariffs"
     expect(link).to_have_attribute("href", href)
+
+
+def test_details_of_a_copy_an_operator_sent_give_its_date_and_no_status(visit):
+    page = visit().open("?view=list", map_ready=False)
+    expect(page.locator("#list-items li")).to_have_count(LOCATIONS)
+    page.locator("#list-items button", has_text="Colvend Golf Club").click()
+    body = page.locator("#detail-body")
+    note = body.locator(".sent-copy")
+    expect(note).to_contain_text("Connekt sent this data by email on 26 October 2026")
+    expect(note).to_contain_text("charge point status is not shown")
+    expect(body).to_contain_text("Not shown: this operator's data is a copy it sent")
+    expect(body.locator(".status-chips")).to_have_count(0)
+    expect(body).to_contain_text("Prices are as in the copy the operator sent")
+    expect(body).not_to_contain_text("Fetched ")
+    link = body.get_by_role("link", name="the files the operator sent")
+    expect(link).to_have_attribute("href", f"{REPOSITORY_URL}/tree/main/sent_copies/connekt")
+    expect(body).to_contain_text("Contains data from Connekt")
 
 
 def test_a_phone_opening_in_the_list_starts_the_map_when_first_shown(visit):

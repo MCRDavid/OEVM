@@ -290,6 +290,18 @@
           },
           "title": "History",
           "type": "array"
+        },
+        "sent_copy": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/SentCopyNote"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Set when the operator's data is a copy it sent (ADR 0029), so its runs read that copy and fetch nothing. Null for a fetched feed."
         }
       },
       "required": [
@@ -297,7 +309,8 @@
         "last_attempt",
         "last_success",
         "latest",
-        "history"
+        "history",
+        "sent_copy"
       ],
       "title": "OperatorStatus",
       "type": "object"
@@ -418,6 +431,48 @@
         "issues"
       ],
       "title": "RunLog",
+      "type": "object"
+    },
+    "SentCopyNote": {
+      "additionalProperties": false,
+      "description": "Set when an operator's data is a copy it sent, shown by the owner's decision in its\noperator file (sent_copy, ADR 0029), not a feed this project fetches.",
+      "properties": {
+        "received": {
+          "description": "When the copy came from the operator.",
+          "format": "date",
+          "title": "Received",
+          "type": "string"
+        },
+        "made_at": {
+          "description": "When the operator made the copy.",
+          "format": "date-time",
+          "title": "Made At",
+          "type": "string"
+        },
+        "channel": {
+          "description": "How the copy came, for example 'email'.",
+          "title": "Channel",
+          "type": "string"
+        },
+        "note": {
+          "description": "What the copy is and why it is shown, with the location.",
+          "title": "Note",
+          "type": "string"
+        },
+        "files_url": {
+          "description": "The repository page that lists the files as sent.",
+          "title": "Files Url",
+          "type": "string"
+        }
+      },
+      "required": [
+        "received",
+        "made_at",
+        "channel",
+        "note",
+        "files_url"
+      ],
+      "title": "SentCopyNote",
       "type": "object"
     }
   },
