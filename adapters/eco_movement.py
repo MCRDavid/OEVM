@@ -17,8 +17,10 @@ The records are read by the ocpi_221 adapter, with two differences:
 - date_from is refused. The user guide says it works for locations only, while the
   tariffs reference lists it, so it is left until tested.
 
-The host's rate limits are kept by the operator files' rate_limit, one gap shared by
-every operator on the host (adapters.http keeps one timer per host).
+The host's rate limits are kept by the operator files' rate_limit. By the owner's
+decision recorded in each file's limits_per_key (29 October 2026), the limits are read per
+token: each network keeps its own gap, and adapters.http still sends the host one request
+at a time, at least SHARED_HOST_SECONDS apart.
 """
 
 from datetime import datetime

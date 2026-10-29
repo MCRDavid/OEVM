@@ -688,6 +688,37 @@
       "title": "Licence",
       "type": "object"
     },
+    "LimitsPerKey": {
+      "additionalProperties": false,
+      "description": "The repository owner's recorded decision that this operator's published rate limits\napply to each key, not to everyone using its host (ADR 0003, amended 29 October 2026).\n\nA platform can serve many networks from one host, each with its own key, and publish\nlimits without saying whether they count per key or per address. Without this decision\nevery operator on the host shares one gap, the strictest reading. With it, this\noperator's gap is kept for its own key; requests to the host, from whichever operator,\nare still sent one at a time and at least the floor plus the margin apart, and a\nserver's request to wait still holds back every key on the host.",
+      "properties": {
+        "decided": {
+          "description": "Date the owner made the decision (YYYY-MM-DD).",
+          "format": "date",
+          "title": "Decided",
+          "type": "string"
+        },
+        "basis": {
+          "description": "Why the limits are read per key, and what the publisher says about them.",
+          "minLength": 1,
+          "title": "Basis",
+          "type": "string"
+        },
+        "evidence_url": {
+          "description": "Where the limits are published.",
+          "pattern": "^https?://\\S+$",
+          "title": "Evidence Url",
+          "type": "string"
+        }
+      },
+      "required": [
+        "decided",
+        "basis",
+        "evidence_url"
+      ],
+      "title": "LimitsPerKey",
+      "type": "object"
+    },
     "MissingPublishFlag": {
       "additionalProperties": false,
       "description": "The repository owner's recorded decision to show locations that have no publish flag.\n\nOCPI 2.2.1 requires every location to have a publish flag, and a location with publish\nset to false may not be shown on a website or app. Without this decision, locations\nwith no flag are never kept. A flag set to false is always respected, whatever is\nrecorded here.",
@@ -1565,6 +1596,18 @@
       ],
       "default": null,
       "description": "Only by the repository owner's decision: leave off the map the locations other operators' feeds send under this operator's country and party codes, while this operator's own are on it. Null means both are shown."
+    },
+    "limits_per_key": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/LimitsPerKey"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "description": "Only by the repository owner's decision: read the published rate limits as applying to this operator's own key, so its gap is not shared with other operators on the host. Null means every operator on the host shares one gap."
     },
     "expired_certificate": {
       "anyOf": [

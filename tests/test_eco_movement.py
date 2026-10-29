@@ -194,6 +194,7 @@ def test_every_eco_movement_network_uses_the_same_host_gap_and_its_own_token(ope
         "Token",
     )
     assert config.auth.secret_name == f"{operator_id.upper()}_TOKEN"
+    assert config.limits_per_key == ubitricity.limits_per_key is not None
     others = {OPERATORS[i].auth.secret_name for i in SHARED if i != operator_id}
     assert config.auth.secret_name not in others
 

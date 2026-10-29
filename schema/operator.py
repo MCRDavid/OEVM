@@ -661,6 +661,25 @@ class OwnFeedOverCopies(_Model):
         return country_code, party_id
 
 
+class LimitsPerKey(_Model):
+    """The repository owner's recorded decision that this operator's published rate limits
+    apply to each key, not to everyone using its host (ADR 0003, amended 29 October 2026).
+
+    A platform can serve many networks from one host, each with its own key, and publish
+    limits without saying whether they count per key or per address. Without this decision
+    every operator on the host shares one gap, the strictest reading. With it, this
+    operator's gap is kept for its own key; requests to the host, from whichever operator,
+    are still sent one at a time and at least the floor plus the margin apart, and a
+    server's request to wait still holds back every key on the host.
+    """
+
+    decided: dt.date = Field(description="Date the owner made the decision (YYYY-MM-DD).")
+    basis: NeutralText = Field(
+        description="Why the limits are read per key, and what the publisher says about them."
+    )
+    evidence_url: SafeUrl = Field(description="Where the limits are published.")
+
+
 class Relay(_Model):
     """The repository owner's recorded decision to fetch this operator through a relay the
     project runs, because the operator's server refused requests from the daily run.
@@ -1034,6 +1053,12 @@ class OperatorConfig(_Model):
         "locations other operators' feeds send under this operator's country and party "
         "codes, while this operator's own are on it. Null means both are shown.",
     )
+    limits_per_key: LimitsPerKey | None = Field(
+        default=None,
+        description="Only by the repository owner's decision: read the published rate "
+        "limits as applying to this operator's own key, so its gap is not shared with other "
+        "operators on the host. Null means every operator on the host shares one gap.",
+    )
     expired_certificate: ExpiredCertificate | None = Field(
         default=None,
         description="Only by the repository owner's decision: read the feed past one "
@@ -1162,6 +1187,10 @@ class OperatorConfig(_Model):
                 problems.append("own_feed_over_copies cannot name the operator itself")
             if "unknown" in (self.ocpi_country_code, self.ocpi_party_id):
                 problems.append("own_feed_over_copies needs a known ocpi_country_code and party")
+        if self.limits_per_key is not None and (
+            self.auth.method == "none" or not self.auth.secret_name
+        ):
+            problems.append("limits_per_key needs a key of the operator's own (auth.secret_name)")
         if self.expired_certificate is not None:
             if self.auth.method != "none":
                 problems.append("only a feed that needs no key may be read past a certificate")

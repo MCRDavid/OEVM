@@ -34,7 +34,7 @@ decisions are in docs/adr/.
   record's owner. Roam gives its OCPI 2.1.1 connectors their 2.2.1 names.
   adapters/sent_copy.py: reads a copy an operator sent (sent_copies/<id>/, gzipped as received; ADR 0029).
   adapters/eco_movement.py: Eco-Movement's PCPR API (adapter eco_movement_pcpr), ocpi_221 with pages of
-  1000; one token per network, one 125 s gap shared by every network on open-chargepoints.com.
+  1000; one token per network, each with its own 125 s gap (limits_per_key), one request at a time.
 - pipeline/registry.py, pipeline/run.py. operators/*.yaml: one file per operator.
 - pipeline/pricing.py: the only way prices are shown. pipeline/tariffs.py: price per connector.
 - providers/*.yaml: charging plans from providers' own pages (schema/provider.py, pipeline/plans.py,
@@ -80,6 +80,9 @@ decisions are in docs/adr/.
 - Never go below 1 second between requests to a host, or below any limit in an operator's
   rate_limit.limits plus a 1 second margin. Record each published limit with its publisher, an
   exact quote, source URL and date; tests enforce these rules. Never run two fetches that use the same host in parallel.
+- Operators on one host share its gap. Keep the gap per key only where the operator file records
+  the owner's decision in limits_per_key, with every operator on that host agreeing; the host still
+  gets one request at a time, at least 2 seconds apart. Never add one yourself.
 - Exception decided by the owner on 22 October 2026 (D1 in ADR 0025): in answer to an
   operator's own credentials call, the OCPI handshake Worker may overlap the daily pull, closer
   than the operator's gap, by up to three requests (two for a renewal). Nothing else may.

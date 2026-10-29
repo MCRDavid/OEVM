@@ -35,7 +35,8 @@ Date: 2026-10-07. Status: accepted.
 - The gap is measured from when the previous response finished, so uneven network delays
   can never bring two requests closer together at the server than the gap.
 - Timers are kept per host and shared by every client in the process, so operators served
-  from the same host (the four Eco-Movement operators) share one gap and one Retry-After.
+  from the same host (the four Eco-Movement operators) share one gap and one Retry-After
+  (per key since 29 October 2026 where the owner has decided so; see the amendment below).
   Timers live in memory: runs that use the same host must never be started in parallel,
   and a future scheduled workflow needs a concurrency group for that.
 - Every Retry-After is honoured, in seconds or as an HTTP date, on any attempt including
@@ -52,6 +53,27 @@ Date: 2026-10-07. Status: accepted.
   policy's limit is recorded with an exact quote, Gridserve uses a 31 second gap, and the
   difference is a finding on the transparency page. Each published limit now names its
   publisher (the operator, or the company hosting its data), and the page shows it.
+
+### Amendment, 29 October 2026: limits read per key
+
+Eco-Movement serves many networks from open-chargepoints.com, each with its own token, and
+publishes 30 requests an hour for its locations and tariffs endpoints without saying
+whether that counts per token or per address. One gap shared by every network made the
+daily fetch of 13 networks about 80 minutes. On 29 October 2026 the repository owner
+decided that these limits are read per token.
+
+- **Opt-in per operator, by the owner only.** `limits_per_key` in the operator file records
+  the date, the basis and where the limits are published. It needs a key of the operator's
+  own, and every operator on the host must record it, or none, so a shared gap is never
+  shortened by others' per-key gaps.
+- **Each key keeps the operator's gap.** `adapters/http.py` keeps a timer per key on that
+  host, with the same gap, margin, retries and slow-downs as before.
+- **The host still gets one request at a time.** Any two requests to the host, whichever key
+  they use, are at least the floor plus the margin (2 seconds) apart, operators on the host
+  are still fetched one after another, and any wait the server asks for (Retry-After, rate
+  limit headers, a refusal) holds back every key on the host.
+- If Eco-Movement says its limits count per address, or refuses requests, the decision is
+  removed and the shared gap returns.
 
 ## Prices
 

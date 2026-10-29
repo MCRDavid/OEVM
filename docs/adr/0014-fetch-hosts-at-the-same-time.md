@@ -65,7 +65,11 @@ takes as long as its slowest group.
 
 Amended 29 October 2026: with the 13 networks on Eco-Movement's PCPR API switched on,
 open-chargepoints.com is the slowest group. A full fetch there is 39 requests (26 pages of
-locations and 13 of tariffs, pages of 1000) 125 seconds apart, about 80 minutes, so the
-fetch job's time limit goes from 60 to 150 minutes and the map is published at about 05:45
-UTC rather than soon after the 04:17 UTC start. Whether Eco-Movement's limits apply per
-token needs confirming by Eco-Movement; if they do, each network could keep its own gap.
+locations and 13 of tariffs, pages of 1000). The repository owner decided the same day that
+Eco-Movement's limits are read per token (`limits_per_key`, ADR 0003 amended): each network
+keeps its own 125 second gap, the networks are still fetched one after another, and any
+two requests to the host are at least 2 seconds apart. Each network waits only between its
+own requests (26 gaps in all), so the group takes about 55 minutes rather than about 80
+with one shared gap. The fetch job's time limit goes from 60 to 150 minutes, leaving room
+for retries and more networks, and the map is published at about 05:15 UTC rather than
+soon after the 04:17 UTC start.

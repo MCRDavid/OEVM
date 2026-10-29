@@ -65,8 +65,8 @@ jobs:
     if: github.ref == 'refs/heads/main' && needs.check.outputs.fetch == 'true'
     runs-on: ubuntu-latest
     # The slowest host sets the length (ADR 0014): the 13 networks on open-chargepoints.com
-    # make 39 requests 125 seconds apart, about 80 minutes, so the limit leaves room for
-    # retries.
+    # make 39 requests, each network keeping its own 125 second gap, about 55 minutes, so
+    # the limit leaves room for retries and more networks.
     timeout-minutes: 150
     permissions:
       contents: read

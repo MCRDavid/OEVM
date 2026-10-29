@@ -18,6 +18,7 @@ import sys
 from datetime import UTC, date
 from pathlib import Path
 
+from adapters.http import SHARED_HOST_SECONDS
 from adapters.sent_copy import CHANNEL_WORDS
 from pipeline.access import PHRASES
 from pipeline.project import REPOSITORY_URL
@@ -180,6 +181,15 @@ def rate_limit_view(config: OperatorConfig) -> dict:
         f"At least {gap:g} s between requests to the operator's host, measured from the end "
         f"of the previous request (at most {per_hour} in any hour), retries included."
     )
+    per_key = config.limits_per_key
+    if per_key is not None:
+        ours = (
+            f"At least {gap:g} s between requests with the operator's own key, measured from "
+            f"the end of the previous request (at most {per_hour} in any hour with it), "
+            f"retries included. The limits are read as applying to each key, by the owner's "
+            f"decision of {per_key.decided}; requests to the host are still sent one at a "
+            f"time, at least {SHARED_HOST_SECONDS:g} s apart."
+        )
     if rate.limits:
         needed = max(limit.min_interval for limit in rate.limits)
         comparison = (
@@ -216,6 +226,15 @@ def rate_limit_view(config: OperatorConfig) -> dict:
         "comparison": comparison,
         "difference_from_regulations": difference,
         "notes": rate.notes,
+        "per_key": (
+            {
+                "decided": str(per_key.decided),
+                "basis": per_key.basis,
+                "evidence_url": per_key.evidence_url,
+            }
+            if per_key
+            else None
+        ),
     }
 
 
@@ -797,6 +816,12 @@ def _rate_table(data: dict) -> str:
             else "Not checked yet"
         )
         notes = f"<br>{_e(rate['notes'])}" if rate["notes"] else ""
+        if rate["per_key"]:
+            per_key = rate["per_key"]
+            notes += (
+                f"<br>Limits read per key by the owner's decision of {_e(per_key['decided'])}: "
+                f"{_e(per_key['basis'])} ({_link(per_key['evidence_url'], 'evidence')})"
+            )
         rows.append(
             "<tr>"
             f'<th scope="row">{_e(op["name"])}</th>'
@@ -924,8 +949,10 @@ replies are added to its log.</p>
 within every limit an operator, or the company hosting its data, publishes with a safety
 margin on top, and waits as long as
 a server asks before contacting it again. Gaps are measured from the end of the previous
-request and shared by every operator on the same host. Automated tests check these
-rules.</p>
+request and shared by every operator on the same host, unless the repository owner has
+decided that a host's published limits apply to each key: then each operator keeps its gap
+for its own key, and the host still gets one request at a time. Automated tests check
+these rules.</p>
 <div class="table-wrap">{_rate_table(data)}</div>
 <h2>What has been found</h2>
 <p>Differences from the OCPI 2.2.1 standard, quirks in the data and access issues, each

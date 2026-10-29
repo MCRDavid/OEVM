@@ -58,12 +58,23 @@ rate_limit:
       checked: 2026-10-26
   limits_checked: 2026-10-26
   notes: >-
-    One gap of 125 seconds (the 120 seconds the strictest limit needs, plus a safety
-    margin) is kept between any two requests to open-chargepoints.com, shared by every
-    operator served from it, so this project sends it at most 29 requests in any hour.
-    Requests are sent one at a time; Eco-Movement "strongly recommends limiting
-    simultaneous GET requests to a maximum of 5". It recommends retrieving the entire
-    dataset once a day.
+    A gap of 125 seconds (the 120 seconds the strictest limit needs, plus a safety
+    margin) is kept between any two requests with this network's token, so at most 29
+    requests in any hour are sent with it. By the repository owner's decision of
+    2026-10-29 (limits_per_key) the limits are read as applying to each token. Requests
+    to open-chargepoints.com are still sent one at a time, at least 2 seconds apart
+    whichever network they are for, and a request from the server to wait holds back
+    every network on it. Eco-Movement "strongly recommends limiting simultaneous GET
+    requests to a maximum of 5". It recommends retrieving the entire dataset once a day.
+limits_per_key:
+  decided: 2026-10-29
+  basis: >-
+    Eco-Movement publishes a limit of 30 requests an hour for each of the locations and
+    tariffs endpoints and gives each network its own token, but does not say whether the
+    limits count per token or per address. The repository owner decided on 2026-10-29
+    that they are read as applying to each token, so each network keeps its own 125
+    second gap, while requests to open-chargepoints.com are still sent one at a time.
+  evidence_url: https://developers.eco-movement.com/v2.2.1/docs/eco-movement-pcpr-api-user-guide
 supports_single_location: unknown
 cors: unknown
 attribution: >-
@@ -181,6 +192,17 @@ sources:
       premises". Its network list offers "ChargePoint platform CPOs", Raw Charging, ev-point
       and Lidl Great Britain Limited.
 findings:
+  - date: 2026-10-29
+    kind: data_quality
+    summary: >-
+      Every one of the 331 locations names ChargePoint as its operator and owner,
+      although the request form says this feed holds the data of 31 operators on the
+      ChargePoint platform.
+    handling: >-
+      The locations are shown under ChargePoint, as published. Which operator runs
+      each site cannot be told from the feed, and nothing is filled in from other
+      sources.
+    evidence_url: https://open-chargepoints.com/api/ocpi/cpo/2.2.1/locations/
   - date: 2026-10-29
     kind: data_quality
     summary: >-

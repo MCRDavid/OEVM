@@ -169,7 +169,8 @@
         "limits_checked": "2026-10-23",
         "comparison": "Within every published limit. The strictest needs 30 s between requests; this project waits 31 s, which includes a safety margin.",
         "difference_from_regulations": "The operator sets a limit; the regulations set none. DfT guidance allows such terms on access.",
-        "notes": "The limit is quoted from a comment in the script on 3ti's public charge points page, read as its lower figure, 1 request per 30 seconds. Arnold Clark Charge and ScottishPower Recharge use the same 31 second gap on the same host, and the client keeps one timer for it. Five sites are read, each with a location and a tariff file, so a run makes 10 requests and takes about 5 minutes."
+        "notes": "The limit is quoted from a comment in the script on 3ti's public charge points page, read as its lower figure, 1 request per 30 seconds. Arnold Clark Charge and ScottishPower Recharge use the same 31 second gap on the same host, and the client keeps one timer for it. Five sites are read, each with a location and a tariff file, so a run makes 10 requests and takes about 5 minutes.",
+        "per_key": null
       },
       "findings": [
         {
@@ -337,7 +338,7 @@
       "rate_limit": {
         "our_gap_seconds": 125.0,
         "our_max_per_hour": 29,
-        "ours": "At least 125 s between requests to the operator's host, measured from the end of the previous request (at most 29 in any hour), retries included.",
+        "ours": "At least 125 s between requests with the operator's own key, measured from the end of the previous request (at most 29 in any hour with it), retries included. The limits are read as applying to each key, by the owner's decision of 2026-10-29; requests to the host are still sent one at a time, at least 2 s apart.",
         "published": [
           {
             "text": "30 per 1 hour for the locations endpoint",
@@ -371,7 +372,12 @@
         "limits_checked": "2026-10-26",
         "comparison": "Within every published limit. The strictest needs 120 s between requests; this project waits 125 s, which includes a safety margin.",
         "difference_from_regulations": "The operator sets a limit; the regulations set none. DfT guidance allows such terms on access.",
-        "notes": "One gap of 125 seconds (the 120 seconds the strictest limit needs, plus a safety margin) is kept between any two requests to open-chargepoints.com, shared by every operator served from it, so this project sends it at most 29 requests in any hour. Requests are sent one at a time; Eco-Movement \"strongly recommends limiting simultaneous GET requests to a maximum of 5\". It recommends retrieving the entire dataset once a day."
+        "notes": "A gap of 125 seconds (the 120 seconds the strictest limit needs, plus a safety margin) is kept between any two requests with this network's token, so at most 29 requests in any hour are sent with it. By the repository owner's decision of 2026-10-29 (limits_per_key) the limits are read as applying to each token. Requests to open-chargepoints.com are still sent one at a time, at least 2 seconds apart whichever network they are for, and a request from the server to wait holds back every network on it. Eco-Movement \"strongly recommends limiting simultaneous GET requests to a maximum of 5\". It recommends retrieving the entire dataset once a day.",
+        "per_key": {
+          "decided": "2026-10-29",
+          "basis": "Eco-Movement publishes a limit of 30 requests an hour for each of the locations and tariffs endpoints and gives each network its own token, but does not say whether the limits count per token or per address. The repository owner decided on 2026-10-29 that they are read as applying to each token, so each network keeps its own 125 second gap, while requests to open-chargepoints.com are still sent one at a time.",
+          "evidence_url": "https://developers.eco-movement.com/v2.2.1/docs/eco-movement-pcpr-api-user-guide"
+        }
       },
       "findings": [
         {
@@ -482,7 +488,8 @@
         "limits_checked": "2026-10-10",
         "comparison": "No limit published (checked 2026-10-10). The gap is our own choice.",
         "difference_from_regulations": "Neither the operator nor the regulations set a limit.",
-        "notes": "Arnold Clark's pages state no rate limit. The gap is this project's own choice: 2 seconds until 11 October 2026, then 31 seconds, because the host answered the second request of each run with HTTP 429 and Retry-After 30 (see findings). 31 seconds is the 30 the host asks for, plus a 1 second margin. ScottishPower Recharge's files are on the same host and use the same gap. Each response holds every record, so a full run makes two requests (about 0.3 MB on 2026-10-10)."
+        "notes": "Arnold Clark's pages state no rate limit. The gap is this project's own choice: 2 seconds until 11 October 2026, then 31 seconds, because the host answered the second request of each run with HTTP 429 and Retry-After 30 (see findings). 31 seconds is the 30 the host asks for, plus a 1 second margin. ScottishPower Recharge's files are on the same host and use the same gap. Each response holds every record, so a full run makes two requests (about 0.3 MB on 2026-10-10).",
+        "per_key": null
       },
       "findings": [
         {
@@ -655,7 +662,7 @@
       "rate_limit": {
         "our_gap_seconds": 125.0,
         "our_max_per_hour": 29,
-        "ours": "At least 125 s between requests to the operator's host, measured from the end of the previous request (at most 29 in any hour), retries included.",
+        "ours": "At least 125 s between requests with the operator's own key, measured from the end of the previous request (at most 29 in any hour with it), retries included. The limits are read as applying to each key, by the owner's decision of 2026-10-29; requests to the host are still sent one at a time, at least 2 s apart.",
         "published": [
           {
             "text": "30 per 1 hour for the locations endpoint",
@@ -689,7 +696,12 @@
         "limits_checked": "2026-10-26",
         "comparison": "Within every published limit. The strictest needs 120 s between requests; this project waits 125 s, which includes a safety margin.",
         "difference_from_regulations": "The operator sets a limit; the regulations set none. DfT guidance allows such terms on access.",
-        "notes": "One gap of 125 seconds (the 120 seconds the strictest limit needs, plus a safety margin) is kept between any two requests to open-chargepoints.com, shared by every operator served from it, so this project sends it at most 29 requests in any hour. Requests are sent one at a time; Eco-Movement \"strongly recommends limiting simultaneous GET requests to a maximum of 5\". It recommends retrieving the entire dataset once a day."
+        "notes": "A gap of 125 seconds (the 120 seconds the strictest limit needs, plus a safety margin) is kept between any two requests with this network's token, so at most 29 requests in any hour are sent with it. By the repository owner's decision of 2026-10-29 (limits_per_key) the limits are read as applying to each token. Requests to open-chargepoints.com are still sent one at a time, at least 2 seconds apart whichever network they are for, and a request from the server to wait holds back every network on it. Eco-Movement \"strongly recommends limiting simultaneous GET requests to a maximum of 5\". It recommends retrieving the entire dataset once a day.",
+        "per_key": {
+          "decided": "2026-10-29",
+          "basis": "Eco-Movement publishes a limit of 30 requests an hour for each of the locations and tariffs endpoints and gives each network its own token, but does not say whether the limits count per token or per address. The repository owner decided on 2026-10-29 that they are read as applying to each token, so each network keeps its own 125 second gap, while requests to open-chargepoints.com are still sent one at a time.",
+          "evidence_url": "https://developers.eco-movement.com/v2.2.1/docs/eco-movement-pcpr-api-user-guide"
+        }
       },
       "findings": [
         {
@@ -814,7 +826,8 @@
         "limits_checked": "2026-10-23",
         "comparison": "No limit published (checked 2026-10-23). The gap is our own choice.",
         "difference_from_regulations": "Neither the operator nor the regulations set a limit.",
-        "notes": "BrightGreen's open data page states no rate limit, and responses carry no rate limit headers. The 2 second gap is this project's own choice. Each file holds every record, so a full run makes two requests (about 38 KB on 2026-10-23)."
+        "notes": "BrightGreen's open data page states no rate limit, and responses carry no rate limit headers. The 2 second gap is this project's own choice. Each file holds every record, so a full run makes two requests (about 38 KB on 2026-10-23).",
+        "per_key": null
       },
       "findings": [
         {
@@ -972,7 +985,8 @@
         "limits_checked": "2026-10-07",
         "comparison": "No limit published (checked 2026-10-07). The gap is our own choice.",
         "difference_from_regulations": "Neither the operator nor the regulations set a limit.",
-        "notes": "char.gy's open data page states no rate limit. The gap is this project's own choice: 2 seconds until 8 October 2026, then 6 seconds after the feed refused requests from GitHub's servers part-way through the first daily run (see findings). Lowered to 4 seconds on 9 October 2026 by the repository owner's decision, to shorten the daily run, on the condition that it goes back to 6 seconds if the feed refused requests again. It did, in the run of 9 October 2026 at 17:51 UTC, so the gap is 6 seconds again from that date."
+        "notes": "char.gy's open data page states no rate limit. The gap is this project's own choice: 2 seconds until 8 October 2026, then 6 seconds after the feed refused requests from GitHub's servers part-way through the first daily run (see findings). Lowered to 4 seconds on 9 October 2026 by the repository owner's decision, to shorten the daily run, on the condition that it goes back to 6 seconds if the feed refused requests again. It did, in the run of 9 October 2026 at 17:51 UTC, so the gap is 6 seconds again from that date.",
+        "per_key": null
       },
       "findings": [
         {
@@ -1162,7 +1176,8 @@
         "limits_checked": "2026-10-10",
         "comparison": "No limit published (checked 2026-10-10). The gap is our own choice.",
         "difference_from_regulations": "Neither the operator nor the regulations set a limit.",
-        "notes": "Neither ChargePlace Scotland's pages nor the responses state a rate limit. The 2 second gap is this project's own choice, shared with PoGo Charge and Evolt Network, whose feeds are on the same host and are fetched one after another. Each response holds every record, so a full run makes two requests."
+        "notes": "Neither ChargePlace Scotland's pages nor the responses state a rate limit. The 2 second gap is this project's own choice, shared with PoGo Charge and Evolt Network, whose feeds are on the same host and are fetched one after another. Each response holds every record, so a full run makes two requests.",
+        "per_key": null
       },
       "findings": [
         {
@@ -1368,7 +1383,7 @@
       "rate_limit": {
         "our_gap_seconds": 125.0,
         "our_max_per_hour": 29,
-        "ours": "At least 125 s between requests to the operator's host, measured from the end of the previous request (at most 29 in any hour), retries included.",
+        "ours": "At least 125 s between requests with the operator's own key, measured from the end of the previous request (at most 29 in any hour with it), retries included. The limits are read as applying to each key, by the owner's decision of 2026-10-29; requests to the host are still sent one at a time, at least 2 s apart.",
         "published": [
           {
             "text": "30 per 1 hour for the locations endpoint",
@@ -1402,9 +1417,24 @@
         "limits_checked": "2026-10-26",
         "comparison": "Within every published limit. The strictest needs 120 s between requests; this project waits 125 s, which includes a safety margin.",
         "difference_from_regulations": "The operator sets a limit; the regulations set none. DfT guidance allows such terms on access.",
-        "notes": "One gap of 125 seconds (the 120 seconds the strictest limit needs, plus a safety margin) is kept between any two requests to open-chargepoints.com, shared by every operator served from it, so this project sends it at most 29 requests in any hour. Requests are sent one at a time; Eco-Movement \"strongly recommends limiting simultaneous GET requests to a maximum of 5\". It recommends retrieving the entire dataset once a day."
+        "notes": "A gap of 125 seconds (the 120 seconds the strictest limit needs, plus a safety margin) is kept between any two requests with this network's token, so at most 29 requests in any hour are sent with it. By the repository owner's decision of 2026-10-29 (limits_per_key) the limits are read as applying to each token. Requests to open-chargepoints.com are still sent one at a time, at least 2 seconds apart whichever network they are for, and a request from the server to wait holds back every network on it. Eco-Movement \"strongly recommends limiting simultaneous GET requests to a maximum of 5\". It recommends retrieving the entire dataset once a day.",
+        "per_key": {
+          "decided": "2026-10-29",
+          "basis": "Eco-Movement publishes a limit of 30 requests an hour for each of the locations and tariffs endpoints and gives each network its own token, but does not say whether the limits count per token or per address. The repository owner decided on 2026-10-29 that they are read as applying to each token, so each network keeps its own 125 second gap, while requests to open-chargepoints.com are still sent one at a time.",
+          "evidence_url": "https://developers.eco-movement.com/v2.2.1/docs/eco-movement-pcpr-api-user-guide"
+        }
       },
       "findings": [
+        {
+          "date": "2026-10-29",
+          "kind": "data_quality",
+          "kind_label": "Data quirk",
+          "summary": "Every one of the 331 locations names ChargePoint as its operator and owner, although the request form says this feed holds the data of 31 operators on the ChargePoint platform.",
+          "handling": "The locations are shown under ChargePoint, as published. Which operator runs each site cannot be told from the feed, and nothing is filled in from other sources.",
+          "evidence_url": "https://open-chargepoints.com/api/ocpi/cpo/2.2.1/locations/",
+          "status": "open",
+          "resolved_date": null
+        },
         {
           "date": "2026-10-29",
           "kind": "data_quality",
@@ -1520,7 +1550,8 @@
         "limits_checked": "2026-10-09",
         "comparison": "No limit published (checked 2026-10-09). The gap is our own choice.",
         "difference_from_regulations": "Neither the operator nor the regulations set a limit.",
-        "notes": "Clenergy EV's open data page states no rate limit. Responses carry X-RateLimit-Limit 6 with no window stated (see findings). The 11 second gap is this project's own choice: it would stay within 6 requests a minute, plus a 1 second margin, if that is what the header means. Each file holds every record, so a full run makes two requests (about 2.2 MB on 2026-10-09)."
+        "notes": "Clenergy EV's open data page states no rate limit. Responses carry X-RateLimit-Limit 6 with no window stated (see findings). The 11 second gap is this project's own choice: it would stay within 6 requests a minute, plus a 1 second margin, if that is what the header means. Each file holds every record, so a full run makes two requests (about 2.2 MB on 2026-10-09).",
+        "per_key": null
       },
       "findings": [
         {
@@ -1738,7 +1769,8 @@
         "limits_checked": "2026-10-26",
         "comparison": "No limit published (checked 2026-10-26). The gap is our own choice.",
         "difference_from_regulations": "Neither the operator nor the regulations set a limit.",
-        "notes": "No requests are made: the map shows a copy of Connekt's data that it sent by email on 2026-10-26 (sent_copy below). Connekt's open data page and its reply state no rate limit. The 2 second gap is this project's own choice, for a feed if one is published."
+        "notes": "No requests are made: the map shows a copy of Connekt's data that it sent by email on 2026-10-26 (sent_copy below). Connekt's open data page and its reply state no rate limit. The 2 second gap is this project's own choice, for a feed if one is published.",
+        "per_key": null
       },
       "findings": [
         {
@@ -1840,7 +1872,8 @@
         "limits_checked": "2026-10-23",
         "comparison": "No limit published (checked 2026-10-23). The gap is our own choice.",
         "difference_from_regulations": "Neither the operator nor the regulations set a limit.",
-        "notes": "The council's page states no rate limit. The host answers quick repeat requests with HTTP 429 (\"The Fuuse API is currently being rate limited\"), and asked for 30 seconds when ScottishPower Recharge's files were recorded on 2026-10-11. The 31 second gap is this project's own choice, the same as for the other operators on this host. Each response holds every record, so a full run makes two requests."
+        "notes": "The council's page states no rate limit. The host answers quick repeat requests with HTTP 429 (\"The Fuuse API is currently being rate limited\"), and asked for 30 seconds when ScottishPower Recharge's files were recorded on 2026-10-11. The 31 second gap is this project's own choice, the same as for the other operators on this host. Each response holds every record, so a full run makes two requests.",
+        "per_key": null
       },
       "findings": [
         {
@@ -1985,7 +2018,7 @@
       "rate_limit": {
         "our_gap_seconds": 125.0,
         "our_max_per_hour": 29,
-        "ours": "At least 125 s between requests to the operator's host, measured from the end of the previous request (at most 29 in any hour), retries included.",
+        "ours": "At least 125 s between requests with the operator's own key, measured from the end of the previous request (at most 29 in any hour with it), retries included. The limits are read as applying to each key, by the owner's decision of 2026-10-29; requests to the host are still sent one at a time, at least 2 s apart.",
         "published": [
           {
             "text": "30 per 1 hour for the locations endpoint",
@@ -2019,7 +2052,12 @@
         "limits_checked": "2026-10-26",
         "comparison": "Within every published limit. The strictest needs 120 s between requests; this project waits 125 s, which includes a safety margin.",
         "difference_from_regulations": "The operator sets a limit; the regulations set none. DfT guidance allows such terms on access.",
-        "notes": "One gap of 125 seconds (the 120 seconds the strictest limit needs, plus a safety margin) is kept between any two requests to open-chargepoints.com, shared by every operator served from it, so this project sends it at most 29 requests in any hour. Requests are sent one at a time; Eco-Movement \"strongly recommends limiting simultaneous GET requests to a maximum of 5\". It recommends retrieving the entire dataset once a day."
+        "notes": "A gap of 125 seconds (the 120 seconds the strictest limit needs, plus a safety margin) is kept between any two requests with this network's token, so at most 29 requests in any hour are sent with it. By the repository owner's decision of 2026-10-29 (limits_per_key) the limits are read as applying to each token. Requests to open-chargepoints.com are still sent one at a time, at least 2 seconds apart whichever network they are for, and a request from the server to wait holds back every network on it. Eco-Movement \"strongly recommends limiting simultaneous GET requests to a maximum of 5\". It recommends retrieving the entire dataset once a day.",
+        "per_key": {
+          "decided": "2026-10-29",
+          "basis": "Eco-Movement publishes a limit of 30 requests an hour for each of the locations and tariffs endpoints and gives each network its own token, but does not say whether the limits count per token or per address. The repository owner decided on 2026-10-29 that they are read as applying to each token, so each network keeps its own 125 second gap, while requests to open-chargepoints.com are still sent one at a time.",
+          "evidence_url": "https://developers.eco-movement.com/v2.2.1/docs/eco-movement-pcpr-api-user-guide"
+        }
       },
       "findings": [
         {
@@ -2156,7 +2194,7 @@
       "rate_limit": {
         "our_gap_seconds": 125.0,
         "our_max_per_hour": 29,
-        "ours": "At least 125 s between requests to the operator's host, measured from the end of the previous request (at most 29 in any hour), retries included.",
+        "ours": "At least 125 s between requests with the operator's own key, measured from the end of the previous request (at most 29 in any hour with it), retries included. The limits are read as applying to each key, by the owner's decision of 2026-10-29; requests to the host are still sent one at a time, at least 2 s apart.",
         "published": [
           {
             "text": "30 per 1 hour for the locations endpoint",
@@ -2190,7 +2228,12 @@
         "limits_checked": "2026-10-26",
         "comparison": "Within every published limit. The strictest needs 120 s between requests; this project waits 125 s, which includes a safety margin.",
         "difference_from_regulations": "The operator sets a limit; the regulations set none. DfT guidance allows such terms on access.",
-        "notes": "One gap of 125 seconds (the 120 seconds the strictest limit needs, plus a safety margin) is kept between any two requests to open-chargepoints.com, shared by every operator served from it, so this project sends it at most 29 requests in any hour. Requests are sent one at a time; Eco-Movement \"strongly recommends limiting simultaneous GET requests to a maximum of 5\". It recommends retrieving the entire dataset once a day."
+        "notes": "A gap of 125 seconds (the 120 seconds the strictest limit needs, plus a safety margin) is kept between any two requests with this network's token, so at most 29 requests in any hour are sent with it. By the repository owner's decision of 2026-10-29 (limits_per_key) the limits are read as applying to each token. Requests to open-chargepoints.com are still sent one at a time, at least 2 seconds apart whichever network they are for, and a request from the server to wait holds back every network on it. Eco-Movement \"strongly recommends limiting simultaneous GET requests to a maximum of 5\". It recommends retrieving the entire dataset once a day.",
+        "per_key": {
+          "decided": "2026-10-29",
+          "basis": "Eco-Movement publishes a limit of 30 requests an hour for each of the locations and tariffs endpoints and gives each network its own token, but does not say whether the limits count per token or per address. The repository owner decided on 2026-10-29 that they are read as applying to each token, so each network keeps its own 125 second gap, while requests to open-chargepoints.com are still sent one at a time.",
+          "evidence_url": "https://developers.eco-movement.com/v2.2.1/docs/eco-movement-pcpr-api-user-guide"
+        }
       },
       "findings": [
         {
@@ -2321,7 +2364,8 @@
         "limits_checked": "2026-10-10",
         "comparison": "No limit published (checked 2026-10-10). The gap is our own choice.",
         "difference_from_regulations": "Neither the operator nor the regulations set a limit.",
-        "notes": "Neither Evolt Network's pages nor the responses state a rate limit. The 2 second gap is this project's own choice, shared with PoGo Charge and ChargePlace Scotland, whose feeds are on the same host and are fetched one after another. Each response holds every record, so a full run makes two requests."
+        "notes": "Neither Evolt Network's pages nor the responses state a rate limit. The 2 second gap is this project's own choice, shared with PoGo Charge and ChargePlace Scotland, whose feeds are on the same host and are fetched one after another. Each response holds every record, so a full run makes two requests.",
+        "per_key": null
       },
       "findings": [
         {
@@ -2518,7 +2562,7 @@
       "rate_limit": {
         "our_gap_seconds": 125.0,
         "our_max_per_hour": 29,
-        "ours": "At least 125 s between requests to the operator's host, measured from the end of the previous request (at most 29 in any hour), retries included.",
+        "ours": "At least 125 s between requests with the operator's own key, measured from the end of the previous request (at most 29 in any hour with it), retries included. The limits are read as applying to each key, by the owner's decision of 2026-10-29; requests to the host are still sent one at a time, at least 2 s apart.",
         "published": [
           {
             "text": "30 per 1 hour for the locations endpoint",
@@ -2552,7 +2596,12 @@
         "limits_checked": "2026-10-26",
         "comparison": "Within every published limit. The strictest needs 120 s between requests; this project waits 125 s, which includes a safety margin.",
         "difference_from_regulations": "The operator sets a limit; the regulations set none. DfT guidance allows such terms on access.",
-        "notes": "One gap of 125 seconds (the 120 seconds the strictest limit needs, plus a safety margin) is kept between any two requests to open-chargepoints.com, shared by every operator served from it, so this project sends it at most 29 requests in any hour. Requests are sent one at a time; Eco-Movement \"strongly recommends limiting simultaneous GET requests to a maximum of 5\". It recommends retrieving the entire dataset once a day."
+        "notes": "A gap of 125 seconds (the 120 seconds the strictest limit needs, plus a safety margin) is kept between any two requests with this network's token, so at most 29 requests in any hour are sent with it. By the repository owner's decision of 2026-10-29 (limits_per_key) the limits are read as applying to each token. Requests to open-chargepoints.com are still sent one at a time, at least 2 seconds apart whichever network they are for, and a request from the server to wait holds back every network on it. Eco-Movement \"strongly recommends limiting simultaneous GET requests to a maximum of 5\". It recommends retrieving the entire dataset once a day.",
+        "per_key": {
+          "decided": "2026-10-29",
+          "basis": "Eco-Movement publishes a limit of 30 requests an hour for each of the locations and tariffs endpoints and gives each network its own token, but does not say whether the limits count per token or per address. The repository owner decided on 2026-10-29 that they are read as applying to each token, so each network keeps its own 125 second gap, while requests to open-chargepoints.com are still sent one at a time.",
+          "evidence_url": "https://developers.eco-movement.com/v2.2.1/docs/eco-movement-pcpr-api-user-guide"
+        }
       },
       "findings": [
         {
@@ -2704,7 +2753,7 @@
       "rate_limit": {
         "our_gap_seconds": 125.0,
         "our_max_per_hour": 29,
-        "ours": "At least 125 s between requests to the operator's host, measured from the end of the previous request (at most 29 in any hour), retries included.",
+        "ours": "At least 125 s between requests with the operator's own key, measured from the end of the previous request (at most 29 in any hour with it), retries included. The limits are read as applying to each key, by the owner's decision of 2026-10-29; requests to the host are still sent one at a time, at least 2 s apart.",
         "published": [
           {
             "text": "30 per 1 hour for the locations endpoint",
@@ -2738,7 +2787,12 @@
         "limits_checked": "2026-10-26",
         "comparison": "Within every published limit. The strictest needs 120 s between requests; this project waits 125 s, which includes a safety margin.",
         "difference_from_regulations": "The operator sets a limit; the regulations set none. DfT guidance allows such terms on access.",
-        "notes": "One gap of 125 seconds (the 120 seconds the strictest limit needs, plus a safety margin) is kept between any two requests to open-chargepoints.com, shared by every operator served from it, so this project sends it at most 29 requests in any hour. Requests are sent one at a time; Eco-Movement \"strongly recommends limiting simultaneous GET requests to a maximum of 5\". It recommends retrieving the entire dataset once a day."
+        "notes": "A gap of 125 seconds (the 120 seconds the strictest limit needs, plus a safety margin) is kept between any two requests with this network's token, so at most 29 requests in any hour are sent with it. By the repository owner's decision of 2026-10-29 (limits_per_key) the limits are read as applying to each token. Requests to open-chargepoints.com are still sent one at a time, at least 2 seconds apart whichever network they are for, and a request from the server to wait holds back every network on it. Eco-Movement \"strongly recommends limiting simultaneous GET requests to a maximum of 5\". It recommends retrieving the entire dataset once a day.",
+        "per_key": {
+          "decided": "2026-10-29",
+          "basis": "Eco-Movement publishes a limit of 30 requests an hour for each of the locations and tariffs endpoints and gives each network its own token, but does not say whether the limits count per token or per address. The repository owner decided on 2026-10-29 that they are read as applying to each token, so each network keeps its own 125 second gap, while requests to open-chargepoints.com are still sent one at a time.",
+          "evidence_url": "https://developers.eco-movement.com/v2.2.1/docs/eco-movement-pcpr-api-user-guide"
+        }
       },
       "findings": [
         {
@@ -2871,7 +2925,8 @@
         "limits_checked": "2026-10-24",
         "comparison": "No limit published (checked 2026-10-24). The gap is our own choice.",
         "difference_from_regulations": "Neither the operator nor the regulations set a limit.",
-        "notes": "Fastned's Fair Use Policy, read 2026-10-10 and again 2026-10-24, states no numeric limit. It says \"Fastned may throttle your use of the APIs at any time.\" and \"Fastned reserves the right to implement rate limits on the API to ensure system performance, reliability, and overall service quality or for other reasons at its discretion.\" The key email gives no limit either, and the responses of 2026-10-24 carried no rate limit headers. The 2 second gap is this project's own choice, and the feed is fetched once a day: two requests a run."
+        "notes": "Fastned's Fair Use Policy, read 2026-10-10 and again 2026-10-24, states no numeric limit. It says \"Fastned may throttle your use of the APIs at any time.\" and \"Fastned reserves the right to implement rate limits on the API to ensure system performance, reliability, and overall service quality or for other reasons at its discretion.\" The key email gives no limit either, and the responses of 2026-10-24 carried no rate limit headers. The 2 second gap is this project's own choice, and the feed is fetched once a day: two requests a run.",
+        "per_key": null
       },
       "findings": [
         {
@@ -2978,7 +3033,8 @@
         "limits_checked": "2026-10-08",
         "comparison": "No limit published (checked 2026-10-08). The gap is our own choice.",
         "difference_from_regulations": "Neither the operator nor the regulations set a limit.",
-        "notes": "GeniePoint's open data page states no rate limit. The 2 second gap is this project's own choice. Each file holds every record, so a full run makes two requests (about 1.6 MB on 2026-10-08)."
+        "notes": "GeniePoint's open data page states no rate limit. The 2 second gap is this project's own choice. Each file holds every record, so a full run makes two requests (about 1.6 MB on 2026-10-08).",
+        "per_key": null
       },
       "findings": [
         {
@@ -3144,7 +3200,8 @@
         "limits_checked": "2026-10-23",
         "comparison": "No limit published (checked 2026-10-23). The gap is our own choice.",
         "difference_from_regulations": "Neither the operator nor the regulations set a limit.",
-        "notes": "Globe EV's open data page states no rate limit. Responses carry X-RateLimit-Limit 6 with no window stated, as Clenergy EV's do (see findings). The 11 second gap is this project's own choice, the same as for Clenergy EV, whose files are on the same platform under another host name: it would stay within 6 requests a minute, plus a 1 second margin, if that is what the header means. Each file holds every record, so a full run makes two requests (about 0.2 MB on 2026-10-23)."
+        "notes": "Globe EV's open data page states no rate limit. Responses carry X-RateLimit-Limit 6 with no window stated, as Clenergy EV's do (see findings). The 11 second gap is this project's own choice, the same as for Clenergy EV, whose files are on the same platform under another host name: it would stay within 6 requests a minute, plus a 1 second margin, if that is what the header means. Each file holds every record, so a full run makes two requests (about 0.2 MB on 2026-10-23).",
+        "per_key": null
       },
       "findings": [
         {
@@ -3316,7 +3373,7 @@
       "rate_limit": {
         "our_gap_seconds": 125.0,
         "our_max_per_hour": 29,
-        "ours": "At least 125 s between requests to the operator's host, measured from the end of the previous request (at most 29 in any hour), retries included.",
+        "ours": "At least 125 s between requests with the operator's own key, measured from the end of the previous request (at most 29 in any hour with it), retries included. The limits are read as applying to each key, by the owner's decision of 2026-10-29; requests to the host are still sent one at a time, at least 2 s apart.",
         "published": [
           {
             "text": "30 per 1 hour for the locations endpoint",
@@ -3350,7 +3407,12 @@
         "limits_checked": "2026-10-26",
         "comparison": "Within every published limit. The strictest needs 120 s between requests; this project waits 125 s, which includes a safety margin.",
         "difference_from_regulations": "The operator sets a limit; the regulations set none. DfT guidance allows such terms on access.",
-        "notes": "One gap of 125 seconds (the 120 seconds the strictest limit needs, plus a safety margin) is kept between any two requests to open-chargepoints.com, shared by every operator served from it, so this project sends it at most 29 requests in any hour. Requests are sent one at a time; Eco-Movement \"strongly recommends limiting simultaneous GET requests to a maximum of 5\". It recommends retrieving the entire dataset once a day."
+        "notes": "A gap of 125 seconds (the 120 seconds the strictest limit needs, plus a safety margin) is kept between any two requests with this network's token, so at most 29 requests in any hour are sent with it. By the repository owner's decision of 2026-10-29 (limits_per_key) the limits are read as applying to each token. Requests to open-chargepoints.com are still sent one at a time, at least 2 seconds apart whichever network they are for, and a request from the server to wait holds back every network on it. Eco-Movement \"strongly recommends limiting simultaneous GET requests to a maximum of 5\". It recommends retrieving the entire dataset once a day.",
+        "per_key": {
+          "decided": "2026-10-29",
+          "basis": "Eco-Movement publishes a limit of 30 requests an hour for each of the locations and tariffs endpoints and gives each network its own token, but does not say whether the limits count per token or per address. The repository owner decided on 2026-10-29 that they are read as applying to each token, so each network keeps its own 125 second gap, while requests to open-chargepoints.com are still sent one at a time.",
+          "evidence_url": "https://developers.eco-movement.com/v2.2.1/docs/eco-movement-pcpr-api-user-guide"
+        }
       },
       "findings": []
     },
@@ -3428,7 +3490,8 @@
         "limits_checked": "2026-10-08",
         "comparison": "No limit published (checked 2026-10-08). The gap is our own choice.",
         "difference_from_regulations": "Neither the operator nor the regulations set a limit.",
-        "notes": "Jolt's page states no rate limit (re-read 2026-10-08). The 2 second gap is this project's own choice. A full run makes one request for locations and one per tariff (6 requests on 2026-10-08)."
+        "notes": "Jolt's page states no rate limit (re-read 2026-10-08). The 2 second gap is this project's own choice. A full run makes one request for locations and one per tariff (6 requests on 2026-10-08).",
+        "per_key": null
       },
       "findings": [
         {
@@ -3665,7 +3728,7 @@
       "rate_limit": {
         "our_gap_seconds": 125.0,
         "our_max_per_hour": 29,
-        "ours": "At least 125 s between requests to the operator's host, measured from the end of the previous request (at most 29 in any hour), retries included.",
+        "ours": "At least 125 s between requests with the operator's own key, measured from the end of the previous request (at most 29 in any hour with it), retries included. The limits are read as applying to each key, by the owner's decision of 2026-10-29; requests to the host are still sent one at a time, at least 2 s apart.",
         "published": [
           {
             "text": "30 per 1 hour for the locations endpoint",
@@ -3699,7 +3762,12 @@
         "limits_checked": "2026-10-26",
         "comparison": "Within every published limit. The strictest needs 120 s between requests; this project waits 125 s, which includes a safety margin.",
         "difference_from_regulations": "The operator sets a limit; the regulations set none. DfT guidance allows such terms on access.",
-        "notes": "One gap of 125 seconds (the 120 seconds the strictest limit needs, plus a safety margin) is kept between any two requests to open-chargepoints.com, shared by every operator served from it, so this project sends it at most 29 requests in any hour. Requests are sent one at a time; Eco-Movement \"strongly recommends limiting simultaneous GET requests to a maximum of 5\". It recommends retrieving the entire dataset once a day."
+        "notes": "A gap of 125 seconds (the 120 seconds the strictest limit needs, plus a safety margin) is kept between any two requests with this network's token, so at most 29 requests in any hour are sent with it. By the repository owner's decision of 2026-10-29 (limits_per_key) the limits are read as applying to each token. Requests to open-chargepoints.com are still sent one at a time, at least 2 seconds apart whichever network they are for, and a request from the server to wait holds back every network on it. Eco-Movement \"strongly recommends limiting simultaneous GET requests to a maximum of 5\". It recommends retrieving the entire dataset once a day.",
+        "per_key": {
+          "decided": "2026-10-29",
+          "basis": "Eco-Movement publishes a limit of 30 requests an hour for each of the locations and tariffs endpoints and gives each network its own token, but does not say whether the limits count per token or per address. The repository owner decided on 2026-10-29 that they are read as applying to each token, so each network keeps its own 125 second gap, while requests to open-chargepoints.com are still sent one at a time.",
+          "evidence_url": "https://developers.eco-movement.com/v2.2.1/docs/eco-movement-pcpr-api-user-guide"
+        }
       },
       "findings": [
         {
@@ -3810,7 +3878,8 @@
         "limits_checked": "2026-10-10",
         "comparison": "No limit published (checked 2026-10-10). The gap is our own choice.",
         "difference_from_regulations": "Neither the operator nor the regulations set a limit.",
-        "notes": "Mer's pages state no rate limit. The 2 second gap is this project's own choice. One response holds every location and tariff, so a full run makes one request (about 0.7 MB on 2026-10-10)."
+        "notes": "Mer's pages state no rate limit. The 2 second gap is this project's own choice. One response holds every location and tariff, so a full run makes one request (about 0.7 MB on 2026-10-10).",
+        "per_key": null
       },
       "findings": [
         {
@@ -3919,7 +3988,8 @@
         "limits_checked": "2026-10-09",
         "comparison": "No limit published (checked 2026-10-09). The gap is our own choice.",
         "difference_from_regulations": "Neither the operator nor the regulations set a limit.",
-        "notes": "MFG's EV Power page states no rate limit. The 2 second gap is this project's own choice. Each file holds every record, so a full run makes two requests (about 3.6 MB on 2026-10-09)."
+        "notes": "MFG's EV Power page states no rate limit. The 2 second gap is this project's own choice. Each file holds every record, so a full run makes two requests (about 3.6 MB on 2026-10-09).",
+        "per_key": null
       },
       "findings": [
         {
@@ -4048,7 +4118,8 @@
         "limits_checked": "2026-10-23",
         "comparison": "Within every published limit. The strictest needs 6 s between requests; this project waits 7 s, which includes a safety margin.",
         "difference_from_regulations": "The operator sets a limit; the regulations set none. DfT guidance allows such terms on access.",
-        "notes": "The token request counts towards the same limit. The same page says \"Rate limits might change in the future.\""
+        "notes": "The token request counts towards the same limit. The same page says \"Rate limits might change in the future.\"",
+        "per_key": null
       },
       "findings": [
         {
@@ -4249,7 +4320,8 @@
         "limits_checked": "2026-10-17",
         "comparison": "No limit published (checked 2026-10-17). The gap is our own choice.",
         "difference_from_regulations": "Neither the operator nor the regulations set a limit.",
-        "notes": "ParkRecharge's page states no rate limit. Responses carry X-RateLimit-Limit 60 and X-RateLimit-Reset 60 (see findings), which a 2 second gap stays well within. The 2 second gap is this project's own choice. Each page holds up to 100 records, so a full run makes six requests (about 0.9 MB on 2026-10-17)."
+        "notes": "ParkRecharge's page states no rate limit. Responses carry X-RateLimit-Limit 60 and X-RateLimit-Reset 60 (see findings), which a 2 second gap stays well within. The 2 second gap is this project's own choice. Each page holds up to 100 records, so a full run makes six requests (about 0.9 MB on 2026-10-17).",
+        "per_key": null
       },
       "findings": [
         {
@@ -4528,7 +4600,8 @@
         "limits_checked": "2026-10-22",
         "comparison": "Within every published limit. The strictest needs 0.5 s between requests; this project waits 2 s, which includes a safety margin.",
         "difference_from_regulations": "The operator sets a limit; the regulations set none. DfT guidance allows such terms on access.",
-        "notes": "The API access terms on the same page also say requests \"must not exceed the published rate limit, currently 120 requests per minute per key\" and forbid registering several keys for one service. This project uses one key. Each module comes in one page (the server's page size was 500 on 2026-10-23), so a full run makes two requests."
+        "notes": "The API access terms on the same page also say requests \"must not exceed the published rate limit, currently 120 requests per minute per key\" and forbid registering several keys for one service. This project uses one key. Each module comes in one page (the server's page size was 500 on 2026-10-23), so a full run makes two requests.",
+        "per_key": null
       },
       "findings": [
         {
@@ -4690,7 +4763,7 @@
       "rate_limit": {
         "our_gap_seconds": 125.0,
         "our_max_per_hour": 29,
-        "ours": "At least 125 s between requests to the operator's host, measured from the end of the previous request (at most 29 in any hour), retries included.",
+        "ours": "At least 125 s between requests with the operator's own key, measured from the end of the previous request (at most 29 in any hour with it), retries included. The limits are read as applying to each key, by the owner's decision of 2026-10-29; requests to the host are still sent one at a time, at least 2 s apart.",
         "published": [
           {
             "text": "30 per 1 hour for the locations endpoint",
@@ -4724,7 +4797,12 @@
         "limits_checked": "2026-10-26",
         "comparison": "Within every published limit. The strictest needs 120 s between requests; this project waits 125 s, which includes a safety margin.",
         "difference_from_regulations": "The operator sets a limit; the regulations set none. DfT guidance allows such terms on access.",
-        "notes": "One gap of 125 seconds (the 120 seconds the strictest limit needs, plus a safety margin) is kept between any two requests to open-chargepoints.com, shared by every operator served from it, so this project sends it at most 29 requests in any hour. Requests are sent one at a time; Eco-Movement \"strongly recommends limiting simultaneous GET requests to a maximum of 5\". It recommends retrieving the entire dataset once a day."
+        "notes": "A gap of 125 seconds (the 120 seconds the strictest limit needs, plus a safety margin) is kept between any two requests with this network's token, so at most 29 requests in any hour are sent with it. By the repository owner's decision of 2026-10-29 (limits_per_key) the limits are read as applying to each token. Requests to open-chargepoints.com are still sent one at a time, at least 2 seconds apart whichever network they are for, and a request from the server to wait holds back every network on it. Eco-Movement \"strongly recommends limiting simultaneous GET requests to a maximum of 5\". It recommends retrieving the entire dataset once a day.",
+        "per_key": {
+          "decided": "2026-10-29",
+          "basis": "Eco-Movement publishes a limit of 30 requests an hour for each of the locations and tariffs endpoints and gives each network its own token, but does not say whether the limits count per token or per address. The repository owner decided on 2026-10-29 that they are read as applying to each token, so each network keeps its own 125 second gap, while requests to open-chargepoints.com are still sent one at a time.",
+          "evidence_url": "https://developers.eco-movement.com/v2.2.1/docs/eco-movement-pcpr-api-user-guide"
+        }
       },
       "findings": [
         {
@@ -4752,7 +4830,7 @@
           "kind": "data_quality",
           "kind_label": "Data quirk",
           "summary": "Two tariffs have every price zero. In the first 1,000 locations, 163 connectors at 63 locations name one of them, at sites such as Sainsbury's stores, a McDonald's and schools.",
-          "handling": "These connectors show \"Free\", as the feed gives no charge. Whether drivers pay nothing at these sites needs confirming by Pod.",
+          "handling": "These connectors show \"Free\", as the feed gives no charge. On 2026-10-29 the repository owner decided they are shown as published, rather than as \"Price unknown\". Whether drivers pay nothing at every one of these sites needs confirming by Pod.",
           "evidence_url": "https://open-chargepoints.com/api/ocpi/cpo/2.2.1/tariffs/",
           "status": "open",
           "resolved_date": null
@@ -4871,7 +4949,8 @@
         "limits_checked": "2026-10-10",
         "comparison": "No limit published (checked 2026-10-10). The gap is our own choice.",
         "difference_from_regulations": "Neither the operator nor the regulations set a limit.",
-        "notes": "Neither PoGo Charge's pages nor the responses state a rate limit. The 2 second gap is this project's own choice, shared with Evolt Network and ChargePlace Scotland, whose feeds are on the same host and are fetched one after another. Each response holds every record, so a full run makes two requests."
+        "notes": "Neither PoGo Charge's pages nor the responses state a rate limit. The 2 second gap is this project's own choice, shared with Evolt Network and ChargePlace Scotland, whose feeds are on the same host and are fetched one after another. Each response holds every record, so a full run makes two requests.",
+        "per_key": null
       },
       "findings": [
         {
@@ -5028,7 +5107,7 @@
       "rate_limit": {
         "our_gap_seconds": 125.0,
         "our_max_per_hour": 29,
-        "ours": "At least 125 s between requests to the operator's host, measured from the end of the previous request (at most 29 in any hour), retries included.",
+        "ours": "At least 125 s between requests with the operator's own key, measured from the end of the previous request (at most 29 in any hour with it), retries included. The limits are read as applying to each key, by the owner's decision of 2026-10-29; requests to the host are still sent one at a time, at least 2 s apart.",
         "published": [
           {
             "text": "30 per 1 hour for the locations endpoint",
@@ -5062,7 +5141,12 @@
         "limits_checked": "2026-10-26",
         "comparison": "Within every published limit. The strictest needs 120 s between requests; this project waits 125 s, which includes a safety margin.",
         "difference_from_regulations": "The operator sets a limit; the regulations set none. DfT guidance allows such terms on access.",
-        "notes": "One gap of 125 seconds (the 120 seconds the strictest limit needs, plus a safety margin) is kept between any two requests to open-chargepoints.com, shared by every operator served from it, so this project sends it at most 29 requests in any hour. Requests are sent one at a time; Eco-Movement \"strongly recommends limiting simultaneous GET requests to a maximum of 5\". It recommends retrieving the entire dataset once a day."
+        "notes": "A gap of 125 seconds (the 120 seconds the strictest limit needs, plus a safety margin) is kept between any two requests with this network's token, so at most 29 requests in any hour are sent with it. By the repository owner's decision of 2026-10-29 (limits_per_key) the limits are read as applying to each token. Requests to open-chargepoints.com are still sent one at a time, at least 2 seconds apart whichever network they are for, and a request from the server to wait holds back every network on it. Eco-Movement \"strongly recommends limiting simultaneous GET requests to a maximum of 5\". It recommends retrieving the entire dataset once a day.",
+        "per_key": {
+          "decided": "2026-10-29",
+          "basis": "Eco-Movement publishes a limit of 30 requests an hour for each of the locations and tariffs endpoints and gives each network its own token, but does not say whether the limits count per token or per address. The repository owner decided on 2026-10-29 that they are read as applying to each token, so each network keeps its own 125 second gap, while requests to open-chargepoints.com are still sent one at a time.",
+          "evidence_url": "https://developers.eco-movement.com/v2.2.1/docs/eco-movement-pcpr-api-user-guide"
+        }
       },
       "findings": [
         {
@@ -5245,7 +5329,8 @@
         "limits_checked": "2026-10-26",
         "comparison": "Within every published limit. The strictest needs 720 s between requests; this project waits 721 s, which includes a safety margin.",
         "difference_from_regulations": "The operator sets a limit; the regulations set none. DfT guidance allows such terms on access.",
-        "notes": "The locations address answers with the RateLimit-Policy header \"5;w=3600\", which allows 5 requests in a 3,600 second window; the tariffs address sent no such header on 2026-10-26. Roam's reply email and website state no limit. The 721 second gap (3,600 / 5 plus a 1 second margin) applies to every request to the host, so a run makes its two requests about 12 minutes apart."
+        "notes": "The locations address answers with the RateLimit-Policy header \"5;w=3600\", which allows 5 requests in a 3,600 second window; the tariffs address sent no such header on 2026-10-26. Roam's reply email and website state no limit. The 721 second gap (3,600 / 5 plus a 1 second margin) applies to every request to the host, so a run makes its two requests about 12 minutes apart.",
+        "per_key": null
       },
       "findings": [
         {
@@ -5422,7 +5507,8 @@
         "limits_checked": "2026-10-11",
         "comparison": "No limit published (checked 2026-10-11). The gap is our own choice.",
         "difference_from_regulations": "Neither the operator nor the regulations set a limit.",
-        "notes": "ScottishPower's pages state no rate limit. The host answers a second request sent 2 seconds after the first with HTTP 429 and Retry-After 30 (see findings). The 31 second gap is this project's own choice: the 30 seconds the host asks for, plus a 1 second margin. Arnold Clark Charge's files are on the same host and use the same gap. Each response holds every record, so a full run makes two requests (about 0.2 MB on 2026-10-11)."
+        "notes": "ScottishPower's pages state no rate limit. The host answers a second request sent 2 seconds after the first with HTTP 429 and Retry-After 30 (see findings). The 31 second gap is this project's own choice: the 30 seconds the host asks for, plus a 1 second margin. Arnold Clark Charge's files are on the same host and use the same gap. Each response holds every record, so a full run makes two requests (about 0.2 MB on 2026-10-11).",
+        "per_key": null
       },
       "findings": [
         {
@@ -5604,7 +5690,7 @@
       "rate_limit": {
         "our_gap_seconds": 125.0,
         "our_max_per_hour": 29,
-        "ours": "At least 125 s between requests to the operator's host, measured from the end of the previous request (at most 29 in any hour), retries included.",
+        "ours": "At least 125 s between requests with the operator's own key, measured from the end of the previous request (at most 29 in any hour with it), retries included. The limits are read as applying to each key, by the owner's decision of 2026-10-29; requests to the host are still sent one at a time, at least 2 s apart.",
         "published": [
           {
             "text": "30 per 1 hour for the locations endpoint",
@@ -5638,7 +5724,12 @@
         "limits_checked": "2026-10-26",
         "comparison": "Within every published limit. The strictest needs 120 s between requests; this project waits 125 s, which includes a safety margin.",
         "difference_from_regulations": "The operator sets a limit; the regulations set none. DfT guidance allows such terms on access.",
-        "notes": "One gap of 125 seconds (the 120 seconds the strictest limit needs, plus a safety margin) is kept between any two requests to open-chargepoints.com, shared by every operator served from it, so this project sends it at most 29 requests in any hour. Requests are sent one at a time; Eco-Movement \"strongly recommends limiting simultaneous GET requests to a maximum of 5\". It recommends retrieving the entire dataset once a day."
+        "notes": "A gap of 125 seconds (the 120 seconds the strictest limit needs, plus a safety margin) is kept between any two requests with this network's token, so at most 29 requests in any hour are sent with it. By the repository owner's decision of 2026-10-29 (limits_per_key) the limits are read as applying to each token. Requests to open-chargepoints.com are still sent one at a time, at least 2 seconds apart whichever network they are for, and a request from the server to wait holds back every network on it. Eco-Movement \"strongly recommends limiting simultaneous GET requests to a maximum of 5\". It recommends retrieving the entire dataset once a day.",
+        "per_key": {
+          "decided": "2026-10-29",
+          "basis": "Eco-Movement publishes a limit of 30 requests an hour for each of the locations and tariffs endpoints and gives each network its own token, but does not say whether the limits count per token or per address. The repository owner decided on 2026-10-29 that they are read as applying to each token, so each network keeps its own 125 second gap, while requests to open-chargepoints.com are still sent one at a time.",
+          "evidence_url": "https://developers.eco-movement.com/v2.2.1/docs/eco-movement-pcpr-api-user-guide"
+        }
       },
       "findings": [
         {
@@ -5770,7 +5861,7 @@
       "rate_limit": {
         "our_gap_seconds": 125.0,
         "our_max_per_hour": 29,
-        "ours": "At least 125 s between requests to the operator's host, measured from the end of the previous request (at most 29 in any hour), retries included.",
+        "ours": "At least 125 s between requests with the operator's own key, measured from the end of the previous request (at most 29 in any hour with it), retries included. The limits are read as applying to each key, by the owner's decision of 2026-10-29; requests to the host are still sent one at a time, at least 2 s apart.",
         "published": [
           {
             "text": "30 per 1 hour for the locations endpoint",
@@ -5804,7 +5895,12 @@
         "limits_checked": "2026-10-26",
         "comparison": "Within every published limit. The strictest needs 120 s between requests; this project waits 125 s, which includes a safety margin.",
         "difference_from_regulations": "The operator sets a limit; the regulations set none. DfT guidance allows such terms on access.",
-        "notes": "One gap of 125 seconds (the 120 seconds the strictest limit needs, plus a safety margin) is kept between any two requests to open-chargepoints.com, shared by every operator served from it, so this project sends it at most 29 requests in any hour. Requests are sent one at a time; Eco-Movement \"strongly recommends limiting simultaneous GET requests to a maximum of 5\". It recommends retrieving the entire dataset once a day."
+        "notes": "A gap of 125 seconds (the 120 seconds the strictest limit needs, plus a safety margin) is kept between any two requests with this network's token, so at most 29 requests in any hour are sent with it. By the repository owner's decision of 2026-10-29 (limits_per_key) the limits are read as applying to each token. Requests to open-chargepoints.com are still sent one at a time, at least 2 seconds apart whichever network they are for, and a request from the server to wait holds back every network on it. Eco-Movement \"strongly recommends limiting simultaneous GET requests to a maximum of 5\". It recommends retrieving the entire dataset once a day.",
+        "per_key": {
+          "decided": "2026-10-29",
+          "basis": "Eco-Movement publishes a limit of 30 requests an hour for each of the locations and tariffs endpoints and gives each network its own token, but does not say whether the limits count per token or per address. The repository owner decided on 2026-10-29 that they are read as applying to each token, so each network keeps its own 125 second gap, while requests to open-chargepoints.com are still sent one at a time.",
+          "evidence_url": "https://developers.eco-movement.com/v2.2.1/docs/eco-movement-pcpr-api-user-guide"
+        }
       },
       "findings": [
         {
@@ -5832,7 +5928,7 @@
           "kind": "documentation",
           "kind_label": "Documentation",
           "summary": "The rate limits are published, but the documentation does not say whether they apply per key or per address, what kind of time window is used, or what response is sent when a limit is reached.",
-          "handling": "This project assumes the strictest reading: one allowance shared by every endpoint and every operator on this host, so it waits 125 seconds between any two requests to it.",
+          "handling": "Until 2026-10-29 this project assumed the strictest reading: one allowance shared by every endpoint and every operator on this host, so 125 seconds between any two requests to it. Since then, by the repository owner's decision recorded in limits_per_key, each token keeps its own 125 second gap, shared by its endpoints, with requests to the host still sent one at a time.",
           "evidence_url": "https://developers.eco-movement.com/v2.2.1/docs/eco-movement-pcpr-api-user-guide",
           "status": "open",
           "resolved_date": null
@@ -5929,7 +6025,8 @@
         "limits_checked": "2026-10-23",
         "comparison": "No limit published (checked 2026-10-23). The gap is our own choice.",
         "difference_from_regulations": "Neither the operator nor the regulations set a limit.",
-        "notes": "Urban Fox's data access page and API description state no rate limit, and responses carry no rate limit headers. The 2 second gap is this project's own choice. A full run makes about four requests (138 locations in pages of 50, and one page of 22 tariffs on 2026-10-23)."
+        "notes": "Urban Fox's data access page and API description state no rate limit, and responses carry no rate limit headers. The 2 second gap is this project's own choice. A full run makes about four requests (138 locations in pages of 50, and one page of 22 tariffs on 2026-10-23).",
+        "per_key": null
       },
       "findings": [
         {
@@ -6025,7 +6122,8 @@
         "limits_checked": "unknown",
         "comparison": "The operator's pages have not been checked for limits yet.",
         "difference_from_regulations": "Not known yet.",
-        "notes": "No feed found yet. Amey's network runs on Fuuse, whose open data host (api.fuuse.io) asks for 30 seconds between requests, so any feed found there would use the same 31 second gap as Arnold Clark Charge and ScottishPower Recharge."
+        "notes": "No feed found yet. Amey's network runs on Fuuse, whose open data host (api.fuuse.io) asks for 30 seconds between requests, so any feed found there would use the same 31 second gap as Arnold Clark Charge and ScottishPower Recharge.",
+        "per_key": null
       },
       "findings": []
     },
@@ -6101,7 +6199,8 @@
         "limits_checked": "unknown",
         "comparison": "The operator's pages have not been checked for limits yet.",
         "difference_from_regulations": "Not known yet.",
-        "notes": null
+        "notes": null,
+        "per_key": null
       },
       "findings": []
     },
@@ -6166,7 +6265,8 @@
         "limits_checked": "unknown",
         "comparison": "The operator's pages have not been checked for limits yet.",
         "difference_from_regulations": "Not known yet.",
-        "notes": null
+        "notes": null,
+        "per_key": null
       },
       "findings": []
     },
@@ -6224,7 +6324,8 @@
         "limits_checked": "unknown",
         "comparison": "The operator's pages have not been checked for limits yet.",
         "difference_from_regulations": "Not known yet.",
-        "notes": null
+        "notes": null,
+        "per_key": null
       },
       "findings": []
     },
@@ -6300,7 +6401,8 @@
         "limits_checked": "unknown",
         "comparison": "The operator's pages have not been checked for limits yet.",
         "difference_from_regulations": "Not known yet.",
-        "notes": null
+        "notes": null,
+        "per_key": null
       },
       "findings": []
     },
@@ -6416,7 +6518,8 @@
         "limits_checked": "2026-10-23",
         "comparison": "Within every published limit. The strictest needs 864 s between requests; this project waits 865 s, which includes a safety margin.",
         "difference_from_regulations": "The operator sets a limit; the regulations set none. DfT guidance allows such terms on access.",
-        "notes": "The limits are in the API documentation, shown only after signing in (copy in evidence/believ/2026-10-23-api-documentation.md). 100 calls a day, with this project's 1 second margin, means one request every 865 seconds. A documented call on 2026-10-23 answered with x-ratelimit-limit 1 and x-ratelimit-remaining 1, which match the one-a-second limit; no header gave the daily limit."
+        "notes": "The limits are in the API documentation, shown only after signing in (copy in evidence/believ/2026-10-23-api-documentation.md). 100 calls a day, with this project's 1 second margin, means one request every 865 seconds. A documented call on 2026-10-23 answered with x-ratelimit-limit 1 and x-ratelimit-remaining 1, which match the one-a-second limit; no header gave the daily limit.",
+        "per_key": null
       },
       "findings": [
         {
@@ -6524,7 +6627,7 @@
       "rate_limit": {
         "our_gap_seconds": 125.0,
         "our_max_per_hour": 29,
-        "ours": "At least 125 s between requests to the operator's host, measured from the end of the previous request (at most 29 in any hour), retries included.",
+        "ours": "At least 125 s between requests with the operator's own key, measured from the end of the previous request (at most 29 in any hour with it), retries included. The limits are read as applying to each key, by the owner's decision of 2026-10-29; requests to the host are still sent one at a time, at least 2 s apart.",
         "published": [
           {
             "text": "30 per 1 hour for the locations endpoint",
@@ -6558,7 +6661,12 @@
         "limits_checked": "2026-10-26",
         "comparison": "Within every published limit. The strictest needs 120 s between requests; this project waits 125 s, which includes a safety margin.",
         "difference_from_regulations": "The operator sets a limit; the regulations set none. DfT guidance allows such terms on access.",
-        "notes": "One gap of 125 seconds (the 120 seconds the strictest limit needs, plus a safety margin) is kept between any two requests to open-chargepoints.com, shared by every operator served from it, so this project sends it at most 29 requests in any hour. Requests are sent one at a time; Eco-Movement \"strongly recommends limiting simultaneous GET requests to a maximum of 5\". It recommends retrieving the entire dataset once a day."
+        "notes": "A gap of 125 seconds (the 120 seconds the strictest limit needs, plus a safety margin) is kept between any two requests with this network's token, so at most 29 requests in any hour are sent with it. By the repository owner's decision of 2026-10-29 (limits_per_key) the limits are read as applying to each token. Requests to open-chargepoints.com are still sent one at a time, at least 2 seconds apart whichever network they are for, and a request from the server to wait holds back every network on it. Eco-Movement \"strongly recommends limiting simultaneous GET requests to a maximum of 5\". It recommends retrieving the entire dataset once a day.",
+        "per_key": {
+          "decided": "2026-10-29",
+          "basis": "Eco-Movement publishes a limit of 30 requests an hour for each of the locations and tariffs endpoints and gives each network its own token, but does not say whether the limits count per token or per address. The repository owner decided on 2026-10-29 that they are read as applying to each token, so each network keeps its own 125 second gap, while requests to open-chargepoints.com are still sent one at a time.",
+          "evidence_url": "https://developers.eco-movement.com/v2.2.1/docs/eco-movement-pcpr-api-user-guide"
+        }
       },
       "findings": [
         {
@@ -6576,7 +6684,7 @@
           "kind": "documentation",
           "kind_label": "Documentation",
           "summary": "The rate limits are published, but the documentation does not say whether they apply per key or per address, what kind of time window is used, or what response is sent when a limit is reached.",
-          "handling": "This project assumes the strictest reading: one allowance shared by every endpoint and every operator on this host, so it waits 125 seconds between any two requests to it.",
+          "handling": "Until 2026-10-29 this project assumed the strictest reading: one allowance shared by every endpoint and every operator on this host, so 125 seconds between any two requests to it. Since then, by the repository owner's decision recorded in limits_per_key, each token keeps its own 125 second gap, shared by its endpoints, with requests to the host still sent one at a time.",
           "evidence_url": "https://developers.eco-movement.com/v2.2.1/docs/eco-movement-pcpr-api-user-guide",
           "status": "open",
           "resolved_date": null
@@ -6655,7 +6763,8 @@
         "limits_checked": "unknown",
         "comparison": "The operator's pages have not been checked for limits yet.",
         "difference_from_regulations": "Not known yet.",
-        "notes": null
+        "notes": null,
+        "per_key": null
       },
       "findings": []
     },
@@ -6720,7 +6829,8 @@
         "limits_checked": "unknown",
         "comparison": "The operator's pages have not been checked for limits yet.",
         "difference_from_regulations": "Not known yet.",
-        "notes": null
+        "notes": null,
+        "per_key": null
       },
       "findings": []
     },
@@ -6800,7 +6910,7 @@
       "rate_limit": {
         "our_gap_seconds": 125.0,
         "our_max_per_hour": 29,
-        "ours": "At least 125 s between requests to the operator's host, measured from the end of the previous request (at most 29 in any hour), retries included.",
+        "ours": "At least 125 s between requests with the operator's own key, measured from the end of the previous request (at most 29 in any hour with it), retries included. The limits are read as applying to each key, by the owner's decision of 2026-10-29; requests to the host are still sent one at a time, at least 2 s apart.",
         "published": [
           {
             "text": "30 per 1 hour for the locations endpoint",
@@ -6834,7 +6944,12 @@
         "limits_checked": "2026-10-26",
         "comparison": "Within every published limit. The strictest needs 120 s between requests; this project waits 125 s, which includes a safety margin.",
         "difference_from_regulations": "The operator sets a limit; the regulations set none. DfT guidance allows such terms on access.",
-        "notes": "One gap of 125 seconds (the 120 seconds the strictest limit needs, plus a safety margin) is kept between any two requests to open-chargepoints.com, shared by every operator served from it, so this project sends it at most 29 requests in any hour. Requests are sent one at a time; Eco-Movement \"strongly recommends limiting simultaneous GET requests to a maximum of 5\". It recommends retrieving the entire dataset once a day."
+        "notes": "A gap of 125 seconds (the 120 seconds the strictest limit needs, plus a safety margin) is kept between any two requests with this network's token, so at most 29 requests in any hour are sent with it. By the repository owner's decision of 2026-10-29 (limits_per_key) the limits are read as applying to each token. Requests to open-chargepoints.com are still sent one at a time, at least 2 seconds apart whichever network they are for, and a request from the server to wait holds back every network on it. Eco-Movement \"strongly recommends limiting simultaneous GET requests to a maximum of 5\". It recommends retrieving the entire dataset once a day.",
+        "per_key": {
+          "decided": "2026-10-29",
+          "basis": "Eco-Movement publishes a limit of 30 requests an hour for each of the locations and tariffs endpoints and gives each network its own token, but does not say whether the limits count per token or per address. The repository owner decided on 2026-10-29 that they are read as applying to each token, so each network keeps its own 125 second gap, while requests to open-chargepoints.com are still sent one at a time.",
+          "evidence_url": "https://developers.eco-movement.com/v2.2.1/docs/eco-movement-pcpr-api-user-guide"
+        }
       },
       "findings": [
         {
@@ -6852,7 +6967,7 @@
           "kind": "documentation",
           "kind_label": "Documentation",
           "summary": "The rate limits are published, but the documentation does not say whether they apply per key or per address, what kind of time window is used, or what response is sent when a limit is reached.",
-          "handling": "This project assumes the strictest reading: one allowance shared by every endpoint and every operator on this host, so it waits 125 seconds between any two requests to it.",
+          "handling": "Until 2026-10-29 this project assumed the strictest reading: one allowance shared by every endpoint and every operator on this host, so 125 seconds between any two requests to it. Since then, by the repository owner's decision recorded in limits_per_key, each token keeps its own 125 second gap, shared by its endpoints, with requests to the host still sent one at a time.",
           "evidence_url": "https://developers.eco-movement.com/v2.2.1/docs/eco-movement-pcpr-api-user-guide",
           "status": "open",
           "resolved_date": null
@@ -6913,7 +7028,8 @@
         "limits_checked": "unknown",
         "comparison": "The operator's pages have not been checked for limits yet.",
         "difference_from_regulations": "Not known yet.",
-        "notes": null
+        "notes": null,
+        "per_key": null
       },
       "findings": []
     },
@@ -6978,7 +7094,8 @@
         "limits_checked": "unknown",
         "comparison": "The operator's pages have not been checked for limits yet.",
         "difference_from_regulations": "Not known yet.",
-        "notes": null
+        "notes": null,
+        "per_key": null
       },
       "findings": []
     },
@@ -7054,7 +7171,8 @@
         "limits_checked": "unknown",
         "comparison": "The operator's pages have not been checked for limits yet.",
         "difference_from_regulations": "Not known yet.",
-        "notes": null
+        "notes": null,
+        "per_key": null
       },
       "findings": []
     },
@@ -7119,7 +7237,8 @@
         "limits_checked": "unknown",
         "comparison": "The operator's pages have not been checked for limits yet.",
         "difference_from_regulations": "Not known yet.",
-        "notes": null
+        "notes": null,
+        "per_key": null
       },
       "findings": []
     },
@@ -7184,7 +7303,8 @@
         "limits_checked": "unknown",
         "comparison": "The operator's pages have not been checked for limits yet.",
         "difference_from_regulations": "Not known yet.",
-        "notes": null
+        "notes": null,
+        "per_key": null
       },
       "findings": []
     },
@@ -7249,7 +7369,8 @@
         "limits_checked": "unknown",
         "comparison": "The operator's pages have not been checked for limits yet.",
         "difference_from_regulations": "Not known yet.",
-        "notes": null
+        "notes": null,
+        "per_key": null
       },
       "findings": []
     },
@@ -7314,7 +7435,8 @@
         "limits_checked": "unknown",
         "comparison": "The operator's pages have not been checked for limits yet.",
         "difference_from_regulations": "Not known yet.",
-        "notes": null
+        "notes": null,
+        "per_key": null
       },
       "findings": []
     },
@@ -7383,7 +7505,8 @@
         "limits_checked": "unknown",
         "comparison": "The operator's pages have not been checked for limits yet.",
         "difference_from_regulations": "Not known yet.",
-        "notes": null
+        "notes": null,
+        "per_key": null
       },
       "findings": []
     },
@@ -7448,7 +7571,8 @@
         "limits_checked": "unknown",
         "comparison": "The operator's pages have not been checked for limits yet.",
         "difference_from_regulations": "Not known yet.",
-        "notes": null
+        "notes": null,
+        "per_key": null
       },
       "findings": []
     },
@@ -7517,7 +7641,8 @@
         "limits_checked": "unknown",
         "comparison": "The operator's pages have not been checked for limits yet.",
         "difference_from_regulations": "Not known yet.",
-        "notes": null
+        "notes": null,
+        "per_key": null
       },
       "findings": []
     },
@@ -7582,7 +7707,8 @@
         "limits_checked": "unknown",
         "comparison": "The operator's pages have not been checked for limits yet.",
         "difference_from_regulations": "Not known yet.",
-        "notes": null
+        "notes": null,
+        "per_key": null
       },
       "findings": []
     },
@@ -7647,7 +7773,8 @@
         "limits_checked": "unknown",
         "comparison": "The operator's pages have not been checked for limits yet.",
         "difference_from_regulations": "Not known yet.",
-        "notes": null
+        "notes": null,
+        "per_key": null
       },
       "findings": []
     },
@@ -7712,7 +7839,8 @@
         "limits_checked": "unknown",
         "comparison": "The operator's pages have not been checked for limits yet.",
         "difference_from_regulations": "Not known yet.",
-        "notes": null
+        "notes": null,
+        "per_key": null
       },
       "findings": []
     },
@@ -7777,7 +7905,8 @@
         "limits_checked": "unknown",
         "comparison": "The operator's pages have not been checked for limits yet.",
         "difference_from_regulations": "Not known yet.",
-        "notes": null
+        "notes": null,
+        "per_key": null
       },
       "findings": []
     },
@@ -7842,7 +7971,8 @@
         "limits_checked": "unknown",
         "comparison": "The operator's pages have not been checked for limits yet.",
         "difference_from_regulations": "Not known yet.",
-        "notes": null
+        "notes": null,
+        "per_key": null
       },
       "findings": []
     },
@@ -7907,7 +8037,8 @@
         "limits_checked": "unknown",
         "comparison": "The operator's pages have not been checked for limits yet.",
         "difference_from_regulations": "Not known yet.",
-        "notes": null
+        "notes": null,
+        "per_key": null
       },
       "findings": []
     },
@@ -7972,7 +8103,8 @@
         "limits_checked": "unknown",
         "comparison": "The operator's pages have not been checked for limits yet.",
         "difference_from_regulations": "Not known yet.",
-        "notes": null
+        "notes": null,
+        "per_key": null
       },
       "findings": []
     },
@@ -8037,7 +8169,8 @@
         "limits_checked": "unknown",
         "comparison": "The operator's pages have not been checked for limits yet.",
         "difference_from_regulations": "Not known yet.",
-        "notes": "No feed found yet. First Charge runs on Fuuse, whose open data host (api.fuuse.io) asks for 30 seconds between requests, so any feed found there would use the same 31 second gap as Arnold Clark Charge and ScottishPower Recharge."
+        "notes": "No feed found yet. First Charge runs on Fuuse, whose open data host (api.fuuse.io) asks for 30 seconds between requests, so any feed found there would use the same 31 second gap as Arnold Clark Charge and ScottishPower Recharge.",
+        "per_key": null
       },
       "findings": []
     },
@@ -8102,7 +8235,8 @@
         "limits_checked": "unknown",
         "comparison": "The operator's pages have not been checked for limits yet.",
         "difference_from_regulations": "Not known yet.",
-        "notes": null
+        "notes": null,
+        "per_key": null
       },
       "findings": [
         {
@@ -8178,7 +8312,8 @@
         "limits_checked": "unknown",
         "comparison": "The operator's pages have not been checked for limits yet.",
         "difference_from_regulations": "Not known yet.",
-        "notes": null
+        "notes": null,
+        "per_key": null
       },
       "findings": []
     },
@@ -8243,7 +8378,8 @@
         "limits_checked": "unknown",
         "comparison": "The operator's pages have not been checked for limits yet.",
         "difference_from_regulations": "Not known yet.",
-        "notes": null
+        "notes": null,
+        "per_key": null
       },
       "findings": []
     },
@@ -8319,7 +8455,8 @@
         "limits_checked": "unknown",
         "comparison": "The operator's pages have not been checked for limits yet.",
         "difference_from_regulations": "Not known yet.",
-        "notes": null
+        "notes": null,
+        "per_key": null
       },
       "findings": []
     },
@@ -8388,7 +8525,8 @@
         "limits_checked": "unknown",
         "comparison": "The operator's pages have not been checked for limits yet.",
         "difference_from_regulations": "Not known yet.",
-        "notes": null
+        "notes": null,
+        "per_key": null
       },
       "findings": []
     },
@@ -8453,7 +8591,8 @@
         "limits_checked": "unknown",
         "comparison": "The operator's pages have not been checked for limits yet.",
         "difference_from_regulations": "Not known yet.",
-        "notes": null
+        "notes": null,
+        "per_key": null
       },
       "findings": []
     },
@@ -8529,7 +8668,8 @@
         "limits_checked": "2026-10-08",
         "comparison": "Within every published limit. The strictest needs 30 s between requests; this project waits 31 s, which includes a safety margin.",
         "difference_from_regulations": "The operator sets a limit; the regulations set none. DfT guidance allows such terms on access.",
-        "notes": "Gridserve's API Fair Use Policy sets the limit above, says \"Default rate limits are set to 1 call every 30 seconds\", and says limits may change. This project waits 31 seconds between any two requests to the host (30 seconds plus a safety margin). The developer documentation (version 1.0, November 2024) states no limit."
+        "notes": "Gridserve's API Fair Use Policy sets the limit above, says \"Default rate limits are set to 1 call every 30 seconds\", and says limits may change. This project waits 31 seconds between any two requests to the host (30 seconds plus a safety margin). The developer documentation (version 1.0, November 2024) states no limit.",
+        "per_key": null
       },
       "findings": [
         {
@@ -8639,7 +8779,8 @@
         "limits_checked": "unknown",
         "comparison": "The operator's pages have not been checked for limits yet.",
         "difference_from_regulations": "Not known yet.",
-        "notes": null
+        "notes": null,
+        "per_key": null
       },
       "findings": []
     },
@@ -8704,7 +8845,8 @@
         "limits_checked": "unknown",
         "comparison": "The operator's pages have not been checked for limits yet.",
         "difference_from_regulations": "Not known yet.",
-        "notes": null
+        "notes": null,
+        "per_key": null
       },
       "findings": []
     },
@@ -8784,7 +8926,8 @@
         "limits_checked": "unknown",
         "comparison": "The operator's pages have not been checked for limits yet.",
         "difference_from_regulations": "Not known yet.",
-        "notes": null
+        "notes": null,
+        "per_key": null
       },
       "findings": []
     },
@@ -8849,7 +8992,8 @@
         "limits_checked": "unknown",
         "comparison": "The operator's pages have not been checked for limits yet.",
         "difference_from_regulations": "Not known yet.",
-        "notes": null
+        "notes": null,
+        "per_key": null
       },
       "findings": []
     },
@@ -8907,7 +9051,8 @@
         "limits_checked": "unknown",
         "comparison": "The operator's pages have not been checked for limits yet.",
         "difference_from_regulations": "Not known yet.",
-        "notes": null
+        "notes": null,
+        "per_key": null
       },
       "findings": []
     },
@@ -8972,7 +9117,8 @@
         "limits_checked": "unknown",
         "comparison": "The operator's pages have not been checked for limits yet.",
         "difference_from_regulations": "Not known yet.",
-        "notes": null
+        "notes": null,
+        "per_key": null
       },
       "findings": []
     },
@@ -9037,7 +9183,8 @@
         "limits_checked": "unknown",
         "comparison": "The operator's pages have not been checked for limits yet.",
         "difference_from_regulations": "Not known yet.",
-        "notes": null
+        "notes": null,
+        "per_key": null
       },
       "findings": []
     },
@@ -9102,7 +9249,8 @@
         "limits_checked": "unknown",
         "comparison": "The operator's pages have not been checked for limits yet.",
         "difference_from_regulations": "Not known yet.",
-        "notes": null
+        "notes": null,
+        "per_key": null
       },
       "findings": []
     },
@@ -9167,7 +9315,8 @@
         "limits_checked": "unknown",
         "comparison": "The operator's pages have not been checked for limits yet.",
         "difference_from_regulations": "Not known yet.",
-        "notes": null
+        "notes": null,
+        "per_key": null
       },
       "findings": []
     },
@@ -9232,7 +9381,8 @@
         "limits_checked": "unknown",
         "comparison": "The operator's pages have not been checked for limits yet.",
         "difference_from_regulations": "Not known yet.",
-        "notes": null
+        "notes": null,
+        "per_key": null
       },
       "findings": []
     },
@@ -9314,7 +9464,8 @@
         "limits_checked": "unknown",
         "comparison": "The operator's pages have not been checked for limits yet.",
         "difference_from_regulations": "Not known yet.",
-        "notes": null
+        "notes": null,
+        "per_key": null
       },
       "findings": [
         {
@@ -9383,7 +9534,8 @@
         "limits_checked": "unknown",
         "comparison": "The operator's pages have not been checked for limits yet.",
         "difference_from_regulations": "Not known yet.",
-        "notes": null
+        "notes": null,
+        "per_key": null
       },
       "findings": []
     },
@@ -9448,7 +9600,8 @@
         "limits_checked": "unknown",
         "comparison": "The operator's pages have not been checked for limits yet.",
         "difference_from_regulations": "Not known yet.",
-        "notes": null
+        "notes": null,
+        "per_key": null
       },
       "findings": []
     },
@@ -9513,7 +9666,8 @@
         "limits_checked": "unknown",
         "comparison": "The operator's pages have not been checked for limits yet.",
         "difference_from_regulations": "Not known yet.",
-        "notes": null
+        "notes": null,
+        "per_key": null
       },
       "findings": []
     },
@@ -9571,7 +9725,8 @@
         "limits_checked": "unknown",
         "comparison": "The operator's pages have not been checked for limits yet.",
         "difference_from_regulations": "Not known yet.",
-        "notes": null
+        "notes": null,
+        "per_key": null
       },
       "findings": []
     },
@@ -9636,7 +9791,8 @@
         "limits_checked": "unknown",
         "comparison": "The operator's pages have not been checked for limits yet.",
         "difference_from_regulations": "Not known yet.",
-        "notes": null
+        "notes": null,
+        "per_key": null
       },
       "findings": []
     },
@@ -9723,7 +9879,7 @@
       "rate_limit": {
         "our_gap_seconds": 125.0,
         "our_max_per_hour": 29,
-        "ours": "At least 125 s between requests to the operator's host, measured from the end of the previous request (at most 29 in any hour), retries included.",
+        "ours": "At least 125 s between requests with the operator's own key, measured from the end of the previous request (at most 29 in any hour with it), retries included. The limits are read as applying to each key, by the owner's decision of 2026-10-29; requests to the host are still sent one at a time, at least 2 s apart.",
         "published": [
           {
             "text": "30 per 1 hour for the locations endpoint",
@@ -9757,7 +9913,12 @@
         "limits_checked": "2026-10-26",
         "comparison": "Within every published limit. The strictest needs 120 s between requests; this project waits 125 s, which includes a safety margin.",
         "difference_from_regulations": "The operator sets a limit; the regulations set none. DfT guidance allows such terms on access.",
-        "notes": "One gap of 125 seconds (the 120 seconds the strictest limit needs, plus a safety margin) is kept between any two requests to open-chargepoints.com, shared by every operator served from it, so this project sends it at most 29 requests in any hour. Requests are sent one at a time; Eco-Movement \"strongly recommends limiting simultaneous GET requests to a maximum of 5\". It recommends retrieving the entire dataset once a day."
+        "notes": "A gap of 125 seconds (the 120 seconds the strictest limit needs, plus a safety margin) is kept between any two requests with this network's token, so at most 29 requests in any hour are sent with it. By the repository owner's decision of 2026-10-29 (limits_per_key) the limits are read as applying to each token. Requests to open-chargepoints.com are still sent one at a time, at least 2 seconds apart whichever network they are for, and a request from the server to wait holds back every network on it. Eco-Movement \"strongly recommends limiting simultaneous GET requests to a maximum of 5\". It recommends retrieving the entire dataset once a day.",
+        "per_key": {
+          "decided": "2026-10-29",
+          "basis": "Eco-Movement publishes a limit of 30 requests an hour for each of the locations and tariffs endpoints and gives each network its own token, but does not say whether the limits count per token or per address. The repository owner decided on 2026-10-29 that they are read as applying to each token, so each network keeps its own 125 second gap, while requests to open-chargepoints.com are still sent one at a time.",
+          "evidence_url": "https://developers.eco-movement.com/v2.2.1/docs/eco-movement-pcpr-api-user-guide"
+        }
       },
       "findings": [
         {
@@ -9775,7 +9936,7 @@
           "kind": "documentation",
           "kind_label": "Documentation",
           "summary": "The rate limits are published, but the documentation does not say whether they apply per key or per address, what kind of time window is used, or what response is sent when a limit is reached.",
-          "handling": "This project assumes the strictest reading: one allowance shared by every endpoint and every operator on this host, so it waits 125 seconds between any two requests to it.",
+          "handling": "Until 2026-10-29 this project assumed the strictest reading: one allowance shared by every endpoint and every operator on this host, so 125 seconds between any two requests to it. Since then, by the repository owner's decision recorded in limits_per_key, each token keeps its own 125 second gap, shared by its endpoints, with requests to the host still sent one at a time.",
           "evidence_url": "https://developers.eco-movement.com/v2.2.1/docs/eco-movement-pcpr-api-user-guide",
           "status": "open",
           "resolved_date": null
@@ -9843,7 +10004,8 @@
         "limits_checked": "unknown",
         "comparison": "The operator's pages have not been checked for limits yet.",
         "difference_from_regulations": "Not known yet.",
-        "notes": null
+        "notes": null,
+        "per_key": null
       },
       "findings": []
     },
@@ -9912,7 +10074,8 @@
         "limits_checked": "unknown",
         "comparison": "The operator's pages have not been checked for limits yet.",
         "difference_from_regulations": "Not known yet.",
-        "notes": null
+        "notes": null,
+        "per_key": null
       },
       "findings": []
     },
@@ -10010,7 +10173,8 @@
         "limits_checked": "unknown",
         "comparison": "The operator's pages have not been checked for limits yet.",
         "difference_from_regulations": "Not known yet.",
-        "notes": null
+        "notes": null,
+        "per_key": null
       },
       "findings": [
         {
@@ -10089,7 +10253,8 @@
         "limits_checked": "unknown",
         "comparison": "The operator's pages have not been checked for limits yet.",
         "difference_from_regulations": "Not known yet.",
-        "notes": null
+        "notes": null,
+        "per_key": null
       },
       "findings": []
     },
@@ -10147,7 +10312,8 @@
         "limits_checked": "unknown",
         "comparison": "The operator's pages have not been checked for limits yet.",
         "difference_from_regulations": "Not known yet.",
-        "notes": null
+        "notes": null,
+        "per_key": null
       },
       "findings": []
     },
@@ -10212,7 +10378,8 @@
         "limits_checked": "unknown",
         "comparison": "The operator's pages have not been checked for limits yet.",
         "difference_from_regulations": "Not known yet.",
-        "notes": null
+        "notes": null,
+        "per_key": null
       },
       "findings": []
     },
@@ -10270,7 +10437,8 @@
         "limits_checked": "unknown",
         "comparison": "The operator's pages have not been checked for limits yet.",
         "difference_from_regulations": "Not known yet.",
-        "notes": null
+        "notes": null,
+        "per_key": null
       },
       "findings": []
     },
@@ -10335,7 +10503,8 @@
         "limits_checked": "unknown",
         "comparison": "The operator's pages have not been checked for limits yet.",
         "difference_from_regulations": "Not known yet.",
-        "notes": "No feed found yet. WattStop is run by Fuuse, whose open data host (api.fuuse.io) asks for 30 seconds between requests, so any feed found there would use the same 31 second gap as Arnold Clark Charge and ScottishPower Recharge."
+        "notes": "No feed found yet. WattStop is run by Fuuse, whose open data host (api.fuuse.io) asks for 30 seconds between requests, so any feed found there would use the same 31 second gap as Arnold Clark Charge and ScottishPower Recharge.",
+        "per_key": null
       },
       "findings": []
     },
@@ -10400,7 +10569,8 @@
         "limits_checked": "unknown",
         "comparison": "The operator's pages have not been checked for limits yet.",
         "difference_from_regulations": "Not known yet.",
-        "notes": null
+        "notes": null,
+        "per_key": null
       },
       "findings": [
         {
@@ -10476,7 +10646,8 @@
         "limits_checked": "2026-10-10",
         "comparison": "No limit published (checked 2026-10-10). The gap is our own choice.",
         "difference_from_regulations": "Neither the operator nor the regulations set a limit.",
-        "notes": "The Wenea Open Data Policy, read 2026-10-10, states no numeric limit. It says \"We may impose rate limits or other technical controls on your use of the API at our discretion to maintain system integrity and performance.\" The API's technical documentation has not been seen."
+        "notes": "The Wenea Open Data Policy, read 2026-10-10, states no numeric limit. It says \"We may impose rate limits or other technical controls on your use of the API at our discretion to maintain system integrity and performance.\" The API's technical documentation has not been seen.",
+        "per_key": null
       },
       "findings": [
         {
@@ -10552,7 +10723,8 @@
         "limits_checked": "unknown",
         "comparison": "The operator's pages have not been checked for limits yet.",
         "difference_from_regulations": "Not known yet.",
-        "notes": "No feed found yet. The council's Fuuse chargers would publish on Fuuse's open data host (api.fuuse.io), which asks for 30 seconds between requests, so any feed found there would use the same 31 second gap as Arnold Clark Charge and ScottishPower Recharge."
+        "notes": "No feed found yet. The council's Fuuse chargers would publish on Fuuse's open data host (api.fuuse.io), which asks for 30 seconds between requests, so any feed found there would use the same 31 second gap as Arnold Clark Charge and ScottishPower Recharge.",
+        "per_key": null
       },
       "findings": []
     },
@@ -10617,7 +10789,8 @@
         "limits_checked": "unknown",
         "comparison": "The operator's pages have not been checked for limits yet.",
         "difference_from_regulations": "Not known yet.",
-        "notes": null
+        "notes": null,
+        "per_key": null
       },
       "findings": []
     },
@@ -10682,7 +10855,8 @@
         "limits_checked": "unknown",
         "comparison": "The operator's pages have not been checked for limits yet.",
         "difference_from_regulations": "Not known yet.",
-        "notes": null
+        "notes": null,
+        "per_key": null
       },
       "findings": []
     },
@@ -10758,7 +10932,8 @@
         "limits_checked": "unknown",
         "comparison": "The operator's pages have not been checked for limits yet.",
         "difference_from_regulations": "Not known yet.",
-        "notes": null
+        "notes": null,
+        "per_key": null
       },
       "findings": []
     }

@@ -58,12 +58,23 @@ rate_limit:
       checked: 2026-10-26
   limits_checked: 2026-10-26
   notes: >-
-    One gap of 125 seconds (the 120 seconds the strictest limit needs, plus a safety
-    margin) is kept between any two requests to open-chargepoints.com, shared by every
-    operator served from it, so this project sends it at most 29 requests in any hour.
-    Requests are sent one at a time; Eco-Movement "strongly recommends limiting
-    simultaneous GET requests to a maximum of 5". It recommends retrieving the entire
-    dataset once a day.
+    A gap of 125 seconds (the 120 seconds the strictest limit needs, plus a safety
+    margin) is kept between any two requests with this network's token, so at most 29
+    requests in any hour are sent with it. By the repository owner's decision of
+    2026-10-29 (limits_per_key) the limits are read as applying to each token. Requests
+    to open-chargepoints.com are still sent one at a time, at least 2 seconds apart
+    whichever network they are for, and a request from the server to wait holds back
+    every network on it. Eco-Movement "strongly recommends limiting simultaneous GET
+    requests to a maximum of 5". It recommends retrieving the entire dataset once a day.
+limits_per_key:
+  decided: 2026-10-29
+  basis: >-
+    Eco-Movement publishes a limit of 30 requests an hour for each of the locations and
+    tariffs endpoints and gives each network its own token, but does not say whether the
+    limits count per token or per address. The repository owner decided on 2026-10-29
+    that they are read as applying to each token, so each network keeps its own 125
+    second gap, while requests to open-chargepoints.com are still sent one at a time.
+  evidence_url: https://developers.eco-movement.com/v2.2.1/docs/eco-movement-pcpr-api-user-guide
 supports_single_location: unknown
 cors: unknown
 attribution: >-
@@ -193,8 +204,10 @@ findings:
       at 63 locations name one of them, at sites such as Sainsbury's stores, a
       McDonald's and schools.
     handling: >-
-      These connectors show "Free", as the feed gives no charge. Whether drivers pay
-      nothing at these sites needs confirming by Pod.
+      These connectors show "Free", as the feed gives no charge. On 2026-10-29 the
+      repository owner decided they are shown as published, rather than as "Price
+      unknown". Whether drivers pay nothing at every one of these sites needs
+      confirming by Pod.
     evidence_url: https://open-chargepoints.com/api/ocpi/cpo/2.2.1/tariffs/
 notes: >-
   The blueprint said the ocpi_221 adapter would cover Pod "once a token is granted", with

@@ -386,3 +386,14 @@ def test_a_decision_to_use_a_related_operators_tariffs_is_shown(page):
     assert "name a tariff only Evolt Network publishes are priced from that exact tariff" in text
     assert "never by name, by the owner's decision of 2026-10-10" in text
     assert ".. " not in " ".join(" ".join(parse(page).text).split())
+
+
+def test_limits_read_per_key_are_shown_with_the_owners_decision(page):
+    data = json.loads(transparency.outputs()[transparency.JSON_PATH])
+    per_key = {op["id"]: op["rate_limit"]["per_key"] for op in data["operators"]}
+    decided = {i for i, v in per_key.items() if v}
+    assert "ubitricity" in decided and "chargy" not in decided
+    assert {per_key[i]["decided"] for i in decided} == {"2026-10-29"}
+    text = " ".join(page.split())
+    assert "Limits read per key by the owner's decision of 2026-10-29" in text
+    assert "requests to the host are still sent one at a time, at least 2 s apart" in text
