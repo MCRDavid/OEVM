@@ -95,3 +95,8 @@ On 23 October 2026 the project sent its first 16 access requests, each through t
 web form; several of those forms pass requests to Eco-Movement. None had been answered by 24
 October 2026. Each request and reply is listed with its date on the [transparency
 page](transparency/).
+
+**Update, 29 October 2026:** Fastned sent a key on 24 October 2026, Roam and Connekt replied on 26
+October 2026, and Eco-Movement sent tokens for 13 networks the same day. See [the post on three
+requests answered](findings/three-requests-answered/) and [the post on Eco-Movement's
+networks](findings/eco-movement-networks/).
