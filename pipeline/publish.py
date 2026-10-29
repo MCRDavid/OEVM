@@ -53,6 +53,10 @@ Rules:
   the lowest price per kWh among every tariff it lists, worded by pipeline/pricing.py
   (ADR 0026). The map picks the lowest among the connectors that match the visitor's
   filters, and compares it with the plans they ticked.
+- An operator whose data is a copy it sent rather than a feed (sent_copy in the operator
+  file, ADR 0029) is published from that copy on every run. Its detail files and manifest
+  entry say so and carry the time the operator made the copy, and every charge point
+  status is unknown (adapters/sent_copy.py), so nothing looks newer than it is.
 - Every file is validated against schema/published.py before it is written.
 - The committed site/ folder is never written to; the deploy step copies site/ and adds
   this output.
@@ -64,11 +68,12 @@ import json
 import shutil
 from collections import defaultdict
 from dataclasses import dataclass, field
-from datetime import datetime, timedelta
+from datetime import UTC, datetime, timedelta
 from decimal import ROUND_HALF_UP, Decimal
 from pathlib import Path
 
 from adapters.ocpi_221 import AdapterResult
+from adapters.sent_copy import CHANNEL_WORDS, folder_url
 from pipeline.access import private_words
 from pipeline.geography import place_in_uk
 from pipeline.health import in_uk
@@ -106,6 +111,7 @@ from schema.published import (
     PlanOut,
     PlansFile,
     PointGeometry,
+    SentCopyNote,
     TariffOptionOut,
     TariffSource,
 )
@@ -135,11 +141,48 @@ RELATED_NOTE = (
     "shown as {other} published {them}, matched by exact id and never by name."
 )
 
+SENT_COPY_NOTE = (
+    "{name} sent this data{how} on {received}, in files made {made}. This map shows that "
+    "copy as sent, by the repository owner's decision of {decided}, while no address to "
+    "fetch {name}'s data from is known. It is not updated, so details and prices may have "
+    "changed since, and charge point status is not shown."
+)
+
 LICENCE_NOTE = (
     "Charge point data belongs to each operator and is used in line with the Open "
     "Government Licence v3.0, with the attribution statements listed here. This project's "
     "Apache-2.0 licence covers its code only. Check prices and availability at the charger."
 )
+
+
+def _day(value) -> str:
+    return f"{value.day} {value:%B %Y}"
+
+
+def sent_copy_note(config: OperatorConfig) -> SentCopyNote | None:
+    """What a sent copy is and why it is shown (ADR 0029), or None for a fetched feed."""
+    copy = config.sent_copy
+    if copy is None:
+        return None
+    made_at = copy.made_at.astimezone(UTC)
+    made = (
+        f"at {made_at:%H:%M} UTC that day"
+        if made_at.date() == copy.received
+        else f"on {_day(made_at)} at {made_at:%H:%M} UTC"
+    )
+    return SentCopyNote(
+        received=copy.received,
+        made_at=made_at,
+        channel=copy.channel,
+        note=SENT_COPY_NOTE.format(
+            name=config.display_name,
+            how=CHANNEL_WORDS[copy.channel],
+            received=_day(copy.received),
+            made=made,
+            decided=_day(copy.decided),
+        ),
+        files_url=folder_url(copy.locations),
+    )
 
 
 # The oldest last good copy shown for an operator whose fetch failed (ADR 0018).
@@ -599,6 +642,7 @@ def publish(
             raise PublishError(f"{result.operator_id} is not switched on in the registry")
         attribution.append(" ".join(str(config.attribution).split()))
         related = related_for(config, result, fresh_tariffs)
+        sent_copy = sent_copy_note(config)
         withheld: frozenset[str] = frozenset()
         if config.zero_price_tariffs is not None:
             ids = config.zero_price_tariffs.tariff_ids
@@ -646,6 +690,7 @@ def publish(
                 licence=config.licence.name,
                 licence_url=config.licence.url,
                 fetched_at=result.fetched_at,
+                sent_copy=sent_copy,
             )
             details[key] = _validated(LocationDetail, _dump(detail))
             coordinates = (
@@ -674,6 +719,7 @@ def publish(
             attribution=attribution[-1],
             licence=config.licence.name,
             licence_url=config.licence.url,
+            sent_copy=sent_copy,
         )
 
     features = _own_feeds_over_copies(features, details, entries, operators)
@@ -735,6 +781,11 @@ def publish(
             if entry.kept_from_previous
             else ""
         )
+        sent = (
+            f", from a copy it sent, made {entry.fetched_at:%Y-%m-%d %H:%M} UTC"
+            if entry.sent_copy
+            else ""
+        )
         copies = (
             f", {entry.replaced} left off as copies of {', '.join(sorted(entry.replaced_by))}'s "
             "own feed"
@@ -743,7 +794,7 @@ def publish(
         )
         report.append(
             f"  {operator_id}: {entry.mapped} locations mapped{left_off}{swapped}{related}"
-            f"{hidden}{copies}{last_good}"
+            f"{hidden}{copies}{last_good}{sent}"
         )
     kept_at = {c.operator_id: c.entry.fetched_at for c in kept}
     return Published(manifest=manifest, report=report, kept=kept_at)

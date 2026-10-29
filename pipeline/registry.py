@@ -94,6 +94,11 @@ def load_registry(directory: Path = OPERATORS_DIR) -> dict[str, OperatorConfig]:
             problems.append(f"{path.name}: id {config.id!r} must match the file name")
         files = [e.file for e in config.engagement.evidence]
         files += [e.evidence_file for e in config.engagement.log]
+        if config.sent_copy is not None:
+            files.append(config.sent_copy.evidence_file)
+            for copy in (config.sent_copy.locations, config.sent_copy.tariffs):
+                if not (directory.parent / copy).is_file():
+                    problems.append(f"{path.name}: sent_copy file {copy} does not exist")
         for file in files:
             if file is None:
                 continue

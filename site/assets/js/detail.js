@@ -5,6 +5,9 @@ import { STATUS_LABELS, formatDateTime, formatKw, plugName } from "./format.js";
 import { STATUS_GROUPS, asOfText, chips, countByGroup, groupOf, summaryText } from "./live.js";
 import { breakEven, breakEvenText, cheapest, discounted, needsSubscription, plansFor } from "./plans.js";
 
+export const SENT_COPY_STATUS =
+  "Not shown: this operator's data is a copy it sent, not a feed, so it cannot say whether a charge point is free now.";
+
 const WEEKDAYS = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"];
 
 export function detailUrl(key) {
@@ -61,6 +64,13 @@ function statusLine(evse) {
 export function statusSection(detail, { hideOut = false, onHideOut = null } = {}) {
   const counts = countByGroup(detail.location?.evses);
   if (!counts.total) return [];
+  // A copy the operator sent says nothing about now, so no status is shown (ADR 0029).
+  if (detail.sent_copy) {
+    return [
+      h("h3", { text: "Charge point status" }),
+      h("p", { className: "hint", text: SENT_COPY_STATUS }),
+    ];
+  }
   const all = chips(counts);
   const filterButton = onHideOut && all.some((chip) => chip.group === "out");
   const chip = ({ group, className, symbol, text }) => {
@@ -453,6 +463,7 @@ export function renderDetail(
     ...(detail.coordinates_corrected?.note
       ? [h("p", { className: "hint corrected", text: detail.coordinates_corrected.note })]
       : []),
+    detail.sent_copy?.note ? h("p", { className: "hint sent-copy", text: detail.sent_copy.note }) : null,
     openingHours(location.opening_hours),
     // Kept even when empty, so the line can follow the filters while the panel is open.
     h("div", { id: "detail-label" }, mapLabelLine(detail, label, filtered)),
@@ -467,21 +478,37 @@ export function renderDetail(
     h(
       "p",
       { className: "hint" },
-      sources.length
-        ? "Status and prices are as published in the feeds named below when last fetched, and may have changed. Always check at the charger."
-        : "Status and prices are as the operator published them when last fetched, and may have changed. Always check at the charger.",
+      detail.sent_copy
+        ? "Prices are as in the copy the operator sent, and may have changed. Always check at the charger."
+        : sources.length
+          ? "Status and prices are as published in the feeds named below when last fetched, and may have changed. Always check at the charger."
+          : "Status and prices are as the operator published them when last fetched, and may have changed. Always check at the charger.",
     ),
     h("h3", { text: "Where this comes from" }),
     h("p", { text: detail.attribution }),
-    h(
-      "p",
-      {},
-      `Fetched ${formatDateTime(detail.fetched_at)} from `,
-      safeLink(provenance.source_url, "the operator's feed"),
-      ". Licence: ",
-      detail.licence_url ? safeLink(detail.licence_url, detail.licence) : detail.licence,
-      ".",
-    ),
+    ...(detail.sent_copy
+      ? [
+          h(
+            "p",
+            {},
+            "Read from ",
+            safeLink(detail.sent_copy.files_url, "the files the operator sent"),
+            `, made ${formatDateTime(detail.fetched_at)}. Licence: `,
+            detail.licence_url ? safeLink(detail.licence_url, detail.licence) : detail.licence,
+            ".",
+          ),
+        ]
+      : [
+          h(
+            "p",
+            {},
+            `Fetched ${formatDateTime(detail.fetched_at)} from `,
+            safeLink(provenance.source_url, "the operator's feed"),
+            ". Licence: ",
+            detail.licence_url ? safeLink(detail.licence_url, detail.licence) : detail.licence,
+            ".",
+          ),
+        ]),
     ...sources.flatMap((source) => [
       h("p", { text: source.attribution }),
       h(

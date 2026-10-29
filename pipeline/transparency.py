@@ -15,9 +15,10 @@ import html
 import json
 import math
 import sys
-from datetime import date
+from datetime import UTC, date
 from pathlib import Path
 
+from adapters.sent_copy import CHANNEL_WORDS
 from pipeline.access import PHRASES
 from pipeline.project import REPOSITORY_URL
 from pipeline.registry import ROOT, RegistryError, load_registry
@@ -414,11 +415,24 @@ def operator_view(config: OperatorConfig) -> dict:
                 "basis": config.excluded_locations.basis,
                 "evidence_url": config.excluded_locations.evidence_url,
                 "locations": [
-                    {"id": location.id, "name": location.name}
+                    {"id": location.id, "name": location.name, "evse_uids": location.evse_uids}
                     for location in config.excluded_locations.locations
                 ],
             }
             if config.excluded_locations
+            else None
+        ),
+        "sent_copy": (
+            {
+                "decided": str(config.sent_copy.decided),
+                "basis": config.sent_copy.basis,
+                "evidence_file": config.sent_copy.evidence_file,
+                "channel": config.sent_copy.channel,
+                "received": str(config.sent_copy.received),
+                "made_at": config.sent_copy.made_at.astimezone(UTC).strftime("%Y-%m-%d %H:%M UTC"),
+                "files": [config.sent_copy.locations, config.sent_copy.tariffs],
+            }
+            if config.sent_copy
             else None
         ),
         "rate_limit": rate_limit_view(config),
@@ -468,6 +482,8 @@ def last_reviewed(operators: dict[str, OperatorConfig]) -> str:
             config.own_feed_over_copies.decided if config.own_feed_over_copies else None,
             config.expired_certificate.decided if config.expired_certificate else None,
             config.excluded_locations.decided if config.excluded_locations else None,
+            config.sent_copy.decided if config.sent_copy else None,
+            config.sent_copy.received if config.sent_copy else None,
         ]
         dates += [d for d in candidates if isinstance(d, date)]
     return max(dates).isoformat() if dates else "unknown"
@@ -536,6 +552,19 @@ def _sources_table(data: dict) -> str:
         )
         relay = op["relay"]
         fetched = "Yes" if op["enabled"] else "No"
+        copy = op["sent_copy"]
+        if op["enabled"] and copy:
+            files = ", ".join(
+                _link(f"{REPOSITORY_URL}/blob/main/{file}", file) for file in copy["files"]
+            )
+            message = _evidence_link(None, copy["evidence_file"])
+            fetched = (
+                "No requests are made. The map shows a copy the operator sent"
+                f"{CHANNEL_WORDS[copy['channel']]} on {_e(copy['received'])}, made "
+                f"{_e(copy['made_at'])}, read as sent on every run, with every charge point "
+                f"status shown as unknown, by the owner's decision of {_e(copy['decided'])}: "
+                f"{_e(copy['basis'])} ({message} of the message; files: {files})"
+            )
         if op["enabled"] and relay:
             fetched += (
                 f", through the project's relay since {_e(relay['decided'])}: "
@@ -639,7 +668,12 @@ def _sources_table(data: dict) -> str:
         excluded = op["excluded_locations"]
         if op["enabled"] and excluded:
             names = ", ".join(
-                f"{_e(location['name'])} (id {_e(location['id'])})"
+                f"{_e(location['name'])} (id {_e(location['id'])}"
+                + (
+                    f", only EVSE {_e(', '.join(location['evse_uids']))})"
+                    if location["evse_uids"]
+                    else ")"
+                )
                 for location in excluded["locations"]
             )
             fetched = fetched.rstrip(".")

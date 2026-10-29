@@ -1,0 +1,825 @@
+{
+  "request": {
+    "method": "GET",
+    "url": "https://data.evc.ninja/public/v1/data"
+  },
+  "response": {
+    "status_code": 200,
+    "headers": {
+      "content-type": "application/json; charset=utf-8",
+      "x-total-count": "7"
+    },
+    "body": {
+      "data": [
+        {
+          "id": "0G2WrxDlQlXuRWbDBaRa",
+          "type": "ON_STREET",
+          "name": "The Tytherington Club",
+          "address": "Dorchester Way, Macclesfield ",
+          "city": "Cheshire ",
+          "postal_code": "SK10 2JP",
+          "country": "GBR",
+          "coordinates": {
+            "latitude": "53.2819444",
+            "longitude": "-2.1307270"
+          },
+          "operator": {
+            "name": "Roam Charging"
+          },
+          "last_updated": "2026-10-22T12:31:47.147Z",
+          "evses": [
+            {
+              "uid": "8fb2b49b-5ead-4bb7-be04-87f7d7329fea",
+              "evse_id": "GBEVCE8fb2b49b5ead4bb7be0487f7d7329f",
+              "status": "AVAILABLE",
+              "status_schedule": [],
+              "capabilities": [
+                "REMOTE_START_STOP_CAPABLE",
+                "UNLOCK_CAPABLE"
+              ],
+              "last_updated": "2026-10-26T10:12:29.000Z",
+              "connectors": [
+                {
+                  "charger_name": "The Tytherington Club - Charger 2",
+                  "id": "1",
+                  "standard": "IEC_62196_T2",
+                  "format": "SOCKET",
+                  "power_type": "AC_3_PHASE",
+                  "voltage": 230,
+                  "amperage": 32,
+                  "tariff_id": "Rt3tiIkSSppod6Q1Exmw",
+                  "last_updated": "2026-10-26T10:12:29.000Z",
+                  "uuid": "24354",
+                  "status": "AVAILABLE",
+                  "evseid": "8fb2b49b5ead4bb7be0487f7d7329fea",
+                  "uid": "8fb2b49b-5ead-4bb7-be04-87f7d7329fea"
+                },
+                {
+                  "charger_name": "The Tytherington Club - Charger 2",
+                  "id": "2",
+                  "standard": "IEC_62196_T2",
+                  "format": "SOCKET",
+                  "power_type": "AC_3_PHASE",
+                  "voltage": 230,
+                  "amperage": 32,
+                  "tariff_id": "Rt3tiIkSSppod6Q1Exmw",
+                  "last_updated": "2026-10-26T14:57:02.000Z",
+                  "uuid": "24355",
+                  "status": "AVAILABLE",
+                  "evseid": "1685d5cffd08466c84daea2edae7b594",
+                  "uid": "1685d5cf-fd08-466c-84da-ea2edae7b594"
+                }
+              ]
+            },
+            {
+              "uid": "80380127-8796-4daf-a6b8-02c3ea1fc17d",
+              "evse_id": "GBEVCE8038012787964dafa6b802c3ea1fc1",
+              "status": "AVAILABLE",
+              "status_schedule": [],
+              "capabilities": [
+                "REMOTE_START_STOP_CAPABLE",
+                "UNLOCK_CAPABLE"
+              ],
+              "last_updated": "2026-10-26T09:23:20.000Z",
+              "connectors": [
+                {
+                  "charger_name": "The Tytherington Club - Charger 3",
+                  "id": "1",
+                  "standard": "IEC_62196_T2",
+                  "format": "SOCKET",
+                  "power_type": "AC_3_PHASE",
+                  "voltage": 230,
+                  "amperage": 32,
+                  "tariff_id": "Rt3tiIkSSppod6Q1Exmw",
+                  "last_updated": "2026-10-26T09:23:20.000Z",
+                  "uuid": "24356",
+                  "status": "AVAILABLE",
+                  "evseid": "8038012787964dafa6b802c3ea1fc17d",
+                  "uid": "80380127-8796-4daf-a6b8-02c3ea1fc17d"
+                },
+                {
+                  "charger_name": "The Tytherington Club - Charger 3",
+                  "id": "2",
+                  "standard": "IEC_62196_T2",
+                  "format": "SOCKET",
+                  "power_type": "AC_3_PHASE",
+                  "voltage": 230,
+                  "amperage": 32,
+                  "tariff_id": "Rt3tiIkSSppod6Q1Exmw",
+                  "last_updated": "2026-10-26T09:21:48.000Z",
+                  "uuid": "24357",
+                  "status": "AVAILABLE",
+                  "evseid": "3a9313853bc9472aa3681fcca20c12e5",
+                  "uid": "3a931385-3bc9-472a-a368-1fcca20c12e5"
+                }
+              ]
+            },
+            {
+              "uid": "976d2d81-5d59-4c24-9a78-8be40e4954ed",
+              "evse_id": "GBEVCE976d2d815d594c249a788be40e4954",
+              "status": "AVAILABLE",
+              "status_schedule": [],
+              "capabilities": [
+                "REMOTE_START_STOP_CAPABLE",
+                "UNLOCK_CAPABLE"
+              ],
+              "last_updated": "2026-10-26T09:23:53.000Z",
+              "connectors": [
+                {
+                  "charger_name": "The Tytherington Club - Charger 4",
+                  "id": "1",
+                  "standard": "IEC_62196_T2",
+                  "format": "SOCKET",
+                  "power_type": "AC_3_PHASE",
+                  "voltage": 230,
+                  "amperage": 32,
+                  "tariff_id": "Rt3tiIkSSppod6Q1Exmw",
+                  "last_updated": "2026-10-26T09:23:53.000Z",
+                  "uuid": "24358",
+                  "status": "AVAILABLE",
+                  "evseid": "976d2d815d594c249a788be40e4954ed",
+                  "uid": "976d2d81-5d59-4c24-9a78-8be40e4954ed"
+                },
+                {
+                  "charger_name": "The Tytherington Club - Charger 4",
+                  "id": "2",
+                  "standard": "IEC_62196_T2",
+                  "format": "SOCKET",
+                  "power_type": "AC_3_PHASE",
+                  "voltage": 230,
+                  "amperage": 32,
+                  "tariff_id": "Rt3tiIkSSppod6Q1Exmw",
+                  "last_updated": "2026-10-26T13:08:29.000Z",
+                  "uuid": "24359",
+                  "status": "AVAILABLE",
+                  "evseid": "17cc44e43b764d7ba217096fe86e8edb",
+                  "uid": "17cc44e4-3b76-4d7b-a217-096fe86e8edb"
+                }
+              ]
+            },
+            {
+              "uid": "8536352d-d6f5-4662-a027-5f9f5798be39",
+              "evse_id": "GBEVCE8536352dd6f54662a0275f9f5798be",
+              "status": "AVAILABLE",
+              "status_schedule": [],
+              "capabilities": [
+                "REMOTE_START_STOP_CAPABLE",
+                "UNLOCK_CAPABLE"
+              ],
+              "last_updated": "2026-10-26T16:46:46.000Z",
+              "connectors": [
+                {
+                  "charger_name": "The Tytherington Club - DC 1",
+                  "id": "1",
+                  "standard": "IEC_62196_T2_COMBO",
+                  "format": "CABLE",
+                  "power_type": "DC",
+                  "voltage": 400,
+                  "amperage": 250,
+                  "tariff_id": "9sPuq9hYtbjEg5IpMmsX",
+                  "last_updated": "2026-10-26T16:46:46.000Z",
+                  "uuid": "24352",
+                  "status": "AVAILABLE",
+                  "evseid": "8536352dd6f54662a0275f9f5798be39",
+                  "uid": "8536352d-d6f5-4662-a027-5f9f5798be39"
+                },
+                {
+                  "charger_name": "The Tytherington Club - DC 1",
+                  "id": "2",
+                  "standard": "IEC_62196_T2_COMBO",
+                  "format": "CABLE",
+                  "power_type": "DC",
+                  "voltage": 400,
+                  "amperage": 250,
+                  "tariff_id": "9sPuq9hYtbjEg5IpMmsX",
+                  "last_updated": "2026-10-26T18:24:48.000Z",
+                  "uuid": "24353",
+                  "status": "AVAILABLE",
+                  "evseid": "023dc700c29c4041a926732b06f53029",
+                  "uid": "023dc700-c29c-4041-a926-732b06f53029"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "2fDHay9pjCSytGLYz37F",
+          "type": "ON_STREET",
+          "name": "Norwood Hall Hotel",
+          "address": "Norwood Hall Hotel, Norwood Hall, Garthdee Rd,",
+          "city": " Aberdeen ",
+          "postal_code": "AB15 9FX",
+          "country": "GBR",
+          "coordinates": {
+            "latitude": "57.1175106",
+            "longitude": "-2.1521995"
+          },
+          "operator": {
+            "name": "Roam Charging"
+          },
+          "last_updated": "2024-08-15T10:46:48.574Z",
+          "evses": [
+            {
+              "uid": "c008d1ad-292b-4971-813f-18db2e053775",
+              "evse_id": "GBEVCEc008d1ad292b4971813f18db2e0537",
+              "status": "UNKNOWN",
+              "status_schedule": [],
+              "capabilities": [
+                "REMOTE_START_STOP_CAPABLE",
+                "UNLOCK_CAPABLE"
+              ],
+              "last_updated": "2024-01-01T00:00:00.000Z",
+              "connectors": [
+                {
+                  "charger_name": "Schnieder French Test charger",
+                  "id": "1",
+                  "standard": "IEC_62196_T2",
+                  "format": "SOCKET",
+                  "power_type": "AC_3_PHASE",
+                  "voltage": 230,
+                  "amperage": 32,
+                  "tariff_id": "free_tariff",
+                  "last_updated": "2024-01-01T00:00:00.000Z",
+                  "uuid": "22615",
+                  "status": "UNKNOWN",
+                  "evseid": "4ea361c57aec4c838556346e432f3ab0",
+                  "uid": "c008d1ad-292b-4971-813f-18db2e053775"
+                }
+              ]
+            },
+            {
+              "uid": "efc48935-c45c-48d8-b1e8-f6c0a7e8d3aa",
+              "evse_id": "GBEVCEefc48935c45c48d8b1e8f6c0a7e8d3",
+              "status": "AVAILABLE",
+              "status_schedule": [],
+              "capabilities": [
+                "REMOTE_START_STOP_CAPABLE",
+                "UNLOCK_CAPABLE"
+              ],
+              "last_updated": "2026-10-26T07:06:10.000Z",
+              "connectors": [
+                {
+                  "charger_name": "Charger 1 - Norwood Hall Hotel",
+                  "id": "1",
+                  "standard": "IEC_62196_T2",
+                  "format": "SOCKET",
+                  "power_type": "AC_3_PHASE",
+                  "voltage": 230,
+                  "amperage": 32,
+                  "tariff_id": "Kb7A327aq9PEQ4mzttTJ",
+                  "last_updated": "2026-10-26T07:06:10.000Z",
+                  "uuid": "22405",
+                  "status": "AVAILABLE",
+                  "evseid": "efc48935c45c48d8b1e8f6c0a7e8d3aa",
+                  "uid": "efc48935-c45c-48d8-b1e8-f6c0a7e8d3aa"
+                },
+                {
+                  "charger_name": "Charger 1 - Norwood Hall Hotel",
+                  "id": "2",
+                  "standard": "IEC_62196_T2",
+                  "format": "SOCKET",
+                  "power_type": "AC_3_PHASE",
+                  "voltage": 230,
+                  "amperage": 32,
+                  "tariff_id": "Kb7A327aq9PEQ4mzttTJ",
+                  "last_updated": "2026-10-26T16:31:27.000Z",
+                  "uuid": "22406",
+                  "status": "CHARGING",
+                  "evseid": "3020cd9d6314430b882833ebb6bc7fe6",
+                  "uid": "3020cd9d-6314-430b-8828-33ebb6bc7fe6"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "6tzGHiMTDkqeL1mIohGt",
+          "type": "ON_STREET",
+          "name": "Mawgan Porth Golf Club",
+          "address": "Mawgan Porth Golf Club, Mawgan Porth, ",
+          "city": "Newquay",
+          "postal_code": "TR8 4DN",
+          "country": "GBR",
+          "coordinates": {
+            "latitude": "50.4704735",
+            "longitude": "-5.0147571"
+          },
+          "operator": {
+            "name": "Roam Charging"
+          },
+          "last_updated": "2025-12-19T13:36:22.252Z",
+          "evses": [
+            {
+              "uid": "384b52b0-3289-4dff-bbd7-3664c7d4d3e3",
+              "evse_id": "GBEVCE384b52b032894dffbbd73664c7d4d3",
+              "status": "AVAILABLE",
+              "status_schedule": [],
+              "capabilities": [
+                "REMOTE_START_STOP_CAPABLE",
+                "UNLOCK_CAPABLE"
+              ],
+              "last_updated": "2026-10-26T15:21:33.000Z",
+              "connectors": [
+                {
+                  "charger_name": "Mawgan Porth Golf Club - Charger 1",
+                  "id": "2",
+                  "standard": "IEC_62196_T2",
+                  "format": "SOCKET",
+                  "power_type": "AC_3_PHASE",
+                  "voltage": 230,
+                  "amperage": 32,
+                  "tariff_id": "OGE68CmzgENlSPnLQcSZ",
+                  "last_updated": "2026-10-26T15:21:33.000Z",
+                  "uuid": "22574",
+                  "status": "AVAILABLE",
+                  "evseid": "384b52b032894dffbbd73664c7d4d3e3",
+                  "uid": "384b52b0-3289-4dff-bbd7-3664c7d4d3e3"
+                },
+                {
+                  "charger_name": "Mawgan Porth Golf Club - Charger 1",
+                  "id": "1",
+                  "standard": "IEC_62196_T2",
+                  "format": "SOCKET",
+                  "power_type": "AC_3_PHASE",
+                  "voltage": 230,
+                  "amperage": 32,
+                  "tariff_id": "OGE68CmzgENlSPnLQcSZ",
+                  "last_updated": "2026-10-26T13:45:35.000Z",
+                  "uuid": "22571",
+                  "status": "AVAILABLE",
+                  "evseid": "db615b2fdc0c4a419a649de4125e6025",
+                  "uid": "db615b2f-dc0c-4a41-9a64-9de4125e6025"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "DYmze49fRHgjNu18NOUV",
+          "type": "ON_STREET",
+          "name": "Marlie Holiday Park ",
+          "address": "Marlie Holiday Park , Dymchurch Rd, New Romney ",
+          "city": "Kent ",
+          "postal_code": "TN28 8UE",
+          "country": "GBR",
+          "coordinates": {
+            "latitude": "50.9965610",
+            "longitude": "0.95534402"
+          },
+          "operator": {
+            "name": "Roam Charging"
+          },
+          "last_updated": "2025-12-01T13:34:07.022Z",
+          "evses": [
+            {
+              "uid": "9793af10-525d-47be-8906-92aeecfc852f",
+              "evse_id": "GBEVCE9793af10525d47be890692aeecfc85",
+              "status": "AVAILABLE",
+              "status_schedule": [],
+              "capabilities": [
+                "REMOTE_START_STOP_CAPABLE",
+                "UNLOCK_CAPABLE"
+              ],
+              "last_updated": "2026-10-26T16:13:08.000Z",
+              "connectors": [
+                {
+                  "charger_name": "Marlie Holiday Park - Charger 1",
+                  "id": "1",
+                  "standard": "IEC_62196_T2",
+                  "format": "SOCKET",
+                  "power_type": "AC_3_PHASE",
+                  "voltage": 230,
+                  "amperage": 32,
+                  "tariff_id": "EdffQOIJdpZBqYqQtHuF",
+                  "last_updated": "2026-10-26T16:13:08.000Z",
+                  "uuid": "24263",
+                  "status": "AVAILABLE",
+                  "evseid": "9793af10525d47be890692aeecfc852f",
+                  "uid": "9793af10-525d-47be-8906-92aeecfc852f"
+                },
+                {
+                  "charger_name": "Marlie Holiday Park - Charger 1",
+                  "id": "1",
+                  "standard": "IEC_62196_T2",
+                  "format": "SOCKET",
+                  "power_type": "AC_3_PHASE",
+                  "voltage": 230,
+                  "amperage": 32,
+                  "tariff_id": "EdffQOIJdpZBqYqQtHuF",
+                  "last_updated": "2026-10-26T16:13:08.000Z",
+                  "uuid": "24264",
+                  "status": "AVAILABLE",
+                  "evseid": "abe08942baa346518c32786234461a1a",
+                  "uid": "abe08942-baa3-4651-8c32-786234461a1a"
+                }
+              ]
+            },
+            {
+              "uid": "bb0c95b1-214a-48f4-88f0-d0da25b10baa",
+              "evse_id": "GBEVCEbb0c95b1214a48f488f0d0da25b10b",
+              "status": "AVAILABLE",
+              "status_schedule": [],
+              "capabilities": [
+                "REMOTE_START_STOP_CAPABLE",
+                "UNLOCK_CAPABLE"
+              ],
+              "last_updated": "2026-10-26T17:24:37.000Z",
+              "connectors": [
+                {
+                  "charger_name": "Marlie Holiday Park - Charger 2",
+                  "id": "1",
+                  "standard": "IEC_62196_T2",
+                  "format": "SOCKET",
+                  "power_type": "AC_3_PHASE",
+                  "voltage": 230,
+                  "amperage": 32,
+                  "tariff_id": "EdffQOIJdpZBqYqQtHuF",
+                  "last_updated": "2026-10-26T17:24:37.000Z",
+                  "uuid": "24265",
+                  "status": "AVAILABLE",
+                  "evseid": "bb0c95b1214a48f488f0d0da25b10baa",
+                  "uid": "bb0c95b1-214a-48f4-88f0-d0da25b10baa"
+                },
+                {
+                  "charger_name": "Marlie Holiday Park - Charger 2",
+                  "id": "1",
+                  "standard": "IEC_62196_T2",
+                  "format": "SOCKET",
+                  "power_type": "AC_3_PHASE",
+                  "voltage": 230,
+                  "amperage": 32,
+                  "tariff_id": "EdffQOIJdpZBqYqQtHuF",
+                  "last_updated": "2026-10-26T16:19:02.000Z",
+                  "uuid": "24266",
+                  "status": "CHARGING",
+                  "evseid": "f18c4b88e838406aa59f007a87781c37",
+                  "uid": "f18c4b88-e838-406a-a59f-007a87781c37"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "KrePv8IG7SfXtwFH8K2D",
+          "type": "ON_STREET",
+          "name": "Slaley Hall Hotel Spa Golf Resort RV1",
+          "address": "Slaley Hall Hotel, Spa & Golf Resort,  Coal Road",
+          "city": "Hexham",
+          "postal_code": "NE47 0BX",
+          "country": "GBR",
+          "coordinates": {
+            "latitude": "54.8972528",
+            "longitude": "-2.0172857"
+          },
+          "operator": {
+            "name": "Roam Charging"
+          },
+          "last_updated": "2026-03-31T09:31:37.888Z",
+          "evses": [
+            {
+              "uid": "11b5c3fe-260e-4da4-a49d-e9c81a712fa6",
+              "evse_id": "GBEVCE11b5c3fe260e4da4a49de9c81a712f",
+              "status": "CHARGING",
+              "status_schedule": [],
+              "capabilities": [
+                "REMOTE_START_STOP_CAPABLE",
+                "UNLOCK_CAPABLE"
+              ],
+              "last_updated": "2026-10-26T18:37:45.000Z",
+              "connectors": [
+                {
+                  "charger_name": "Slaley Hall Hotel - Charger 4",
+                  "id": "1",
+                  "standard": "IEC_62196_T2",
+                  "format": "SOCKET",
+                  "power_type": "AC_3_PHASE",
+                  "voltage": 230,
+                  "amperage": 32,
+                  "tariff_id": "T54LtC3Brgs9x63sdgxb",
+                  "last_updated": "2026-10-26T18:37:45.000Z",
+                  "uuid": "25666",
+                  "status": "CHARGING",
+                  "evseid": "11b5c3fe260e4da4a49de9c81a712fa6",
+                  "uid": "11b5c3fe-260e-4da4-a49d-e9c81a712fa6"
+                },
+                {
+                  "charger_name": "Slaley Hall Hotel - Charger 4",
+                  "id": "2",
+                  "standard": "IEC_62196_T2",
+                  "format": "SOCKET",
+                  "power_type": "AC_3_PHASE",
+                  "voltage": 230,
+                  "amperage": 32,
+                  "tariff_id": "T54LtC3Brgs9x63sdgxb",
+                  "last_updated": "2026-10-26T15:27:58.000Z",
+                  "uuid": "25667",
+                  "status": "CHARGING",
+                  "evseid": "4377ea16499845c59e61c9074f2a3195",
+                  "uid": "4377ea16-4998-45c5-9e61-c9074f2a3195"
+                }
+              ]
+            },
+            {
+              "uid": "9d2fd04e-994c-4d67-8e80-a4a34852e15c",
+              "evse_id": "GBEVCE9d2fd04e994c4d678e80a4a34852e1",
+              "status": "AVAILABLE",
+              "status_schedule": [],
+              "capabilities": [
+                "REMOTE_START_STOP_CAPABLE",
+                "UNLOCK_CAPABLE"
+              ],
+              "last_updated": "2026-10-26T11:53:12.000Z",
+              "connectors": [
+                {
+                  "charger_name": "Slaley Hall Hotel - Charger 5",
+                  "id": "1",
+                  "standard": "IEC_62196_T2",
+                  "format": "SOCKET",
+                  "power_type": "AC_3_PHASE",
+                  "voltage": 230,
+                  "amperage": 32,
+                  "tariff_id": "T54LtC3Brgs9x63sdgxb",
+                  "last_updated": "2026-10-26T11:53:12.000Z",
+                  "uuid": "26331",
+                  "status": "AVAILABLE",
+                  "evseid": "9d2fd04e994c4d678e80a4a34852e15c",
+                  "uid": "9d2fd04e-994c-4d67-8e80-a4a34852e15c"
+                },
+                {
+                  "charger_name": "Slaley Hall Hotel - Charger 5",
+                  "id": "2",
+                  "standard": "IEC_62196_T2",
+                  "format": "SOCKET",
+                  "power_type": "AC_3_PHASE",
+                  "voltage": 230,
+                  "amperage": 32,
+                  "tariff_id": "T54LtC3Brgs9x63sdgxb",
+                  "last_updated": "2026-10-26T11:53:12.000Z",
+                  "uuid": "26332",
+                  "status": "AVAILABLE",
+                  "evseid": "bef49ac74a724bdeb75f6cd2709f7404",
+                  "uid": "bef49ac7-4a72-4bde-b75f-6cd2709f7404"
+                }
+              ]
+            },
+            {
+              "uid": "7cc2cb26-4c14-494b-b2a6-9a4f10454f74",
+              "evse_id": "GBEVCE7cc2cb264c14494bb2a69a4f10454f",
+              "status": "AVAILABLE",
+              "status_schedule": [],
+              "capabilities": [
+                "REMOTE_START_STOP_CAPABLE",
+                "UNLOCK_CAPABLE"
+              ],
+              "last_updated": "2026-10-26T11:53:12.000Z",
+              "connectors": [
+                {
+                  "charger_name": "Slaley Hall Hotel - Charger 6",
+                  "id": "1",
+                  "standard": "IEC_62196_T2",
+                  "format": "SOCKET",
+                  "power_type": "AC_3_PHASE",
+                  "voltage": 230,
+                  "amperage": 32,
+                  "tariff_id": "T54LtC3Brgs9x63sdgxb",
+                  "last_updated": "2026-10-26T11:53:12.000Z",
+                  "uuid": "26341",
+                  "status": "AVAILABLE",
+                  "evseid": "7cc2cb264c14494bb2a69a4f10454f74",
+                  "uid": "7cc2cb26-4c14-494b-b2a6-9a4f10454f74"
+                },
+                {
+                  "charger_name": "Slaley Hall Hotel - Charger 6",
+                  "id": "2",
+                  "standard": "IEC_62196_T2",
+                  "format": "SOCKET",
+                  "power_type": "AC_3_PHASE",
+                  "voltage": 230,
+                  "amperage": 32,
+                  "tariff_id": "T54LtC3Brgs9x63sdgxb",
+                  "last_updated": "2026-10-26T11:53:12.000Z",
+                  "uuid": "26342",
+                  "status": "AVAILABLE",
+                  "evseid": "8a209a25698e4a389743220a992c99db",
+                  "uid": "8a209a25-698e-4a38-9743-220a992c99db"
+                }
+              ]
+            },
+            {
+              "uid": "ba1cec29-5998-4ace-b35b-9ce7728d5141",
+              "evse_id": "GBEVCEba1cec2959984aceb35b9ce7728d51",
+              "status": "OUTOFORDER",
+              "status_schedule": [],
+              "capabilities": [
+                "REMOTE_START_STOP_CAPABLE",
+                "UNLOCK_CAPABLE"
+              ],
+              "last_updated": "2026-10-26T11:53:12.000Z",
+              "connectors": [
+                {
+                  "charger_name": "Slaley Hall Hotel - Charger 7",
+                  "id": "1",
+                  "standard": "IEC_62196_T2",
+                  "format": "SOCKET",
+                  "power_type": "AC_3_PHASE",
+                  "voltage": 230,
+                  "amperage": 32,
+                  "tariff_id": "T54LtC3Brgs9x63sdgxb",
+                  "last_updated": "2026-10-26T11:53:12.000Z",
+                  "uuid": "26357",
+                  "status": "OUTOFORDER",
+                  "evseid": "ba1cec2959984aceb35b9ce7728d5141",
+                  "uid": "ba1cec29-5998-4ace-b35b-9ce7728d5141"
+                },
+                {
+                  "charger_name": "Slaley Hall Hotel - Charger 7",
+                  "id": "2",
+                  "standard": "IEC_62196_T2",
+                  "format": "SOCKET",
+                  "power_type": "AC_3_PHASE",
+                  "voltage": 230,
+                  "amperage": 32,
+                  "tariff_id": "T54LtC3Brgs9x63sdgxb",
+                  "last_updated": "2026-10-26T11:53:11.000Z",
+                  "uuid": "26358",
+                  "status": "OUTOFORDER",
+                  "evseid": "7516505a6227421884bc576fd8f63b53",
+                  "uid": "7516505a-6227-4218-84bc-576fd8f63b53"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "YFHJvFuK0VLyIx4JotrJ",
+          "type": "ON_STREET",
+          "name": "Forge Retail Park",
+          "address": "Unit 4, Forge Retail Park, Dudley Road",
+          "city": "Stourbridge",
+          "postal_code": "DY9 8DU",
+          "country": "GBR",
+          "coordinates": {
+            "latitude": "52.4624646",
+            "longitude": "-2.1168626"
+          },
+          "operator": {
+            "name": "Roam Charging"
+          },
+          "last_updated": "2024-10-28T11:21:44.901Z",
+          "evses": [
+            {
+              "uid": "07f6d9b9-9d88-4874-99ae-3b5f74e18c6b",
+              "evse_id": "GBEVCE07f6d9b99d88487499ae3b5f74e18c",
+              "status": "AVAILABLE",
+              "status_schedule": [],
+              "capabilities": [
+                "REMOTE_START_STOP_CAPABLE",
+                "UNLOCK_CAPABLE"
+              ],
+              "last_updated": "2026-10-26T14:41:20.000Z",
+              "connectors": [
+                {
+                  "charger_name": "Forge Retail Park - Charger 1",
+                  "id": "1",
+                  "standard": "IEC_62196_T2_COMBO",
+                  "format": "CABLE",
+                  "power_type": "DC",
+                  "voltage": 400,
+                  "amperage": 750,
+                  "tariff_id": "maXuNtYv8oo0jFgIXqy2",
+                  "last_updated": "2026-10-26T14:41:20.000Z",
+                  "uuid": "22996",
+                  "status": "AVAILABLE",
+                  "evseid": "07f6d9b99d88487499ae3b5f74e18c6b",
+                  "uid": "07f6d9b9-9d88-4874-99ae-3b5f74e18c6b"
+                },
+                {
+                  "charger_name": "Forge Retail Park - Charger 1",
+                  "id": "2",
+                  "standard": "IEC_62196_T2_COMBO",
+                  "format": "CABLE",
+                  "power_type": "DC",
+                  "voltage": 400,
+                  "amperage": 750,
+                  "tariff_id": "maXuNtYv8oo0jFgIXqy2",
+                  "last_updated": "2026-10-26T10:37:29.000Z",
+                  "uuid": "22997",
+                  "status": "AVAILABLE",
+                  "evseid": "8e459fc7259f42b8b6b0ff09dfb5c047",
+                  "uid": "8e459fc7-259f-42b8-b6b0-ff09dfb5c047"
+                }
+              ]
+            },
+            {
+              "uid": "d6df0da2-a9f4-4065-9906-38b4775f02e9",
+              "evse_id": "GBEVCEd6df0da2a9f44065990638b4775f02",
+              "status": "AVAILABLE",
+              "status_schedule": [],
+              "capabilities": [
+                "REMOTE_START_STOP_CAPABLE",
+                "UNLOCK_CAPABLE"
+              ],
+              "last_updated": "2026-10-26T10:37:30.000Z",
+              "connectors": [
+                {
+                  "charger_name": "Forge Retail Park - Charger 2",
+                  "id": "1",
+                  "standard": "IEC_62196_T2_COMBO",
+                  "format": "CABLE",
+                  "power_type": "DC",
+                  "voltage": 400,
+                  "amperage": 750,
+                  "tariff_id": "maXuNtYv8oo0jFgIXqy2",
+                  "last_updated": "2026-10-26T10:37:30.000Z",
+                  "uuid": "22988",
+                  "status": "AVAILABLE",
+                  "evseid": "d6df0da2a9f44065990638b4775f02e9",
+                  "uid": "d6df0da2-a9f4-4065-9906-38b4775f02e9"
+                },
+                {
+                  "charger_name": "Forge Retail Park - Charger 2",
+                  "id": "2",
+                  "standard": "IEC_62196_T2_COMBO",
+                  "format": "CABLE",
+                  "power_type": "DC",
+                  "voltage": 400,
+                  "amperage": 750,
+                  "tariff_id": "maXuNtYv8oo0jFgIXqy2",
+                  "last_updated": "2026-10-26T11:46:36.000Z",
+                  "uuid": "22995",
+                  "status": "AVAILABLE",
+                  "evseid": "ef03e7e18965480abefae16210f0ed72",
+                  "uid": "ef03e7e1-8965-480a-befa-e16210f0ed72"
+                }
+              ]
+            },
+            {
+              "uid": "cc9f2dae-9df0-4e2b-b7f7-23a37c0ac0d1",
+              "evse_id": "GBEVCEcc9f2dae9df04e2bb7f723a37c0ac0",
+              "status": "AVAILABLE",
+              "status_schedule": [],
+              "capabilities": [
+                "REMOTE_START_STOP_CAPABLE",
+                "UNLOCK_CAPABLE"
+              ],
+              "last_updated": "2026-10-26T14:05:41.000Z",
+              "connectors": [
+                {
+                  "charger_name": "Forge Retail Park - Charger 3",
+                  "id": "1",
+                  "standard": "IEC_62196_T2_COMBO",
+                  "format": "CABLE",
+                  "power_type": "DC",
+                  "voltage": 400,
+                  "amperage": 750,
+                  "tariff_id": "maXuNtYv8oo0jFgIXqy2",
+                  "last_updated": "2026-10-26T14:05:41.000Z",
+                  "uuid": "22986",
+                  "status": "AVAILABLE",
+                  "evseid": "cc9f2dae9df04e2bb7f723a37c0ac0d1",
+                  "uid": "cc9f2dae-9df0-4e2b-b7f7-23a37c0ac0d1"
+                },
+                {
+                  "charger_name": "Forge Retail Park - Charger 3",
+                  "id": "2",
+                  "standard": "IEC_62196_T2_COMBO",
+                  "format": "CABLE",
+                  "power_type": "DC",
+                  "voltage": 400,
+                  "amperage": 750,
+                  "tariff_id": "maXuNtYv8oo0jFgIXqy2",
+                  "last_updated": "2026-10-26T10:37:30.000Z",
+                  "uuid": "22987",
+                  "status": "AVAILABLE",
+                  "evseid": "9bef2ebc962d496681c1b6458b7615e7",
+                  "uid": "9bef2ebc-962d-4966-81c1-b6458b7615e7"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "bWbUNpOKSQHU9mUnCF23",
+          "type": "ON_STREET",
+          "name": "Co op Boley Park",
+          "address": "Co-Op Boley Park, ",
+          "city": "Lichfield",
+          "postal_code": "WS14 9XU",
+          "country": "GBR",
+          "coordinates": {
+            "latitude": "52.6809623",
+            "longitude": "-1.8047129"
+          },
+          "operator": {
+            "name": "Roam Charging"
+          },
+          "last_updated": "2024-06-12T14:25:30.038Z",
+          "evses": []
+        }
+      ],
+      "status_code": 1000,
+      "status_message": 1000,
+      "timestamp": "2026-10-26T18:53:21.238Z"
+    }
+  }
+}

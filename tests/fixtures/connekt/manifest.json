@@ -1,0 +1,11 @@
+{
+  "operator": "connekt",
+  "recorded_at": "2026-10-26T14:22:52Z",
+  "page_size": null,
+  "max_pages": null,
+  "date_from": null,
+  "sent_copy": {
+    "locations": "locations.json",
+    "tariffs": "tariffs.json"
+  }
+}

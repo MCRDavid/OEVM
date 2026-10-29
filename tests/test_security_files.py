@@ -61,12 +61,18 @@ URBAN_FOX_ZERO_TARIFFS = {
 PUBLISHED_LOCATION_IDS = {
     "4cbfa56a-07da-4cf1-90be-8277667b4158",
 }
+# EVSE uids an operator publishes, named in excluded_locations (ADR 0021, amended 29 October
+# 2026): the test charger at Norwood Hall Hotel in operators/roam.yaml.
+PUBLISHED_EVSE_UIDS = {
+    "c008d1ad-292b-4971-813f-18db2e053775",
+}
 KEY_LIKE_ALLOWED = {
     "https://www.contractsfinder.service.gov.uk/Notice/9b22d88e-38ba-4055-8e0e-84c58a196aa0",
     "https://www.contractsfinder.service.gov.uk/Notice/Attachment/3f6da4fd-2533-4289-a49e-ebad9a25c086",
     *PUBLISHED_FEED_ADDRESSES,
     *PUBLISHED_RECORD_IDS,
     *PUBLISHED_LOCATION_IDS,
+    *PUBLISHED_EVSE_UIDS,
     *URBAN_FOX_ZERO_TARIFFS,
 }
 # RFC 9116 fields, plus CSAF and Bug-Bounty, which IANA's registry added later.
