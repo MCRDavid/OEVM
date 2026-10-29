@@ -51,7 +51,8 @@
 Timers live in memory, so they cover one run of the program. Runs that use the same host
 must not be started in parallel. Within one run, pipeline.run fetches operators on
 different hosts at the same time, but never two operators that share a host
-(`operator_hosts`).
+(`operator_hosts`), except operators whose limits the owner reads per key, which this
+module keeps within their limits as above (pipeline.run.takes_turns).
 """
 
 import hashlib
@@ -789,6 +790,10 @@ class PoliteClient:
                     if retry_after is None and response.status_code >= 400 and reset is not None:
                         retry_after = reset + LIMIT_MARGIN_SECONDS
                     status = response.status_code
+                    if host is not None and (status == REFUSAL_STATUS or status in RETRY_STATUSES):
+                        # A refusal or a limit reached, even one not retried, ends the
+                        # allowance for every key on the host.
+                        host.spaced = True
                     if (
                         status == REFUSAL_STATUS
                         and timer.answered

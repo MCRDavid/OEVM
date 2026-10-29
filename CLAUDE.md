@@ -34,7 +34,8 @@ decisions are in docs/adr/.
   record's owner. Roam gives its OCPI 2.1.1 connectors their 2.2.1 names.
   adapters/sent_copy.py: reads a copy an operator sent (sent_copies/<id>/, gzipped as received; ADR 0029).
   adapters/eco_movement.py: Eco-Movement's PCPR API (adapter eco_movement_pcpr), ocpi_221 with pages of
-  1000; one token per network, each with its own 125 s gap (limits_per_key), one request at a time.
+  1000; one token per network, each keeping its limits as an hourly allowance (limits_per_key and
+  limits_as_allowance), at most 5 requests at once to the host.
 - pipeline/registry.py, pipeline/run.py. operators/*.yaml: one file per operator.
 - pipeline/pricing.py: the only way prices are shown. pipeline/tariffs.py: price per connector.
 - providers/*.yaml: charging plans from providers' own pages (schema/provider.py, pipeline/plans.py,
@@ -85,6 +86,12 @@ decisions are in docs/adr/.
 - Operators on one host share its gap. Keep the gap per key only where the operator file records
   the owner's decision in limits_per_key, with every operator on that host agreeing; the host still
   gets one request at a time, at least 2 seconds apart. Never add one yourself.
+- Exception decided by the owner on 29 October 2026 (ADR 0003): where every operator on a host also
+  records limits_as_allowance with the same at_once, each key keeps its published limits as an
+  allowance rather than a spacing (one request in hand in each limit's period plus the margin,
+  each request at least 2 seconds after the key's last one finished), and the host gets at most
+  at_once requests at the same time, started at least 1 second apart. Any retry, wait the server
+  asks for or refusal puts every key back to its gap, one request at a time. Never add one yourself.
 - Exception decided by the owner on 22 October 2026 (D1 in ADR 0025): in answer to an
   operator's own credentials call, the OCPI handshake Worker may overlap the daily pull, closer
   than the operator's gap, by up to three requests (two for a renewal). Nothing else may.

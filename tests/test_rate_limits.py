@@ -501,6 +501,19 @@ def test_any_sign_of_trouble_puts_every_key_back_to_its_gap_for_the_rest_of_the_
         assert later - earlier >= SHARED_HOST_SECONDS - 1e-9
 
 
+def test_a_refusal_not_retried_still_ends_the_allowance_for_every_key():
+    first, second = ECO[0], ECO[1]
+    clock = FakeClock()
+    ok = httpx.Response(200, json={})
+    server = KeyServer(clock, [httpx.Response(403), ok, ok])
+    with keyed_client_for(first, clock, server) as a, keyed_client_for(second, clock, server) as b:
+        assert a.get(first.endpoints["locations"].url).status_code == 403
+        b.get(second.endpoints["locations"].url)
+        b.get(second.endpoints["locations"].url)
+    own_b = server.arrivals_for(f"made-up-{second.id}")
+    assert own_b[1] - own_b[0] >= 125 - 1e-9
+
+
 def test_keys_fetched_together_within_their_allowance_send_at_most_five_at_once(monkeypatch):
     """Real threads, one per key, as pipeline.run fetches them. Floors are scaled down so
     the test is quick: requests overlap, never more than five at once, their starts at
