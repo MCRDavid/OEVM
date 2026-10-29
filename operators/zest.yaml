@@ -3,22 +3,54 @@ id: zest
 display_name: Zest
 ocpi_country_code: GB
 ocpi_party_id: ZST
-adapter: unknown
+adapter: sent_copy
 base_url: unknown
 endpoints: {}
 auth:
-  method: unknown
+  method: none
   name: null
   secret_name: null
 rate_limit:
   min_seconds_between_requests: 2
   limits: []
-  limits_checked: unknown
-  notes: null
+  limits_checked: 2026-10-29
+  notes: >-
+    No requests are made: the map shows a copy of Zest's data that it sent by email on
+    2026-10-28 (sent_copy below). Zest's open data page and its reply state no rate limit.
+    The 2 second gap is this project's own choice, for a feed if one is published.
 supports_single_location: unknown
 cors: unknown
-attribution: null
-licence: null
+attribution: >-
+  Contains data from Zest, licensed under CC BY 4.0. Adapted from Zest's data.
+licence:
+  name: CC-BY-4.0
+  url: https://creativecommons.org/licenses/by/4.0/
+  basis: >-
+    Zest's "Public charge point open data" page, which offers the data "as per the Public
+    Charge Point Regulations 2023" through a request form, says "Use of this data is
+    licensed under CC BY 4.0." and links to https://creativecommons.org/licenses/by/4.0/
+    (read 2026-10-10 and 2026-10-29). The page states no other terms for the data, and
+    Zest's reply of 2026-10-28, which sent the data, states none either. The form's own
+    line, "By clicking 'Send Enquiry' you agree to Zest's Privacy Policy", covers the
+    request, not the data. The licence asks for attribution, a link to the licence and a
+    note that the data was changed: the map reshapes the data into its own format and
+    shows every charge point status as unknown, so the attribution says it is adapted.
+  checked: 2026-10-29
+sent_copy:
+  decided: 2026-10-29
+  basis: >-
+    Zest answered a request through its open data form by emailing its location and tariff
+    data as two OCPI 2.2.1 files, with no address to fetch them from, and asked for the form
+    to be completed monthly for an updated snapshot. On 2026-10-29 the repository owner
+    decided to show that copy on the map, dated as made and with charge point status
+    unknown, and that each newer copy Zest sends replaces it without a new decision. It is
+    to be replaced with Zest's feed if one is published.
+  evidence_file: evidence/zest/2026-10-28-reply.md
+  channel: email
+  received: 2026-10-28
+  made_at: 2026-10-26T10:29:56Z
+  locations: sent_copies/zest/2026-10-28-locations.json.gz
+  tariffs: sent_copies/zest/2026-10-28-tariffs.json.gz
 engagement:
   status: no_public_feed_found
   evidence:
@@ -80,12 +112,54 @@ findings:
       web address for fetching it. The reply asks for the form to be completed monthly for
       an updated snapshot and says Zest is working on automating the process.
     handling: >-
-      The files are kept privately and are not on the map while the repository owner
-      decides whether to show them.
+      By the repository owner's decision of 2026-10-29, the map shows the emailed copy as
+      sent, dated 2026-10-26 10:29 UTC when it was made, says it is a copy that is not
+      updated, and shows every charge point status as unknown. Each newer copy Zest sends
+      replaces it. The project is asking Zest for an address that can be fetched
+      automatically.
+    evidence_url: https://www.zest.uk.com/charge-point-open-data
+  - date: 2026-10-29
+    kind: data_quality
+    summary: >-
+      The locations file sent on 2026-10-28 holds 2,005 records for 1,963 locations: 42
+      location ids appear twice, and in each pair the later record has the newer
+      last_updated time.
+    handling: >-
+      The later record of each pair is kept, as for any feed that repeats a record.
+    evidence_url: https://www.zest.uk.com/charge-point-open-data
+  - date: 2026-10-29
+    kind: spec_conformance
+    summary: >-
+      Tariffs 93 and 530, named by 620 connectors in the copy, give an idle fee as a
+      PARKING_TIME price of 0.08 before VAT, which OCPI 2.2.1 defines per hour, while the
+      tariffs' own text says "£0.10/min after 4 hours not charging".
+    handling: >-
+      The map shows the price as the data gives it, about £0.10 per hour parked with VAT,
+      and shows Zest's own text with the tariff. Neither is changed.
+    evidence_url: https://github.com/ocpi/ocpi/blob/2.2.1/mod_tariffs.asciidoc
+  - date: 2026-10-29
+    kind: spec_conformance
+    summary: >-
+      66 of the 67 tariffs give their description with HTML markup such as div, br and
+      strong tags, while OCPI 2.2.1 says display text is "Text to be displayed to a end
+      user. No markup, html etc. allowed."
+    handling: >-
+      The map shows each description with the tags taken out, as text only, and the
+      operator's text exactly as sent next to it.
+    evidence_url: https://github.com/ocpi/ocpi/blob/2.2.1/types.asciidoc
+  - date: 2026-10-29
+    kind: data_quality
+    summary: >-
+      Tariff 18 gives an energy price of 8.33 per kWh before VAT. No connector in the copy
+      names it.
+    handling: >-
+      It is not shown, because no connector uses it.
     evidence_url: https://www.zest.uk.com/charge-point-open-data
 notes: >-
-  Zest's page says "Use of this data is licensed under CC BY 4.0." (read 2026-10-10). Access
-  was requested through the form on its open data page on 2026-10-23, and Zest replied on
-  2026-10-28 with its data as emailed files (1,963 locations under GB ZST), asking for a new
-  request each month.
-enabled: false
+  Zest's page says "Use of this data is licensed under CC BY 4.0." (read 2026-10-10 and
+  2026-10-29). Access was requested through the form on its open data page on 2026-10-23,
+  and Zest replied on 2026-10-28 with its data as emailed files (1,963 locations under GB
+  ZST), asking for a new request each month. The map shows that copy by the owner's decision
+  of 2026-10-29 (sent_copy, ADR 0029), with charge point status unknown, and each newer copy
+  Zest sends replaces it until Zest's data can be fetched.
+enabled: true
