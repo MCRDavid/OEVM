@@ -9494,19 +9494,28 @@
       "enabled": false,
       "adapter": "unknown",
       "engagement": {
-        "status": "requested_no_reply",
-        "label": "Requested, no reply",
-        "headline": "Requested, no reply (as of 2026-10-23)",
-        "as_of": "2026-10-23",
+        "status": "no_public_feed_found",
+        "label": "No public feed found",
+        "headline": "No public feed found (as of 2026-10-28)",
+        "as_of": "2026-10-28",
         "last_request": "2026-10-23",
-        "last_response": null,
-        "last_response_text": "None recorded",
+        "last_response": {
+          "date": "2026-10-28",
+          "action": "reply_received"
+        },
+        "last_response_text": "2026-10-28 (Reply received)",
         "evidence": [
           {
             "date": "2026-10-10",
             "url": "https://www.zest.uk.com/charge-point-open-data",
             "file": null,
             "note": "Zest's open data page offers a request form asking for a first and last name, email address, company and reason for the request. It says the data is licensed under CC BY 4.0. It does not say whether access is given as a key, a file or by other means."
+          },
+          {
+            "date": "2026-10-28",
+            "url": null,
+            "file": "evidence/zest/2026-10-28-reply.md",
+            "note": "Zest's emailed reply, with its location and tariff data attached as two OCPI 2.2.1 JSON files made on 2026-10-26 and no web address or key for fetching the data. It asks for the form to be completed monthly for an updated snapshot."
           }
         ],
         "log": [
@@ -9531,6 +9540,17 @@
             "quote": null,
             "evidence_url": null,
             "evidence_file": null
+          },
+          {
+            "date": "2026-10-28",
+            "action": "reply_received",
+            "action_label": "Reply received",
+            "channel": "email",
+            "channel_label": "Email",
+            "summary": "Zest replied by email with its location and tariff data attached as two OCPI 2.2.1 JSON files, with no web address or key for fetching the data, and asked for the form to be completed monthly for an updated snapshot.",
+            "quote": "Please find the OCPI Data request documents attached. We are currently working hard behind the scenes to implement automation for this process. In the meantime, please complete the form monthly to ensure we have an updated snapshot of the necessary information.",
+            "evidence_url": null,
+            "evidence_file": "evidence/zest/2026-10-28-reply.md"
           }
         ]
       },
@@ -9562,7 +9582,18 @@
         "difference_from_regulations": "Not known yet.",
         "notes": null
       },
-      "findings": []
+      "findings": [
+        {
+          "date": "2026-10-28",
+          "kind": "access",
+          "kind_label": "Access",
+          "summary": "Zest offers its open data through a request form, and its reply to a request on 2026-10-23 was the data as two files attached to an email, made on 2026-10-26, with no web address for fetching it. The reply asks for the form to be completed monthly for an updated snapshot and says Zest is working on automating the process.",
+          "handling": "The files are kept privately and are not on the map while the repository owner decides whether to show them.",
+          "evidence_url": "https://www.zest.uk.com/charge-point-open-data",
+          "status": "open",
+          "resolved_date": null
+        }
+      ]
     }
   ]
 }
