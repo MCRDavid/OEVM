@@ -3,6 +3,7 @@
 import gzip
 import hashlib
 import json
+import re
 from collections import Counter
 from datetime import UTC, datetime
 from pathlib import Path
@@ -25,11 +26,6 @@ FIXTURES = Path(__file__).parent / "fixtures" / "connekt"
 MADE_AT = datetime(2026, 10, 26, 14, 22, 52, tzinfo=UTC)
 WHEN = datetime(2026, 10, 30, 4, 17, tzinfo=UTC)
 FILES = "https://github.com/MCRDavid/OEVM/tree/main/tests/fixtures/connekt"
-# SHA-256 of each file as received, before gzip (sent_copies/connekt/README.md).
-RECEIVED = {
-    "locations": "9791dbac2728701f47bd8af8bf8b390829ecec5d2abfc63d2a4ef22abada2784",
-    "tariffs": "eb3c1509bcd9c8ec76c657c89027ec0f3eac28693048b448b466ca1df139cb6d",
-}
 
 
 class NoRequests(httpx.BaseTransport):
@@ -118,13 +114,22 @@ def test_prices_add_the_vat_the_copy_states():
     assert text == "46.8p per kWh, plus £0.59 per session including VAT"
 
 
+def received_hashes() -> dict[str, str]:
+    """The SHA-256 of each file as received, before gzip, from the copy's README table."""
+    readme = (ROOT / "sent_copies" / "connekt" / "README.md").read_text(encoding="utf-8")
+    rows = re.findall(r"^\| `2026-10-26-(\w+)\.json\.gz` \|.*\| `([0-9a-f]{64})` \|$", readme, re.M)
+    return dict(rows)
+
+
 def test_the_files_kept_are_exactly_the_ones_connekt_sent():
     config = load_registry()["connekt"]
     copy = config.sent_copy
     assert copy.made_at == MADE_AT and copy.received.isoformat() == "2026-10-26"
+    received = received_hashes()
+    assert set(received) == {"locations", "tariffs"}
     for module in ("locations", "tariffs"):
         blob = gzip.decompress((ROOT / getattr(copy, module)).read_bytes())
-        assert hashlib.sha256(blob).hexdigest() == RECEIVED[module]
+        assert hashlib.sha256(blob).hexdigest() == received[module]
         body = json.loads(blob)
         assert body["status_code"] == 1000
         # made_at is the responses' own timestamp, to the second.
