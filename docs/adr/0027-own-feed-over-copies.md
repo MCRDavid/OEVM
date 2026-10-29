@@ -41,3 +41,16 @@ are on the map.
   a day both feeds fail it may lack the copies; this is accepted as rare.
 - Other platform feeds that carry networks with their own feeds (Monta carries several
   parties) can be handled the same way, each by its own recorded decision.
+
+## Amendment, 29 October 2026: copies under other codes
+
+evyve's own data, served by Eco-Movement's PCPR API, uses the party GB DRI, while EV
+Roam's ID register lists evyve as GB*EVY and Monta's feed carries the same 224 locations
+under GB EVY, with no prices. On 29 October 2026 the repository owner decided that evyve's
+own feed is shown and Monta's GB EVY copies are left off while it is on the map.
+
+- **The decision can name the copies' codes.** `copies_country_code` and `copies_party_id`,
+  given together, name the codes the copies are sent under where they differ from the
+  network's own feed. Without them the network's own codes are used, as before.
+- Everything else above is unchanged: copies are matched by those codes alone, only while
+  the network's own locations are on the map, and nothing in either feed is changed.

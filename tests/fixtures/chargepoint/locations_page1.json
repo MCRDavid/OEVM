@@ -1,0 +1,487 @@
+{
+  "request": {
+    "method": "GET",
+    "url": "https://open-chargepoints.com/api/ocpi/cpo/2.2.1/locations/?limit=1000"
+  },
+  "response": {
+    "status_code": 200,
+    "headers": {
+      "content-type": "application/json",
+      "link": "<https://open-chargepoints.com/api/ocpi/cpo/2.2.1/locations/?limit=1000&offset=4>; rel=\"next\"",
+      "x-total-count": "4",
+      "x-limit": "1000"
+    },
+    "body": {
+      "timestamp": "2026-10-29T13:26:06Z",
+      "status_code": 1000,
+      "status_message": "Success",
+      "data": [
+        {
+          "party_id": "CPI",
+          "id": "GBCPIL6619665",
+          "country_code": "GB",
+          "publish": true,
+          "country": "GBR",
+          "address": "Wrens Farm, Castle Lane North Baddesley",
+          "city": "Southampton",
+          "postal_code": "SO52 9LY",
+          "coordinates": {
+            "latitude": "50.97572700",
+            "longitude": "-1.43016000"
+          },
+          "state": null,
+          "last_updated": "2026-10-28T19:10:09Z",
+          "opening_times": {
+            "twentyfourseven": true
+          },
+          "name": "PARTRIDGEBMW PARTRIDGE 1",
+          "time_zone": "Europe/London",
+          "owner": {
+            "name": "ChargePoint",
+            "website": "https://www.chargepoint.com"
+          },
+          "operator": {
+            "name": "ChargePoint",
+            "website": "https://www.chargepoint.com"
+          },
+          "suboperator": {
+            "name": "ChargePoint",
+            "website": "https://www.chargepoint.com"
+          },
+          "energy_mix": {
+            "is_green_energy": true
+          },
+          "charging_when_closed": true,
+          "directions": null,
+          "evses": [
+            {
+              "uid": "3263205",
+              "status": "CHARGING",
+              "last_updated": "2026-10-25T14:12:38Z",
+              "evse_id": "GBCPIE6619665*1",
+              "physical_reference": "PARTRIDGE 1-1",
+              "floor_level": null,
+              "directions": null,
+              "parking_restrictions": null,
+              "capabilities": [
+                "CREDIT_CARD_PAYABLE",
+                "REMOTE_START_STOP_CAPABLE",
+                "RFID_READER"
+              ],
+              "connectors": [
+                {
+                  "id": "GBCPIP6619665*1*373",
+                  "standard": "IEC_62196_T2_COMBO",
+                  "format": "CABLE",
+                  "power_type": "DC",
+                  "last_updated": "2026-10-28T19:10:09Z",
+                  "max_amperage": 150,
+                  "max_voltage": 1000,
+                  "max_electric_power": 150000,
+                  "tariff_ids": [
+                    "NLCPIT2QP*1*0"
+                  ]
+                }
+              ]
+            },
+            {
+              "uid": "3263215",
+              "status": "AVAILABLE",
+              "last_updated": "2026-10-25T14:12:38Z",
+              "evse_id": "GBCPIE6619665*2",
+              "physical_reference": "PARTRIDGE 1-2",
+              "floor_level": null,
+              "directions": null,
+              "parking_restrictions": null,
+              "capabilities": [
+                "CREDIT_CARD_PAYABLE",
+                "REMOTE_START_STOP_CAPABLE",
+                "RFID_READER"
+              ],
+              "connectors": [
+                {
+                  "id": "GBCPIP6619665*2*373",
+                  "standard": "IEC_62196_T2_COMBO",
+                  "format": "CABLE",
+                  "power_type": "DC",
+                  "last_updated": "2026-10-28T19:10:09Z",
+                  "max_amperage": 150,
+                  "max_voltage": 1000,
+                  "max_electric_power": 150000,
+                  "tariff_ids": [
+                    "NLCPIT2QP*1*0"
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "party_id": "CPI",
+          "id": "GBCPIL6884155",
+          "country_code": "GB",
+          "publish": true,
+          "country": "GBR",
+          "address": "Washingpool Farm",
+          "city": "Easter Compton",
+          "postal_code": "BS35 5RE",
+          "coordinates": {
+            "latitude": "51.54639900",
+            "longitude": "-2.61824600"
+          },
+          "state": null,
+          "last_updated": "2026-10-28T19:26:48Z",
+          "opening_times": {
+            "twentyfourseven": true
+          },
+          "name": "THE WAVE STATION 02",
+          "time_zone": "Europe/London",
+          "owner": {
+            "name": "ChargePoint",
+            "website": "https://www.chargepoint.com"
+          },
+          "operator": {
+            "name": "ChargePoint",
+            "website": "https://www.chargepoint.com"
+          },
+          "suboperator": {
+            "name": "ChargePoint",
+            "website": "https://www.chargepoint.com"
+          },
+          "energy_mix": {
+            "is_green_energy": true
+          },
+          "charging_when_closed": true,
+          "directions": null,
+          "evses": [
+            {
+              "uid": "3698275",
+              "status": "AVAILABLE",
+              "last_updated": "2026-10-28T12:19:32Z",
+              "evse_id": "GBCPIE6884155*2",
+              "physical_reference": "STATION 02-2",
+              "floor_level": null,
+              "directions": null,
+              "parking_restrictions": null,
+              "capabilities": [
+                "CREDIT_CARD_PAYABLE",
+                "REMOTE_START_STOP_CAPABLE",
+                "RFID_READER"
+              ],
+              "connectors": [
+                {
+                  "id": "GBCPIP6884155*2*1259",
+                  "standard": "IEC_62196_T2",
+                  "format": "CABLE",
+                  "power_type": "AC_3_PHASE",
+                  "last_updated": "2026-10-28T19:26:48Z",
+                  "max_amperage": 55,
+                  "max_voltage": 230,
+                  "max_electric_power": 22080,
+                  "tariff_ids": [
+                    "NLCPIT2lrt*3*0"
+                  ]
+                }
+              ]
+            },
+            {
+              "uid": "3646105",
+              "status": "AVAILABLE",
+              "last_updated": "2026-10-23T20:33:59Z",
+              "evse_id": "GBCPIE6855085*1",
+              "physical_reference": "STATION 01-1",
+              "floor_level": null,
+              "directions": null,
+              "parking_restrictions": null,
+              "capabilities": [
+                "CREDIT_CARD_PAYABLE",
+                "REMOTE_START_STOP_CAPABLE",
+                "RFID_READER"
+              ],
+              "connectors": [
+                {
+                  "id": "GBCPIP6855085*1*1259",
+                  "standard": "IEC_62196_T2",
+                  "format": "CABLE",
+                  "power_type": "AC_3_PHASE",
+                  "last_updated": "2026-10-28T19:26:13Z",
+                  "max_amperage": 55,
+                  "max_voltage": 230,
+                  "max_electric_power": 22080,
+                  "tariff_ids": [
+                    "NLCPIT2lrt*3*0"
+                  ]
+                }
+              ]
+            },
+            {
+              "uid": "3646115",
+              "status": "AVAILABLE",
+              "last_updated": "2026-10-24T19:14:22Z",
+              "evse_id": "GBCPIE6855085*2",
+              "physical_reference": "STATION 01-2",
+              "floor_level": null,
+              "directions": null,
+              "parking_restrictions": null,
+              "capabilities": [
+                "CREDIT_CARD_PAYABLE",
+                "REMOTE_START_STOP_CAPABLE",
+                "RFID_READER"
+              ],
+              "connectors": [
+                {
+                  "id": "GBCPIP6855085*2*1259",
+                  "standard": "IEC_62196_T2",
+                  "format": "CABLE",
+                  "power_type": "AC_3_PHASE",
+                  "last_updated": "2026-10-28T19:26:13Z",
+                  "max_amperage": 55,
+                  "max_voltage": 230,
+                  "max_electric_power": 22080,
+                  "tariff_ids": [
+                    "NLCPIT2lrt*3*0"
+                  ]
+                }
+              ]
+            },
+            {
+              "uid": "3698265",
+              "status": "CHARGING",
+              "last_updated": "2026-10-28T14:43:08Z",
+              "evse_id": "GBCPIE6884155*1",
+              "physical_reference": "STATION 02-1",
+              "floor_level": null,
+              "directions": null,
+              "parking_restrictions": null,
+              "capabilities": [
+                "CREDIT_CARD_PAYABLE",
+                "REMOTE_START_STOP_CAPABLE",
+                "RFID_READER"
+              ],
+              "connectors": [
+                {
+                  "id": "GBCPIP6884155*1*1259",
+                  "standard": "IEC_62196_T2",
+                  "format": "CABLE",
+                  "power_type": "AC_3_PHASE",
+                  "last_updated": "2026-10-28T19:26:48Z",
+                  "max_amperage": 55,
+                  "max_voltage": 230,
+                  "max_electric_power": 22080,
+                  "tariff_ids": [
+                    "NLCPIT2lrt*3*0"
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "party_id": "CPI",
+          "id": "GBCPIL7408555",
+          "country_code": "GB",
+          "publish": true,
+          "country": "GBR",
+          "address": "Parkway Shopping Centre 9 Parkway",
+          "city": "Newbury",
+          "postal_code": "RG14 1EF",
+          "coordinates": {
+            "latitude": "51.40396700",
+            "longitude": "-1.32342700"
+          },
+          "state": null,
+          "last_updated": "2026-10-28T19:45:03Z",
+          "opening_times": {
+            "twentyfourseven": true
+          },
+          "name": "PARKWAY SC EVC 4",
+          "time_zone": "Europe/London",
+          "owner": {
+            "name": "ChargePoint",
+            "website": "https://www.chargepoint.com"
+          },
+          "operator": {
+            "name": "ChargePoint",
+            "website": "https://www.chargepoint.com"
+          },
+          "suboperator": {
+            "name": "ChargePoint",
+            "website": "https://www.chargepoint.com"
+          },
+          "energy_mix": {
+            "is_green_energy": true
+          },
+          "charging_when_closed": true,
+          "directions": null,
+          "evses": [
+            {
+              "uid": "4313075",
+              "status": "UNKNOWN",
+              "last_updated": "2026-10-08T09:12:49Z",
+              "evse_id": "GBCPIE7408555*1",
+              "physical_reference": "EVC 4-1",
+              "floor_level": "-2",
+              "directions": null,
+              "parking_restrictions": null,
+              "capabilities": [
+                "CREDIT_CARD_PAYABLE",
+                "REMOTE_START_STOP_CAPABLE",
+                "RFID_READER"
+              ],
+              "connectors": [
+                {
+                  "id": "GBCPIP7408555*1*1258",
+                  "standard": "IEC_62196_T2",
+                  "format": "SOCKET",
+                  "power_type": "AC_3_PHASE",
+                  "last_updated": "2026-10-28T19:45:03Z",
+                  "max_amperage": 31,
+                  "max_voltage": 400,
+                  "max_electric_power": 22080,
+                  "tariff_ids": [
+                    "NLCPIT1asZ*4*0"
+                  ]
+                }
+              ]
+            },
+            {
+              "uid": "4313085",
+              "status": "UNKNOWN",
+              "last_updated": "2026-10-07T22:26:27Z",
+              "evse_id": "GBCPIE7408555*2",
+              "physical_reference": "EVC 4-2",
+              "floor_level": "-2",
+              "directions": null,
+              "parking_restrictions": null,
+              "capabilities": [
+                "CREDIT_CARD_PAYABLE",
+                "REMOTE_START_STOP_CAPABLE",
+                "RFID_READER"
+              ],
+              "connectors": [
+                {
+                  "id": "GBCPIP7408555*2*1258",
+                  "standard": "IEC_62196_T2",
+                  "format": "SOCKET",
+                  "power_type": "AC_3_PHASE",
+                  "last_updated": "2026-10-28T19:45:03Z",
+                  "max_amperage": 31,
+                  "max_voltage": 400,
+                  "max_electric_power": 22080,
+                  "tariff_ids": [
+                    "NLCPIT1asZ*4*0"
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "party_id": "CPI",
+          "id": "GBCPIL6479515",
+          "country_code": "GB",
+          "publish": true,
+          "country": "GBR",
+          "address": "Otford Village Memorial Hall High street",
+          "city": "Otford",
+          "postal_code": "TN14 5PQ",
+          "coordinates": {
+            "latitude": "51.31323200",
+            "longitude": "0.18872400"
+          },
+          "state": null,
+          "last_updated": "2026-10-28T19:02:15Z",
+          "opening_times": {
+            "twentyfourseven": true
+          },
+          "name": "OTFORDPC CARPARK 1",
+          "time_zone": "Europe/Jersey",
+          "owner": {
+            "name": "ChargePoint",
+            "website": "https://www.chargepoint.com"
+          },
+          "operator": {
+            "name": "ChargePoint",
+            "website": "https://www.chargepoint.com"
+          },
+          "suboperator": {
+            "name": "ChargePoint",
+            "website": "https://www.chargepoint.com"
+          },
+          "energy_mix": {
+            "is_green_energy": true
+          },
+          "charging_when_closed": true,
+          "directions": [
+            {
+              "language": "en",
+              "text": "Carpark "
+            }
+          ],
+          "evses": [
+            {
+              "uid": "3063015",
+              "status": "AVAILABLE",
+              "last_updated": "2026-10-28T15:57:07Z",
+              "evse_id": "GBCPIE6479515*1",
+              "physical_reference": "CARPARK 1-1",
+              "floor_level": null,
+              "directions": null,
+              "parking_restrictions": null,
+              "capabilities": [
+                "CREDIT_CARD_PAYABLE",
+                "REMOTE_START_STOP_CAPABLE",
+                "RFID_READER"
+              ],
+              "connectors": [
+                {
+                  "id": "GBCPIP6479515*1*82",
+                  "standard": "IEC_62196_T2",
+                  "format": "SOCKET",
+                  "power_type": "AC_3_PHASE",
+                  "last_updated": "2026-10-28T19:02:15Z",
+                  "max_amperage": 31,
+                  "max_voltage": 400,
+                  "max_electric_power": 22000,
+                  "tariff_ids": [
+                    "NLCPITWm1*3*0"
+                  ]
+                }
+              ]
+            },
+            {
+              "uid": "3063025",
+              "status": "AVAILABLE",
+              "last_updated": "2026-10-28T09:23:01Z",
+              "evse_id": "GBCPIE6479515*2",
+              "physical_reference": "CARPARK 1-2",
+              "floor_level": null,
+              "directions": null,
+              "parking_restrictions": null,
+              "capabilities": [
+                "CREDIT_CARD_PAYABLE",
+                "REMOTE_START_STOP_CAPABLE",
+                "RFID_READER"
+              ],
+              "connectors": [
+                {
+                  "id": "GBCPIP6479515*2*82",
+                  "standard": "IEC_62196_T2",
+                  "format": "SOCKET",
+                  "power_type": "AC_3_PHASE",
+                  "last_updated": "2026-10-28T19:02:15Z",
+                  "max_amperage": 31,
+                  "max_voltage": 400,
+                  "max_electric_power": 22000,
+                  "tariff_ids": [
+                    "NLCPITWm1*3*0"
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  }
+}

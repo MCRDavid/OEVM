@@ -1,26 +1,101 @@
 # yaml-language-server: $schema=schema.json
 id: chargepoint
 display_name: ChargePoint
-ocpi_country_code: unknown
-ocpi_party_id: unknown
-adapter: unknown
+ocpi_country_code: GB
+ocpi_party_id: CPI # Confirmed from the feed's own country_code and party_id on 2026-10-29.
+adapter: eco_movement_pcpr
 base_url: unknown
-endpoints: {}
+endpoints:
+  locations:
+    url: https://open-chargepoints.com/api/ocpi/cpo/2.2.1/locations/
+    status: documented
+    note: >-
+      Confirmed in Eco-Movement's PCPR API reference on 2026-10-07. Written with the trailing
+      slash, as in the user guide's example request and the getting started page's paging
+      link (read 2026-10-26); without it the server answered HTTP 307 on 2026-10-29.
+  tariffs:
+    url: https://open-chargepoints.com/api/ocpi/cpo/2.2.1/tariffs/
+    status: documented
+  statuses:
+    url: https://open-chargepoints.com/api/statuses
+    status: documented
 auth:
-  method: unknown
-  name: null
-  secret_name: null
+  method: header
+  name: Authorization
+  scheme: Token
+  secret_name: CHARGEPOINT_TOKEN
 rate_limit:
-  min_seconds_between_requests: 2
-  limits: []
-  limits_checked: unknown
-  notes: null
+  min_seconds_between_requests: 125
+  limits:
+    - publisher: Eco-Movement
+      requests: 30
+      per_seconds: 3600
+      endpoint: locations
+      quote: The `locations` endpoint has a rate limit of 30 requests per 1 hour.
+      source_url: https://developers.eco-movement.com/v2.2.1/reference/get-all-locations-pcpr-api
+      checked: 2026-10-26
+    - publisher: Eco-Movement
+      requests: 30
+      per_seconds: 3600
+      endpoint: locations
+      scope: single location
+      quote: The `locations/{id}` endpoint has a rate limit of 30 requests per 1 hour.
+      source_url: https://developers.eco-movement.com/v2.2.1/reference/get-specific-location-pcpr-api
+      checked: 2026-10-26
+    - publisher: Eco-Movement
+      requests: 30
+      per_seconds: 3600
+      endpoint: tariffs
+      quote: The `tariffs` endpoint has a rate limit of 30 requests per 1 hour.
+      source_url: https://developers.eco-movement.com/reference/get-tariffs-pcpr-api
+      checked: 2026-10-26
+    - publisher: Eco-Movement
+      requests: 1
+      per_seconds: 30
+      endpoint: statuses
+      quote: The `statuses` endpoint has a rate limit of 1 request per 30 seconds.
+      source_url: https://developers.eco-movement.com/reference/get-statuses-pcpr-api
+      checked: 2026-10-26
+  limits_checked: 2026-10-26
+  notes: >-
+    A gap of 125 seconds (the 120 seconds the strictest limit needs, plus a safety
+    margin) is kept between any two requests with this network's token, so at most 29
+    requests in any hour are sent with it. By the repository owner's decision of
+    2026-10-29 (limits_per_key) the limits are read as applying to each token. Requests
+    to open-chargepoints.com are still sent one at a time, at least 2 seconds apart
+    whichever network they are for, and a request from the server to wait holds back
+    every network on it. Eco-Movement "strongly recommends limiting simultaneous GET
+    requests to a maximum of 5". It recommends retrieving the entire dataset once a day.
+limits_per_key:
+  decided: 2026-10-29
+  basis: >-
+    Eco-Movement publishes a limit of 30 requests an hour for each of the locations and
+    tariffs endpoints and gives each network its own token, but does not say whether the
+    limits count per token or per address. The repository owner decided on 2026-10-29
+    that they are read as applying to each token, so each network keeps its own 125
+    second gap, while requests to open-chargepoints.com are still sent one at a time.
+  evidence_url: https://developers.eco-movement.com/v2.2.1/docs/eco-movement-pcpr-api-user-guide
 supports_single_location: unknown
 cors: unknown
-attribution: null
-licence: null
+attribution: >-
+  Contains data from ChargePoint published under the Public Charge Point Regulations 2023,
+  used in line with the Open Government Licence v3.0.
+licence:
+  name: OGL-3.0
+  url: https://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/
+  basis: >-
+    ChargePoint's UK guide to the regulations and its "PCPR Data Request" Google form (read
+    2026-10-10 and 2026-10-23) name no licence, terms, key or rate limit for the data.
+    Eco-Movement's email of 2026-10-26 with the token, and its PCPR API user guide and
+    reference (read 2026-10-26), state no licence or terms either. Regulation 10(5) of the
+    Public Charge Point Regulations 2023 requires the data to be available "without any
+    requirement to agree to terms and conditions regarding the use of that data", and the
+    DfT guidance says "Data must be open in line with the Open Government Licence". On
+    2026-10-10 the repository owner decided, as a standing rule for operators whose data has
+    no terms of its own, that such operators can be switched on without asking again.
+  checked: 2026-10-29
 engagement:
-  status: requested_no_reply
+  status: key_on_request
   evidence:
     - date: 2026-10-10
       url: https://www.chargepoint.com/en-gb/blog/navigating-uk-public-charging-regulations-guide-charge-point-operators
@@ -48,6 +123,12 @@ engagement:
         Inn, Macrow Ltd, MEPC Milton Park, mysql8ccqauat_eu (appears to be a test entry),
         Otford Parish Council, Pamusoro, Sea Level Wave Co Ltd, Selwood Limited, Sutton hotel
         collection, Tylehurst Instruments, West Estates Limited, ZOLB EV.
+    - date: 2026-10-26
+      file: evidence/chargepoint/2026-10-26-token-email.md
+      note: >-
+        Eco-Movement's email with an expiring link to this network's token for its PCPR
+        API, sent as an "Authorization: Token" header to its OCPI 2.2.1 endpoints. The
+        token itself is not kept here.
   log:
     - date: 2026-10-10
       action: feed_searched
@@ -78,8 +159,16 @@ engagement:
       channel: web_form
       summary: >-
         Requested access to PCPR data for the ChargePoint platform networks through ChargePoint's Google form (choice "ChargePoint platform CPOs"), which is shared with Eco-Movement.
+    - date: 2026-10-26
+      action: key_granted
+      channel: email
+      summary: >-
+        Eco-Movement sent a token for this network's PCPR data by email, through an
+        expiring link, to be sent as an "Authorization: Token" header to its OCPI
+        2.2.1 endpoints. The token is kept as a GitHub Actions secret.
+      evidence_file: evidence/chargepoint/2026-10-26-token-email.md
 access_requested: 2026-10-23
-access_granted: null
+access_granted: 2026-10-26
 sources:
   - url: https://www.chargepoint.com/en-gb
     note: ChargePoint's UK home page (read 2026-10-10). No open data link.
@@ -102,11 +191,62 @@ sources:
       and "does not act as a Charge Point Operator beyond charging stations on its own
       premises". Its network list offers "ChargePoint platform CPOs", Raw Charging, ev-point
       and Lidl Great Britain Limited.
-findings: []
+findings:
+  - date: 2026-10-29
+    kind: data_quality
+    summary: >-
+      Every one of the 331 locations names ChargePoint as its operator and owner,
+      although the request form says this feed holds the data of 31 operators on the
+      ChargePoint platform.
+    handling: >-
+      The locations are shown under ChargePoint, as published. Which operator runs
+      each site cannot be told from the feed, and nothing is filled in from other
+      sources.
+    evidence_url: https://open-chargepoints.com/api/ocpi/cpo/2.2.1/locations/
+  - date: 2026-10-29
+    kind: data_quality
+    summary: >-
+      No price gives a VAT rate. Of the 167 energy prices in GBP, 120 are whole pence
+      as published and 106 once 20% is added, so whether they include VAT cannot be
+      told from the figures.
+    handling: >-
+      The prices are shown as published and marked "VAT not stated".
+    evidence_url: https://open-chargepoints.com/api/ocpi/cpo/2.2.1/tariffs/
+  - date: 2026-10-29
+    kind: data_quality
+    summary: >-
+      2 tariffs in US dollars, with every price zero, are the only tariffs named by
+      115 connectors at 37 locations.
+    handling: >-
+      Only GBP tariffs are shown, so these connectors show "Price unknown". Nothing is
+      converted.
+    evidence_url: https://open-chargepoints.com/api/ocpi/cpo/2.2.1/tariffs/
+  - date: 2026-10-29
+    kind: data_quality
+    summary: >-
+      Nine locations in England and Wales give time_zone "Europe/Jersey" (8) or
+      "Atlantic/St_Helena" (1), where the time zone is Europe/London.
+    handling: >-
+      The time zone is not used on the map, which shows every time in UK time. Nothing
+      is changed.
+    evidence_url: https://open-chargepoints.com/api/ocpi/cpo/2.2.1/locations/
+  - date: 2026-10-29
+    kind: data_quality
+    summary: >-
+      The same OCPI party, GB CPI, is used by three networks served from ChargePoint's
+      platform: ChargePoint's own feed, evpoint and RAW Charging, each with its own
+      token.
+    handling: >-
+      Each feed is shown under its own operator. Record ids start with the operator's
+      own id, so the three never share an id.
+    evidence_url: https://open-chargepoints.com/api/ocpi/cpo/2.2.1/locations/
 notes: >-
-  Access could be requested through the "PCPR Data Request" form linked from ChargePoint's UK
-  guide to the regulations. The form says ChargePoint is a technology provider rather than a
-  charge point operator, so this file records the route for networks on its platform.
-  Requests are shared with Eco-Movement, so the eco_movement_pcpr adapter may apply once
-  access is given, but the form does not say how the data is delivered; this needs testing.
-enabled: false
+  Its regulation 10 data is served by Eco-Movement's PCPR API (eco_movement_pcpr adapter),
+  with a token Eco-Movement sent on 2026-10-26, kept as the GitHub Actions secret
+  CHARGEPOINT_TOKEN. Every response on 2026-10-29 linked to a next page past the last
+  record, which the adapter does not follow. Eco-Movement's user guide says it creates the
+  location ids and may change them when it merges locations. On 2026-10-29 the feed
+  reported 331 locations and 149 tariffs. The network is the ChargePoint platform's own
+  CPOs; evpoint, Lidl and RAW Charging on the same platform each have their own token and
+  operator file.
+enabled: true

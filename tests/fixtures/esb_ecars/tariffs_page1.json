@@ -1,0 +1,222 @@
+{
+  "request": {
+    "method": "GET",
+    "url": "https://open-chargepoints.com/api/ocpi/cpo/2.2.1/tariffs/?limit=1000"
+  },
+  "response": {
+    "status_code": 200,
+    "headers": {
+      "content-type": "application/json",
+      "link": "<https://open-chargepoints.com/api/ocpi/cpo/2.2.1/tariffs/?limit=1000&offset=2>; rel=\"next\"",
+      "x-total-count": "2",
+      "x-limit": "1000"
+    },
+    "body": {
+      "timestamp": "2026-10-29T13:47:05Z",
+      "status_code": 1000,
+      "status_message": "Success",
+      "data": [
+        {
+          "party_id": "ESB",
+          "id": "f5e536316a384cf17654864173b4a184",
+          "currency": "GBP",
+          "tariff_alt_url": null,
+          "tariff_alt_text": [
+            {
+              "language": "en",
+              "text": "OTP tariff for chargers less than 22kW in NI"
+            },
+            {
+              "language": "en",
+              "text": "OTP tariff for chargers less than 22kW in NI"
+            },
+            {
+              "language": "en",
+              "text": "OTP tariff for chargers less than 22kW in NI"
+            },
+            {
+              "language": "en",
+              "text": "OTP tariff for chargers less than 22kW in NI"
+            }
+          ],
+          "last_updated": "2026-10-28T15:02:36Z",
+          "country_code": "GB",
+          "elements": [
+            {
+              "restrictions": {
+                "day_of_week": [
+                  "MONDAY"
+                ],
+                "end_time": "23:59",
+                "min_duration": 38700,
+                "start_time": "00:00"
+              },
+              "price_components": [
+                {
+                  "type": "ENERGY",
+                  "price": 0.61,
+                  "vat": 20,
+                  "step_size": 1000
+                }
+              ]
+            },
+            {
+              "restrictions": {
+                "day_of_week": [
+                  "MONDAY",
+                  "TUESDAY",
+                  "WEDNESDAY",
+                  "THURSDAY",
+                  "FRIDAY",
+                  "SATURDAY",
+                  "SUNDAY"
+                ],
+                "end_time": "23:59",
+                "min_duration": 0,
+                "start_time": "00:00"
+              },
+              "price_components": [
+                {
+                  "type": "ENERGY",
+                  "price": 0.61,
+                  "vat": 20,
+                  "step_size": 1000
+                }
+              ]
+            },
+            {
+              "restrictions": {
+                "day_of_week": [
+                  "MONDAY",
+                  "TUESDAY",
+                  "WEDNESDAY",
+                  "THURSDAY",
+                  "FRIDAY",
+                  "SATURDAY",
+                  "SUNDAY"
+                ],
+                "end_time": "23:59",
+                "min_duration": 36000,
+                "start_time": "00:00"
+              },
+              "price_components": [
+                {
+                  "type": "TIME",
+                  "price": 30,
+                  "vat": 20,
+                  "step_size": 60
+                },
+                {
+                  "type": "ENERGY",
+                  "price": 0.61,
+                  "vat": 20,
+                  "step_size": 1000
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "party_id": "ESB",
+          "id": "33ed41de3be4acb8213dd95afe589054",
+          "currency": "GBP",
+          "tariff_alt_url": null,
+          "tariff_alt_text": [
+            {
+              "language": "en",
+              "text": "OTP tariff for chargers between 20 and 50kW in NI"
+            },
+            {
+              "language": "en",
+              "text": "OTP tariff for chargers between 20 and 50kW in NI"
+            },
+            {
+              "language": "en",
+              "text": "OTP tariff for chargers between 20 and 50kW in NI"
+            },
+            {
+              "language": "en",
+              "text": "OTP tariff for chargers between 20 and 50kW in NI"
+            }
+          ],
+          "last_updated": "2026-09-09T20:55:16Z",
+          "country_code": "GB",
+          "elements": [
+            {
+              "restrictions": {
+                "day_of_week": [
+                  "MONDAY"
+                ],
+                "end_time": "23:59",
+                "min_duration": 5400,
+                "start_time": "00:00"
+              },
+              "price_components": [
+                {
+                  "type": "ENERGY",
+                  "price": 0.75,
+                  "vat": 20,
+                  "step_size": 1000
+                }
+              ]
+            },
+            {
+              "restrictions": {
+                "day_of_week": [
+                  "MONDAY",
+                  "TUESDAY",
+                  "WEDNESDAY",
+                  "THURSDAY",
+                  "FRIDAY",
+                  "SATURDAY",
+                  "SUNDAY"
+                ],
+                "end_time": "23:59",
+                "min_duration": 0,
+                "start_time": "00:00"
+              },
+              "price_components": [
+                {
+                  "type": "ENERGY",
+                  "price": 0.75,
+                  "vat": 20,
+                  "step_size": 1000
+                }
+              ]
+            },
+            {
+              "restrictions": {
+                "day_of_week": [
+                  "MONDAY",
+                  "TUESDAY",
+                  "WEDNESDAY",
+                  "THURSDAY",
+                  "FRIDAY",
+                  "SATURDAY",
+                  "SUNDAY"
+                ],
+                "end_time": "23:59",
+                "min_duration": 2700,
+                "start_time": "00:00"
+              },
+              "price_components": [
+                {
+                  "type": "TIME",
+                  "price": 30,
+                  "vat": 20,
+                  "step_size": 60
+                },
+                {
+                  "type": "ENERGY",
+                  "price": 0.75,
+                  "vat": 20,
+                  "step_size": 1000
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  }
+}

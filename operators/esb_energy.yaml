@@ -1,26 +1,111 @@
 # yaml-language-server: $schema=schema.json
 id: esb_energy
 display_name: ESB Energy
-ocpi_country_code: unknown
-ocpi_party_id: unknown
-adapter: unknown
+ocpi_country_code: GB
+ocpi_party_id: ESB # Confirmed from the feed's own country_code and party_id on 2026-10-29.
+adapter: eco_movement_pcpr
 base_url: unknown
-endpoints: {}
+endpoints:
+  locations:
+    url: https://open-chargepoints.com/api/ocpi/cpo/2.2.1/locations/
+    status: documented
+    note: >-
+      Confirmed in Eco-Movement's PCPR API reference on 2026-10-07. Written with the trailing
+      slash, as in the user guide's example request and the getting started page's paging
+      link (read 2026-10-26); without it the server answered HTTP 307 on 2026-10-29.
+  tariffs:
+    url: https://open-chargepoints.com/api/ocpi/cpo/2.2.1/tariffs/
+    status: documented
+  statuses:
+    url: https://open-chargepoints.com/api/statuses
+    status: documented
 auth:
-  method: unknown
-  name: null
-  secret_name: null
+  method: header
+  name: Authorization
+  scheme: Token
+  secret_name: ESB_ENERGY_TOKEN
 rate_limit:
-  min_seconds_between_requests: 2
-  limits: []
-  limits_checked: unknown
-  notes: null
+  min_seconds_between_requests: 125
+  limits:
+    - publisher: Eco-Movement
+      requests: 30
+      per_seconds: 3600
+      endpoint: locations
+      quote: The `locations` endpoint has a rate limit of 30 requests per 1 hour.
+      source_url: https://developers.eco-movement.com/v2.2.1/reference/get-all-locations-pcpr-api
+      checked: 2026-10-26
+    - publisher: Eco-Movement
+      requests: 30
+      per_seconds: 3600
+      endpoint: locations
+      scope: single location
+      quote: The `locations/{id}` endpoint has a rate limit of 30 requests per 1 hour.
+      source_url: https://developers.eco-movement.com/v2.2.1/reference/get-specific-location-pcpr-api
+      checked: 2026-10-26
+    - publisher: Eco-Movement
+      requests: 30
+      per_seconds: 3600
+      endpoint: tariffs
+      quote: The `tariffs` endpoint has a rate limit of 30 requests per 1 hour.
+      source_url: https://developers.eco-movement.com/reference/get-tariffs-pcpr-api
+      checked: 2026-10-26
+    - publisher: Eco-Movement
+      requests: 1
+      per_seconds: 30
+      endpoint: statuses
+      quote: The `statuses` endpoint has a rate limit of 1 request per 30 seconds.
+      source_url: https://developers.eco-movement.com/reference/get-statuses-pcpr-api
+      checked: 2026-10-26
+  limits_checked: 2026-10-26
+  notes: >-
+    A gap of 125 seconds (the 120 seconds the strictest limit needs, plus a safety
+    margin) is kept between any two requests with this network's token, so at most 29
+    requests in any hour are sent with it. By the repository owner's decision of
+    2026-10-29 (limits_per_key) the limits are read as applying to each token. Requests
+    to open-chargepoints.com are still sent one at a time, at least 2 seconds apart
+    whichever network they are for, and a request from the server to wait holds back
+    every network on it. Eco-Movement "strongly recommends limiting simultaneous GET
+    requests to a maximum of 5". It recommends retrieving the entire dataset once a day.
+limits_per_key:
+  decided: 2026-10-29
+  basis: >-
+    Eco-Movement publishes a limit of 30 requests an hour for each of the locations and
+    tariffs endpoints and gives each network its own token, but does not say whether the
+    limits count per token or per address. The repository owner decided on 2026-10-29
+    that they are read as applying to each token, so each network keeps its own 125
+    second gap, while requests to open-chargepoints.com are still sent one at a time.
+  evidence_url: https://developers.eco-movement.com/v2.2.1/docs/eco-movement-pcpr-api-user-guide
 supports_single_location: unknown
 cors: unknown
-attribution: null
-licence: null
+attribution: >-
+  Contains data from ESB Energy published under the Public Charge Point Regulations 2023,
+  used in line with the Open Government Licence v3.0.
+licence:
+  name: OGL-3.0
+  url: https://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/
+  basis: >-
+    ESB Energy's "PCPR Data Request" Google form (read 2026-10-10) names no licence, terms,
+    key or rate limit. Eco-Movement's email of 2026-10-26 with the token, and its PCPR API
+    user guide and reference (read 2026-10-26), state no licence or terms either. Regulation
+    10(5) of the Public Charge Point Regulations 2023 requires the data to be available
+    "without any requirement to agree to terms and conditions regarding the use of that
+    data", and the DfT guidance says "Data must be open in line with the Open Government
+    Licence". On 2026-10-10 the repository owner decided, as a standing rule for operators
+    whose data has no terms of its own, that such operators can be switched on without
+    asking again.
+  checked: 2026-10-29
+vat_in_price:
+  decided: 2026-10-29
+  basis: >-
+    ESB Energy's five tariffs on Eco-Movement's PCPR API give every energy price with
+    VAT 20 on 2026-10-29, and all 19 are whole pence as published (for example 0.80 and
+    0.40 pounds per kWh). Read as OCPI 2.2.1 says, with VAT added, 0.80 would be 96p per
+    kWh. That the stated VAT is already in the prices is inferred from the figures, not
+    stated by ESB Energy. The repository owner decided on 2026-10-29 that the prices are
+    read as already including VAT, so no VAT is added.
+  evidence_url: https://open-chargepoints.com/api/ocpi/cpo/2.2.1/tariffs/
 engagement:
-  status: requested_no_reply
+  status: key_on_request
   evidence:
     - date: 2026-10-10
       url: https://www.esbenergy.co.uk/ev
@@ -29,6 +114,12 @@ engagement:
         form asking for an email address, name, organisation and planned use of data. The
         form says requests are shared with Eco-Movement and names no licence, terms, key or
         rate limit.
+    - date: 2026-10-26
+      file: evidence/esb_energy/2026-10-26-token-email.md
+      note: >-
+        Eco-Movement's email with an expiring link to this network's token for its PCPR
+        API, sent as an "Authorization: Token" header to its OCPI 2.2.1 endpoints. The
+        token itself is not kept here.
   log:
     - date: 2026-10-10
       action: feed_searched
@@ -52,8 +143,16 @@ engagement:
       channel: web_form
       summary: >-
         Requested access to ESB Energy's PCPR data through its Google form, which is shared with Eco-Movement.
+    - date: 2026-10-26
+      action: key_granted
+      channel: email
+      summary: >-
+        Eco-Movement sent a token for this network's PCPR data by email, through an
+        expiring link, to be sent as an "Authorization: Token" header to its OCPI
+        2.2.1 endpoints. The token is kept as a GitHub Actions secret.
+      evidence_file: evidence/esb_energy/2026-10-26-token-email.md
 access_requested: 2026-10-23
-access_granted: null
+access_granted: 2026-10-26
 sources:
   - url: https://www.esbenergy.co.uk/
     note: ESB Energy's home page (read 2026-10-10). No open data link.
@@ -66,10 +165,24 @@ sources:
       The "PCPR Data Request - ESB" Google form (read 2026-10-10, not submitted). Its
       disclaimer says "Your request will be shared with Eco-Movement" and gives
       Eco-Movement's PCPR address for privacy questions.
-findings: []
+findings:
+  - date: 2026-10-29
+    kind: spec_conformance
+    summary: >-
+      Every energy price gives VAT 20, and all 19 are whole pence as published (for
+      example 80p per kWh); with VAT added as OCPI 2.2.1 says, 0.80 would be 96p.
+    handling: >-
+      By the repository owner's decision of 2026-10-29 recorded in vat_in_price, the
+      stated VAT is read as already in each price, so it is not added again. This is
+      inferred from the figures and needs confirming by ESB Energy. The tariffs are
+      published unchanged.
+    evidence_url: https://open-chargepoints.com/api/ocpi/cpo/2.2.1/tariffs/
 notes: >-
-  Access could be requested through the "PCPR Data Request" form linked from ESB Energy's
-  electric vehicle pages. Requests are shared with Eco-Movement, so the eco_movement_pcpr
-  adapter may apply once access is given, but the form does not say how the data is
-  delivered; this needs testing.
-enabled: false
+  Its regulation 10 data is served by Eco-Movement's PCPR API (eco_movement_pcpr adapter),
+  with a token Eco-Movement sent on 2026-10-26, kept as the GitHub Actions secret
+  ESB_ENERGY_TOKEN. Every response on 2026-10-29 linked to a next page past the last
+  record, which the adapter does not follow. Eco-Movement's user guide says it creates the
+  location ids and may change them when it merges locations. On 2026-10-29 the feed
+  reported 202 locations and 5 tariffs. ESB Energy and ESB ecars share the OCPI party GB
+  ESB, each with its own token.
+enabled: true

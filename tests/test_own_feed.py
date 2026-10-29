@@ -14,16 +14,23 @@ from schema.operator import OperatorConfig
 WHEN = datetime(2026, 10, 23, 12, 0, tzinfo=UTC)
 COPY = "monta:GB:UFX:copy-1"
 OTHER = "monta:GB:EXN:copy-2"
+# Under evyve's registered party, which its own feed does not use (it uses GB DRI).
+EVYVE_COPY = "monta:GB:EVY:copy-3"
+# Under evyve's own feed's party, which Monta's copies do not use.
+NOT_A_COPY = "monta:GB:DRI:copy-4"
 
 
 @pytest.fixture(scope="module")
 def results():
-    """The fixture run, with two made-up records added to Monta's: one under Urban Fox's
-    party GB UFX and one under another party, both copies of a real Monta record."""
+    """The fixture run, with made-up records added to Monta's, each a copy of a real Monta
+    record: one under Urban Fox's party GB UFX, one under another party, one under evyve's
+    registered party GB EVY and one under the party evyve's own feed uses, GB DRI."""
     found = run.run_fixtures(load_registry())
     monta = next(r for r in found if r.operator_id == "monta")
     template = monta.locations[0]
-    monta.locations += [template.model_copy(update={"id": i}) for i in (COPY, OTHER)]
+    monta.locations += [
+        template.model_copy(update={"id": i}) for i in (COPY, OTHER, EVYVE_COPY, NOT_A_COPY)
+    ]
     return found
 
 
@@ -45,19 +52,21 @@ def test_copies_under_the_owners_party_are_left_off_while_its_own_feed_is_on_the
     assert COPY not in on_map and OTHER in on_map
     assert any(i.startswith("urban_fox:GB:UFX:") for i in on_map)
     entry = out.manifest.operators["monta"]
-    assert entry.replaced == 1 and entry.replaced_ids == [COPY]
-    assert entry.replaced_by == {"urban_fox": 1}
+    assert entry.replaced == 2 and entry.replaced_ids == [EVYVE_COPY, COPY]
+    assert entry.replaced_by == {"evyve": 1, "urban_fox": 1}
     assert entry.mapped == sum(i.startswith("monta:") for i in on_map)
     key = publish.location_key(COPY)
     assert not (tmp_path / "data" / "loc" / key[:2] / f"{key}.json").exists()
-    assert any("1 left off as copies of urban_fox's own feed" in line for line in out.report)
+    assert any(
+        "2 left off as copies of evyve's and urban_fox's own feeds" in line for line in out.report
+    )
     assert out.manifest.operators["urban_fox"].replaced == 0
 
 
 def test_copies_stay_when_the_owners_own_feed_has_nothing_on_the_map(results, tmp_path):
-    without = [r for r in results if r.operator_id != "urban_fox"]
+    without = [r for r in results if r.operator_id not in ("urban_fox", "evyve")]
     out = published(without, tmp_path)
-    assert COPY in ids_on_map(tmp_path)
+    assert {COPY, EVYVE_COPY} <= ids_on_map(tmp_path)
     assert out.manifest.operators["monta"].replaced == 0
 
 
@@ -80,16 +89,29 @@ def test_the_owners_last_good_copy_also_replaces_the_copies(results, tmp_path):
     without = [r for r in results if r.operator_id != "urban_fox"]
     out = published(without, tmp_path / "after", mode="live", kept=[kept])
     assert COPY not in ids_on_map(tmp_path / "after")
-    assert out.manifest.operators["monta"].replaced_by == {"urban_fox": 1}
+    assert out.manifest.operators["monta"].replaced_by == {"evyve": 1, "urban_fox": 1}
 
 
-def test_only_urban_fox_records_the_decision_and_it_names_monta():
+def test_copies_under_the_codes_the_decision_names_are_left_off_and_the_owners_are_not(
+    results, tmp_path
+):
+    published(results, tmp_path)
+    on_map = ids_on_map(tmp_path)
+    assert EVYVE_COPY not in on_map and NOT_A_COPY in on_map
+    assert any(i.startswith("evyve:GB:DRI:") for i in on_map)
+
+
+def test_only_urban_fox_and_evyve_record_the_decision_and_both_name_monta():
     operators = load_registry()
     decided = {
         i: c.own_feed_over_copies.operators for i, c in operators.items() if c.own_feed_over_copies
     }
-    assert decided == {"urban_fox": ["monta"]}
+    assert decided == {"evyve": ["monta"], "urban_fox": ["monta"]}
     assert str(operators["urban_fox"].own_feed_over_copies.decided) == "2026-10-23"
+    evyve = operators["evyve"].own_feed_over_copies
+    assert str(evyve.decided) == "2026-10-29"
+    assert evyve.copies_codes("GB", "DRI") == ("GB", "EVY")
+    assert operators["urban_fox"].own_feed_over_copies.copies_codes("GB", "UFX") == ("GB", "UFX")
 
 
 def _decision(**overrides) -> dict:
@@ -111,6 +133,9 @@ def test_the_decision_needs_a_known_party_and_cannot_name_the_operator_itself():
         {"own_feed_over_copies": _decision(), "ocpi_party_id": "unknown"},
         {"own_feed_over_copies": _decision(operators=["monta", "monta"])},
         {"own_feed_over_copies": _decision(operators=["Not An Id"])},
+        {"own_feed_over_copies": _decision(copies_country_code="GB")},
+        {"own_feed_over_copies": _decision(copies_party_id="EVY")},
+        {"own_feed_over_copies": _decision(copies_country_code="GB", copies_party_id="ev")},
     ):
         with pytest.raises(ValidationError):
             OperatorConfig.model_validate(config | bad)

@@ -342,6 +342,11 @@ def test_a_decision_to_add_vat_is_shown_with_what_was_seen_across_operators(page
         "clenergy_ev": ("2026-10-22", 20),
         "globe_ev": ("2026-10-23", 20),
         "roam": ("2026-10-26", 20),
+        "allego": ("2026-10-29", 20),
+        "blink_charging_uk": ("2026-10-29", 20),
+        "ev_point": ("2026-10-29", 20),
+        "lidl": ("2026-10-29", 20),
+        "raw_charging": ("2026-10-29", 20),
     }
     text = " ".join(page.split())
     assert "Prices that give no VAT rate have VAT at 20% added, by the owner's decision" in text
@@ -351,15 +356,23 @@ def test_a_decision_to_add_vat_is_shown_with_what_was_seen_across_operators(page
     assert "<li>Clenergy EV: 20%, decided 2026-10-22" in text
     assert "<li>Globe EV: 20%, decided 2026-10-23" in text
     assert "<li>Roam: 20%, decided 2026-10-26" in text
+    assert "<li>Allego: 20%, decided 2026-10-29" in text
+    assert "<li>RAW Charging: 20%, decided 2026-10-29" in text
 
 
 def test_a_decision_to_read_stated_vat_as_in_the_price_is_shown(page):
     data = json.loads(transparency.outputs()[transparency.JSON_PATH])
     decisions = {op["id"]: op["vat_in_price"] for op in data["operators"]}
-    assert {k: v["decided"] for k, v in decisions.items() if v} == {"bright_green": "2026-10-23"}
+    assert {k: v["decided"] for k, v in decisions.items() if v} == {
+        "bright_green": "2026-10-23",
+        "esb_ecars": "2026-10-29",
+        "esb_energy": "2026-10-29",
+        "pod": "2026-10-29",
+    }
     text = " ".join(page.split())
     assert "The VAT each price states is read as already in the price, so it is not" in text
     assert "<li>BrightGreen: decided 2026-10-23" in text
+    assert "<li>Pod: decided 2026-10-29" in text
 
 
 def test_a_decision_to_use_a_related_operators_tariffs_is_shown(page):
@@ -373,3 +386,14 @@ def test_a_decision_to_use_a_related_operators_tariffs_is_shown(page):
     assert "name a tariff only Evolt Network publishes are priced from that exact tariff" in text
     assert "never by name, by the owner's decision of 2026-10-10" in text
     assert ".. " not in " ".join(" ".join(parse(page).text).split())
+
+
+def test_limits_read_per_key_are_shown_with_the_owners_decision(page):
+    data = json.loads(transparency.outputs()[transparency.JSON_PATH])
+    per_key = {op["id"]: op["rate_limit"]["per_key"] for op in data["operators"]}
+    decided = {i for i, v in per_key.items() if v}
+    assert "ubitricity" in decided and "chargy" not in decided
+    assert {per_key[i]["decided"] for i in decided} == {"2026-10-29"}
+    text = " ".join(page.split())
+    assert "Limits read per key by the owner's decision of 2026-10-29" in text
+    assert "requests to the host are still sent one at a time, at least 2 s apart" in text

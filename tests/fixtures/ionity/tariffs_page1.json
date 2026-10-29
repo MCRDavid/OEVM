@@ -1,0 +1,88 @@
+{
+  "request": {
+    "method": "GET",
+    "url": "https://open-chargepoints.com/api/ocpi/cpo/2.2.1/tariffs/?limit=1000"
+  },
+  "response": {
+    "status_code": 200,
+    "headers": {
+      "content-type": "application/json",
+      "link": "<https://open-chargepoints.com/api/ocpi/cpo/2.2.1/tariffs/?limit=1000&offset=3>; rel=\"next\"",
+      "x-total-count": "3",
+      "x-limit": "1000"
+    },
+    "body": {
+      "timestamp": "2026-10-29T13:59:39Z",
+      "status_code": 1000,
+      "status_message": "Success",
+      "data": [
+        {
+          "party_id": "IOY",
+          "id": "GB*HPC*ADHOC*004",
+          "currency": "GBP",
+          "tariff_alt_url": null,
+          "tariff_alt_text": null,
+          "last_updated": "2026-06-23T13:21:06Z",
+          "country_code": "GB",
+          "elements": [
+            {
+              "restrictions": null,
+              "price_components": [
+                {
+                  "type": "ENERGY",
+                  "price": 0.6944,
+                  "vat": 20,
+                  "step_size": 1
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "party_id": "IOY",
+          "id": "GB*MC*ADHOC*004",
+          "currency": "GBP",
+          "tariff_alt_url": null,
+          "tariff_alt_text": null,
+          "last_updated": "2026-06-23T13:23:43Z",
+          "country_code": "GB",
+          "elements": [
+            {
+              "restrictions": null,
+              "price_components": [
+                {
+                  "type": "ENERGY",
+                  "price": 0.519,
+                  "vat": 20,
+                  "step_size": 1
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "party_id": "IOY",
+          "id": "GB*ONHW*HPC*ADHOC*001",
+          "currency": "GBP",
+          "tariff_alt_url": null,
+          "tariff_alt_text": null,
+          "last_updated": "2026-02-27T12:49:18Z",
+          "country_code": "GB",
+          "elements": [
+            {
+              "restrictions": null,
+              "price_components": [
+                {
+                  "type": "ENERGY",
+                  "price": 0.7417,
+                  "vat": 20,
+                  "step_size": 1
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  }
+}

@@ -765,7 +765,7 @@ def test_a_vat_decision_needs_a_rate_above_zero_and_up_to_100(rate):
         OperatorConfig.model_validate(enabled_open(vat_not_stated=decision))
 
 
-def test_only_chargy_clenergy_globe_ev_and_roam_carry_a_vat_decision_at_20_percent():
+def test_only_the_operators_the_owner_named_carry_a_vat_decision_at_20_percent():
     operators = registry.load_registry(OPERATORS_DIR)
     decisions = {
         i: (str(c.vat_not_stated.decided), c.vat_not_stated.add_percent)
@@ -777,13 +777,24 @@ def test_only_chargy_clenergy_globe_ev_and_roam_carry_a_vat_decision_at_20_perce
         "clenergy_ev": ("2026-10-22", 20),
         "globe_ev": ("2026-10-23", 20),
         "roam": ("2026-10-26", 20),
+        # Eco-Movement networks whose prices give no VAT rate (owner's decision, 29 Oct 2026).
+        "allego": ("2026-10-29", 20),
+        "blink_charging_uk": ("2026-10-29", 20),
+        "ev_point": ("2026-10-29", 20),
+        "lidl": ("2026-10-29", 20),
+        "raw_charging": ("2026-10-29", 20),
     }
 
 
-def test_only_bright_green_reads_its_stated_vat_as_in_its_prices():
+def test_only_the_operators_the_owner_named_read_their_stated_vat_as_in_their_prices():
     operators = registry.load_registry(OPERATORS_DIR)
     decided = {i: str(c.vat_in_price.decided) for i, c in operators.items() if c.vat_in_price}
-    assert decided == {"bright_green": "2026-10-23"}
+    assert decided == {
+        "bright_green": "2026-10-23",
+        "esb_ecars": "2026-10-29",
+        "esb_energy": "2026-10-29",
+        "pod": "2026-10-29",
+    }
 
 
 def test_vat_in_price_and_vat_not_stated_cannot_both_be_recorded():

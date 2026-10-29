@@ -1,0 +1,803 @@
+{
+  "request": {
+    "method": "GET",
+    "url": "https://open-chargepoints.com/api/ocpi/cpo/2.2.1/locations/?limit=1000"
+  },
+  "response": {
+    "status_code": 200,
+    "headers": {
+      "content-type": "application/json",
+      "link": "<https://open-chargepoints.com/api/ocpi/cpo/2.2.1/locations/?limit=1000&offset=3>; rel=\"next\"",
+      "x-total-count": "3",
+      "x-limit": "1000"
+    },
+    "body": {
+      "timestamp": "2026-10-29T13:49:10Z",
+      "status_code": 1000,
+      "status_message": "Success",
+      "data": [
+        {
+          "party_id": "ESB",
+          "id": "1579",
+          "country_code": "GB",
+          "publish": true,
+          "country": "GBR",
+          "address": "Sussex Place by Hammersmith Flyover, Hammersm",
+          "city": "London",
+          "postal_code": "W6 9EA",
+          "coordinates": {
+            "latitude": "51.49121000",
+            "longitude": "-0.22571200"
+          },
+          "state": null,
+          "last_updated": "2026-10-29T13:47:04Z",
+          "opening_times": {
+            "twentyfourseven": true
+          },
+          "name": "ESB Energy Sussex Place",
+          "time_zone": "Europe/London",
+          "owner": {
+            "name": "ESB Energy",
+            "website": "https://www.esbenergy.co.uk/ev"
+          },
+          "operator": {
+            "name": "ESB Energy",
+            "website": "https://www.esbenergy.co.uk/ev"
+          },
+          "suboperator": {
+            "name": "ESB Energy",
+            "website": "https://www.esbenergy.co.uk/ev"
+          },
+          "energy_mix": {
+            "is_green_energy": true
+          },
+          "charging_when_closed": true,
+          "directions": [
+            {
+              "language": "en",
+              "text": ""
+            }
+          ],
+          "evses": [
+            {
+              "uid": "3204",
+              "status": "AVAILABLE",
+              "last_updated": "2026-10-29T09:50:49Z",
+              "evse_id": "GB*ESB*E1904*2",
+              "physical_reference": "UT03N2",
+              "floor_level": null,
+              "directions": null,
+              "parking_restrictions": null,
+              "capabilities": [
+                "CREDIT_CARD_PAYABLE",
+                "DEBIT_CARD_PAYABLE",
+                "REMOTE_START_STOP_CAPABLE",
+                "RFID_READER",
+                "TOKEN_GROUP_CAPABLE"
+              ],
+              "connectors": [
+                {
+                  "id": "3204",
+                  "standard": "IEC_62196_T2",
+                  "format": "CABLE",
+                  "power_type": "AC_3_PHASE",
+                  "last_updated": "2026-10-28T20:00:24Z",
+                  "max_amperage": 63,
+                  "max_voltage": 230,
+                  "max_electric_power": 43000,
+                  "tariff_ids": [
+                    "e81fa68a86515fcf67c79996836400d6"
+                  ]
+                }
+              ]
+            },
+            {
+              "uid": "3207",
+              "status": "AVAILABLE",
+              "last_updated": "2026-10-29T03:46:56Z",
+              "evse_id": "GB*ESB*E1905*2",
+              "physical_reference": "UTO51H",
+              "floor_level": null,
+              "directions": null,
+              "parking_restrictions": null,
+              "capabilities": [
+                "CREDIT_CARD_PAYABLE",
+                "DEBIT_CARD_PAYABLE",
+                "REMOTE_START_STOP_CAPABLE",
+                "RFID_READER",
+                "TOKEN_GROUP_CAPABLE"
+              ],
+              "connectors": [
+                {
+                  "id": "3207",
+                  "standard": "IEC_62196_T2",
+                  "format": "CABLE",
+                  "power_type": "AC_3_PHASE",
+                  "last_updated": "2026-10-28T20:00:24Z",
+                  "max_amperage": 63,
+                  "max_voltage": 230,
+                  "max_electric_power": 43000,
+                  "tariff_ids": [
+                    "e81fa68a86515fcf67c79996836400d6"
+                  ]
+                }
+              ]
+            },
+            {
+              "uid": "3213",
+              "status": "AVAILABLE",
+              "last_updated": "2026-10-29T11:31:10Z",
+              "evse_id": "GB*ESB*E1907*2",
+              "physical_reference": "UT06ZH",
+              "floor_level": null,
+              "directions": null,
+              "parking_restrictions": null,
+              "capabilities": [
+                "CREDIT_CARD_PAYABLE",
+                "DEBIT_CARD_PAYABLE",
+                "REMOTE_START_STOP_CAPABLE",
+                "RFID_READER",
+                "TOKEN_GROUP_CAPABLE"
+              ],
+              "connectors": [
+                {
+                  "id": "3213",
+                  "standard": "IEC_62196_T2",
+                  "format": "CABLE",
+                  "power_type": "AC_3_PHASE",
+                  "last_updated": "2026-10-28T20:00:24Z",
+                  "max_amperage": 63,
+                  "max_voltage": 230,
+                  "max_electric_power": 43000,
+                  "tariff_ids": [
+                    "e81fa68a86515fcf67c79996836400d6"
+                  ]
+                }
+              ]
+            },
+            {
+              "uid": "3202",
+              "status": "AVAILABLE",
+              "last_updated": "2026-10-29T13:47:04Z",
+              "evse_id": "GB*ESB*E1904*1",
+              "physical_reference": "UT03N2",
+              "floor_level": null,
+              "directions": null,
+              "parking_restrictions": null,
+              "capabilities": [
+                "CREDIT_CARD_PAYABLE",
+                "DEBIT_CARD_PAYABLE",
+                "REMOTE_START_STOP_CAPABLE",
+                "RFID_READER",
+                "TOKEN_GROUP_CAPABLE"
+              ],
+              "connectors": [
+                {
+                  "id": "3203",
+                  "standard": "IEC_62196_T2_COMBO",
+                  "format": "CABLE",
+                  "power_type": "DC",
+                  "last_updated": "2026-10-28T20:00:24Z",
+                  "max_amperage": 120,
+                  "max_voltage": 400,
+                  "max_electric_power": 50000,
+                  "tariff_ids": [
+                    "e81fa68a86515fcf67c79996836400d6"
+                  ]
+                },
+                {
+                  "id": "3202",
+                  "standard": "CHADEMO",
+                  "format": "CABLE",
+                  "power_type": "DC",
+                  "last_updated": "2026-10-28T20:00:24Z",
+                  "max_amperage": 120,
+                  "max_voltage": 400,
+                  "max_electric_power": 50000,
+                  "tariff_ids": [
+                    "e81fa68a86515fcf67c79996836400d6"
+                  ]
+                }
+              ]
+            },
+            {
+              "uid": "3205",
+              "status": "AVAILABLE",
+              "last_updated": "2026-10-29T13:24:39Z",
+              "evse_id": "GB*ESB*E1905*1",
+              "physical_reference": "UTO51H",
+              "floor_level": null,
+              "directions": null,
+              "parking_restrictions": null,
+              "capabilities": [
+                "CREDIT_CARD_PAYABLE",
+                "DEBIT_CARD_PAYABLE",
+                "REMOTE_START_STOP_CAPABLE",
+                "RFID_READER",
+                "TOKEN_GROUP_CAPABLE"
+              ],
+              "connectors": [
+                {
+                  "id": "3205",
+                  "standard": "CHADEMO",
+                  "format": "CABLE",
+                  "power_type": "DC",
+                  "last_updated": "2026-10-28T20:00:24Z",
+                  "max_amperage": 120,
+                  "max_voltage": 400,
+                  "max_electric_power": 50000,
+                  "tariff_ids": [
+                    "e81fa68a86515fcf67c79996836400d6"
+                  ]
+                },
+                {
+                  "id": "3206",
+                  "standard": "IEC_62196_T2_COMBO",
+                  "format": "CABLE",
+                  "power_type": "DC",
+                  "last_updated": "2026-10-28T20:00:24Z",
+                  "max_amperage": 120,
+                  "max_voltage": 400,
+                  "max_electric_power": 50000,
+                  "tariff_ids": [
+                    "e81fa68a86515fcf67c79996836400d6"
+                  ]
+                }
+              ]
+            },
+            {
+              "uid": "3211",
+              "status": "CHARGING",
+              "last_updated": "2026-10-29T13:12:28Z",
+              "evse_id": "GB*ESB*E1907*1",
+              "physical_reference": "UT06ZH",
+              "floor_level": null,
+              "directions": null,
+              "parking_restrictions": null,
+              "capabilities": [
+                "CREDIT_CARD_PAYABLE",
+                "DEBIT_CARD_PAYABLE",
+                "REMOTE_START_STOP_CAPABLE",
+                "RFID_READER",
+                "TOKEN_GROUP_CAPABLE"
+              ],
+              "connectors": [
+                {
+                  "id": "3211",
+                  "standard": "CHADEMO",
+                  "format": "CABLE",
+                  "power_type": "DC",
+                  "last_updated": "2026-10-28T20:00:24Z",
+                  "max_amperage": 120,
+                  "max_voltage": 400,
+                  "max_electric_power": 50000,
+                  "tariff_ids": [
+                    "e81fa68a86515fcf67c79996836400d6"
+                  ]
+                },
+                {
+                  "id": "3212",
+                  "standard": "IEC_62196_T2_COMBO",
+                  "format": "CABLE",
+                  "power_type": "DC",
+                  "last_updated": "2026-10-28T20:00:24Z",
+                  "max_amperage": 120,
+                  "max_voltage": 400,
+                  "max_electric_power": 50000,
+                  "tariff_ids": [
+                    "e81fa68a86515fcf67c79996836400d6"
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "party_id": "ESB",
+          "id": "1529",
+          "country_code": "GB",
+          "publish": true,
+          "country": "GBR",
+          "address": "16-4 Cramper's Field",
+          "city": "Coventry",
+          "postal_code": "CV6 1HQ",
+          "coordinates": {
+            "latitude": "52.41753900",
+            "longitude": "-1.52589400"
+          },
+          "state": null,
+          "last_updated": "2026-10-29T08:07:32Z",
+          "opening_times": {
+            "twentyfourseven": true
+          },
+          "name": "ESB Energy Cramper's Field (Coventry)",
+          "time_zone": "Europe/London",
+          "owner": {
+            "name": "ESB Energy",
+            "website": "https://www.esbenergy.co.uk/ev"
+          },
+          "operator": {
+            "name": "ESB Energy",
+            "website": "https://www.esbenergy.co.uk/ev"
+          },
+          "suboperator": {
+            "name": "ESB Energy",
+            "website": "https://www.esbenergy.co.uk/ev"
+          },
+          "energy_mix": {
+            "is_green_energy": true
+          },
+          "charging_when_closed": true,
+          "directions": [
+            {
+              "language": "en",
+              "text": ""
+            }
+          ],
+          "evses": [
+            {
+              "uid": "3048",
+              "status": "OUTOFORDER",
+              "last_updated": "2026-10-28T20:01:54Z",
+              "evse_id": "GB*ESB*E1833*2",
+              "physical_reference": "UC1DV5",
+              "floor_level": null,
+              "directions": null,
+              "parking_restrictions": null,
+              "capabilities": [
+                "CREDIT_CARD_PAYABLE",
+                "DEBIT_CARD_PAYABLE",
+                "REMOTE_START_STOP_CAPABLE",
+                "RFID_READER",
+                "TOKEN_GROUP_CAPABLE"
+              ],
+              "connectors": [
+                {
+                  "id": "3048",
+                  "standard": "IEC_62196_T2",
+                  "format": "CABLE",
+                  "power_type": "AC_3_PHASE",
+                  "last_updated": "2026-10-28T20:01:53Z",
+                  "max_amperage": 62,
+                  "max_voltage": 230,
+                  "max_electric_power": 43000,
+                  "tariff_ids": [
+                    "c30edbcbd14b1dff9bd59fa4b64ca204"
+                  ]
+                }
+              ]
+            },
+            {
+              "uid": "3049",
+              "status": "OUTOFORDER",
+              "last_updated": "2025-10-29T12:09:00Z",
+              "evse_id": "GB*ESB*E1834*1",
+              "physical_reference": "UC2P7F",
+              "floor_level": null,
+              "directions": null,
+              "parking_restrictions": null,
+              "capabilities": [
+                "CREDIT_CARD_PAYABLE",
+                "DEBIT_CARD_PAYABLE",
+                "REMOTE_START_STOP_CAPABLE",
+                "RFID_READER",
+                "TOKEN_GROUP_CAPABLE"
+              ],
+              "connectors": [
+                {
+                  "id": "3049",
+                  "standard": "CHADEMO",
+                  "format": "CABLE",
+                  "power_type": "DC",
+                  "last_updated": "2026-10-28T20:01:54Z",
+                  "max_amperage": 125,
+                  "max_voltage": 400,
+                  "max_electric_power": 50000,
+                  "tariff_ids": [
+                    "c30edbcbd14b1dff9bd59fa4b64ca204"
+                  ]
+                },
+                {
+                  "id": "3050",
+                  "standard": "IEC_62196_T2_COMBO",
+                  "format": "CABLE",
+                  "power_type": "DC",
+                  "last_updated": "2026-10-28T20:01:54Z",
+                  "max_amperage": 125,
+                  "max_voltage": 400,
+                  "max_electric_power": 50000,
+                  "tariff_ids": [
+                    "c30edbcbd14b1dff9bd59fa4b64ca204"
+                  ]
+                }
+              ]
+            },
+            {
+              "uid": "3051",
+              "status": "OUTOFORDER",
+              "last_updated": "2026-10-28T20:01:54Z",
+              "evse_id": "GB*ESB*E1834*2",
+              "physical_reference": "UC2P7F",
+              "floor_level": null,
+              "directions": null,
+              "parking_restrictions": null,
+              "capabilities": [
+                "CREDIT_CARD_PAYABLE",
+                "DEBIT_CARD_PAYABLE",
+                "REMOTE_START_STOP_CAPABLE",
+                "RFID_READER",
+                "TOKEN_GROUP_CAPABLE"
+              ],
+              "connectors": [
+                {
+                  "id": "3051",
+                  "standard": "IEC_62196_T2",
+                  "format": "CABLE",
+                  "power_type": "AC_3_PHASE",
+                  "last_updated": "2026-10-28T20:01:54Z",
+                  "max_amperage": 62,
+                  "max_voltage": 230,
+                  "max_electric_power": 43000,
+                  "tariff_ids": [
+                    "c30edbcbd14b1dff9bd59fa4b64ca204"
+                  ]
+                }
+              ]
+            },
+            {
+              "uid": "3046",
+              "status": "AVAILABLE",
+              "last_updated": "2026-10-29T08:07:32Z",
+              "evse_id": "GB*ESB*E1833*1",
+              "physical_reference": "UC1DV5",
+              "floor_level": null,
+              "directions": null,
+              "parking_restrictions": null,
+              "capabilities": [
+                "CREDIT_CARD_PAYABLE",
+                "DEBIT_CARD_PAYABLE",
+                "REMOTE_START_STOP_CAPABLE",
+                "RFID_READER",
+                "TOKEN_GROUP_CAPABLE"
+              ],
+              "connectors": [
+                {
+                  "id": "3046",
+                  "standard": "CHADEMO",
+                  "format": "CABLE",
+                  "power_type": "DC",
+                  "last_updated": "2026-10-28T20:01:53Z",
+                  "max_amperage": 125,
+                  "max_voltage": 400,
+                  "max_electric_power": 50000,
+                  "tariff_ids": [
+                    "c30edbcbd14b1dff9bd59fa4b64ca204"
+                  ]
+                },
+                {
+                  "id": "3047",
+                  "standard": "IEC_62196_T2_COMBO",
+                  "format": "CABLE",
+                  "power_type": "DC",
+                  "last_updated": "2026-10-28T20:01:53Z",
+                  "max_amperage": 125,
+                  "max_voltage": 400,
+                  "max_electric_power": 50000,
+                  "tariff_ids": [
+                    "c30edbcbd14b1dff9bd59fa4b64ca204"
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "party_id": "ESB",
+          "id": "1052",
+          "country_code": "GB",
+          "publish": true,
+          "country": "GBR",
+          "address": "Scrubs Lane Car Park, Scrubs Lane, Shepherd's",
+          "city": "London",
+          "postal_code": "W12 0DE",
+          "coordinates": {
+            "latitude": "51.51997500",
+            "longitude": "-0.22860900"
+          },
+          "state": null,
+          "last_updated": "2026-10-29T13:48:46Z",
+          "opening_times": {
+            "twentyfourseven": true
+          },
+          "name": "ESB Energy Scrubs Lane Car Park Hammersmith",
+          "time_zone": "Europe/London",
+          "owner": {
+            "name": "ESB Energy",
+            "website": "https://www.esbenergy.co.uk/ev"
+          },
+          "operator": {
+            "name": "ESB Energy",
+            "website": "https://www.esbenergy.co.uk/ev"
+          },
+          "suboperator": {
+            "name": "ESB Energy",
+            "website": "https://www.esbenergy.co.uk/ev"
+          },
+          "energy_mix": {
+            "is_green_energy": true
+          },
+          "charging_when_closed": true,
+          "directions": [
+            {
+              "language": "en",
+              "text": ""
+            }
+          ],
+          "evses": [
+            {
+              "uid": "1667",
+              "status": "CHARGING",
+              "last_updated": "2026-10-29T13:48:46Z",
+              "evse_id": "GB*ESB*E1034*1667",
+              "physical_reference": "UT07WQ",
+              "floor_level": null,
+              "directions": [
+                {
+                  "language": "en",
+                  "text": "Contactless payment available."
+                }
+              ],
+              "parking_restrictions": null,
+              "capabilities": [
+                "CREDIT_CARD_PAYABLE",
+                "DEBIT_CARD_PAYABLE",
+                "REMOTE_START_STOP_CAPABLE",
+                "RFID_READER",
+                "TOKEN_GROUP_CAPABLE"
+              ],
+              "connectors": [
+                {
+                  "id": "1667",
+                  "standard": "IEC_62196_T2",
+                  "format": "CABLE",
+                  "power_type": "AC_3_PHASE",
+                  "last_updated": "2026-10-28T20:00:19Z",
+                  "max_amperage": 62,
+                  "max_voltage": 230,
+                  "max_electric_power": 43000,
+                  "tariff_ids": [
+                    "e81fa68a86515fcf67c79996836400d6"
+                  ]
+                }
+              ]
+            },
+            {
+              "uid": "1670",
+              "status": "CHARGING",
+              "last_updated": "2026-10-29T13:42:18Z",
+              "evse_id": "GB*ESB*E1035*1670",
+              "physical_reference": "UT07T7",
+              "floor_level": null,
+              "directions": [
+                {
+                  "language": "en",
+                  "text": "Contactless payment available."
+                }
+              ],
+              "parking_restrictions": null,
+              "capabilities": [
+                "CREDIT_CARD_PAYABLE",
+                "DEBIT_CARD_PAYABLE",
+                "REMOTE_START_STOP_CAPABLE",
+                "RFID_READER",
+                "TOKEN_GROUP_CAPABLE"
+              ],
+              "connectors": [
+                {
+                  "id": "1670",
+                  "standard": "IEC_62196_T2",
+                  "format": "CABLE",
+                  "power_type": "AC_3_PHASE",
+                  "last_updated": "2026-10-28T20:00:20Z",
+                  "max_amperage": 62,
+                  "max_voltage": 230,
+                  "max_electric_power": 43000,
+                  "tariff_ids": [
+                    "e81fa68a86515fcf67c79996836400d6"
+                  ]
+                }
+              ]
+            },
+            {
+              "uid": "1662",
+              "status": "CHARGING",
+              "last_updated": "2026-10-29T13:39:12Z",
+              "evse_id": "GB*ESB*E1033*1",
+              "physical_reference": "UT07VY",
+              "floor_level": null,
+              "directions": [
+                {
+                  "language": "en",
+                  "text": "Contactless payment available."
+                }
+              ],
+              "parking_restrictions": null,
+              "capabilities": [
+                "CREDIT_CARD_PAYABLE",
+                "DEBIT_CARD_PAYABLE",
+                "REMOTE_START_STOP_CAPABLE",
+                "RFID_READER",
+                "TOKEN_GROUP_CAPABLE"
+              ],
+              "connectors": [
+                {
+                  "id": "1662",
+                  "standard": "CHADEMO",
+                  "format": "CABLE",
+                  "power_type": "DC",
+                  "last_updated": "2026-10-28T20:00:19Z",
+                  "max_amperage": 125,
+                  "max_voltage": 400,
+                  "max_electric_power": 50000,
+                  "tariff_ids": [
+                    "e81fa68a86515fcf67c79996836400d6"
+                  ]
+                },
+                {
+                  "id": "1663",
+                  "standard": "IEC_62196_T2_COMBO",
+                  "format": "CABLE",
+                  "power_type": "DC",
+                  "last_updated": "2026-10-28T20:00:19Z",
+                  "max_amperage": 125,
+                  "max_voltage": 400,
+                  "max_electric_power": 50000,
+                  "tariff_ids": [
+                    "e81fa68a86515fcf67c79996836400d6"
+                  ]
+                }
+              ]
+            },
+            {
+              "uid": "1665",
+              "status": "AVAILABLE",
+              "last_updated": "2026-10-29T12:59:53Z",
+              "evse_id": "GB*ESB*E1034*1",
+              "physical_reference": "UT07WQ",
+              "floor_level": null,
+              "directions": [
+                {
+                  "language": "en",
+                  "text": "Contactless payment available."
+                }
+              ],
+              "parking_restrictions": null,
+              "capabilities": [
+                "CREDIT_CARD_PAYABLE",
+                "DEBIT_CARD_PAYABLE",
+                "REMOTE_START_STOP_CAPABLE",
+                "RFID_READER",
+                "TOKEN_GROUP_CAPABLE"
+              ],
+              "connectors": [
+                {
+                  "id": "1666",
+                  "standard": "IEC_62196_T2_COMBO",
+                  "format": "CABLE",
+                  "power_type": "DC",
+                  "last_updated": "2026-10-28T20:00:19Z",
+                  "max_amperage": 125,
+                  "max_voltage": 400,
+                  "max_electric_power": 50000,
+                  "tariff_ids": [
+                    "e81fa68a86515fcf67c79996836400d6"
+                  ]
+                },
+                {
+                  "id": "1665",
+                  "standard": "CHADEMO",
+                  "format": "CABLE",
+                  "power_type": "DC",
+                  "last_updated": "2026-10-28T20:00:19Z",
+                  "max_amperage": 125,
+                  "max_voltage": 400,
+                  "max_electric_power": 50000,
+                  "tariff_ids": [
+                    "e81fa68a86515fcf67c79996836400d6"
+                  ]
+                }
+              ]
+            },
+            {
+              "uid": "1668",
+              "status": "AVAILABLE",
+              "last_updated": "2026-10-29T12:49:05Z",
+              "evse_id": "GB*ESB*E1035*1",
+              "physical_reference": "UT07T7",
+              "floor_level": null,
+              "directions": [
+                {
+                  "language": "en",
+                  "text": "Contactless payment available."
+                }
+              ],
+              "parking_restrictions": null,
+              "capabilities": [
+                "CREDIT_CARD_PAYABLE",
+                "DEBIT_CARD_PAYABLE",
+                "REMOTE_START_STOP_CAPABLE",
+                "RFID_READER",
+                "TOKEN_GROUP_CAPABLE"
+              ],
+              "connectors": [
+                {
+                  "id": "1668",
+                  "standard": "CHADEMO",
+                  "format": "CABLE",
+                  "power_type": "DC",
+                  "last_updated": "2026-10-28T20:00:19Z",
+                  "max_amperage": 125,
+                  "max_voltage": 400,
+                  "max_electric_power": 50000,
+                  "tariff_ids": [
+                    "e81fa68a86515fcf67c79996836400d6"
+                  ]
+                },
+                {
+                  "id": "1669",
+                  "standard": "IEC_62196_T2_COMBO",
+                  "format": "CABLE",
+                  "power_type": "DC",
+                  "last_updated": "2026-10-28T20:00:20Z",
+                  "max_amperage": 125,
+                  "max_voltage": 400,
+                  "max_electric_power": 50000,
+                  "tariff_ids": [
+                    "e81fa68a86515fcf67c79996836400d6"
+                  ]
+                }
+              ]
+            },
+            {
+              "uid": "1664",
+              "status": "AVAILABLE",
+              "last_updated": "2026-10-29T13:41:42Z",
+              "evse_id": "GB*ESB*E1033*1664",
+              "physical_reference": "UT07VY",
+              "floor_level": null,
+              "directions": [
+                {
+                  "language": "en",
+                  "text": "Contactless payment available."
+                }
+              ],
+              "parking_restrictions": null,
+              "capabilities": [
+                "CREDIT_CARD_PAYABLE",
+                "DEBIT_CARD_PAYABLE",
+                "REMOTE_START_STOP_CAPABLE",
+                "RFID_READER",
+                "TOKEN_GROUP_CAPABLE"
+              ],
+              "connectors": [
+                {
+                  "id": "1664",
+                  "standard": "IEC_62196_T2",
+                  "format": "CABLE",
+                  "power_type": "AC_3_PHASE",
+                  "last_updated": "2026-10-28T20:00:19Z",
+                  "max_amperage": 62,
+                  "max_voltage": 230,
+                  "max_electric_power": 43000,
+                  "tariff_ids": [
+                    "e81fa68a86515fcf67c79996836400d6"
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  }
+}
