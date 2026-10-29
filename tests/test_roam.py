@@ -15,7 +15,7 @@ from pipeline import publish, run
 from pipeline.geography import place_in_uk
 from pipeline.pricing import describe_tariff
 from pipeline.registry import load_registry
-from schema.operator import OperatorConfig
+from schema.operator import ExcludedLocation, OperatorConfig
 
 FIXTURES = Path(__file__).parent / "fixtures" / "roam"
 WHEN = datetime(2026, 10, 26, 19, 0, tzinfo=UTC)
@@ -23,7 +23,8 @@ PREFIX = "roam:GB:EVC:"
 TYTHERINGTON = PREFIX + "0G2WrxDlQlXuRWbDBaRa"
 NORWOOD_HALL = PREFIX + "2fDHay9pjCSytGLYz37F"
 BOLEY_PARK = PREFIX + "bWbUNpOKSQHU9mUnCF23"
-MARLIE = "DYmze49fRHgjNu18NOUV"
+MARLIE = PREFIX + "DYmze49fRHgjNu18NOUV"
+TEST_CHARGER = "c008d1ad-292b-4971-813f-18db2e053775"
 
 
 def config(**update) -> OperatorConfig:
@@ -61,7 +62,7 @@ def test_each_module_is_read_in_one_request_twelve_minutes_apart():
 
 def test_recorded_locations_convert_with_roams_party_and_ocpi_221_names():
     result, _, _ = replay()
-    assert len(result.locations) == 6
+    assert len(result.locations) == 7
     assert all(location.id.startswith(PREFIX) for location in result.locations)
     assert {t.id for t in result.tariffs} == {
         PREFIX + i for i in [*(c["tariff_id"] for c in _raw_connectors()), "free_tariff"]
@@ -72,7 +73,7 @@ def test_recorded_locations_convert_with_roams_party_and_ocpi_221_names():
     tariffs = {t.id for t in result.tariffs}
     assert all(len(c.tariff_ids) == 1 and c.tariff_ids[0] in tariffs for c in connectors(result))
     statuses = Counter(e.status for loc in result.locations for e in loc.evses)
-    assert set(statuses) == {"available", "charging", "out_of_order", "unknown"}
+    assert set(statuses) == {"available", "charging", "out_of_order"}
     (site,) = [loc for loc in result.locations if loc.id == TYTHERINGTON]
     assert site.operator.name == "Roam Charging" and site.address.country == "GBR"
 
@@ -98,7 +99,6 @@ def test_an_evse_status_is_shown_as_sent_whatever_its_second_connector_says():
     raw = {
         e["uid"]: e
         for loc in recorded_locations()
-        if loc["id"] != MARLIE
         for e in loc["evses"]
         if len({c["status"] for c in e["connectors"]}) > 1
     }
@@ -110,15 +110,24 @@ def test_an_evse_status_is_shown_as_sent_whatever_its_second_connector_says():
         assert evses[uid].status == evse["status"].lower().replace("outoforder", "out_of_order")
 
 
-def test_duplicate_connector_ids_leave_that_location_off():
-    """Finding of 2026-10-26: some EVSEs give both connectors the id 1."""
+def test_repeated_connector_ids_take_roams_own_connector_uuids():
+    """Finding of 2026-10-26, owner's decision of 2026-10-29: some EVSEs give both
+    connectors the id 1, and those sites are still shown."""
+    (raw,) = [loc for loc in recorded_locations() if PREFIX + loc["id"] == MARLIE]
+    sent = [[(c["id"], c["uuid"]) for c in e["connectors"]] for e in raw["evses"]]
+    assert sent == [[("1", "24263"), ("1", "24264")], [("1", "24265"), ("1", "24266")]]
     result, _, _ = replay()
-    assert not any(loc.id.endswith(MARLIE) for loc in result.locations)
-    assert PREFIX + MARLIE in result.dropped_location_ids
-    assert any(
-        line.startswith(f"location {MARLIE!r} skipped") and "duplicate connector ids" in line
-        for line in result.issues
-    )
+    (site,) = [loc for loc in result.locations if loc.id == MARLIE]
+    assert [[c.id for c in e.connectors] for e in site.evses] == [
+        ["24263", "24264"],
+        ["24265", "24266"],
+    ]
+    assert result.dropped_location_ids == []
+    expected = "connector ids repeat within an EVSE; Roam's own connector uuid used as each id"
+    assert f"{expected} (2 times)" in result.issues
+    # Elsewhere the ids are kept as sent.
+    (other,) = [loc for loc in result.locations if loc.id == TYTHERINGTON]
+    assert {c.id for e in other.evses for c in e.connectors} == {"1", "2"}
 
 
 def test_a_location_with_no_evses_is_shown_as_published():
@@ -145,15 +154,34 @@ def test_prices_show_with_vat_added_only_under_the_owners_decision():
     assert shown.text.startswith("54p per kWh including VAT, with VAT at 20% added by this")
 
 
-def test_the_free_tariff_is_free_only_because_every_price_is_zero():
-    """Finding of 2026-10-26: a test charger names free_tariff, a flat fee of 0."""
+def test_the_test_charger_is_left_off_and_the_rest_of_its_site_stays():
+    """Finding of 2026-10-26, owner's decision of 2026-10-29: a test charger names
+    free_tariff, a flat fee of 0."""
+    (item,) = config().excluded_locations.locations
+    assert (PREFIX + item.id, item.evse_uids) == (NORWOOD_HALL, [TEST_CHARGER])
     result, _, _ = replay()
-    (free,) = [t for t in result.tariffs if t.price_state == "free_confirmed"]
-    assert free.id == PREFIX + "free_tariff"
-    assert describe_tariff(free).text == "Free"
     (site,) = [loc for loc in result.locations if loc.id == NORWOOD_HALL]
-    on_free = [e for e in site.evses if any(free.id in c.tariff_ids for c in e.connectors)]
-    assert [e.status for e in on_free] == ["unknown"]
+    assert len(site.evses) == 1 and site.evses[0].uid != TEST_CHARGER
+    assert not any(c.tariff_ids == [PREFIX + "free_tariff"] for c in connectors(result))
+    assert result.dropped_location_ids == []
+    assert (
+        f"EVSE {TEST_CHARGER!r} at location '2fDHay9pjCSytGLYz37F' not kept: left off under "
+        "the decision recorded in the operator file"
+    ) in result.issues
+    # The tariff is still read as sent; only the charger that names it is left off.
+    (free,) = [t for t in result.tariffs if t.price_state == "free_confirmed"]
+    assert free.id == PREFIX + "free_tariff" and describe_tariff(free).text == "Free"
+
+    # Without the decision the test charger is shown, as published.
+    result, _, _ = replay(config(excluded_locations=None))
+    (site,) = [loc for loc in result.locations if loc.id == NORWOOD_HALL]
+    (test,) = [e for e in site.evses if e.uid == TEST_CHARGER]
+    assert test.status == "unknown" and test.connectors[0].tariff_ids == [free.id]
+
+
+def test_a_listed_evse_must_be_named_once():
+    with pytest.raises(ValueError, match="each EVSE may be listed once"):
+        ExcludedLocation(id="a", name="A", evse_uids=["x", "x"])
 
 
 def test_published_files_carry_the_attribution_and_prices_with_vat(tmp_path):
@@ -164,7 +192,7 @@ def test_published_files_carry_the_attribution_and_prices_with_vat(tmp_path):
     statement = " ".join(operators["roam"].attribution.split())
     layer = json.loads((data / "locations.geojson").read_text(encoding="utf-8"))
     assert statement in layer["attribution"]
-    assert len(layer["features"]) == 6
+    assert len(layer["features"]) == 7
     (site,) = [f["properties"] for f in layer["features"] if f["properties"]["id"] == TYTHERINGTON]
     assert "VAT not stated" not in site["pt"]
     details = [json.loads(p.read_text(encoding="utf-8")) for p in (data / "loc").rglob("*.json")]
@@ -189,6 +217,15 @@ def test_the_adapter_renames_only_what_is_missing():
     assert roam._connector("not a connector", issues) == "not a connector"
     assert roam.ocpi_location({"id": "a", "evses": None}, issues) == {"id": "a", "evses": None}
     assert roam.ocpi_location(["a"], issues) == ["a"]
+    # Repeated ids with no usable uuid are left for the converter to skip.
+    same = [{"id": "1", "uuid": "9"}, {"id": "1", "uuid": "9"}]
+    assert [c["id"] for c in roam._connectors(same, issues)] == ["1", "1"]
+    assert [c["id"] for c in roam._connectors([{"id": "1"}, {"id": "1"}], issues)] == ["1", "1"]
+    # Missing ids are not repeated ids; the converter deals with them as for any feed.
+    missing = [{"uuid": "7"}, {"uuid": "8"}]
+    assert [c.get("id") for c in roam._connectors(missing, issues)] == [None, None]
+    numbers = [{"id": "1", "uuid": 7}, {"id": "1", "uuid": 8}]
+    assert [c["id"] for c in roam._connectors(numbers, issues)] == ["7", "8"]
 
 
 @pytest.mark.parametrize("option", ["date_from", "page_size"])
@@ -213,6 +250,7 @@ def test_roam_records_its_terms_decisions_and_rate_limit():
     assert cfg.rate_limit.min_seconds_between_requests == 721
     assert str(cfg.missing_publish_flag.decided) == "2026-10-26"
     assert str(cfg.vat_not_stated.decided) == "2026-10-26"
+    assert str(cfg.excluded_locations.decided) == "2026-10-29"
     assert cfg.vat_not_stated.add_percent == 20
     assert str(cfg.access_requested) == "2026-10-24"
     assert cfg.engagement.log[-2].action == "reply_received"

@@ -43,7 +43,7 @@ BROWSER_ARGS = [
 # In the fixtures (recorded, and Monta's made-up ones), without the two hidden unless
 # asked for (ADR 0023): Evolt Network's "Arthur House - Private Use Only" and PoGo
 # Charge's taxi-only "Swales Central Avenue".
-LOCATIONS = 123
+LOCATIONS = 124
 PRIVATE = "Arthur House - Private Use Only"
 TAXIS = "Swales Central Avenue"
 OUT_OF_SERVICE = 11  # fixture locations with every charger reported out of service
@@ -512,9 +512,16 @@ def test_the_header_shrinks_back_after_it_has_wrapped(visit):
     page.wait_for_timeout(300)
     one_row = page.locator(".top").bounding_box()["height"]
     assert one_row < 70 and one_row < wrapped
-    measured = page.evaluate(
-        "getComputedStyle(document.documentElement).getPropertyValue('--header-measured')"
-    )
+    # The page measures the header in a ResizeObserver callback, which a busy page can run
+    # after the wait above, so give the measurement up to 5 seconds more to catch up.
+    # (wait_for_function would need eval, which the page's security policy blocks.)
+    for _ in range(50):
+        measured = page.evaluate(
+            "getComputedStyle(document.documentElement).getPropertyValue('--header-measured')"
+        )
+        if measured.strip() == f"{round(one_row)}px":
+            break
+        page.wait_for_timeout(100)
     assert measured.strip() == f"{round(one_row)}px"
     map_view = page.locator("#map-view").bounding_box()
     assert abs(map_view["y"] + map_view["height"] - WIDE["height"]) < 2

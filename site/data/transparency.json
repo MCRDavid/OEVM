@@ -1,5 +1,5 @@
 {
-  "last_reviewed": "2026-10-26",
+  "last_reviewed": "2026-10-29",
   "disclaimer": "OEVM is a personal, experimental project for learning about AI tools. Much of its code and text was written with an AI assistant, and it will contain mistakes. Charger data comes from the operators and other sources credited on every record, and remains their work. Everything is provided \"as is\", with no warranty or guarantee of any kind. Always check prices and availability at the charger.",
   "regulation": {
     "summary": "The Public Charge Point Regulations 2023 set no limit on how often data users may request the data. Regulation 10(5) requires the data to be available free of charge without terms on its use. DfT's guidance allows terms covering the means of access, which is where operators' rate limits come from.",
@@ -2495,11 +2495,13 @@
         "locations": [
           {
             "id": "3166",
-            "name": "PR06767 H19 Test Unit"
+            "name": "PR06767 H19 Test Unit",
+            "evse_uids": []
           },
           {
             "id": "1183",
-            "name": "TR0047 Hubeleon Test Centre"
+            "name": "TR0047 Hubeleon Test Centre",
+            "evse_uids": []
           }
         ]
       },
@@ -3097,7 +3099,20 @@
       "own_feed_over_copies": null,
       "relay": null,
       "expired_certificate": null,
-      "excluded_locations": null,
+      "excluded_locations": {
+        "decided": "2026-10-29",
+        "basis": "The EVSE's only connector is named \"Schnieder French Test charger\" and names the tariff free_tariff, a flat fee of 0, so the map would show a test charger as free. The repository owner decided on 2026-10-29 to leave that charger off; the rest of Norwood Hall Hotel stays on the map.",
+        "evidence_url": "https://data.evc.ninja/public/v1/data",
+        "locations": [
+          {
+            "id": "2fDHay9pjCSytGLYz37F",
+            "name": "Norwood Hall Hotel",
+            "evse_uids": [
+              "c008d1ad-292b-4971-813f-18db2e053775"
+            ]
+          }
+        ]
+      },
       "rate_limit": {
         "our_gap_seconds": 721.0,
         "our_max_per_hour": 5,
@@ -3142,7 +3157,7 @@
           "kind": "spec_conformance",
           "kind_label": "Differs from OCPI 2.2.1",
           "summary": "In 12 EVSEs at 10 locations both connectors have the id 1, while OCPI 2.2.1 requires connector ids to differ within an EVSE (2026-10-26).",
-          "handling": "Those 10 locations are not shown, as with any feed, and each is named in the run's issues on the feed health page.",
+          "handling": "On 2026-10-29 the repository owner decided that these sites should still be shown, as the chargers are likely there and only the ids are wrong. In such an EVSE each connector takes Roam's own connector uuid, which is unique, as its id; the run's issues count how often.",
           "evidence_url": "https://data.evc.ninja/public/v1/data",
           "status": "open",
           "resolved_date": null
@@ -3181,8 +3196,8 @@
           "date": "2026-10-26",
           "kind": "data_quality",
           "kind_label": "Data quirk",
-          "summary": "One connector, on an EVSE at Norwood Hall Hotel whose connector charger_name reads \"Schnieder French Test charger 2\", names the tariff free_tariff, whose only price is a flat fee of 0. Its EVSE status was UNKNOWN on 2026-10-26.",
-          "handling": "Shown as published.",
+          "summary": "One EVSE at Norwood Hall Hotel, whose only connector has the charger_name \"Schnieder French Test charger\", names the tariff free_tariff, whose only price is a flat fee of 0. Its status was UNKNOWN on 2026-10-26.",
+          "handling": "That EVSE is left off the map under the repository owner's decision of 2026-10-29 recorded in excluded_locations; the hotel's other charger is shown.",
           "evidence_url": "https://data.evc.ninja/public/v1/tariffs",
           "status": "open",
           "resolved_date": null

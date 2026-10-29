@@ -414,7 +414,7 @@ def operator_view(config: OperatorConfig) -> dict:
                 "basis": config.excluded_locations.basis,
                 "evidence_url": config.excluded_locations.evidence_url,
                 "locations": [
-                    {"id": location.id, "name": location.name}
+                    {"id": location.id, "name": location.name, "evse_uids": location.evse_uids}
                     for location in config.excluded_locations.locations
                 ],
             }
@@ -639,7 +639,12 @@ def _sources_table(data: dict) -> str:
         excluded = op["excluded_locations"]
         if op["enabled"] and excluded:
             names = ", ".join(
-                f"{_e(location['name'])} (id {_e(location['id'])})"
+                f"{_e(location['name'])} (id {_e(location['id'])}"
+                + (
+                    f", only EVSE {_e(', '.join(location['evse_uids']))})"
+                    if location["evse_uids"]
+                    else ")"
+                )
                 for location in excluded["locations"]
             )
             fetched = fetched.rstrip(".")

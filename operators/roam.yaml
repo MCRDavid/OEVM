@@ -87,6 +87,19 @@ vat_not_stated:
     prices on the map all include VAT and can be compared.
   evidence_url: https://data.evc.ninja/public/v1/tariffs
   add_percent: 20
+excluded_locations:
+  decided: 2026-10-29
+  basis: >-
+    The EVSE's only connector is named "Schnieder French Test charger" and names the tariff
+    free_tariff, a flat fee of 0, so the map would show a test charger as free. The
+    repository owner decided on 2026-10-29 to leave that charger off; the rest of Norwood
+    Hall Hotel stays on the map.
+  evidence_url: https://data.evc.ninja/public/v1/data
+  locations:
+    - id: 2fDHay9pjCSytGLYz37F
+      name: Norwood Hall Hotel
+      evse_uids:
+        - c008d1ad-292b-4971-813f-18db2e053775
 engagement:
   status: open_anonymous
   evidence:
@@ -192,8 +205,10 @@ findings:
       In 12 EVSEs at 10 locations both connectors have the id 1, while OCPI 2.2.1 requires
       connector ids to differ within an EVSE (2026-10-26).
     handling: >-
-      Those 10 locations are not shown, as with any feed, and each is named in the run's
-      issues on the feed health page.
+      On 2026-10-29 the repository owner decided that these sites should still be shown,
+      as the chargers are likely there and only the ids are wrong. In such an EVSE each
+      connector takes Roam's own connector uuid, which is unique, as its id; the run's
+      issues count how often.
     evidence_url: https://data.evc.ninja/public/v1/data
   - date: 2026-10-26
     kind: spec_conformance
@@ -227,10 +242,12 @@ findings:
   - date: 2026-10-26
     kind: data_quality
     summary: >-
-      One connector, on an EVSE at Norwood Hall Hotel whose connector charger_name reads
-      "Schnieder French Test charger 2", names the tariff free_tariff, whose only price is a
-      flat fee of 0. Its EVSE status was UNKNOWN on 2026-10-26.
-    handling: Shown as published.
+      One EVSE at Norwood Hall Hotel, whose only connector has the charger_name "Schnieder
+      French Test charger", names the tariff free_tariff, whose only price is a flat fee
+      of 0. Its status was UNKNOWN on 2026-10-26.
+    handling: >-
+      That EVSE is left off the map under the repository owner's decision of 2026-10-29
+      recorded in excluded_locations; the hotel's other charger is shown.
     evidence_url: https://data.evc.ninja/public/v1/tariffs
   - date: 2026-10-26
     kind: data_quality
@@ -240,6 +257,7 @@ findings:
 notes: >-
   Roam was called EVC until November 2024. Its data was given by email on 2026-10-26 in
   reply to a request; no open data page has been found on its website. Fetched by the
-  custom adapter in adapters/roam.py. Switched on 2026-10-26 after the repository owner's
-  decisions on locations with no publish flag and on VAT.
+  custom adapter in adapters/roam.py. Switched on after the repository owner's decisions
+  of 2026-10-26 on locations with no publish flag and on VAT, and of 2026-10-29 on the
+  test charger and on repeated connector ids.
 enabled: true

@@ -13,8 +13,8 @@ The records use OCPI 2.1.1 field names (`adapters/roam.py`). To keep the fixture
   sockets, DC CCS cables of 100 kW and 300 kW, the statuses AVAILABLE, CHARGING, OUTOFORDER
   and UNKNOWN, EVSEs whose two connectors report different statuses, the test charger at
   Norwood Hall Hotel on the tariff `free_tariff`, Co op Boley Park with no EVSEs, Marlie
-  Holiday Park whose EVSEs have two connectors with the id 1, and sites in Scotland and
-  Cornwall.
+  Holiday Park whose EVSEs have two connectors with the id 1 (read with Roam's own
+  connector uuids as ids), and sites in Scotland and Cornwall.
 - `tariffs.json` keeps the 8 of 728 tariffs those locations name.
 - `X-Total-Count` was changed to match each trimmed count. Every record is exactly as Roam
   sent it.

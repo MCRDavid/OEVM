@@ -12,6 +12,7 @@ from pydantic import ValidationError
 from pipeline import registry
 from schema.operator import ENGAGEMENT_LABELS, EngagementStatus, OperatorConfig
 from tests.test_security_files import (
+    PUBLISHED_EVSE_UIDS,
     PUBLISHED_FEED_ADDRESSES,
     PUBLISHED_LOCATION_IDS,
     PUBLISHED_RECORD_IDS,
@@ -197,6 +198,7 @@ def test_template_is_valid_and_disabled():
 
 def test_operator_files_contain_no_key_like_values():
     allowed = PUBLISHED_FEED_ADDRESSES | PUBLISHED_RECORD_IDS | PUBLISHED_LOCATION_IDS
+    allowed |= PUBLISHED_EVSE_UIDS
     for path in sorted(OPERATORS_DIR.glob("*.yaml")):
         text = path.read_text(encoding="utf-8")
         for published in allowed | URBAN_FOX_ZERO_TARIFFS:
@@ -812,6 +814,16 @@ def test_a_named_missing_minus_sign_needs_a_uk_postcode_and_each_location_once()
             OperatorConfig.model_validate(
                 enabled_open(swapped_coordinates={**decision, "sign_missing": bad})
             )
+
+
+def test_only_roam_leaves_single_evses_off_and_names_them_exactly():
+    operators = registry.load_registry(OPERATORS_DIR)
+    named = {
+        i: sorted(uid for item in c.excluded_locations.locations for uid in item.evse_uids)
+        for i, c in operators.items()
+        if c.excluded_locations and any(item.evse_uids for item in c.excluded_locations.locations)
+    }
+    assert named == {"roam": sorted(PUBLISHED_EVSE_UIDS)}
 
 
 def test_only_scottishpower_recharge_and_urban_fox_carry_a_zero_price_tariffs_decision():

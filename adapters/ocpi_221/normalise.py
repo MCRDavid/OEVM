@@ -124,18 +124,30 @@ def publish_allowed(raw: dict, config: OperatorConfig, issues: IssueLog) -> bool
 
 
 def excluded_by_owner(raw: dict, config: OperatorConfig, issues: IssueLog) -> bool:
-    """Whether the operator file records the owner's decision to leave this location off
-    the map (excluded_locations), matched by its exact OCPI id."""
+    """Whether the operator file records the owner's decision to leave this whole location
+    off the map (excluded_locations), matched by its exact OCPI id. A listed location that
+    names evse_uids stays, and only those EVSEs are left off (excluded_evses)."""
     decision = config.excluded_locations
     if decision is None or raw.get("id") is None:
         return False
-    if str(raw["id"]) in {location.id for location in decision.locations}:
+    if str(raw["id"]) in {item.id for item in decision.locations if not item.evse_uids}:
         issues.add(
             f"location {str(raw['id'])!r} not kept: left off under the decision recorded in "
             "the operator file"
         )
         return True
     return False
+
+
+def excluded_evses(raw: dict, config: OperatorConfig) -> set[str]:
+    """The uids of this location's EVSEs that the operator file's excluded_locations
+    decision leaves off the map, matched by the location's exact OCPI id."""
+    decision = config.excluded_locations
+    if decision is None or raw.get("id") is None:
+        return set()
+    return {
+        uid for item in decision.locations if item.id == str(raw["id"]) for uid in item.evse_uids
+    }
 
 
 def parse_ocpi_datetime(value: object) -> datetime | None:
@@ -268,6 +280,17 @@ def _evse(
     )
 
 
+def _left_off(evse: object, location: dict, uids: set[str], issues: IssueLog) -> bool:
+    """Whether the owner's decision leaves this EVSE off, logging it if so."""
+    if not uids or not isinstance(evse, dict) or evse.get("uid") not in uids:
+        return False
+    issues.add(
+        f"EVSE {evse['uid']!r} at location {str(location['id'])!r} not kept: left off under "
+        "the decision recorded in the operator file"
+    )
+    return True
+
+
 def _physical_reference(value: object) -> str | None:
     """The label on the charge point as text, or None when none is given."""
     if isinstance(value, int) and not isinstance(value, bool):
@@ -344,6 +367,7 @@ def location_from_ocpi(
     prefix = f"{config.id}:{country}:{party}"
     last_updated = _last_updated(raw, "location", issues)
     coordinates = raw["coordinates"]
+    left_off = excluded_evses(raw, config)
     return Location(
         id=f"{prefix}:{_ocpi_id(raw['id'], 'location', issues)}",
         name=raw.get("name"),
@@ -362,7 +386,11 @@ def location_from_ocpi(
             name=(raw.get("operator") or {}).get("name") or config.display_name,
         ),
         opening_hours=_opening_hours(raw.get("opening_times"), issues),
-        evses=[_evse(e, last_updated, prefix, issues, config) for e in raw.get("evses") or []],
+        evses=[
+            _evse(e, last_updated, prefix, issues, config)
+            for e in raw.get("evses") or []
+            if not _left_off(e, raw, left_off, issues)
+        ],
         last_updated=last_updated,
         provenance=_provenance(config, source_url, fetched_at),
     )

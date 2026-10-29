@@ -9,6 +9,9 @@ differences, recorded as findings in operators/roam.yaml on 2026-10-26, are:
 - Locations and tariffs have no country_code or party_id, so the operator file's GB and
   EVC are used. Locations have no publish flag.
 - Locations give type (OCPI 2.1.1) rather than parking_type, which this project does not use.
+- Some EVSEs give two connectors the same id, which OCPI does not allow. By the repository
+  owner's decision of 2026-10-29, each connector in such an EVSE takes Roam's own
+  connector uuid, which is unique, as its id, so the site is still shown.
 
 Each connector is given its OCPI 2.2.1 names, then every record is converted by
 adapters.ocpi_221.convert_records, so the publish rule and every model rule apply.
@@ -47,6 +50,28 @@ def _connector(raw: object, issues: IssueLog) -> object:
     return connector
 
 
+def _text_id(value: object) -> str | None:
+    """An id as text: a non-empty string, or a whole number written as text."""
+    if isinstance(value, str) and value.strip():
+        return value
+    if isinstance(value, int) and not isinstance(value, bool):
+        return str(value)
+    return None
+
+
+def _connectors(raw: list, issues: IssueLog) -> list:
+    """An EVSE's connectors, each with its own Roam uuid as its id if their ids repeat."""
+    connectors = [_connector(c, issues) for c in raw]
+    ids = [c["id"] for c in connectors if isinstance(c, dict) and c.get("id") is not None]
+    if len(set(map(repr, ids))) == len(ids):
+        return connectors
+    uuids = [_text_id(c.get("uuid")) if isinstance(c, dict) else None for c in connectors]
+    if None in uuids or len(set(uuids)) != len(uuids):
+        return connectors  # left for the converter to skip, as for any feed
+    issues.add("connector ids repeat within an EVSE; Roam's own connector uuid used as each id")
+    return [{**c, "id": uuid} for c, uuid in zip(connectors, uuids, strict=True)]
+
+
 def ocpi_location(raw: object, issues: IssueLog) -> object:
     """Reshape one Roam location into an OCPI 2.2.1 Location."""
     if not isinstance(raw, dict) or not isinstance(raw.get("evses"), list):
@@ -54,7 +79,7 @@ def ocpi_location(raw: object, issues: IssueLog) -> object:
     evses = []
     for evse in raw["evses"]:
         if isinstance(evse, dict) and isinstance(evse.get("connectors"), list):
-            evse = {**evse, "connectors": [_connector(c, issues) for c in evse["connectors"]]}
+            evse = {**evse, "connectors": _connectors(evse["connectors"], issues)}
         evses.append(evse)
     return {**raw, "evses": evses}
 

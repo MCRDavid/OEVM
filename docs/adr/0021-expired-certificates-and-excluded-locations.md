@@ -37,6 +37,11 @@ the owner decided: "Let's leave off the test ones".
   exact OCPI id, with the date, basis and evidence. Each one is logged in the run's issues
   and counted as dropped, and the transparency page lists them by name and id. Without
   it, every location the feed marks for publishing is kept.
+- **Single EVSEs left off (amended 29 October 2026).** A listed location may also name
+  `evse_uids`. Then only those EVSEs, by their exact uid, are left off and the rest of the
+  location stays on the map; each is logged in the run's issues and the transparency page
+  names it. The first use is a test charger at a Roam site that is otherwise in use
+  (`operators/roam.yaml`).
 
 ## Consequences
 
