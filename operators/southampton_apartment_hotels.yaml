@@ -1,0 +1,125 @@
+# yaml-language-server: $schema=schema.json
+id: southampton_apartment_hotels
+display_name: Southampton Apartment Hotels
+ocpi_country_code: unknown
+ocpi_party_id: unknown
+adapter: eco_movement_pcpr
+base_url: unknown
+endpoints:
+  locations:
+    url: https://open-chargepoints.com/api/ocpi/cpo/2.2.1/locations/
+    status: documented
+    note: >-
+      Confirmed in Eco-Movement's PCPR API reference on 2026-10-07. Written with the trailing
+      slash, as in the user guide's example request and the getting started page's paging
+      link (read 2026-10-26); without it the server answered HTTP 307 on 2026-10-29.
+  tariffs:
+    url: https://open-chargepoints.com/api/ocpi/cpo/2.2.1/tariffs/
+    status: documented
+  statuses:
+    url: https://open-chargepoints.com/api/statuses
+    status: documented
+auth:
+  method: header
+  name: Authorization
+  scheme: Token
+  secret_name: SOUTHAMPTON_APARTMENT_HOTELS_TOKEN
+rate_limit:
+  min_seconds_between_requests: 125
+  limits:
+    - publisher: Eco-Movement
+      requests: 30
+      per_seconds: 3600
+      endpoint: locations
+      quote: The `locations` endpoint has a rate limit of 30 requests per 1 hour.
+      source_url: https://developers.eco-movement.com/v2.2.1/reference/get-all-locations-pcpr-api
+      checked: 2026-10-26
+    - publisher: Eco-Movement
+      requests: 30
+      per_seconds: 3600
+      endpoint: locations
+      scope: single location
+      quote: The `locations/{id}` endpoint has a rate limit of 30 requests per 1 hour.
+      source_url: https://developers.eco-movement.com/v2.2.1/reference/get-specific-location-pcpr-api
+      checked: 2026-10-26
+    - publisher: Eco-Movement
+      requests: 30
+      per_seconds: 3600
+      endpoint: tariffs
+      quote: The `tariffs` endpoint has a rate limit of 30 requests per 1 hour.
+      source_url: https://developers.eco-movement.com/reference/get-tariffs-pcpr-api
+      checked: 2026-10-26
+    - publisher: Eco-Movement
+      requests: 1
+      per_seconds: 30
+      endpoint: statuses
+      quote: The `statuses` endpoint has a rate limit of 1 request per 30 seconds.
+      source_url: https://developers.eco-movement.com/reference/get-statuses-pcpr-api
+      checked: 2026-10-26
+  limits_checked: 2026-10-26
+  notes: >-
+    A gap of 125 seconds (the 120 seconds the strictest limit needs, plus a safety
+    margin) is kept between any two requests with this network's token, so at most 29
+    requests in any hour are sent with it. By the repository owner's decision of
+    2026-10-29 (limits_per_key) the limits are read as applying to each token. Requests
+    to open-chargepoints.com are still sent one at a time, at least 2 seconds apart
+    whichever network they are for, and a request from the server to wait holds back
+    every network on it. Eco-Movement "strongly recommends limiting simultaneous GET
+    requests to a maximum of 5". It recommends retrieving the entire dataset once a day.
+limits_per_key:
+  decided: 2026-10-29
+  basis: >-
+    Eco-Movement publishes a limit of 30 requests an hour for each of the locations and
+    tariffs endpoints and gives each network its own token, but does not say whether the
+    limits count per token or per address. The repository owner decided on 2026-10-29
+    that they are read as applying to each token, so each network keeps its own 125
+    second gap, while requests to open-chargepoints.com are still sent one at a time.
+  evidence_url: https://developers.eco-movement.com/v2.2.1/docs/eco-movement-pcpr-api-user-guide
+supports_single_location: supported
+cors: needs_testing
+attribution: null
+engagement:
+  status: key_on_request
+  evidence:
+    - date: 2026-10-27
+      file: evidence/southampton_apartment_hotels/2026-10-27-token-emails.md
+      note: >-
+        Three emails from Eco-Movement on 2026-10-27, each with expiring links to tokens
+        for the same eight networks, this one among them, for its PCPR API, sent as an
+        "Authorization: Token" header to its OCPI 2.2.1 endpoints. The token itself is not
+        kept here.
+  log:
+    - date: 2026-10-27
+      action: key_granted
+      channel: email
+      summary: >-
+        Eco-Movement sent a token for the network it labels "Southampton Apartment Hotels" by email, through
+        an expiring link, to be sent as an "Authorization: Token" header to its OCPI 2.2.1
+        endpoints. The emails do not say which request they answer. The token is kept as a
+        GitHub Actions secret.
+      evidence_file: evidence/southampton_apartment_hotels/2026-10-27-token-emails.md
+access_requested: null
+access_granted: 2026-10-27
+sources:
+  - url: https://developers.eco-movement.com/v2.2.1/docs/eco-movement-pcpr-api-user-guide
+    note: >-
+      Eco-Movement's PCPR API user guide: at most 5 simultaneous requests; date_from and
+      date_to described for locations only.
+  - url: https://developers.eco-movement.com/v2.2.1/reference/get-all-locations-pcpr-api
+    note: Locations endpoint URL and its rate limit (read 2026-10-26).
+  - url: https://developers.eco-movement.com/reference/get-tariffs-pcpr-api
+    note: Tariffs endpoint and its rate limit (read 2026-10-26).
+  - url: https://energy.drax.com/drax-network-of-public-chargers/
+    note: >-
+      Drax's PCPR request page (read 2026-10-23), for "the Drax managed Public Charge Point
+      Network within the United Kingdom", whose requests are shared with Eco-Movement. The
+      project requested data there on 2026-10-23; that this network's token answers that
+      request is inferred, not stated.
+findings: []
+notes: >-
+  Named "Southampton Apartment Hotels" in Eco-Movement's emails of 2026-10-27, which gave tokens for eight
+  networks (Drax Group, GFX-GB Drax, drax-Ista, Aldi Stores Limited, Travis Perkins, Volvo,
+  WCCC Edgbaston and Southampton Apartment Hotels). Who operates its chargers, and its
+  OCPI codes, are to be confirmed from its data. The token is kept as the GitHub Actions
+  secret SOUTHAMPTON_APARTMENT_HOTELS_TOKEN.
+enabled: false

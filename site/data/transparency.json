@@ -6062,6 +6062,124 @@
       ]
     },
     {
+      "id": "aldi",
+      "name": "Aldi Stores Limited",
+      "enabled": false,
+      "adapter": "eco_movement_pcpr",
+      "engagement": {
+        "status": "key_on_request",
+        "label": "Key issued on request",
+        "headline": "Key issued on request (as of 2026-10-27)",
+        "as_of": "2026-10-27",
+        "last_request": null,
+        "last_response": {
+          "date": "2026-10-27",
+          "action": "key_granted"
+        },
+        "last_response_text": "2026-10-27 (Key issued)",
+        "evidence": [
+          {
+            "date": "2026-10-27",
+            "url": null,
+            "file": "evidence/aldi/2026-10-27-token-emails.md",
+            "note": "Three emails from Eco-Movement on 2026-10-27, each with expiring links to tokens for the same eight networks, this one among them, for its PCPR API, sent as an \"Authorization: Token\" header to its OCPI 2.2.1 endpoints. The token itself is not kept here."
+          }
+        ],
+        "log": [
+          {
+            "date": "2026-10-27",
+            "action": "key_granted",
+            "action_label": "Key issued",
+            "channel": "email",
+            "channel_label": "Email",
+            "summary": "Eco-Movement sent a token for the network it labels \"Aldi Stores Limited\" by email, through an expiring link, to be sent as an \"Authorization: Token\" header to its OCPI 2.2.1 endpoints. The emails do not say which request they answer. The token is kept as a GitHub Actions secret.",
+            "quote": null,
+            "evidence_url": null,
+            "evidence_file": "evidence/aldi/2026-10-27-token-emails.md"
+          }
+        ]
+      },
+      "access_requested": null,
+      "access_granted": "2026-10-27",
+      "feeds": [
+        {
+          "kind": "locations",
+          "url": "https://open-chargepoints.com/api/ocpi/cpo/2.2.1/locations/",
+          "status": "documented"
+        },
+        {
+          "kind": "tariffs",
+          "url": "https://open-chargepoints.com/api/ocpi/cpo/2.2.1/tariffs/",
+          "status": "documented"
+        },
+        {
+          "kind": "statuses",
+          "url": "https://open-chargepoints.com/api/statuses",
+          "status": "documented"
+        }
+      ],
+      "licence": null,
+      "attribution": null,
+      "missing_publish_flag": null,
+      "swapped_coordinates": null,
+      "nonstandard_statuses": null,
+      "tariffs_from": null,
+      "nonstandard_parking_restrictions": null,
+      "zero_price_tariffs": null,
+      "vat_not_stated": null,
+      "vat_in_price": null,
+      "own_feed_over_copies": null,
+      "relay": null,
+      "expired_certificate": null,
+      "excluded_locations": null,
+      "sent_copy": null,
+      "rate_limit": {
+        "our_gap_seconds": 125.0,
+        "our_max_per_hour": 29,
+        "ours": "At least 125 s between requests with the operator's own key, measured from the end of the previous request (at most 29 in any hour with it), retries included. The limits are read as applying to each key, by the owner's decision of 2026-10-29; requests to the host are still sent one at a time, at least 2 s apart.",
+        "published": [
+          {
+            "text": "30 per 1 hour for the locations endpoint",
+            "publisher": "Eco-Movement",
+            "quote": "The `locations` endpoint has a rate limit of 30 requests per 1 hour.",
+            "source_url": "https://developers.eco-movement.com/v2.2.1/reference/get-all-locations-pcpr-api",
+            "checked": "2026-10-26"
+          },
+          {
+            "text": "30 per 1 hour for the locations endpoint (single location)",
+            "publisher": "Eco-Movement",
+            "quote": "The `locations/{id}` endpoint has a rate limit of 30 requests per 1 hour.",
+            "source_url": "https://developers.eco-movement.com/v2.2.1/reference/get-specific-location-pcpr-api",
+            "checked": "2026-10-26"
+          },
+          {
+            "text": "30 per 1 hour for the tariffs endpoint",
+            "publisher": "Eco-Movement",
+            "quote": "The `tariffs` endpoint has a rate limit of 30 requests per 1 hour.",
+            "source_url": "https://developers.eco-movement.com/reference/get-tariffs-pcpr-api",
+            "checked": "2026-10-26"
+          },
+          {
+            "text": "1 per 30 seconds for the statuses endpoint",
+            "publisher": "Eco-Movement",
+            "quote": "The `statuses` endpoint has a rate limit of 1 request per 30 seconds.",
+            "source_url": "https://developers.eco-movement.com/reference/get-statuses-pcpr-api",
+            "checked": "2026-10-26"
+          }
+        ],
+        "limits_checked": "2026-10-26",
+        "comparison": "Within every published limit. The strictest needs 120 s between requests; this project waits 125 s, which includes a safety margin.",
+        "difference_from_regulations": "The operator sets a limit; the regulations set none. DfT guidance allows such terms on access.",
+        "notes": "A gap of 125 seconds (the 120 seconds the strictest limit needs, plus a safety margin) is kept between any two requests with this network's token, so at most 29 requests in any hour are sent with it. By the repository owner's decision of 2026-10-29 (limits_per_key) the limits are read as applying to each token. Requests to open-chargepoints.com are still sent one at a time, at least 2 seconds apart whichever network they are for, and a request from the server to wait holds back every network on it. Eco-Movement \"strongly recommends limiting simultaneous GET requests to a maximum of 5\". It recommends retrieving the entire dataset once a day.",
+        "per_key": {
+          "decided": "2026-10-29",
+          "basis": "Eco-Movement publishes a limit of 30 requests an hour for each of the locations and tariffs endpoints and gives each network its own token, but does not say whether the limits count per token or per address. The repository owner decided on 2026-10-29 that they are read as applying to each token, so each network keeps its own 125 second gap, while requests to open-chargepoints.com are still sent one at a time.",
+          "evidence_url": "https://developers.eco-movement.com/v2.2.1/docs/eco-movement-pcpr-api-user-guide"
+        }
+      },
+      "findings": []
+    },
+    {
       "id": "amey_ev_charging",
       "name": "Amey EV Charging",
       "enabled": false,
@@ -7173,6 +7291,242 @@
         "difference_from_regulations": "Not known yet.",
         "notes": null,
         "per_key": null
+      },
+      "findings": []
+    },
+    {
+      "id": "drax_group",
+      "name": "Drax Group",
+      "enabled": false,
+      "adapter": "eco_movement_pcpr",
+      "engagement": {
+        "status": "key_on_request",
+        "label": "Key issued on request",
+        "headline": "Key issued on request (as of 2026-10-27)",
+        "as_of": "2026-10-27",
+        "last_request": null,
+        "last_response": {
+          "date": "2026-10-27",
+          "action": "key_granted"
+        },
+        "last_response_text": "2026-10-27 (Key issued)",
+        "evidence": [
+          {
+            "date": "2026-10-27",
+            "url": null,
+            "file": "evidence/drax_group/2026-10-27-token-emails.md",
+            "note": "Three emails from Eco-Movement on 2026-10-27, each with expiring links to tokens for the same eight networks, this one among them, for its PCPR API, sent as an \"Authorization: Token\" header to its OCPI 2.2.1 endpoints. The token itself is not kept here."
+          }
+        ],
+        "log": [
+          {
+            "date": "2026-10-27",
+            "action": "key_granted",
+            "action_label": "Key issued",
+            "channel": "email",
+            "channel_label": "Email",
+            "summary": "Eco-Movement sent a token for the network it labels \"Drax Group\" by email, through an expiring link, to be sent as an \"Authorization: Token\" header to its OCPI 2.2.1 endpoints. The emails do not say which request they answer. The token is kept as a GitHub Actions secret.",
+            "quote": null,
+            "evidence_url": null,
+            "evidence_file": "evidence/drax_group/2026-10-27-token-emails.md"
+          }
+        ]
+      },
+      "access_requested": null,
+      "access_granted": "2026-10-27",
+      "feeds": [
+        {
+          "kind": "locations",
+          "url": "https://open-chargepoints.com/api/ocpi/cpo/2.2.1/locations/",
+          "status": "documented"
+        },
+        {
+          "kind": "tariffs",
+          "url": "https://open-chargepoints.com/api/ocpi/cpo/2.2.1/tariffs/",
+          "status": "documented"
+        },
+        {
+          "kind": "statuses",
+          "url": "https://open-chargepoints.com/api/statuses",
+          "status": "documented"
+        }
+      ],
+      "licence": null,
+      "attribution": null,
+      "missing_publish_flag": null,
+      "swapped_coordinates": null,
+      "nonstandard_statuses": null,
+      "tariffs_from": null,
+      "nonstandard_parking_restrictions": null,
+      "zero_price_tariffs": null,
+      "vat_not_stated": null,
+      "vat_in_price": null,
+      "own_feed_over_copies": null,
+      "relay": null,
+      "expired_certificate": null,
+      "excluded_locations": null,
+      "sent_copy": null,
+      "rate_limit": {
+        "our_gap_seconds": 125.0,
+        "our_max_per_hour": 29,
+        "ours": "At least 125 s between requests with the operator's own key, measured from the end of the previous request (at most 29 in any hour with it), retries included. The limits are read as applying to each key, by the owner's decision of 2026-10-29; requests to the host are still sent one at a time, at least 2 s apart.",
+        "published": [
+          {
+            "text": "30 per 1 hour for the locations endpoint",
+            "publisher": "Eco-Movement",
+            "quote": "The `locations` endpoint has a rate limit of 30 requests per 1 hour.",
+            "source_url": "https://developers.eco-movement.com/v2.2.1/reference/get-all-locations-pcpr-api",
+            "checked": "2026-10-26"
+          },
+          {
+            "text": "30 per 1 hour for the locations endpoint (single location)",
+            "publisher": "Eco-Movement",
+            "quote": "The `locations/{id}` endpoint has a rate limit of 30 requests per 1 hour.",
+            "source_url": "https://developers.eco-movement.com/v2.2.1/reference/get-specific-location-pcpr-api",
+            "checked": "2026-10-26"
+          },
+          {
+            "text": "30 per 1 hour for the tariffs endpoint",
+            "publisher": "Eco-Movement",
+            "quote": "The `tariffs` endpoint has a rate limit of 30 requests per 1 hour.",
+            "source_url": "https://developers.eco-movement.com/reference/get-tariffs-pcpr-api",
+            "checked": "2026-10-26"
+          },
+          {
+            "text": "1 per 30 seconds for the statuses endpoint",
+            "publisher": "Eco-Movement",
+            "quote": "The `statuses` endpoint has a rate limit of 1 request per 30 seconds.",
+            "source_url": "https://developers.eco-movement.com/reference/get-statuses-pcpr-api",
+            "checked": "2026-10-26"
+          }
+        ],
+        "limits_checked": "2026-10-26",
+        "comparison": "Within every published limit. The strictest needs 120 s between requests; this project waits 125 s, which includes a safety margin.",
+        "difference_from_regulations": "The operator sets a limit; the regulations set none. DfT guidance allows such terms on access.",
+        "notes": "A gap of 125 seconds (the 120 seconds the strictest limit needs, plus a safety margin) is kept between any two requests with this network's token, so at most 29 requests in any hour are sent with it. By the repository owner's decision of 2026-10-29 (limits_per_key) the limits are read as applying to each token. Requests to open-chargepoints.com are still sent one at a time, at least 2 seconds apart whichever network they are for, and a request from the server to wait holds back every network on it. Eco-Movement \"strongly recommends limiting simultaneous GET requests to a maximum of 5\". It recommends retrieving the entire dataset once a day.",
+        "per_key": {
+          "decided": "2026-10-29",
+          "basis": "Eco-Movement publishes a limit of 30 requests an hour for each of the locations and tariffs endpoints and gives each network its own token, but does not say whether the limits count per token or per address. The repository owner decided on 2026-10-29 that they are read as applying to each token, so each network keeps its own 125 second gap, while requests to open-chargepoints.com are still sent one at a time.",
+          "evidence_url": "https://developers.eco-movement.com/v2.2.1/docs/eco-movement-pcpr-api-user-guide"
+        }
+      },
+      "findings": []
+    },
+    {
+      "id": "drax_ista",
+      "name": "drax-Ista",
+      "enabled": false,
+      "adapter": "eco_movement_pcpr",
+      "engagement": {
+        "status": "key_on_request",
+        "label": "Key issued on request",
+        "headline": "Key issued on request (as of 2026-10-27)",
+        "as_of": "2026-10-27",
+        "last_request": null,
+        "last_response": {
+          "date": "2026-10-27",
+          "action": "key_granted"
+        },
+        "last_response_text": "2026-10-27 (Key issued)",
+        "evidence": [
+          {
+            "date": "2026-10-27",
+            "url": null,
+            "file": "evidence/drax_ista/2026-10-27-token-emails.md",
+            "note": "Three emails from Eco-Movement on 2026-10-27, each with expiring links to tokens for the same eight networks, this one among them, for its PCPR API, sent as an \"Authorization: Token\" header to its OCPI 2.2.1 endpoints. The token itself is not kept here."
+          }
+        ],
+        "log": [
+          {
+            "date": "2026-10-27",
+            "action": "key_granted",
+            "action_label": "Key issued",
+            "channel": "email",
+            "channel_label": "Email",
+            "summary": "Eco-Movement sent a token for the network it labels \"drax-Ista\" by email, through an expiring link, to be sent as an \"Authorization: Token\" header to its OCPI 2.2.1 endpoints. The emails do not say which request they answer. The token is kept as a GitHub Actions secret.",
+            "quote": null,
+            "evidence_url": null,
+            "evidence_file": "evidence/drax_ista/2026-10-27-token-emails.md"
+          }
+        ]
+      },
+      "access_requested": null,
+      "access_granted": "2026-10-27",
+      "feeds": [
+        {
+          "kind": "locations",
+          "url": "https://open-chargepoints.com/api/ocpi/cpo/2.2.1/locations/",
+          "status": "documented"
+        },
+        {
+          "kind": "tariffs",
+          "url": "https://open-chargepoints.com/api/ocpi/cpo/2.2.1/tariffs/",
+          "status": "documented"
+        },
+        {
+          "kind": "statuses",
+          "url": "https://open-chargepoints.com/api/statuses",
+          "status": "documented"
+        }
+      ],
+      "licence": null,
+      "attribution": null,
+      "missing_publish_flag": null,
+      "swapped_coordinates": null,
+      "nonstandard_statuses": null,
+      "tariffs_from": null,
+      "nonstandard_parking_restrictions": null,
+      "zero_price_tariffs": null,
+      "vat_not_stated": null,
+      "vat_in_price": null,
+      "own_feed_over_copies": null,
+      "relay": null,
+      "expired_certificate": null,
+      "excluded_locations": null,
+      "sent_copy": null,
+      "rate_limit": {
+        "our_gap_seconds": 125.0,
+        "our_max_per_hour": 29,
+        "ours": "At least 125 s between requests with the operator's own key, measured from the end of the previous request (at most 29 in any hour with it), retries included. The limits are read as applying to each key, by the owner's decision of 2026-10-29; requests to the host are still sent one at a time, at least 2 s apart.",
+        "published": [
+          {
+            "text": "30 per 1 hour for the locations endpoint",
+            "publisher": "Eco-Movement",
+            "quote": "The `locations` endpoint has a rate limit of 30 requests per 1 hour.",
+            "source_url": "https://developers.eco-movement.com/v2.2.1/reference/get-all-locations-pcpr-api",
+            "checked": "2026-10-26"
+          },
+          {
+            "text": "30 per 1 hour for the locations endpoint (single location)",
+            "publisher": "Eco-Movement",
+            "quote": "The `locations/{id}` endpoint has a rate limit of 30 requests per 1 hour.",
+            "source_url": "https://developers.eco-movement.com/v2.2.1/reference/get-specific-location-pcpr-api",
+            "checked": "2026-10-26"
+          },
+          {
+            "text": "30 per 1 hour for the tariffs endpoint",
+            "publisher": "Eco-Movement",
+            "quote": "The `tariffs` endpoint has a rate limit of 30 requests per 1 hour.",
+            "source_url": "https://developers.eco-movement.com/reference/get-tariffs-pcpr-api",
+            "checked": "2026-10-26"
+          },
+          {
+            "text": "1 per 30 seconds for the statuses endpoint",
+            "publisher": "Eco-Movement",
+            "quote": "The `statuses` endpoint has a rate limit of 1 request per 30 seconds.",
+            "source_url": "https://developers.eco-movement.com/reference/get-statuses-pcpr-api",
+            "checked": "2026-10-26"
+          }
+        ],
+        "limits_checked": "2026-10-26",
+        "comparison": "Within every published limit. The strictest needs 120 s between requests; this project waits 125 s, which includes a safety margin.",
+        "difference_from_regulations": "The operator sets a limit; the regulations set none. DfT guidance allows such terms on access.",
+        "notes": "A gap of 125 seconds (the 120 seconds the strictest limit needs, plus a safety margin) is kept between any two requests with this network's token, so at most 29 requests in any hour are sent with it. By the repository owner's decision of 2026-10-29 (limits_per_key) the limits are read as applying to each token. Requests to open-chargepoints.com are still sent one at a time, at least 2 seconds apart whichever network they are for, and a request from the server to wait holds back every network on it. Eco-Movement \"strongly recommends limiting simultaneous GET requests to a maximum of 5\". It recommends retrieving the entire dataset once a day.",
+        "per_key": {
+          "decided": "2026-10-29",
+          "basis": "Eco-Movement publishes a limit of 30 requests an hour for each of the locations and tariffs endpoints and gives each network its own token, but does not say whether the limits count per token or per address. The repository owner decided on 2026-10-29 that they are read as applying to each token, so each network keeps its own 125 second gap, while requests to open-chargepoints.com are still sent one at a time.",
+          "evidence_url": "https://developers.eco-movement.com/v2.2.1/docs/eco-movement-pcpr-api-user-guide"
+        }
       },
       "findings": []
     },
@@ -8380,6 +8734,124 @@
         "difference_from_regulations": "Not known yet.",
         "notes": null,
         "per_key": null
+      },
+      "findings": []
+    },
+    {
+      "id": "gfx_gb_drax",
+      "name": "GFX-GB Drax",
+      "enabled": false,
+      "adapter": "eco_movement_pcpr",
+      "engagement": {
+        "status": "key_on_request",
+        "label": "Key issued on request",
+        "headline": "Key issued on request (as of 2026-10-27)",
+        "as_of": "2026-10-27",
+        "last_request": null,
+        "last_response": {
+          "date": "2026-10-27",
+          "action": "key_granted"
+        },
+        "last_response_text": "2026-10-27 (Key issued)",
+        "evidence": [
+          {
+            "date": "2026-10-27",
+            "url": null,
+            "file": "evidence/gfx_gb_drax/2026-10-27-token-emails.md",
+            "note": "Three emails from Eco-Movement on 2026-10-27, each with expiring links to tokens for the same eight networks, this one among them, for its PCPR API, sent as an \"Authorization: Token\" header to its OCPI 2.2.1 endpoints. The token itself is not kept here."
+          }
+        ],
+        "log": [
+          {
+            "date": "2026-10-27",
+            "action": "key_granted",
+            "action_label": "Key issued",
+            "channel": "email",
+            "channel_label": "Email",
+            "summary": "Eco-Movement sent a token for the network it labels \"GFX-GB Drax\" by email, through an expiring link, to be sent as an \"Authorization: Token\" header to its OCPI 2.2.1 endpoints. The emails do not say which request they answer. The token is kept as a GitHub Actions secret.",
+            "quote": null,
+            "evidence_url": null,
+            "evidence_file": "evidence/gfx_gb_drax/2026-10-27-token-emails.md"
+          }
+        ]
+      },
+      "access_requested": null,
+      "access_granted": "2026-10-27",
+      "feeds": [
+        {
+          "kind": "locations",
+          "url": "https://open-chargepoints.com/api/ocpi/cpo/2.2.1/locations/",
+          "status": "documented"
+        },
+        {
+          "kind": "tariffs",
+          "url": "https://open-chargepoints.com/api/ocpi/cpo/2.2.1/tariffs/",
+          "status": "documented"
+        },
+        {
+          "kind": "statuses",
+          "url": "https://open-chargepoints.com/api/statuses",
+          "status": "documented"
+        }
+      ],
+      "licence": null,
+      "attribution": null,
+      "missing_publish_flag": null,
+      "swapped_coordinates": null,
+      "nonstandard_statuses": null,
+      "tariffs_from": null,
+      "nonstandard_parking_restrictions": null,
+      "zero_price_tariffs": null,
+      "vat_not_stated": null,
+      "vat_in_price": null,
+      "own_feed_over_copies": null,
+      "relay": null,
+      "expired_certificate": null,
+      "excluded_locations": null,
+      "sent_copy": null,
+      "rate_limit": {
+        "our_gap_seconds": 125.0,
+        "our_max_per_hour": 29,
+        "ours": "At least 125 s between requests with the operator's own key, measured from the end of the previous request (at most 29 in any hour with it), retries included. The limits are read as applying to each key, by the owner's decision of 2026-10-29; requests to the host are still sent one at a time, at least 2 s apart.",
+        "published": [
+          {
+            "text": "30 per 1 hour for the locations endpoint",
+            "publisher": "Eco-Movement",
+            "quote": "The `locations` endpoint has a rate limit of 30 requests per 1 hour.",
+            "source_url": "https://developers.eco-movement.com/v2.2.1/reference/get-all-locations-pcpr-api",
+            "checked": "2026-10-26"
+          },
+          {
+            "text": "30 per 1 hour for the locations endpoint (single location)",
+            "publisher": "Eco-Movement",
+            "quote": "The `locations/{id}` endpoint has a rate limit of 30 requests per 1 hour.",
+            "source_url": "https://developers.eco-movement.com/v2.2.1/reference/get-specific-location-pcpr-api",
+            "checked": "2026-10-26"
+          },
+          {
+            "text": "30 per 1 hour for the tariffs endpoint",
+            "publisher": "Eco-Movement",
+            "quote": "The `tariffs` endpoint has a rate limit of 30 requests per 1 hour.",
+            "source_url": "https://developers.eco-movement.com/reference/get-tariffs-pcpr-api",
+            "checked": "2026-10-26"
+          },
+          {
+            "text": "1 per 30 seconds for the statuses endpoint",
+            "publisher": "Eco-Movement",
+            "quote": "The `statuses` endpoint has a rate limit of 1 request per 30 seconds.",
+            "source_url": "https://developers.eco-movement.com/reference/get-statuses-pcpr-api",
+            "checked": "2026-10-26"
+          }
+        ],
+        "limits_checked": "2026-10-26",
+        "comparison": "Within every published limit. The strictest needs 120 s between requests; this project waits 125 s, which includes a safety margin.",
+        "difference_from_regulations": "The operator sets a limit; the regulations set none. DfT guidance allows such terms on access.",
+        "notes": "A gap of 125 seconds (the 120 seconds the strictest limit needs, plus a safety margin) is kept between any two requests with this network's token, so at most 29 requests in any hour are sent with it. By the repository owner's decision of 2026-10-29 (limits_per_key) the limits are read as applying to each token. Requests to open-chargepoints.com are still sent one at a time, at least 2 seconds apart whichever network they are for, and a request from the server to wait holds back every network on it. Eco-Movement \"strongly recommends limiting simultaneous GET requests to a maximum of 5\". It recommends retrieving the entire dataset once a day.",
+        "per_key": {
+          "decided": "2026-10-29",
+          "basis": "Eco-Movement publishes a limit of 30 requests an hour for each of the locations and tariffs endpoints and gives each network its own token, but does not say whether the limits count per token or per address. The repository owner decided on 2026-10-29 that they are read as applying to each token, so each network keeps its own 125 second gap, while requests to open-chargepoints.com are still sent one at a time.",
+          "evidence_url": "https://developers.eco-movement.com/v2.2.1/docs/eco-movement-pcpr-api-user-guide"
+        }
       },
       "findings": []
     },
@@ -10010,6 +10482,124 @@
       "findings": []
     },
     {
+      "id": "southampton_apartment_hotels",
+      "name": "Southampton Apartment Hotels",
+      "enabled": false,
+      "adapter": "eco_movement_pcpr",
+      "engagement": {
+        "status": "key_on_request",
+        "label": "Key issued on request",
+        "headline": "Key issued on request (as of 2026-10-27)",
+        "as_of": "2026-10-27",
+        "last_request": null,
+        "last_response": {
+          "date": "2026-10-27",
+          "action": "key_granted"
+        },
+        "last_response_text": "2026-10-27 (Key issued)",
+        "evidence": [
+          {
+            "date": "2026-10-27",
+            "url": null,
+            "file": "evidence/southampton_apartment_hotels/2026-10-27-token-emails.md",
+            "note": "Three emails from Eco-Movement on 2026-10-27, each with expiring links to tokens for the same eight networks, this one among them, for its PCPR API, sent as an \"Authorization: Token\" header to its OCPI 2.2.1 endpoints. The token itself is not kept here."
+          }
+        ],
+        "log": [
+          {
+            "date": "2026-10-27",
+            "action": "key_granted",
+            "action_label": "Key issued",
+            "channel": "email",
+            "channel_label": "Email",
+            "summary": "Eco-Movement sent a token for the network it labels \"Southampton Apartment Hotels\" by email, through an expiring link, to be sent as an \"Authorization: Token\" header to its OCPI 2.2.1 endpoints. The emails do not say which request they answer. The token is kept as a GitHub Actions secret.",
+            "quote": null,
+            "evidence_url": null,
+            "evidence_file": "evidence/southampton_apartment_hotels/2026-10-27-token-emails.md"
+          }
+        ]
+      },
+      "access_requested": null,
+      "access_granted": "2026-10-27",
+      "feeds": [
+        {
+          "kind": "locations",
+          "url": "https://open-chargepoints.com/api/ocpi/cpo/2.2.1/locations/",
+          "status": "documented"
+        },
+        {
+          "kind": "tariffs",
+          "url": "https://open-chargepoints.com/api/ocpi/cpo/2.2.1/tariffs/",
+          "status": "documented"
+        },
+        {
+          "kind": "statuses",
+          "url": "https://open-chargepoints.com/api/statuses",
+          "status": "documented"
+        }
+      ],
+      "licence": null,
+      "attribution": null,
+      "missing_publish_flag": null,
+      "swapped_coordinates": null,
+      "nonstandard_statuses": null,
+      "tariffs_from": null,
+      "nonstandard_parking_restrictions": null,
+      "zero_price_tariffs": null,
+      "vat_not_stated": null,
+      "vat_in_price": null,
+      "own_feed_over_copies": null,
+      "relay": null,
+      "expired_certificate": null,
+      "excluded_locations": null,
+      "sent_copy": null,
+      "rate_limit": {
+        "our_gap_seconds": 125.0,
+        "our_max_per_hour": 29,
+        "ours": "At least 125 s between requests with the operator's own key, measured from the end of the previous request (at most 29 in any hour with it), retries included. The limits are read as applying to each key, by the owner's decision of 2026-10-29; requests to the host are still sent one at a time, at least 2 s apart.",
+        "published": [
+          {
+            "text": "30 per 1 hour for the locations endpoint",
+            "publisher": "Eco-Movement",
+            "quote": "The `locations` endpoint has a rate limit of 30 requests per 1 hour.",
+            "source_url": "https://developers.eco-movement.com/v2.2.1/reference/get-all-locations-pcpr-api",
+            "checked": "2026-10-26"
+          },
+          {
+            "text": "30 per 1 hour for the locations endpoint (single location)",
+            "publisher": "Eco-Movement",
+            "quote": "The `locations/{id}` endpoint has a rate limit of 30 requests per 1 hour.",
+            "source_url": "https://developers.eco-movement.com/v2.2.1/reference/get-specific-location-pcpr-api",
+            "checked": "2026-10-26"
+          },
+          {
+            "text": "30 per 1 hour for the tariffs endpoint",
+            "publisher": "Eco-Movement",
+            "quote": "The `tariffs` endpoint has a rate limit of 30 requests per 1 hour.",
+            "source_url": "https://developers.eco-movement.com/reference/get-tariffs-pcpr-api",
+            "checked": "2026-10-26"
+          },
+          {
+            "text": "1 per 30 seconds for the statuses endpoint",
+            "publisher": "Eco-Movement",
+            "quote": "The `statuses` endpoint has a rate limit of 1 request per 30 seconds.",
+            "source_url": "https://developers.eco-movement.com/reference/get-statuses-pcpr-api",
+            "checked": "2026-10-26"
+          }
+        ],
+        "limits_checked": "2026-10-26",
+        "comparison": "Within every published limit. The strictest needs 120 s between requests; this project waits 125 s, which includes a safety margin.",
+        "difference_from_regulations": "The operator sets a limit; the regulations set none. DfT guidance allows such terms on access.",
+        "notes": "A gap of 125 seconds (the 120 seconds the strictest limit needs, plus a safety margin) is kept between any two requests with this network's token, so at most 29 requests in any hour are sent with it. By the repository owner's decision of 2026-10-29 (limits_per_key) the limits are read as applying to each token. Requests to open-chargepoints.com are still sent one at a time, at least 2 seconds apart whichever network they are for, and a request from the server to wait holds back every network on it. Eco-Movement \"strongly recommends limiting simultaneous GET requests to a maximum of 5\". It recommends retrieving the entire dataset once a day.",
+        "per_key": {
+          "decided": "2026-10-29",
+          "basis": "Eco-Movement publishes a limit of 30 requests an hour for each of the locations and tariffs endpoints and gives each network its own token, but does not say whether the limits count per token or per address. The repository owner decided on 2026-10-29 that they are read as applying to each token, so each network keeps its own 125 second gap, while requests to open-chargepoints.com are still sent one at a time.",
+          "evidence_url": "https://developers.eco-movement.com/v2.2.1/docs/eco-movement-pcpr-api-user-guide"
+        }
+      },
+      "findings": []
+    },
+    {
       "id": "sprint",
       "name": "Sprint",
       "enabled": false,
@@ -10259,6 +10849,124 @@
       "findings": []
     },
     {
+      "id": "travis_perkins",
+      "name": "Travis Perkins",
+      "enabled": false,
+      "adapter": "eco_movement_pcpr",
+      "engagement": {
+        "status": "key_on_request",
+        "label": "Key issued on request",
+        "headline": "Key issued on request (as of 2026-10-27)",
+        "as_of": "2026-10-27",
+        "last_request": null,
+        "last_response": {
+          "date": "2026-10-27",
+          "action": "key_granted"
+        },
+        "last_response_text": "2026-10-27 (Key issued)",
+        "evidence": [
+          {
+            "date": "2026-10-27",
+            "url": null,
+            "file": "evidence/travis_perkins/2026-10-27-token-emails.md",
+            "note": "Three emails from Eco-Movement on 2026-10-27, each with expiring links to tokens for the same eight networks, this one among them, for its PCPR API, sent as an \"Authorization: Token\" header to its OCPI 2.2.1 endpoints. The token itself is not kept here."
+          }
+        ],
+        "log": [
+          {
+            "date": "2026-10-27",
+            "action": "key_granted",
+            "action_label": "Key issued",
+            "channel": "email",
+            "channel_label": "Email",
+            "summary": "Eco-Movement sent a token for the network it labels \"Travis Perkins\" by email, through an expiring link, to be sent as an \"Authorization: Token\" header to its OCPI 2.2.1 endpoints. The emails do not say which request they answer. The token is kept as a GitHub Actions secret.",
+            "quote": null,
+            "evidence_url": null,
+            "evidence_file": "evidence/travis_perkins/2026-10-27-token-emails.md"
+          }
+        ]
+      },
+      "access_requested": null,
+      "access_granted": "2026-10-27",
+      "feeds": [
+        {
+          "kind": "locations",
+          "url": "https://open-chargepoints.com/api/ocpi/cpo/2.2.1/locations/",
+          "status": "documented"
+        },
+        {
+          "kind": "tariffs",
+          "url": "https://open-chargepoints.com/api/ocpi/cpo/2.2.1/tariffs/",
+          "status": "documented"
+        },
+        {
+          "kind": "statuses",
+          "url": "https://open-chargepoints.com/api/statuses",
+          "status": "documented"
+        }
+      ],
+      "licence": null,
+      "attribution": null,
+      "missing_publish_flag": null,
+      "swapped_coordinates": null,
+      "nonstandard_statuses": null,
+      "tariffs_from": null,
+      "nonstandard_parking_restrictions": null,
+      "zero_price_tariffs": null,
+      "vat_not_stated": null,
+      "vat_in_price": null,
+      "own_feed_over_copies": null,
+      "relay": null,
+      "expired_certificate": null,
+      "excluded_locations": null,
+      "sent_copy": null,
+      "rate_limit": {
+        "our_gap_seconds": 125.0,
+        "our_max_per_hour": 29,
+        "ours": "At least 125 s between requests with the operator's own key, measured from the end of the previous request (at most 29 in any hour with it), retries included. The limits are read as applying to each key, by the owner's decision of 2026-10-29; requests to the host are still sent one at a time, at least 2 s apart.",
+        "published": [
+          {
+            "text": "30 per 1 hour for the locations endpoint",
+            "publisher": "Eco-Movement",
+            "quote": "The `locations` endpoint has a rate limit of 30 requests per 1 hour.",
+            "source_url": "https://developers.eco-movement.com/v2.2.1/reference/get-all-locations-pcpr-api",
+            "checked": "2026-10-26"
+          },
+          {
+            "text": "30 per 1 hour for the locations endpoint (single location)",
+            "publisher": "Eco-Movement",
+            "quote": "The `locations/{id}` endpoint has a rate limit of 30 requests per 1 hour.",
+            "source_url": "https://developers.eco-movement.com/v2.2.1/reference/get-specific-location-pcpr-api",
+            "checked": "2026-10-26"
+          },
+          {
+            "text": "30 per 1 hour for the tariffs endpoint",
+            "publisher": "Eco-Movement",
+            "quote": "The `tariffs` endpoint has a rate limit of 30 requests per 1 hour.",
+            "source_url": "https://developers.eco-movement.com/reference/get-tariffs-pcpr-api",
+            "checked": "2026-10-26"
+          },
+          {
+            "text": "1 per 30 seconds for the statuses endpoint",
+            "publisher": "Eco-Movement",
+            "quote": "The `statuses` endpoint has a rate limit of 1 request per 30 seconds.",
+            "source_url": "https://developers.eco-movement.com/reference/get-statuses-pcpr-api",
+            "checked": "2026-10-26"
+          }
+        ],
+        "limits_checked": "2026-10-26",
+        "comparison": "Within every published limit. The strictest needs 120 s between requests; this project waits 125 s, which includes a safety margin.",
+        "difference_from_regulations": "The operator sets a limit; the regulations set none. DfT guidance allows such terms on access.",
+        "notes": "A gap of 125 seconds (the 120 seconds the strictest limit needs, plus a safety margin) is kept between any two requests with this network's token, so at most 29 requests in any hour are sent with it. By the repository owner's decision of 2026-10-29 (limits_per_key) the limits are read as applying to each token. Requests to open-chargepoints.com are still sent one at a time, at least 2 seconds apart whichever network they are for, and a request from the server to wait holds back every network on it. Eco-Movement \"strongly recommends limiting simultaneous GET requests to a maximum of 5\". It recommends retrieving the entire dataset once a day.",
+        "per_key": {
+          "decided": "2026-10-29",
+          "basis": "Eco-Movement publishes a limit of 30 requests an hour for each of the locations and tariffs endpoints and gives each network its own token, but does not say whether the limits count per token or per address. The repository owner decided on 2026-10-29 that they are read as applying to each token, so each network keeps its own 125 second gap, while requests to open-chargepoints.com are still sent one at a time.",
+          "evidence_url": "https://developers.eco-movement.com/v2.2.1/docs/eco-movement-pcpr-api-user-guide"
+        }
+      },
+      "findings": []
+    },
+    {
       "id": "trojan_energy",
       "name": "Trojan Energy",
       "enabled": false,
@@ -10384,6 +11092,124 @@
       "findings": []
     },
     {
+      "id": "volvo",
+      "name": "Volvo",
+      "enabled": false,
+      "adapter": "eco_movement_pcpr",
+      "engagement": {
+        "status": "key_on_request",
+        "label": "Key issued on request",
+        "headline": "Key issued on request (as of 2026-10-27)",
+        "as_of": "2026-10-27",
+        "last_request": null,
+        "last_response": {
+          "date": "2026-10-27",
+          "action": "key_granted"
+        },
+        "last_response_text": "2026-10-27 (Key issued)",
+        "evidence": [
+          {
+            "date": "2026-10-27",
+            "url": null,
+            "file": "evidence/volvo/2026-10-27-token-emails.md",
+            "note": "Three emails from Eco-Movement on 2026-10-27, each with expiring links to tokens for the same eight networks, this one among them, for its PCPR API, sent as an \"Authorization: Token\" header to its OCPI 2.2.1 endpoints. The token itself is not kept here."
+          }
+        ],
+        "log": [
+          {
+            "date": "2026-10-27",
+            "action": "key_granted",
+            "action_label": "Key issued",
+            "channel": "email",
+            "channel_label": "Email",
+            "summary": "Eco-Movement sent a token for the network it labels \"Volvo\" by email, through an expiring link, to be sent as an \"Authorization: Token\" header to its OCPI 2.2.1 endpoints. The emails do not say which request they answer. The token is kept as a GitHub Actions secret.",
+            "quote": null,
+            "evidence_url": null,
+            "evidence_file": "evidence/volvo/2026-10-27-token-emails.md"
+          }
+        ]
+      },
+      "access_requested": null,
+      "access_granted": "2026-10-27",
+      "feeds": [
+        {
+          "kind": "locations",
+          "url": "https://open-chargepoints.com/api/ocpi/cpo/2.2.1/locations/",
+          "status": "documented"
+        },
+        {
+          "kind": "tariffs",
+          "url": "https://open-chargepoints.com/api/ocpi/cpo/2.2.1/tariffs/",
+          "status": "documented"
+        },
+        {
+          "kind": "statuses",
+          "url": "https://open-chargepoints.com/api/statuses",
+          "status": "documented"
+        }
+      ],
+      "licence": null,
+      "attribution": null,
+      "missing_publish_flag": null,
+      "swapped_coordinates": null,
+      "nonstandard_statuses": null,
+      "tariffs_from": null,
+      "nonstandard_parking_restrictions": null,
+      "zero_price_tariffs": null,
+      "vat_not_stated": null,
+      "vat_in_price": null,
+      "own_feed_over_copies": null,
+      "relay": null,
+      "expired_certificate": null,
+      "excluded_locations": null,
+      "sent_copy": null,
+      "rate_limit": {
+        "our_gap_seconds": 125.0,
+        "our_max_per_hour": 29,
+        "ours": "At least 125 s between requests with the operator's own key, measured from the end of the previous request (at most 29 in any hour with it), retries included. The limits are read as applying to each key, by the owner's decision of 2026-10-29; requests to the host are still sent one at a time, at least 2 s apart.",
+        "published": [
+          {
+            "text": "30 per 1 hour for the locations endpoint",
+            "publisher": "Eco-Movement",
+            "quote": "The `locations` endpoint has a rate limit of 30 requests per 1 hour.",
+            "source_url": "https://developers.eco-movement.com/v2.2.1/reference/get-all-locations-pcpr-api",
+            "checked": "2026-10-26"
+          },
+          {
+            "text": "30 per 1 hour for the locations endpoint (single location)",
+            "publisher": "Eco-Movement",
+            "quote": "The `locations/{id}` endpoint has a rate limit of 30 requests per 1 hour.",
+            "source_url": "https://developers.eco-movement.com/v2.2.1/reference/get-specific-location-pcpr-api",
+            "checked": "2026-10-26"
+          },
+          {
+            "text": "30 per 1 hour for the tariffs endpoint",
+            "publisher": "Eco-Movement",
+            "quote": "The `tariffs` endpoint has a rate limit of 30 requests per 1 hour.",
+            "source_url": "https://developers.eco-movement.com/reference/get-tariffs-pcpr-api",
+            "checked": "2026-10-26"
+          },
+          {
+            "text": "1 per 30 seconds for the statuses endpoint",
+            "publisher": "Eco-Movement",
+            "quote": "The `statuses` endpoint has a rate limit of 1 request per 30 seconds.",
+            "source_url": "https://developers.eco-movement.com/reference/get-statuses-pcpr-api",
+            "checked": "2026-10-26"
+          }
+        ],
+        "limits_checked": "2026-10-26",
+        "comparison": "Within every published limit. The strictest needs 120 s between requests; this project waits 125 s, which includes a safety margin.",
+        "difference_from_regulations": "The operator sets a limit; the regulations set none. DfT guidance allows such terms on access.",
+        "notes": "A gap of 125 seconds (the 120 seconds the strictest limit needs, plus a safety margin) is kept between any two requests with this network's token, so at most 29 requests in any hour are sent with it. By the repository owner's decision of 2026-10-29 (limits_per_key) the limits are read as applying to each token. Requests to open-chargepoints.com are still sent one at a time, at least 2 seconds apart whichever network they are for, and a request from the server to wait holds back every network on it. Eco-Movement \"strongly recommends limiting simultaneous GET requests to a maximum of 5\". It recommends retrieving the entire dataset once a day.",
+        "per_key": {
+          "decided": "2026-10-29",
+          "basis": "Eco-Movement publishes a limit of 30 requests an hour for each of the locations and tariffs endpoints and gives each network its own token, but does not say whether the limits count per token or per address. The repository owner decided on 2026-10-29 that they are read as applying to each token, so each network keeps its own 125 second gap, while requests to open-chargepoints.com are still sent one at a time.",
+          "evidence_url": "https://developers.eco-movement.com/v2.2.1/docs/eco-movement-pcpr-api-user-guide"
+        }
+      },
+      "findings": []
+    },
+    {
       "id": "wattif",
       "name": "Wattif",
       "enabled": false,
@@ -10505,6 +11331,124 @@
         "difference_from_regulations": "Not known yet.",
         "notes": "No feed found yet. WattStop is run by Fuuse, whose open data host (api.fuuse.io) asks for 30 seconds between requests, so any feed found there would use the same 31 second gap as Arnold Clark Charge and ScottishPower Recharge.",
         "per_key": null
+      },
+      "findings": []
+    },
+    {
+      "id": "wccc_edgbaston",
+      "name": "WCCC Edgbaston",
+      "enabled": false,
+      "adapter": "eco_movement_pcpr",
+      "engagement": {
+        "status": "key_on_request",
+        "label": "Key issued on request",
+        "headline": "Key issued on request (as of 2026-10-27)",
+        "as_of": "2026-10-27",
+        "last_request": null,
+        "last_response": {
+          "date": "2026-10-27",
+          "action": "key_granted"
+        },
+        "last_response_text": "2026-10-27 (Key issued)",
+        "evidence": [
+          {
+            "date": "2026-10-27",
+            "url": null,
+            "file": "evidence/wccc_edgbaston/2026-10-27-token-emails.md",
+            "note": "Three emails from Eco-Movement on 2026-10-27, each with expiring links to tokens for the same eight networks, this one among them, for its PCPR API, sent as an \"Authorization: Token\" header to its OCPI 2.2.1 endpoints. The token itself is not kept here."
+          }
+        ],
+        "log": [
+          {
+            "date": "2026-10-27",
+            "action": "key_granted",
+            "action_label": "Key issued",
+            "channel": "email",
+            "channel_label": "Email",
+            "summary": "Eco-Movement sent a token for the network it labels \"WCCC Edgbaston\" by email, through an expiring link, to be sent as an \"Authorization: Token\" header to its OCPI 2.2.1 endpoints. The emails do not say which request they answer. The token is kept as a GitHub Actions secret.",
+            "quote": null,
+            "evidence_url": null,
+            "evidence_file": "evidence/wccc_edgbaston/2026-10-27-token-emails.md"
+          }
+        ]
+      },
+      "access_requested": null,
+      "access_granted": "2026-10-27",
+      "feeds": [
+        {
+          "kind": "locations",
+          "url": "https://open-chargepoints.com/api/ocpi/cpo/2.2.1/locations/",
+          "status": "documented"
+        },
+        {
+          "kind": "tariffs",
+          "url": "https://open-chargepoints.com/api/ocpi/cpo/2.2.1/tariffs/",
+          "status": "documented"
+        },
+        {
+          "kind": "statuses",
+          "url": "https://open-chargepoints.com/api/statuses",
+          "status": "documented"
+        }
+      ],
+      "licence": null,
+      "attribution": null,
+      "missing_publish_flag": null,
+      "swapped_coordinates": null,
+      "nonstandard_statuses": null,
+      "tariffs_from": null,
+      "nonstandard_parking_restrictions": null,
+      "zero_price_tariffs": null,
+      "vat_not_stated": null,
+      "vat_in_price": null,
+      "own_feed_over_copies": null,
+      "relay": null,
+      "expired_certificate": null,
+      "excluded_locations": null,
+      "sent_copy": null,
+      "rate_limit": {
+        "our_gap_seconds": 125.0,
+        "our_max_per_hour": 29,
+        "ours": "At least 125 s between requests with the operator's own key, measured from the end of the previous request (at most 29 in any hour with it), retries included. The limits are read as applying to each key, by the owner's decision of 2026-10-29; requests to the host are still sent one at a time, at least 2 s apart.",
+        "published": [
+          {
+            "text": "30 per 1 hour for the locations endpoint",
+            "publisher": "Eco-Movement",
+            "quote": "The `locations` endpoint has a rate limit of 30 requests per 1 hour.",
+            "source_url": "https://developers.eco-movement.com/v2.2.1/reference/get-all-locations-pcpr-api",
+            "checked": "2026-10-26"
+          },
+          {
+            "text": "30 per 1 hour for the locations endpoint (single location)",
+            "publisher": "Eco-Movement",
+            "quote": "The `locations/{id}` endpoint has a rate limit of 30 requests per 1 hour.",
+            "source_url": "https://developers.eco-movement.com/v2.2.1/reference/get-specific-location-pcpr-api",
+            "checked": "2026-10-26"
+          },
+          {
+            "text": "30 per 1 hour for the tariffs endpoint",
+            "publisher": "Eco-Movement",
+            "quote": "The `tariffs` endpoint has a rate limit of 30 requests per 1 hour.",
+            "source_url": "https://developers.eco-movement.com/reference/get-tariffs-pcpr-api",
+            "checked": "2026-10-26"
+          },
+          {
+            "text": "1 per 30 seconds for the statuses endpoint",
+            "publisher": "Eco-Movement",
+            "quote": "The `statuses` endpoint has a rate limit of 1 request per 30 seconds.",
+            "source_url": "https://developers.eco-movement.com/reference/get-statuses-pcpr-api",
+            "checked": "2026-10-26"
+          }
+        ],
+        "limits_checked": "2026-10-26",
+        "comparison": "Within every published limit. The strictest needs 120 s between requests; this project waits 125 s, which includes a safety margin.",
+        "difference_from_regulations": "The operator sets a limit; the regulations set none. DfT guidance allows such terms on access.",
+        "notes": "A gap of 125 seconds (the 120 seconds the strictest limit needs, plus a safety margin) is kept between any two requests with this network's token, so at most 29 requests in any hour are sent with it. By the repository owner's decision of 2026-10-29 (limits_per_key) the limits are read as applying to each token. Requests to open-chargepoints.com are still sent one at a time, at least 2 seconds apart whichever network they are for, and a request from the server to wait holds back every network on it. Eco-Movement \"strongly recommends limiting simultaneous GET requests to a maximum of 5\". It recommends retrieving the entire dataset once a day.",
+        "per_key": {
+          "decided": "2026-10-29",
+          "basis": "Eco-Movement publishes a limit of 30 requests an hour for each of the locations and tariffs endpoints and gives each network its own token, but does not say whether the limits count per token or per address. The repository owner decided on 2026-10-29 that they are read as applying to each token, so each network keeps its own 125 second gap, while requests to open-chargepoints.com are still sent one at a time.",
+          "evidence_url": "https://developers.eco-movement.com/v2.2.1/docs/eco-movement-pcpr-api-user-guide"
+        }
       },
       "findings": []
     },
