@@ -64,8 +64,8 @@ jobs:
     needs: check
     if: github.ref == 'refs/heads/main' && needs.check.outputs.fetch == 'true'
     runs-on: ubuntu-latest
-    # The slowest host sets the length (ADR 0014): the 13 networks on open-chargepoints.com
-    # make 39 requests, each network keeping its own 125 second gap, about 55 minutes, so
+    # The slowest host sets the length (ADR 0014): the 22 networks on open-chargepoints.com
+    # make 57 requests, each network keeping its own 125 second gap, about 75 minutes, so
     # the limit leaves room for retries and more networks.
     timeout-minutes: 150
     permissions:
@@ -98,14 +98,18 @@ jobs:
         # Operators with a relay decision (operators/<id>.yaml, relay) go through the
         # project's one relay Worker, which these two secrets address.
         env:
+          ALDI_TOKEN: ${{ secrets.ALDI_TOKEN }}
           ALLEGO_TOKEN: ${{ secrets.ALLEGO_TOKEN }}
           BLINK_CHARGING_UK_TOKEN: ${{ secrets.BLINK_CHARGING_UK_TOKEN }}
           CHARGEPOINT_TOKEN: ${{ secrets.CHARGEPOINT_TOKEN }}
+          DRAX_GROUP_TOKEN: ${{ secrets.DRAX_GROUP_TOKEN }}
+          DRAX_ISTA_TOKEN: ${{ secrets.DRAX_ISTA_TOKEN }}
           ESB_ECARS_TOKEN: ${{ secrets.ESB_ECARS_TOKEN }}
           ESB_ENERGY_TOKEN: ${{ secrets.ESB_ENERGY_TOKEN }}
           EVYVE_TOKEN: ${{ secrets.EVYVE_TOKEN }}
           EV_POINT_TOKEN: ${{ secrets.EV_POINT_TOKEN }}
           FASTNED_API_KEY: ${{ secrets.FASTNED_API_KEY }}
+          GFX_GB_DRAX_TOKEN: ${{ secrets.GFX_GB_DRAX_TOKEN }}
           IONITY_TOKEN: ${{ secrets.IONITY_TOKEN }}
           JOLT_API_KEY: ${{ secrets.JOLT_API_KEY }}
           LIDL_TOKEN: ${{ secrets.LIDL_TOKEN }}
@@ -114,8 +118,13 @@ jobs:
           PLUG_CHARGING_TOKEN: ${{ secrets.PLUG_CHARGING_TOKEN }}
           POD_TOKEN: ${{ secrets.POD_TOKEN }}
           RAW_CHARGING_TOKEN: ${{ secrets.RAW_CHARGING_TOKEN }}
+          SHELL_RECHARGE_TOKEN: ${{ secrets.SHELL_RECHARGE_TOKEN }}
           SOURCE_EV_TOKEN: ${{ secrets.SOURCE_EV_TOKEN }}
+          SOUTHAMPTON_APARTMENT_HOTELS_TOKEN: ${{ secrets.SOUTHAMPTON_APARTMENT_HOTELS_TOKEN }}
+          TRAVIS_PERKINS_TOKEN: ${{ secrets.TRAVIS_PERKINS_TOKEN }}
           UBITRICITY_TOKEN: ${{ secrets.UBITRICITY_TOKEN }}
+          VOLVO_TOKEN: ${{ secrets.VOLVO_TOKEN }}
+          WCCC_EDGBASTON_TOKEN: ${{ secrets.WCCC_EDGBASTON_TOKEN }}
           OEVM_RELAY_URL: ${{ secrets.OEVM_RELAY_URL }}
           OEVM_RELAY_TOKEN: ${{ secrets.OEVM_RELAY_TOKEN }}
         run: |

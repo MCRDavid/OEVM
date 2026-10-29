@@ -20,7 +20,7 @@ cors: unknown
 attribution: null
 licence: null
 engagement:
-  status: requested_no_reply
+  status: key_on_request
   evidence:
     - date: 2026-10-23
       url: https://energy.drax.com/drax-network-of-public-chargers/
@@ -28,6 +28,11 @@ engagement:
         Drax's "Public Charge Point Regulations (PCPR) RFI Files" page offers a form to
         request reference data for "the Drax managed Public Charge Point Network within the
         United Kingdom" and says requests are shared with Eco-Movement.
+    - date: 2026-10-27
+      file: evidence/drax_energy_solutions/2026-10-27-token-emails.md
+      note: >-
+        Three emails from Eco-Movement with tokens for eight networks, all published under
+        OCPI party GB GFX. The tokens are not kept here.
   log:
     - date: 2026-10-23
       action: page_checked
@@ -44,6 +49,16 @@ engagement:
       channel: web_form
       summary: >-
         Requested access to Drax Energy Solutions' PCPR data through the form on its PCPR page, which is shared with Eco-Movement.
+    - date: 2026-10-27
+      action: reply_received
+      channel: email
+      summary: >-
+        Eco-Movement sent tokens by email for eight networks: Drax Group, GFX-GB Drax,
+        drax-Ista, Aldi Stores Limited, Travis Perkins, Volvo, WCCC Edgbaston and
+        Southampton Apartment Hotels. The emails do not say which request they answer;
+        reading them as the answer to this one is inferred from the labels and from the
+        shared OCPI party GB GFX.
+      evidence_file: evidence/drax_energy_solutions/2026-10-27-token-emails.md
 access_requested: 2026-10-23
 access_granted: null
 sources:
@@ -57,7 +72,10 @@ sources:
       which is how this network was found (read 2026-10-23).
 findings: []
 notes: >-
-  Requests go through Eco-Movement, as for bp pulse, Shell Recharge, ubitricity, Ionity and
-  others, so the planned eco_movement_pcpr adapter (task A1 in docs/ADAPTERS_PLAN.md) would
-  read it once a token is granted.
+  Drax's PCPR page offers data on "the Drax managed Public Charge Point Network". The
+  eight networks whose tokens Eco-Movement sent on 2026-10-27 are recorded as operators of
+  their own, each with its own token: drax_group, gfx_gb_drax, drax_ista, aldi,
+  travis_perkins, volvo, wccc_edgbaston and southampton_apartment_hotels. This file keeps
+  the request and reply; it has no feed of its own. Whether the eight are the whole of
+  Drax's managed network is unknown.
 enabled: false

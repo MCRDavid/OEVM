@@ -1,0 +1,229 @@
+{
+  "request": {
+    "method": "GET",
+    "url": "https://open-chargepoints.com/api/ocpi/cpo/2.2.1/tariffs/?limit=1000"
+  },
+  "response": {
+    "status_code": 200,
+    "headers": {
+      "content-type": "application/json",
+      "link": "<https://open-chargepoints.com/api/ocpi/cpo/2.2.1/tariffs/?limit=1000&offset=3>; rel=\"next\"",
+      "x-total-count": "3",
+      "x-limit": "1000"
+    },
+    "body": {
+      "timestamp": "2026-10-29T18:14:23Z",
+      "status_code": 1000,
+      "status_message": "Success",
+      "data": [
+        {
+          "party_id": "TNM",
+          "id": "PP359124541_999999",
+          "currency": "GBP",
+          "tariff_alt_url": null,
+          "tariff_alt_text": [
+            {
+              "language": "en",
+              "text": "ALL: \u00a30.74 per kWh"
+            },
+            {
+              "language": "en",
+              "text": "ALL: \u00a30.74 per kWh"
+            }
+          ],
+          "last_updated": "2026-10-28T17:59:32Z",
+          "country_code": "GB",
+          "elements": [
+            {
+              "restrictions": {
+                "day_of_week": [
+                  "MONDAY",
+                  "TUESDAY",
+                  "WEDNESDAY",
+                  "THURSDAY",
+                  "FRIDAY",
+                  "SATURDAY",
+                  "SUNDAY"
+                ],
+                "end_time": "23:59",
+                "start_date": "2026-10-28",
+                "start_time": "00:00"
+              },
+              "price_components": [
+                {
+                  "type": "ENERGY",
+                  "price": 0.7417,
+                  "vat": null,
+                  "step_size": 1
+                }
+              ]
+            },
+            {
+              "restrictions": {
+                "day_of_week": [
+                  "MONDAY",
+                  "TUESDAY",
+                  "WEDNESDAY",
+                  "THURSDAY",
+                  "FRIDAY",
+                  "SATURDAY",
+                  "SUNDAY"
+                ],
+                "end_time": "23:59",
+                "max_power": 0,
+                "start_date": "2026-10-28",
+                "start_time": "00:00"
+              },
+              "price_components": [
+                {
+                  "type": "PARKING_TIME",
+                  "price": 0,
+                  "vat": null,
+                  "step_size": 60
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "party_id": "TNM",
+          "id": "PP359125626_999999",
+          "currency": "GBP",
+          "tariff_alt_url": null,
+          "tariff_alt_text": [
+            {
+              "language": "en",
+              "text": "ALL: \u00a30.66 per kWh"
+            },
+            {
+              "language": "en",
+              "text": "ALL: \u00a30.66 per kWh"
+            }
+          ],
+          "last_updated": "2026-10-28T18:04:31Z",
+          "country_code": "GB",
+          "elements": [
+            {
+              "restrictions": {
+                "day_of_week": [
+                  "MONDAY",
+                  "TUESDAY",
+                  "WEDNESDAY",
+                  "THURSDAY",
+                  "FRIDAY",
+                  "SATURDAY",
+                  "SUNDAY"
+                ],
+                "end_time": "23:59",
+                "start_date": "2026-10-28",
+                "start_time": "00:00"
+              },
+              "price_components": [
+                {
+                  "type": "ENERGY",
+                  "price": 0.6583,
+                  "vat": null,
+                  "step_size": 1
+                }
+              ]
+            },
+            {
+              "restrictions": {
+                "day_of_week": [
+                  "MONDAY",
+                  "TUESDAY",
+                  "WEDNESDAY",
+                  "THURSDAY",
+                  "FRIDAY",
+                  "SATURDAY",
+                  "SUNDAY"
+                ],
+                "end_time": "23:59",
+                "max_power": 0,
+                "start_date": "2026-10-28",
+                "start_time": "00:00"
+              },
+              "price_components": [
+                {
+                  "type": "PARKING_TIME",
+                  "price": 0,
+                  "vat": null,
+                  "step_size": 60
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "party_id": "TNM",
+          "id": "PP359125645_999999",
+          "currency": "GBP",
+          "tariff_alt_url": null,
+          "tariff_alt_text": [
+            {
+              "language": "en",
+              "text": "ALL: \u00a30.74 per kWh"
+            },
+            {
+              "language": "en",
+              "text": "ALL: \u00a30.74 per kWh"
+            }
+          ],
+          "last_updated": "2026-10-28T18:04:53Z",
+          "country_code": "GB",
+          "elements": [
+            {
+              "restrictions": {
+                "day_of_week": [
+                  "MONDAY",
+                  "TUESDAY",
+                  "WEDNESDAY",
+                  "THURSDAY",
+                  "FRIDAY",
+                  "SATURDAY",
+                  "SUNDAY"
+                ],
+                "end_time": "23:59",
+                "start_date": "2026-10-28",
+                "start_time": "00:00"
+              },
+              "price_components": [
+                {
+                  "type": "ENERGY",
+                  "price": 0.7417,
+                  "vat": null,
+                  "step_size": 1
+                }
+              ]
+            },
+            {
+              "restrictions": {
+                "day_of_week": [
+                  "MONDAY",
+                  "TUESDAY",
+                  "WEDNESDAY",
+                  "THURSDAY",
+                  "FRIDAY",
+                  "SATURDAY",
+                  "SUNDAY"
+                ],
+                "end_time": "23:59",
+                "max_power": 0,
+                "start_date": "2026-10-28",
+                "start_time": "00:00"
+              },
+              "price_components": [
+                {
+                  "type": "PARKING_TIME",
+                  "price": 0,
+                  "vat": null,
+                  "step_size": 60
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  }
+}

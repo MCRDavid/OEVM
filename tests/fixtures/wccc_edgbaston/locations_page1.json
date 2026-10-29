@@ -1,0 +1,261 @@
+{
+  "request": {
+    "method": "GET",
+    "url": "https://open-chargepoints.com/api/ocpi/cpo/2.2.1/locations/?limit=1000"
+  },
+  "response": {
+    "status_code": 200,
+    "headers": {
+      "content-type": "application/json",
+      "link": "<https://open-chargepoints.com/api/ocpi/cpo/2.2.1/locations/?limit=1000&offset=1>; rel=\"next\"",
+      "x-total-count": "1",
+      "x-limit": "1000"
+    },
+    "body": {
+      "timestamp": "2026-10-29T18:08:03Z",
+      "status_code": 1000,
+      "status_message": "Success",
+      "data": [
+        {
+          "party_id": "GFX",
+          "id": "4c2fd205-aed1-4d23-ab34-1b84a522ef35",
+          "country_code": "GB",
+          "publish": true,
+          "country": "GBR",
+          "address": "Edgbaston Rd",
+          "city": "Birmingham",
+          "postal_code": "B5 7QU",
+          "coordinates": {
+            "latitude": "52.45596100",
+            "longitude": "-1.90486000"
+          },
+          "state": null,
+          "last_updated": "2026-10-27T22:32:07Z",
+          "opening_times": {
+            "regular_hours": [
+              {
+                "period_begin": "10:00",
+                "period_end": "18:00",
+                "weekday": 5
+              },
+              {
+                "period_begin": "10:00",
+                "period_end": "18:00",
+                "weekday": 4
+              },
+              {
+                "period_begin": "10:00",
+                "period_end": "18:00",
+                "weekday": 3
+              },
+              {
+                "period_begin": "10:00",
+                "period_end": "18:00",
+                "weekday": 2
+              },
+              {
+                "period_begin": "10:00",
+                "period_end": "18:00",
+                "weekday": 1
+              }
+            ],
+            "twentyfourseven": false
+          },
+          "name": "WCCC Edgbaston - Location 1",
+          "time_zone": "Europe/London",
+          "owner": {
+            "name": "WCCC Edgbaston",
+            "website": ""
+          },
+          "operator": {
+            "name": "WCCC Edgbaston",
+            "website": ""
+          },
+          "suboperator": {
+            "name": "WCCC Edgbaston",
+            "website": ""
+          },
+          "energy_mix": null,
+          "charging_when_closed": true,
+          "directions": null,
+          "evses": [
+            {
+              "uid": "GB-GFX-EDRAX00613-1",
+              "status": "AVAILABLE",
+              "last_updated": "2026-09-29T12:45:46Z",
+              "evse_id": "GB*GFX*EDRAX00613*1",
+              "physical_reference": "DRAX00613",
+              "floor_level": null,
+              "directions": null,
+              "parking_restrictions": null,
+              "capabilities": [
+                "REMOTE_START_STOP_CAPABLE",
+                "RFID_READER"
+              ],
+              "connectors": [
+                {
+                  "id": "1",
+                  "standard": "IEC_62196_T2",
+                  "format": "SOCKET",
+                  "power_type": "AC_3_PHASE",
+                  "last_updated": "2026-10-27T22:32:06Z",
+                  "max_amperage": 32,
+                  "max_voltage": 400,
+                  "max_electric_power": 22000,
+                  "tariff_ids": [
+                    "94a9ef859e0642ceaa7ead39d61fbb6d"
+                  ]
+                }
+              ]
+            },
+            {
+              "uid": "GB-GFX-EDRAX00613-2",
+              "status": "AVAILABLE",
+              "last_updated": "2026-10-11T14:45:18Z",
+              "evse_id": "GB*GFX*EDRAX00613*2",
+              "physical_reference": "DRAX00613",
+              "floor_level": null,
+              "directions": null,
+              "parking_restrictions": null,
+              "capabilities": [
+                "REMOTE_START_STOP_CAPABLE",
+                "RFID_READER"
+              ],
+              "connectors": [
+                {
+                  "id": "2",
+                  "standard": "IEC_62196_T2",
+                  "format": "SOCKET",
+                  "power_type": "AC_3_PHASE",
+                  "last_updated": "2026-10-27T22:32:07Z",
+                  "max_amperage": 32,
+                  "max_voltage": 400,
+                  "max_electric_power": 22000,
+                  "tariff_ids": [
+                    "94a9ef859e0642ceaa7ead39d61fbb6d"
+                  ]
+                }
+              ]
+            },
+            {
+              "uid": "GB-GFX-EDRAX00614-1",
+              "status": "AVAILABLE",
+              "last_updated": "2026-10-14T09:51:47Z",
+              "evse_id": "GB*GFX*EDRAX00614*1",
+              "physical_reference": "DRAX00614",
+              "floor_level": null,
+              "directions": null,
+              "parking_restrictions": null,
+              "capabilities": [
+                "REMOTE_START_STOP_CAPABLE",
+                "RFID_READER"
+              ],
+              "connectors": [
+                {
+                  "id": "1",
+                  "standard": "IEC_62196_T2",
+                  "format": "SOCKET",
+                  "power_type": "AC_3_PHASE",
+                  "last_updated": "2026-10-27T22:32:07Z",
+                  "max_amperage": 32,
+                  "max_voltage": 400,
+                  "max_electric_power": 22000,
+                  "tariff_ids": [
+                    "445ba434683e4b7cad13fe3781d45853"
+                  ]
+                }
+              ]
+            },
+            {
+              "uid": "GB-GFX-EDRAX00614-2",
+              "status": "AVAILABLE",
+              "last_updated": "2026-10-14T09:51:18Z",
+              "evse_id": "GB*GFX*EDRAX00614*2",
+              "physical_reference": "DRAX00614",
+              "floor_level": null,
+              "directions": null,
+              "parking_restrictions": null,
+              "capabilities": [
+                "REMOTE_START_STOP_CAPABLE",
+                "RFID_READER"
+              ],
+              "connectors": [
+                {
+                  "id": "2",
+                  "standard": "IEC_62196_T2",
+                  "format": "SOCKET",
+                  "power_type": "AC_3_PHASE",
+                  "last_updated": "2026-10-27T22:32:07Z",
+                  "max_amperage": 32,
+                  "max_voltage": 400,
+                  "max_electric_power": 22000,
+                  "tariff_ids": [
+                    "445ba434683e4b7cad13fe3781d45853"
+                  ]
+                }
+              ]
+            },
+            {
+              "uid": "GB-GFX-EDRAX00615-1",
+              "status": "AVAILABLE",
+              "last_updated": "2026-09-29T12:12:08Z",
+              "evse_id": "GB*GFX*EDRAX00615*1",
+              "physical_reference": "DRAX00615",
+              "floor_level": null,
+              "directions": null,
+              "parking_restrictions": null,
+              "capabilities": [
+                "REMOTE_START_STOP_CAPABLE",
+                "RFID_READER"
+              ],
+              "connectors": [
+                {
+                  "id": "1",
+                  "standard": "IEC_62196_T2",
+                  "format": "SOCKET",
+                  "power_type": "AC_3_PHASE",
+                  "last_updated": "2026-10-27T22:32:07Z",
+                  "max_amperage": 32,
+                  "max_voltage": 400,
+                  "max_electric_power": 22000,
+                  "tariff_ids": [
+                    "445ba434683e4b7cad13fe3781d45853"
+                  ]
+                }
+              ]
+            },
+            {
+              "uid": "GB-GFX-EDRAX00615-2",
+              "status": "AVAILABLE",
+              "last_updated": "2026-09-15T13:02:32Z",
+              "evse_id": "GB*GFX*EDRAX00615*2",
+              "physical_reference": "DRAX00615",
+              "floor_level": null,
+              "directions": null,
+              "parking_restrictions": null,
+              "capabilities": [
+                "REMOTE_START_STOP_CAPABLE",
+                "RFID_READER"
+              ],
+              "connectors": [
+                {
+                  "id": "2",
+                  "standard": "IEC_62196_T2",
+                  "format": "SOCKET",
+                  "power_type": "AC_3_PHASE",
+                  "last_updated": "2026-10-27T22:32:07Z",
+                  "max_amperage": 32,
+                  "max_voltage": 400,
+                  "max_electric_power": 22000,
+                  "tariff_ids": [
+                    "445ba434683e4b7cad13fe3781d45853"
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  }
+}

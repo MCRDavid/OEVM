@@ -248,7 +248,7 @@ def test_operators_on_one_host_share_one_gap():
         for c in OPERATORS.values()
         if c.adapter == "eco_movement_pcpr"
     ]
-    assert len(shared) == 16
+    assert len(shared) == 24
     clock = FakeClock()
     server = Server(clock, [httpx.Response(200, json={})] * 10 * len(shared), UNEVEN_DELAYS)
     for config in shared:

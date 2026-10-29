@@ -1,0 +1,118 @@
+{
+  "request": {
+    "method": "GET",
+    "url": "https://open-chargepoints.com/api/ocpi/cpo/2.2.1/locations/?limit=1000"
+  },
+  "response": {
+    "status_code": 200,
+    "headers": {
+      "content-type": "application/json",
+      "link": "<https://open-chargepoints.com/api/ocpi/cpo/2.2.1/locations/?limit=1000&offset=1>; rel=\"next\"",
+      "x-total-count": "1",
+      "x-limit": "1000"
+    },
+    "body": {
+      "timestamp": "2026-10-29T18:10:10Z",
+      "status_code": 1000,
+      "status_message": "Success",
+      "data": [
+        {
+          "party_id": "GFX",
+          "id": "33428c4f-3f8c-4685-8891-9929b1273935",
+          "country_code": "GB",
+          "publish": true,
+          "country": "GBR",
+          "address": "Room 2, 1 Queens Terrace",
+          "city": "Southampton",
+          "postal_code": "SO14 3BP",
+          "coordinates": {
+            "latitude": "50.89789000",
+            "longitude": "-1.40017000"
+          },
+          "state": null,
+          "last_updated": "2026-10-27T22:21:45Z",
+          "opening_times": {
+            "twentyfourseven": true
+          },
+          "name": "Second Nature Southampton",
+          "time_zone": "Europe/London",
+          "owner": {
+            "name": "Southampton Apartment Hotels",
+            "website": ""
+          },
+          "operator": {
+            "name": "Southampton Apartment Hotels",
+            "website": ""
+          },
+          "suboperator": {
+            "name": "Southampton Apartment Hotels",
+            "website": ""
+          },
+          "energy_mix": null,
+          "charging_when_closed": true,
+          "directions": null,
+          "evses": [
+            {
+              "uid": "GB-GFX-EDRAX00385-2",
+              "status": "AVAILABLE",
+              "last_updated": "2026-10-27T08:43:58Z",
+              "evse_id": "GB*GFX*EDRAX00385*2",
+              "physical_reference": "DRAX00385",
+              "floor_level": null,
+              "directions": null,
+              "parking_restrictions": null,
+              "capabilities": [
+                "REMOTE_START_STOP_CAPABLE",
+                "RFID_READER"
+              ],
+              "connectors": [
+                {
+                  "id": "2",
+                  "standard": "IEC_62196_T2",
+                  "format": "SOCKET",
+                  "power_type": "AC_3_PHASE",
+                  "last_updated": "2026-10-27T22:21:45Z",
+                  "max_amperage": 32,
+                  "max_voltage": 230,
+                  "max_electric_power": 22000,
+                  "tariff_ids": [
+                    "18a0ed8b1c5c4cc88d8a3eb5a88e9aa1"
+                  ]
+                }
+              ]
+            },
+            {
+              "uid": "GB-GFX-EDRAX00385-1",
+              "status": "AVAILABLE",
+              "last_updated": "2026-10-27T13:26:58Z",
+              "evse_id": "GB*GFX*EDRAX00385*1",
+              "physical_reference": "DRAX00385",
+              "floor_level": null,
+              "directions": null,
+              "parking_restrictions": null,
+              "capabilities": [
+                "REMOTE_START_STOP_CAPABLE",
+                "RFID_READER"
+              ],
+              "connectors": [
+                {
+                  "id": "1",
+                  "standard": "IEC_62196_T2",
+                  "format": "SOCKET",
+                  "power_type": "AC_3_PHASE",
+                  "last_updated": "2026-10-27T22:21:45Z",
+                  "max_amperage": 32,
+                  "max_voltage": 230,
+                  "max_electric_power": 22000,
+                  "tariff_ids": [
+                    "18a0ed8b1c5c4cc88d8a3eb5a88e9aa1"
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  }
+}

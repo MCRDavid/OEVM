@@ -1,0 +1,419 @@
+{
+  "request": {
+    "method": "GET",
+    "url": "https://open-chargepoints.com/api/ocpi/cpo/2.2.1/locations/?limit=1000"
+  },
+  "response": {
+    "status_code": 200,
+    "headers": {
+      "content-type": "application/json",
+      "link": "<https://open-chargepoints.com/api/ocpi/cpo/2.2.1/locations/?limit=1000&offset=2>; rel=\"next\"",
+      "x-total-count": "2",
+      "x-limit": "1000"
+    },
+    "body": {
+      "timestamp": "2026-10-29T17:57:24Z",
+      "status_code": 1000,
+      "status_message": "Success",
+      "data": [
+        {
+          "party_id": "GFX",
+          "id": "0a5cce33-71b1-4c60-bfc1-6f58c6c4c55a",
+          "country_code": "GB",
+          "publish": true,
+          "country": "GBR",
+          "address": "Botany Brow, Canal Mill",
+          "city": "Chorley",
+          "postal_code": "PR6 9AF",
+          "coordinates": {
+            "latitude": "53.66235000",
+            "longitude": "-2.61869000"
+          },
+          "state": null,
+          "last_updated": "2026-10-28T09:25:36Z",
+          "opening_times": {
+            "regular_hours": [
+              {
+                "period_begin": "07:00",
+                "period_end": "17:00",
+                "weekday": 5
+              },
+              {
+                "period_begin": "07:00",
+                "period_end": "17:00",
+                "weekday": 4
+              },
+              {
+                "period_begin": "07:00",
+                "period_end": "17:00",
+                "weekday": 3
+              },
+              {
+                "period_begin": "07:00",
+                "period_end": "17:00",
+                "weekday": 2
+              },
+              {
+                "period_begin": "07:00",
+                "period_end": "17:00",
+                "weekday": 1
+              }
+            ],
+            "twentyfourseven": false
+          },
+          "name": "FI REM Botany Bay",
+          "time_zone": "Europe/London",
+          "owner": {
+            "name": "GFX-GB Drax",
+            "website": ""
+          },
+          "operator": {
+            "name": "GFX-GB Drax",
+            "website": ""
+          },
+          "suboperator": {
+            "name": "GFX-GB Drax",
+            "website": ""
+          },
+          "energy_mix": null,
+          "charging_when_closed": true,
+          "directions": null,
+          "evses": [
+            {
+              "uid": "GB-GFX-EDRAX00619-2",
+              "status": "AVAILABLE",
+              "last_updated": "2026-10-25T15:25:48Z",
+              "evse_id": "GB*GFX*EDRAX00619*2",
+              "physical_reference": "DRAX00619",
+              "floor_level": null,
+              "directions": null,
+              "parking_restrictions": null,
+              "capabilities": [
+                "CREDIT_CARD_PAYABLE",
+                "REMOTE_START_STOP_CAPABLE",
+                "RFID_READER"
+              ],
+              "connectors": [
+                {
+                  "id": "2",
+                  "standard": "IEC_62196_T2",
+                  "format": "SOCKET",
+                  "power_type": "AC_3_PHASE",
+                  "last_updated": "2026-10-27T22:05:01Z",
+                  "max_amperage": 32,
+                  "max_voltage": 400,
+                  "max_electric_power": 22000,
+                  "tariff_ids": [
+                    "af4aecc24bbd47a88172d053c306460c"
+                  ]
+                }
+              ]
+            },
+            {
+              "uid": "GB-GFX-EDRAX00618-1",
+              "status": "AVAILABLE",
+              "last_updated": "2026-10-28T09:25:35Z",
+              "evse_id": "GB*GFX*EDRAX00618*1",
+              "physical_reference": "DRAX00618",
+              "floor_level": null,
+              "directions": null,
+              "parking_restrictions": null,
+              "capabilities": [
+                "CREDIT_CARD_PAYABLE",
+                "REMOTE_START_STOP_CAPABLE",
+                "RFID_READER"
+              ],
+              "connectors": [
+                {
+                  "id": "1",
+                  "standard": "IEC_62196_T2",
+                  "format": "SOCKET",
+                  "power_type": "AC_3_PHASE",
+                  "last_updated": "2026-10-27T22:05:00Z",
+                  "max_amperage": 32,
+                  "max_voltage": 400,
+                  "max_electric_power": 22000,
+                  "tariff_ids": [
+                    "af4aecc24bbd47a88172d053c306460c"
+                  ]
+                }
+              ]
+            },
+            {
+              "uid": "GB-GFX-EDRAX00618-2",
+              "status": "AVAILABLE",
+              "last_updated": "2026-10-26T08:46:43Z",
+              "evse_id": "GB*GFX*EDRAX00618*2",
+              "physical_reference": "DRAX00618",
+              "floor_level": null,
+              "directions": null,
+              "parking_restrictions": null,
+              "capabilities": [
+                "CREDIT_CARD_PAYABLE",
+                "REMOTE_START_STOP_CAPABLE",
+                "RFID_READER"
+              ],
+              "connectors": [
+                {
+                  "id": "2",
+                  "standard": "IEC_62196_T2",
+                  "format": "SOCKET",
+                  "power_type": "AC_3_PHASE",
+                  "last_updated": "2026-10-27T22:05:01Z",
+                  "max_amperage": 32,
+                  "max_voltage": 400,
+                  "max_electric_power": 22000,
+                  "tariff_ids": [
+                    "af4aecc24bbd47a88172d053c306460c"
+                  ]
+                }
+              ]
+            },
+            {
+              "uid": "GB-GFX-EDRAX00619-1",
+              "status": "AVAILABLE",
+              "last_updated": "2026-10-27T14:51:09Z",
+              "evse_id": "GB*GFX*EDRAX00619*1",
+              "physical_reference": "DRAX00619",
+              "floor_level": null,
+              "directions": null,
+              "parking_restrictions": null,
+              "capabilities": [
+                "CREDIT_CARD_PAYABLE",
+                "REMOTE_START_STOP_CAPABLE",
+                "RFID_READER"
+              ],
+              "connectors": [
+                {
+                  "id": "1",
+                  "standard": "IEC_62196_T2",
+                  "format": "SOCKET",
+                  "power_type": "AC_3_PHASE",
+                  "last_updated": "2026-10-27T22:05:01Z",
+                  "max_amperage": 32,
+                  "max_voltage": 400,
+                  "max_electric_power": 22000,
+                  "tariff_ids": [
+                    "af4aecc24bbd47a88172d053c306460c"
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "party_id": "GFX",
+          "id": "da8072ba-5294-42a2-b7b0-4fd9e5bd6da2",
+          "country_code": "GB",
+          "publish": true,
+          "country": "GBR",
+          "address": "Winnington avenue 170",
+          "city": "Northwich",
+          "postal_code": "CW8 4FT",
+          "coordinates": {
+            "latitude": "53.25752000",
+            "longitude": "-2.54010000"
+          },
+          "state": null,
+          "last_updated": "2026-10-28T12:09:04Z",
+          "opening_times": {
+            "twentyfourseven": true
+          },
+          "name": "FI REM Winnington",
+          "time_zone": "Europe/London",
+          "owner": {
+            "name": "GFX-GB Drax",
+            "website": ""
+          },
+          "operator": {
+            "name": "GFX-GB Drax",
+            "website": ""
+          },
+          "suboperator": {
+            "name": "GFX-GB Drax",
+            "website": ""
+          },
+          "energy_mix": null,
+          "charging_when_closed": true,
+          "directions": null,
+          "evses": [
+            {
+              "uid": "GB-GFX-EDRAX00400-1",
+              "status": "CHARGING",
+              "last_updated": "2026-10-28T12:09:03Z",
+              "evse_id": "GB*GFX*EDRAX00400*1",
+              "physical_reference": "DRAX00400",
+              "floor_level": null,
+              "directions": null,
+              "parking_restrictions": null,
+              "capabilities": [
+                "REMOTE_START_STOP_CAPABLE",
+                "RFID_READER"
+              ],
+              "connectors": [
+                {
+                  "id": "1",
+                  "standard": "IEC_62196_T2",
+                  "format": "SOCKET",
+                  "power_type": "AC_1_PHASE",
+                  "last_updated": "2026-10-27T23:39:48Z",
+                  "max_amperage": 32,
+                  "max_voltage": 230,
+                  "max_electric_power": 7400,
+                  "tariff_ids": [
+                    "334ba095b6d747808c942e3ec123f61d"
+                  ]
+                }
+              ]
+            },
+            {
+              "uid": "GB-GFX-EDRAX00400-2",
+              "status": "AVAILABLE",
+              "last_updated": "2026-10-24T16:38:05Z",
+              "evse_id": "GB*GFX*EDRAX00400*2",
+              "physical_reference": "DRAX00400",
+              "floor_level": null,
+              "directions": null,
+              "parking_restrictions": null,
+              "capabilities": [
+                "REMOTE_START_STOP_CAPABLE",
+                "RFID_READER"
+              ],
+              "connectors": [
+                {
+                  "id": "2",
+                  "standard": "IEC_62196_T2",
+                  "format": "SOCKET",
+                  "power_type": "AC_1_PHASE",
+                  "last_updated": "2026-10-27T23:39:48Z",
+                  "max_amperage": 32,
+                  "max_voltage": 230,
+                  "max_electric_power": 7400,
+                  "tariff_ids": [
+                    "334ba095b6d747808c942e3ec123f61d"
+                  ]
+                }
+              ]
+            },
+            {
+              "uid": "GB-GFX-EDRAX00401-1",
+              "status": "AVAILABLE",
+              "last_updated": "2026-10-26T18:04:52Z",
+              "evse_id": "GB*GFX*EDRAX00401*1",
+              "physical_reference": "DRAX00401",
+              "floor_level": null,
+              "directions": null,
+              "parking_restrictions": null,
+              "capabilities": [
+                "REMOTE_START_STOP_CAPABLE",
+                "RFID_READER"
+              ],
+              "connectors": [
+                {
+                  "id": "1",
+                  "standard": "IEC_62196_T2",
+                  "format": "SOCKET",
+                  "power_type": "AC_1_PHASE",
+                  "last_updated": "2026-10-27T23:39:48Z",
+                  "max_amperage": 32,
+                  "max_voltage": 230,
+                  "max_electric_power": 7400,
+                  "tariff_ids": [
+                    "334ba095b6d747808c942e3ec123f61d"
+                  ]
+                }
+              ]
+            },
+            {
+              "uid": "GB-GFX-EDRAX00401-2",
+              "status": "AVAILABLE",
+              "last_updated": "2026-10-18T19:26:47Z",
+              "evse_id": "GB*GFX*EDRAX00401*2",
+              "physical_reference": "DRAX00401",
+              "floor_level": null,
+              "directions": null,
+              "parking_restrictions": null,
+              "capabilities": [
+                "REMOTE_START_STOP_CAPABLE",
+                "RFID_READER"
+              ],
+              "connectors": [
+                {
+                  "id": "2",
+                  "standard": "IEC_62196_T2",
+                  "format": "SOCKET",
+                  "power_type": "AC_1_PHASE",
+                  "last_updated": "2026-10-27T23:39:48Z",
+                  "max_amperage": 32,
+                  "max_voltage": 230,
+                  "max_electric_power": 7400,
+                  "tariff_ids": [
+                    "334ba095b6d747808c942e3ec123f61d"
+                  ]
+                }
+              ]
+            },
+            {
+              "uid": "GB-GFX-EDRAX00402-1",
+              "status": "AVAILABLE",
+              "last_updated": "2026-10-12T11:32:24Z",
+              "evse_id": "GB*GFX*EDRAX00402*1",
+              "physical_reference": "DRAX00402",
+              "floor_level": null,
+              "directions": null,
+              "parking_restrictions": null,
+              "capabilities": [
+                "REMOTE_START_STOP_CAPABLE",
+                "RFID_READER"
+              ],
+              "connectors": [
+                {
+                  "id": "1",
+                  "standard": "IEC_62196_T2",
+                  "format": "SOCKET",
+                  "power_type": "AC_1_PHASE",
+                  "last_updated": "2026-10-27T23:39:48Z",
+                  "max_amperage": 32,
+                  "max_voltage": 230,
+                  "max_electric_power": 7400,
+                  "tariff_ids": [
+                    "334ba095b6d747808c942e3ec123f61d"
+                  ]
+                }
+              ]
+            },
+            {
+              "uid": "GB-GFX-EDRAX00402-2",
+              "status": "AVAILABLE",
+              "last_updated": "2026-09-30T15:13:39Z",
+              "evse_id": "GB*GFX*EDRAX00402*2",
+              "physical_reference": "DRAX00402",
+              "floor_level": null,
+              "directions": null,
+              "parking_restrictions": null,
+              "capabilities": [
+                "REMOTE_START_STOP_CAPABLE",
+                "RFID_READER"
+              ],
+              "connectors": [
+                {
+                  "id": "2",
+                  "standard": "IEC_62196_T2",
+                  "format": "SOCKET",
+                  "power_type": "AC_1_PHASE",
+                  "last_updated": "2026-10-27T23:39:48Z",
+                  "max_amperage": 32,
+                  "max_voltage": 230,
+                  "max_electric_power": 7400,
+                  "tariff_ids": [
+                    "334ba095b6d747808c942e3ec123f61d"
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  }
+}

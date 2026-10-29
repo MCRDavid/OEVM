@@ -342,11 +342,20 @@ def test_a_decision_to_add_vat_is_shown_with_what_was_seen_across_operators(page
         "clenergy_ev": ("2026-10-22", 20),
         "globe_ev": ("2026-10-23", 20),
         "roam": ("2026-10-26", 20),
+        "aldi": ("2026-10-29", 20),
         "allego": ("2026-10-29", 20),
         "blink_charging_uk": ("2026-10-29", 20),
+        "drax_group": ("2026-10-29", 20),
+        "drax_ista": ("2026-10-29", 20),
         "ev_point": ("2026-10-29", 20),
+        "gfx_gb_drax": ("2026-10-29", 20),
         "lidl": ("2026-10-29", 20),
         "raw_charging": ("2026-10-29", 20),
+        "shell_recharge": ("2026-10-29", 20),
+        "southampton_apartment_hotels": ("2026-10-29", 20),
+        "travis_perkins": ("2026-10-29", 20),
+        "volvo": ("2026-10-29", 20),
+        "wccc_edgbaston": ("2026-10-29", 20),
     }
     text = " ".join(page.split())
     assert "Prices that give no VAT rate have VAT at 20% added, by the owner's decision" in text
