@@ -34,6 +34,7 @@ regulations describe the price in reference data as "the price in pence per kilo
   confirmed free. A price that would show as "0p" is never a label.
 """
 
+import html
 import re
 from collections.abc import Sequence
 from dataclasses import dataclass
@@ -415,14 +416,19 @@ def comparison(options: Sequence[TariffOptionLike]) -> str | None:
 
 _UUID = re.compile(r"[_\s-]*[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$", re.I)
 _CAMEL = re.compile(r"(?<=[a-z])(?=[A-Z][a-z])")
+# HTML tags, which OCPI 2.2.1 display text should not carry ("No markup, html etc. allowed").
+_MARKUP = re.compile(r"</?[a-z][a-z0-9]*(?:\s[^<>]*)?/?>", re.I)
 
 
 def readable_name(text: str | None) -> str | None:
     """A tariff description that is easier to read, when the operator's own text looks like
     a system name such as "Tariff_Contactless_Rapid7ab83c27-57b5-...": the trailing id and
     a leading "Tariff" are dropped and the words are split, giving "Contactless rapid".
+    HTML tags such as <div> and <br> are taken out, leaving the words between them.
     Text that already reads as words is kept exactly. None when nothing readable is left.
     The original is always published next to it, so nothing the operator said is lost."""
+    if text and _MARKUP.search(text):
+        text = " ".join(html.unescape(_MARKUP.sub(" ", text)).split())
     if not text:
         return None
     stripped = _UUID.sub("", text.strip())

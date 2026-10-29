@@ -3652,6 +3652,168 @@
       ]
     },
     {
+      "id": "zest",
+      "name": "Zest",
+      "enabled": true,
+      "adapter": "sent_copy",
+      "engagement": {
+        "status": "no_public_feed_found",
+        "label": "No public feed found",
+        "headline": "No public feed found (as of 2026-10-28)",
+        "as_of": "2026-10-28",
+        "last_request": "2026-10-23",
+        "last_response": {
+          "date": "2026-10-28",
+          "action": "reply_received"
+        },
+        "last_response_text": "2026-10-28 (Reply received)",
+        "evidence": [
+          {
+            "date": "2026-10-10",
+            "url": "https://www.zest.uk.com/charge-point-open-data",
+            "file": null,
+            "note": "Zest's open data page offers a request form asking for a first and last name, email address, company and reason for the request. It says the data is licensed under CC BY 4.0. It does not say whether access is given as a key, a file or by other means."
+          },
+          {
+            "date": "2026-10-28",
+            "url": null,
+            "file": "evidence/zest/2026-10-28-reply.md",
+            "note": "Zest's emailed reply, with its location and tariff data attached as two OCPI 2.2.1 JSON files made on 2026-10-26 and no web address or key for fetching the data. It asks for the form to be completed monthly for an updated snapshot."
+          }
+        ],
+        "log": [
+          {
+            "date": "2026-10-10",
+            "action": "page_checked",
+            "action_label": "Operator's page checked",
+            "channel": null,
+            "channel_label": null,
+            "summary": "Zest's charge point open data page was read; it offers a request form and states a licence for the data.",
+            "quote": "Request Zest’s charge point open data as per the Public Charge Point Regulations 2023.",
+            "evidence_url": "https://www.zest.uk.com/charge-point-open-data",
+            "evidence_file": null
+          },
+          {
+            "date": "2026-10-23",
+            "action": "request_sent",
+            "action_label": "Access requested",
+            "channel": "web_form",
+            "channel_label": "Web form",
+            "summary": "Requested access to Zest's charge point open data through its open data form.",
+            "quote": null,
+            "evidence_url": null,
+            "evidence_file": null
+          },
+          {
+            "date": "2026-10-28",
+            "action": "reply_received",
+            "action_label": "Reply received",
+            "channel": "email",
+            "channel_label": "Email",
+            "summary": "Zest replied by email with its location and tariff data attached as two OCPI 2.2.1 JSON files, with no web address or key for fetching the data, and asked for the form to be completed monthly for an updated snapshot.",
+            "quote": "Please find the OCPI Data request documents attached. We are currently working hard behind the scenes to implement automation for this process. In the meantime, please complete the form monthly to ensure we have an updated snapshot of the necessary information.",
+            "evidence_url": null,
+            "evidence_file": "evidence/zest/2026-10-28-reply.md"
+          }
+        ]
+      },
+      "access_requested": "2026-10-23",
+      "access_granted": null,
+      "feeds": [],
+      "licence": {
+        "name": "CC-BY-4.0",
+        "url": "https://creativecommons.org/licenses/by/4.0/",
+        "checked": "2026-10-29"
+      },
+      "attribution": "Contains data from Zest, licensed under CC BY 4.0. Adapted from Zest's data.",
+      "missing_publish_flag": null,
+      "swapped_coordinates": null,
+      "nonstandard_statuses": null,
+      "tariffs_from": null,
+      "nonstandard_parking_restrictions": null,
+      "zero_price_tariffs": null,
+      "vat_not_stated": null,
+      "vat_in_price": null,
+      "own_feed_over_copies": null,
+      "relay": null,
+      "expired_certificate": null,
+      "excluded_locations": null,
+      "sent_copy": {
+        "decided": "2026-10-29",
+        "basis": "Zest answered a request through its open data form by emailing its location and tariff data as two OCPI 2.2.1 files, with no address to fetch them from, and asked for the form to be completed monthly for an updated snapshot. On 2026-10-29 the repository owner decided to show that copy on the map, dated as made and with charge point status unknown, and that each newer copy Zest sends replaces it without a new decision. It is to be replaced with Zest's feed if one is published.",
+        "evidence_file": "evidence/zest/2026-10-28-reply.md",
+        "channel": "email",
+        "received": "2026-10-28",
+        "made_at": "2026-10-26 10:29 UTC",
+        "files": [
+          "sent_copies/zest/2026-10-28-locations.json.gz",
+          "sent_copies/zest/2026-10-28-tariffs.json.gz"
+        ]
+      },
+      "rate_limit": {
+        "our_gap_seconds": 2.0,
+        "our_max_per_hour": 1800,
+        "ours": "At least 2 s between requests to the operator's host, measured from the end of the previous request (at most 1800 in any hour), retries included.",
+        "published": [],
+        "limits_checked": "2026-10-29",
+        "comparison": "No limit published (checked 2026-10-29). The gap is our own choice.",
+        "difference_from_regulations": "Neither the operator nor the regulations set a limit.",
+        "notes": "No requests are made: the map shows a copy of Zest's data that it sent by email on 2026-10-28 (sent_copy below). Zest's open data page and its reply state no rate limit. The 2 second gap is this project's own choice, for a feed if one is published."
+      },
+      "findings": [
+        {
+          "date": "2026-10-28",
+          "kind": "access",
+          "kind_label": "Access",
+          "summary": "Zest offers its open data through a request form, and its reply to a request on 2026-10-23 was the data as two files attached to an email, made on 2026-10-26, with no web address for fetching it. The reply asks for the form to be completed monthly for an updated snapshot and says Zest is working on automating the process.",
+          "handling": "By the repository owner's decision of 2026-10-29, the map shows the emailed copy as sent, dated 2026-10-26 10:29 UTC when it was made, says it is a copy that is not updated, and shows every charge point status as unknown. Each newer copy Zest sends replaces it. The project is asking Zest for an address that can be fetched automatically.",
+          "evidence_url": "https://www.zest.uk.com/charge-point-open-data",
+          "status": "open",
+          "resolved_date": null
+        },
+        {
+          "date": "2026-10-29",
+          "kind": "data_quality",
+          "kind_label": "Data quirk",
+          "summary": "The locations file sent on 2026-10-28 holds 2,005 records for 1,963 locations: 42 location ids appear twice, and in each pair the later record has the newer last_updated time.",
+          "handling": "The later record of each pair is kept, as for any feed that repeats a record.",
+          "evidence_url": "https://www.zest.uk.com/charge-point-open-data",
+          "status": "open",
+          "resolved_date": null
+        },
+        {
+          "date": "2026-10-29",
+          "kind": "spec_conformance",
+          "kind_label": "Differs from OCPI 2.2.1",
+          "summary": "Tariffs 93 and 530, named by 620 connectors in the copy, give an idle fee as a PARKING_TIME price of 0.08 before VAT, which OCPI 2.2.1 defines per hour, while the tariffs' own text says \"£0.10/min after 4 hours not charging\".",
+          "handling": "The map shows the price as the data gives it, about £0.10 per hour parked with VAT, and shows Zest's own text with the tariff. Neither is changed.",
+          "evidence_url": "https://github.com/ocpi/ocpi/blob/2.2.1/mod_tariffs.asciidoc",
+          "status": "open",
+          "resolved_date": null
+        },
+        {
+          "date": "2026-10-29",
+          "kind": "spec_conformance",
+          "kind_label": "Differs from OCPI 2.2.1",
+          "summary": "66 of the 67 tariffs give their description with HTML markup such as div, br and strong tags, while OCPI 2.2.1 says display text is \"Text to be displayed to a end user. No markup, html etc. allowed.\"",
+          "handling": "The map shows each description with the tags taken out, as text only, and the operator's text exactly as sent next to it.",
+          "evidence_url": "https://github.com/ocpi/ocpi/blob/2.2.1/types.asciidoc",
+          "status": "open",
+          "resolved_date": null
+        },
+        {
+          "date": "2026-10-29",
+          "kind": "data_quality",
+          "kind_label": "Data quirk",
+          "summary": "Tariff 18 gives an energy price of 8.33 per kWh before VAT. No connector in the copy names it.",
+          "handling": "It is not shown, because no connector uses it.",
+          "evidence_url": "https://www.zest.uk.com/charge-point-open-data",
+          "status": "open",
+          "resolved_date": null
+        }
+      ]
+    },
+    {
       "id": "allego",
       "name": "Allego",
       "enabled": false,
@@ -9487,113 +9649,6 @@
         "notes": null
       },
       "findings": []
-    },
-    {
-      "id": "zest",
-      "name": "Zest",
-      "enabled": false,
-      "adapter": "unknown",
-      "engagement": {
-        "status": "no_public_feed_found",
-        "label": "No public feed found",
-        "headline": "No public feed found (as of 2026-10-28)",
-        "as_of": "2026-10-28",
-        "last_request": "2026-10-23",
-        "last_response": {
-          "date": "2026-10-28",
-          "action": "reply_received"
-        },
-        "last_response_text": "2026-10-28 (Reply received)",
-        "evidence": [
-          {
-            "date": "2026-10-10",
-            "url": "https://www.zest.uk.com/charge-point-open-data",
-            "file": null,
-            "note": "Zest's open data page offers a request form asking for a first and last name, email address, company and reason for the request. It says the data is licensed under CC BY 4.0. It does not say whether access is given as a key, a file or by other means."
-          },
-          {
-            "date": "2026-10-28",
-            "url": null,
-            "file": "evidence/zest/2026-10-28-reply.md",
-            "note": "Zest's emailed reply, with its location and tariff data attached as two OCPI 2.2.1 JSON files made on 2026-10-26 and no web address or key for fetching the data. It asks for the form to be completed monthly for an updated snapshot."
-          }
-        ],
-        "log": [
-          {
-            "date": "2026-10-10",
-            "action": "page_checked",
-            "action_label": "Operator's page checked",
-            "channel": null,
-            "channel_label": null,
-            "summary": "Zest's charge point open data page was read; it offers a request form and states a licence for the data.",
-            "quote": "Request Zest’s charge point open data as per the Public Charge Point Regulations 2023.",
-            "evidence_url": "https://www.zest.uk.com/charge-point-open-data",
-            "evidence_file": null
-          },
-          {
-            "date": "2026-10-23",
-            "action": "request_sent",
-            "action_label": "Access requested",
-            "channel": "web_form",
-            "channel_label": "Web form",
-            "summary": "Requested access to Zest's charge point open data through its open data form.",
-            "quote": null,
-            "evidence_url": null,
-            "evidence_file": null
-          },
-          {
-            "date": "2026-10-28",
-            "action": "reply_received",
-            "action_label": "Reply received",
-            "channel": "email",
-            "channel_label": "Email",
-            "summary": "Zest replied by email with its location and tariff data attached as two OCPI 2.2.1 JSON files, with no web address or key for fetching the data, and asked for the form to be completed monthly for an updated snapshot.",
-            "quote": "Please find the OCPI Data request documents attached. We are currently working hard behind the scenes to implement automation for this process. In the meantime, please complete the form monthly to ensure we have an updated snapshot of the necessary information.",
-            "evidence_url": null,
-            "evidence_file": "evidence/zest/2026-10-28-reply.md"
-          }
-        ]
-      },
-      "access_requested": "2026-10-23",
-      "access_granted": null,
-      "feeds": [],
-      "licence": null,
-      "attribution": null,
-      "missing_publish_flag": null,
-      "swapped_coordinates": null,
-      "nonstandard_statuses": null,
-      "tariffs_from": null,
-      "nonstandard_parking_restrictions": null,
-      "zero_price_tariffs": null,
-      "vat_not_stated": null,
-      "vat_in_price": null,
-      "own_feed_over_copies": null,
-      "relay": null,
-      "expired_certificate": null,
-      "excluded_locations": null,
-      "sent_copy": null,
-      "rate_limit": {
-        "our_gap_seconds": 2.0,
-        "our_max_per_hour": 1800,
-        "ours": "At least 2 s between requests to the operator's host, measured from the end of the previous request (at most 1800 in any hour), retries included.",
-        "published": [],
-        "limits_checked": "unknown",
-        "comparison": "The operator's pages have not been checked for limits yet.",
-        "difference_from_regulations": "Not known yet.",
-        "notes": null
-      },
-      "findings": [
-        {
-          "date": "2026-10-28",
-          "kind": "access",
-          "kind_label": "Access",
-          "summary": "Zest offers its open data through a request form, and its reply to a request on 2026-10-23 was the data as two files attached to an email, made on 2026-10-26, with no web address for fetching it. The reply asks for the form to be completed monthly for an updated snapshot and says Zest is working on automating the process.",
-          "handling": "The files are kept privately and are not on the map while the repository owner decides whether to show them.",
-          "evidence_url": "https://www.zest.uk.com/charge-point-open-data",
-          "status": "open",
-          "resolved_date": null
-        }
-      ]
     }
   ]
 }

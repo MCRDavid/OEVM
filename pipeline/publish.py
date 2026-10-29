@@ -150,8 +150,9 @@ SENT_COPY_NOTE = (
 
 LICENCE_NOTE = (
     "Charge point data belongs to each operator and is used in line with the Open "
-    "Government Licence v3.0, with the attribution statements listed here. This project's "
-    "Apache-2.0 licence covers its code only. Check prices and availability at the charger."
+    "Government Licence v3.0, or under the licence an operator's statement names, with the "
+    "attribution statements listed here. This project's Apache-2.0 licence covers its code "
+    "only. Check prices and availability at the charger."
 )
 
 
