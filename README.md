@@ -130,7 +130,7 @@ feeds. Use `--live` sparingly. It only works for operators switched on in the re
 
 ```
 operators/            one YAML file per operator, _template.yaml and schema.json
-adapters/             code that reads operator feeds (ocpi_221, jolt)
+adapters/             code that reads operator feeds (ocpi_221, jolt, monta, roam)
 pipeline/registry.py  loads and validates the registry
 pipeline/run.py       runs adapters on recorded or live data
 pipeline/pricing.py   how prices are shown (pounds and pence only)

@@ -29,8 +29,9 @@ decisions are in docs/adr/.
 ## Where things live
 - schema/models.py: Location, EVSE, Connector, Tariff, Provenance. schema/operator.py: registry file model.
 - adapters/http.py: polite client. adapters/ocpi_221/: paging and OCPI conversion. adapters/replay.py: fixtures.
-  adapters/jolt.py and adapters/monta.py: custom adapters (pipeline/run.py CUSTOM_ADAPTERS). Monta asks
-  for a token (auth client_credentials), skips sites its server cannot send and drops each record's owner.
+  adapters/jolt.py, adapters/monta.py and adapters/roam.py: custom adapters (pipeline/run.py CUSTOM_ADAPTERS).
+  Monta asks for a token (auth client_credentials), skips sites its server cannot send and drops each
+  record's owner. Roam gives its OCPI 2.1.1 connectors their 2.2.1 names.
 - pipeline/registry.py, pipeline/run.py. operators/*.yaml: one file per operator.
 - pipeline/pricing.py: the only way prices are shown. pipeline/tariffs.py: price per connector.
 - providers/*.yaml: charging plans from providers' own pages (schema/provider.py, pipeline/plans.py,
