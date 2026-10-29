@@ -1666,7 +1666,7 @@
         "label": "No public feed found",
         "headline": "No public feed found (as of 2026-10-26)",
         "as_of": "2026-10-26",
-        "last_request": "2026-10-24",
+        "last_request": "2026-10-26",
         "last_response": {
           "date": "2026-10-26",
           "action": "reply_received"
@@ -1725,6 +1725,17 @@
             "quote": null,
             "evidence_url": null,
             "evidence_file": "evidence/connekt/2026-10-26-reply.md"
+          },
+          {
+            "date": "2026-10-26",
+            "action": "follow_up_sent",
+            "action_label": "Follow-up sent",
+            "channel": "email",
+            "channel_label": "Email",
+            "summary": "Answered Connekt's email, thanking it for the data and asking for a web address where the same OCPI 2.2.1 data can be fetched automatically, with reference to the GOV.UK guidance.",
+            "quote": null,
+            "evidence_url": null,
+            "evidence_file": "evidence/connekt/2026-10-26-follow-up.md"
           }
         ]
       },
@@ -1778,7 +1789,7 @@
           "kind": "access",
           "kind_label": "Access",
           "summary": "Connekt offers its open data through a request form, and its reply to a request on 2026-10-24 was the data as two files attached to an email, with no web address for fetching it.",
-          "handling": "By the repository owner's decision of 2026-10-29, the map shows the emailed copy as sent, dated 2026-10-26 14:22 UTC when it was made, says it is a copy that is not updated, and shows every charge point status as unknown. The project is asking Connekt for an address that can be fetched automatically.",
+          "handling": "By the repository owner's decision of 2026-10-29, the map shows the emailed copy as sent, dated 2026-10-26 14:22 UTC when it was made, says it is a copy that is not updated, and shows every charge point status as unknown. On 2026-10-26 the project asked Connekt by email for an address that can be fetched automatically.",
           "evidence_url": "https://www.connektcharging.com/public-charge-point-regulations",
           "status": "open",
           "resolved_date": null

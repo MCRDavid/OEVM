@@ -97,6 +97,13 @@ engagement:
         Connekt replied by email with its location and tariff data attached as two OCPI 2.2.1
         JSON files, with no web address or key for fetching the data.
       evidence_file: evidence/connekt/2026-10-26-reply.md
+    - date: 2026-10-26
+      action: follow_up_sent
+      channel: email
+      summary: >-
+        Answered Connekt's email, thanking it for the data and asking for a web address where the
+        same OCPI 2.2.1 data can be fetched automatically, with reference to the GOV.UK guidance.
+      evidence_file: evidence/connekt/2026-10-26-follow-up.md
 access_requested: 2026-10-24
 access_granted: null
 sources:
@@ -125,8 +132,8 @@ findings:
     handling: >-
       By the repository owner's decision of 2026-10-29, the map shows the emailed copy as
       sent, dated 2026-10-26 14:22 UTC when it was made, says it is a copy that is not
-      updated, and shows every charge point status as unknown. The project is asking
-      Connekt for an address that can be fetched automatically.
+      updated, and shows every charge point status as unknown. On 2026-10-26 the project asked
+      Connekt by email for an address that can be fetched automatically.
     evidence_url: https://www.connektcharging.com/public-charge-point-regulations
 notes: >-
   No open data feed or request route was found on Connekt's own website on 2026-10-10. A
