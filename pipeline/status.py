@@ -249,6 +249,20 @@ def _operator_circle(status: OperatorStatus, now: datetime) -> str:
     return _circle(shown, "Not fetched yet" if status.latest is None else None)
 
 
+def _overview(data: StatusFile, switched_off: Sequence[str]) -> str:
+    """Every operator in the registry, switched on or off, by name, each with its circle."""
+    entries = [
+        (status.name, _operator_circle(status, data.generated_at))
+        for status in data.operators.values()
+    ]
+    entries += [(name, _circle(GREY)) for name in switched_off]
+    items = "".join(
+        f"<li>{circle} {_e(name)}</li>"
+        for name, circle in sorted(entries, key=lambda entry: entry[0].casefold())
+    )
+    return f'<ul class="off overview">{items}</ul>'
+
+
 def _at_a_glance(data: StatusFile, switched_off: Sequence[str]) -> str:
     counts = dict.fromkeys(CIRCLES, 0)
     for status in data.operators.values():
@@ -260,19 +274,35 @@ def _at_a_glance(data: StatusFile, switched_off: Sequence[str]) -> str:
         for shade in CIRCLES
     )
     total = sum(counts.values())
-    return f'<p>Of {total} operators in the registry: {summary}.</p><ul class="key">{key}</ul>'
+    return (
+        f"<p>Of {total} operators in the registry: {summary}.</p>"
+        f"{_overview(data, switched_off)}"
+        '<details class="colours"><summary>What the colours mean</summary>'
+        f'<ul class="key">{key}</ul></details>'
+        "<p>Select a heading below to open it and see the detail.</p>"
+    )
+
+
+def _section(title: str, body: str, anchor: str | None = None) -> str:
+    """A section that stays closed until a visitor opens it, so the overview leads the
+    page. The id is on the heading, which shows while the section is closed, so a link to
+    it lands in every browser."""
+    if not body:
+        return ""
+    where = f' id="{anchor}"' if anchor else ""
+    return f'<details class="section"><summary><h2{where}>{title}</h2></summary>{body}</details>'
 
 
 def _switched_off(names: Sequence[str]) -> str:
     if not names:
         return ""
     items = "".join(f"<li>{_circle(GREY)} {_e(name)}</li>" for name in names)
-    return (
-        "<h2>Switched off</h2>"
+    return _section(
+        "Switched off",
         "<p>These operators are in this project&rsquo;s registry, but their data is not "
         "fetched, so none of it is on the map. The "
         '<a href="../transparency/">transparency page</a> gives the status of each one and '
-        f'the steps taken so far.</p><ul class="off">{items}</ul>'
+        f'the steps taken so far.</p><ul class="off">{items}</ul>',
     )
 
 
@@ -420,7 +450,6 @@ def private_rows(layer: MapLayer, operators: dict[str, OperatorConfig]) -> list[
 
 def _private_section(rows: list[PrivateRow] | None) -> str:
     intro = (
-        '<h2 id="private">Hidden on the map unless asked for</h2>'
         "<p>Locations whose name, as the operator published it, marks them private or "
         "restricted, and locations where the operator marks every charge point for taxis "
         "only. The map hides them unless a visitor ticks &ldquo;Show chargers marked "
@@ -428,20 +457,25 @@ def _private_section(rows: list[PrivateRow] | None) -> str:
         'decisions on taxis, are on the <a href="../transparency/#private">transparency '
         "page</a>.</p>"
     )
+    title = "Hidden on the map unless asked for"
     if rows is None:
-        return intro + "<p>The map files were not available when this page was built.</p>"
+        body = "<p>The map files were not available when this page was built.</p>"
+        return _section(title, intro + body, "private")
     if not rows:
-        return intro + "<p>No location in the latest map files is hidden this way.</p>"
-    body = "".join(
+        body = "<p>No location in the latest map files is hidden this way.</p>"
+        return _section(title, intro + body, "private")
+    cells = "".join(
         f"<tr><td>{_e(network)}</td><td>{_e(name)}</td><td>{_e(why)}</td></tr>"
         for network, name, why in rows
     )
-    return (
+    return _section(
+        title,
         f'{intro}<div class="table-wrap"><table><caption>{len(rows)} location'
         f"{'' if len(rows) == 1 else 's'} hidden unless asked for</caption>"
         '<thead><tr><th scope="col">Network</th><th scope="col">Location</th>'
         '<th scope="col">Why</th></tr></thead>'
-        f"<tbody>{body}</tbody></table></div>"
+        f"<tbody>{cells}</tbody></table></div>",
+        "private",
     )
 
 
@@ -469,7 +503,6 @@ def copy_rows(manifest: Manifest, operators: dict[str, OperatorConfig]) -> list[
 
 def _copies_section(rows: list[CopyRow] | None) -> str:
     intro = (
-        '<h2 id="copies">Shown from the network&rsquo;s own feed</h2>'
         "<p>Some feeds also carry another network&rsquo;s locations, under that "
         "network&rsquo;s own country and party codes. Where the repository owner has "
         "decided so for a network, those copies are left off the map while the "
@@ -477,22 +510,27 @@ def _copies_section(rows: list[CopyRow] | None) -> str:
         'operator. The decisions are on the <a href="../transparency/">transparency '
         "page</a>.</p>"
     )
+    title = "Shown from the network&rsquo;s own feed"
     if rows is None:
-        return intro + "<p>The map files were not available when this page was built.</p>"
+        body = "<p>The map files were not available when this page was built.</p>"
+        return _section(title, intro + body, "copies")
     if not rows:
-        return intro + "<p>No location in the latest map files was left off this way.</p>"
-    body = "".join(
+        body = "<p>No location in the latest map files was left off this way.</p>"
+        return _section(title, intro + body, "copies")
+    cells = "".join(
         f"<tr><td>{_e(feed)}</td><td>{_e(owner)}</td><td>{len(ids)}"
         "<details><summary>Location ids</summary><ul>"
         + "".join(f"<li>{_e(i)}</li>" for i in ids)
         + "</ul></details></td></tr>"
         for feed, owner, ids in rows
     )
-    return (
+    return _section(
+        title,
         f'{intro}<div class="table-wrap"><table><caption>Locations left off as copies'
         '</caption><thead><tr><th scope="col">Feed</th><th scope="col">Network whose own '
         'feed is shown</th><th scope="col">Locations left off</th></tr></thead>'
-        f"<tbody>{body}</tbody></table></div>"
+        f"<tbody>{cells}</tbody></table></div>",
+        "copies",
     )
 
 
@@ -502,8 +540,8 @@ def _day(value) -> str:
 
 def _daily_runs_section(record: "daily_runs.Record | str") -> str:
     """How the daily fetch started; a string is the reason the record is missing."""
+    title = "How the daily fetch started"
     intro = (
-        '<h2 id="daily-runs">How the daily fetch started</h2>'
         "<p>The daily fetch is a GitHub Actions workflow. It can be started by a timer on "
         "this project&rsquo;s Cloudflare Worker, by GitHub&rsquo;s own schedule, or by "
         "hand. GitHub says scheduled runs can be delayed when it is busy, and some dropped, "
@@ -512,7 +550,7 @@ def _daily_runs_section(record: "daily_runs.Record | str") -> str:
         "read from GitHub&rsquo;s list of the workflow&rsquo;s runs; days are in UTC.</p>"
     )
     if isinstance(record, str):
-        return f"{intro}<p>{_e(record)}</p>"
+        return _section(title, f"{intro}<p>{_e(record)}</p>", "daily-runs")
     summary = daily_runs.summarise(record)
     since = _day(record.since)
     items = [f"Days the map was updated: {summary.days_updated} of {summary.days}, since {since}."]
@@ -558,22 +596,30 @@ def _daily_runs_section(record: "daily_runs.Record | str") -> str:
                 "</tr>"
             )
         day -= timedelta(days=1)
-    return (
+    return _section(
+        title,
         f"{intro}<ul>{''.join(f'<li>{item}</li>' for item in items)}</ul>"
         '<details><summary>Run by run</summary><div class="table-wrap"><table>'
         f"<caption>Runs of the daily fetch since {_e(since)}</caption>"
         '<thead><tr><th scope="col">Date</th><th scope="col">Started (UTC)</th>'
         '<th scope="col">Started by</th><th scope="col">Delay after the time set</th>'
         '<th scope="col">Result</th></tr></thead>'
-        f"<tbody>{''.join(rows)}</tbody></table></div></details>"
+        f"<tbody>{''.join(rows)}</tbody></table></div></details>",
+        "daily-runs",
     )
 
 
-# Added to the shared style: the key, and the switched-off list in columns.
+# Added to the shared style: the key, the overview and switched-off lists in columns, and
+# the sections a visitor opens, each with its heading beside the open and close marker.
 EXTRA_STYLE = """
 .key, .off { list-style: none; padding-left: 0; }
 .off { columns: 16rem; }
 .off li { break-inside: avoid; }
+details.section { border-top: 1px solid var(--line); }
+details.section > summary { cursor: pointer; padding: 0.75rem 0; }
+details.section > summary h2 { display: inline; font-size: 1.3rem; margin: 0; }
+details.section[open] > summary { margin-bottom: 0.5rem; }
+details.colours > summary { cursor: pointer; }
 """
 
 
@@ -589,6 +635,7 @@ def render_html(
     copies is from copy_rows, or None when the map files were not given."""
     links = "".join(f"<li>{_link(url, text)}</li>" for text, url in LINKS)
     trends = "".join(_trend(status, data.generated_at) for status in data.operators.values())
+    latest = f'<div class="table-wrap">{_latest_table(data)}</div>{_related_note(data)}'
     return f"""<!doctype html>
 <html lang="en-GB">
 <head>
@@ -608,13 +655,10 @@ evidence are on the <a href="../transparency/">transparency page</a>.</p>
 <main>
 <h2>At a glance</h2>
 {_at_a_glance(data, switched_off)}
-<h2>Latest runs</h2>
-<div class="table-wrap">{_latest_table(data)}</div>
-{_related_note(data)}
+{_section("Latest runs", latest)}
 {_switched_off(switched_off)}
 {"" if record is None else _daily_runs_section(record)}
-<h2>The last {HISTORY_DAYS} days</h2>
-{trends}
+{_section(f"The last {HISTORY_DAYS} days", trends)}
 {_private_section(private)}
 {_copies_section(copies)}
 </main>
