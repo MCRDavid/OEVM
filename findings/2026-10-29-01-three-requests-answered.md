@@ -3,7 +3,7 @@
 Three operators the project asked on 24 October 2026 have given it their data, each in a different
 way. Fastned sent a key minutes after its form was filled in. Roam replied by email on 26 October
 2026 with two addresses that need no key; its feed uses an older version of OCPI, allows five
-requests an hour and gives two connectors the same id at ten sites, which are left off the map.
+requests an hour and gives two connectors the same id at ten sites.
 Connekt also replied on 26 October 2026, with its data attached to an email and no address to fetch
 it from. This post sets out what we found in each.
 
@@ -61,14 +61,16 @@ No location has a publish flag, which OCPI 2.2.1 requires (none of 438). Because
 addresses as its open data under the regulations, the project owner decided on 26 October 2026 that
 these locations may be shown. A flag set to false would still be respected.
 
-### Ten sites left off
+### Repeated connector ids
 
-In 12 chargers at 10 locations, both connectors have the id 1. OCPI 2.2.1 requires connector ids to
-differ within a charger, so, as with any feed, those 10 locations are not shown, and each is named
-on the [feed health page](status/). They include, as Roam names them, "Hilton T5 Area B Heathrow
+In 12 chargers at 10 locations, both connectors have the id 1, while OCPI 2.2.1 requires connector
+ids to differ within a charger. They include, as Roam names them, "Hilton T5 Area B Heathrow
 Airport", "Hilton T5 Area C Heathrow Airport", "Northwood Park" and "The Queen Elizabeth Hospital
-Kings Lynn" (26 October 2026). Five other locations list no chargers at all and are shown as
-published.
+Kings Lynn" (26 October 2026). The map would normally leave such sites off, but the project owner
+decided on 29 October 2026 that they should be shown, as the chargers are likely there and only the
+ids are wrong. In those chargers each connector takes Roam's own connector id, which is unique, and
+the [feed health page](status/) counts how often. Five other locations list no chargers at all and
+are shown as published.
 
 ### Prices without VAT
 
@@ -82,9 +84,11 @@ tariffs. That the feed's prices leave out VAT is inferred from these figures; Ro
 By the owner's decision the map adds VAT at 20%, so 45p shows as 54p, and each price says the
 project added it.
 
-One connector at Norwood Hall Hotel, whose name in the feed reads "Schnieder French Test charger 2",
-names a tariff called free_tariff, whose only price is a fixed fee of 0. Its status was UNKNOWN on
-26 October 2026. It is shown as published, so the map lists it as free.
+One charger at Norwood Hall Hotel, whose only connector is named "Schnieder French Test charger" in
+the feed, names a tariff called free_tariff, whose only price is a fixed fee of 0. Its status was
+UNKNOWN on 26 October 2026. Shown as published, a test charger would read as free, so the project
+owner decided on 29 October 2026 to leave that one charger off. The hotel's other charger is on the
+map.
 
 ## Connekt: the data as an email attachment
 
