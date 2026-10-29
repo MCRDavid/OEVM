@@ -1,5 +1,5 @@
 # Temporary: a one-off recording of Eco-Movement's PCPR API from this branch, removed
-# before the PR is ready. At most 26 requests, 125 seconds apart, with the 13 networks'
+# before the PR is ready (second run: endpoints now end in a slash). At most 26 requests, 125 seconds apart, with the 13 networks'
 # tokens from their secrets. Shares the daily fetch's concurrency group, so the two never
 # run at once.
 name: Eco-Movement check (temporary)

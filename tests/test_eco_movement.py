@@ -13,8 +13,8 @@ from pipeline import run
 from pipeline.registry import load_registry
 
 NOW = datetime(2026, 10, 26, 19, 30, tzinfo=UTC)
-LOCATIONS = "https://open-chargepoints.com/api/ocpi/cpo/2.2.1/locations"
-TARIFFS = "https://open-chargepoints.com/api/ocpi/cpo/2.2.1/tariffs"
+LOCATIONS = "https://open-chargepoints.com/api/ocpi/cpo/2.2.1/locations/"
+TARIFFS = "https://open-chargepoints.com/api/ocpi/cpo/2.2.1/tariffs/"
 FAKE_TOKEN = "made-up-token-for-tests"
 OPERATORS = load_registry()
 SHARED = sorted(i for i, c in OPERATORS.items() if c.adapter == "eco_movement_pcpr")
@@ -67,7 +67,7 @@ def fetch_with(server: Server, operator_id: str = "ubitricity", **kwargs):
 
 
 def test_asks_for_pages_of_1000_and_follows_the_link_header():
-    second = f"{LOCATIONS}/?offset=1000&limit=1000"
+    second = f"{LOCATIONS}?offset=1000&limit=1000"
     server = Server(
         {
             f"{LOCATIONS}?limit=1000": httpx.Response(

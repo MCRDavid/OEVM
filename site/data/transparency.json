@@ -3733,12 +3733,12 @@
       "feeds": [
         {
           "kind": "locations",
-          "url": "https://open-chargepoints.com/api/ocpi/cpo/2.2.1/locations",
+          "url": "https://open-chargepoints.com/api/ocpi/cpo/2.2.1/locations/",
           "status": "documented"
         },
         {
           "kind": "tariffs",
-          "url": "https://open-chargepoints.com/api/ocpi/cpo/2.2.1/tariffs",
+          "url": "https://open-chargepoints.com/api/ocpi/cpo/2.2.1/tariffs/",
           "status": "documented"
         },
         {
@@ -4361,12 +4361,12 @@
       "feeds": [
         {
           "kind": "locations",
-          "url": "https://open-chargepoints.com/api/ocpi/cpo/2.2.1/locations",
+          "url": "https://open-chargepoints.com/api/ocpi/cpo/2.2.1/locations/",
           "status": "documented"
         },
         {
           "kind": "tariffs",
-          "url": "https://open-chargepoints.com/api/ocpi/cpo/2.2.1/tariffs",
+          "url": "https://open-chargepoints.com/api/ocpi/cpo/2.2.1/tariffs/",
           "status": "documented"
         },
         {
@@ -4486,12 +4486,12 @@
       "feeds": [
         {
           "kind": "locations",
-          "url": "https://open-chargepoints.com/api/ocpi/cpo/2.2.1/locations",
+          "url": "https://open-chargepoints.com/api/ocpi/cpo/2.2.1/locations/",
           "status": "documented"
         },
         {
           "kind": "tariffs",
-          "url": "https://open-chargepoints.com/api/ocpi/cpo/2.2.1/tariffs",
+          "url": "https://open-chargepoints.com/api/ocpi/cpo/2.2.1/tariffs/",
           "status": "documented"
         },
         {
@@ -4758,12 +4758,12 @@
       "feeds": [
         {
           "kind": "locations",
-          "url": "https://open-chargepoints.com/api/ocpi/cpo/2.2.1/locations",
+          "url": "https://open-chargepoints.com/api/ocpi/cpo/2.2.1/locations/",
           "status": "documented"
         },
         {
           "kind": "tariffs",
-          "url": "https://open-chargepoints.com/api/ocpi/cpo/2.2.1/tariffs",
+          "url": "https://open-chargepoints.com/api/ocpi/cpo/2.2.1/tariffs/",
           "status": "documented"
         },
         {
@@ -4941,12 +4941,12 @@
       "feeds": [
         {
           "kind": "locations",
-          "url": "https://open-chargepoints.com/api/ocpi/cpo/2.2.1/locations",
+          "url": "https://open-chargepoints.com/api/ocpi/cpo/2.2.1/locations/",
           "status": "documented"
         },
         {
           "kind": "tariffs",
-          "url": "https://open-chargepoints.com/api/ocpi/cpo/2.2.1/tariffs",
+          "url": "https://open-chargepoints.com/api/ocpi/cpo/2.2.1/tariffs/",
           "status": "documented"
         },
         {
@@ -5819,12 +5819,12 @@
       "feeds": [
         {
           "kind": "locations",
-          "url": "https://open-chargepoints.com/api/ocpi/cpo/2.2.1/locations",
+          "url": "https://open-chargepoints.com/api/ocpi/cpo/2.2.1/locations/",
           "status": "documented"
         },
         {
           "kind": "tariffs",
-          "url": "https://open-chargepoints.com/api/ocpi/cpo/2.2.1/tariffs",
+          "url": "https://open-chargepoints.com/api/ocpi/cpo/2.2.1/tariffs/",
           "status": "documented"
         },
         {
@@ -5975,12 +5975,12 @@
       "feeds": [
         {
           "kind": "locations",
-          "url": "https://open-chargepoints.com/api/ocpi/cpo/2.2.1/locations",
+          "url": "https://open-chargepoints.com/api/ocpi/cpo/2.2.1/locations/",
           "status": "documented"
         },
         {
           "kind": "tariffs",
-          "url": "https://open-chargepoints.com/api/ocpi/cpo/2.2.1/tariffs",
+          "url": "https://open-chargepoints.com/api/ocpi/cpo/2.2.1/tariffs/",
           "status": "documented"
         },
         {
@@ -6380,12 +6380,12 @@
       "feeds": [
         {
           "kind": "locations",
-          "url": "https://open-chargepoints.com/api/ocpi/cpo/2.2.1/locations",
+          "url": "https://open-chargepoints.com/api/ocpi/cpo/2.2.1/locations/",
           "status": "documented"
         },
         {
           "kind": "tariffs",
-          "url": "https://open-chargepoints.com/api/ocpi/cpo/2.2.1/tariffs",
+          "url": "https://open-chargepoints.com/api/ocpi/cpo/2.2.1/tariffs/",
           "status": "documented"
         },
         {
@@ -6536,12 +6536,12 @@
       "feeds": [
         {
           "kind": "locations",
-          "url": "https://open-chargepoints.com/api/ocpi/cpo/2.2.1/locations",
+          "url": "https://open-chargepoints.com/api/ocpi/cpo/2.2.1/locations/",
           "status": "documented"
         },
         {
           "kind": "tariffs",
-          "url": "https://open-chargepoints.com/api/ocpi/cpo/2.2.1/tariffs",
+          "url": "https://open-chargepoints.com/api/ocpi/cpo/2.2.1/tariffs/",
           "status": "documented"
         },
         {
@@ -7543,12 +7543,12 @@
       "feeds": [
         {
           "kind": "locations",
-          "url": "https://open-chargepoints.com/api/ocpi/cpo/2.2.1/locations",
+          "url": "https://open-chargepoints.com/api/ocpi/cpo/2.2.1/locations/",
           "status": "documented"
         },
         {
           "kind": "tariffs",
-          "url": "https://open-chargepoints.com/api/ocpi/cpo/2.2.1/tariffs",
+          "url": "https://open-chargepoints.com/api/ocpi/cpo/2.2.1/tariffs/",
           "status": "documented"
         },
         {
@@ -7891,12 +7891,12 @@
       "feeds": [
         {
           "kind": "locations",
-          "url": "https://open-chargepoints.com/api/ocpi/cpo/2.2.1/locations",
+          "url": "https://open-chargepoints.com/api/ocpi/cpo/2.2.1/locations/",
           "status": "documented"
         },
         {
           "kind": "tariffs",
-          "url": "https://open-chargepoints.com/api/ocpi/cpo/2.2.1/tariffs",
+          "url": "https://open-chargepoints.com/api/ocpi/cpo/2.2.1/tariffs/",
           "status": "documented"
         },
         {
@@ -8528,12 +8528,12 @@
       "feeds": [
         {
           "kind": "locations",
-          "url": "https://open-chargepoints.com/api/ocpi/cpo/2.2.1/locations",
+          "url": "https://open-chargepoints.com/api/ocpi/cpo/2.2.1/locations/",
           "status": "documented"
         },
         {
           "kind": "tariffs",
-          "url": "https://open-chargepoints.com/api/ocpi/cpo/2.2.1/tariffs",
+          "url": "https://open-chargepoints.com/api/ocpi/cpo/2.2.1/tariffs/",
           "status": "documented"
         },
         {
@@ -8861,12 +8861,12 @@
       "feeds": [
         {
           "kind": "locations",
-          "url": "https://open-chargepoints.com/api/ocpi/cpo/2.2.1/locations",
+          "url": "https://open-chargepoints.com/api/ocpi/cpo/2.2.1/locations/",
           "status": "documented"
         },
         {
           "kind": "tariffs",
-          "url": "https://open-chargepoints.com/api/ocpi/cpo/2.2.1/tariffs",
+          "url": "https://open-chargepoints.com/api/ocpi/cpo/2.2.1/tariffs/",
           "status": "documented"
         },
         {
@@ -9051,12 +9051,12 @@
       "feeds": [
         {
           "kind": "locations",
-          "url": "https://open-chargepoints.com/api/ocpi/cpo/2.2.1/locations",
+          "url": "https://open-chargepoints.com/api/ocpi/cpo/2.2.1/locations/",
           "status": "documented"
         },
         {
           "kind": "tariffs",
-          "url": "https://open-chargepoints.com/api/ocpi/cpo/2.2.1/tariffs",
+          "url": "https://open-chargepoints.com/api/ocpi/cpo/2.2.1/tariffs/",
           "status": "documented"
         },
         {
@@ -9278,12 +9278,12 @@
       "feeds": [
         {
           "kind": "locations",
-          "url": "https://open-chargepoints.com/api/ocpi/cpo/2.2.1/locations",
+          "url": "https://open-chargepoints.com/api/ocpi/cpo/2.2.1/locations/",
           "status": "documented"
         },
         {
           "kind": "tariffs",
-          "url": "https://open-chargepoints.com/api/ocpi/cpo/2.2.1/tariffs",
+          "url": "https://open-chargepoints.com/api/ocpi/cpo/2.2.1/tariffs/",
           "status": "documented"
         },
         {
@@ -9738,12 +9738,12 @@
       "feeds": [
         {
           "kind": "locations",
-          "url": "https://open-chargepoints.com/api/ocpi/cpo/2.2.1/locations",
+          "url": "https://open-chargepoints.com/api/ocpi/cpo/2.2.1/locations/",
           "status": "documented"
         },
         {
           "kind": "tariffs",
-          "url": "https://open-chargepoints.com/api/ocpi/cpo/2.2.1/tariffs",
+          "url": "https://open-chargepoints.com/api/ocpi/cpo/2.2.1/tariffs/",
           "status": "documented"
         },
         {

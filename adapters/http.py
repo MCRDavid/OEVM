@@ -260,11 +260,15 @@ def rate_limit_state(response: httpx.Response, now: datetime) -> tuple[float | N
 
 
 def server_hint(response: httpx.Response) -> str:
-    """A short note on who answered, for error messages: the Server header and any limits."""
+    """A short note on who answered, for error messages: the Server header, where a
+    redirect points (never followed, so a key is never sent on) and any limits."""
     parts = []
     server = re.sub(r"[^A-Za-z0-9 ./_()-]", "", response.headers.get("Server", ""))[:40]
     if server.strip():
         parts.append(f"server {server.strip()}")
+    if response.is_redirect:
+        target = redact_url(response.headers["Location"])
+        parts.append("redirect to " + re.sub(r"[^A-Za-z0-9:/?&=%._~+-]", "", target)[:120])
     names = sorted(name for name in response.headers if "ratelimit" in name.replace("-", ""))
     if names:
         parts.append("rate limit headers " + ", ".join(names))

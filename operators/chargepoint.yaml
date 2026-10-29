@@ -7,11 +7,14 @@ adapter: eco_movement_pcpr
 base_url: unknown
 endpoints:
   locations:
-    url: https://open-chargepoints.com/api/ocpi/cpo/2.2.1/locations
+    url: https://open-chargepoints.com/api/ocpi/cpo/2.2.1/locations/
     status: documented
-    note: Confirmed in Eco-Movement's PCPR API reference on 2026-10-07.
+    note: >-
+      Confirmed in Eco-Movement's PCPR API reference on 2026-10-07. Written with the trailing
+      slash, as in the user guide's example request and the getting started page's paging
+      link (read 2026-10-26); without it the server answered HTTP 307 on 2026-10-29.
   tariffs:
-    url: https://open-chargepoints.com/api/ocpi/cpo/2.2.1/tariffs
+    url: https://open-chargepoints.com/api/ocpi/cpo/2.2.1/tariffs/
     status: documented
   statuses:
     url: https://open-chargepoints.com/api/statuses
