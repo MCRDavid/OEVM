@@ -140,7 +140,7 @@ class TariffOptionOut(_Model):
     name: str | None = Field(
         default=None,
         description="The operator's own description, made readable when it looks like a "
-        "system name (see pipeline/pricing.py readable_name).",
+        "system name or carries HTML tags (see pipeline/pricing.py readable_name).",
     )
     original_name: str | None = Field(
         default=None, description="The operator's text exactly, when name differs from it."
