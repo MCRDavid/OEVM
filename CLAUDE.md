@@ -31,6 +31,7 @@ decisions are in docs/adr/.
 - adapters/http.py: polite client. adapters/ocpi_221/: paging and OCPI conversion. adapters/replay.py: fixtures.
   adapters/jolt.py and adapters/monta.py: custom adapters (pipeline/run.py CUSTOM_ADAPTERS). Monta asks
   for a token (auth client_credentials), skips sites its server cannot send and drops each record's owner.
+  adapters/sent_copy.py: reads a copy an operator sent (sent_copies/<id>/, gzipped as received; ADR 0029).
 - pipeline/registry.py, pipeline/run.py. operators/*.yaml: one file per operator.
 - pipeline/pricing.py: the only way prices are shown. pipeline/tariffs.py: price per connector.
 - providers/*.yaml: charging plans from providers' own pages (schema/provider.py, pipeline/plans.py,
@@ -108,6 +109,9 @@ decisions are in docs/adr/.
 - Leave off another operator's copies of a network's locations (records under the network's own
   country and party codes) only where the network's operator file records the owner's decision in
   own_feed_over_copies, and only while its own locations are on the map (ADR 0027); never add one yourself.
+- Show a copy of its data that an operator sent (sent_copies/<id>/) only where the operator file
+  records the owner's decision in sent_copy (ADR 0029): kept exactly as received, dated when it was
+  made, every status unknown, and said to be a copy wherever it is shown; never add one yourself.
 - Fetch through the relay (relay/worker.js) only when the operator file records the owner's
   decision in relay; only feeds that need no key; same User-Agent and rate limits; never
   rotate addresses or disguise the project. Cloudflare deploys relay/ from main (relay/wrangler.toml).
