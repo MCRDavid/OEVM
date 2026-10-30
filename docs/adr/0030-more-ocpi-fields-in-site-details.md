@@ -14,13 +14,14 @@ October 2026 to add five of them, each in its own pull request:
 4. The kind of parking, from OCPI 2.2.1 `parking_type`.
 5. BrightGreen's plug types and statuses, from fields outside OCPI 2.2.1, by the owner's
    decision recorded in its operator file.
+6. The floor level, from OCPI 2.2.1 `floor_level`, added by the owner on 30 October 2026,
+   except for operators whose values the owner decided are not levels.
 
-Parts 3 to 5 are added to this record by the pull requests that build them.
+Parts 5 and 6 are added to this record by the pull requests that build them.
 
 Fields the survey found and the owner did not choose stay dropped: images (visitors'
-browsers would fetch them from the operator's storage), floor level (mostly cut-off
-names, not levels), green energy claims, the owner of a site (it can name a private
-individual), and fields that only repeat a standard one.
+browsers would fetch them from the operator's storage), green energy claims, the owner
+of a site (it can name a private individual), and fields that only repeat a standard one.
 
 ## Decisions
 
@@ -71,3 +72,17 @@ individual), and fields that only repeat a standard one.
   for a site whose address is "Hatton Cross Car Park". The owner decided on 30 October
   2026 to show every value as published, Roam's included; the wording says it is the
   operator's statement, and the operator files record these findings.
+- **Floor level, as the operator states it, except where the owner decided otherwise.**
+  OCPI 2.2.1 `floor_level` ("level on which the Charge Point is located (in garage
+  buildings) in the locally displayed numbering scheme", up to four characters) is kept
+  on each EVSE as published, with spaces at either end removed, and shown with the
+  charge point as "Floor level, the operator says: -2". A value that is not text is
+  ignored and logged. In the 30 October survey five networks sent it. ChargePoint (81 of
+  1,167 charge points), RAW Charging (94 of 2,573) and Mer (2 of 846) mostly give levels
+  such as "1", "2" and "-2", with a few that may not be ("T2", "LCFA", "B&Q", "="); those
+  are shown as published. MFG (all 3,034) and Allego (all 240) give the first four
+  characters of the location's name, such as "MFG ", "Morr", "Alle" and "GB, ". The
+  owner decided on 30 October 2026 that no floor level is shown for those two operators,
+  recorded in each operator file as `floor_level_not_read` and listed on the transparency
+  page. Floor levels are left unread only where the owner records that decision; no one
+  else adds one.

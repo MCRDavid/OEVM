@@ -357,6 +357,19 @@
           "description": "The operator's own notes for this charge point (OCPI 2.2.1 directions), in English where given, as published. Null when none are given.",
           "title": "Directions"
         },
+        "floor_level": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "The level the operator says the charge point is on (OCPI 2.2.1 floor_level), as published. Null when not given, or when the owner decided not to read this operator's values (floor_level_not_read).",
+          "title": "Floor Level"
+        },
         "capabilities": {
           "description": "What the operator says the charge point can do (OCPI 2.2.1 capabilities), such as contactless_card_support for a payment terminal that takes contactless cards.",
           "items": {
@@ -396,6 +409,7 @@
         "status_at",
         "parking_restrictions",
         "directions",
+        "floor_level",
         "capabilities",
         "connectors"
       ],

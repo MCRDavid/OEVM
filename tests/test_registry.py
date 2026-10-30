@@ -815,6 +815,16 @@ def test_only_the_operators_the_owner_named_read_their_stated_vat_as_in_their_pr
     }
 
 
+def test_only_the_operators_the_owner_named_have_their_floor_levels_left_unread():
+    operators = registry.load_registry(OPERATORS_DIR)
+    decided = {
+        i: str(c.floor_level_not_read.decided)
+        for i, c in operators.items()
+        if c.floor_level_not_read
+    }
+    assert decided == {"allego": "2026-10-30", "mfg_ev_power": "2026-10-30"}
+
+
 def test_vat_in_price_and_vat_not_stated_cannot_both_be_recorded():
     feed = "https://example.invalid/tariffs"
     in_price = {"decided": "2026-10-23", "basis": "Display prices.", "evidence_url": feed}

@@ -38,6 +38,7 @@
       "status_at": "2026-10-06T09:00:00Z",
       "parking_restrictions": ["customers"],
       "directions": "Level 1, next to the lifts",
+      "floor_level": "1",
       "capabilities": ["contactless_card_support", "rfid_reader"],
       "connectors": [
         {
@@ -58,6 +59,7 @@
       "status_at": null,
       "parking_restrictions": [],
       "directions": null,
+      "floor_level": null,
       "capabilities": [],
       "connectors": [
         {

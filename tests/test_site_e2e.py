@@ -1114,6 +1114,15 @@ def test_the_parking_type_is_shown_as_the_operator_states_it(visit):
     )
 
 
+def test_a_floor_level_is_shown_with_each_charge_point(visit):
+    page = visit().open("?view=list", map_ready=False)
+    page.locator("#list-items button", has_text="PARKWAY SC EVC 4").click()
+    expect(page.locator("#detail-heading")).to_be_focused()
+    floors = page.locator("#detail-body .charge-points .floor-level")
+    expect(floors).to_have_count(2)
+    expect(floors.first).to_have_text("Floor level, the operator says: -2.")
+
+
 def test_taxi_only_charge_points_are_labelled(visit):
     page = visit().open("?view=list&priv=1", map_ready=False)
     page.locator("#list-items button", has_text=TAXIS).click()

@@ -369,6 +369,19 @@ def test_a_decision_to_add_vat_is_shown_with_what_was_seen_across_operators(page
     assert "<li>RAW Charging: 20%, decided 2026-10-29" in text
 
 
+def test_a_decision_not_to_read_floor_levels_is_shown(page):
+    data = json.loads(transparency.outputs()[transparency.JSON_PATH])
+    decisions = {op["id"]: op["floor_level_not_read"] for op in data["operators"]}
+    assert {k: v["decided"] for k, v in decisions.items() if v} == {
+        "allego": "2026-10-30",
+        "mfg_ev_power": "2026-10-30",
+    }
+    text = " ".join(page.split())
+    assert (
+        "No floor level is shown for its charge points, by the owner's decision of 2026-10-30"
+    ) in text
+
+
 def test_a_decision_to_read_stated_vat_as_in_the_price_is_shown(page):
     data = json.loads(transparency.outputs()[transparency.JSON_PATH])
     decisions = {op["id"]: op["vat_in_price"] for op in data["operators"]}

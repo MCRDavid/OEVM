@@ -149,6 +149,12 @@ export function paymentText(evse) {
   return ways.length ? `Card payment here, the operator says: ${ways.map((c) => PAYMENT[c]).join(", ")}.` : null;
 }
 
+// The level the operator says a charge point is on (OCPI floor_level), as published
+// (ADR 0030). Not given for operators whose values the owner decided are not levels.
+export function floorLevelText(evse) {
+  return evse.floor_level ? `Floor level, the operator says: ${evse.floor_level}.` : null;
+}
+
 // A charge point's name: the label the operator says is on it (OCPI physical_reference),
 // else its EVSE ID, else its place in the operator's list.
 export function chargePointName(evse, index) {
@@ -199,12 +205,14 @@ function chargePointItem(evse, index, prices, shownNotes) {
   const connectors = evse.connectors ?? [];
   const parking = (evse.parking_restrictions ?? []).map((r) => PARKING[r]).filter(Boolean);
   const payment = paymentText(evse);
+  const floor = floorLevelText(evse);
   return h(
     "li",
     { className: "charge-point" },
     h("p", { className: "charge-point-name" }, h("strong", { text: name })),
     evse.evse_id && evse.evse_id !== name ? h("p", { className: "hint", text: `ID ${evse.evse_id}` }) : null,
     statusLine(evse),
+    floor ? h("p", { className: "floor-level", text: floor }) : null,
     parking.length ? h("p", { className: "parking", text: `Parking: ${parking.join("; ")}.` }) : null,
     payment ? h("p", { className: "payment", text: payment }) : null,
     evse.directions && !shownNotes.includes(evse.directions)
