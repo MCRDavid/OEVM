@@ -7,6 +7,12 @@ shapes one standard takes. The figures come from the run of 29 October 2026 that
 UTC, which read 36 networks and put 32,268 locations on the map. Nine more networks are read from
 30 October 2026.
 
+**Update, 29 October 2026:** a second run that evening read all 45 networks and put 32,855
+locations on the map. Across them, 88% of connectors name a tariff the same feed supplies (63,395 of
+72,279) and 87% of chargers give a status other than unknown. The nine networks added that evening
+name a supplied tariff for every connector but one, at drax-Ista. The figures below are from the
+earlier run.
+
 ## How the data is reached
 
 Of the 45 networks switched on:
