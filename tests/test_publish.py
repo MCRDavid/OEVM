@@ -451,10 +451,31 @@ def test_a_location_with_one_free_connector_is_not_called_free(results):
 def test_each_kind_of_connector_is_listed_once_with_its_power_and_price(results, tmp_path):
     for properties, detail in _layer_and_details(results, tmp_path):
         connectors = [c for e in detail["location"]["evses"] for c in e["connectors"]]
-        kinds = {(c["std"], c["kw"], c["price"], c["ppk"], c["out"]) for c in properties["cons"]}
+        kinds = {
+            (c["std"], c["kw"], c["cur"], c["price"], c["ppk"], c["out"])
+            for c in properties["cons"]
+        }
         assert len(kinds) == len(properties["cons"]), "no repeats"
         assert {c["standard"] for c in connectors} == {c["std"] for c in properties["cons"]}
         assert {c["max_kw"] for c in connectors} == {c["kw"] for c in properties["cons"]}
+        assert {
+            (c["standard"], c["max_kw"], publish._current(c["power_type"])) for c in connectors
+        } == {(c["std"], c["kw"], c["cur"]) for c in properties["cons"]}
+
+
+@pytest.mark.parametrize(
+    ("power_type", "cur"),
+    [
+        ("ac_1_phase", "ac"),
+        ("ac_2_phase", "ac"),
+        ("ac_2_phase_split", "ac"),
+        ("ac_3_phase", "ac"),
+        ("dc", "dc"),
+        ("unknown", None),
+    ],
+)
+def test_ac_or_dc_comes_from_the_feeds_power_type_only(power_type, cur):
+    assert publish._current(power_type) == cur
 
 
 def test_connectors_alike_but_for_their_lowest_price_are_both_listed(results):
@@ -466,7 +487,7 @@ def test_connectors_alike_but_for_their_lowest_price_are_both_listed(results):
     ).model_copy(deep=True)
     connectors = [(e, c) for e in location.evses for c in e.connectors]
     for _, c in connectors:  # the same kind of connector everywhere
-        c.standard, c.max_kw = "IEC_62196_T2_COMBO", 50.0
+        c.standard, c.max_kw, c.power_type = "IEC_62196_T2_COMBO", 50.0, "dc"
     prices = [
         ConnectorPrice(
             location_id=location.id,

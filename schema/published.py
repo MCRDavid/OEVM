@@ -36,6 +36,12 @@ class ConnectorSummary(_Model):
 
     std: str = Field(description="Connector standard (OCPI 2.2.1 name).")
     kw: float | None = Field(default=None, ge=0, description="Maximum power, kW.")
+    cur: Literal["ac", "dc"] | None = Field(
+        default=None,
+        description="'ac' or 'dc' from the feed's power_type (any AC_ value is 'ac'), for "
+        "the map's AC and DC markers. Null when the feed gives no OCPI 2.2.1 value; "
+        "never read from the connector standard.",
+    )
     price: MapPrice = Field(description="'free' only when its price state is free_confirmed.")
     ppk: float | None = Field(
         default=None,
