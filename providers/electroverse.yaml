@@ -9,7 +9,7 @@ terms:
   reuse: no_restriction_found
   quote: null
   attribution: null
-  checked: 2026-10-09
+  checked: 2026-10-30
 plans:
   - id: payg
     name: Pay as you go (app)
@@ -47,7 +47,7 @@ plans:
     discount_of: the price of charging on the IONITY network through Electroverse
     includes_vat: true
     networks: [IONITY]
-    operator_ids: []
+    operator_ids: [ionity]
     conditions: >-
       The discount varies by country, and the UK row on the page says 40%. No per kWh price
       is published. The Subscription Terms say the subscription fee includes VAT.
@@ -58,7 +58,7 @@ plans:
         The cost for the subscription will vary depending on where you are signing up from
         but you can expect to pay £10.50 / €11.99 per month. We recommend checking the
         Electroverse app for currency specific pricing!
-      checked: 2026-10-09
+      checked: 2026-10-30
   - id: shell_recharge_subscription
     name: Shell Recharge subscription (via Electroverse)
     pay_by: Electroverse app or Electrocard
@@ -116,7 +116,7 @@ plans:
     discount_of: the price of charging on Arnold Clark chargers through Electroverse
     includes_vat: true
     networks: [Arnold Clark Charge]
-    operator_ids: []
+    operator_ids: [arnold_clark_charge]
     conditions: The Subscription Terms say the subscription fee includes VAT.
     needs_testing: null
     source:
@@ -124,7 +124,7 @@ plans:
       quote: >-
         Electroverse users can now get 29% off Arnold Clark chargers by subscribing for
         £8.99 a month! Once you sign up, you'll have instant access to cheaper charging!
-      checked: 2026-10-09
+      checked: 2026-10-30
   - id: octopus_go_discount
     name: Octopus Go customer discount
     pay_by: Electroverse app with a linked Octopus Energy account
@@ -177,7 +177,7 @@ plans:
     discount_of: the price of charging on Evyve chargers through Electroverse
     includes_vat: null
     networks: [Evyve]
-    operator_ids: []
+    operator_ids: [evyve]
     conditions: >-
       Applied automatically when a charge is started with the Electroverse app or
       Electrocard. Listed under 'Limited-time discounts and benefits', with no end date
@@ -188,7 +188,7 @@ plans:
       quote: >-
         Automatically get 15% off Evyve chargers when you start a charge via the
         Electroverse app or charging card (Electrocard)!
-      checked: 2026-10-09
+      checked: 2026-10-30
   - id: source_ev_discount
     name: Source EV discount (via Electroverse)
     pay_by: Electroverse app or Electrocard
@@ -199,7 +199,7 @@ plans:
     discount_of: the price of charging at Source EV sites through Electroverse
     includes_vat: null
     networks: [Source EV]
-    operator_ids: []
+    operator_ids: [source_ev]
     conditions: >-
       Limited-time offer, network wide at Source EV sites. The start date is given as
       'Monday the 27th of October' with no year and no end date.
@@ -211,9 +211,9 @@ plans:
       quote: >-
         Starting Monday the 27th of October and running you will be able to stop and charge
         at any Source EV site and get a cool 20% discount!
-      checked: 2026-10-09
+      checked: 2026-10-30
 notes: >-
-  Terms checked 2026-10-09: electroverse.com/legal/terms holds the General Terms and the
+  Terms checked 2026-10-09 and 2026-10-30: electroverse.com/legal/terms holds the General Terms and the
   Subscription Terms, with no clause found on copying or reusing website content or prices.
   Per charger prices are shown only in the Electroverse app. https://octopusev.com/ev-hub/electroverse
   returned HTTP 404 on 2026-10-09.
