@@ -150,6 +150,14 @@ findings:
       decision of 2026-10-23 (vat_not_stated above), and each such price says the VAT was
       added by this project. The tariffs are published unchanged.
     evidence_url: https://api.evdot.clenergy.online/development/pcpr/tariffs
+  - date: 2026-10-30
+    kind: spec_conformance
+    summary: >-
+      All 119 locations give parking_type "UNKNOWN" (read 2026-10-30), which is not one of
+      the OCPI 2.2.1 ParkingType values.
+    handling: >-
+      Recorded as unknown, so no parking type is shown for these locations.
+    evidence_url: https://api.evdot.clenergy.online/development/pcpr/locations
 notes: >-
   Globe EV's files are OCPI 2.2.1 records inside Clenergy's wrapper, so the ocpi_221 adapter
   reads them with response_envelope set to data_list, as for Clenergy EV. The host name

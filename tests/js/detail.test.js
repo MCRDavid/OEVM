@@ -1,7 +1,7 @@
 import assert from "node:assert/strict";
 import { test } from "node:test";
 
-import { paymentText, siteNotes } from "../../site/assets/js/detail.js";
+import { parkingTypeText, paymentText, siteNotes } from "../../site/assets/js/detail.js";
 
 const evse = (directions) => ({ uid: String(Math.random()), directions });
 
@@ -35,4 +35,11 @@ test("card payment is worded from the payment capabilities only, in a fixed orde
   // Nothing is said when no payment capability is listed, rather than "no card payment".
   assert.equal(paymentText({ capabilities: ["remote_start_stop_capable", "rfid_reader"] }), null);
   assert.equal(paymentText({}), null);
+});
+
+test("the parking type is worded as the operator's statement, and left out when unknown", () => {
+  assert.equal(parkingTypeText({ parking_type: "along_motorway" }), "Parking type, the operator says: motorway services or rest area.");
+  assert.equal(parkingTypeText({ parking_type: "on_street" }), "Parking type, the operator says: on the street.");
+  assert.equal(parkingTypeText({ parking_type: null }), null);
+  assert.equal(parkingTypeText({}), null);
 });

@@ -185,7 +185,8 @@ findings:
       has a country_code or party_id.
     handling: >-
       A custom adapter gives each connector the OCPI 2.2.1 names, which have the same
-      meanings, then converts the records as usual. The country code GB and party id EVC
+      meanings, and from 2026-10-30 reads each location's type as its parking_type, then
+      converts the records as usual. The country code GB and party id EVC
       come from the operator file, read from the EVSE ids.
     evidence_url: https://data.evc.ninja/public/v1/data
   - date: 2026-10-26
@@ -253,6 +254,18 @@ findings:
     kind: data_quality
     summary: Five of 438 locations list no EVSEs (2026-10-26).
     handling: Shown as published, with no chargers listed.
+    evidence_url: https://data.evc.ninja/public/v1/data
+  - date: 2026-10-30
+    kind: data_quality
+    summary: >-
+      All 438 locations give the OCPI 2.1.1 type ON_STREET (recorded 2026-10-26), including
+      racecourses, hotels and golf clubs such as Cheltenham Racecourse, Crowne Plaza Gatwick
+      and Kirkbymoorside Golf Club.
+    handling: >-
+      Read as the OCPI 2.2.1 parking_type, which has the same values, and shown as
+      published, worded as the operator's statement ("Parking type, the operator says: on
+      the street"), by the repository owner's decision of 2026-10-30. ON_STREET is also the
+      value in the OCPI 2.1.1 specification's example location.
     evidence_url: https://data.evc.ninja/public/v1/data
 notes: >-
   Roam was called EVC until November 2024. Its data was given by email on 2026-10-26 in

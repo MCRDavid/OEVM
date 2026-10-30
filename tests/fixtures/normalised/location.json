@@ -28,6 +28,7 @@
     ]
   },
   "directions": "Car park closes at 22:00. Parking charges apply.",
+  "parking_type": "parking_lot",
   "evses": [
     {
       "uid": "EVSE-1",

@@ -8,7 +8,11 @@ differences, recorded as findings in operators/roam.yaml on 2026-10-26, are:
   has the list tariff_ids and max_voltage and max_amperage. The meanings are the same.
 - Locations and tariffs have no country_code or party_id, so the operator file's GB and
   EVC are used. Locations have no publish flag.
-- Locations give type (OCPI 2.1.1) rather than parking_type, which this project does not use.
+- Locations give type (OCPI 2.1.1 LocationType) rather than parking_type. Its values
+  ON_STREET, PARKING_GARAGE, UNDERGROUND_GARAGE and PARKING_LOT have the same names and
+  meanings in OCPI 2.2.1, so type is read as parking_type; OTHER and UNKNOWN are not OCPI
+  2.2.1 values and are recorded as unknown by the converter. Every location gave
+  ON_STREET on 2026-10-26; the owner decided on 2026-10-30 to show it as published.
 - Some EVSEs give two connectors the same id, which OCPI does not allow. By the repository
   owner's decision of 2026-10-29, each connector in such an EVSE takes Roam's own
   connector uuid, which is unique, as its id, so the site is still shown.
@@ -81,7 +85,10 @@ def ocpi_location(raw: object, issues: IssueLog) -> object:
         if isinstance(evse, dict) and isinstance(evse.get("connectors"), list):
             evse = {**evse, "connectors": _connectors(evse["connectors"], issues)}
         evses.append(evse)
-    return {**raw, "evses": evses}
+    location = {**raw, "evses": evses}
+    if "parking_type" not in raw and "type" in raw:
+        location["parking_type"] = raw["type"]
+    return location
 
 
 def fetch(

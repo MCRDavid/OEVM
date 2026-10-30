@@ -187,6 +187,14 @@ findings:
       project added it. Reading the prices as excluding VAT is inferred from the figures
       and needs confirming by Clenergy EV. The tariffs are published unchanged.
     evidence_url: https://api.clenergy.online/development/pcpr/tariffs
+  - date: 2026-10-30
+    kind: spec_conformance
+    summary: >-
+      All 1,414 locations give parking_type "UNKNOWN" (read 2026-10-30), which is not one of
+      the OCPI 2.2.1 ParkingType values.
+    handling: >-
+      Recorded as unknown, so no parking type is shown for these locations.
+    evidence_url: https://api.clenergy.online/development/pcpr/locations
 notes: >-
   Clenergy EV's files are OCPI 2.2.1 records inside a different wrapper, so the ocpi_221
   adapter reads them with response_envelope set to data_list (task A6 in

@@ -77,6 +77,17 @@ CAPABILITIES = {
         "UNLOCK_CAPABLE",
     )
 }
+PARKING_TYPES = {
+    value: value.lower()
+    for value in (
+        "ALONG_MOTORWAY",
+        "PARKING_GARAGE",
+        "PARKING_LOT",
+        "ON_DRIVEWAY",
+        "ON_STREET",
+        "UNDERGROUND_GARAGE",
+    )
+}
 DIMENSIONS = {"ENERGY": "energy", "FLAT": "flat", "PARKING_TIME": "parking_time", "TIME": "time"}
 TARIFF_TYPES = {
     "AD_HOC_PAYMENT": "ad_hoc_payment",
@@ -373,6 +384,19 @@ def _capabilities(values: object, issues: IssueLog) -> list[str]:
     return kept
 
 
+def _parking_type(value: object, issues: IssueLog) -> str | None:
+    """OCPI 2.2.1 parking_type in lower case; None when not given. Any other value is
+    recorded as unknown (None) and logged."""
+    if value is None:
+        return None
+    parking_type = PARKING_TYPES.get(value) if isinstance(value, str) else None
+    if parking_type is None:
+        issues.add(
+            f"location parking_type {value!r} is not an OCPI 2.2.1 value; recorded as unknown"
+        )
+    return parking_type
+
+
 def _directions(value: object, what: str, issues: IssueLog) -> str | None:
     """OCPI 2.2.1 directions, a list of DisplayText, as the operator's text: the English
     entry where there is one, with spaces at either end removed. None when there is no
@@ -447,6 +471,7 @@ def location_from_ocpi(
         ),
         opening_hours=_opening_hours(raw.get("opening_times"), issues),
         directions=_directions(raw.get("directions"), "location", issues),
+        parking_type=_parking_type(raw.get("parking_type"), issues),
         evses=[
             _evse(e, last_updated, prefix, issues, config)
             for e in raw.get("evses") or []

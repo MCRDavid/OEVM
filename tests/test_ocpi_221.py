@@ -6,6 +6,7 @@ Made-up responses (httpx.MockTransport, example.invalid) cover failures and edge
 
 import json
 from datetime import UTC, datetime
+from functools import partial
 from pathlib import Path
 
 import httpx
@@ -971,6 +972,21 @@ def test_capabilities_are_kept_once_each_and_other_values_logged():
         "EVSE capabilities is not a list; ignored",
         "EVSE capability '' is not an OCPI 2.2.1 value; ignored",
         "EVSE capability 'contactless_card_support' is not an OCPI 2.2.1 value; ignored",
+    ]
+
+
+def test_parking_type_is_kept_and_other_values_are_unknown():
+    issues = IssueLog()
+    raw = raw_location()
+    raw["parking_type"] = "ALONG_MOTORWAY"
+    convert = partial(
+        location_from_ocpi, config=make_config(), source_url=EXAMPLE, fetched_at=NOW, issues=issues
+    )
+    assert convert(raw).parking_type == "along_motorway"
+    assert convert({**raw, "parking_type": "UNKNOWN"}).parking_type is None
+    assert convert({**raw, "parking_type": None}).parking_type is None
+    assert issues.lines() == [
+        "location parking_type 'UNKNOWN' is not an OCPI 2.2.1 value; recorded as unknown"
     ]
 
 

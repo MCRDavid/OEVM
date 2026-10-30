@@ -26,7 +26,10 @@ def test_each_file_is_read_in_one_request():
     result, transport = replay()
     assert transport.requested == [f"{FEED}/locations", f"{FEED}/tariffs"]
     assert result.complete
-    assert result.issues == []
+    # Every location gives parking_type "UNKNOWN", which OCPI 2.2.1 does not have.
+    assert result.issues == [
+        "location parking_type 'UNKNOWN' is not an OCPI 2.2.1 value; recorded as unknown (6 times)"
+    ]
 
 
 def test_recorded_locations_convert_faithfully():

@@ -60,3 +60,14 @@ individual), and fields that only repeat a standard one.
   every charge point as credit card payable, lamp posts included (RAW Charging,
   ChargePoint, Allego, evpoint, Source EV), which may mean paying on a web page rather than
   at a terminal; that needs testing, so the wording stays the operator's statement.
+- **Parking type, as the operator states it.** OCPI 2.2.1 `parking_type` is kept in lower
+  case and shown under the address as "Parking type, the operator says: car park" (or
+  multi-storey car park, underground car park, on the street, driveway, motorway services
+  or rest area). A value that is not an OCPI 2.2.1 ParkingType is recorded as unknown and
+  logged (Clenergy EV and Globe EV give "UNKNOWN" for every location). Roam's records use
+  OCPI 2.1.1, whose `type` has the same values, so the Roam adapter reads `type` as
+  `parking_type`. Some feeds give one value for nearly every site: all 438 of Roam's
+  locations, racecourses and hotels included, say ON_STREET, and Fastned gives ON_STREET
+  for a site whose address is "Hatton Cross Car Park". The owner decided on 30 October
+  2026 to show every value as published, Roam's included; the wording says it is the
+  operator's statement, and the operator files record these findings.

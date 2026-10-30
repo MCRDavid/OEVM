@@ -76,6 +76,8 @@ def test_recorded_locations_convert_with_roams_party_and_ocpi_221_names():
     assert set(statuses) == {"available", "charging", "out_of_order"}
     (site,) = [loc for loc in result.locations if loc.id == TYTHERINGTON]
     assert site.operator.name == "Roam Charging" and site.address.country == "GBR"
+    # OCPI 2.1.1 type is read as parking_type (the owner's decision of 2026-10-30).
+    assert {loc.parking_type for loc in result.locations} == {"on_street"}
 
 
 def _raw_connectors() -> list[dict]:
@@ -217,6 +219,10 @@ def test_the_adapter_renames_only_what_is_missing():
     assert roam._connector("not a connector", issues) == "not a connector"
     assert roam.ocpi_location({"id": "a", "evses": None}, issues) == {"id": "a", "evses": None}
     assert roam.ocpi_location(["a"], issues) == ["a"]
+    typed = {"id": "a", "type": "PARKING_GARAGE", "evses": []}
+    assert roam.ocpi_location(typed, issues)["parking_type"] == "PARKING_GARAGE"
+    both = {**typed, "parking_type": "PARKING_LOT"}
+    assert roam.ocpi_location(both, issues)["parking_type"] == "PARKING_LOT"
     # Repeated ids with no usable uuid are left for the converter to skip.
     same = [{"id": "1", "uuid": "9"}, {"id": "1", "uuid": "9"}]
     assert [c["id"] for c in roam._connectors(same, issues)] == ["1", "1"]
