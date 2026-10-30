@@ -89,6 +89,23 @@ def test_operator_ids_must_have_a_registry_file(tmp_path: Path):
     assert list(load_providers(tmp_path, operator_ids={"jolt"})) == ["example"]
 
 
+def test_own_networks_must_have_a_registry_file(tmp_path: Path):
+    data = provider(kind="operator", own_networks=["nowhere"])
+    (tmp_path / "example.yaml").write_text(yaml.safe_dump(data))
+    with pytest.raises(ProvidersError, match="own_networks names operator 'nowhere'"):
+        load_providers(tmp_path, operator_ids={"jolt"})
+    data["own_networks"] = ["jolt"]
+    (tmp_path / "example.yaml").write_text(yaml.safe_dump(data))
+    assert load_providers(tmp_path, operator_ids={"jolt"})["example"].own_networks == ["jolt"]
+
+
+def test_own_networks_are_only_for_an_operators_own_provider_file():
+    with pytest.raises(ValidationError, match="only for an operator's own provider file"):
+        ProviderFile.model_validate(provider(kind="roaming", own_networks=["jolt"]))
+    with pytest.raises(ValidationError, match="must not repeat"):
+        ProviderFile.model_validate(provider(kind="operator", own_networks=["jolt", "jolt"]))
+
+
 def test_the_file_name_must_match_the_id(tmp_path: Path):
     (tmp_path / "other.yaml").write_text(yaml.safe_dump(provider()))
     with pytest.raises(ProvidersError, match="must match the file name"):
@@ -130,6 +147,19 @@ def test_the_published_plan_list_matches_the_provider_files(tmp_path: Path):
         assert plan.ppk is None or plan.discount_percent is None
         # The map's label for a ticked plan is its fixed price including VAT, or nothing.
         assert (plan.label is None) == (plan.ppk is None)
+    # Operators whose own terms keep their plans off the map are named, so the details of
+    # their locations can say so (ADR 0016); operators whose plans are listed are not.
+    withheld = PlansFile.model_validate_json(blob).withheld
+    restricted = {
+        item.name: item.own_networks
+        for item in load_providers().values()
+        if item.own_networks and item.terms.reuse in ("forbidden", "personal_use_only")
+    }
+    assert {entry.provider: entry.operator_ids for entry in withheld} == restricted
+    ionity = next(entry for entry in withheld if entry.provider == "IONITY")
+    assert ionity.operator_ids == ["ionity"]
+    assert ionity.website.startswith("https://") and ionity.terms_url.startswith("https://")
+    assert not {"Fastned", "Lidl GB"} & {entry.provider for entry in withheld}
     fastned = next(plan for plan in plans if plan.id == "fastned.fastned_standard")
     assert (fastned.ppk, fastned.label) == (79.0, "79p")
     # A plan that applies only at some times says so in its label.

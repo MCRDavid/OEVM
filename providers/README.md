@@ -18,6 +18,7 @@ uv run python -m pipeline.plans --validate
 - A plan gives a fixed price or a discount, never both, and must publish at least one of a fee, a price or a discount.
 - When the provider's own pages disagree, keep the figure from the main pricing page and explain in `needs_testing`; the map shows that note.
 - Set `operator_ids` only to ids that have a file in `operators/`, so the plan shows at those networks' chargers.
+- For an operator's own app and subscriptions (`kind: operator`), set `own_networks` to its ids in `operators/`. When its terms are `forbidden` or `personal_use_only`, the details of those networks' locations then say that its memberships or subscriptions may be available but cannot be shown here because of its terms, with links to its website and terms ([ADR 0016](../docs/adr/0016-charging-plans.md)).
 - Set `only_at_some_times: true` when the plan's price applies only at some times of day or on some days (off-peak hours, weekends), so its label on the map says "from" ([ADR 0026](../docs/adr/0026-price-labels-on-the-map.md)).
 - British English, neutral wording, no em dashes. Never use a provider's logo or suggest it endorses the project.
 
@@ -82,7 +83,7 @@ For a provider whose terms could not be read, read them first (in a browser if a
 1. Send the request below through the provider's own contact or press page. Do not copy contact details into this repository.
 2. Update its row above: "Sent <date>", then the outcome. Record the channel and date only, never names or addresses.
 3. If the provider agrees, save its reply with names and contact details removed under `evidence/providers/<id>/`, quote the permission in `terms.quote`, set `terms.reuse` to `attribution` (with the wording it asks for) or `no_restriction_found`, and add its plans as in "Adding a provider or plan". The research from 9 October 2026 already lists their published plans; re-check each page before copying.
-4. If it declines or does not reply, leave `plans: []`. Its prices still show wherever its own open data feed publishes them.
+4. If it declines or does not reply, leave `plans: []`. Its prices still show wherever its own open data feed publishes them, and its locations' details say that its plans cannot be shown here (`own_networks`).
 
 ### The request
 

@@ -115,6 +115,7 @@ from schema.published import (
     SentCopyNote,
     TariffOptionOut,
     TariffSource,
+    WithheldOut,
 )
 
 SWAP_NOTE = (
@@ -417,9 +418,21 @@ PLANS_NOTE = (
 
 
 def plans_file(operators: dict[str, OperatorConfig], generated_at: datetime) -> PlansFile:
-    """Every listed plan, for the map's plan list, details and calculator."""
+    """Every listed plan, for the map's plan list, details and calculator, and the
+    operators whose terms keep their own plans off the map, so the details of their
+    locations can say so (owner's request, 30 October 2026; ADR 0016)."""
     plans = []
+    withheld = []
     for provider in load_providers(operator_ids=set(operators)).values():
+        if provider.own_networks and provider.terms.reuse in ("forbidden", "personal_use_only"):
+            withheld.append(
+                WithheldOut(
+                    provider=provider.name,
+                    operator_ids=provider.own_networks,
+                    website=provider.website,
+                    terms_url=provider.terms.url,
+                )
+            )
         attribution = provider.terms.attribution if provider.terms.reuse == "attribution" else None
         for plan in provider.plans:
             fixed = plan.price_per_kwh is not None and plan.includes_vat
@@ -456,7 +469,7 @@ def plans_file(operators: dict[str, OperatorConfig], generated_at: datetime) -> 
                     checked=plan.source.checked,
                 )
             )
-    return PlansFile(generated_at=generated_at, note=PLANS_NOTE, plans=plans)
+    return PlansFile(generated_at=generated_at, note=PLANS_NOTE, plans=plans, withheld=withheld)
 
 
 def _dump(model, *, indent: int | None = None) -> bytes:

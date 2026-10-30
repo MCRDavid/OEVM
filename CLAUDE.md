@@ -40,7 +40,8 @@ decisions are in docs/adr/.
 - pipeline/pricing.py: the only way prices are shown. pipeline/tariffs.py: price per connector.
 - providers/*.yaml: charging plans from providers' own pages (schema/provider.py, pipeline/plans.py,
   ADR 0016, providers/README.md). Plans only where the provider's terms allow reuse; never
-  estimate a price. Permission requests to the others are tracked in providers/README.md.
+  estimate a price. Permission requests to the others are tracked in providers/README.md;
+  their own_networks' site details say their plans cannot be shown (ADR 0016).
 - pipeline/transparency.py: site/transparency/. pipeline/publish.py: map files; schema/published.py.
 - pipeline/geography.py and pipeline/data/: whether a point is in the UK (Natural Earth outlines).
 - pipeline/access.py: names that mark a location private or restricted, hidden unless asked (ADR 0023).

@@ -289,6 +289,22 @@ def _open_details_containing(page, text):
     raise AssertionError(f"no location's details contain {text!r}")
 
 
+def test_details_say_where_an_operators_terms_keep_its_plans_off_the_map(visit):
+    v = visit()
+    page = v.open("?view=list", map_ready=False)
+    expect(page.locator("#list-items li")).to_have_count(LOCATIONS)
+    _open_details_containing(page, "may be available here")
+    note = page.locator("#detail-body p.withheld").first
+    text = note.text_content()
+    assert "do not allow them to be republished, so they are not shown." in text
+    assert text.endswith("website or app for details.")
+    links = note.locator("a")
+    assert links.count() == 2
+    assert links.nth(0).text_content() == "website terms"
+    assert links.nth(1).text_content().endswith("'s website")
+    assert all(links.nth(n).get_attribute("href").startswith("https://") for n in range(2))
+
+
 def test_details_show_plans_from_providers_pages_and_the_visitors_own(visit):
     v = visit()
     page = v.open("?view=list", map_ready=False)

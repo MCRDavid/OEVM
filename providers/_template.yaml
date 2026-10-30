@@ -12,6 +12,7 @@ terms:
   quote: null # the reuse clause word for word, required for a restriction
   attribution: null # wording to show, required when reuse is attribution
   checked: 2026-10-09
+own_networks: [] # kind operator only: ids from operators/ for the networks it runs
 plans:
   - id: example_plus
     name: Example Plus

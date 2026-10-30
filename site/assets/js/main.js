@@ -58,6 +58,7 @@ const app = {
   savedOnly: false,
   theme: null, // "light" or "dark" once the visitor picks one; until then the device decides
   plans: [], // data/plans.json; empty if it could not be loaded
+  withheld: [], // data/plans.json: operators whose terms keep their own plans off the map
   mine: new Set(), // ids of the plans the visitor says they have
   detail: null, // the open location's detail file, so the panel can be redrawn
 };
@@ -379,6 +380,7 @@ function detailOptions() {
     ...app.config,
     plans: app.plans,
     mine: app.mine,
+    withheld: app.withheld,
     label: props ? priceLabel(props, app.state, bestPlans(app.plans, app.mine).get(props.op)) : null,
     filtered: connectorFiltersOn(app.state),
     hideOut: app.state.working,
@@ -952,9 +954,12 @@ async function start() {
       // operator names fall back to their ids
     }
     try {
-      app.plans = (await loadJson("data/plans.json")).plans ?? [];
+      const list = await loadJson("data/plans.json");
+      app.plans = list.plans ?? [];
+      app.withheld = list.withheld ?? [];
     } catch {
       app.plans = []; // the map works without the plan list
+      app.withheld = [];
     }
     buildNetworks();
     buildPlanPicker();
