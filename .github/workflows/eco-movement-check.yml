@@ -1,0 +1,40 @@
+# Temporary: a one-off recording of bp pulse's feed on Eco-Movement's PCPR API from this
+# branch, removed before the PR is ready. Every page of locations and tariffs once, through
+# the project's polite client (the same limits as the daily fetch), with the token from its
+# secret. Shares the daily fetch's concurrency group, so the two never run at once.
+name: Eco-Movement check (temporary)
+
+on:
+  push:
+    branches: [claude/project-thread-0ru0ra]
+    paths: [.github/workflows/eco-movement-check.yml, .github/scripts/eco-movement-check.py]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: fetch-daily
+  cancel-in-progress: false
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+      - uses: astral-sh/setup-uv@v7
+      - run: uv sync --locked
+      - name: Read bp pulse's locations and tariffs
+        env:
+          BP_PULSE_TOKEN: ${{ secrets.BP_PULSE_TOKEN }}
+        run: PYTHONPATH=. uv run python .github/scripts/eco-movement-check.py
+      - name: Keep the responses for the fixtures
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: eco-movement-raw
+          path: raw
+          retention-days: 3
+          if-no-files-found: warn
