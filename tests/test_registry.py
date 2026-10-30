@@ -825,6 +825,17 @@ def test_only_the_operators_the_owner_named_have_their_floor_levels_left_unread(
     assert decided == {"allego": "2026-10-30", "mfg_ev_power": "2026-10-30"}
 
 
+def test_only_brightgreen_reads_plug_types_and_statuses_from_its_connectors():
+    operators = registry.load_registry(OPERATORS_DIR)
+    sockets = {i: str(c.socket_types.decided) for i, c in operators.items() if c.socket_types}
+    statuses = {
+        i: str(c.status_from_connectors.decided)
+        for i, c in operators.items()
+        if c.status_from_connectors
+    }
+    assert sockets == statuses == {"bright_green": "2026-10-30"}
+
+
 def test_vat_in_price_and_vat_not_stated_cannot_both_be_recorded():
     feed = "https://example.invalid/tariffs"
     in_price = {"decided": "2026-10-23", "basis": "Display prices.", "evidence_url": feed}

@@ -257,9 +257,18 @@ def _ocpi_id(value: object, what: str, issues: IssueLog) -> object:
     return value
 
 
-def _connector(raw: dict, tariff_prefix: str, issues: IssueLog) -> Connector:
+def _connector(
+    raw: dict, tariff_prefix: str, issues: IssueLog, config: OperatorConfig
+) -> Connector:
     standard = raw.get("standard")
-    if not isinstance(standard, str) or not standard.replace("_", "").isalnum():
+    socket_types = config.socket_types.types if config.socket_types else {}
+    if standard is None and raw.get("socket_type") in socket_types:
+        standard = socket_types[raw["socket_type"]]
+        issues.add(
+            f"connector has no standard; socket_type {raw['socket_type']!r} read as "
+            f"{standard} under the decision recorded in the operator file"
+        )
+    elif not isinstance(standard, str) or not standard.replace("_", "").isalnum():
         issues.add(f"connector standard {standard!r} is not valid; recorded as unknown")
         standard = "unknown"
     power_type = POWER_TYPES.get(raw.get("power_type"), "unknown")
@@ -290,6 +299,8 @@ def _evse(
             f"EVSE status {raw['status']!r} is not an OCPI 2.2.1 value; shown as {status} "
             "under the decision recorded in the operator file"
         )
+    elif status is None and config.status_from_connectors is not None:
+        status = _status_from_connectors(raw, issues)
     elif status is None:
         issues.add(
             f"EVSE status {raw.get('status')!r} is not an OCPI 2.2.1 value; recorded as unknown"
@@ -309,8 +320,29 @@ def _evse(
         directions=_directions(raw.get("directions"), "EVSE", issues),
         floor_level=_floor_level(raw.get("floor_level"), issues, config),
         capabilities=_capabilities(raw.get("capabilities"), issues),
-        connectors=[_connector(c, prefix, issues) for c in raw.get("connectors") or []],
+        connectors=[_connector(c, prefix, issues, config) for c in raw.get("connectors") or []],
     )
+
+
+def _status_from_connectors(raw: dict, issues: IssueLog) -> str:
+    """An EVSE's status from its connectors' status, a field outside OCPI 2.2.1, when every
+    connector gives the same OCPI 2.2.1 status in any case; otherwise unknown. Used only
+    under the owner's decision in status_from_connectors (ADR 0030)."""
+    sent = {
+        c.get("status").upper() if isinstance(c.get("status"), str) else c.get("status")
+        for c in raw.get("connectors") or []
+        if isinstance(c, dict)
+    }
+    what = f"EVSE status {raw.get('status')!r} is not an OCPI 2.2.1 value"
+    if len(sent) == 1 and (only := next(iter(sent))) in EVSE_STATUSES:
+        issues.add(
+            f"{what}; read as its connectors' status {only} under the decision recorded "
+            "in the operator file"
+        )
+        return EVSE_STATUSES[only]
+    reason = "its connectors differ" if len(sent) > 1 else "its connectors give no OCPI status"
+    issues.add(f"{what} and {reason}; recorded as unknown")
+    return "unknown"
 
 
 def _left_off(evse: object, location: dict, uids: set[str], issues: IssueLog) -> bool:

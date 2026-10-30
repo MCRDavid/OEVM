@@ -1206,6 +1206,47 @@
       "title": "SignMissingLocation",
       "type": "object"
     },
+    "SocketTypes": {
+      "additionalProperties": false,
+      "description": "The repository owner's recorded decision to read a connector's plug type from its\nsocket_type, a field outside OCPI 2.2.1 (ADR 0030).\n\nUsed only for a connector that gives no OCPI 2.2.1 standard, and only for the values\nnamed here, each read as one OCPI 2.2.1 ConnectorType. Without this decision such a\nconnector's plug type is unknown.",
+      "properties": {
+        "decided": {
+          "description": "Date the owner made the decision (YYYY-MM-DD).",
+          "format": "date",
+          "title": "Decided",
+          "type": "string"
+        },
+        "basis": {
+          "description": "Why the values may be read this way.",
+          "minLength": 1,
+          "title": "Basis",
+          "type": "string"
+        },
+        "evidence_url": {
+          "description": "Where the values can be seen in the feed.",
+          "pattern": "^https?://\\S+$",
+          "title": "Evidence Url",
+          "type": "string"
+        },
+        "types": {
+          "additionalProperties": {
+            "type": "string"
+          },
+          "description": "Each socket_type as the feed sends it, and the OCPI 2.2.1 ConnectorType it is read as.",
+          "minProperties": 1,
+          "title": "Types",
+          "type": "object"
+        }
+      },
+      "required": [
+        "decided",
+        "basis",
+        "evidence_url",
+        "types"
+      ],
+      "title": "SocketTypes",
+      "type": "object"
+    },
     "Source": {
       "additionalProperties": false,
       "properties": {
@@ -1231,6 +1272,37 @@
         "url"
       ],
       "title": "Source",
+      "type": "object"
+    },
+    "StatusFromConnectors": {
+      "additionalProperties": false,
+      "description": "The repository owner's recorded decision to take a charge point's status from its\nconnectors' status, a field outside OCPI 2.2.1 (ADR 0030).\n\nUsed only for an EVSE whose own status is not an OCPI 2.2.1 value, and only where every\nconnector gives the same OCPI 2.2.1 status, in any case. Otherwise the status is unknown.",
+      "properties": {
+        "decided": {
+          "description": "Date the owner made the decision (YYYY-MM-DD).",
+          "format": "date",
+          "title": "Decided",
+          "type": "string"
+        },
+        "basis": {
+          "description": "Why the connectors' statuses may be read.",
+          "minLength": 1,
+          "title": "Basis",
+          "type": "string"
+        },
+        "evidence_url": {
+          "description": "Where the statuses can be seen in the feed.",
+          "pattern": "^https?://\\S+$",
+          "title": "Evidence Url",
+          "type": "string"
+        }
+      },
+      "required": [
+        "decided",
+        "basis",
+        "evidence_url"
+      ],
+      "title": "StatusFromConnectors",
       "type": "object"
     },
     "SwappedCoordinates": {
@@ -1721,6 +1793,30 @@
       ],
       "default": null,
       "description": "Only by the repository owner's decision: OCPI location ids to leave off the map, such as test sites. Null means every location marked for publishing is kept."
+    },
+    "socket_types": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/SocketTypes"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "description": "Only by the repository owner's decision: read the plug type of a connector with no OCPI 2.2.1 standard from its socket_type, for the values named. Null means such a connector's plug type is unknown."
+    },
+    "status_from_connectors": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/StatusFromConnectors"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "description": "Only by the repository owner's decision: where an EVSE's status is not an OCPI 2.2.1 value, take it from its connectors' status when they all give the same OCPI 2.2.1 value. Null means such a status is unknown."
     },
     "floor_level_not_read": {
       "anyOf": [

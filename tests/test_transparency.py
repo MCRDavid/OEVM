@@ -382,6 +382,20 @@ def test_a_decision_not_to_read_floor_levels_is_shown(page):
     ) in text
 
 
+def test_decisions_to_read_connector_fields_are_shown(page):
+    data = json.loads(transparency.outputs()[transparency.JSON_PATH])
+    sockets = {op["id"]: op["socket_types"] for op in data["operators"] if op["socket_types"]}
+    statuses = [op["id"] for op in data["operators"] if op["status_from_connectors"]]
+    assert list(sockets) == statuses == ["bright_green"]
+    assert sockets["bright_green"]["types"] == {
+        "Type 2": "IEC_62196_T2",
+        "CCS 2": "IEC_62196_T2_COMBO",
+    }
+    text = " ".join(page.split())
+    assert "its socket_type is read: &ldquo;Type 2&rdquo; as IEC_62196_T2" in text
+    assert "it is taken from its connectors' status when they all give the same" in text
+
+
 def test_a_decision_to_read_stated_vat_as_in_the_price_is_shown(page):
     data = json.loads(transparency.outputs()[transparency.JSON_PATH])
     decisions = {op["id"]: op["vat_in_price"] for op in data["operators"]}
