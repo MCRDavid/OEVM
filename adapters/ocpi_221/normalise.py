@@ -59,6 +59,24 @@ PARKING_RESTRICTIONS = {
     "CUSTOMERS": "customers",
     "MOTORCYCLES": "motorcycles",
 }
+CAPABILITIES = {
+    value: value.lower()
+    for value in (
+        "CHARGING_PROFILE_CAPABLE",
+        "CHARGING_PREFERENCES_CAPABLE",
+        "CHIP_CARD_SUPPORT",
+        "CONTACTLESS_CARD_SUPPORT",
+        "CREDIT_CARD_PAYABLE",
+        "DEBIT_CARD_PAYABLE",
+        "PED_TERMINAL",
+        "REMOTE_START_STOP_CAPABLE",
+        "RESERVABLE",
+        "RFID_READER",
+        "START_SESSION_CONNECTOR_REQUIRED",
+        "TOKEN_GROUP_CAPABLE",
+        "UNLOCK_CAPABLE",
+    )
+}
 DIMENSIONS = {"ENERGY": "energy", "FLAT": "flat", "PARKING_TIME": "parking_time", "TIME": "time"}
 TARIFF_TYPES = {
     "AD_HOC_PAYMENT": "ad_hoc_payment",
@@ -278,6 +296,7 @@ def _evse(
         status_at=status_at,
         parking_restrictions=_parking_restrictions(raw.get("parking_restrictions"), issues, config),
         directions=_directions(raw.get("directions"), "EVSE", issues),
+        capabilities=_capabilities(raw.get("capabilities"), issues),
         connectors=[_connector(c, prefix, issues) for c in raw.get("connectors") or []],
     )
 
@@ -333,6 +352,24 @@ def _parking_restrictions(values: object, issues: IssueLog, config: OperatorConf
             issues.add(f"EVSE parking restriction {value!r} is not an OCPI 2.2.1 value; ignored")
         elif restriction not in kept:
             kept.append(restriction)
+    return kept
+
+
+def _capabilities(values: object, issues: IssueLog) -> list[str]:
+    """OCPI 2.2.1 capabilities, in the order sent, each once. Other values are ignored and
+    logged."""
+    if values in (None, []):
+        return []
+    if not isinstance(values, list):
+        issues.add("EVSE capabilities is not a list; ignored")
+        return []
+    kept = []
+    for value in values:
+        capability = CAPABILITIES.get(value) if isinstance(value, str) else None
+        if capability is None:
+            issues.add(f"EVSE capability {value!r} is not an OCPI 2.2.1 value; ignored")
+        elif capability not in kept:
+            kept.append(capability)
     return kept
 
 

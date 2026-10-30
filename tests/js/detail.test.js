@@ -1,7 +1,7 @@
 import assert from "node:assert/strict";
 import { test } from "node:test";
 
-import { siteNotes } from "../../site/assets/js/detail.js";
+import { paymentText, siteNotes } from "../../site/assets/js/detail.js";
 
 const evse = (directions) => ({ uid: String(Math.random()), directions });
 
@@ -24,4 +24,15 @@ test("notes that differ between charge points stay with each charge point", () =
   ]);
   assert.deepEqual(siteNotes({ evses: [] }), []);
   assert.deepEqual(siteNotes({ evses: [evse(null), evse(null)] }), []);
+});
+
+test("card payment is worded from the payment capabilities only, in a fixed order", () => {
+  assert.equal(
+    paymentText({ capabilities: ["rfid_reader", "credit_card_payable", "contactless_card_support", "debit_card_payable"] }),
+    "Card payment here, the operator says: contactless, credit card, debit card.",
+  );
+  assert.equal(paymentText({ capabilities: ["ped_terminal", "chip_card_support"] }), "Card payment here, the operator says: chip card, PIN pad.");
+  // Nothing is said when no payment capability is listed, rather than "no card payment".
+  assert.equal(paymentText({ capabilities: ["remote_start_stop_capable", "rfid_reader"] }), null);
+  assert.equal(paymentText({}), null);
 });
