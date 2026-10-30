@@ -5,7 +5,7 @@ Date: 2026-10-30. Status: accepted.
 A survey of 45 networks on 30 October 2026 (saved feed samples, and one page from each
 of 16 no-key feeds fetched that morning) found that feeds send fields drivers would use
 that the normaliser (`adapters/ocpi_221/normalise.py`) dropped. The owner chose on 30
-October 2026 to add five of them, each in its own pull request:
+October 2026 to add six of them, each in its own pull request:
 
 1. Parking restrictions sent as one string, such as "ev_only,plugged", read as the OCPI
    2.2.1 list they name (PR #106; no new field).
@@ -16,8 +16,6 @@ October 2026 to add five of them, each in its own pull request:
    decision recorded in its operator file.
 6. The floor level, from OCPI 2.2.1 `floor_level`, added by the owner on 30 October 2026,
    except for operators whose values the owner decided are not levels.
-
-Parts 5 and 6 are added to this record by the pull requests that build them.
 
 Fields the survey found and the owner did not choose stay dropped: images (visitors'
 browsers would fetch them from the operator's storage), green energy claims, the owner
@@ -86,3 +84,25 @@ of a site (it can name a private individual), and fields that only repeat a stan
   recorded in each operator file as `floor_level_not_read` and listed on the transparency
   page. Floor levels are left unread only where the owner records that decision; no one
   else adds one.
+- **BrightGreen's plug types and statuses, by the owner's decisions.** BrightGreen's
+  connectors give no OCPI 2.2.1 `standard`, and every charge point's own status is
+  "idle", which is not an OCPI 2.2.1 value, so its plug types and statuses were all
+  unknown. Each connector gives two fields outside OCPI 2.2.1: `socket_type` ("Type 2" on
+  50 and "CCS 2" on 2 of the 52 connectors at published locations on 30 October 2026) and
+  `status` ("Available" 44, "Charging" 3, "Unknown" 4, "Unavailable" 1). The owner decided
+  on 30 October 2026 to read both, recorded in its operator file in two new fields that no
+  one else may add:
+  - `socket_types` names each value and the OCPI 2.2.1 ConnectorType it is read as
+    ("Type 2" as IEC_62196_T2, "CCS 2" as IEC_62196_T2_COMBO). It is used only where a
+    connector gives no standard; a standard the feed gives is never replaced, and a value
+    not named stays unknown.
+  - `status_from_connectors` takes a charge point's status from its connectors only where
+    its own status is not an OCPI 2.2.1 value and every connector gives the same OCPI 2.2.1
+    status, in any case; OCPI 2.2.1 describes its statuses as those of the
+    "EVSE/Connector". Otherwise the status stays unknown: two charge points whose
+    connectors differ (eight sockets with one charging, three with one charging), and
+    "Unavailable", which is not an OCPI 2.2.1 status, are never read as one. A
+    non-standard status word is still read only under `nonstandard_statuses`.
+  Both decisions are listed on the transparency page. BrightGreen's power types ("fast",
+  "ultrarapid") stay unknown, and one Type 2 connector given as 150 kW is shown as
+  published, with a finding in the operator file.

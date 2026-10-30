@@ -70,6 +70,31 @@ vat_in_price:
     drivers pay is not stated. The repository owner decided that the prices are read as
     the display price shows them, already including VAT, so no VAT is added.
   evidence_url: https://connect.bright.green/ocpp/tariffs
+socket_types:
+  decided: 2026-10-30
+  basis: >-
+    BrightGreen's connectors give no OCPI 2.2.1 standard, so their plug type was unknown.
+    Each gives a socket_type, a field outside OCPI 2.2.1: "Type 2" on 50 and "CCS 2" on 2
+    of the 52 connectors at published locations on 2026-10-30. These are the common names
+    of the plugs OCPI 2.2.1 calls IEC_62196_T2 (IEC 62196 Type 2 "Mennekes") and
+    IEC_62196_T2_COMBO (Combo Type 2 based, DC). The repository owner decided on
+    2026-10-30 that socket_type is read as the plug type for these two values.
+  evidence_url: https://connect.bright.green/ocpp/locations
+  types:
+    Type 2: IEC_62196_T2
+    CCS 2: IEC_62196_T2_COMBO
+status_from_connectors:
+  decided: 2026-10-30
+  basis: >-
+    Every EVSE status is "idle", which is not an OCPI 2.2.1 value, so every charge point
+    showed status unknown. Each connector also gives a status, a field outside OCPI 2.2.1,
+    mostly in OCPI 2.2.1 words with a capital first letter: "Available" (44), "Charging" (3),
+    "Unknown" (4) and "Unavailable" (1) on 2026-10-30. OCPI 2.2.1 describes its statuses as
+    those of the "EVSE/Connector". The repository owner decided on 2026-10-30 that a charge
+    point's status is taken from its connectors where they all give the same OCPI 2.2.1
+    status (28 of 30 charge points at published locations on 2026-10-30), and is unknown
+    otherwise.
+  evidence_url: https://connect.bright.green/ocpp/locations
 engagement:
   status: open_anonymous
   evidence:
@@ -111,7 +136,11 @@ findings:
     summary: >-
       Every EVSE status is "idle" (52 EVSEs on 2026-10-23), which is not one of the OCPI
       2.2.1 EVSE status values.
-    handling: Shown as status unknown, as for any value outside OCPI 2.2.1.
+    handling: >-
+      Shown as status unknown, as for any value outside OCPI 2.2.1, until 2026-10-29. From
+      2026-10-30, by the repository owner's decision recorded in status_from_connectors,
+      the status is taken from the connectors' own status where they all give the same
+      OCPI 2.2.1 status, and is unknown otherwise.
     evidence_url: https://connect.bright.green/ocpp/locations
   - date: 2026-10-23
     kind: spec_conformance
@@ -142,7 +171,9 @@ findings:
       and a three-letter ISO 3166-1 code for country.
     handling: >-
       Each is recorded as unknown, as for any value outside OCPI 2.2.1. Whether a location is
-      in the UK is decided from its coordinates, not from country.
+      in the UK is decided from its coordinates, not from country. From 2026-10-30, by the
+      repository owner's decision recorded in socket_types, a connector's plug type is read
+      from its socket_type (next finding).
     evidence_url: https://connect.bright.green/ocpp/locations
   - date: 2026-10-23
     kind: data_quality
@@ -167,6 +198,31 @@ findings:
       Shown at longitude -0.82, by the repository owner's decision of 2026-10-23
       (swapped_coordinates above), with the operator's own figures kept and the correction
       shown on the map.
+    evidence_url: https://connect.bright.green/ocpp/locations
+  - date: 2026-10-30
+    kind: spec_conformance
+    summary: >-
+      Each connector gives two fields that are not in OCPI 2.2.1: socket_type ("Type 2" on
+      50 and "CCS 2" on 2 of the 52 connectors at published locations) and status
+      ("Available" 44, "Charging" 3, "Unknown" 4, "Unavailable" 1). Every EVSE's own status
+      is "idle".
+    handling: >-
+      By the repository owner's decisions of 2026-10-30 recorded in socket_types and
+      status_from_connectors, "Type 2" is read as IEC_62196_T2 and "CCS 2" as
+      IEC_62196_T2_COMBO where a connector gives no standard, and a charge point's status
+      is taken from its connectors where they all give the same OCPI 2.2.1 status. Two
+      charge points have connectors that differ (IBIS Derby, eight sockets, one charging
+      and one "Unavailable"; EZ charge HQ, three, one charging), so their status stays
+      unknown. "Unavailable" is not an OCPI 2.2.1 status, so it is never read as one.
+    evidence_url: https://connect.bright.green/ocpp/locations
+  - date: 2026-10-30
+    kind: data_quality
+    summary: >-
+      At "EZ charge HQ" one charge point has two "CCS 2" connectors and one "Type 2"
+      connector, each with max_electric_power 150000 (150 kW) and power_type "ultrarapid".
+    handling: >-
+      Shown as published, a Type 2 connector at 150 kW; neither value is changed. Whether
+      that connector charges at 150 kW needs testing.
     evidence_url: https://connect.bright.green/ocpp/locations
 notes: >-
   One location in the feed is named "EZ charge HQ" (Bicester). EZ-Charge has its own file in

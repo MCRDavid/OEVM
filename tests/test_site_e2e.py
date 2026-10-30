@@ -1123,6 +1123,18 @@ def test_a_floor_level_is_shown_with_each_charge_point(visit):
     expect(floors.first).to_have_text("Floor level, the operator says: -2.")
 
 
+def test_brightgreen_plugs_and_statuses_come_from_its_connectors(visit):
+    # By the owner's decisions in operators/bright_green.yaml (ADR 0030).
+    page = visit().open("?view=list", map_ready=False)
+    page.locator("#list-items button", has_text="Nash Estates").click()
+    expect(page.locator("#detail-heading")).to_be_focused()
+    points = page.locator("#detail-body .charge-points > li")
+    expect(points).to_have_count(10)
+    first = points.first
+    assert re.fullmatch(r"● Available, reported .+", first.locator(".status").text_content())
+    expect(first.locator(".connectors")).to_contain_text("Type 2 · 22 kW")
+
+
 def test_taxi_only_charge_points_are_labelled(visit):
     page = visit().open("?view=list&priv=1", map_ready=False)
     page.locator("#list-items button", has_text=TAXIS).click()

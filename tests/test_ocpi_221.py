@@ -990,6 +990,72 @@ def test_parking_type_is_kept_and_other_values_are_unknown():
     ]
 
 
+SOCKET_TYPES = {
+    "decided": "2026-10-30",
+    "basis": "Common names of OCPI plug types.",
+    "evidence_url": "https://example.invalid/locations",
+    "types": {"Type 2": "IEC_62196_T2"},
+}
+FROM_CONNECTORS = {
+    "decided": "2026-10-30",
+    "basis": "Connectors give OCPI statuses.",
+    "evidence_url": "https://example.invalid/locations",
+}
+
+
+def test_socket_type_is_read_only_as_the_owner_decided_and_never_over_a_standard():
+    raw = raw_location()
+    connector = raw["evses"][0]["connectors"][0]
+    del connector["standard"]
+    connector["socket_type"] = "Type 2"
+    convert = partial(location_from_ocpi, source_url=EXAMPLE, fetched_at=NOW, issues=IssueLog())
+    assert convert(raw, make_config()).evses[0].connectors[0].standard == "unknown"
+    decided = make_config(socket_types=SOCKET_TYPES)
+    assert convert(raw, decided).evses[0].connectors[0].standard == "IEC_62196_T2"
+    connector["socket_type"] = "Type 3"
+    assert convert(raw, decided).evses[0].connectors[0].standard == "unknown"
+    connector.update(standard="CHADEMO", socket_type="Type 2")
+    assert convert(raw, decided).evses[0].connectors[0].standard == "CHADEMO"
+    with pytest.raises(ValidationError, match=r"not an OCPI 2\.2\.1 ConnectorType"):
+        make_config(socket_types={**SOCKET_TYPES, "types": {"Type 2": "TYPE_2"}})
+
+
+@pytest.mark.parametrize(
+    ("connector_statuses", "shown"),
+    [
+        (["Available", "AVAILABLE"], "available"),
+        (["Charging"], "charging"),
+        (["Available", "Charging"], "unknown"),
+        (["Unavailable"], "unknown"),
+        ([None], "unknown"),
+    ],
+)
+def test_status_comes_from_connectors_only_where_they_all_give_one_ocpi_status(
+    connector_statuses, shown
+):
+    raw = raw_location()
+    evse = raw["evses"][0]
+    evse["status"] = "idle"
+    evse["connectors"] = [
+        {**evse["connectors"][0], "id": str(n), "status": status}
+        for n, status in enumerate(connector_statuses, start=1)
+    ]
+    convert = partial(location_from_ocpi, source_url=EXAMPLE, fetched_at=NOW, issues=IssueLog())
+    assert convert(raw, make_config()).evses[0].status == "unknown"
+    decided = make_config(status_from_connectors=FROM_CONNECTORS)
+    assert convert(raw, decided).evses[0].status == shown
+
+
+def test_an_ocpi_evse_status_is_never_replaced_by_its_connectors():
+    raw = raw_location()
+    raw["evses"][0]["connectors"][0]["status"] = "Charging"
+    config = make_config(status_from_connectors=FROM_CONNECTORS)
+    location = location_from_ocpi(
+        raw, config, source_url=EXAMPLE, fetched_at=NOW, issues=IssueLog()
+    )
+    assert location.evses[0].status == "available"
+
+
 def test_floor_level_is_kept_as_published_unless_the_owner_decided_not_to_read_it():
     issues = IssueLog()
     raw = raw_location()

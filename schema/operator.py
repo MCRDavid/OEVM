@@ -604,6 +604,57 @@ class VatInPrice(_Model):
     evidence_url: SafeUrl = Field(description="Where the prices and their VAT can be seen.")
 
 
+# OCPI 2.2.1 ConnectorType values, the only plug types a socket_types reading may give.
+OCPI_CONNECTOR_TYPES = frozenset(
+    {"CHADEMO", "CHAOJI", "GBT_AC", "GBT_DC", "TESLA_R", "TESLA_S"}
+    | {f"DOMESTIC_{letter}" for letter in "ABCDEFGHIJKLMNO"}
+    | {"IEC_60309_2_single_16", "IEC_60309_2_three_16", "IEC_60309_2_three_32"}
+    | {"IEC_60309_2_three_64", "IEC_62196_T1", "IEC_62196_T1_COMBO", "IEC_62196_T2"}
+    | {"IEC_62196_T2_COMBO", "IEC_62196_T3A", "IEC_62196_T3C"}
+    | {"NEMA_5_20", "NEMA_6_30", "NEMA_6_50", "NEMA_10_30", "NEMA_10_50", "NEMA_14_30"}
+    | {"NEMA_14_50"}
+)
+
+
+class SocketTypes(_Model):
+    """The repository owner's recorded decision to read a connector's plug type from its
+    socket_type, a field outside OCPI 2.2.1 (ADR 0030).
+
+    Used only for a connector that gives no OCPI 2.2.1 standard, and only for the values
+    named here, each read as one OCPI 2.2.1 ConnectorType. Without this decision such a
+    connector's plug type is unknown.
+    """
+
+    decided: dt.date = Field(description="Date the owner made the decision (YYYY-MM-DD).")
+    basis: NeutralText = Field(description="Why the values may be read this way.")
+    evidence_url: SafeUrl = Field(description="Where the values can be seen in the feed.")
+    types: dict[str, str] = Field(
+        min_length=1,
+        description="Each socket_type as the feed sends it, and the OCPI 2.2.1 "
+        "ConnectorType it is read as.",
+    )
+
+    @model_validator(mode="after")
+    def _ocpi_types(self) -> "SocketTypes":
+        for value, standard in self.types.items():
+            if standard not in OCPI_CONNECTOR_TYPES:
+                raise ValueError(f"{value!r}: {standard!r} is not an OCPI 2.2.1 ConnectorType")
+        return self
+
+
+class StatusFromConnectors(_Model):
+    """The repository owner's recorded decision to take a charge point's status from its
+    connectors' status, a field outside OCPI 2.2.1 (ADR 0030).
+
+    Used only for an EVSE whose own status is not an OCPI 2.2.1 value, and only where every
+    connector gives the same OCPI 2.2.1 status, in any case. Otherwise the status is unknown.
+    """
+
+    decided: dt.date = Field(description="Date the owner made the decision (YYYY-MM-DD).")
+    basis: NeutralText = Field(description="Why the connectors' statuses may be read.")
+    evidence_url: SafeUrl = Field(description="Where the statuses can be seen in the feed.")
+
+
 class FloorLevelNotRead(_Model):
     """The repository owner's recorded decision not to read this operator's EVSE
     floor_level (ADR 0030).
@@ -1125,6 +1176,18 @@ class OperatorConfig(_Model):
         description="Only by the repository owner's decision: OCPI location ids to leave off "
         "the map, such as test sites. Null means every location marked for publishing is "
         "kept.",
+    )
+    socket_types: SocketTypes | None = Field(
+        default=None,
+        description="Only by the repository owner's decision: read the plug type of a "
+        "connector with no OCPI 2.2.1 standard from its socket_type, for the values named. "
+        "Null means such a connector's plug type is unknown.",
+    )
+    status_from_connectors: StatusFromConnectors | None = Field(
+        default=None,
+        description="Only by the repository owner's decision: where an EVSE's status is not "
+        "an OCPI 2.2.1 value, take it from its connectors' status when they all give the "
+        "same OCPI 2.2.1 value. Null means such a status is unknown.",
     )
     floor_level_not_read: FloorLevelNotRead | None = Field(
         default=None,

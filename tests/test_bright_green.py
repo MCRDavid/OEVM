@@ -42,12 +42,38 @@ def test_unpublished_and_unplaceable_locations_are_not_kept():
 
 def test_values_outside_ocpi_are_recorded_as_unknown():
     result, _ = replay()
-    evses = [e for loc in result.locations for e in loc.evses]
-    connectors = [c for e in evses for c in e.connectors]
-    assert Counter(e.status for e in evses) == {"unknown": len(evses)}
+    connectors = [c for loc in result.locations for e in loc.evses for c in e.connectors]
     assert {c.power_type for c in connectors} == {"unknown"}
-    assert {c.standard for c in connectors} == {"unknown"}
-    assert any("'idle'" in issue for issue in result.issues)
+    assert any("power_type 'fast'" in issue for issue in result.issues)
+
+
+def test_plug_types_are_read_from_socket_type_by_the_owners_decision():
+    config = load_registry()["bright_green"]
+    assert config.socket_types is not None
+    assert config.socket_types.types == {"Type 2": "IEC_62196_T2", "CCS 2": "IEC_62196_T2_COMBO"}
+    result, _ = replay()
+    connectors = [c for loc in result.locations for e in loc.evses for c in e.connectors]
+    assert Counter(c.standard for c in connectors) == {"IEC_62196_T2": 49, "IEC_62196_T2_COMBO": 2}
+    assert (
+        "connector has no standard; socket_type 'Type 2' read as IEC_62196_T2 under the "
+        "decision recorded in the operator file (49 times)"
+    ) in result.issues
+
+
+def test_statuses_come_from_connectors_only_where_they_all_agree():
+    config = load_registry()["bright_green"]
+    assert config.status_from_connectors is not None and config.nonstandard_statuses is None
+    result, _ = replay()
+    status = {
+        (loc.name, e.physical_reference): e.status for loc in result.locations for e in loc.evses
+    }
+    # Each charge point's own status is "idle". Eight sockets with one charging and one
+    # "Unavailable", and three with one charging, do not agree, so stay unknown.
+    assert status[("IBIS Derby", "26183114")] == "unknown"
+    assert status[("EZ charge HQ", "Ezy Chargepoint 1")] == "unknown"
+    assert set(status.values()) <= {"available", "charging", "unknown"}
+    assert "available" in status.values()
+    assert any("its connectors differ; recorded as unknown (2 times)" in i for i in result.issues)
 
 
 def test_ids_use_the_feeds_country_and_an_unknown_party():
