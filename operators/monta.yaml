@@ -194,6 +194,17 @@ findings:
       Not used. Prices come only from the tariffs in the open data list. On 2026-10-23 the
       repository owner decided not to ask Monta for UK prices and to record this instead.
     evidence_url: https://docs.public-api.monta.com/reference/get-afir-evse-status
+  - date: 2026-10-30
+    kind: spec_conformance
+    summary: >-
+      In the run of 30 October 2026, 176 locations gave directions that is not a list of
+      DisplayText objects, the shape OCPI 2.2.1 uses. The run log records the count only, so
+      what the value holds is not known.
+    handling: >-
+      Ignored and logged, so no operator's note is shown for these locations. Reading them
+      would need the repository owner's decision, as the text has not been seen and Monta's
+      records can name private site owners.
+    evidence_url: https://mcrdavid.github.io/OEVM/status/
 notes: >-
   Monta runs charge point management software used by many UK charge point owners, and
   publishes their open data through one endpoint of its Public API. It is separate from
