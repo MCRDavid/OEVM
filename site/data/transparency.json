@@ -548,7 +548,7 @@
           "kind": "spec_conformance",
           "kind_label": "Differs from OCPI 2.2.1",
           "summary": "240 EVSEs give parking_restrictions as a single string, such as \"ev_only,plugged\", where OCPI 2.2.1 has a list of values.",
-          "handling": "The value is not read and the EVSE's parking restrictions are shown as unknown. Nothing else in the record changes.",
+          "handling": "Until 2026-10-29 the value was not read. From 2026-10-30 it is read as the list of the values it names, in upper case as OCPI 2.2.1 writes them (EV_ONLY and PLUGGED), and shown with each charge point; a word that is not an OCPI 2.2.1 value is still ignored. Nothing else in the record changes.",
           "evidence_url": "https://open-chargepoints.com/api/ocpi/cpo/2.2.1/locations/",
           "status": "open",
           "resolved_date": null
@@ -2262,7 +2262,7 @@
           "kind": "spec_conformance",
           "kind_label": "Differs from OCPI 2.2.1",
           "summary": "1 EVSE gives parking_restrictions as the single string \"customers\", where OCPI 2.2.1 has a list of values (CUSTOMERS is one).",
-          "handling": "The value is not read and the EVSE's parking restrictions are shown as unknown. Nothing else in the record changes.",
+          "handling": "Until 2026-10-29 the value was not read. From 2026-10-30 it is read as the list of the values it names, in upper case as OCPI 2.2.1 writes them (CUSTOMERS), and shown with each charge point; a word that is not an OCPI 2.2.1 value is still ignored. Nothing else in the record changes.",
           "evidence_url": "https://open-chargepoints.com/api/ocpi/cpo/2.2.1/locations/",
           "status": "open",
           "resolved_date": null
@@ -4472,7 +4472,7 @@
           "kind": "spec_conformance",
           "kind_label": "Differs from OCPI 2.2.1",
           "summary": "1408 EVSEs give parking_restrictions as a single string, such as \"customers\", where OCPI 2.2.1 has a list of values.",
-          "handling": "The value is not read and the EVSE's parking restrictions are shown as unknown. Nothing else in the record changes.",
+          "handling": "Until 2026-10-29 the value was not read. From 2026-10-30 it is read as the list of the values it names, in upper case as OCPI 2.2.1 writes them (CUSTOMERS), and shown with each charge point; a word that is not an OCPI 2.2.1 value is still ignored. Nothing else in the record changes.",
           "evidence_url": "https://open-chargepoints.com/api/ocpi/cpo/2.2.1/locations/",
           "status": "open",
           "resolved_date": null
@@ -6966,7 +6966,7 @@
           "kind": "spec_conformance",
           "kind_label": "Differs from OCPI 2.2.1",
           "summary": "5 EVSEs give parking_restrictions as the single string \"customers\", where OCPI 2.2.1 has a list of values (CUSTOMERS is one).",
-          "handling": "The value is not read and the EVSE's parking restrictions are shown as unknown. Nothing else in the record changes.",
+          "handling": "Until 2026-10-29 the value was not read. From 2026-10-30 it is read as the list of the values it names, in upper case as OCPI 2.2.1 writes them (CUSTOMERS), and shown with each charge point; a word that is not an OCPI 2.2.1 value is still ignored. Nothing else in the record changes.",
           "evidence_url": "https://open-chargepoints.com/api/ocpi/cpo/2.2.1/locations/",
           "status": "open",
           "resolved_date": null
@@ -7145,7 +7145,7 @@
           "kind": "spec_conformance",
           "kind_label": "Differs from OCPI 2.2.1",
           "summary": "75 EVSEs give parking_restrictions as a single string, such as \"ev_only\", where OCPI 2.2.1 has a list of values.",
-          "handling": "The value is not read and the EVSE's parking restrictions are shown as unknown. Nothing else in the record changes.",
+          "handling": "Until 2026-10-29 the value was not read. From 2026-10-30 it is read as the list of the values it names, in upper case as OCPI 2.2.1 writes them (EV_ONLY), and shown with each charge point; a word that is not an OCPI 2.2.1 value is still ignored. Nothing else in the record changes.",
           "evidence_url": "https://open-chargepoints.com/api/ocpi/cpo/2.2.1/locations/",
           "status": "open",
           "resolved_date": null

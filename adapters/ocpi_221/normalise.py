@@ -5,7 +5,8 @@ is not valid OCPI is recorded as "unknown" and logged as an issue, never guessed
 exceptions are an EVSE status the operator file maps in nonstandard_statuses, the owner's
 recorded decision, which may read such a value only as working or out_of_order, and a
 parking restriction it maps in nonstandard_parking_restrictions, which may read such a
-value only as taxis_only.
+value only as taxis_only. Parking restrictions sent as one comma-separated string rather
+than a list are read as that list (_parking_restrictions).
 """
 
 from collections import Counter
@@ -303,9 +304,17 @@ def _physical_reference(value: object) -> str | None:
 def _parking_restrictions(values: object, issues: IssueLog, config: OperatorConfig) -> list[str]:
     """OCPI 2.2.1 parking restrictions, in the order sent, each once. Other values are
     ignored and logged, unless the operator file maps them in
-    nonstandard_parking_restrictions, the owner's recorded decision."""
-    if values in (None, []):
+    nonstandard_parking_restrictions, the owner's recorded decision.
+
+    OCPI 2.2.1 parking_restrictions is a list. Some feeds send one string of the same
+    values in lower case, separated by commas, such as "ev_only,plugged"; it is read as the
+    list of those values in upper case and logged, and each value is then checked as usual.
+    """
+    if values in (None, [], ""):
         return []
+    if isinstance(values, str):
+        issues.add("EVSE parking_restrictions is one string, not a list; read as a list")
+        values = [part.strip().upper() for part in values.split(",") if part.strip()]
     if not isinstance(values, list):
         issues.add("EVSE parking_restrictions is not a list; ignored")
         return []
