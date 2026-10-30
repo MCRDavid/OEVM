@@ -271,6 +271,13 @@ def _sortable(value: float | None) -> float:
 OUT_OF_SERVICE = frozenset({"out_of_order", "inoperative", "planned", "removed"})
 
 
+def _current(power_type: str) -> str | None:
+    """'ac' or 'dc' for the map, from the connector's OCPI 2.2.1 power_type."""
+    if power_type == "dc":
+        return "dc"
+    return "ac" if power_type.startswith("ac_") else None
+
+
 def _connector_summary(
     connector: Connector, price: ConnectorPrice, status: str
 ) -> ConnectorSummary:
@@ -278,6 +285,7 @@ def _connector_summary(
     return ConnectorSummary(
         std=connector.standard,
         kw=connector.max_kw,
+        cur=_current(connector.power_type),
         price=MAP_PRICE[price.state],
         ppk=_pence(price.energy_high) if with_vat else None,
         out=status in OUT_OF_SERVICE,
@@ -298,7 +306,16 @@ def map_properties(location: Location, prices: list[ConnectorPrice], key: str) -
     powers = [c.max_kw for c in connectors if c.max_kw is not None]
     states = {p.state for p in prices}
     summaries = {
-        (s.std, _sortable(s.kw), s.price, _sortable(s.ppk), s.out, _sortable(s.low), s.lt or ""): s
+        (
+            s.std,
+            _sortable(s.kw),
+            s.cur or "",
+            s.price,
+            _sortable(s.ppk),
+            s.out,
+            _sortable(s.low),
+            s.lt or "",
+        ): s
         for s in (
             _connector_summary(c, p, st)
             for c, p, st in zip(connectors, prices, statuses, strict=True)
