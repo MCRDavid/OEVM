@@ -1,0 +1,15 @@
+# yaml-language-server: $schema=schema.json
+# Source EV: operator network with its own app and subscriptions. Rules are in schema/provider.py.
+id: source_ev
+name: Source EV
+kind: operator
+website: https://source-ev.com/
+terms:
+  url: https://source-ev.com/legal/terms-and-conditions
+  reuse: forbidden
+  quote: "You may not reproduce, modify, or distribute any content without prior written permission from Source."
+  attribution: null
+  checked: 2026-10-30
+own_networks: [source_ev]
+plans: []
+notes: "Plans are not listed because the website terms (clause 3, Intellectual Property) need Source's prior written permission to reproduce or distribute any content (checked 2026-10-30). Its plans are on https://source-ev.com/ev-drivers/pricing-subscriptions. Octopus Electroverse's discount at Source EV sites is listed under electroverse."

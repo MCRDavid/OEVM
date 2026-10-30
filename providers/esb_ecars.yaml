@@ -1,0 +1,16 @@
+# yaml-language-server: $schema=schema.json
+# ESB ecars: ESB's own app and membership for its network in Northern Ireland.
+# Rules are in schema/provider.py.
+id: esb_ecars
+name: ESB ecars
+kind: operator
+website: https://esb.ie/what-we-do/ecars/price-plans
+terms:
+  url: https://esb.ie/copyright
+  reuse: forbidden
+  quote: "Materials on this website may not be copied, modified, reproduced, republished, uploaded, posted, transmitted, publicly displayed, performed, distributed or used for any public or commercial purposes except as expressly provided for on this website or expressly authorised in writing by ESB and strictly on the condition that all content is kept intact and in the same format as on this website (including, without limitation, all copyright, trademark and other proprietary notices and all advertisements)."
+  attribution: null
+  checked: 2026-10-30
+own_networks: [esb_ecars]
+plans: []
+notes: "Plans are not listed because ESB's copyright page (Published March 2022) does not allow materials on the website to be republished or used for public purposes without ESB's written authorisation (checked 2026-10-30). The Northern Ireland price plans are on the page named in website."

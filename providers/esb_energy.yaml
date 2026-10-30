@@ -1,0 +1,16 @@
+# yaml-language-server: $schema=schema.json
+# ESB Energy: operator network in Great Britain with its own app and membership.
+# Rules are in schema/provider.py.
+id: esb_energy
+name: ESB Energy
+kind: operator
+website: https://www.esbenergy.co.uk/ev
+terms:
+  url: https://www.esbenergy.co.uk/ev/disclaimer
+  reuse: forbidden
+  quote: "Materials on this website/application may not be modified, reproduced or publicly displayed, performed or distributed or used for any public or commercial purposes."
+  attribution: null
+  checked: 2026-10-30
+own_networks: [esb_energy]
+plans: []
+notes: "Plans are not listed because the disclaimer page does not allow materials on the website or app to be reproduced, publicly displayed or used for public purposes (checked 2026-10-30). Price plans are on https://esbenergy.co.uk/ev/price-plans-terms-and-conditions."
