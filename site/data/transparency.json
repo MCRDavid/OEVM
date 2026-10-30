@@ -1046,7 +1046,12 @@
       "tariffs_from": null,
       "nonstandard_parking_restrictions": null,
       "zero_price_tariffs": null,
-      "vat_not_stated": null,
+      "vat_not_stated": {
+        "decided": "2026-10-30",
+        "basis": "bp pulse's 5 tariffs on Eco-Movement's PCPR API gave no VAT rate on 2026-10-30. Its energy prices are 0.542 and 0.742 pounds per kWh, which are 65p and 89p with 20% added, the UK standard rate of VAT on public charging, to the nearest penny. bp pulse's own site page for a charger in Slough (read 2026-10-30) lists pay as you go prices of \"£0.65\" for \"Fast (AC 7kW)\" and \"£0.79 - £0.93\" for \"Rapid (AC 43kW / DC 50kW)\", without saying whether VAT is included. That the feed's prices exclude VAT is inferred from the figures, not stated by bp pulse. The repository owner decided on 2026-10-30 that VAT at 20% is added, so prices on the map all include VAT and can be compared.",
+        "evidence_url": "https://open-chargepoints.com/api/ocpi/cpo/2.2.1/tariffs/",
+        "add_percent": 20.0
+      },
       "vat_in_price": null,
       "socket_types": null,
       "status_from_connectors": null,
@@ -1108,6 +1113,26 @@
         }
       },
       "findings": [
+        {
+          "date": "2026-10-30",
+          "kind": "data_quality",
+          "kind_label": "Data quirk",
+          "summary": "No price gives a VAT rate. The energy prices are 0.542 and 0.742 pounds per kWh, which are 65p and 89p with 20% added, to the nearest penny. bp pulse's own site page for a charger in Slough lists pay as you go prices of \"£0.65\" for \"Fast (AC 7kW)\" and \"£0.79 - £0.93\" for \"Rapid (AC 43kW / DC 50kW)\".",
+          "handling": "By the repository owner's decision of 2026-10-30 recorded in vat_not_stated, VAT at 20% is added to every price that gives no VAT rate, and the price says this project added it. Reading the prices as excluding VAT is inferred from the figures and needs confirming by bp pulse. The tariffs are published unchanged.",
+          "evidence_url": "https://open-chargepoints.com/api/ocpi/cpo/2.2.1/tariffs/",
+          "status": "open",
+          "resolved_date": null
+        },
+        {
+          "date": "2026-10-30",
+          "kind": "data_quality",
+          "kind_label": "Data quirk",
+          "summary": "Tariff 1 gives a flat price of 0 and no other price. On 2026-10-30 it was named by 15 connectors at 6 of the 1,136 locations, with names such as \"New Cross Gate Depot\", \"Langlands Court Council Depot\" and \"Uniper Cottam Development Centre Power Station\".",
+          "handling": "These connectors show \"Free\", as the feed gives no charge. On 2026-10-30 the repository owner decided they are shown as published, rather than as \"Price unknown\". Whether drivers pay nothing at these sites needs confirming by bp pulse.",
+          "evidence_url": "https://open-chargepoints.com/api/ocpi/cpo/2.2.1/tariffs/",
+          "status": "open",
+          "resolved_date": null
+        },
         {
           "date": "2026-10-30",
           "kind": "data_quality",

@@ -790,6 +790,7 @@ def test_only_the_operators_the_owner_named_carry_a_vat_decision_at_20_percent()
         "aldi": ("2026-10-29", 20),
         "allego": ("2026-10-29", 20),
         "blink_charging_uk": ("2026-10-29", 20),
+        "bp_pulse": ("2026-10-30", 20),
         "drax_group": ("2026-10-29", 20),
         "drax_ista": ("2026-10-29", 20),
         "ev_point": ("2026-10-29", 20),

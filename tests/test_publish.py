@@ -561,6 +561,7 @@ def test_vat_is_added_only_where_the_owner_decided_and_the_tariffs_stay_as_publi
         "aldi",
         "allego",
         "blink_charging_uk",
+        "bp_pulse",
         "chargy",
         "clenergy_ev",
         "drax_group",
