@@ -188,6 +188,9 @@ function connectorItem(connector, price) {
     "li",
     {},
     h("p", { className: "plug" }, h("strong", { text: plugName(connector.standard) }), ` · ${formatKw(connector.max_kw)}`),
+    // Power this project worked out from a voltage other than the one published, by the
+    // owner's decision in the operator file (line_to_line_voltage, ADR 0031).
+    connector.max_kw_note ? h("p", { className: "hint", text: connector.max_kw_note }) : null,
     h(
       "p",
       { className: "price" },

@@ -6,7 +6,9 @@ exceptions are an EVSE status the operator file maps in nonstandard_statuses, th
 recorded decision, which may read such a value only as working or out_of_order, and a
 parking restriction it maps in nonstandard_parking_restrictions, which may read such a
 value only as taxis_only. Parking restrictions sent as one comma-separated string rather
-than a list are read as that list (_parking_restrictions).
+than a list are read as that list (_parking_restrictions). Power worked out from an AC
+voltage the operator file names in line_to_line_voltage uses the voltage it is read as,
+and the connector says so (_max_kw).
 """
 
 from collections import Counter
@@ -233,16 +235,37 @@ def _provenance(config: OperatorConfig, source_url: str, fetched_at: datetime) -
     )
 
 
-def _max_kw(raw: dict, power_type: str, issues: IssueLog) -> float | None:
+def _max_kw(
+    raw: dict, power_type: str, issues: IssueLog, config: OperatorConfig | None = None
+) -> tuple[float | None, str | None]:
+    """The connector's power in kW, and a note when it was worked out from a voltage other
+    than the one published (the owner's line_to_line_voltage decision)."""
     watts = raw.get("max_electric_power")
     if watts:
-        return round(watts / 1000, 2)
+        return round(watts / 1000, 2), None
     phases = PHASES.get(power_type)
     volts, amps = raw.get("max_voltage"), raw.get("max_amperage")
+    decision = config.line_to_line_voltage if config else None
+    note = None
+    if (
+        decision is not None
+        and power_type in ("ac_1_phase", "ac_3_phase")
+        and volts == decision.published_volts
+        and amps
+    ):
+        issues.add(
+            f"connector max_voltage {volts} V on {power_type}; power worked out at "
+            f"{decision.read_as_volts} V under the decision recorded in the operator file"
+        )
+        note = (
+            f"Worked out by this project at {decision.read_as_volts} V: the feed gives "
+            f"{volts} V, which UK supplies do not give between one phase and neutral."
+        )
+        volts = decision.read_as_volts
     if phases and volts and amps:
-        return round(volts * amps * phases / 1000, 2)
+        return round(volts * amps * phases / 1000, 2), note
     issues.add(f"connector power not calculated for power_type {power_type!r}")
-    return None
+    return None, None
 
 
 def _ocpi_id(value: object, what: str, issues: IssueLog) -> object:
@@ -274,12 +297,14 @@ def _connector(
     power_type = POWER_TYPES.get(raw.get("power_type"), "unknown")
     if power_type == "unknown":
         issues.add(f"connector power_type {raw.get('power_type')!r} is not an OCPI 2.2.1 value")
+    max_kw, max_kw_note = _max_kw(raw, power_type, issues, config)
     return Connector(
         id=_ocpi_id(raw["id"], "connector", issues),
         standard=standard,
         format=FORMATS.get(raw.get("format"), "unknown"),
         power_type=power_type,
-        max_kw=_max_kw(raw, power_type, issues),
+        max_kw=max_kw,
+        max_kw_note=max_kw_note,
         tariff_ids=[f"{tariff_prefix}:{tariff_id}" for tariff_id in raw.get("tariff_ids") or []],
     )
 

@@ -796,6 +796,51 @@
       "title": "LimitsPerKey",
       "type": "object"
     },
+    "LineToLineVoltage": {
+      "additionalProperties": false,
+      "description": "The repository owner's recorded decision to read one AC voltage as another.\n\nOCPI 2.2.1 gives max_voltage line to neutral, 230 V on UK supplies. A feed that gives\nthe line-to-line figure, 400 V, makes the power worked out from voltage and current\nabout 1.7 times too high (12.8 kW rather than 7.4 kW at 32 A on one phase). Only\nAC_1_PHASE and AC_3_PHASE connectors that give no max_electric_power (or 0) and give\nexactly published_volts are read at read_as_volts, and each such connector says so\n(max_kw_note). Without this decision the power is worked out from the voltage as\npublished (ADR 0031, amended 30 October 2026).",
+      "properties": {
+        "decided": {
+          "description": "Date the owner made the decision (YYYY-MM-DD).",
+          "format": "date",
+          "title": "Decided",
+          "type": "string"
+        },
+        "basis": {
+          "description": "Why the voltage may be read as another figure.",
+          "minLength": 1,
+          "title": "Basis",
+          "type": "string"
+        },
+        "evidence_url": {
+          "description": "Where the finding behind the decision is shown.",
+          "pattern": "^https?://\\S+$",
+          "title": "Evidence Url",
+          "type": "string"
+        },
+        "published_volts": {
+          "description": "The voltage as the feed gives it, e.g. 400.",
+          "exclusiveMinimum": 0,
+          "title": "Published Volts",
+          "type": "integer"
+        },
+        "read_as_volts": {
+          "description": "The voltage it is read as, e.g. 230.",
+          "exclusiveMinimum": 0,
+          "title": "Read As Volts",
+          "type": "integer"
+        }
+      },
+      "required": [
+        "decided",
+        "basis",
+        "evidence_url",
+        "published_volts",
+        "read_as_volts"
+      ],
+      "title": "LineToLineVoltage",
+      "type": "object"
+    },
     "MissingPublishFlag": {
       "additionalProperties": false,
       "description": "The repository owner's recorded decision to show locations that have no publish flag.\n\nOCPI 2.2.1 requires every location to have a publish flag, and a location with publish\nset to false may not be shown on a website or app. Without this decision, locations\nwith no flag are never kept. A flag set to false is always respected, whatever is\nrecorded here.",
@@ -1649,6 +1694,18 @@
       ],
       "default": null,
       "description": "Only by the repository owner's decision: correct coordinates that are obviously the wrong way round. Null means such locations are left off the map."
+    },
+    "line_to_line_voltage": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/LineToLineVoltage"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "description": "Only by the repository owner's decision: read one AC max_voltage as another when working out power. Null means the voltage is read as published."
     },
     "nonstandard_statuses": {
       "anyOf": [

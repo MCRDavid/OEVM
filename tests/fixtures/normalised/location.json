@@ -47,6 +47,7 @@
           "format": "cable",
           "power_type": "dc",
           "max_kw": 50.0,
+          "max_kw_note": null,
           "tariff_ids": ["example:GB:EXA:TARIFF-DC"]
         }
       ]
@@ -68,6 +69,7 @@
           "format": "socket",
           "power_type": "ac_3_phase",
           "max_kw": 22.0,
+          "max_kw_note": null,
           "tariff_ids": []
         }
       ]

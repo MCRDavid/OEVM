@@ -115,6 +115,19 @@
           "default": null,
           "title": "Max Kw"
         },
+        "max_kw_note": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Set only when this project worked out max_kw from a voltage other than the one published, by the owner's decision in the operator file (line_to_line_voltage); says what was published and how it was read. Null otherwise.",
+          "title": "Max Kw Note"
+        },
         "tariff_ids": {
           "description": "Ids of Tariff records that apply to this connector.",
           "items": {
@@ -132,6 +145,7 @@
         "format",
         "power_type",
         "max_kw",
+        "max_kw_note",
         "tariff_ids"
       ],
       "title": "Connector",

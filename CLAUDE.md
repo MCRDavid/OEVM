@@ -113,6 +113,9 @@ decisions are in docs/adr/.
 - Correct coordinates only where the operator file records the owner's decision in
   swapped_coordinates, and only obvious latitude/longitude swaps or missing longitude minus signs (ADR 0013); show and record each one.
   A point that is inside the UK as published moves only if the owner names it in sign_missing.
+- Work out an AC connector's power from a voltage other than the one published only where the
+  operator file records the owner's decision in line_to_line_voltage (ADR 0031), only for that
+  exact voltage and only when the feed gives no power figure; never add one yourself.
 - Switch an operator on only after reading its own terms and filling in its licence section.
 - Price a connector from another operator's tariff only where the operator file records the
   owner's decision in tariffs_from, only by exact tariff id, never by name (ADR 0020); never add one yourself.

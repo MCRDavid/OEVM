@@ -768,6 +768,73 @@ def test_two_phase_power_is_not_guessed():
     assert issues.lines() == ["connector power not calculated for power_type 'ac_2_phase'"]
 
 
+VOLTAGE_DECISION = {
+    "decided": "2026-10-30",
+    "basis": "The feed gives 400 V between lines.",
+    "evidence_url": "https://example.invalid/findings",
+    "published_volts": 400,
+    "read_as_volts": 230,
+}
+
+
+def _power(connector: dict, decision: dict | None) -> tuple[object, IssueLog]:
+    issues = IssueLog()
+    raw = raw_location()
+    raw["evses"][0]["connectors"][0].update(connector)
+    config = make_config(line_to_line_voltage=decision) if decision else make_config()
+    location = location_from_ocpi(raw, config, source_url=EXAMPLE, fetched_at=NOW, issues=issues)
+    return location.evses[0].connectors[0], issues
+
+
+def test_a_line_to_line_voltage_is_read_only_as_the_owner_decided():
+    one_phase = {"power_type": "AC_1_PHASE", "max_voltage": 400, "max_amperage": 32}
+    connector, issues = _power(one_phase, None)
+    assert (connector.max_kw, connector.max_kw_note) == (12.8, None), "as published without it"
+    assert issues.lines() == []
+
+    connector, issues = _power(one_phase, VOLTAGE_DECISION)
+    assert connector.max_kw == 7.36
+    assert connector.max_kw_note == (
+        "Worked out by this project at 230 V: the feed gives 400 V, which UK supplies do not "
+        "give between one phase and neutral."
+    )
+    assert issues.lines() == [
+        "connector max_voltage 400 V on ac_1_phase; power worked out at 230 V under the "
+        "decision recorded in the operator file"
+    ]
+    three = {"power_type": "AC_3_PHASE", "max_voltage": 400, "max_amperage": 32}
+    assert _power(three, VOLTAGE_DECISION)[0].max_kw == 22.08
+
+
+@pytest.mark.parametrize(
+    "connector",
+    [
+        # A stated power is used as it is.
+        {
+            "power_type": "AC_1_PHASE",
+            "max_voltage": 400,
+            "max_amperage": 32,
+            "max_electric_power": 7400,
+        },
+        # DC at 400 V is normal.
+        {"power_type": "DC", "max_voltage": 400, "max_amperage": 125},
+        # Only the exact voltage named.
+        {"power_type": "AC_1_PHASE", "max_voltage": 260, "max_amperage": 32},
+        {"power_type": "AC_3_PHASE", "max_voltage": 230, "max_amperage": 32},
+    ],
+)
+def test_the_voltage_decision_touches_nothing_else(connector):
+    with_decision, _ = _power(connector, VOLTAGE_DECISION)
+    without, _ = _power(connector, None)
+    assert with_decision.max_kw == without.max_kw
+    assert with_decision.max_kw_note is None
+
+
+def test_the_voltage_decision_must_read_a_lower_voltage():
+    with pytest.raises(ValidationError):
+        make_config(line_to_line_voltage={**VOLTAGE_DECISION, "read_as_volts": 400})
+
+
 def test_values_that_are_not_ocpi_become_unknown():
     issues = IssueLog()
     raw = raw_location(country="GB", opening_times={"twentyfourseven": False})
