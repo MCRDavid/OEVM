@@ -72,6 +72,22 @@ EvseStatus = Literal[
     "working",
 ]
 ConnectorFormat = Literal["socket", "cable", "unknown"]
+# OCPI 2.2.1 Capability values, in lower case.
+Capability = Literal[
+    "charging_profile_capable",
+    "charging_preferences_capable",
+    "chip_card_support",
+    "contactless_card_support",
+    "credit_card_payable",
+    "debit_card_payable",
+    "ped_terminal",
+    "remote_start_stop_capable",
+    "reservable",
+    "rfid_reader",
+    "start_session_connector_required",
+    "token_group_capable",
+    "unlock_capable",
+]
 # OCPI 2.2.1 ParkingRestriction values, and one that is not: taxis_only, used only under
 # the owner's decision recorded in an operator file (nonstandard_parking_restrictions).
 # Any other value is ignored and logged.
@@ -193,6 +209,12 @@ class EVSE(_Model):
         default=None,
         description="The operator's own notes for this charge point (OCPI 2.2.1 directions), "
         "in English where given, as published. Null when none are given.",
+    )
+    capabilities: list[Capability] = Field(
+        default_factory=list,
+        description="What the operator says the charge point can do (OCPI 2.2.1 "
+        "capabilities), such as contactless_card_support for a payment terminal that "
+        "takes contactless cards.",
     )
     connectors: list[Connector] = Field(default_factory=list)
 

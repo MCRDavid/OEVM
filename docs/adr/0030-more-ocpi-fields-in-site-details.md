@@ -48,3 +48,15 @@ individual), and fields that only repeat a standard one.
   words of a note (a note saying "Disabled Parking Bay" does not add a Blue Badge
   restriction), and the private-site phrases of ADR 0023 are still matched against the
   location's name only.
+- **Card payment, as the operator states it.** OCPI 2.2.1 `capabilities` on each EVSE are
+  kept, in lower case, once each; a value that is not an OCPI 2.2.1 capability is ignored
+  and logged (Pod sends an empty one on 41 of its first 4,351). Five of them say the charge
+  point "has a payment terminal": CONTACTLESS_CARD_SUPPORT, CREDIT_CARD_PAYABLE,
+  DEBIT_CARD_PAYABLE, CHIP_CARD_SUPPORT and PED_TERMINAL. Each charge point that lists any
+  of them says "Card payment here, the operator says: contactless, credit card, ...". A
+  charge point that lists none says nothing about payment: no capability is not read as
+  no card payment, and nothing suggests a charge point lacks a terminal the regulations
+  require. In the 30 October survey 41 of 45 networks sent capabilities. Some networks mark
+  every charge point as credit card payable, lamp posts included (RAW Charging,
+  ChargePoint, Allego, evpoint, Source EV), which may mean paying on a web page rather than
+  at a terminal; that needs testing, so the wording stays the operator's statement.

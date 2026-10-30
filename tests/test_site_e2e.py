@@ -1096,6 +1096,15 @@ def test_a_note_every_charge_point_has_is_shown_with_the_site(visit):
     expect(page.locator("#detail-body .notes")).to_have_text("Contactless payment available.")
 
 
+def test_card_payment_is_shown_as_the_operator_states_it(visit):
+    page = visit().open("?view=list&priv=1", map_ready=False)
+    page.locator("#list-items button", has_text="University of Surrey").click()
+    expect(page.locator("#detail-heading")).to_be_focused()
+    expect(page.locator("#detail-body .charge-points .payment").first).to_have_text(
+        "Card payment here, the operator says: contactless, chip card, PIN pad."
+    )
+
+
 def test_taxi_only_charge_points_are_labelled(visit):
     page = visit().open("?view=list&priv=1", map_ready=False)
     page.locator("#list-items button", has_text=TAXIS).click()

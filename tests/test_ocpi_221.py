@@ -950,6 +950,30 @@ def test_directions_are_kept_as_the_operators_english_text():
     )
 
 
+def test_capabilities_are_kept_once_each_and_other_values_logged():
+    issues = IssueLog()
+    raw = raw_location()
+    raw["evses"][0]["capabilities"] = [
+        "REMOTE_START_STOP_CAPABLE",
+        "CONTACTLESS_CARD_SUPPORT",
+        "REMOTE_START_STOP_CAPABLE",
+        "",
+        "contactless_card_support",
+    ]
+    raw["evses"].append({**raw["evses"][0], "uid": "E2", "capabilities": "RFID_READER"})
+    location = location_from_ocpi(
+        raw, make_config(), source_url=EXAMPLE, fetched_at=NOW, issues=issues
+    )
+    first, second = location.evses
+    assert first.capabilities == ["remote_start_stop_capable", "contactless_card_support"]
+    assert second.capabilities == []
+    assert issues.lines() == [
+        "EVSE capabilities is not a list; ignored",
+        "EVSE capability '' is not an OCPI 2.2.1 value; ignored",
+        "EVSE capability 'contactless_card_support' is not an OCPI 2.2.1 value; ignored",
+    ]
+
+
 def test_a_nonstandard_parking_restriction_is_read_only_as_the_owner_decided():
     decision = {
         "decided": "2026-10-12",

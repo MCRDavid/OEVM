@@ -117,6 +117,22 @@ const PARKING = {
   taxis_only: "taxis only",
 };
 
+// OCPI 2.2.1 capabilities that say the charge point has a payment terminal, worded for
+// drivers (ADR 0030). Shown only as the operator's statement, and only when present: no
+// capability listed is not taken to mean no card payment.
+const PAYMENT = {
+  contactless_card_support: "contactless",
+  credit_card_payable: "credit card",
+  debit_card_payable: "debit card",
+  chip_card_support: "chip card",
+  ped_terminal: "PIN pad",
+};
+
+export function paymentText(evse) {
+  const ways = Object.keys(PAYMENT).filter((c) => (evse.capabilities ?? []).includes(c));
+  return ways.length ? `Card payment here, the operator says: ${ways.map((c) => PAYMENT[c]).join(", ")}.` : null;
+}
+
 // A charge point's name: the label the operator says is on it (OCPI physical_reference),
 // else its EVSE ID, else its place in the operator's list.
 export function chargePointName(evse, index) {
@@ -166,6 +182,7 @@ function chargePointItem(evse, index, prices, shownNotes) {
   const name = chargePointName(evse, index);
   const connectors = evse.connectors ?? [];
   const parking = (evse.parking_restrictions ?? []).map((r) => PARKING[r]).filter(Boolean);
+  const payment = paymentText(evse);
   return h(
     "li",
     { className: "charge-point" },
@@ -173,6 +190,7 @@ function chargePointItem(evse, index, prices, shownNotes) {
     evse.evse_id && evse.evse_id !== name ? h("p", { className: "hint", text: `ID ${evse.evse_id}` }) : null,
     statusLine(evse),
     parking.length ? h("p", { className: "parking", text: `Parking: ${parking.join("; ")}.` }) : null,
+    payment ? h("p", { className: "payment", text: payment }) : null,
     evse.directions && !shownNotes.includes(evse.directions)
       ? h("p", { className: "notes", text: `Operator's note: ${evse.directions}` })
       : null,
