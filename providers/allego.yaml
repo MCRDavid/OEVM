@@ -1,0 +1,15 @@
+# yaml-language-server: $schema=schema.json
+# Allego: operator network with its own app and subscriptions. Rules are in schema/provider.py.
+id: allego
+name: Allego
+kind: operator
+website: https://www.allego.eu/
+terms:
+  url: https://www.allego.eu/disclaimer/
+  reuse: personal_use_only
+  quote: "The information on and through this website offered by Allego Holding B.V. can be printed or downloaded for personal use. However, it is strictly prohibited to disclose, copy or distribute this information or take any other action that is inconsistent with the intellectual property rights of Allego Holding B.V."
+  attribution: null
+  checked: 2026-10-30
+own_networks: [allego]
+plans: []
+notes: "Plans are not listed because the website disclaimer allows its information to be printed or downloaded for personal use only (checked 2026-10-30); the separate terms of use page (https://www.allego.eu/terms-of-use/) has no clause on copying. Its prices and subscriptions by country are on https://www.allego.eu/pricing/."

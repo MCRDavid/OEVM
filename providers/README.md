@@ -49,17 +49,20 @@ Re-check listed plans regularly: prices change often, and each plan shows the da
 | Plugsurfing (`plugsurfing`) | 1 | No restriction found |
 | Pod (`pod`) | 0 | No restriction found |
 
-## Permission requests (20 providers)
+## Permission requests (24 providers)
 
 The owner decided on 9 October 2026 to list plans only where the provider's terms allow reuse, and to ask the others in writing. As of 9 October 2026 the request below is drafted but **not yet sent** to any provider.
 
 | Provider | Why no plans are listed | Request |
 |---|---|---|
+| Allego (`allego`) | Terms allow personal use only ([terms](https://www.allego.eu/disclaimer/)) | Not sent |
 | Allstar Chargepass (`allstar`) | Terms could not be read | Not sent |
 | Arnold Clark Charge (`arnold_clark_charge`) | Terms restrict copying or reuse ([terms](https://www.arnoldclark.com/terms-of-use)) | Not sent |
 | Believ (`believ`) | Terms restrict copying or reuse ([terms](https://www.believ.com/legal-notices/)) | Not sent |
 | bp pulse (`bp_pulse`) | Terms restrict copying or reuse ([terms](https://www.bppulse.com/en-gb/legal-notice)) | Not sent |
 | Chargemap (`chargemap`) | Terms restrict copying or reuse ([terms](https://community-optins.chargemap.com/conditions/3/document?locale=en_GB)) | Not sent |
+| ESB ecars (`esb_ecars`) | Terms restrict copying or reuse ([terms](https://esb.ie/copyright)) | Not sent |
+| ESB Energy (`esb_energy`) | Terms restrict copying or reuse ([terms](https://www.esbenergy.co.uk/ev/disclaimer)) | Not sent |
 | EVYVE (`evyve`) | Terms restrict copying or reuse ([terms](https://evyve.co.uk/terms-and-conditions/)) | Not sent |
 | GeniePoint (`geniepoint`) | Terms could not be read | Not sent |
 | GRIDSERVE Electric Highway (`gridserve`) | Terms restrict copying or reuse ([terms](https://www.gridserve.com/legal-area/website-customer-self-service-portal/)) | Not sent |
@@ -72,6 +75,7 @@ The owner decided on 9 October 2026 to list plans only where the provider's term
 | Raw Charging (`raw_charging`) | Terms restrict copying or reuse ([terms](https://rawcharging.com/legal-information)) | Not sent |
 | Sainsbury's Smart Charge (`sainsburys_smart_charge`) | Terms restrict copying or reuse ([terms](https://smartcharge.co.uk/)) | Not sent |
 | Shell Recharge (`shell_recharge`) | Terms restrict copying or reuse ([terms](https://www.shell.co.uk/terms-of-use.html)) | Not sent |
+| Source EV (`source_ev`) | Terms restrict copying or reuse ([terms](https://source-ev.com/legal/terms-and-conditions)) | Not sent |
 | Tesla Supercharger (`tesla`) | Terms could not be read ([terms](https://www.tesla.com/legal/terms)) | Not sent |
 | ubitricity (`ubitricity`) | Terms restrict copying or reuse ([terms](https://ubitricity.com/en/legal-notice/)) | Not sent |
 | Zapmap (`zapmap`) | Terms restrict copying or reuse ([terms](https://www.zapmap.com/terms-of-use)) | Not sent |
