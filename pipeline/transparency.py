@@ -374,6 +374,17 @@ def operator_view(config: OperatorConfig) -> dict:
             if config.swapped_coordinates
             else None
         ),
+        "line_to_line_voltage": (
+            {
+                "decided": str(config.line_to_line_voltage.decided),
+                "basis": config.line_to_line_voltage.basis,
+                "evidence_url": config.line_to_line_voltage.evidence_url,
+                "published_volts": config.line_to_line_voltage.published_volts,
+                "read_as_volts": config.line_to_line_voltage.read_as_volts,
+            }
+            if config.line_to_line_voltage
+            else None
+        ),
         "nonstandard_statuses": (
             {
                 "decided": str(config.nonstandard_statuses.decided),
@@ -559,6 +570,7 @@ def last_reviewed(operators: dict[str, OperatorConfig]) -> str:
             config.relay.decided if config.relay else None,
             config.swapped_coordinates.decided if config.swapped_coordinates else None,
             config.nonstandard_statuses.decided if config.nonstandard_statuses else None,
+            config.line_to_line_voltage.decided if config.line_to_line_voltage else None,
             (
                 config.nonstandard_parking_restrictions.decided
                 if config.nonstandard_parking_restrictions
@@ -680,6 +692,15 @@ def _sources_table(data: dict) -> str:
                     ". Named by the owner as missing a minus sign although the point as "
                     f"published is inside the UK: {named}"
                 )
+        voltage = op["line_to_line_voltage"]
+        if op["enabled"] and voltage:
+            fetched = fetched.rstrip(".")
+            fetched += (
+                f". AC connectors that give {voltage['published_volts']} V and no power "
+                f"figure have their power worked out at {voltage['read_as_volts']} V, each "
+                f"saying so, by the owner's decision of {_e(voltage['decided'])}: "
+                f"{_e(voltage['basis'])} ({_link(voltage['evidence_url'], 'evidence')})"
+            )
         statuses = op["nonstandard_statuses"]
         if op["enabled"] and statuses:
             fetched = fetched.rstrip(".")  # a basis may end with its own full stop

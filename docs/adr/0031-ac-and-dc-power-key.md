@@ -62,3 +62,12 @@ From the live map file of 30 October 2026 (32,854 locations):
   The owner chose shapes instead.
 - A setting for the visitor's own car (for example "my car takes 11 kW on AC"), which
   would recolour AC posts by what the car can use.
+
+## Amended 30 October 2026: Blink's 400 V posts
+
+Blink's feed gives some AC posts 400 V on one phase with no power figure. UK supplies give
+about 230 V between one phase and neutral, so working out the power at 400 V put 7 kW posts
+into the 11 kW band. The owner decided to read these as 230 V, each connector saying so in
+its details. The decision is recorded as `line_to_line_voltage` in Blink's operator file and
+on the transparency page; it applies only to AC connectors with no power figure that give
+exactly the voltage named there.

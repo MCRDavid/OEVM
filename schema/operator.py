@@ -416,6 +416,31 @@ class MissingPublishFlag(_Model):
     evidence_url: SafeUrl = Field(description="Where the operator says the data is public.")
 
 
+class LineToLineVoltage(_Model):
+    """The repository owner's recorded decision to read one AC voltage as another.
+
+    OCPI 2.2.1 gives max_voltage line to neutral, 230 V on UK supplies. A feed that gives
+    the line-to-line figure, 400 V, makes the power worked out from voltage and current
+    about 1.7 times too high (12.8 kW rather than 7.4 kW at 32 A on one phase). Only
+    AC_1_PHASE and AC_3_PHASE connectors that give no max_electric_power (or 0) and give
+    exactly published_volts are read at read_as_volts, and each such connector says so
+    (max_kw_note). Without this decision the power is worked out from the voltage as
+    published (ADR 0031, amended 30 October 2026).
+    """
+
+    decided: dt.date = Field(description="Date the owner made the decision (YYYY-MM-DD).")
+    basis: NeutralText = Field(description="Why the voltage may be read as another figure.")
+    evidence_url: SafeUrl = Field(description="Where the finding behind the decision is shown.")
+    published_volts: int = Field(gt=0, description="The voltage as the feed gives it, e.g. 400.")
+    read_as_volts: int = Field(gt=0, description="The voltage it is read as, e.g. 230.")
+
+    @model_validator(mode="after")
+    def _lower(self) -> "LineToLineVoltage":
+        if self.read_as_volts >= self.published_volts:
+            raise ValueError("read_as_volts must be lower than published_volts")
+        return self
+
+
 class SwappedCoordinates(_Model):
     """The repository owner's recorded decision to correct obviously wrong coordinates.
 
@@ -1107,6 +1132,11 @@ class OperatorConfig(_Model):
         default=None,
         description="Only by the repository owner's decision: correct coordinates that are "
         "obviously the wrong way round. Null means such locations are left off the map.",
+    )
+    line_to_line_voltage: LineToLineVoltage | None = Field(
+        default=None,
+        description="Only by the repository owner's decision: read one AC max_voltage as "
+        "another when working out power. Null means the voltage is read as published.",
     )
     nonstandard_statuses: NonstandardStatuses | None = Field(
         default=None,

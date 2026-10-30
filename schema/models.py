@@ -190,6 +190,12 @@ class Connector(_Model):
     format: ConnectorFormat = "unknown"
     power_type: PowerType = "unknown"
     max_kw: float | None = Field(default=None, ge=0)
+    max_kw_note: str | None = Field(
+        default=None,
+        description="Set only when this project worked out max_kw from a voltage other than "
+        "the one published, by the owner's decision in the operator file "
+        "(line_to_line_voltage); says what was published and how it was read. Null otherwise.",
+    )
     tariff_ids: list[RecordId] = Field(
         default_factory=list, description="Ids of Tariff records that apply to this connector."
     )

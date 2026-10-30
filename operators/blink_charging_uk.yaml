@@ -124,6 +124,20 @@ vat_not_stated:
     prices on the map all include VAT and can be compared.
   evidence_url: https://open-chargepoints.com/api/ocpi/cpo/2.2.1/tariffs/
   add_percent: 20
+line_to_line_voltage:
+  decided: 2026-10-30
+  basis: >-
+    Blink Charging gives every connector's maximum power as 0, so its power is worked out
+    from voltage and current. In its feed of 2026-10-29, 384 of its 3,493 AC connectors
+    gave 400 V, the voltage between two lines of a UK three-phase supply, and 288 of them
+    said they were single phase. OCPI 2.2.1 gives AC voltage line to neutral, 230 V in the
+    UK, so a 32 A single-phase socket worked out at 12.8 kW rather than 7.4 kW, and a
+    32 A three-phase one at 38.4 kW rather than 22 kW. That 230 V is meant is inferred,
+    not stated by Blink Charging. The repository owner decided on 2026-10-30 that these
+    connectors are worked out at 230 V, each saying so.
+  evidence_url: https://mcrdavid.github.io/OEVM/findings/plugs-power-and-misplaced-values/
+  published_volts: 400
+  read_as_volts: 230
 engagement:
   status: key_on_request
   evidence:
@@ -213,6 +227,21 @@ findings:
       A power of 0 is not shown. As for any connector with no power figure, its power
       is worked out from max_voltage and max_amperage, which Eco-Movement's
       documentation says it validates and corrects.
+    evidence_url: https://open-chargepoints.com/api/ocpi/cpo/2.2.1/locations/
+  - date: 2026-10-30
+    kind: data_quality
+    summary: >-
+      384 of the 3,493 AC connectors in the feed of 2026-10-29, at 74 of the 875
+      locations, give max_voltage 400, and 288 of them give power_type AC_1_PHASE.
+      OCPI 2.2.1 gives AC voltage line to neutral, about 230 V in the UK. Worked out at
+      400 V, 41 locations showed 12.8 kW and 20 showed 38.4 kW as their fastest connector
+      on 2026-10-30.
+    handling: >-
+      By the repository owner's decision of 2026-10-30 recorded in line_to_line_voltage,
+      AC connectors that give 400 V have their power worked out at 230 V (7.4 kW rather
+      than 12.8 kW at 32 A on one phase, 22 kW rather than 38.4 kW on three), and site
+      details say so beside each. That 230 V is meant is inferred and needs confirming by
+      Blink Charging. The feed's figures are kept unchanged in the issue log.
     evidence_url: https://open-chargepoints.com/api/ocpi/cpo/2.2.1/locations/
 notes: >-
   Its regulation 10 data is served by Eco-Movement's PCPR API (eco_movement_pcpr adapter),
