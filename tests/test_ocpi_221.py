@@ -900,6 +900,27 @@ def test_charge_point_labels_and_parking_restrictions_are_kept():
     ]
 
 
+def test_parking_restrictions_sent_as_one_string_are_read_as_a_list():
+    issues = IssueLog()
+    raw = raw_location()
+    raw["evses"][0]["parking_restrictions"] = "ev_only, plugged,,ev_only,bus_only"
+    raw["evses"].append({**raw["evses"][0], "uid": "E2", "parking_restrictions": "customers"})
+    raw["evses"].append({**raw["evses"][0], "uid": "E3", "parking_restrictions": ""})
+    raw["evses"].append({**raw["evses"][0], "uid": "E4", "parking_restrictions": 3})
+    location = location_from_ocpi(
+        raw, make_config(), source_url=EXAMPLE, fetched_at=NOW, issues=issues
+    )
+    first, second, third, fourth = location.evses
+    assert first.parking_restrictions == ["ev_only", "plugged"]
+    assert second.parking_restrictions == ["customers"]
+    assert third.parking_restrictions == fourth.parking_restrictions == []
+    assert issues.lines() == [
+        "EVSE parking restriction 'BUS_ONLY' is not an OCPI 2.2.1 value; ignored",
+        "EVSE parking_restrictions is not a list; ignored",
+        "EVSE parking_restrictions is one string, not a list; read as a list (2 times)",
+    ]
+
+
 def test_a_nonstandard_parking_restriction_is_read_only_as_the_owner_decided():
     decision = {
         "decided": "2026-10-12",
