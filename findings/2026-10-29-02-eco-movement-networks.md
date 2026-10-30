@@ -57,6 +57,14 @@ its own requests, the networks are read one after another, and any two requests 
 at least 2 seconds apart. A full read takes 26 pages of locations and 13 of tariffs, 39 requests in
 about 55 minutes. Read as one allowance shared by every network, it would take about 80.
 
+**Update, 29 October 2026:** later that day the project owner decided to read each token's limit
+as an hourly allowance that may be used close together, rather than spread evenly, keeping one
+request in hand. Eco-Movement's guide "strongly recommends limiting simultaneous GET requests to a
+maximum of 5", so no more than 5 requests go to the platform at once. If any request is refused or
+asked to wait, every network goes back to even spacing for the rest of the run. In a run that
+evening all 22 networks were read in 1 minute 18 seconds, 57 requests, with nothing refused, and the
+whole daily fetch took 14 minutes.
+
 Every response recorded on 29 October 2026 linked to a next page that starts after the last record,
 for example at offset 77 when the total was 77. The project stops once the stated total has
 arrived, which saves one request per network for each of locations and tariffs.
