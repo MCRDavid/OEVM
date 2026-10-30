@@ -1,5 +1,5 @@
 {
-  "last_reviewed": "2026-10-29",
+  "last_reviewed": "2026-10-30",
   "disclaimer": "OEVM is a personal, experimental project for learning about AI tools. Much of its code and text was written with an AI assistant, and it will contain mistakes. Charger data comes from the operators and other sources credited on every record, and remains their work. Everything is provided \"as is\", with no warranty or guarantee of any kind. Always check prices and availability at the charger.",
   "regulation": {
     "summary": "The Public Charge Point Regulations 2023 set no limit on how often data users may request the data. Regulation 10(5) requires the data to be available free of charge without terms on its use. DfT's guidance allows terms covering the means of access, which is where operators' rate limits come from.",
@@ -10872,6 +10872,79 @@
             "summary": "Maxol's EV charging page was read, and no open data feed or route for requesting open data was found.",
             "quote": "The hub provides the highest charging speeds currently available to the public in Northern Ireland",
             "evidence_url": "https://www.maxol.ie/ev-recharge",
+            "evidence_file": null
+          }
+        ]
+      },
+      "access_requested": null,
+      "access_granted": null,
+      "feeds": [],
+      "licence": null,
+      "attribution": null,
+      "missing_publish_flag": null,
+      "swapped_coordinates": null,
+      "nonstandard_statuses": null,
+      "tariffs_from": null,
+      "nonstandard_parking_restrictions": null,
+      "zero_price_tariffs": null,
+      "vat_not_stated": null,
+      "vat_in_price": null,
+      "own_feed_over_copies": null,
+      "relay": null,
+      "expired_certificate": null,
+      "excluded_locations": null,
+      "sent_copy": null,
+      "rate_limit": {
+        "our_gap_seconds": 2.0,
+        "our_max_per_hour": 1800,
+        "ours": "At least 2 s between requests to the operator's host, measured from the end of the previous request (at most 1800 in any hour), retries included.",
+        "published": [],
+        "limits_checked": "unknown",
+        "comparison": "The operator's pages have not been checked for limits yet.",
+        "difference_from_regulations": "Not known yet.",
+        "notes": null,
+        "per_key": null,
+        "allowance": null
+      },
+      "findings": []
+    },
+    {
+      "id": "milence",
+      "name": "Milence",
+      "enabled": false,
+      "adapter": "unknown",
+      "engagement": {
+        "status": "key_on_request",
+        "label": "Key issued on request",
+        "headline": "Key issued on request (as of 2026-10-30)",
+        "as_of": "2026-10-30",
+        "last_request": null,
+        "last_response": null,
+        "last_response_text": "No request sent",
+        "evidence": [
+          {
+            "date": "2026-10-30",
+            "url": "https://milence.com/legal/",
+            "file": null,
+            "note": "Milence's legal page links a \"Public Charge Point Regulations (UK)\" page and a \"PCPR Data Request (UK)\" form."
+          },
+          {
+            "date": "2026-10-30",
+            "url": "https://docs.google.com/forms/d/e/1FAIpQLSfwJwrRDQGrTVdvig20FIJY6v7GHEL5jH-ehn2whzPsJNvPdA/viewform",
+            "file": null,
+            "note": "The form, titled \"PCPR Data Request - Milence\", asks for a name, organisation and planned use of the data, says the request is shared with Eco-Movement and promises an answer within 5 working days."
+          }
+        ],
+        "log": [
+          {
+            "date": "2026-10-30",
+            "action": "page_checked",
+            "action_label": "Operator's page checked",
+            "channel": null,
+            "channel_label": null,
+            "summary": "Milence's legal page, its Public Charge Point Regulations page and the linked PCPR data request form were read. The form covers Milence's stations in the United Kingdom that are suitable for trucks, and is shared with Eco-Movement.",
+            "quote": "Request data on the location, status, and properties of Milence's stations in the United Kingdom, in accordance with the UK Public Charge Point Regulations. Please note this only includes charging stations suitable for trucks.",
+            "evidence_url": "https://docs.google.com/forms/d/e/1FAIpQLSfwJwrRDQGrTVdvig20FIJY6v7GHEL5jH-ehn2whzPsJNvPdA/viewform",
             "evidence_file": null
           }
         ]
