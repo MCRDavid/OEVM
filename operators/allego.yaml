@@ -125,6 +125,15 @@ vat_not_stated:
     compared.
   evidence_url: https://open-chargepoints.com/api/ocpi/cpo/2.2.1/tariffs/
   add_percent: 20
+floor_level_not_read:
+  decided: 2026-10-30
+  basis: >-
+    Allego's 240 EVSEs on Eco-Movement's PCPR API on 2026-10-30 give a floor_level of
+    "Alle" (158), "GB, " (80) or "UK, " (2): the first four characters of location names
+    such as "Allego - Hollywood Bowl Shrewsbury" and "GB, Station Street, E15 1DA London",
+    not the level the charge point is on. The repository owner decided on 2026-10-30 that
+    no floor level is shown for Allego's charge points.
+  evidence_url: https://open-chargepoints.com/api/ocpi/cpo/2.2.1/locations/
 engagement:
   status: key_on_request
   evidence:
@@ -212,6 +221,17 @@ findings:
       A power of 0 is not shown. As for any connector with no power figure, its power
       is worked out from max_voltage and max_amperage, which Eco-Movement's
       documentation says it validates and corrects.
+    evidence_url: https://open-chargepoints.com/api/ocpi/cpo/2.2.1/locations/
+  - date: 2026-10-30
+    kind: data_quality
+    summary: >-
+      All 240 EVSEs give a floor_level that is the first four characters of the location's
+      name, such as "Alle" and "GB, ", where OCPI 2.2.1 has the level the charge point is
+      on.
+    handling: >-
+      By the repository owner's decision of 2026-10-30 recorded in floor_level_not_read,
+      no floor level is shown for Allego's charge points. Nothing else in the record
+      changes.
     evidence_url: https://open-chargepoints.com/api/ocpi/cpo/2.2.1/locations/
 notes: >-
   Its regulation 10 data is served by Eco-Movement's PCPR API (eco_movement_pcpr adapter),

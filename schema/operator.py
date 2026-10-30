@@ -604,6 +604,23 @@ class VatInPrice(_Model):
     evidence_url: SafeUrl = Field(description="Where the prices and their VAT can be seen.")
 
 
+class FloorLevelNotRead(_Model):
+    """The repository owner's recorded decision not to read this operator's EVSE
+    floor_level (ADR 0030).
+
+    OCPI 2.2.1 floor_level is the level a charge point is on, in up to four characters.
+    Some feeds fill it with something else, such as the start of a name. Without this
+    decision the value is shown as published; with it, no floor level is shown for this
+    operator's charge points.
+    """
+
+    decided: dt.date = Field(description="Date the owner made the decision (YYYY-MM-DD).")
+    basis: NeutralText = Field(
+        description="Why the values are not read, with examples of what the feed sends."
+    )
+    evidence_url: SafeUrl = Field(description="Where the values can be seen.")
+
+
 class OwnFeedOverCopies(_Model):
     """The repository owner's recorded decision that this operator's own feed is shown in
     place of copies of its locations in other operators' feeds (ADR 0027).
@@ -1108,6 +1125,12 @@ class OperatorConfig(_Model):
         description="Only by the repository owner's decision: OCPI location ids to leave off "
         "the map, such as test sites. Null means every location marked for publishing is "
         "kept.",
+    )
+    floor_level_not_read: FloorLevelNotRead | None = Field(
+        default=None,
+        description="Only by the repository owner's decision: show no floor level for this "
+        "operator's charge points, because its floor_level values are not levels. Null means "
+        "each floor level is shown as published.",
     )
     sent_copy: SentCopy | None = Field(
         default=None,

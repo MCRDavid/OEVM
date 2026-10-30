@@ -307,6 +307,7 @@ def _evse(
         status_at=status_at,
         parking_restrictions=_parking_restrictions(raw.get("parking_restrictions"), issues, config),
         directions=_directions(raw.get("directions"), "EVSE", issues),
+        floor_level=_floor_level(raw.get("floor_level"), issues, config),
         capabilities=_capabilities(raw.get("capabilities"), issues),
         connectors=[_connector(c, prefix, issues) for c in raw.get("connectors") or []],
     )
@@ -364,6 +365,23 @@ def _parking_restrictions(values: object, issues: IssueLog, config: OperatorConf
         elif restriction not in kept:
             kept.append(restriction)
     return kept
+
+
+def _floor_level(value: object, issues: IssueLog, config: OperatorConfig) -> str | None:
+    """The level the charge point is on, as published, with spaces at either end removed,
+    or None when none is given. Not read where the operator file records the owner's
+    decision in floor_level_not_read (ADR 0030)."""
+    if value is None:
+        return None
+    if not isinstance(value, str):
+        issues.add("EVSE floor_level is not a string; ignored")
+        return None
+    if not value.strip():
+        return None
+    if config.floor_level_not_read is not None:
+        issues.add("EVSE floor_level not read, under the decision recorded in the operator file")
+        return None
+    return value.strip()
 
 
 def _capabilities(values: object, issues: IssueLog) -> list[str]:

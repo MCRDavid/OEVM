@@ -42,6 +42,14 @@ licence:
     2026-10-09, states no licence, terms or rate limit for the data, and links no website
     terms of use.
   checked: 2026-10-09
+floor_level_not_read:
+  decided: 2026-10-30
+  basis: >-
+    Every one of the 3,034 EVSEs in MFG's locations file on 2026-10-30 gives a floor_level
+    that is the first four characters of its location's name, such as "MFG " (2,375) and
+    "Morr" (616), not the level the charge point is on. The repository owner decided on
+    2026-10-30 that no floor level is shown for MFG's charge points.
+  evidence_url: https://opendata.motorfuelgroup.net/locations
 engagement:
   status: open_anonymous
   evidence:
@@ -74,6 +82,16 @@ findings:
       The files send no Access-Control-Allow-Origin header, so web browsers cannot read
       them directly.
     handling: The map uses data fetched by the pipeline, not requests from visitors' browsers.
+    evidence_url: https://opendata.motorfuelgroup.net/locations
+  - date: 2026-10-30
+    kind: data_quality
+    summary: >-
+      All 3,034 EVSEs give a floor_level that is the first four characters of the
+      location's name, such as "MFG " and "Morr", where OCPI 2.2.1 has the level the charge
+      point is on.
+    handling: >-
+      By the repository owner's decision of 2026-10-30 recorded in floor_level_not_read,
+      no floor level is shown for MFG's charge points. Nothing else in the record changes.
     evidence_url: https://opendata.motorfuelgroup.net/locations
 notes: >-
   The files are OCPI 2.2.1 responses in the same shape as GeniePoint's, read by the ocpi_221

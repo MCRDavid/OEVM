@@ -27,7 +27,12 @@ def test_each_file_is_read_in_one_request_without_paging_headers():
     ]
     assert result.complete
     assert result.modules["locations"].total_reported is None
-    assert result.issues == []
+    # Each floor_level is the start of the location's name; not read by the owner's
+    # decision recorded in the operator file (ADR 0030).
+    assert result.issues == [
+        "EVSE floor_level not read, under the decision recorded in the operator file (29 times)"
+    ]
+    assert all(e.floor_level is None for loc in result.locations for e in loc.evses)
 
 
 def test_recorded_locations_convert_faithfully():

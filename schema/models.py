@@ -219,6 +219,12 @@ class EVSE(_Model):
         description="The operator's own notes for this charge point (OCPI 2.2.1 directions), "
         "in English where given, as published. Null when none are given.",
     )
+    floor_level: str | None = Field(
+        default=None,
+        description="The level the operator says the charge point is on (OCPI 2.2.1 "
+        "floor_level), as published. Null when not given, or when the owner decided not to "
+        "read this operator's values (floor_level_not_read).",
+    )
     capabilities: list[Capability] = Field(
         default_factory=list,
         description="What the operator says the charge point can do (OCPI 2.2.1 "

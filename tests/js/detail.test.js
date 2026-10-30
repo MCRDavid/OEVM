@@ -1,7 +1,7 @@
 import assert from "node:assert/strict";
 import { test } from "node:test";
 
-import { parkingTypeText, paymentText, siteNotes } from "../../site/assets/js/detail.js";
+import { floorLevelText, parkingTypeText, paymentText, siteNotes } from "../../site/assets/js/detail.js";
 
 const evse = (directions) => ({ uid: String(Math.random()), directions });
 
@@ -42,4 +42,11 @@ test("the parking type is worded as the operator's statement, and left out when 
   assert.equal(parkingTypeText({ parking_type: "on_street" }), "Parking type, the operator says: on the street.");
   assert.equal(parkingTypeText({ parking_type: null }), null);
   assert.equal(parkingTypeText({}), null);
+});
+
+test("a floor level is shown as the operator published it, and only when given", () => {
+  assert.equal(floorLevelText({ floor_level: "-2" }), "Floor level, the operator says: -2.");
+  assert.equal(floorLevelText({ floor_level: "T2" }), "Floor level, the operator says: T2.");
+  assert.equal(floorLevelText({ floor_level: null }), null);
+  assert.equal(floorLevelText({}), null);
 });

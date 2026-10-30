@@ -433,6 +433,15 @@ def operator_view(config: OperatorConfig) -> dict:
             if config.vat_in_price
             else None
         ),
+        "floor_level_not_read": (
+            {
+                "decided": str(config.floor_level_not_read.decided),
+                "basis": config.floor_level_not_read.basis,
+                "evidence_url": config.floor_level_not_read.evidence_url,
+            }
+            if config.floor_level_not_read
+            else None
+        ),
         "own_feed_over_copies": (
             {
                 "decided": str(config.own_feed_over_copies.decided),
@@ -540,6 +549,7 @@ def last_reviewed(operators: dict[str, OperatorConfig]) -> str:
             config.zero_price_tariffs.decided if config.zero_price_tariffs else None,
             config.vat_not_stated.decided if config.vat_not_stated else None,
             config.vat_in_price.decided if config.vat_in_price else None,
+            config.floor_level_not_read.decided if config.floor_level_not_read else None,
             config.own_feed_over_copies.decided if config.own_feed_over_copies else None,
             config.expired_certificate.decided if config.expired_certificate else None,
             config.excluded_locations.decided if config.excluded_locations else None,
@@ -703,6 +713,14 @@ def _sources_table(data: dict) -> str:
                 ". The VAT each price states is read as already in the price, so it is not "
                 f"added again, by the owner's decision of {_e(in_price['decided'])}: "
                 f"{_e(in_price['basis'])} ({_link(in_price['evidence_url'], 'evidence')})"
+            )
+        floor = op["floor_level_not_read"]
+        if op["enabled"] and floor:
+            fetched = fetched.rstrip(".")
+            fetched += (
+                ". No floor level is shown for its charge points, by the owner's decision of "
+                f"{_e(floor['decided'])}: {_e(floor['basis'])} "
+                f"({_link(floor['evidence_url'], 'evidence')})"
             )
         copies = op["own_feed_over_copies"]
         if op["enabled"] and copies:

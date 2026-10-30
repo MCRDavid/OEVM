@@ -990,6 +990,39 @@ def test_parking_type_is_kept_and_other_values_are_unknown():
     ]
 
 
+def test_floor_level_is_kept_as_published_unless_the_owner_decided_not_to_read_it():
+    issues = IssueLog()
+    raw = raw_location()
+    raw["evses"][0]["floor_level"] = " -2 "
+    convert = partial(location_from_ocpi, source_url=EXAMPLE, fetched_at=NOW, issues=issues)
+    assert convert(raw, make_config()).evses[0].floor_level == "-2"
+    for value in (None, "", "  "):
+        raw["evses"][0]["floor_level"] = value
+        assert convert(raw, make_config()).evses[0].floor_level is None
+    raw["evses"][0]["floor_level"] = 2
+    assert convert(raw, make_config()).evses[0].floor_level is None
+    assert issues.lines() == ["EVSE floor_level is not a string; ignored"]
+
+    decision = {
+        "decided": "2026-10-30",
+        "basis": "The values are the start of each location's name.",
+        "evidence_url": "https://example.invalid/locations",
+    }
+    issues = IssueLog()
+    raw["evses"][0]["floor_level"] = "MFG "
+    location = location_from_ocpi(
+        raw,
+        make_config(floor_level_not_read=decision),
+        source_url=EXAMPLE,
+        fetched_at=NOW,
+        issues=issues,
+    )
+    assert location.evses[0].floor_level is None
+    assert issues.lines() == [
+        "EVSE floor_level not read, under the decision recorded in the operator file"
+    ]
+
+
 def test_a_nonstandard_parking_restriction_is_read_only_as_the_owner_decided():
     decision = {
         "decided": "2026-10-12",
