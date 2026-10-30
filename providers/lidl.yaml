@@ -1,0 +1,61 @@
+# yaml-language-server: $schema=schema.json
+# Lidl: supermarket that owns its charge points; members pay less through the Lidl Plus app.
+# Rules are in schema/provider.py.
+id: lidl
+name: Lidl GB
+kind: operator
+website: https://www.lidl.co.uk/c/electric-vehicle-charging/s10049808
+terms:
+  url: https://www.lidl.co.uk/c/legal-information/s10022935
+  reuse: no_restriction_found
+  quote: null
+  attribution: null
+  checked: 2026-10-30
+plans:
+  - id: lidl_plus_fast
+    name: Lidl Plus app (fast chargers)
+    pay_by: Lidl Plus app
+    monthly_fee: 0
+    fee_note: No fee for Lidl Plus is mentioned on the page.
+    price_per_kwh: 0.40
+    discount_percent: null
+    discount_of: null
+    includes_vat: null
+    networks: [Lidl]
+    operator_ids: [lidl]
+    conditions: >-
+      Fast (AC) chargers only. Rapid chargers have their own Lidl Plus price. Paying
+      through the third-party website costs £0.55 per kWh on fast chargers.
+    only_at_some_times: false
+    needs_testing: null
+    source:
+      url: https://www.lidl.co.uk/c/electric-vehicle-charging/s10049808
+      quote: "Fast Charger Tariff: £0.40/kWh with the Lidl Plus app. £0.55/kWh through the third-party website."
+      checked: 2026-10-30
+  - id: lidl_plus_rapid
+    name: Lidl Plus app (rapid chargers)
+    pay_by: Lidl Plus app
+    monthly_fee: 0
+    fee_note: No fee for Lidl Plus is mentioned on the page.
+    price_per_kwh: 0.59
+    discount_percent: null
+    discount_of: null
+    includes_vat: null
+    networks: [Lidl]
+    operator_ids: [lidl]
+    conditions: >-
+      Rapid (DC) chargers only. Fast chargers have their own Lidl Plus price. Paying
+      through the third-party website or by contactless card on the rapid charger costs
+      £0.74 per kWh.
+    only_at_some_times: false
+    needs_testing: null
+    source:
+      url: https://www.lidl.co.uk/c/electric-vehicle-charging/s10049808
+      quote: "Rapid Charger Tariff: £0.59/kWh with the Lidl Plus app. £0.74/kWh through the third-party website or via contactless payment on Rapid Charging machines."
+      checked: 2026-10-30
+notes: >-
+  Terms checked 2026-10-30: the Legal Information page and the Lidl Plus Terms of Use
+  (https://www.lidl.co.uk/c/lidl-plus-terms-of-use/s10025414) have no clause on copying or
+  reusing content. The charging page does not say whether prices include VAT. Lidl's press
+  release of 8 September 2026 gives the same rapid prices (59p with Lidl Plus, otherwise 74p):
+  https://corporate.lidl.co.uk/media-centre/pressreleases/2026/ev-chargers-lidl-plus

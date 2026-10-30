@@ -32,7 +32,7 @@ uv run python -m pipeline.plans --validate
 
 Re-check listed plans regularly: prices change often, and each plan shows the date it was checked.
 
-## Listed providers (10)
+## Listed providers (11)
 
 | Provider | Plans | Terms |
 |---|---|---|
@@ -43,6 +43,7 @@ Re-check listed plans regularly: prices change often, and each plan shows the da
 | Octopus Electroverse (`electroverse`) | 9 | No restriction found |
 | Evolt Network (`evolt`) | 0 | No restriction found |
 | Fastned (`fastned`) | 3 | No restriction found |
+| Lidl GB (`lidl`) | 2 | No restriction found |
 | MFG EV Power (`mfg_ev_power`) | 2 | No restriction found |
 | Plugsurfing (`plugsurfing`) | 1 | No restriction found |
 | Pod (`pod`) | 0 | No restriction found |
