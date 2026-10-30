@@ -189,6 +189,11 @@ class EVSE(_Model):
         default_factory=list,
         description="Who may park at the charge point (OCPI 2.2.1 parking_restrictions).",
     )
+    directions: str | None = Field(
+        default=None,
+        description="The operator's own notes for this charge point (OCPI 2.2.1 directions), "
+        "in English where given, as published. Null when none are given.",
+    )
     connectors: list[Connector] = Field(default_factory=list)
 
     @model_validator(mode="after")
@@ -213,6 +218,11 @@ class Location(_Model):
     access: Access = "unknown"
     opening_hours: OpeningHours | None = Field(
         default=None, description="Null when the opening hours are unknown."
+    )
+    directions: str | None = Field(
+        default=None,
+        description="The operator's own notes for this location (OCPI 2.2.1 directions), "
+        "in English where given, as published. Null when none are given.",
     )
     evses: list[EVSE] = Field(default_factory=list)
     last_updated: AwareDatetime | None = Field(

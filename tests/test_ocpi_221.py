@@ -921,6 +921,35 @@ def test_parking_restrictions_sent_as_one_string_are_read_as_a_list():
     ]
 
 
+def test_directions_are_kept_as_the_operators_english_text():
+    issues = IssueLog()
+    raw = raw_location()
+    raw["directions"] = [
+        {"language": "cy", "text": "Yn y maes parcio"},
+        {"language": "en", "text": "  Car Park Opening Times: 07:00 - 19:00\n"},
+    ]
+    raw["evses"][0]["directions"] = [{"language": "en", "text": "Disabled Parking Bay"}]
+    for uid, directions in (
+        ("E2", [{"language": "en", "text": " "}]),
+        ("E3", "Behind the barrier"),
+        ("E4", [{"language": "fr", "text": "Ici"}]),
+    ):
+        raw["evses"].append({**raw["evses"][0], "uid": uid, "directions": directions})
+    location = location_from_ocpi(
+        raw, make_config(), source_url=EXAMPLE, fetched_at=NOW, issues=issues
+    )
+    assert location.directions == "Car Park Opening Times: 07:00 - 19:00"
+    assert [e.directions for e in location.evses] == ["Disabled Parking Bay", None, None, "Ici"]
+    assert issues.lines() == ["EVSE directions is not a list of DisplayText; ignored"]
+    raw.pop("directions")
+    assert (
+        location_from_ocpi(
+            raw, make_config(), source_url=EXAMPLE, fetched_at=NOW, issues=IssueLog()
+        ).directions
+        is None
+    )
+
+
 def test_a_nonstandard_parking_restriction_is_read_only_as_the_owner_decided():
     decision = {
         "decided": "2026-10-12",

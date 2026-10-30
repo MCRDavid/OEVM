@@ -277,6 +277,7 @@ def _evse(
         status=status,
         status_at=status_at,
         parking_restrictions=_parking_restrictions(raw.get("parking_restrictions"), issues, config),
+        directions=_directions(raw.get("directions"), "EVSE", issues),
         connectors=[_connector(c, prefix, issues) for c in raw.get("connectors") or []],
     )
 
@@ -333,6 +334,19 @@ def _parking_restrictions(values: object, issues: IssueLog, config: OperatorConf
         elif restriction not in kept:
             kept.append(restriction)
     return kept
+
+
+def _directions(value: object, what: str, issues: IssueLog) -> str | None:
+    """OCPI 2.2.1 directions, a list of DisplayText, as the operator's text: the English
+    entry where there is one, with spaces at either end removed. None when there is no
+    text. The text is kept as published; the map shows it as text only (ADR 0030)."""
+    if value in (None, []):
+        return None
+    if not isinstance(value, list) or not all(isinstance(entry, dict) for entry in value):
+        issues.add(f"{what} directions is not a list of DisplayText; ignored")
+        return None
+    text = _english_text(value)
+    return text.strip() if isinstance(text, str) and text.strip() else None
 
 
 def _opening_hours(raw: dict | None, issues: IssueLog) -> OpeningHours | None:
@@ -395,6 +409,7 @@ def location_from_ocpi(
             name=(raw.get("operator") or {}).get("name") or config.display_name,
         ),
         opening_hours=_opening_hours(raw.get("opening_times"), issues),
+        directions=_directions(raw.get("directions"), "location", issues),
         evses=[
             _evse(e, last_updated, prefix, issues, config)
             for e in raw.get("evses") or []

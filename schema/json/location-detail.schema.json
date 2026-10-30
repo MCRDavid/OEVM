@@ -344,6 +344,19 @@
           "title": "Parking Restrictions",
           "type": "array"
         },
+        "directions": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "The operator's own notes for this charge point (OCPI 2.2.1 directions), in English where given, as published. Null when none are given.",
+          "title": "Directions"
+        },
         "connectors": {
           "items": {
             "$ref": "#/$defs/Connector"
@@ -359,6 +372,7 @@
         "status",
         "status_at",
         "parking_restrictions",
+        "directions",
         "connectors"
       ],
       "title": "EVSE",
@@ -430,6 +444,19 @@
           "default": null,
           "description": "Null when the opening hours are unknown."
         },
+        "directions": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "The operator's own notes for this location (OCPI 2.2.1 directions), in English where given, as published. Null when none are given.",
+          "title": "Directions"
+        },
         "evses": {
           "items": {
             "$ref": "#/$defs/EVSE"
@@ -464,6 +491,7 @@
         "operator",
         "access",
         "opening_hours",
+        "directions",
         "evses",
         "last_updated",
         "provenance"
