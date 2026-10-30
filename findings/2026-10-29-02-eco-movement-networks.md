@@ -121,6 +121,12 @@ show "Price unknown".
   in Hull gives "Europe/Warsaw". The map shows every time in UK time, so none of these changes
   anything on it.
 
+**Update, 30 October 2026:** from that day the map reads parking restrictions sent as one piece
+of text as a list, since the words are OCPI 2.2.1's own values. Travis Perkins and drax-Ista send
+them the same way, so five networks did, at 2,462 charge points in the run of 30 October 2026.
+Blink Charging's voltages make some of its chargers look faster than they probably are: see [the
+post on plugs and power](findings/plugs-power-and-misplaced-values/).
+
 ## Outside the UK
 
 12 of Pod's first 1,000 locations are on the Isle of Man, with postcodes starting IM and the

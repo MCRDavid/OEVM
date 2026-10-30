@@ -110,6 +110,11 @@ files:
 - **Paging**: Monta pages by cursor in its own format, Eco-Movement links to a page past the end,
   and the smartcharging.uk feeds send everything in one response.
 
+**Update, 30 October 2026:** five networks, not three, send parking restrictions as text: Travis
+Perkins and drax-Ista do too, and in the run of 30 October 2026 the five did so 2,462 times. From
+that day the map reads them as a list. More differences, in plugs, power and floor levels, are in
+[the post on plugs and power](findings/plugs-power-and-misplaced-values/).
+
 ## The same sites in more than one feed
 
 - **Copies on platforms**: Monta's feed carries sites of networks that also publish their own. By
