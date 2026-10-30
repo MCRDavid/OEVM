@@ -104,3 +104,20 @@ tariff data. In the feeds recorded on 29 October 2026:
   by phrases in its name, so on 30 October 2026 these six were shown, with their notes.
 - 183 of RAW Charging's 514 locations have the note "3$0 - Hospitality" and 46 have
   "3$0 - Leisure", which look like internal categories (inferred).
+
+**Update, 30 October 2026:** later that day the project added card payment, parking type and
+floor level to site details, each as the operator's statement and shown from the next daily run.
+
+- **Card payment**: OCPI 2.2.1's capabilities say whether a charge point has a payment terminal.
+  In the feeds recorded on 29 October 2026, six networks mark every one of their charge points as
+  taking credit cards and list no other way to pay by card: Allego (240), ChargePoint (1,167),
+  evpoint (128), Lidl (1,408), RAW Charging (2,573) and Source EV (360). Whether each of them has
+  a terminal is unknown and needs testing. Site details show nothing where a feed lists no card
+  payment, since that does not mean there is none.
+- **Parking type**: Roam gives every one of its 438 locations in its data of 26 October 2026 the
+  type "ON_STREET", under OCPI 2.1.1's name for the field, including about 200 whose names suggest
+  a car park, hotel, club, hospital or services (inferred). Clenergy's 1,414 locations and Globe
+  EV's 119 all give "UNKNOWN", which is not an OCPI 2.2.1 parking type, so none is shown for them.
+- **Floor level**: MFG's and Allego's values are the first four characters of each location's
+  name, such as "GB, Station Street, E15 1DA London" at Allego, so by the owner's decision no
+  floor level is shown for their charge points.
