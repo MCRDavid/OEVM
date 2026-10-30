@@ -3,9 +3,12 @@
 
 import { PLUG_GROUPS, plugGroup } from "./format.js";
 
-export const POWER_STEPS = [0, 7, 22, 50, 150];
+export const POWER_STEPS = [0, 7, 11, 22, 50, 100, 150, 300];
+export const CURRENTS = ["ac", "dc"];
 export const MAX_PRICE_PENCE = 500;
 
+// cur: only connectors the feed marks AC, or only DC (cur in schema/published.py); empty
+// for both.
 // priv: show locations marked private or restricted, or taxis only at every charge point
 // (hidden unless asked for, ADR 0023).
 // group: draw nearby chargers as numbered circles on the map. It changes how the map
@@ -13,6 +16,7 @@ export const MAX_PRICE_PENCE = 500;
 export function defaults() {
   return {
     minkw: 0,
+    cur: "",
     plugs: [],
     free: false,
     maxp: null,
@@ -37,6 +41,7 @@ export function parse(search) {
   const state = defaults();
   const minkw = Number(params.get("minkw"));
   if (POWER_STEPS.includes(minkw)) state.minkw = minkw;
+  if (CURRENTS.includes(params.get("cur"))) state.cur = params.get("cur");
   state.plugs = list(params.get("plug"), (p) => Object.hasOwn(PLUG_GROUPS, p));
   state.free = params.get("free") === "1";
   const maxp = params.get("maxp");
@@ -57,6 +62,7 @@ export function parse(search) {
 export function serialise(state) {
   const params = new URLSearchParams();
   if (state.minkw) params.set("minkw", String(state.minkw));
+  if (state.cur) params.set("cur", state.cur);
   if (state.plugs.length) params.set("plug", [...state.plugs].sort().join(","));
   if (state.free) params.set("free", "1");
   if (state.maxp !== null) params.set("maxp", String(state.maxp));
@@ -80,6 +86,7 @@ function priceKnown(connector) {
 export function connectorMatches(connector, state) {
   if (state.working && connector.out === true) return false;
   if (state.minkw && !(Number.isFinite(connector.kw) && connector.kw >= state.minkw)) return false;
+  if (state.cur && connector.cur !== state.cur) return false;
   if (state.plugs.length && !(connector.std && state.plugs.includes(plugGroup(connector.std)))) return false;
   if (state.free && connector.price !== "free") return false;
   if (!state.unknown && !priceKnown(connector)) return false;
@@ -92,7 +99,13 @@ export function connectorMatches(connector, state) {
 
 export function connectorFilters(state) {
   return Boolean(
-    state.minkw || state.plugs.length || state.free || state.maxp !== null || !state.unknown || state.working,
+    state.minkw ||
+      state.cur ||
+      state.plugs.length ||
+      state.free ||
+      state.maxp !== null ||
+      !state.unknown ||
+      state.working,
   );
 }
 
@@ -100,6 +113,7 @@ export function connectorFilters(state) {
 export function activeCount(state) {
   return [
     state.minkw,
+    state.cur,
     state.plugs.length,
     state.free,
     state.maxp !== null,
@@ -112,7 +126,7 @@ export function activeCount(state) {
 
 // A location with no connectors listed is treated as one connector about which nothing is
 // known, so "include unknown prices" keeps it while any other connector condition drops it.
-const NOTHING_KNOWN = [{ std: null, kw: null, price: "unknown", ppk: null, out: false }];
+const NOTHING_KNOWN = [{ std: null, kw: null, cur: null, price: "unknown", ppk: null, out: false }];
 
 export function matches(props, state) {
   if ((props.priv || props.taxi) && !state.priv) return false;

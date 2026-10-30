@@ -37,10 +37,20 @@
     <select id="minkw" name="minkw">
       <option value="0">Any power</option>
       <option value="7">7 kW or more</option>
+      <option value="11">11 kW or more</option>
       <option value="22">22 kW or more</option>
       <option value="50">50 kW or more (rapid)</option>
+      <option value="100">100 kW or more</option>
       <option value="150">150 kW or more (ultra-rapid)</option>
+      <option value="300">300 kW or more</option>
     </select>
+    <label for="cur">AC or DC</label>
+    <select id="cur" name="cur" aria-describedby="cur-hint">
+      <option value="">AC and DC</option>
+      <option value="ac">AC only</option>
+      <option value="dc">DC only</option>
+    </select>
+    <p class="hint" id="cur-hint">Many cars take 7 or 11 kW at most on AC, whatever the charger offers, but much more on DC. AC or DC is as the operator&rsquo;s feed states it.</p>
   </fieldset>
   <fieldset>
     <legend>Status</legend>
@@ -100,13 +110,22 @@
     <div id="map" class="map"></div>
     <details class="legend" id="legend">
       <summary>Key</summary>
-      <p class="key-heading">Colour: fastest connector</p>
+      <p class="key-heading">Shape and colour: fastest DC connector, or fastest AC where there is no DC</p>
+      <p class="key-heading key-note">DC<svg class="current-symbol" viewBox="0 0 18 10" aria-hidden="true"><path d="M2 3h14M2 7.5h2.5M7.75 7.5h2.5M13.5 7.5H16"/></svg> diamonds</p>
       <ul>
-        <li><i class="dot ultra" aria-hidden="true"></i> 150 kW or more (ultra-rapid)</li>
-        <li><i class="dot rapid" aria-hidden="true"></i> 50 to 149 kW (rapid)</li>
-        <li><i class="dot fast" aria-hidden="true"></i> 8 to 49 kW</li>
-        <li><i class="dot slow" aria-hidden="true"></i> Under 8 kW</li>
-        <li><i class="dot unknown" aria-hidden="true"></i> Power unknown</li>
+        <li><i class="dot dc150" aria-hidden="true"></i> 150 kW or more (ultra-rapid)</li>
+        <li><i class="dot dc100" aria-hidden="true"></i> 100 to 149 kW</li>
+        <li><i class="dot dc50" aria-hidden="true"></i> 50 to 99 kW (rapid)</li>
+        <li><i class="dot dc" aria-hidden="true"></i> Under 50 kW</li>
+      </ul>
+      <p class="key-heading key-note">AC<svg class="current-symbol" viewBox="0 0 18 10" aria-hidden="true"><path d="M1 5Q3.5 0 6 5T11 5T16 5"/></svg> circles</p>
+      <ul>
+        <li><i class="dot ac11" aria-hidden="true"></i> 11 kW or more, usually 22 kW</li>
+        <li><i class="dot ac7" aria-hidden="true"></i> 6 to 10 kW, usually 7 kW</li>
+        <li><i class="dot ac" aria-hidden="true"></i> Under 6 kW, mostly lamp posts</li>
+      </ul>
+      <ul>
+        <li><i class="dot unknown" aria-hidden="true"></i> Power, or AC or DC, not stated</li>
       </ul>
       <p class="key-heading">Letter: price</p>
       <ul>

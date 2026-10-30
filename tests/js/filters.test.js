@@ -16,14 +16,16 @@ test("an empty address gives the defaults", () => {
 });
 
 test("addresses round-trip in a fixed order", () => {
-  const query = "minkw=50&plug=ccs%2Cchademo&free=1&maxp=45.5&unknown=0&ok=1&priv=1&op=chargy%2Cjolt&group=0&view=list";
+  const query =
+    "minkw=50&cur=dc&plug=ccs%2Cchademo&free=1&maxp=45.5&unknown=0&ok=1&priv=1&op=chargy%2Cjolt&group=0&view=list";
   assert.equal(serialise(parse(query)), query);
   assert.equal(serialise(parse("op=jolt,chargy&plug=chademo,ccs,ccs")), "plug=ccs%2Cchademo&op=chargy%2Cjolt");
 });
 
 test("bad values are ignored, not guessed", () => {
-  const state = parse("minkw=51&plug=type2,usb&free=yes&maxp=-1&op=Jolt,<script>,ok_1&view=grid");
+  const state = parse("minkw=51&cur=both&plug=type2,usb&free=yes&maxp=-1&op=Jolt,<script>,ok_1&view=grid");
   assert.equal(state.minkw, 0);
+  assert.equal(state.cur, "");
   assert.deepEqual(state.plugs, ["type2"]);
   assert.equal(state.free, false);
   assert.equal(state.maxp, null);
@@ -117,6 +119,7 @@ test("power and working apply to the same connector", () => {
 test("the Filters button counts each filter that differs from the defaults", () => {
   assert.equal(activeCount(defaults()), 0);
   assert.equal(activeCount(parse("minkw=50&plug=ccs,type2&ok=1&op=jolt")), 4);
+  assert.equal(activeCount(parse("cur=ac&minkw=11")), 2);
   assert.equal(activeCount(parse("free=1&maxp=0&unknown=0")), 3);
   assert.equal(activeCount(parse("priv=1")), 1, "showing private chargers is a filter");
   assert.equal(activeCount(parse("group=0&view=list")), 0, "grouping and the view are not");
@@ -145,4 +148,26 @@ test("grouping is on unless the address turns it off", () => {
   assert.equal(parse("group=no").group, true, "only 0 turns it off");
   assert.equal(serialise({ ...defaults(), group: false }), "group=0");
   assert.equal(matches(point([connector()]), parse("group=0")), true, "it never hides a charger");
+});
+
+test("AC only and DC only follow the feed's power type, on the same connector as the power", () => {
+  const site = {
+    op: "x",
+    cons: [
+      { std: "IEC_62196_T2", kw: 22, cur: "ac", price: "priced", ppk: 40, out: false },
+      { std: "CHADEMO", kw: 25, cur: "dc", price: "priced", ppk: 70, out: false },
+      { std: "IEC_62196_T2_COMBO", kw: 50, cur: null, price: "priced", ppk: 70, out: false },
+    ],
+  };
+  assert.equal(matches(site, parse("cur=dc")), true);
+  assert.equal(matches(site, parse("cur=dc&minkw=50")), false, "a CCS with no stated type is not counted as DC");
+  assert.equal(matches(site, parse("cur=ac&minkw=22")), true);
+  assert.equal(matches(site, parse("cur=ac&minkw=50")), false);
+  assert.equal(matches(site, parse("cur=dc&maxp=50")), false, "the cheap price is on the AC connector");
+  assert.equal(matches({ op: "x", cons: [] }, parse("cur=ac")), false);
+});
+
+test("the new power steps are accepted, and the old ones still work", () => {
+  for (const kw of [7, 11, 22, 50, 100, 150, 300]) assert.equal(parse(`minkw=${kw}`).minkw, kw);
+  assert.equal(parse("minkw=400").minkw, 0);
 });

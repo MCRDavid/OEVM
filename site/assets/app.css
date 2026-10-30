@@ -18,12 +18,15 @@
   --out: #8a2a12;
   --map-bg: #e4ebef;
   --overlay: rgb(255 255 255 / 94%);
-  /* Map points by fastest connector; the same colours as SPEED_COLOURS in main.js. */
-  --speed-ultra: #9b2c74;
-  --speed-rapid: #b3460c;
-  --speed-fast: #0d6b62;
-  --speed-slow: #2f5d9e;
-  --speed-unknown: #5c5c5c;
+  /* Map points by power band; the same colours as BAND_COLOURS in main.js. */
+  --band-ac: #7fd4b4;
+  --band-ac7: #3b73bc;
+  --band-ac11: #1d2f6f;
+  --band-dc: #f0c93c;
+  --band-dc50: #e0701c;
+  --band-dc100: #b8287a;
+  --band-dc150: #4b1d6e;
+  --band-unknown: #5c5c5c;
   /* Price labels; the same colours as PILLS in main.js. */
   --tag-fill: #ffffff;
   --tag-edge: #24323f;
@@ -428,7 +431,7 @@ button.status-chip {
   height: 1.3rem;
   border: 2px solid #ffffff;
   border-radius: 50%;
-  background: var(--speed-unknown);
+  background: var(--band-unknown);
   color: #ffffff;
   font-style: normal;
   font-size: 0.75rem;
@@ -436,20 +439,56 @@ button.status-chip {
   box-shadow: 0 0 0 1px var(--line);
 }
 
-.dot.ultra {
-  background: var(--speed-ultra);
+/* Power bands, matching BAND_COLOURS and BAND_LETTERS in main.js. */
+.dot.ac {
+  background: var(--band-ac);
+  color: #1b1b1b;
 }
 
-.dot.rapid {
-  background: var(--speed-rapid);
+.dot.ac7 {
+  background: var(--band-ac7);
 }
 
-.dot.fast {
-  background: var(--speed-fast);
+.dot.ac11 {
+  background: var(--band-ac11);
 }
 
-.dot.slow {
-  background: var(--speed-slow);
+.dot.dc {
+  background: var(--band-dc);
+  color: #1b1b1b;
+}
+
+.dot.dc50 {
+  background: var(--band-dc50);
+  color: #1b1b1b;
+}
+
+.dot.dc100 {
+  background: var(--band-dc100);
+}
+
+.dot.dc150 {
+  background: var(--band-dc150);
+}
+
+/* DC points are diamonds on the map (dc-points in main.js). */
+.dot.dc,
+.dot.dc50,
+.dot.dc100,
+.dot.dc150 {
+  border-radius: 2px;
+  transform: rotate(45deg) scale(0.85);
+}
+
+/* The AC and DC symbols beside the headings in the key. */
+.current-symbol {
+  flex: none;
+  width: 1.4em;
+  height: 0.9em;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.6;
+  stroke-linecap: round;
 }
 
 .dot.plain {

@@ -72,19 +72,36 @@ export function plugsSummary(plugs) {
   return names.length ? names.join(", ") : "Connector unknown";
 }
 
-// Map point colours group chargers by their fastest connector. 8 kW is where the Public
-// Charge Point Regulations 2023 start requiring contactless payment; 50 kW is where they
-// call a charge point rapid. 150 kW matches the ultra-rapid step in the power filter.
-export const SPEED_BANDS = [
-  { id: "ultra", min: 150, label: "150 kW or more (ultra-rapid)" },
-  { id: "rapid", min: 50, label: "50 to 149 kW (rapid)" },
-  { id: "fast", min: 8, label: "8 to 49 kW" },
-  { id: "slow", min: 0, label: "Under 8 kW" },
+// Map point colours. A location with a DC connector takes the colour of its fastest DC
+// connector; one with only AC connectors takes the colour of its fastest AC connector.
+// AC and DC are kept apart because many cars take 7 or 11 kW at most on AC, whatever the
+// post offers, but can use far more on DC. Whether a connector is AC or DC comes from the
+// feed's power_type (cur in schema/published.py), never from its plug. The DC steps match
+// the rapid (50 kW) and ultra-rapid (150 kW) bands in the Department for Transport's
+// statistics; the AC steps split lamp posts (mostly 3 to 5 kW) from 7 kW posts and from
+// 11 to 22 kW ones. Ordered fastest first within each kind.
+export const POWER_BANDS = [
+  { id: "dc150", cur: "dc", min: 150, label: "DC 150 kW or more" },
+  { id: "dc100", cur: "dc", min: 100, label: "DC 100 to 149 kW" },
+  { id: "dc50", cur: "dc", min: 50, label: "DC 50 to 99 kW" },
+  { id: "dc", cur: "dc", min: 0, label: "DC under 50 kW" },
+  { id: "ac11", cur: "ac", min: 11, label: "AC 11 kW or more" },
+  { id: "ac7", cur: "ac", min: 6, label: "AC 6 to 10 kW" },
+  { id: "ac", cur: "ac", min: 0, label: "AC under 6 kW" },
 ];
 
-export function speedBand(kw) {
-  if (kw === null || kw === undefined || !Number.isFinite(kw)) return "unknown";
-  return SPEED_BANDS.find((band) => kw >= band.min).id;
+function fastest(cons, cur) {
+  const powers = (cons ?? []).filter((c) => c.cur === cur && Number.isFinite(c.kw)).map((c) => c.kw);
+  return powers.length ? Math.max(...powers) : null;
+}
+
+// "unknown" when no connector has both a power and an AC or DC type.
+export function powerBand(cons) {
+  for (const cur of ["dc", "ac"]) {
+    const kw = fastest(cons, cur);
+    if (kw !== null) return POWER_BANDS.find((band) => band.cur === cur && kw >= band.min).id;
+  }
+  return "unknown";
 }
 
 // True when every connector was reported out of service in the last daily fetch.
