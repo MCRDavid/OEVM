@@ -129,6 +129,21 @@ vat_not_stated:
     that VAT at 20% is added, so prices on the map all include VAT and can be compared.
   evidence_url: https://open-chargepoints.com/api/ocpi/cpo/2.2.1/tariffs/
   add_percent: 20
+line_to_line_voltage:
+  decided: 2026-10-30
+  basis: >-
+    696 of bp pulse's 1,136 locations give every connector's maximum power as 0, so its
+    power is worked out from voltage and current. In its feed of 2026-10-30, 346 of its
+    350 three-phase AC connectors gave 400 V, the voltage between two lines of a UK
+    three-phase supply (270 at 63 A, 68 at 32 A and 8 at 16 A). OCPI 2.2.1 gives AC
+    voltage line to neutral, 230 V in the UK, so a 63 A three-phase socket worked out at
+    75.6 kW rather than 43.5 kW, and a 32 A one at 38.4 kW rather than 22.1 kW. That 230 V
+    is meant is inferred, not stated by bp pulse. The repository owner decided on
+    2026-10-30 that these connectors are worked out at 230 V, each saying so, as for
+    Blink Charging.
+  evidence_url: https://open-chargepoints.com/api/ocpi/cpo/2.2.1/locations/
+  published_volts: 400
+  read_as_volts: 230
 engagement:
   status: key_on_request
   evidence:
@@ -239,6 +254,22 @@ findings:
     handling: >-
       The statuses are shown as published, dated, and both are shown as reported out of
       service. Whether some of these chargers have been removed is not known.
+    evidence_url: https://open-chargepoints.com/api/ocpi/cpo/2.2.1/locations/
+  - date: 2026-10-30
+    kind: data_quality
+    summary: >-
+      346 of the 350 three-phase AC (AC_3_PHASE) connectors, all Type 2, give max_voltage
+      400 (270 at 63 A, 68 at 32 A, 8 at 16 A) and max_electric_power 0. OCPI 2.2.1 gives
+      AC voltage line to neutral, about 230 V in the UK. Worked out at 400 V they came to
+      75.6 kW, 38.4 kW and 19.2 kW, above the 43.5 kW a Type 2 socket can give at 63 A on
+      three phases of a UK supply. bp pulse's own site page for a charger in Slough lists
+      "Rapid (AC 43kW / DC 50kW)".
+    handling: >-
+      By the repository owner's decision of 2026-10-30 recorded in line_to_line_voltage,
+      AC connectors that give 400 V and no power figure have their power worked out at
+      230 V (43.5 kW at 63 A, 22.1 kW at 32 A, 11 kW at 16 A), and site details say so
+      beside each. They stay AC, as published. That 230 V is meant is inferred and needs
+      confirming by bp pulse. The feed's figures are kept unchanged in the issue log.
     evidence_url: https://open-chargepoints.com/api/ocpi/cpo/2.2.1/locations/
   - date: 2026-10-30
     kind: data_quality

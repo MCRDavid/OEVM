@@ -338,7 +338,8 @@ def test_a_decision_to_read_one_voltage_as_another_is_shown(page):
     data = json.loads(transparency.outputs()[transparency.JSON_PATH])
     decisions = {op["id"]: op["line_to_line_voltage"] for op in data["operators"]}
     assert {k: (v["published_volts"], v["read_as_volts"]) for k, v in decisions.items() if v} == {
-        "blink_charging_uk": (400, 230)
+        "blink_charging_uk": (400, 230),
+        "bp_pulse": (400, 230),
     }
     text = " ".join(page.split())
     assert "AC connectors that give 400 V and no power figure have their power worked out" in text

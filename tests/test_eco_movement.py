@@ -295,6 +295,15 @@ def test_bp_pulses_prices_have_vat_added_and_its_newer_sites_name_no_tariff(tmp_
     assert states == {"Millfields Hotel": "priced", "Willingdon SF Connect": "unknown"}
 
 
+def test_bp_pulses_400_v_three_phase_sockets_are_worked_out_at_230_v():
+    result, _ = replay("bp_pulse")
+    (site,) = [loc for loc in result.locations if loc.name == "Millfields Hotel"]
+    ac = {(c.power_type, c.max_kw, bool(c.max_kw_note)) for e in site.evses for c in e.connectors}
+    assert ("ac_3_phase", 43.47, True) in ac
+    assert ("ac_1_phase", 7.36, False) in ac
+    assert ("dc", 50.0, False) in ac
+
+
 def test_bp_pulses_all_zero_tariff_shows_free_as_published():
     tariffs = json.loads((FIXTURES / "bp_pulse" / "tariffs_page1.json").read_text())
     zero = [t for t in tariffs["response"]["body"]["data"] if t["id"] == "1"]

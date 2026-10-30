@@ -71,3 +71,11 @@ into the 11 kW band. The owner decided to read these as 230 V, each connector sa
 its details. The decision is recorded as `line_to_line_voltage` in Blink's operator file and
 on the transparency page; it applies only to AC connectors with no power figure that give
 exactly the voltage named there.
+
+## Amended 30 October 2026: bp pulse's 400 V three-phase sockets
+
+bp pulse's feed of 30 October 2026 gives 346 of its 350 three-phase Type 2 sockets 400 V
+with no power figure, which worked out at 75.6 kW for a 63 A socket, above the 43.5 kW a
+Type 2 socket can give at 63 A on three phases of a UK supply. The owner decided to read
+them as AC at 230 V, as for Blink, recorded as `line_to_line_voltage` in bp pulse's
+operator file.
