@@ -1,6 +1,6 @@
 # 0012: Map layout, point colours, dark mode and "Find my location"
 
-Date: 2026-10-09. Status: accepted.
+Date: 2026-10-09. Status: accepted; the point colours are replaced by ADR 0031 (AC and DC power key, 30 October 2026).
 
 The repository owner asked for an easier map: clearer navigation, filters by speed, cost
 and "not broken", different colours for map points, a dark mode, and a button that moves

@@ -5,18 +5,42 @@
 import { mapLabelLine, renderDetail, detailUrl } from "./detail.js";
 import { activeCount, connectorFilters as connectorFiltersOn, defaults, matches, parse, serialise } from "./filters.js";
 import { h } from "./dom.js";
-import { allOut, formatKw, plugsSummary, speedBand } from "./format.js";
+import { allOut, formatKw, plugsSummary, powerBand } from "./format.js";
 import { bestPlans, priceLabel } from "./labels.js";
 import { createSettings } from "./settings.js";
 
 const LIST_LIMIT = 200;
-// Point colours by fastest connector (format.js, SPEED_BANDS), matching app.css. Each has
-// at least 4.5:1 contrast with the white letter drawn on it.
-const SPEED_COLOURS = { ultra: "#9b2c74", rapid: "#b3460c", fast: "#0d6b62", slow: "#2f5d9e", unknown: "#5c5c5c" };
-const SPEED_RADIUS = { ultra: 13, rapid: 12, fast: 11, slow: 10, unknown: 10 };
-const CHARGER_LAYERS = ["clusters", "points", "price-labels", "cluster-count", "point-labels"];
+// Point colours by power band (format.js, POWER_BANDS), matching app.css. AC points are
+// circles and DC points diamonds, so AC and DC are told apart by shape as well as colour.
+// Within each shape the colours were picked to stay apart for the common kinds of colour
+// blindness, and points grow with power. The letter on each point is white or near black,
+// whichever has at least 4.5:1 contrast with the colour.
+const BAND_COLOURS = {
+  ac: "#7fd4b4",
+  ac7: "#3b73bc",
+  ac11: "#1d2f6f",
+  dc: "#f0c93c",
+  dc50: "#e0701c",
+  dc100: "#b8287a",
+  dc150: "#4b1d6e",
+  unknown: "#5c5c5c",
+};
+const BAND_RADIUS = { ac: 9, ac7: 10, ac11: 11, dc: 11, dc50: 12, dc100: 13, dc150: 14, unknown: 9 };
+const DC_BANDS = ["dc", "dc50", "dc100", "dc150"];
+const DARK_LETTER = "#1b1b1b";
+const BAND_LETTERS = {
+  ac: DARK_LETTER,
+  ac7: "#ffffff",
+  ac11: "#ffffff",
+  dc: DARK_LETTER,
+  dc50: DARK_LETTER,
+  dc100: "#ffffff",
+  dc150: "#ffffff",
+  unknown: "#ffffff",
+};
+const CHARGER_LAYERS = ["clusters", "points", "dc-points", "price-labels", "cluster-count", "point-labels"];
 // What a press on the map opens a charger's details from.
-const CHARGER_TARGETS = ["points", "price-labels", "point-labels"];
+const CHARGER_TARGETS = ["points", "dc-points", "price-labels", "point-labels"];
 const FONT = ["Noto Sans Regular"];
 // The rounded box behind each price label: white with a dark edge, or dark with a light
 // edge in dark mode, and amber with a thicker edge when the price comes from a plan the
@@ -77,7 +101,7 @@ function notice(text) {
 // Filters and the page address
 
 function hasFilterParams() {
-  const keys = ["minkw", "plug", "free", "maxp", "unknown", "ok", "priv", "op", "group", "view"];
+  const keys = ["minkw", "cur", "plug", "free", "maxp", "unknown", "ok", "priv", "op", "group", "view"];
   const params = new URLSearchParams(window.location.search);
   return keys.some((key) => params.has(key));
 }
@@ -99,6 +123,7 @@ function saveIfRemembered() {
 function stateToForm() {
   const form = $("filters");
   $("minkw").value = String(app.state.minkw);
+  $("cur").value = app.state.cur;
   for (const box of form.querySelectorAll('input[name="plug"]')) box.checked = app.state.plugs.includes(box.value);
   for (const box of form.querySelectorAll('input[name="op"]')) box.checked = app.state.ops.includes(box.value);
   $("free").checked = app.state.free;
@@ -129,6 +154,7 @@ function formToState() {
   const form = $("filters");
   const query = new URLSearchParams();
   query.set("minkw", $("minkw").value);
+  if ($("cur").value) query.set("cur", $("cur").value);
   const plugs = [...form.querySelectorAll('input[name="plug"]:checked')].map((b) => b.value);
   if (plugs.length) query.set("plug", plugs.join(","));
   const boxes = new Set([...form.querySelectorAll('input[name="op"]')].map((b) => b.value));
@@ -560,9 +586,10 @@ function mapStyle() {
   return effectiveTheme() === "dark" ? (app.config.darkStyle ?? app.config.style) : app.config.style;
 }
 
-// Points are coloured by their fastest connector and sized a little larger the faster
-// it is, so the colour is not the only cue. The letter shows the price. A location whose
-// every connector was reported out of service is faded.
+// Points are coloured by their fastest DC connector, or fastest AC one where there is no
+// DC: circles for AC and diamonds for DC, a little larger the faster, so colour is not the
+// only cue. The letter shows the price. A location whose every connector was reported out
+// of service is faded. Where the browser cannot draw the diamonds, DC points are circles.
 function addChargerLayers() {
   if (app.map.getSource("chargers")) return;
   app.map.addSource("chargers", {
@@ -574,6 +601,9 @@ function addChargerLayers() {
   app.grouped = app.state.group;
   const band = (values) => ["match", ["get", "band"], ...Object.entries(values).flat(), values.unknown];
   const faded = (normal) => ["case", ["get", "down"], 0.45, normal];
+  const diamonds = addDiamondImages();
+  const unclustered = ["!", ["has", "point_count"]];
+  const isDc = ["in", ["get", "band"], ["literal", DC_BANDS]];
   app.map.addLayer({
     id: "clusters",
     type: "circle",
@@ -590,15 +620,27 @@ function addChargerLayers() {
     id: "points",
     type: "circle",
     source: "chargers",
-    filter: ["!", ["has", "point_count"]],
+    filter: diamonds ? ["all", unclustered, ["!", isDc]] : unclustered,
     paint: {
-      "circle-color": band(SPEED_COLOURS),
-      "circle-radius": band(SPEED_RADIUS),
+      "circle-color": band(BAND_COLOURS),
+      "circle-radius": band(BAND_RADIUS),
       "circle-opacity": faded(1),
       "circle-stroke-width": 2,
       "circle-stroke-color": "#ffffff",
       "circle-stroke-opacity": faded(1),
     },
+  });
+  app.map.addLayer({
+    id: "dc-points",
+    type: "symbol",
+    source: "chargers",
+    filter: diamonds ? ["all", unclustered, isDc] : ["==", 1, 0],
+    layout: {
+      "icon-image": ["concat", "diamond-", ["get", "band"]],
+      "icon-allow-overlap": true,
+      "icon-ignore-placement": true,
+    },
+    paint: { "icon-opacity": faded(1) },
   });
   addPriceLabels(faded);
   app.map.addLayer({
@@ -622,7 +664,7 @@ function addChargerLayers() {
       // The letters never push a price label off the map; they are drawn over it instead.
       "text-ignore-placement": true,
     },
-    paint: { "text-color": "#ffffff", "text-opacity": faded(1) },
+    paint: { "text-color": band(BAND_LETTERS), "text-opacity": faded(1) },
   });
   renderList();
 }
@@ -682,6 +724,53 @@ function addPillImages(colours) {
     else added = false;
   }
   return added;
+}
+
+// A diamond for each DC band, drawn once per style with the same white edge as the
+// circles, half as wide again as the circle of that band so it looks about as large.
+// Returns false where the browser cannot draw them (see pillImage).
+function diamondImage(fill, radius) {
+  const ratio = 2;
+  const half = Math.round(radius * 1.3) + 2;
+  const side = half * 2 * ratio;
+  const canvas = document.createElement("canvas");
+  canvas.width = canvas.height = side;
+  const context = canvas.getContext("2d");
+  if (!context) return null;
+  context.scale(ratio, ratio);
+  context.beginPath();
+  const tip = half - 1.5;
+  context.moveTo(half, half - tip);
+  context.lineTo(half + tip, half);
+  context.lineTo(half, half + tip);
+  context.lineTo(half - tip, half);
+  context.closePath();
+  context.lineJoin = "round";
+  context.fillStyle = fill;
+  context.fill();
+  context.lineWidth = 2;
+  context.strokeStyle = "#ffffff";
+  context.stroke();
+  let image;
+  try {
+    image = context.getImageData(0, 0, side, side);
+  } catch {
+    return null;
+  }
+  const middle = (side / 2) * (side + 1) * 4;
+  const rgb = [1, 3, 5].map((i) => parseInt(fill.slice(i, i + 2), 16));
+  const filled = rgb.every((value, i) => Math.abs(image.data[middle + i] - value) <= 2);
+  return image.data[3] === 0 && filled && image.data[middle + 3] === 255 ? image : null;
+}
+
+function addDiamondImages() {
+  const images = DC_BANDS.map((id) => [`diamond-${id}`, diamondImage(BAND_COLOURS[id], BAND_RADIUS[id])]);
+  if (images.some(([, image]) => !image)) return false;
+  for (const [id, image] of images) {
+    if (app.map.hasImage(id)) app.map.removeImage(id);
+    app.map.addImage(id, image, { pixelRatio: 2 });
+  }
+  return true;
 }
 
 // The cheapest price the visitor can pay at each point, in a box above it (labels.js),
@@ -941,7 +1030,7 @@ async function start() {
     const layer = await loadJson("data/locations.geojson");
     app.features = layer.features ?? [];
     for (const { properties } of app.features) {
-      properties.band = speedBand(properties.kw);
+      properties.band = powerBand(properties.cons);
       properties.down = allOut(properties);
       app.byKey.set(properties.key, properties);
     }
