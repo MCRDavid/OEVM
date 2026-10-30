@@ -27,6 +27,9 @@ from pipeline.access import PHRASES, private_words
         ("Non-public test bay", "Non-public"),
         ("Yard: no public access", "no public access"),
         (f"Head office {chr(0x2013)} private", "private"),  # an en dash
+        # bp pulse's names on 30 October 2026 (owner's decision of that day).
+        ("[E-TAXI ONLY] Mill Hill East Station Car Park", "TAXI ONLY"),
+        ("Rank - taxis only", "taxis only"),
     ],
 )
 def test_names_that_say_private_or_restricted_are_caught_with_their_words(name, words):
@@ -49,6 +52,9 @@ def test_names_that_say_private_or_restricted_are_caught_with_their_words(name, 
         "UoL MSCP 9 (Blue Badge holders only)",
         "Staffordshire County Hall",
         "Publicity House",
+        "Market Street Taxi Rank",
+        "Meeks Road Taxi Hub",
+        "Heathrow Taxi Feeder Park - Landside",
     ],
 )
 def test_other_names_are_not_caught(name):

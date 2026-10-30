@@ -215,6 +215,18 @@ findings:
   - date: 2026-10-30
     kind: data_quality
     summary: >-
+      33 locations (70 EVSEs, in and around London) have names beginning "[E-TAXI
+      ONLY]", such as "[E-TAXI ONLY] Mill Hill East Station Car Park". No parking
+      restriction or other field in the feed says they are for taxis only.
+    handling: >-
+      By the repository owner's decision of 2026-10-30 (ADR 0023, amended), "taxi only"
+      is one of the name phrases in pipeline/access.py, so these locations are hidden on
+      the map unless a visitor asks to see private and restricted chargers, and listed on
+      the feed health page. The data is published unchanged.
+    evidence_url: https://open-chargepoints.com/api/ocpi/cpo/2.2.1/locations/
+  - date: 2026-10-30
+    kind: data_quality
+    summary: >-
       Two locations are named "IDIADA (PRIVATE)" and "IDIADA bp pulse (PRIVATE)".
     handling: >-
       They are hidden on the map unless a visitor asks to see private and restricted

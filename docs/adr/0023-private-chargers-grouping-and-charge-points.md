@@ -69,3 +69,15 @@ ones, and each such charge point is labelled "Taxis only".
 - A last good copy kept from before this change has no `taxi` flags until its operator is
   fetched again, because its detail files predate the parking restrictions.
 - Showing every point with grouping off is slower to draw at country zoom on older phones.
+
+## Amended 30 October 2026: "taxi only" in a name
+
+bp pulse's feed of 30 October 2026 names 33 of its 1,136 locations "[E-TAXI ONLY] ..." (70
+EVSEs, all in and around London), with no parking restriction or other field saying so. On
+30 October 2026 the repository owner chose "Hide unless asked" on a decision card: "taxi
+only" and "taxis only" join the phrases in `pipeline/access.py`, so such locations are
+hidden with private ones unless the visitor asks, and listed on the feed health page. No
+other feed on the map that day had "taxi only" in a location name ("Taxi Rank" and "Taxi
+Hub" are places, not rules, and are not caught). The phrase applies to every operator, as
+the others do; taxi-only parking restrictions still need the per-operator decision above.
+

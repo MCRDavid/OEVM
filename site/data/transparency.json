@@ -28,7 +28,8 @@
       "\"no public access\"",
       "\"restricted access\" or \"restricted use\"",
       "\"staff only\", \"fleet only\", \"employees only\", \"residents only\", \"tenants only\", \"members only\" or \"permit holders only\", with or without \"use\" before \"only\"",
-      "\"staff car park\""
+      "\"staff car park\"",
+      "\"taxi only\" or \"taxis only\", as in \"[E-TAXI ONLY]\""
     ],
     "taxis": "Separately, where the owner has decided so for an operator (see Sources above), a location where the operator marks every charge point for taxis only is hidden in the same way, and each such charge point is labelled \"Taxis only\".",
     "not_counted": "Words that often name a place rather than a rule, such as \"Fleet\" in Fleetwood Road, \"Depot\", \"Residential\", \"Visitor Centre\" or \"Blue Badge holders only\", are not counted. A marked location is published unchanged: its details say which words were found, and the feed health page lists every location marked in the latest run."
@@ -1133,6 +1134,16 @@
           "kind_label": "Data quirk",
           "summary": "Two connectors give figures that do not fit their type: one Type 1 (IEC_62196_T1) connector gives power_type DC at 400 V and 16 A, and one Type 2 single-phase connector gives 0 A.",
           "handling": "Both are shown as published. The DC Type 1 connector's power is worked out as 6.4 kW; the 0 A connector's power is unknown.",
+          "evidence_url": "https://open-chargepoints.com/api/ocpi/cpo/2.2.1/locations/",
+          "status": "open",
+          "resolved_date": null
+        },
+        {
+          "date": "2026-10-30",
+          "kind": "data_quality",
+          "kind_label": "Data quirk",
+          "summary": "33 locations (70 EVSEs, in and around London) have names beginning \"[E-TAXI ONLY]\", such as \"[E-TAXI ONLY] Mill Hill East Station Car Park\". No parking restriction or other field in the feed says they are for taxis only.",
+          "handling": "By the repository owner's decision of 2026-10-30 (ADR 0023, amended), \"taxi only\" is one of the name phrases in pipeline/access.py, so these locations are hidden on the map unless a visitor asks to see private and restricted chargers, and listed on the feed health page. The data is published unchanged.",
           "evidence_url": "https://open-chargepoints.com/api/ocpi/cpo/2.2.1/locations/",
           "status": "open",
           "resolved_date": null
