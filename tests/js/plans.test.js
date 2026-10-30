@@ -10,6 +10,8 @@ import {
   penceText,
   plansFor,
   poundsText,
+  withheldFor,
+  withheldParts,
 } from "../../site/assets/js/plans.js";
 
 const PLANS = [
@@ -81,4 +83,39 @@ test("discounts and money wording", () => {
   assert.equal(poundsText(-0.5), "minus £0.50");
   assert.equal(penceText(49.25), "49.3p");
   assert.equal(penceText(16), "16p");
+});
+
+const WITHHELD = [
+  { provider: "Jolt", operator_ids: ["jolt"], website: "https://joltcharge.com/uk/", terms_url: "https://joltcharge.com/uk/terms/" },
+  { provider: "Mer UK", operator_ids: ["mer_uk"], website: "https://uk.mer.eco/", terms_url: null },
+];
+
+test("operators whose terms keep their own plans off the map are found by operator", () => {
+  assert.deepEqual(
+    withheldFor("jolt", WITHHELD).map((entry) => entry.provider),
+    ["Jolt"],
+  );
+  assert.deepEqual(withheldFor("chargy", WITHHELD), []);
+  assert.deepEqual(withheldFor("jolt", undefined), []);
+});
+
+test("the note says plans may exist, why they are not shown, and where to look", () => {
+  const text = (parts) => parts.map((part) => (typeof part === "string" ? part : part.text)).join("");
+  const [jolt, mer] = WITHHELD.map(withheldParts);
+  assert.equal(
+    text(jolt),
+    "Charging memberships or subscriptions from Jolt may be available here, but Jolt's website terms do not allow them to be republished, so they are not shown. Check Jolt's website or app for details.",
+  );
+  assert.deepEqual(
+    jolt.filter((part) => typeof part !== "string"),
+    [
+      { url: "https://joltcharge.com/uk/terms/", text: "website terms" },
+      { url: "https://joltcharge.com/uk/", text: "Jolt's website" },
+    ],
+  );
+  // Without a terms page, "website terms" is plain text.
+  assert.deepEqual(
+    mer.filter((part) => typeof part !== "string"),
+    [{ url: "https://uk.mer.eco/", text: "Mer UK's website" }],
+  );
 });

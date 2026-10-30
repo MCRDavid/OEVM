@@ -306,6 +306,14 @@
     "terms": {
       "$ref": "#/$defs/ProviderTerms"
     },
+    "own_networks": {
+      "description": "For an operator's own app and subscriptions: ids from operators/ for the networks it runs. Where its terms do not allow its plans to be listed, the details of these networks' locations say that its plans cannot be shown here (ADR 0016).",
+      "items": {
+        "type": "string"
+      },
+      "title": "Own Networks",
+      "type": "array"
+    },
     "plans": {
       "items": {
         "$ref": "#/$defs/Plan"

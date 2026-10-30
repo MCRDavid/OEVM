@@ -22,6 +22,26 @@ export function plansFor(operatorId, plans) {
     .map(({ plan }) => plan);
 }
 
+// Operators whose own memberships or subscriptions may exist at this operator's
+// locations but are not shown, because their terms do not allow them to be republished
+// (data/plans.json "withheld", ADR 0016).
+export function withheldFor(operatorId, withheld) {
+  return (withheld ?? []).filter((entry) => (entry.operator_ids ?? []).includes(operatorId));
+}
+
+// What the details say for one of those operators (owner's request, 30 October 2026), as
+// parts: text, or { url, text } for a link.
+export function withheldParts(entry) {
+  const name = entry.provider;
+  return [
+    `Charging memberships or subscriptions from ${name} may be available here, but ${name}'s `,
+    entry.terms_url ? { url: entry.terms_url, text: "website terms" } : "website terms",
+    " do not allow them to be republished, so they are not shown. Check ",
+    { url: entry.website, text: `${name}'s website` },
+    " or app for details.",
+  ];
+}
+
 // A plan needs a paid subscription when it has a monthly fee, or when its fee is not
 // published (so it cannot be shown as free to join).
 export function needsSubscription(plan) {

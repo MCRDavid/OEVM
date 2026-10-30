@@ -3,7 +3,7 @@
 import { h, safeLink } from "./dom.js";
 import { STATUS_LABELS, formatDateTime, formatKw, plugName } from "./format.js";
 import { STATUS_GROUPS, asOfText, chips, countByGroup, groupOf, summaryText } from "./live.js";
-import { breakEven, breakEvenText, cheapest, discounted, needsSubscription, plansFor } from "./plans.js";
+import { breakEven, breakEvenText, cheapest, discounted, needsSubscription, plansFor, withheldFor, withheldParts } from "./plans.js";
 
 export const SENT_COPY_STATUS =
   "Not shown: this operator's data is a copy it sent, not a feed, so it cannot say whether a charge point is free now.";
@@ -419,12 +419,20 @@ function calculator(detail, plans) {
   return h("details", { className: "calculator" }, h("summary", { text: "Is a subscription worth it here?" }), body);
 }
 
+// Where the operator's own terms keep its memberships or subscriptions off the map.
+function withheldNote(entry) {
+  const parts = withheldParts(entry).map((part) => (typeof part === "string" ? part : safeLink(part.url, part.text)));
+  return h("p", { className: "hint withheld" }, ...parts);
+}
+
 // Plans from providers' own pages that cover this location's network, the cheapest
-// published energy price here, and the calculator.
-export function plansSection(detail, allPlans, mine = new Set()) {
+// published energy price here, and the calculator. Where the operator's own plans cannot
+// be shown because of its terms, a note says so.
+export function plansSection(detail, allPlans, mine = new Set(), withheld = []) {
   const operatorId = detail.location?.provenance?.source_id;
   const plans = plansFor(operatorId, allPlans);
-  if (!plans.length) return [];
+  const held = withheldFor(operatorId, withheld).map(withheldNote);
+  if (!plans.length) return held.length ? [h("h3", { text: "Memberships and subscriptions" }), ...held] : [];
   const yours = plans.filter((plan) => mine.has(plan.id));
   const free = plans.filter((plan) => !needsSubscription(plan));
   const paid = plans.filter(needsSubscription);
@@ -436,6 +444,7 @@ export function plansSection(detail, allPlans, mine = new Set()) {
       className: "hint",
       text: "Plans copied by hand from each provider's own page, on the date shown, cheapest first. Fixed prices per kWh come first, then discounts from largest to smallest: discounts are not turned into prices, because the price they come off is often shown only in the provider's app. Check with the provider before signing up.",
     }),
+    ...held,
     yours.length ? cheapestLine(detail, yours, "Lowest published energy price here with your plans") : null,
     cheapestLine(detail, plans, "Lowest published energy price here with any listed plan"),
     ...(free.length
@@ -506,6 +515,7 @@ export function renderDetail(
     repository,
     plans = [],
     mine = new Set(),
+    withheld = [],
     hideOut = false,
     onHideOut = null,
     privateNote = null,
@@ -544,7 +554,7 @@ export function renderDetail(
       : h("p", { text: "No charge points listed." }),
     ...sources.map((source) => h("p", { className: "hint related", text: source.note })),
     ...tariffSection(detail),
-    ...plansSection(detail, plans, mine),
+    ...plansSection(detail, plans, mine, withheld),
     h(
       "p",
       { className: "hint" },

@@ -52,6 +52,16 @@ they already have, and for a calculator showing when a paid plan pays for itself
   the visitor ticked can also give the label above a charger's point on the map, when it
   has a fixed price including VAT and no lower price is published there; on a full tie
   the operator's own price is kept (ADR 0026).
+- **Plans that cannot be shown (amended 30 October 2026, at the owner's request).** An
+  operator's own provider file names its networks in `own_networks`. Where its terms forbid
+  reuse or allow personal use only, `data/plans.json` lists it under `withheld`, and the
+  details of those networks' locations say: "Charging memberships or subscriptions from
+  <operator> may be available here, but <operator>'s website terms do not allow them to be
+  republished, so they are not shown. Check <operator>'s website or app for details.", with
+  links to its website and terms. The note says "may", because a provider's terms are
+  recorded whether or not it runs a membership. Roaming providers have no own networks, so
+  the note is never shown for them, and providers whose terms have not been read get no
+  note.
 
 ## Needs testing
 

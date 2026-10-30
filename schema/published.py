@@ -286,11 +286,26 @@ class PlanOut(_Model):
     checked: dt.date
 
 
+class WithheldOut(_Model):
+    """An operator whose terms keep its own plans off the map (providers/*.yaml with
+    own_networks and terms that forbid reuse or allow personal use only; ADR 0016)."""
+
+    provider: str
+    operator_ids: list[str] = Field(description="Operator registry ids of its own networks.")
+    website: str
+    terms_url: str | None = None
+
+
 class PlansFile(_Model):
     schema_version: Literal[1] = SCHEMA_VERSION
     generated_at: AwareDatetime
     note: str
     plans: list[PlanOut]
+    withheld: list[WithheldOut] = Field(
+        default_factory=list,
+        description="Operators whose memberships or subscriptions may exist but are not "
+        "shown, because their terms do not allow them to be republished.",
+    )
 
 
 class OperatorEntry(_Model):

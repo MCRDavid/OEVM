@@ -16,6 +16,9 @@ Rules the model enforces:
   (null), never estimated.
 - A plan whose published figures disagree with another of the provider's own pages says
   so in needs_testing, and the map shows that note with it.
+- An operator's own provider file names its networks in own_networks. Where its terms keep
+  its plans off the map, the details of those networks' locations say so and point to its
+  website (owner's request, 30 October 2026; ADR 0016).
 """
 
 import datetime as dt
@@ -137,6 +140,12 @@ class ProviderFile(_Model):
     kind: ProviderKind
     website: SafeUrl
     terms: ProviderTerms
+    own_networks: list[str] = Field(
+        default_factory=list,
+        description="For an operator's own app and subscriptions: ids from operators/ for the "
+        "networks it runs. Where its terms do not allow its plans to be listed, the details "
+        "of these networks' locations say that its plans cannot be shown here (ADR 0016).",
+    )
     plans: list[Plan] = Field(default_factory=list)
     notes: NeutralText | None = None
 
@@ -147,6 +156,10 @@ class ProviderFile(_Model):
                 f"terms.reuse is {self.terms.reuse!r}: plans may only be listed when the "
                 "provider's terms allow reuse"
             )
+        if self.own_networks and self.kind != "operator":
+            raise ValueError("own_networks is only for an operator's own provider file")
+        if len(self.own_networks) != len(set(self.own_networks)):
+            raise ValueError("own_networks must not repeat an id")
         ids = [p.id for p in self.plans]
         if len(ids) != len(set(ids)):
             raise ValueError("plan ids must be unique within a provider")

@@ -4,8 +4,8 @@
 
 Each file is one provider: a roaming app or an operator's own app and subscriptions,
 copied by hand from the provider's own pages (schema/provider.py has the rules). The
-loader also checks that every operator id a plan names has a file in operators/, so a
-plan can only be matched to locations this project knows about.
+loader also checks that every operator id a plan or own_networks names has a file in
+operators/, so a plan can only be matched to locations this project knows about.
 """
 
 import argparse
@@ -49,6 +49,12 @@ def load_providers(
             continue
         if provider.id != path.stem:
             problems.append(f"{path.name}: id {provider.id!r} must match the file name")
+        for operator_id in provider.own_networks:
+            if operator_id not in operator_ids:
+                problems.append(
+                    f"{path.name}: own_networks names operator {operator_id!r}, "
+                    "which has no file in operators/"
+                )
         for plan in provider.plans:
             for operator_id in plan.operator_ids:
                 if operator_id not in operator_ids:

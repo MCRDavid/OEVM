@@ -198,6 +198,48 @@
       ],
       "title": "PlanOut",
       "type": "object"
+    },
+    "WithheldOut": {
+      "additionalProperties": false,
+      "description": "An operator whose terms keep its own plans off the map (providers/*.yaml with\nown_networks and terms that forbid reuse or allow personal use only; ADR 0016).",
+      "properties": {
+        "provider": {
+          "title": "Provider",
+          "type": "string"
+        },
+        "operator_ids": {
+          "description": "Operator registry ids of its own networks.",
+          "items": {
+            "type": "string"
+          },
+          "title": "Operator Ids",
+          "type": "array"
+        },
+        "website": {
+          "title": "Website",
+          "type": "string"
+        },
+        "terms_url": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Terms Url"
+        }
+      },
+      "required": [
+        "provider",
+        "operator_ids",
+        "website",
+        "terms_url"
+      ],
+      "title": "WithheldOut",
+      "type": "object"
     }
   },
   "additionalProperties": false,
@@ -223,13 +265,22 @@
       },
       "title": "Plans",
       "type": "array"
+    },
+    "withheld": {
+      "description": "Operators whose memberships or subscriptions may exist but are not shown, because their terms do not allow them to be republished.",
+      "items": {
+        "$ref": "#/$defs/WithheldOut"
+      },
+      "title": "Withheld",
+      "type": "array"
     }
   },
   "required": [
     "schema_version",
     "generated_at",
     "note",
-    "plans"
+    "plans",
+    "withheld"
   ],
   "title": "PlansFile",
   "type": "object"
