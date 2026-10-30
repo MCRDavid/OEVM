@@ -106,7 +106,8 @@ tariff data. In the feeds recorded on 29 October 2026:
   "3$0 - Leisure", which look like internal categories (inferred).
 
 **Update, 30 October 2026:** later that day the project added card payment, parking type and
-floor level to site details, each as the operator's statement and shown from the next daily run.
+floor level to site details, each as the operator's statement, and began reading BrightGreen's
+plug types and statuses, all shown from the next daily run.
 
 - **Card payment**: OCPI 2.2.1's capabilities say whether a charge point has a payment terminal.
   In the feeds recorded on 29 October 2026, six networks mark every one of their charge points as
@@ -121,3 +122,11 @@ floor level to site details, each as the operator's statement and shown from the
 - **Floor level**: MFG's and Allego's values are the first four characters of each location's
   name, such as "GB, Station Street, E15 1DA London" at Allego, so by the owner's decision no
   floor level is shown for their charge points.
+- **BrightGreen**: its connectors give no OCPI 2.2.1 plug type, only a field outside the
+  standard, socket_type ("Type 2" on 50 and "CCS 2" on 2 of its 52 connectors), and every charge
+  point's own status is "idle". By the owner's decisions of 30 October 2026 the map reads those two
+  plug names, and takes a charge point's status from its connectors where they all give the same
+  OCPI 2.2.1 status, as at 28 of its 30 charge points that day. At "EZ charge HQ" one charge point
+  has two CCS connectors and one Type 2, each given as 150 kW with the power type "ultrarapid".
+  The Type 2 connector is shown at 150 kW as published; whether it charges at that rate needs
+  testing.
