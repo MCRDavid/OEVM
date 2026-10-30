@@ -548,6 +548,27 @@
       "description": "The operator's own notes for this location (OCPI 2.2.1 directions), in English where given, as published. Null when none are given.",
       "title": "Directions"
     },
+    "parking_type": {
+      "anyOf": [
+        {
+          "enum": [
+            "along_motorway",
+            "parking_garage",
+            "parking_lot",
+            "on_driveway",
+            "on_street",
+            "underground_garage"
+          ],
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "description": "The general type of parking, as the operator gives it (OCPI 2.2.1 parking_type). Null when not given or not an OCPI 2.2.1 value.",
+      "title": "Parking Type"
+    },
     "evses": {
       "items": {
         "$ref": "#/$defs/EVSE"
@@ -583,6 +604,7 @@
     "access",
     "opening_hours",
     "directions",
+    "parking_type",
     "evses",
     "last_updated",
     "provenance"

@@ -161,6 +161,16 @@ findings:
     evidence_url: https://www.fastnedcharging.com/en-gb/uk-open-data
     status: resolved
     resolved_date: 2026-10-24
+  - date: 2026-10-30
+    kind: data_quality
+    summary: >-
+      30 of 42 locations give parking_type ON_STREET (recorded 2026-10-24), including two
+      whose address names a car park: "Hatton Cross Car Park" and Newcastle Airport's
+      "Short Stay 1". The other 12 give PARKING_LOT.
+    handling: >-
+      Shown as published, worded as the operator's statement ("Parking type, the operator
+      says: ...").
+    evidence_url: https://uk-public.api.fastned.nl/uk-public/ocpi/cpo/2.2.1/locations
 notes: >-
   A fast charging network with stations across Europe, including the UK. Its UK Open Data API
   needs a key, sent by automated email after the form on its UK Open Data page; the key is the

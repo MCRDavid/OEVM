@@ -1825,6 +1825,16 @@
           "evidence_url": "https://api.clenergy.online/development/pcpr/tariffs",
           "status": "open",
           "resolved_date": null
+        },
+        {
+          "date": "2026-10-30",
+          "kind": "spec_conformance",
+          "kind_label": "Differs from OCPI 2.2.1",
+          "summary": "All 1,414 locations give parking_type \"UNKNOWN\" (read 2026-10-30), which is not one of the OCPI 2.2.1 ParkingType values.",
+          "handling": "Recorded as unknown, so no parking type is shown for these locations.",
+          "evidence_url": "https://api.clenergy.online/development/pcpr/locations",
+          "status": "open",
+          "resolved_date": null
         }
       ]
     },
@@ -3483,6 +3493,16 @@
           "evidence_url": "https://www.fastnedcharging.com/en-gb/uk-open-data",
           "status": "resolved",
           "resolved_date": "2026-10-24"
+        },
+        {
+          "date": "2026-10-30",
+          "kind": "data_quality",
+          "kind_label": "Data quirk",
+          "summary": "30 of 42 locations give parking_type ON_STREET (recorded 2026-10-24), including two whose address names a car park: \"Hatton Cross Car Park\" and Newcastle Airport's \"Short Stay 1\". The other 12 give PARKING_LOT.",
+          "handling": "Shown as published, worded as the operator's statement (\"Parking type, the operator says: ...\").",
+          "evidence_url": "https://uk-public.api.fastned.nl/uk-public/ocpi/cpo/2.2.1/locations",
+          "status": "open",
+          "resolved_date": null
         }
       ]
     },
@@ -3933,6 +3953,16 @@
           "summary": "Tariff price components give no VAT rate (12 components on 2026-10-23). OCPI 2.2.1 says an omitted VAT means no VAT is applicable. Of the 10 prices per kWh in pounds, 9 come to a whole penny, to within 0.02p, once 20% is added (for example 0.4334 becomes 52p), against 3 as published, the same pattern as Clenergy EV's prices.",
           "handling": "VAT at 20% is added to each price that gives no rate, by the repository owner's decision of 2026-10-23 (vat_not_stated above), and each such price says the VAT was added by this project. The tariffs are published unchanged.",
           "evidence_url": "https://api.evdot.clenergy.online/development/pcpr/tariffs",
+          "status": "open",
+          "resolved_date": null
+        },
+        {
+          "date": "2026-10-30",
+          "kind": "spec_conformance",
+          "kind_label": "Differs from OCPI 2.2.1",
+          "summary": "All 119 locations give parking_type \"UNKNOWN\" (read 2026-10-30), which is not one of the OCPI 2.2.1 ParkingType values.",
+          "handling": "Recorded as unknown, so no parking type is shown for these locations.",
+          "evidence_url": "https://api.evdot.clenergy.online/development/pcpr/locations",
           "status": "open",
           "resolved_date": null
         }
@@ -6046,7 +6076,7 @@
           "kind": "spec_conformance",
           "kind_label": "Differs from OCPI 2.2.1",
           "summary": "Records come in OCPI response objects but use OCPI 2.1.1 field names: locations give type rather than parking_type, and connectors give one tariff_id, voltage and amperage rather than tariff_ids, max_voltage and max_amperage. No location or tariff has a country_code or party_id.",
-          "handling": "A custom adapter gives each connector the OCPI 2.2.1 names, which have the same meanings, then converts the records as usual. The country code GB and party id EVC come from the operator file, read from the EVSE ids.",
+          "handling": "A custom adapter gives each connector the OCPI 2.2.1 names, which have the same meanings, and from 2026-10-30 reads each location's type as its parking_type, then converts the records as usual. The country code GB and party id EVC come from the operator file, read from the EVSE ids.",
           "evidence_url": "https://data.evc.ninja/public/v1/data",
           "status": "open",
           "resolved_date": null
@@ -6117,6 +6147,16 @@
           "kind_label": "Data quirk",
           "summary": "Five of 438 locations list no EVSEs (2026-10-26).",
           "handling": "Shown as published, with no chargers listed.",
+          "evidence_url": "https://data.evc.ninja/public/v1/data",
+          "status": "open",
+          "resolved_date": null
+        },
+        {
+          "date": "2026-10-30",
+          "kind": "data_quality",
+          "kind_label": "Data quirk",
+          "summary": "All 438 locations give the OCPI 2.1.1 type ON_STREET (recorded 2026-10-26), including racecourses, hotels and golf clubs such as Cheltenham Racecourse, Crowne Plaza Gatwick and Kirkbymoorside Golf Club.",
+          "handling": "Read as the OCPI 2.2.1 parking_type, which has the same values, and shown as published, worded as the operator's statement (\"Parking type, the operator says: on the street\"), by the repository owner's decision of 2026-10-30. ON_STREET is also the value in the OCPI 2.1.1 specification's example location.",
           "evidence_url": "https://data.evc.ninja/public/v1/data",
           "status": "open",
           "resolved_date": null

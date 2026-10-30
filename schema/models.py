@@ -94,6 +94,15 @@ Capability = Literal[
 ParkingRestriction = Literal[
     "ev_only", "plugged", "disabled", "customers", "motorcycles", "taxis_only"
 ]
+# OCPI 2.2.1 ParkingType values, in lower case.
+ParkingType = Literal[
+    "along_motorway",
+    "parking_garage",
+    "parking_lot",
+    "on_driveway",
+    "on_street",
+    "underground_garage",
+]
 PowerType = Literal["ac_1_phase", "ac_2_phase", "ac_2_phase_split", "ac_3_phase", "dc", "unknown"]
 PriceState = Literal["priced", "free_confirmed", "unknown"]
 PriceComponentType = Literal["energy", "flat", "parking_time", "time"]
@@ -245,6 +254,11 @@ class Location(_Model):
         default=None,
         description="The operator's own notes for this location (OCPI 2.2.1 directions), "
         "in English where given, as published. Null when none are given.",
+    )
+    parking_type: ParkingType | None = Field(
+        default=None,
+        description="The general type of parking, as the operator gives it (OCPI 2.2.1 "
+        "parking_type). Null when not given or not an OCPI 2.2.1 value.",
     )
     evses: list[EVSE] = Field(default_factory=list)
     last_updated: AwareDatetime | None = Field(

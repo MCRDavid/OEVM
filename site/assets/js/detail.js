@@ -117,6 +117,22 @@ const PARKING = {
   taxis_only: "taxis only",
 };
 
+// OCPI 2.2.1 parking types, worded for drivers (ADR 0030). Shown as the operator's
+// statement, because some feeds give one type for every site.
+const PARKING_TYPES = {
+  along_motorway: "motorway services or rest area",
+  parking_garage: "multi-storey car park",
+  parking_lot: "car park",
+  on_driveway: "driveway",
+  on_street: "on the street",
+  underground_garage: "underground car park",
+};
+
+export function parkingTypeText(location) {
+  const kind = PARKING_TYPES[location.parking_type];
+  return kind ? `Parking type, the operator says: ${kind}.` : null;
+}
+
 // OCPI 2.2.1 capabilities that say the charge point has a payment terminal, worded for
 // drivers (ADR 0030). Shown only as the operator's statement, and only when present: no
 // capability listed is not taken to mean no card payment.
@@ -503,6 +519,7 @@ export function renderDetail(
     h("h2", { id: "detail-heading", tabindex: "-1", text: location.name || "Charger location" }),
     h("p", { className: "operator", text: location.operator?.name ?? "Operator not given" }),
     h("p", { text: address(location) }),
+    parkingTypeText(location) ? h("p", { className: "parking-type", text: parkingTypeText(location) }) : null,
     privateNote ? h("p", { className: "hint private-note", text: privateNote }) : null,
     ...(detail.coordinates_corrected?.note
       ? [h("p", { className: "hint corrected", text: detail.coordinates_corrected.note })]

@@ -1105,6 +1105,15 @@ def test_card_payment_is_shown_as_the_operator_states_it(visit):
     )
 
 
+def test_the_parking_type_is_shown_as_the_operator_states_it(visit):
+    page = visit().open("?view=list", map_ready=False)
+    page.locator("#list-items button", has_text="Premier Inn Alnwick").click()
+    expect(page.locator("#detail-heading")).to_be_focused()
+    expect(page.locator("#detail-body .parking-type")).to_have_text(
+        "Parking type, the operator says: car park."
+    )
+
+
 def test_taxi_only_charge_points_are_labelled(visit):
     page = visit().open("?view=list&priv=1", map_ready=False)
     page.locator("#list-items button", has_text=TAXIS).click()
