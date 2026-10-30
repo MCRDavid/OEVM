@@ -1,0 +1,72 @@
+# yaml-language-server: $schema=schema.json
+id: milence
+display_name: Milence
+ocpi_country_code: unknown
+ocpi_party_id: unknown
+adapter: unknown
+base_url: unknown
+endpoints: {}
+auth:
+  method: unknown
+  name: null
+  secret_name: null
+rate_limit:
+  min_seconds_between_requests: 2
+  limits: []
+  limits_checked: unknown
+  notes: null
+supports_single_location: unknown
+cors: unknown
+attribution: null
+licence: null
+engagement:
+  status: key_on_request
+  evidence:
+    - date: 2026-10-30
+      url: https://milence.com/legal/
+      note: >-
+        Milence's legal page links a "Public Charge Point Regulations (UK)" page and a "PCPR
+        Data Request (UK)" form.
+    - date: 2026-10-30
+      url: https://docs.google.com/forms/d/e/1FAIpQLSfwJwrRDQGrTVdvig20FIJY6v7GHEL5jH-ehn2whzPsJNvPdA/viewform
+      note: >-
+        The form, titled "PCPR Data Request - Milence", asks for a name, organisation and
+        planned use of the data, says the request is shared with Eco-Movement and promises
+        an answer within 5 working days.
+  log:
+    - date: 2026-10-30
+      action: page_checked
+      summary: >-
+        Milence's legal page, its Public Charge Point Regulations page and the linked PCPR
+        data request form were read. The form covers Milence's stations in the United
+        Kingdom that are suitable for trucks, and is shared with Eco-Movement.
+      quote: >-
+        Request data on the location, status, and properties of Milence's stations in the
+        United Kingdom, in accordance with the UK Public Charge Point Regulations. Please
+        note this only includes charging stations suitable for trucks.
+      evidence_url: https://docs.google.com/forms/d/e/1FAIpQLSfwJwrRDQGrTVdvig20FIJY6v7GHEL5jH-ehn2whzPsJNvPdA/viewform
+access_requested: null
+access_granted: null
+sources:
+  - url: https://milence.com/public-charge-point-regulations/
+    note: >-
+      Milence's Public Charge Point Regulations page, read 2026-10-30. Says Milence
+      "complies with the UK Government's Public Charge Point Regulations 2023" and links its
+      tariffs and payment methods. Names no licence, terms, key or rate limit for the data.
+  - url: https://milence.com/charging-tariffs/
+    note: >-
+      Milence's tariffs page, read 2026-10-30. Lists "UK £ 0.399 / kWh" among its country
+      tariffs and says "*Prices do not include VAT."
+  - url: https://milence.com/
+    note: >-
+      Milence's home page, read 2026-10-30. Describes "a pan-European charging network for
+      heavy-duty transport" and, for July 2025, "Milence's first UK fast-charging hub in
+      Immingham".
+findings: []
+notes: >-
+  A public charging network for heavy-duty electric trucks, with a first UK hub at
+  Immingham. Its site gives its company as Commercial Vehicle Charging Europe B.V. Its PCPR
+  data is requested through a form shared with Eco-Movement, like the other networks whose
+  data Eco-Movement hosts, so a token would be read with the eco_movement_pcpr adapter. The
+  form says the data covers only stations suitable for trucks. No request has been sent.
+enabled: false
