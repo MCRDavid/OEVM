@@ -102,6 +102,7 @@ jobs:
           ALDI_TOKEN: ${{ secrets.ALDI_TOKEN }}
           ALLEGO_TOKEN: ${{ secrets.ALLEGO_TOKEN }}
           BLINK_CHARGING_UK_TOKEN: ${{ secrets.BLINK_CHARGING_UK_TOKEN }}
+          BP_PULSE_TOKEN: ${{ secrets.BP_PULSE_TOKEN }}
           CHARGEPOINT_TOKEN: ${{ secrets.CHARGEPOINT_TOKEN }}
           DRAX_GROUP_TOKEN: ${{ secrets.DRAX_GROUP_TOKEN }}
           DRAX_ISTA_TOKEN: ${{ secrets.DRAX_ISTA_TOKEN }}

@@ -1,8 +1,8 @@
 # yaml-language-server: $schema=schema.json
 id: bp_pulse
 display_name: bp pulse
-ocpi_country_code: unknown
-ocpi_party_id: unknown
+ocpi_country_code: GB
+ocpi_party_id: BPC # Confirmed from the feed's own country_code and party_id on 2026-10-30.
 adapter: eco_movement_pcpr
 base_url: unknown
 endpoints:
@@ -95,13 +95,41 @@ limits_as_allowance:
   evidence_url: https://developers.eco-movement.com/v2.2.1/docs/eco-movement-pcpr-api-user-guide
 supports_single_location: supported
 cors: needs_testing
-attribution: null
+attribution: >-
+  Contains data from bp pulse published under the Public Charge Point Regulations 2023, used
+  in line with the Open Government Licence v3.0.
+licence:
+  name: OGL-3.0
+  url: https://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/
+  basis: >-
+    bp pulse's Public Charge Point Regulations help page (read in a browser by the
+    repository owner on 2026-10-09) links to a request form that names no licence, terms,
+    key, agreement or rate limit. bp pulse's email of 2026-10-30 with the token, and
+    Eco-Movement's PCPR API user guide and reference (read 2026-10-26), state no licence or
+    terms either. bp pulse's website legal notice (providers/README.md) is general website
+    terms, which, as for GeniePoint, Mer UK and Arnold Clark Charge, the repository owner
+    reads as not covering data published under the regulations.
+    Regulation 10(5) of the Public Charge Point Regulations 2023 requires the data to be
+    available "without any requirement to agree to terms and conditions regarding the use
+    of that data", and the DfT guidance says "Data must be open in line with the Open
+    Government Licence". On 2026-10-10 the repository owner decided, as a standing rule for
+    operators whose data has no terms of its own, that such operators can be switched on
+    without asking again.
+  checked: 2026-10-30
 engagement:
-  status: requested_no_reply
+  status: key_on_request
   evidence:
-    - date: unknown
+    - date: 2026-10-09
       url: https://www.bppulse.com/en-gb/help-and-support/public-ev-charging/public-charge-point-regulations
-      note: bp pulse's FAQ uses a request form. Whether a contract is also required is not known.
+      note: >-
+        Read in a browser by the repository owner. bp pulse's FAQ uses a request form, which
+        names no licence, terms, key, agreement or rate limit.
+    - date: 2026-10-30
+      file: evidence/bp_pulse/2026-10-30-token-email.md
+      note: >-
+        bp pulse's email with a token for Eco-Movement's PCPR API, in reply to the request
+        of 2026-10-23. It names no licence, terms or contract. The token itself is not kept
+        here.
   log:
     - date: 2026-10-09
       action: page_checked
@@ -119,8 +147,16 @@ engagement:
       channel: web_form
       summary: >-
         Requested access to bp pulse's PCPR data through the form linked from its Public Charge Point Regulations help page.
+    - date: 2026-10-30
+      action: key_granted
+      channel: email
+      summary: >-
+        bp pulse sent a token for Eco-Movement's PCPR API by email, written in the email
+        itself, in reply to the request of 2026-10-23, with a link to Eco-Movement's PCPR
+        API user guide. The token is kept as a GitHub Actions secret.
+      evidence_file: evidence/bp_pulse/2026-10-30-token-email.md
 access_requested: 2026-10-23
-access_granted: null
+access_granted: 2026-10-30
 sources:
   - url: https://wiki.openstreetmap.org/wiki/EV_charge_points_in_the_United_Kingdom
     note: The blueprint cites this page for this operator using Eco-Movement's PCPR API.
@@ -141,6 +177,50 @@ sources:
   - url: https://developers.eco-movement.com/v2.2.1/docs/eco-movement-pcpr-api-user-guide
     note: At most 5 simultaneous requests; date_from and date_to described for locations only.
 findings:
+  - date: 2026-10-30
+    kind: data_quality
+    summary: >-
+      The feed holds two kinds of location record. 696 of the 1,136 locations have
+      numeric ids, EVSE ids beginning GB*BPC*, time_zone "UTC" and no opening times, and
+      every connector gives max_electric_power 0. The other 440 have longer ids, EVSE ids
+      beginning GB*BPP* (6 EVSEs AT*HTB*), suboperator "bp pulse", time_zone
+      Europe/London and opening times of 24 hours, give each connector's power, and name
+      no tariff for any connector.
+    handling: >-
+      Both are shown. Where max_electric_power is 0 the power is worked out from
+      max_voltage and max_amperage, as for any connector with no power figure. Connectors
+      that name no tariff show "Price unknown"; no price is guessed. The time zone is not
+      used on the map, which shows every time in UK time.
+    evidence_url: https://open-chargepoints.com/api/ocpi/cpo/2.2.1/locations/
+  - date: 2026-10-30
+    kind: data_quality
+    summary: >-
+      Of the 4,794 EVSEs on 2026-10-30, 1,089 gave the status INOPERATIVE and 634
+      OUTOFORDER. At 267 of the 1,136 locations every EVSE gave one of the two (199 of
+      the 696 locations with numeric ids, 68 of the other 440).
+    handling: >-
+      The statuses are shown as published, dated, and both are shown as reported out of
+      service. Whether some of these chargers have been removed is not known.
+    evidence_url: https://open-chargepoints.com/api/ocpi/cpo/2.2.1/locations/
+  - date: 2026-10-30
+    kind: data_quality
+    summary: >-
+      Two connectors give figures that do not fit their type: one Type 1
+      (IEC_62196_T1) connector gives power_type DC at 400 V and 16 A, and one Type 2
+      single-phase connector gives 0 A.
+    handling: >-
+      Both are shown as published. The DC Type 1 connector's power is worked out as
+      6.4 kW; the 0 A connector's power is unknown.
+    evidence_url: https://open-chargepoints.com/api/ocpi/cpo/2.2.1/locations/
+  - date: 2026-10-30
+    kind: data_quality
+    summary: >-
+      Two locations are named "IDIADA (PRIVATE)" and "IDIADA bp pulse (PRIVATE)".
+    handling: >-
+      They are hidden on the map unless a visitor asks to see private and restricted
+      chargers, by the name phrases in pipeline/access.py (ADR 0023), and listed on the
+      feed health page.
+    evidence_url: https://open-chargepoints.com/api/ocpi/cpo/2.2.1/locations/
   - date: 2026-10-07
     kind: documentation
     summary: >-
@@ -163,8 +243,10 @@ findings:
       endpoints, with requests to the host still sent one at a time.
     evidence_url: https://developers.eco-movement.com/v2.2.1/docs/eco-movement-pcpr-api-user-guide
 notes: >-
-  Uses the shared Eco-Movement PCPR endpoints; only the token differs between operators.
-  Authentication is an "Authorization: Token <token>" header (confirmed 2026-10-07).
-  Whether one token covers several operators is unverified, so this operator has its own
-  secret.
-enabled: false
+  Its regulation 10 data is served by Eco-Movement's PCPR API (eco_movement_pcpr adapter),
+  with a token bp pulse sent on 2026-10-30, kept as the GitHub Actions secret
+  BP_PULSE_TOKEN. The responses on 2026-10-30 linked to a next page past the last record,
+  which the adapter does not follow. On 2026-10-30 the feed reported 1,136 locations (two
+  pages of up to 1,000) and 5 tariffs. Before then no bp pulse location was on the map
+  through another feed.
+enabled: true

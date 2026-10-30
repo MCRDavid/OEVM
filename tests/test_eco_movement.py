@@ -235,6 +235,7 @@ def test_the_networks_with_tokens_are_switched_on():
         "aldi",
         "allego",
         "blink_charging_uk",
+        "bp_pulse",
         "chargepoint",
         "drax_group",
         "drax_ista",
