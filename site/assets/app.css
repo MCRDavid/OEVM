@@ -630,6 +630,12 @@ body[data-view="list"] .map-view {
   font-size: 1.05rem;
 }
 
+/* The operator's own notes (OCPI directions): kept on their own lines, as published. */
+.notes {
+  white-space: pre-line;
+  overflow-wrap: anywhere;
+}
+
 /* The reference numbers at the foot of the details: small print. */
 .references h3 {
   margin-top: 1.25rem;

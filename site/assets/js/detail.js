@@ -123,6 +123,28 @@ export function chargePointName(evse, index) {
   return evse.physical_reference || evse.evse_id || `Charge point ${index + 1}`;
 }
 
+// The operator's own notes (OCPI directions), such as parking rules or car park hours,
+// shown as text exactly as published (ADR 0030). A note that every charge point here has
+// is shown once, with the site's own.
+export function siteNotes(location) {
+  const evses = location.evses ?? [];
+  const first = evses[0]?.directions;
+  const shared = first && evses.every((evse) => evse.directions === first) ? first : null;
+  return [...new Set([location.directions, shared].filter(Boolean))];
+}
+
+function notesSection(notes) {
+  if (!notes.length) return [];
+  return [
+    h("h3", { text: "Operator's notes" }),
+    ...notes.map((note) => h("p", { className: "notes", text: note })),
+    h("p", {
+      className: "hint",
+      text: "As the operator published them, and they may be out of date. Prices on this page come from tariff data, not from these notes.",
+    }),
+  ];
+}
+
 function connectorItem(connector, price) {
   return h(
     "li",
@@ -140,7 +162,7 @@ function connectorItem(connector, price) {
 // One item per charge point (OCPI EVSE), each with its own name, status and connectors, so
 // people can see which one is free, in use or out of service. A charge point charges one
 // vehicle at a time, whichever of its connectors is used.
-function chargePointItem(evse, index, prices) {
+function chargePointItem(evse, index, prices, shownNotes) {
   const name = chargePointName(evse, index);
   const connectors = evse.connectors ?? [];
   const parking = (evse.parking_restrictions ?? []).map((r) => PARKING[r]).filter(Boolean);
@@ -151,6 +173,9 @@ function chargePointItem(evse, index, prices) {
     evse.evse_id && evse.evse_id !== name ? h("p", { className: "hint", text: `ID ${evse.evse_id}` }) : null,
     statusLine(evse),
     parking.length ? h("p", { className: "parking", text: `Parking: ${parking.join("; ")}.` }) : null,
+    evse.directions && !shownNotes.includes(evse.directions)
+      ? h("p", { className: "notes", text: `Operator's note: ${evse.directions}` })
+      : null,
     connectors.length > 1
       ? h("p", { className: "hint", text: `${connectors.length} connectors, one vehicle at a time.` })
       : null,
@@ -448,7 +473,8 @@ export function renderDetail(
 ) {
   const location = detail.location;
   const evses = location.evses ?? [];
-  const items = evses.map((evse, index) => chargePointItem(evse, index, detail.prices ?? []));
+  const notes = siteNotes(location);
+  const items = evses.map((evse, index) => chargePointItem(evse, index, detail.prices ?? [], notes));
   const { latitude, longitude } = location.coordinates;
   const report = new URL(`${repository}/issues/new`);
   report.searchParams.set("template", "correction.yml");
@@ -465,6 +491,7 @@ export function renderDetail(
       : []),
     detail.sent_copy?.note ? h("p", { className: "hint sent-copy", text: detail.sent_copy.note }) : null,
     openingHours(location.opening_hours),
+    ...notesSection(notes),
     // Kept even when empty, so the line can follow the filters while the panel is open.
     h("div", { id: "detail-label" }, mapLabelLine(detail, label, filtered)),
     ...statusSection(detail, { hideOut, onHideOut }),

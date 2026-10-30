@@ -1077,6 +1077,25 @@ def test_parking_restrictions_are_shown_with_each_charge_point(visit):
     )
 
 
+def test_the_operators_notes_are_shown_once_as_published(visit):
+    page = visit().open("?view=list", map_ready=False)
+    page.locator("#list-items button", has_text="Premier Inn Alnwick").click()
+    expect(page.locator("#detail-heading")).to_be_focused()
+    # The site's note, which every charge point repeats, is shown once (ADR 0030).
+    notes = page.locator("#detail-body .notes")
+    expect(notes).to_have_count(1)
+    expect(notes).to_have_text("Located in Hotel Car Park")
+    expect(page.locator("#detail-body .charge-points .notes")).to_have_count(0)
+    expect(page.locator("#detail-body h3", has_text="Operator's notes")).to_be_visible()
+
+
+def test_a_note_every_charge_point_has_is_shown_with_the_site(visit):
+    page = visit().open("?view=list", map_ready=False)
+    page.locator("#list-items button", has_text="Scrubs Lane").click()
+    expect(page.locator("#detail-heading")).to_be_focused()
+    expect(page.locator("#detail-body .notes")).to_have_text("Contactless payment available.")
+
+
 def test_taxi_only_charge_points_are_labelled(visit):
     page = visit().open("?view=list&priv=1", map_ready=False)
     page.locator("#list-items button", has_text=TAXIS).click()
