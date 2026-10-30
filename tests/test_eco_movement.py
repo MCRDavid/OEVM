@@ -235,6 +235,7 @@ def test_the_networks_with_tokens_are_switched_on():
         "aldi",
         "allego",
         "blink_charging_uk",
+        "bp_pulse",
         "chargepoint",
         "drax_group",
         "drax_ista",
@@ -282,6 +283,32 @@ def test_vat_is_added_where_the_owner_decided_the_prices_give_none(tmp_path):
     added = "including VAT, with VAT at 20% added by this project"
     assert any(text.startswith(f"63p per kWh {added}") for text in shown)
     assert all(added in text for text in shown)
+
+
+def test_bp_pulses_prices_have_vat_added_and_its_newer_sites_name_no_tariff(tmp_path):
+    shown = prices_shown("bp_pulse", tmp_path)
+    added = "including VAT, with VAT at 20% added by this project"
+    assert sorted(text.split(" from ")[0] for text in shown) == ["65p per kWh", "89p per kWh"]
+    assert all(added in text for text in shown)
+    layer = json.loads((tmp_path / "data" / "locations.geojson").read_text())
+    states = {f["properties"]["name"]: f["properties"]["price"] for f in layer["features"]}
+    assert states == {"Millfields Hotel": "priced", "Willingdon SF Connect": "unknown"}
+
+
+def test_bp_pulses_400_v_three_phase_sockets_are_worked_out_at_230_v():
+    result, _ = replay("bp_pulse")
+    (site,) = [loc for loc in result.locations if loc.name == "Millfields Hotel"]
+    ac = {(c.power_type, c.max_kw, bool(c.max_kw_note)) for e in site.evses for c in e.connectors}
+    assert ("ac_3_phase", 43.47, True) in ac
+    assert ("ac_1_phase", 7.36, False) in ac
+    assert ("dc", 50.0, False) in ac
+
+
+def test_bp_pulses_all_zero_tariff_shows_free_as_published():
+    tariffs = json.loads((FIXTURES / "bp_pulse" / "tariffs_page1.json").read_text())
+    zero = [t for t in tariffs["response"]["body"]["data"] if t["id"] == "1"]
+    assert [p["price"] for e in zero[0]["elements"] for p in e["price_components"]] == [0]
+    assert OPERATORS["bp_pulse"].zero_price_tariffs is None
 
 
 def test_stated_vat_is_read_as_in_the_price_where_the_owner_decided(tmp_path):

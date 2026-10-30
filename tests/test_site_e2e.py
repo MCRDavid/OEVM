@@ -43,10 +43,11 @@ BROWSER_ARGS = [
 # In the fixtures (recorded, and Monta's made-up ones), without the two hidden unless
 # asked for (ADR 0023): Evolt Network's "Arthur House - Private Use Only" and PoGo
 # Charge's taxi-only "Swales Central Avenue".
-LOCATIONS = 198
+LOCATIONS = 200
 PRIVATE = "Arthur House - Private Use Only"
 TAXIS = "Swales Central Avenue"
 OUT_OF_SERVICE = 13  # fixture locations with every charger reported out of service
+LIST_LIMIT = 200  # the most locations the list shows at once (site/assets/js/main.js)
 SERVED: list[str] = []  # every path the test server was asked for
 # MapLibre writes the map position after the # a moment after the map settles, starting
 # from 0/0/0.
@@ -1033,7 +1034,8 @@ def test_private_chargers_are_hidden_until_the_visitor_asks(visit):
     assert not page.is_checked("#private")
     page.check("#private")
     page.wait_for_url("**priv=1**")
-    expect(page.locator("#list-items li")).to_have_count(LOCATIONS + 2)
+    expect(page.locator("#list-summary")).to_contain_text(f"{LOCATIONS + 2} charger locations")
+    expect(page.locator("#list-items li")).to_have_count(min(LOCATIONS + 2, LIST_LIMIT))
     assert page.text_content("#toggle-filters") == "Filters (1)"
     expect(page.locator("#list-items li", has_text=TAXIS)).to_contain_text(
         "Taxis only: the operator marks every charge point here for taxis only"

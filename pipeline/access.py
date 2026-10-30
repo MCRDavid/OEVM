@@ -40,6 +40,10 @@ PHRASES: tuple[tuple[str, str], ...] = (
         r"(?:\s+use)?\s+only",
     ),
     ('"staff car park"', r"staff\s+car\s*park"),
+    (
+        '"taxi only" or "taxis only", as in "[E-TAXI ONLY]"',
+        r"taxis?\s+only",
+    ),
 )
 
 _PATTERN = re.compile(

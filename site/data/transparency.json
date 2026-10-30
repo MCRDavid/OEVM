@@ -28,7 +28,8 @@
       "\"no public access\"",
       "\"restricted access\" or \"restricted use\"",
       "\"staff only\", \"fleet only\", \"employees only\", \"residents only\", \"tenants only\", \"members only\" or \"permit holders only\", with or without \"use\" before \"only\"",
-      "\"staff car park\""
+      "\"staff car park\"",
+      "\"taxi only\" or \"taxis only\", as in \"[E-TAXI ONLY]\""
     ],
     "taxis": "Separately, where the owner has decided so for an operator (see Sources above), a location where the operator marks every charge point for taxis only is hidden in the same way, and each such charge point is labelled \"Taxis only\".",
     "not_counted": "Words that often name a place rather than a rule, such as \"Fleet\" in Fleetwood Road, \"Depot\", \"Residential\", \"Visitor Centre\" or \"Blue Badge holders only\", are not counted. A marked location is published unchanged: its details say which words were found, and the feed health page lists every location marked in the latest run."
@@ -942,6 +943,279 @@
           "summary": "384 of the 3,493 AC connectors in the feed of 2026-10-29, at 74 of the 875 locations, give max_voltage 400, and 288 of them give power_type AC_1_PHASE. OCPI 2.2.1 gives AC voltage line to neutral, about 230 V in the UK. Worked out at 400 V, 41 locations showed 12.8 kW and 20 showed 38.4 kW as their fastest connector on 2026-10-30.",
           "handling": "By the repository owner's decision of 2026-10-30 recorded in line_to_line_voltage, AC connectors that give 400 V have their power worked out at 230 V (7.4 kW rather than 12.8 kW at 32 A on one phase, 22 kW rather than 38.4 kW on three), and site details say so beside each. That 230 V is meant is inferred and needs confirming by Blink Charging. The feed's figures are kept unchanged in the issue log.",
           "evidence_url": "https://open-chargepoints.com/api/ocpi/cpo/2.2.1/locations/",
+          "status": "open",
+          "resolved_date": null
+        }
+      ]
+    },
+    {
+      "id": "bp_pulse",
+      "name": "bp pulse",
+      "enabled": true,
+      "adapter": "eco_movement_pcpr",
+      "engagement": {
+        "status": "key_on_request",
+        "label": "Key issued on request",
+        "headline": "Key issued on request (as of 2026-10-30)",
+        "as_of": "2026-10-30",
+        "last_request": "2026-10-23",
+        "last_response": {
+          "date": "2026-10-30",
+          "action": "key_granted"
+        },
+        "last_response_text": "2026-10-30 (Key issued)",
+        "evidence": [
+          {
+            "date": "2026-10-09",
+            "url": "https://www.bppulse.com/en-gb/help-and-support/public-ev-charging/public-charge-point-regulations",
+            "file": null,
+            "note": "Read in a browser by the repository owner. bp pulse's FAQ uses a request form, which names no licence, terms, key, agreement or rate limit."
+          },
+          {
+            "date": "2026-10-30",
+            "url": null,
+            "file": "evidence/bp_pulse/2026-10-30-token-email.md",
+            "note": "bp pulse's email with a token for Eco-Movement's PCPR API, in reply to the request of 2026-10-23. It names no licence, terms or contract. The token itself is not kept here."
+          }
+        ],
+        "log": [
+          {
+            "date": "2026-10-09",
+            "action": "page_checked",
+            "action_label": "Operator's page checked",
+            "channel": null,
+            "channel_label": null,
+            "summary": "bp pulse's Public Charge Point Regulations FAQ was read in a browser by the repository owner. It links to a request form asking for a name, email address and, optionally, organisation and purpose. The form mentions no key, licence, terms, agreement or rate limit.",
+            "quote": "Once received we will process your request and will contact you to provide instruction on how you can gain access to this data in a machine readable format",
+            "evidence_url": "https://www.bppulse.com/en-gb/help-and-support/public-ev-charging/public-charge-point-regulations",
+            "evidence_file": null
+          },
+          {
+            "date": "2026-10-23",
+            "action": "request_sent",
+            "action_label": "Access requested",
+            "channel": "web_form",
+            "channel_label": "Web form",
+            "summary": "Requested access to bp pulse's PCPR data through the form linked from its Public Charge Point Regulations help page.",
+            "quote": null,
+            "evidence_url": null,
+            "evidence_file": null
+          },
+          {
+            "date": "2026-10-30",
+            "action": "key_granted",
+            "action_label": "Key issued",
+            "channel": "email",
+            "channel_label": "Email",
+            "summary": "bp pulse sent a token for Eco-Movement's PCPR API by email, written in the email itself, in reply to the request of 2026-10-23, with a link to Eco-Movement's PCPR API user guide. The token is kept as a GitHub Actions secret.",
+            "quote": null,
+            "evidence_url": null,
+            "evidence_file": "evidence/bp_pulse/2026-10-30-token-email.md"
+          }
+        ]
+      },
+      "access_requested": "2026-10-23",
+      "access_granted": "2026-10-30",
+      "feeds": [
+        {
+          "kind": "locations",
+          "url": "https://open-chargepoints.com/api/ocpi/cpo/2.2.1/locations/",
+          "status": "documented"
+        },
+        {
+          "kind": "tariffs",
+          "url": "https://open-chargepoints.com/api/ocpi/cpo/2.2.1/tariffs/",
+          "status": "documented"
+        },
+        {
+          "kind": "statuses",
+          "url": "https://open-chargepoints.com/api/statuses",
+          "status": "documented"
+        }
+      ],
+      "licence": {
+        "name": "OGL-3.0",
+        "url": "https://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/",
+        "checked": "2026-10-30"
+      },
+      "attribution": "Contains data from bp pulse published under the Public Charge Point Regulations 2023, used in line with the Open Government Licence v3.0.",
+      "missing_publish_flag": null,
+      "swapped_coordinates": null,
+      "line_to_line_voltage": {
+        "decided": "2026-10-30",
+        "basis": "696 of bp pulse's 1,136 locations give every connector's maximum power as 0, so its power is worked out from voltage and current. In its feed of 2026-10-30, 346 of its 350 three-phase AC connectors gave 400 V, the voltage between two lines of a UK three-phase supply (270 at 63 A, 68 at 32 A and 8 at 16 A). OCPI 2.2.1 gives AC voltage line to neutral, 230 V in the UK, so a 63 A three-phase socket worked out at 75.6 kW rather than 43.5 kW, and a 32 A one at 38.4 kW rather than 22.1 kW. That 230 V is meant is inferred, not stated by bp pulse. The repository owner decided on 2026-10-30 that these connectors are worked out at 230 V, each saying so, as for Blink Charging.",
+        "evidence_url": "https://open-chargepoints.com/api/ocpi/cpo/2.2.1/locations/",
+        "published_volts": 400,
+        "read_as_volts": 230
+      },
+      "nonstandard_statuses": null,
+      "tariffs_from": null,
+      "nonstandard_parking_restrictions": null,
+      "zero_price_tariffs": null,
+      "vat_not_stated": {
+        "decided": "2026-10-30",
+        "basis": "bp pulse's 5 tariffs on Eco-Movement's PCPR API gave no VAT rate on 2026-10-30. Its energy prices are 0.542 and 0.742 pounds per kWh, which are 65p and 89p with 20% added, the UK standard rate of VAT on public charging, to the nearest penny. bp pulse's own site page for a charger in Slough (read 2026-10-30) lists pay as you go prices of \"£0.65\" for \"Fast (AC 7kW)\" and \"£0.79 - £0.93\" for \"Rapid (AC 43kW / DC 50kW)\", without saying whether VAT is included. That the feed's prices exclude VAT is inferred from the figures, not stated by bp pulse. The repository owner decided on 2026-10-30 that VAT at 20% is added, so prices on the map all include VAT and can be compared.",
+        "evidence_url": "https://open-chargepoints.com/api/ocpi/cpo/2.2.1/tariffs/",
+        "add_percent": 20.0
+      },
+      "vat_in_price": null,
+      "socket_types": null,
+      "status_from_connectors": null,
+      "floor_level_not_read": null,
+      "own_feed_over_copies": null,
+      "relay": null,
+      "expired_certificate": null,
+      "excluded_locations": null,
+      "sent_copy": null,
+      "rate_limit": {
+        "our_gap_seconds": 125.0,
+        "our_max_per_hour": 29,
+        "ours": "Each published limit is kept as an allowance for the operator's own key, by the owner's decisions of 2026-10-29 (limits per key) and 2026-10-29 (an allowance): no period of a limit's length plus 1 s holds more than one request fewer than it allows, retries included, and each request with the key starts at least 2 s after its last one finished. At most 5 requests go to the host at the same time, started at least 1 s apart. Any retry, wait the server asks for or refusal brings back 125 s between requests with each key (at most 29 in any hour with it), one request at a time at the host, for the rest of the run.",
+        "published": [
+          {
+            "text": "30 per 1 hour for the locations endpoint",
+            "publisher": "Eco-Movement",
+            "quote": "The `locations` endpoint has a rate limit of 30 requests per 1 hour.",
+            "source_url": "https://developers.eco-movement.com/v2.2.1/reference/get-all-locations-pcpr-api",
+            "checked": "2026-10-26"
+          },
+          {
+            "text": "30 per 1 hour for the locations endpoint (single location)",
+            "publisher": "Eco-Movement",
+            "quote": "The `locations/{id}` endpoint has a rate limit of 30 requests per 1 hour.",
+            "source_url": "https://developers.eco-movement.com/v2.2.1/reference/get-specific-location-pcpr-api",
+            "checked": "2026-10-26"
+          },
+          {
+            "text": "30 per 1 hour for the tariffs endpoint",
+            "publisher": "Eco-Movement",
+            "quote": "The `tariffs` endpoint has a rate limit of 30 requests per 1 hour.",
+            "source_url": "https://developers.eco-movement.com/reference/get-tariffs-pcpr-api",
+            "checked": "2026-10-26"
+          },
+          {
+            "text": "1 per 30 seconds for the statuses endpoint",
+            "publisher": "Eco-Movement",
+            "quote": "The `statuses` endpoint has a rate limit of 1 request per 30 seconds.",
+            "source_url": "https://developers.eco-movement.com/reference/get-statuses-pcpr-api",
+            "checked": "2026-10-26"
+          }
+        ],
+        "limits_checked": "2026-10-26",
+        "comparison": "Within every published limit, keeping one request in hand in each limit's period as a safety margin; after any sign of trouble, 125 s between requests, which includes a safety margin.",
+        "difference_from_regulations": "The operator sets a limit; the regulations set none. DfT guidance allows such terms on access.",
+        "notes": "By the repository owner's decisions of 2026-10-29 the limits are read as applying to each network's own token (limits_per_key) and as an allowance rather than a spacing (limits_as_allowance). With this network's token, no period of an hour and a second holds more than 29 requests to an endpoint limited to 30 an hour, and each request starts at least 2 seconds after the last one finished. At most 5 requests are sent to open-chargepoints.com at the same time, whichever network they are for, started at least 1 second apart. Any retry, wait the server asks for or refusal puts every network back to a gap of 125 seconds (the 120 seconds the strictest limit needs, plus a safety margin) and one request at a time for the rest of the run. Eco-Movement \"strongly recommends limiting simultaneous GET requests to a maximum of 5\". It recommends retrieving the entire dataset once a day.",
+        "per_key": {
+          "decided": "2026-10-29",
+          "basis": "Eco-Movement publishes a limit of 30 requests an hour for each of the locations and tariffs endpoints and gives each network its own token, but does not say whether the limits count per token or per address. The repository owner decided on 2026-10-29 that they are read as applying to each token, so each network keeps its own 125 second gap, while requests to open-chargepoints.com are still sent one at a time.",
+          "evidence_url": "https://developers.eco-movement.com/v2.2.1/docs/eco-movement-pcpr-api-user-guide"
+        },
+        "allowance": {
+          "decided": "2026-10-29",
+          "basis": "Eco-Movement publishes its limits as a number of requests an hour (30 for each of the locations and tariffs endpoints) and does not say they must be spread evenly. The repository owner decided on 2026-10-29 that each network's token may use that allowance close together once a day, as the whole dataset fits within it (the largest network, ubitricity, took 14 requests on 2026-10-29), keeping one request in hand as the margin.",
+          "at_once": 5,
+          "at_once_source": "Eco-Movement's PCPR API user guide \"strongly recommends limiting simultaneous GET requests to a maximum of 5\". It does not say whether that counts per token or in total; the owner chose 5 in total, which keeps within either reading.",
+          "evidence_url": "https://developers.eco-movement.com/v2.2.1/docs/eco-movement-pcpr-api-user-guide"
+        }
+      },
+      "findings": [
+        {
+          "date": "2026-10-30",
+          "kind": "data_quality",
+          "kind_label": "Data quirk",
+          "summary": "No price gives a VAT rate. The energy prices are 0.542 and 0.742 pounds per kWh, which are 65p and 89p with 20% added, to the nearest penny. bp pulse's own site page for a charger in Slough lists pay as you go prices of \"£0.65\" for \"Fast (AC 7kW)\" and \"£0.79 - £0.93\" for \"Rapid (AC 43kW / DC 50kW)\".",
+          "handling": "By the repository owner's decision of 2026-10-30 recorded in vat_not_stated, VAT at 20% is added to every price that gives no VAT rate, and the price says this project added it. Reading the prices as excluding VAT is inferred from the figures and needs confirming by bp pulse. The tariffs are published unchanged.",
+          "evidence_url": "https://open-chargepoints.com/api/ocpi/cpo/2.2.1/tariffs/",
+          "status": "open",
+          "resolved_date": null
+        },
+        {
+          "date": "2026-10-30",
+          "kind": "data_quality",
+          "kind_label": "Data quirk",
+          "summary": "Tariff 1 gives a flat price of 0 and no other price. On 2026-10-30 it was named by 15 connectors at 6 of the 1,136 locations, with names such as \"New Cross Gate Depot\", \"Langlands Court Council Depot\" and \"Uniper Cottam Development Centre Power Station\".",
+          "handling": "These connectors show \"Free\", as the feed gives no charge. On 2026-10-30 the repository owner decided they are shown as published, rather than as \"Price unknown\". Whether drivers pay nothing at these sites needs confirming by bp pulse.",
+          "evidence_url": "https://open-chargepoints.com/api/ocpi/cpo/2.2.1/tariffs/",
+          "status": "open",
+          "resolved_date": null
+        },
+        {
+          "date": "2026-10-30",
+          "kind": "data_quality",
+          "kind_label": "Data quirk",
+          "summary": "The feed holds two kinds of location record. 696 of the 1,136 locations have numeric ids, EVSE ids beginning GB*BPC*, time_zone \"UTC\" and no opening times, and every connector gives max_electric_power 0. The other 440 have longer ids, EVSE ids beginning GB*BPP* (6 EVSEs AT*HTB*), suboperator \"bp pulse\", time_zone Europe/London and opening times of 24 hours, give each connector's power, and name no tariff for any connector.",
+          "handling": "Both are shown. Where max_electric_power is 0 the power is worked out from max_voltage and max_amperage, as for any connector with no power figure. Connectors that name no tariff show \"Price unknown\"; no price is guessed. The time zone is not used on the map, which shows every time in UK time.",
+          "evidence_url": "https://open-chargepoints.com/api/ocpi/cpo/2.2.1/locations/",
+          "status": "open",
+          "resolved_date": null
+        },
+        {
+          "date": "2026-10-30",
+          "kind": "data_quality",
+          "kind_label": "Data quirk",
+          "summary": "Of the 4,794 EVSEs on 2026-10-30, 1,089 gave the status INOPERATIVE and 634 OUTOFORDER. At 267 of the 1,136 locations every EVSE gave one of the two (199 of the 696 locations with numeric ids, 68 of the other 440).",
+          "handling": "The statuses are shown as published, dated, and both are shown as reported out of service. Whether some of these chargers have been removed is not known.",
+          "evidence_url": "https://open-chargepoints.com/api/ocpi/cpo/2.2.1/locations/",
+          "status": "open",
+          "resolved_date": null
+        },
+        {
+          "date": "2026-10-30",
+          "kind": "data_quality",
+          "kind_label": "Data quirk",
+          "summary": "346 of the 350 three-phase AC (AC_3_PHASE) connectors, all Type 2, give max_voltage 400 (270 at 63 A, 68 at 32 A, 8 at 16 A) and max_electric_power 0. OCPI 2.2.1 gives AC voltage line to neutral, about 230 V in the UK. Worked out at 400 V they came to 75.6 kW, 38.4 kW and 19.2 kW, above the 43.5 kW a Type 2 socket can give at 63 A on three phases of a UK supply. bp pulse's own site page for a charger in Slough lists \"Rapid (AC 43kW / DC 50kW)\".",
+          "handling": "By the repository owner's decision of 2026-10-30 recorded in line_to_line_voltage, AC connectors that give 400 V and no power figure have their power worked out at 230 V (43.5 kW at 63 A, 22.1 kW at 32 A, 11 kW at 16 A), and site details say so beside each. They stay AC, as published. That 230 V is meant is inferred and needs confirming by bp pulse. The feed's figures are kept unchanged in the issue log.",
+          "evidence_url": "https://open-chargepoints.com/api/ocpi/cpo/2.2.1/locations/",
+          "status": "open",
+          "resolved_date": null
+        },
+        {
+          "date": "2026-10-30",
+          "kind": "data_quality",
+          "kind_label": "Data quirk",
+          "summary": "Two connectors give figures that do not fit their type: one Type 1 (IEC_62196_T1) connector gives power_type DC at 400 V and 16 A, and one Type 2 single-phase connector gives 0 A.",
+          "handling": "Both are shown as published. The DC Type 1 connector's power is worked out as 6.4 kW; the 0 A connector's power is unknown.",
+          "evidence_url": "https://open-chargepoints.com/api/ocpi/cpo/2.2.1/locations/",
+          "status": "open",
+          "resolved_date": null
+        },
+        {
+          "date": "2026-10-30",
+          "kind": "data_quality",
+          "kind_label": "Data quirk",
+          "summary": "33 locations (70 EVSEs, in and around London) have names beginning \"[E-TAXI ONLY]\", such as \"[E-TAXI ONLY] Mill Hill East Station Car Park\". No parking restriction or other field in the feed says they are for taxis only.",
+          "handling": "By the repository owner's decision of 2026-10-30 (ADR 0023, amended), \"taxi only\" is one of the name phrases in pipeline/access.py, so these locations are hidden on the map unless a visitor asks to see private and restricted chargers, and listed on the feed health page. The data is published unchanged.",
+          "evidence_url": "https://open-chargepoints.com/api/ocpi/cpo/2.2.1/locations/",
+          "status": "open",
+          "resolved_date": null
+        },
+        {
+          "date": "2026-10-30",
+          "kind": "data_quality",
+          "kind_label": "Data quirk",
+          "summary": "Two locations are named \"IDIADA (PRIVATE)\" and \"IDIADA bp pulse (PRIVATE)\".",
+          "handling": "They are hidden on the map unless a visitor asks to see private and restricted chargers, by the name phrases in pipeline/access.py (ADR 0023), and listed on the feed health page.",
+          "evidence_url": "https://open-chargepoints.com/api/ocpi/cpo/2.2.1/locations/",
+          "status": "open",
+          "resolved_date": null
+        },
+        {
+          "date": "2026-10-07",
+          "kind": "documentation",
+          "kind_label": "Documentation",
+          "summary": "Eco-Movement's PCPR API documentation gives two different defaults for the page size (1000 on the getting started page, 1 in the endpoint reference), and its user guide says date_from works for locations only while the tariffs reference lists it.",
+          "handling": "This project will always send an explicit page size and test date_from before relying on it.",
+          "evidence_url": "https://developers.eco-movement.com/v2.2.1/reference/getting-started-pcpr-api",
+          "status": "open",
+          "resolved_date": null
+        },
+        {
+          "date": "2026-10-07",
+          "kind": "documentation",
+          "kind_label": "Documentation",
+          "summary": "The rate limits are published, but the documentation does not say whether they apply per key or per address, what kind of time window is used, or what response is sent when a limit is reached.",
+          "handling": "Until 2026-10-29 this project assumed the strictest reading: one allowance shared by every endpoint and every operator on this host, so 125 seconds between any two requests to it. Since then, by the repository owner's decision recorded in limits_per_key, each token keeps its own 125 second gap, shared by its endpoints, with requests to the host still sent one at a time.",
+          "evidence_url": "https://developers.eco-movement.com/v2.2.1/docs/eco-movement-pcpr-api-user-guide",
           "status": "open",
           "resolved_date": null
         }
@@ -8567,164 +8841,6 @@
           "summary": "In the one EVSE read on 2026-10-23, and in the documentation's example, the location's address field holds the country code \"GB\" rather than a street address.",
           "handling": "Recorded only; no Believ data is on the map.",
           "evidence_url": "https://api.believ.com/1.0/evses/A1190",
-          "status": "open",
-          "resolved_date": null
-        }
-      ]
-    },
-    {
-      "id": "bp_pulse",
-      "name": "bp pulse",
-      "enabled": false,
-      "adapter": "eco_movement_pcpr",
-      "engagement": {
-        "status": "requested_no_reply",
-        "label": "Requested, no reply",
-        "headline": "Requested, no reply (as of 2026-10-23)",
-        "as_of": "2026-10-23",
-        "last_request": "2026-10-23",
-        "last_response": null,
-        "last_response_text": "None recorded",
-        "evidence": [
-          {
-            "date": "unknown",
-            "url": "https://www.bppulse.com/en-gb/help-and-support/public-ev-charging/public-charge-point-regulations",
-            "file": null,
-            "note": "bp pulse's FAQ uses a request form. Whether a contract is also required is not known."
-          }
-        ],
-        "log": [
-          {
-            "date": "2026-10-09",
-            "action": "page_checked",
-            "action_label": "Operator's page checked",
-            "channel": null,
-            "channel_label": null,
-            "summary": "bp pulse's Public Charge Point Regulations FAQ was read in a browser by the repository owner. It links to a request form asking for a name, email address and, optionally, organisation and purpose. The form mentions no key, licence, terms, agreement or rate limit.",
-            "quote": "Once received we will process your request and will contact you to provide instruction on how you can gain access to this data in a machine readable format",
-            "evidence_url": "https://www.bppulse.com/en-gb/help-and-support/public-ev-charging/public-charge-point-regulations",
-            "evidence_file": null
-          },
-          {
-            "date": "2026-10-23",
-            "action": "request_sent",
-            "action_label": "Access requested",
-            "channel": "web_form",
-            "channel_label": "Web form",
-            "summary": "Requested access to bp pulse's PCPR data through the form linked from its Public Charge Point Regulations help page.",
-            "quote": null,
-            "evidence_url": null,
-            "evidence_file": null
-          }
-        ]
-      },
-      "access_requested": "2026-10-23",
-      "access_granted": null,
-      "feeds": [
-        {
-          "kind": "locations",
-          "url": "https://open-chargepoints.com/api/ocpi/cpo/2.2.1/locations/",
-          "status": "documented"
-        },
-        {
-          "kind": "tariffs",
-          "url": "https://open-chargepoints.com/api/ocpi/cpo/2.2.1/tariffs/",
-          "status": "documented"
-        },
-        {
-          "kind": "statuses",
-          "url": "https://open-chargepoints.com/api/statuses",
-          "status": "documented"
-        }
-      ],
-      "licence": null,
-      "attribution": null,
-      "missing_publish_flag": null,
-      "swapped_coordinates": null,
-      "line_to_line_voltage": null,
-      "nonstandard_statuses": null,
-      "tariffs_from": null,
-      "nonstandard_parking_restrictions": null,
-      "zero_price_tariffs": null,
-      "vat_not_stated": null,
-      "vat_in_price": null,
-      "socket_types": null,
-      "status_from_connectors": null,
-      "floor_level_not_read": null,
-      "own_feed_over_copies": null,
-      "relay": null,
-      "expired_certificate": null,
-      "excluded_locations": null,
-      "sent_copy": null,
-      "rate_limit": {
-        "our_gap_seconds": 125.0,
-        "our_max_per_hour": 29,
-        "ours": "Each published limit is kept as an allowance for the operator's own key, by the owner's decisions of 2026-10-29 (limits per key) and 2026-10-29 (an allowance): no period of a limit's length plus 1 s holds more than one request fewer than it allows, retries included, and each request with the key starts at least 2 s after its last one finished. At most 5 requests go to the host at the same time, started at least 1 s apart. Any retry, wait the server asks for or refusal brings back 125 s between requests with each key (at most 29 in any hour with it), one request at a time at the host, for the rest of the run.",
-        "published": [
-          {
-            "text": "30 per 1 hour for the locations endpoint",
-            "publisher": "Eco-Movement",
-            "quote": "The `locations` endpoint has a rate limit of 30 requests per 1 hour.",
-            "source_url": "https://developers.eco-movement.com/v2.2.1/reference/get-all-locations-pcpr-api",
-            "checked": "2026-10-26"
-          },
-          {
-            "text": "30 per 1 hour for the locations endpoint (single location)",
-            "publisher": "Eco-Movement",
-            "quote": "The `locations/{id}` endpoint has a rate limit of 30 requests per 1 hour.",
-            "source_url": "https://developers.eco-movement.com/v2.2.1/reference/get-specific-location-pcpr-api",
-            "checked": "2026-10-26"
-          },
-          {
-            "text": "30 per 1 hour for the tariffs endpoint",
-            "publisher": "Eco-Movement",
-            "quote": "The `tariffs` endpoint has a rate limit of 30 requests per 1 hour.",
-            "source_url": "https://developers.eco-movement.com/reference/get-tariffs-pcpr-api",
-            "checked": "2026-10-26"
-          },
-          {
-            "text": "1 per 30 seconds for the statuses endpoint",
-            "publisher": "Eco-Movement",
-            "quote": "The `statuses` endpoint has a rate limit of 1 request per 30 seconds.",
-            "source_url": "https://developers.eco-movement.com/reference/get-statuses-pcpr-api",
-            "checked": "2026-10-26"
-          }
-        ],
-        "limits_checked": "2026-10-26",
-        "comparison": "Within every published limit, keeping one request in hand in each limit's period as a safety margin; after any sign of trouble, 125 s between requests, which includes a safety margin.",
-        "difference_from_regulations": "The operator sets a limit; the regulations set none. DfT guidance allows such terms on access.",
-        "notes": "By the repository owner's decisions of 2026-10-29 the limits are read as applying to each network's own token (limits_per_key) and as an allowance rather than a spacing (limits_as_allowance). With this network's token, no period of an hour and a second holds more than 29 requests to an endpoint limited to 30 an hour, and each request starts at least 2 seconds after the last one finished. At most 5 requests are sent to open-chargepoints.com at the same time, whichever network they are for, started at least 1 second apart. Any retry, wait the server asks for or refusal puts every network back to a gap of 125 seconds (the 120 seconds the strictest limit needs, plus a safety margin) and one request at a time for the rest of the run. Eco-Movement \"strongly recommends limiting simultaneous GET requests to a maximum of 5\". It recommends retrieving the entire dataset once a day.",
-        "per_key": {
-          "decided": "2026-10-29",
-          "basis": "Eco-Movement publishes a limit of 30 requests an hour for each of the locations and tariffs endpoints and gives each network its own token, but does not say whether the limits count per token or per address. The repository owner decided on 2026-10-29 that they are read as applying to each token, so each network keeps its own 125 second gap, while requests to open-chargepoints.com are still sent one at a time.",
-          "evidence_url": "https://developers.eco-movement.com/v2.2.1/docs/eco-movement-pcpr-api-user-guide"
-        },
-        "allowance": {
-          "decided": "2026-10-29",
-          "basis": "Eco-Movement publishes its limits as a number of requests an hour (30 for each of the locations and tariffs endpoints) and does not say they must be spread evenly. The repository owner decided on 2026-10-29 that each network's token may use that allowance close together once a day, as the whole dataset fits within it (the largest network, ubitricity, took 14 requests on 2026-10-29), keeping one request in hand as the margin.",
-          "at_once": 5,
-          "at_once_source": "Eco-Movement's PCPR API user guide \"strongly recommends limiting simultaneous GET requests to a maximum of 5\". It does not say whether that counts per token or in total; the owner chose 5 in total, which keeps within either reading.",
-          "evidence_url": "https://developers.eco-movement.com/v2.2.1/docs/eco-movement-pcpr-api-user-guide"
-        }
-      },
-      "findings": [
-        {
-          "date": "2026-10-07",
-          "kind": "documentation",
-          "kind_label": "Documentation",
-          "summary": "Eco-Movement's PCPR API documentation gives two different defaults for the page size (1000 on the getting started page, 1 in the endpoint reference), and its user guide says date_from works for locations only while the tariffs reference lists it.",
-          "handling": "This project will always send an explicit page size and test date_from before relying on it.",
-          "evidence_url": "https://developers.eco-movement.com/v2.2.1/reference/getting-started-pcpr-api",
-          "status": "open",
-          "resolved_date": null
-        },
-        {
-          "date": "2026-10-07",
-          "kind": "documentation",
-          "kind_label": "Documentation",
-          "summary": "The rate limits are published, but the documentation does not say whether they apply per key or per address, what kind of time window is used, or what response is sent when a limit is reached.",
-          "handling": "Until 2026-10-29 this project assumed the strictest reading: one allowance shared by every endpoint and every operator on this host, so 125 seconds between any two requests to it. Since then, by the repository owner's decision recorded in limits_per_key, each token keeps its own 125 second gap, shared by its endpoints, with requests to the host still sent one at a time.",
-          "evidence_url": "https://developers.eco-movement.com/v2.2.1/docs/eco-movement-pcpr-api-user-guide",
           "status": "open",
           "resolved_date": null
         }
