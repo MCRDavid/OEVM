@@ -62,6 +62,16 @@ they already have, and for a calculator showing when a paid plan pays for itself
   recorded whether or not it runs a membership. Roaming providers have no own networks, so
   the note is never shown for them, and providers whose terms have not been read get no
   note.
+- **Prices for some chargers only, and VAT a page does not state (amended 1 November 2026,
+  at the owner's request).** Lidl publishes one Lidl Plus price for its fast chargers and
+  another for its rapid chargers, and does not say whether either includes VAT. The owner
+  decided on 1 November 2026 to show them as including VAT, because the same page's other
+  prices match Lidl's open data feed once 20% VAT is added (operators/lidl.yaml,
+  `vat_not_stated`). A plan marked `only_at_some_chargers` shows its price in site details
+  but never gives a map label or the cheapest line, because the map cannot tell which of a
+  network's chargers it covers: Lidl's feed prices a rapid charger's AC socket at the rapid
+  price, so the connector's current is no guide. `includes_vat` stays `null` where a
+  provider says nothing, unless the owner decides otherwise, as here.
 
 ## Needs testing
 

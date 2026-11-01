@@ -93,7 +93,9 @@ class Plan(_Model):
         '"Electroverse\'s own price on the IONITY network".',
     )
     includes_vat: bool | None = Field(
-        description="Whether the provider says its prices include VAT; null when not stated."
+        description="Whether the provider says its prices include VAT; null when not stated, "
+        "unless the owner has decided from other evidence, which conditions and the file's "
+        "notes then say."
     )
     networks: list[str] = Field(
         min_length=1, description="Networks the plan applies to, as the provider names them."
@@ -110,6 +112,13 @@ class Plan(_Model):
         default=False,
         description="True when the plan's price applies only at some times of day or on some "
         "days, as conditions says, so the map's label for it says 'from' (ADR 0026).",
+    )
+    only_at_some_chargers: bool = Field(
+        default=False,
+        description="True when the plan's price applies only to some of a network's chargers "
+        "(rapid or fast ones, for example), as conditions says. The map cannot tell which "
+        "chargers it covers, so the price is shown in site details but never used for a map "
+        "label or as the cheapest price at a site (ADR 0016).",
     )
     needs_testing: NeutralText | None = Field(
         default=None,

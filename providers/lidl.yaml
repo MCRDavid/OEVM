@@ -20,13 +20,17 @@ plans:
     price_per_kwh: 0.40
     discount_percent: null
     discount_of: null
-    includes_vat: null
+    includes_vat: true
     networks: [Lidl]
     operator_ids: [lidl]
     conditions: >-
       Fast (AC) chargers only. Rapid chargers have their own Lidl Plus price. Paying
-      through the third-party website costs £0.55 per kWh on fast chargers.
+      through the third-party website costs £0.55 per kWh on fast chargers. Lidl's page
+      does not say whether these prices include VAT; this project shows them as including
+      VAT, because the page's other prices match Lidl's open data feed once 20% VAT is
+      added.
     only_at_some_times: false
+    only_at_some_chargers: true
     needs_testing: null
     source:
       url: https://www.lidl.co.uk/c/electric-vehicle-charging/s10049808
@@ -40,14 +44,17 @@ plans:
     price_per_kwh: 0.59
     discount_percent: null
     discount_of: null
-    includes_vat: null
+    includes_vat: true
     networks: [Lidl]
     operator_ids: [lidl]
     conditions: >-
       Rapid (DC) chargers only. Fast chargers have their own Lidl Plus price. Paying
       through the third-party website or by contactless card on the rapid charger costs
-      £0.74 per kWh.
+      £0.74 per kWh. Lidl's page does not say whether these prices include VAT; this
+      project shows them as including VAT, because the page's other prices match Lidl's
+      open data feed once 20% VAT is added.
     only_at_some_times: false
+    only_at_some_chargers: true
     needs_testing: null
     source:
       url: https://www.lidl.co.uk/c/electric-vehicle-charging/s10049808
@@ -56,6 +63,11 @@ plans:
 notes: >-
   Terms checked 2026-10-30: the Legal Information page and the Lidl Plus Terms of Use
   (https://www.lidl.co.uk/c/lidl-plus-terms-of-use/s10025414) have no clause on copying or
-  reusing content. The charging page does not say whether prices include VAT. Lidl's press
+  reusing content. The charging page does not say whether prices include VAT. The owner
+  decided on 2026-11-01 to show the Lidl Plus prices as including VAT (includes_vat: true),
+  because the page's prices for paying without Lidl Plus (55p and 74p per kWh) equal the
+  energy prices in Lidl's open data feed once 20% VAT is added (0.4583 and 0.6167 pounds
+  per kWh; operators/lidl.yaml, vat_not_stated). Each Lidl Plus price is for one kind of
+  charger only (only_at_some_chargers), so neither is used for map labels. Lidl's press
   release of 8 September 2026 gives the same rapid prices (59p with Lidl Plus, otherwise 74p):
   https://corporate.lidl.co.uk/media-centre/pressreleases/2026/ev-chargers-lidl-plus

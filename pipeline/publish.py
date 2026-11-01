@@ -435,7 +435,13 @@ def plans_file(operators: dict[str, OperatorConfig], generated_at: datetime) -> 
             )
         attribution = provider.terms.attribution if provider.terms.reuse == "attribution" else None
         for plan in provider.plans:
-            fixed = plan.price_per_kwh is not None and plan.includes_vat
+            # A price for some of a network's chargers only is never compared at a site,
+            # because the map cannot tell which of its chargers the price covers.
+            fixed = (
+                plan.price_per_kwh is not None
+                and plan.includes_vat
+                and not plan.only_at_some_chargers
+            )
             plans.append(
                 PlanOut(
                     id=f"{provider.id}.{plan.id}",
@@ -452,9 +458,9 @@ def plans_file(operators: dict[str, OperatorConfig], generated_at: datetime) -> 
                     ),
                     monthly_fee=None if plan.monthly_fee is None else float(plan.monthly_fee),
                     ppk=_pence(plan.price_per_kwh) if fixed else None,
-                    label=plan_label(
-                        plan.price_per_kwh, plan.includes_vat, plan.only_at_some_times
-                    ),
+                    label=plan_label(plan.price_per_kwh, plan.includes_vat, plan.only_at_some_times)
+                    if fixed
+                    else None,
                     only_at_some_times=plan.only_at_some_times,
                     discount_percent=(
                         None if plan.discount_percent is None else float(plan.discount_percent)

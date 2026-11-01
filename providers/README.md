@@ -20,6 +20,8 @@ uv run python -m pipeline.plans --validate
 - Set `operator_ids` only to ids that have a file in `operators/`, so the plan shows at those networks' chargers.
 - For an operator's own app and subscriptions (`kind: operator`), set `own_networks` to its ids in `operators/`. When its terms are `forbidden` or `personal_use_only`, the details of those networks' locations then say that its memberships or subscriptions may be available but cannot be shown here because of its terms, with links to its website and terms ([ADR 0016](../docs/adr/0016-charging-plans.md)).
 - Set `only_at_some_times: true` when the plan's price applies only at some times of day or on some days (off-peak hours, weekends), so its label on the map says "from" ([ADR 0026](../docs/adr/0026-price-labels-on-the-map.md)).
+- Set `only_at_some_chargers: true` when the plan's price applies only to some of a network's chargers (rapid or fast ones, for example). The map cannot tell which chargers it covers, so the price is shown in site details but never used for a map label or as the cheapest price there ([ADR 0016](../docs/adr/0016-charging-plans.md)).
+- `includes_vat` says what the provider says. Where it says nothing, leave it `null` unless the owner decides from other evidence; then say so in the plan's `conditions` and record the decision, its date and its basis in `notes`.
 - British English, neutral wording, no em dashes. Never use a provider's logo or suggest it endorses the project.
 
 ## Adding a provider or plan

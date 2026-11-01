@@ -166,6 +166,14 @@ def test_the_published_plan_list_matches_the_provider_files(tmp_path: Path):
     off_peak = next(plan for plan in plans if plan.id == "be_ev.be_ev_members_off_peak")
     assert (off_peak.ppk, off_peak.label, off_peak.only_at_some_times) == (49.0, "from 49p", True)
     assert not fastned.only_at_some_times
+    # A price for some of a network's chargers only is shown, but never compared or used
+    # for a label, because the map cannot tell which chargers it covers (ADR 0016).
+    lidl = {plan.id: plan for plan in plans if plan.id.startswith("lidl.")}
+    assert {plan.price_text for plan in lidl.values()} == {
+        "40p per kWh including VAT",
+        "59p per kWh including VAT",
+    }
+    assert all(plan.ppk is None and plan.label is None for plan in lidl.values())
     manifest = json.loads((tmp_path / "data" / "manifest.json").read_text())
     assert "data/plans.json" in {f["path"] for f in manifest["files"]}
 
