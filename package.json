@@ -14,6 +14,6 @@
     "maplibre-gl": "6.16.0"
   },
   "devDependencies": {
-    "lighthouse": "13.5.0"
+    "lighthouse": "13.6.0"
   }
 }
