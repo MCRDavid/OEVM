@@ -201,10 +201,28 @@ findings:
       DisplayText objects, the shape OCPI 2.2.1 uses. The run log records the count only, so
       what the value holds is not known.
     handling: >-
-      Ignored and logged, so no operator's note is shown for these locations. Reading them
-      would need the repository owner's decision, as the text has not been seen and Monta's
-      records can name private site owners.
+      Ignored and logged until 2026-11-06, so no operator's note was shown for these
+      locations. Read since then, by the repository owner's decision recorded in the finding
+      of 2026-11-06.
     evidence_url: https://mcrdavid.github.io/OEVM/status/
+  - date: 2026-11-06
+    kind: spec_conformance
+    summary: >-
+      A one-off run on 6 November 2026 read Monta's notes once, encrypted so that only the
+      project could read them (PR #127, since removed). All 1,120 locations with a note sent
+      directions as one DisplayText object, {"language": "gb", "text": ...}, where OCPI
+      2.2.1 has a list of DisplayText, and "gb" is a country code where DisplayText uses
+      ISO 639-1 language codes ("en"). 175 of them are on locations the daily run keeps; no EVSE
+      sent directions. The notes give directions to the chargers, parking fees, barrier and
+      gate hours and payment tips. Texts are 12 to 191 characters long, and several end
+      mid-word, which suggests they are cut at about 190 characters; this is inferred, not
+      stated by Monta.
+    handling: >-
+      One DisplayText object is read as a list of one and logged, so the notes are shown as
+      published under "Operator's notes", by the repository owner's decision of 2026-11-06
+      (ADR 0030). The language code is not checked, as each note has only one text. Notes
+      that look cut short are shown as sent, and no note is used to hide or label a site.
+    evidence_url: https://github.com/MCRDavid/OEVM/pull/127
 notes: >-
   Monta runs charge point management software used by many UK charge point owners, and
   publishes their open data through one endpoint of its Public API. It is separate from

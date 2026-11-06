@@ -475,9 +475,17 @@ def _parking_type(value: object, issues: IssueLog) -> str | None:
 def _directions(value: object, what: str, issues: IssueLog) -> str | None:
     """OCPI 2.2.1 directions, a list of DisplayText, as the operator's text: the English
     entry where there is one, with spaces at either end removed. None when there is no
-    text. The text is kept as published; the map shows it as text only (ADR 0030)."""
+    text. The text is kept as published; the map shows it as text only (ADR 0030).
+
+    One DisplayText object sent on its own, as Monta sends every note, is read as a list of
+    one and logged, by the owner's decision of 6 November 2026 (ADR 0030)."""
     if value in (None, []):
         return None
+    if isinstance(value, dict):
+        issues.add(
+            f"{what} directions is one DisplayText object, not a list; read as a list of one"
+        )
+        value = [value]
     if not isinstance(value, list) or not all(isinstance(entry, dict) for entry in value):
         issues.add(f"{what} directions is not a list of DisplayText; ignored")
         return None
