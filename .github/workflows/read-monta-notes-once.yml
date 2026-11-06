@@ -1,0 +1,72 @@
+name: Read Monta's notes once
+
+# A one-off, asked for by the repository owner on 6 November 2026. The daily run ignores
+# the directions (operator's notes) of 176 Monta locations because they are not OCPI 2.2.1
+# DisplayText (operators/monta.yaml, finding of 2026-10-30). This reads Monta's feed once,
+# exactly as the daily run does, and keeps only those notes, encrypted with a public key
+# given when the run is started. Neither the log nor the artifact shows them, because
+# Monta's records can name private site owners. Remove this file once they have been read.
+
+on:
+  workflow_dispatch:
+    inputs:
+      public_key:
+        description: RSA public key to encrypt the notes with (PEM, base64 encoded on one line).
+        required: true
+        type: string
+
+permissions:
+  contents: read
+
+# The daily fetch's group, so this never runs while a fetch is reading Monta's host.
+concurrency:
+  group: fetch-daily
+  cancel-in-progress: false
+
+jobs:
+  notes:
+    name: Read and encrypt Monta's notes
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    # A full read took 81 requests 7 seconds apart on 23 October 2026, about 10 minutes.
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+
+      - uses: astral-sh/setup-uv@v7
+
+      - name: Install dependencies from the lock file
+        run: uv sync --locked
+
+      - name: Fetch Monta once, at its usual spacing
+        # Monta's keys are passed to this step only, by secret name, as its registry file lists them.
+        env:
+          MONTA_CLIENT_ID: ${{ secrets.MONTA_CLIENT_ID }}
+          MONTA_CLIENT_SECRET: ${{ secrets.MONTA_CLIENT_SECRET }}
+        run: uv run python -m pipeline.run --live monta --save-raw "$RUNNER_TEMP/raw"
+
+      - name: Keep only the notes, encrypted
+        env:
+          PUBLIC_KEY: ${{ inputs.public_key }}
+        run: |
+          umask 077
+          mkdir -p "$RUNNER_TEMP/out"
+          python3 -I .github/scripts/hidden_notes.py "$RUNNER_TEMP/raw/monta" "$RUNNER_TEMP/notes.json"
+          printf '%s' "$PUBLIC_KEY" | base64 -d > "$RUNNER_TEMP/key.pem"
+          openssl rand -hex 32 > "$RUNNER_TEMP/secret"
+          openssl enc -aes-256-cbc -pbkdf2 -salt -in "$RUNNER_TEMP/notes.json" \
+            -out "$RUNNER_TEMP/out/notes.json.enc" -pass file:"$RUNNER_TEMP/secret"
+          openssl pkeyutl -encrypt -pubin -inkey "$RUNNER_TEMP/key.pem" \
+            -pkeyopt rsa_padding_mode:oaep -in "$RUNNER_TEMP/secret" -out "$RUNNER_TEMP/out/secret.enc"
+          shred -u "$RUNNER_TEMP/secret" "$RUNNER_TEMP/notes.json"
+          rm -rf "$RUNNER_TEMP/raw"
+
+      - name: Keep the encrypted notes for one day
+        uses: actions/upload-artifact@v7
+        with:
+          name: monta-notes-encrypted
+          path: ${{ runner.temp }}/out
+          retention-days: 1
+          if-no-files-found: error

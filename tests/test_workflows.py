@@ -49,14 +49,41 @@ def test_two_daily_fetches_never_run_at_once():
     assert "--live all" in _fetch_step()["run"]
 
 
+# A one-off the owner asked for on 6 November 2026, to be removed once read.
+MONTA_NOTES = "read-monta-notes-once.yml"
+
+
+def _monta_notes_steps() -> list[dict]:
+    return _load(MONTA_NOTES)["jobs"]["notes"]["steps"]
+
+
 def test_secrets_are_used_only_in_the_fetch_step():
     for path in WORKFLOWS.glob("*.yml"):
         text = path.read_text(encoding="utf-8")
         uses = text.count("secrets.")
-        env = _fetch_step().get("env", {})
+        if path.name == "fetch-daily.yml":
+            env = _fetch_step().get("env", {})
+        elif path.name == MONTA_NOTES:
+            env = next(s for s in _monta_notes_steps() if "pipeline.run" in s.get("run", ""))["env"]
+        else:
+            env = {}
         secrets = [value for value in env.values() if "secrets." in value]
-        expected = len(secrets) if path.name == "fetch-daily.yml" else 0
-        assert uses == expected, f"{path.name} uses secrets outside the fetch step"
+        assert uses == len(secrets), f"{path.name} uses secrets outside the fetch step"
+
+
+def test_the_one_off_monta_read_uses_only_its_keys_and_never_overlaps_a_fetch():
+    workflow = _load(MONTA_NOTES)
+    assert workflow["concurrency"] == _load("fetch-daily.yml")["concurrency"]
+    assert workflow["jobs"]["notes"]["if"] == "github.ref == 'refs/heads/main'"
+    fetch = next(s for s in _monta_notes_steps() if "pipeline.run" in s.get("run", ""))
+    assert "--live monta " in fetch["run"]
+    names = set(load_registry()["monta"].auth.secret_names)
+    assert fetch["env"] == {name: f"${{{{ secrets.{name} }}}}" for name in names}
+    # Only the encrypted files leave the runner.
+    upload = next(s for s in _monta_notes_steps() if "upload-artifact" in s.get("uses", ""))
+    assert upload["with"]["path"] == "${{ runner.temp }}/out"
+    encrypt = next(s for s in _monta_notes_steps() if "openssl enc" in s.get("run", ""))
+    assert "notes.json.enc" in encrypt["run"] and 'shred -u "$RUNNER_TEMP/secret"' in encrypt["run"]
 
 
 def test_the_site_is_packaged_with_its_well_known_folder():
