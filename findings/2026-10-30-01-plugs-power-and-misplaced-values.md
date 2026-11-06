@@ -71,6 +71,14 @@ Several other feeds also give voltages well above 230 on AC connectors, among th
 Scotland, Evolt Network, ChargePoint and RAW Charging, but they give a power figure for almost all
 of them, which the map uses instead.
 
+**Update, 6 November 2026:** on 30 October 2026 the project owner decided that where Blink's AC
+connectors give exactly 400 volts and no power figure, the map works out their power at 230 volts,
+and each one's details say so. The Oxford site in the Type 2 table above now works out at about
+43.5 kW. The owner decided the same that day for bp pulse, whose feed of 30 October 2026 gave 400
+volts and no power figure on 346 of its 350 three-phase AC connectors, so a 63 amp socket had
+worked out at 75.6 kW rather than about 43.5 kW. That 230 volts is meant is still inferred, not
+stated by either network.
+
 ## Floor levels that hold names
 
 OCPI 2.2.1 gives each charge point an optional floor level of up to four characters, for the level
@@ -130,3 +138,10 @@ plug types and statuses, all shown from the next daily run.
   has two CCS connectors and one Type 2, each given as 150 kW with the power type "ultrarapid".
   The Type 2 connector is shown at 150 kW as published; whether it charges at that rate needs
   testing.
+
+**Update, 6 November 2026:** Monta's notes are now shown too (see [the post on Monta's
+feed](findings/monta-feed-and-prices/)). The 175 on locations the map keeps give directions to the
+chargers, parking fees, barrier and gate hours and payment tips. They run from 12 to 191
+characters, and several end mid-word, which suggests they are cut at about 190 characters; that
+is inferred, not stated by Monta. Two of them say the site is private or for employees and guests
+only. Like every note, they are not used to hide or label a site.
