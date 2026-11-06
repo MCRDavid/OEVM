@@ -45,6 +45,14 @@ which mapped 636 Monta locations. See [the post on six more networks](findings/s
 decision Monta's copies of evyve's sites are left off too. See [the post on Eco-Movement's
 networks](findings/eco-movement-networks/).
 
+**Update, 6 November 2026:** Monta sends each location's notes (OCPI 2.2.1's directions) as one
+DisplayText object with the language "gb", where OCPI 2.2.1 has a list of them and a language code
+such as "en", so at first the map did not read them. A one-off read on 6 November 2026, encrypted
+so that only the project could read it, found a note on 1,120 locations, 175 of them locations the
+map keeps, and none on a charger. By the project owner's decision that day, a note sent this way
+is read as a list of one, from any operator, and Monta's are shown as published in site details.
+See [the post on plugs and power](findings/plugs-power-and-misplaced-values/).
+
 OCPI 2.2.1 says "A Location without any valid EVSE object can be considered expired and should no
 longer be displayed", so locations whose chargers are all marked REMOVED are left off the map.
 

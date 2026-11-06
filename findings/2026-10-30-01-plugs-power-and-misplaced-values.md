@@ -130,3 +130,10 @@ plug types and statuses, all shown from the next daily run.
   has two CCS connectors and one Type 2, each given as 150 kW with the power type "ultrarapid".
   The Type 2 connector is shown at 150 kW as published; whether it charges at that rate needs
   testing.
+
+**Update, 6 November 2026:** Monta's notes are now shown too (see [the post on Monta's
+feed](findings/monta-feed-and-prices/)). The 175 on locations the map keeps give directions to the
+chargers, parking fees, barrier and gate hours and payment tips. They run from 12 to 191
+characters, and several end mid-word, which suggests they are cut at about 190 characters; that
+is inferred, not stated by Monta. Two of them say the site is private or for employees and guests
+only. Like every note, they are not used to hide or label a site.
