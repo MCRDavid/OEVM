@@ -21,7 +21,8 @@ test. `example.invalid` addresses cannot resolve.
 
 What they cover: an owner field on every record (the adapter removes it), coordinates as
 strings, a site whose only charger is `REMOVED`, a site with `publish` false, a second
-network's party id under Monta, a DC site with two connectors, connectors that name a
+network's party id under Monta, a note (`directions`) sent as one DisplayText object with
+the language "gb", as Monta sends them, a DC site with two connectors, connectors that name a
 tariff id with no tariffs in the feed, and the cursor paging in `meta.pagination`. The
 adapter's handling of HTTP 500 answers is tested with made-up responses in
 `tests/test_monta.py`.

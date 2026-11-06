@@ -1001,14 +1001,21 @@ def test_directions_are_kept_as_the_operators_english_text():
         ("E2", [{"language": "en", "text": " "}]),
         ("E3", "Behind the barrier"),
         ("E4", [{"language": "fr", "text": "Ici"}]),
+        ("E5", ["Behind the barrier"]),
     ):
         raw["evses"].append({**raw["evses"][0], "uid": uid, "directions": directions})
     location = location_from_ocpi(
         raw, make_config(), source_url=EXAMPLE, fetched_at=NOW, issues=issues
     )
     assert location.directions == "Car Park Opening Times: 07:00 - 19:00"
-    assert [e.directions for e in location.evses] == ["Disabled Parking Bay", None, None, "Ici"]
-    assert issues.lines() == ["EVSE directions is not a list of DisplayText; ignored"]
+    assert [e.directions for e in location.evses] == [
+        "Disabled Parking Bay",
+        None,
+        None,
+        "Ici",
+        None,
+    ]
+    assert issues.lines() == ["EVSE directions is not a list of DisplayText; ignored (2 times)"]
     raw.pop("directions")
     assert (
         location_from_ocpi(
@@ -1016,6 +1023,24 @@ def test_directions_are_kept_as_the_operators_english_text():
         ).directions
         is None
     )
+
+
+def test_directions_sent_as_one_displaytext_object_are_read_as_a_list_of_one():
+    # Monta's shape: one object, with the country code "gb" as its language (ADR 0030).
+    issues = IssueLog()
+    raw = raw_location()
+    raw["directions"] = {"language": "gb", "text": " Chargers at the rear of the car park\n"}
+    raw["evses"][0]["directions"] = {"language": "gb", "text": "Bay 3"}
+    raw["evses"].append({**raw["evses"][0], "uid": "E2", "directions": {"language": "gb"}})
+    location = location_from_ocpi(
+        raw, make_config(), source_url=EXAMPLE, fetched_at=NOW, issues=issues
+    )
+    assert location.directions == "Chargers at the rear of the car park"
+    assert [e.directions for e in location.evses] == ["Bay 3", None]
+    assert issues.lines() == [
+        "EVSE directions is one DisplayText object, not a list; read as a list of one (2 times)",
+        "location directions is one DisplayText object, not a list; read as a list of one",
+    ]
 
 
 def test_capabilities_are_kept_once_each_and_other_values_logged():

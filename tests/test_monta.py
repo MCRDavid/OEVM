@@ -367,7 +367,12 @@ def test_fixture_replay_keeps_published_current_sites_only():
     assert ids == ["monta:DK:MON:s1001", "monta:GB:EXN:s1012", "monta:DK:MON:s1020"]
     assert result.complete and result.tariffs == []
     assert result.locations[1].operator.name == "Example Network"
+    # Monta sends each note as one DisplayText object, read as a list of one (ADR 0030).
+    assert result.locations[1].directions == (
+        "Chargers at the rear of the car park.\n\nParking fees may apply, check local signage"
+    )
     issues = " ".join(result.issues)
     assert "publish is false" in issues and "no EVSE that is not REMOVED" in issues
+    assert "location directions is one DisplayText object, not a list" in issues
     raw = json.dumps([p.body for p in result.modules["locations"].pages])
     assert "Example Owner Ltd" not in raw and "owner" not in raw

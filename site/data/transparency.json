@@ -1,5 +1,5 @@
 {
-  "last_reviewed": "2026-10-30",
+  "last_reviewed": "2026-11-06",
   "disclaimer": "OEVM is a personal, experimental project for learning about AI tools. Much of its code and text was written with an AI assistant, and it will contain mistakes. Charger data comes from the operators and other sources credited on every record, and remains their work. Everything is provided \"as is\", with no warranty or guarantee of any kind. Always check prices and availability at the charger.",
   "regulation": {
     "summary": "The Public Charge Point Regulations 2023 set no limit on how often data users may request the data. Regulation 10(5) requires the data to be available free of charge without terms on its use. DfT's guidance allows terms covering the means of access, which is where operators' rate limits come from.",
@@ -5383,8 +5383,18 @@
           "kind": "spec_conformance",
           "kind_label": "Differs from OCPI 2.2.1",
           "summary": "In the run of 30 October 2026, 176 locations gave directions that is not a list of DisplayText objects, the shape OCPI 2.2.1 uses. The run log records the count only, so what the value holds is not known.",
-          "handling": "Ignored and logged, so no operator's note is shown for these locations. Reading them would need the repository owner's decision, as the text has not been seen and Monta's records can name private site owners.",
+          "handling": "Ignored and logged until 2026-11-06, so no operator's note was shown for these locations. Read since then, by the repository owner's decision recorded in the finding of 2026-11-06.",
           "evidence_url": "https://mcrdavid.github.io/OEVM/status/",
+          "status": "open",
+          "resolved_date": null
+        },
+        {
+          "date": "2026-11-06",
+          "kind": "spec_conformance",
+          "kind_label": "Differs from OCPI 2.2.1",
+          "summary": "A one-off run on 6 November 2026 read Monta's notes once, encrypted so that only the project could read them (PR #127, since removed). All 1,120 locations with a note sent directions as one DisplayText object, {\"language\": \"gb\", \"text\": ...}, where OCPI 2.2.1 has a list of DisplayText, and \"gb\" is a country code where DisplayText uses ISO 639-1 language codes (\"en\"). 175 of them are on locations the daily run keeps; no EVSE sent directions. The notes give directions to the chargers, parking fees, barrier and gate hours and payment tips. Texts are 12 to 191 characters long, and several end mid-word, which suggests they are cut at about 190 characters; this is inferred, not stated by Monta.",
+          "handling": "One DisplayText object is read as a list of one and logged, so the notes are shown as published under \"Operator's notes\", by the repository owner's decision of 2026-11-06 (ADR 0030). The language code is not checked, as each note has only one text. Notes that look cut short are shown as sent, and no note is used to hide or label a site.",
+          "evidence_url": "https://github.com/MCRDavid/OEVM/pull/127",
           "status": "open",
           "resolved_date": null
         }

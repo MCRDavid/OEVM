@@ -47,6 +47,13 @@ of a site (it can name a private individual), and fields that only repeat a stan
   words of a note (a note saying "Disabled Parking Bay" does not add a Blue Badge
   restriction), and the private-site phrases of ADR 0023 are still matched against the
   location's name only.
+- **A note sent as one text is read as a list of one.** Monta sends every location's
+  `directions` as one DisplayText object, `{"language": "gb", "text": ...}`, not a list, so
+  its notes were ignored at first. The owner had them read once, encrypted, in a one-off run
+  (PR #127, since removed), and on 6 November 2026 decided to show them all as published
+  (Monta finding of that date). One DisplayText object, from any operator, is now read as a
+  list of one and logged. Two of Monta's 175 kept notes say the site is private or for
+  employees and guests only; like every note, they are not used to hide or label the site.
 - **Card payment, as the operator states it.** OCPI 2.2.1 `capabilities` on each EVSE are
   kept, in lower case, once each; a value that is not an OCPI 2.2.1 capability is ignored
   and logged (Pod sends an empty one on 41 of its first 4,351). Five of them say the charge
