@@ -71,6 +71,14 @@ Several other feeds also give voltages well above 230 on AC connectors, among th
 Scotland, Evolt Network, ChargePoint and RAW Charging, but they give a power figure for almost all
 of them, which the map uses instead.
 
+**Update, 6 November 2026:** on 30 October 2026 the project owner decided that where Blink's AC
+connectors give exactly 400 volts and no power figure, the map works out their power at 230 volts,
+and each one's details say so. The Oxford site in the Type 2 table above now works out at about
+43.5 kW. The owner decided the same that day for bp pulse, whose feed of 30 October 2026 gave 400
+volts and no power figure on 346 of its 350 three-phase AC connectors, so a 63 amp socket had
+worked out at 75.6 kW rather than about 43.5 kW. That 230 volts is meant is still inferred, not
+stated by either network.
+
 ## Floor levels that hold names
 
 OCPI 2.2.1 gives each charge point an optional floor level of up to four characters, for the level
