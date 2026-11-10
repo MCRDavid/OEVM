@@ -46,6 +46,9 @@ class AdapterResult:
     # Ids of location records the feed sent but this result leaves out: not to be
     # published, or unreadable. A snapshot built from a fetch of changes removes them.
     dropped_location_ids: list[str] = field(default_factory=list)
+    # True for a status refresh (adapters.statuses): the locations module alone, with no
+    # tariffs, so the result gives statuses only and is never published as map files.
+    statuses_only: bool = False
 
     @property
     def complete(self) -> bool:
@@ -116,6 +119,7 @@ def fetch(
     max_pages: int | None = None,
     now: datetime | None = None,
     progress: PageProgress = NO_PROGRESS,
+    statuses_only: bool = False,
 ) -> AdapterResult:
     if config.adapter != "ocpi_221":
         raise FeedError(f"{config.id} uses the {config.adapter} adapter, not ocpi_221")
@@ -127,6 +131,7 @@ def fetch(
         max_pages=max_pages,
         now=now,
         progress=progress,
+        statuses_only=statuses_only,
     )
 
 
@@ -140,17 +145,20 @@ def fetch_feed(
     now: datetime | None = None,
     progress: PageProgress = NO_PROGRESS,
     stop_at_total: bool = False,
+    statuses_only: bool = False,
 ) -> AdapterResult:
     """Fetch and convert an OCPI 2.2.1 feed, whatever the operator file's adapter name.
 
     For adapters that are a thin layer over this one, such as eco_movement_pcpr.
-    stop_at_total is passed to fetch_module.
+    stop_at_total is passed to fetch_module. With statuses_only, for a status refresh,
+    only the locations module is fetched and no tariff is read.
     """
     fetched_at = now or datetime.now(UTC).replace(microsecond=0)
-    fetched: dict[str, list[ModuleFetch]] = {module: [] for module in MODULES}
+    wanted = ("locations",) if statuses_only else MODULES
+    fetched: dict[str, list[ModuleFetch]] = {module: [] for module in wanted}
     # One URL answers every module (response_envelope by_module): request it once.
     responses = {} if config.response_envelope == "by_module" else None
-    for module in MODULES:
+    for module in wanted:
         try:
             for endpoint in endpoints_for(config, module):
                 fetched[module].append(
@@ -176,16 +184,19 @@ def fetch_feed(
             }
             raise
     modules = {module: _combined(module, fetches) for module, fetches in fetched.items()}
-    result = AdapterResult(operator_id=config.id, fetched_at=fetched_at, modules=modules)
+    result = AdapterResult(
+        operator_id=config.id, fetched_at=fetched_at, modules=modules, statuses_only=statuses_only
+    )
     issues = IssueLog()
+    several = bool(config.more_endpoints)
     convert_records(
         config,
         result,
         locations=modules["locations"].records,
-        tariffs=modules["tariffs"].records,
+        tariffs=[] if statuses_only else modules["tariffs"].records,
         issues=issues,
-        location_sources=_sources(fetched["locations"]) if config.more_endpoints else None,
-        tariff_sources=_sources(fetched["tariffs"]) if config.more_endpoints else None,
+        location_sources=_sources(fetched["locations"]) if several else None,
+        tariff_sources=_sources(fetched["tariffs"]) if several and not statuses_only else None,
     )
     result.issues = [client.redact(line) for line in issues.lines()]
     return result
@@ -229,6 +240,8 @@ def convert_records(
             issues.add(f"location {raw.get('id')!r} skipped: {_describe(exc)}")
             _dropped(result, raw, config)
 
+    if "tariffs" not in result.modules:
+        return  # a status refresh reads no tariffs
     endpoint = result.modules["tariffs"].endpoint
     for raw in _latest_by_id(tariffs, "tariff", issues):
         source = (tariff_sources or {}).get(str(raw.get("id")), endpoint)

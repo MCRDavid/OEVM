@@ -223,8 +223,11 @@ def fetch(
     max_pages: int | None = None,
     now: datetime | None = None,
     progress: PageProgress = NO_PROGRESS,
+    statuses_only: bool = False,
 ) -> AdapterResult:
-    """Request a token, then read every site in the list, 100 at a time."""
+    """Request a token, then read every site in the list, 100 at a time. A status refresh
+    (statuses_only) makes the same requests, as the list is the only place statuses are,
+    and reads no tariff from it."""
     if date_from is not None or page_size is not None:
         raise FeedError(f"{config.id}: this adapter sets its own page size and has no date_from")
     fetched_at = now or datetime.now(UTC).replace(microsecond=0)
@@ -251,7 +254,10 @@ def fetch(
     )
     # No tariffs module: the tariffs come from the EVSEs of the sites kept, below.
     tariffs = ModuleFetch("tariffs", url, complete=True)
-    result = AdapterResult(config.id, fetched_at, {"locations": locations, "tariffs": tariffs})
+    modules = {"locations": locations}
+    if not statuses_only:
+        modules["tariffs"] = tariffs
+    result = AdapterResult(config.id, fetched_at, modules, statuses_only=statuses_only)
     current = []
     for record in locations.records:
         if _expired(record):
@@ -263,7 +269,8 @@ def fetch(
                 result.dropped_location_ids.append(record_id)
         else:
             current.append(record)
-    tariffs.records = _inline_tariffs(current, issues)
+    if not statuses_only:
+        tariffs.records = _inline_tariffs(current, issues)
     convert_records(config, result, locations=current, tariffs=tariffs.records, issues=issues)
     result.issues = [client.redact(line) for line in issues.lines()]
     return result

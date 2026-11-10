@@ -100,13 +100,15 @@ def fetch(
     max_pages: int | None = None,
     now: datetime | None = None,
     progress: PageProgress = NO_PROGRESS,
+    statuses_only: bool = False,
 ) -> AdapterResult:
-    """Fetch Roam's locations, then its tariffs (one page each), and convert them."""
+    """Fetch Roam's locations, then its tariffs (one page each), and convert them. With
+    statuses_only, for a status refresh, the locations alone: one request."""
     if date_from is not None or page_size is not None:
         raise FeedError(f"{config.id}: Roam's feed documents no date_from or page size")
     fetched_at = now or datetime.now(UTC).replace(microsecond=0)
     modules: dict[str, ModuleFetch] = {}
-    for module in MODULES:
+    for module in ("locations",) if statuses_only else MODULES:
         try:
             modules[module] = fetch_module(
                 client,
@@ -121,13 +123,13 @@ def fetch(
                 modules[module] = exc.partial
             exc.modules = modules
             raise
-    result = AdapterResult(config.id, fetched_at, modules)
+    result = AdapterResult(config.id, fetched_at, modules, statuses_only=statuses_only)
     issues = IssueLog()
     convert_records(
         config,
         result,
         locations=[ocpi_location(raw, issues) for raw in modules["locations"].records],
-        tariffs=modules["tariffs"].records,
+        tariffs=[] if statuses_only else modules["tariffs"].records,
         issues=issues,
     )
     result.issues = [client.redact(line) for line in issues.lines()]

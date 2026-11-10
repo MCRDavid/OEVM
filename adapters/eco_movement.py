@@ -27,11 +27,14 @@ hourly allowance instead, with at most 5 requests at once to the host, until any
 wrong there (adapters.http).
 """
 
-from datetime import datetime
+from datetime import UTC, datetime
 
 from adapters.http import FeedError, PoliteClient
 from adapters.ocpi_221 import AdapterResult, fetch_feed
+from adapters.ocpi_221.client import fetch_module
+from adapters.ocpi_221.normalise import IssueLog
 from adapters.progress import NO_PROGRESS, PageProgress
+from adapters.statuses import StatusResult, from_status_records
 from schema.operator import OperatorConfig
 
 # The most records a page may hold ("The minimum value is `1` and the maximum value is
@@ -48,9 +51,12 @@ def fetch(
     max_pages: int | None = None,
     now: datetime | None = None,
     progress: PageProgress = NO_PROGRESS,
+    statuses_only: bool = False,
 ) -> AdapterResult:
     if config.adapter != "eco_movement_pcpr":
         raise FeedError(f"{config.id} uses the {config.adapter} adapter, not eco_movement_pcpr")
+    if statuses_only:
+        raise FeedError(f"{config.id}: a status refresh reads the statuses endpoint instead")
     if date_from is not None:
         raise FeedError(f"{config.id}: date_from is not tested on Eco-Movement's PCPR API yet")
     return fetch_feed(
@@ -61,4 +67,45 @@ def fetch(
         now=now,
         progress=progress,
         stop_at_total=True,
+    )
+
+
+def fetch_statuses(
+    config: OperatorConfig,
+    client: PoliteClient,
+    *,
+    max_pages: int | None = None,
+    now: datetime | None = None,
+    progress: PageProgress = NO_PROGRESS,
+) -> StatusResult:
+    """Every EVSE's status for one network, from the PCPR API's statuses endpoint.
+
+    The endpoint "Returns realtime updates for all EVSES of a CPO" (reference, read
+    2026-11-09): each location's id with its EVSEs' uid, status and last_updated, and
+    nothing else, so it is far smaller than the locations module. Its published limit, "1
+    request per 30 seconds", is in each operator file's rate_limit and is kept by the
+    client, for this network's token (limits_per_key).
+    """
+    if config.adapter != "eco_movement_pcpr":
+        raise FeedError(f"{config.id} uses the {config.adapter} adapter, not eco_movement_pcpr")
+    endpoint = config.endpoints.get("statuses")
+    if endpoint is None:
+        raise FeedError(f"{config.id}: no statuses endpoint is recorded in its operator file")
+    fetched_at = now or datetime.now(UTC).replace(microsecond=0)
+    module = fetch_module(
+        client,
+        "statuses",
+        endpoint.url,
+        max_pages=max_pages,
+        progress=progress,
+        stop_at_total=True,
+    )
+    issues = IssueLog()
+    return StatusResult(
+        operator_id=config.id,
+        fetched_at=fetched_at,
+        modules={"statuses": module},
+        statuses=from_status_records(module.records, config, issues),
+        ocpi_ids=True,
+        issues=[client.redact(line) for line in issues.lines()],
     )
