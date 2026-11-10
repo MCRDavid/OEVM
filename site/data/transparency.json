@@ -274,7 +274,7 @@
         },
         {
           "kind": "statuses",
-          "url": "https://open-chargepoints.com/api/statuses",
+          "url": "https://open-chargepoints.com/api/statuses/",
           "status": "documented"
         }
       ],
@@ -462,7 +462,7 @@
         },
         {
           "kind": "statuses",
-          "url": "https://open-chargepoints.com/api/statuses",
+          "url": "https://open-chargepoints.com/api/statuses/",
           "status": "documented"
         }
       ],
@@ -816,7 +816,7 @@
         },
         {
           "kind": "statuses",
-          "url": "https://open-chargepoints.com/api/statuses",
+          "url": "https://open-chargepoints.com/api/statuses/",
           "status": "documented"
         }
       ],
@@ -1029,7 +1029,7 @@
         },
         {
           "kind": "statuses",
-          "url": "https://open-chargepoints.com/api/statuses",
+          "url": "https://open-chargepoints.com/api/statuses/",
           "status": "documented"
         }
       ],
@@ -1889,7 +1889,7 @@
         },
         {
           "kind": "statuses",
-          "url": "https://open-chargepoints.com/api/statuses",
+          "url": "https://open-chargepoints.com/api/statuses/",
           "status": "documented"
         }
       ],
@@ -2412,7 +2412,7 @@
         },
         {
           "kind": "statuses",
-          "url": "https://open-chargepoints.com/api/statuses",
+          "url": "https://open-chargepoints.com/api/statuses/",
           "status": "documented"
         }
       ],
@@ -2561,7 +2561,7 @@
         },
         {
           "kind": "statuses",
-          "url": "https://open-chargepoints.com/api/statuses",
+          "url": "https://open-chargepoints.com/api/statuses/",
           "status": "documented"
         }
       ],
@@ -2885,7 +2885,7 @@
         },
         {
           "kind": "statuses",
-          "url": "https://open-chargepoints.com/api/statuses",
+          "url": "https://open-chargepoints.com/api/statuses/",
           "status": "documented"
         }
       ],
@@ -3072,7 +3072,7 @@
         },
         {
           "kind": "statuses",
-          "url": "https://open-chargepoints.com/api/statuses",
+          "url": "https://open-chargepoints.com/api/statuses/",
           "status": "documented"
         }
       ],
@@ -3455,7 +3455,7 @@
         },
         {
           "kind": "statuses",
-          "url": "https://open-chargepoints.com/api/statuses",
+          "url": "https://open-chargepoints.com/api/statuses/",
           "status": "documented"
         }
       ],
@@ -3653,7 +3653,7 @@
         },
         {
           "kind": "statuses",
-          "url": "https://open-chargepoints.com/api/statuses",
+          "url": "https://open-chargepoints.com/api/statuses/",
           "status": "documented"
         }
       ],
@@ -4138,7 +4138,7 @@
         },
         {
           "kind": "statuses",
-          "url": "https://open-chargepoints.com/api/statuses",
+          "url": "https://open-chargepoints.com/api/statuses/",
           "status": "documented"
         }
       ],
@@ -4477,7 +4477,7 @@
         },
         {
           "kind": "statuses",
-          "url": "https://open-chargepoints.com/api/statuses",
+          "url": "https://open-chargepoints.com/api/statuses/",
           "status": "documented"
         }
       ],
@@ -4843,7 +4843,7 @@
         },
         {
           "kind": "statuses",
-          "url": "https://open-chargepoints.com/api/statuses",
+          "url": "https://open-chargepoints.com/api/statuses/",
           "status": "documented"
         }
       ],
@@ -5949,7 +5949,7 @@
         },
         {
           "kind": "statuses",
-          "url": "https://open-chargepoints.com/api/statuses",
+          "url": "https://open-chargepoints.com/api/statuses/",
           "status": "documented"
         }
       ],
@@ -6308,7 +6308,7 @@
         },
         {
           "kind": "statuses",
-          "url": "https://open-chargepoints.com/api/statuses",
+          "url": "https://open-chargepoints.com/api/statuses/",
           "status": "documented"
         }
       ],
@@ -6927,7 +6927,7 @@
         },
         {
           "kind": "statuses",
-          "url": "https://open-chargepoints.com/api/statuses",
+          "url": "https://open-chargepoints.com/api/statuses/",
           "status": "documented"
         }
       ],
@@ -7134,7 +7134,7 @@
         },
         {
           "kind": "statuses",
-          "url": "https://open-chargepoints.com/api/statuses",
+          "url": "https://open-chargepoints.com/api/statuses/",
           "status": "documented"
         }
       ],
@@ -7288,7 +7288,7 @@
         },
         {
           "kind": "statuses",
-          "url": "https://open-chargepoints.com/api/statuses",
+          "url": "https://open-chargepoints.com/api/statuses/",
           "status": "documented"
         }
       ],
@@ -7437,7 +7437,7 @@
         },
         {
           "kind": "statuses",
-          "url": "https://open-chargepoints.com/api/statuses",
+          "url": "https://open-chargepoints.com/api/statuses/",
           "status": "documented"
         }
       ],
@@ -7635,7 +7635,7 @@
         },
         {
           "kind": "statuses",
-          "url": "https://open-chargepoints.com/api/statuses",
+          "url": "https://open-chargepoints.com/api/statuses/",
           "status": "documented"
         }
       ],
@@ -7930,7 +7930,7 @@
         },
         {
           "kind": "statuses",
-          "url": "https://open-chargepoints.com/api/statuses",
+          "url": "https://open-chargepoints.com/api/statuses/",
           "status": "documented"
         }
       ],
@@ -8079,7 +8079,7 @@
         },
         {
           "kind": "statuses",
-          "url": "https://open-chargepoints.com/api/statuses",
+          "url": "https://open-chargepoints.com/api/statuses/",
           "status": "documented"
         }
       ],
@@ -9084,7 +9084,7 @@
         },
         {
           "kind": "statuses",
-          "url": "https://open-chargepoints.com/api/statuses",
+          "url": "https://open-chargepoints.com/api/statuses/",
           "status": "documented"
         }
       ],
