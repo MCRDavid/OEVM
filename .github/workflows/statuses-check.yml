@@ -1,0 +1,43 @@
+# Temporary: a one-off recording of Eco-Movement's statuses endpoint from this branch,
+# removed before the PR is ready. One request each for three networks (two if the answer
+# is paged), through the project's polite client, so each token keeps the endpoint's
+# published limit, with the token from its secret. Shares the daily fetch's concurrency
+# group, so the two never run at once.
+name: Statuses check (temporary)
+
+on:
+  push:
+    branches: [claude/project-thread-fov1rh]
+    paths: [.github/workflows/statuses-check.yml, .github/scripts/statuses-check.py]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: fetch-daily
+  cancel-in-progress: false
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+      - uses: astral-sh/setup-uv@v7
+      - run: uv sync --locked
+      - name: Read three networks' statuses once
+        env:
+          WCCC_EDGBASTON_TOKEN: ${{ secrets.WCCC_EDGBASTON_TOKEN }}
+          ALDI_TOKEN: ${{ secrets.ALDI_TOKEN }}
+          UBITRICITY_TOKEN: ${{ secrets.UBITRICITY_TOKEN }}
+        run: PYTHONPATH=. uv run python .github/scripts/statuses-check.py
+      - name: Keep the responses for the fixtures
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: statuses-raw
+          path: raw
+          retention-days: 3
+          if-no-files-found: warn
