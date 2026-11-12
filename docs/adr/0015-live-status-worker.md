@@ -1,6 +1,8 @@
 # 0015: Live status through snapshots served by a Worker
 
-Date: 2026-10-09. Status: proposed. The full plan is `docs/PHASE3_PLAN.md`.
+Date: 2026-10-09. Status: proposed; its serving half (the Worker and its store) is
+replaced by ADR 0032 of 12 November 2026, which serves statuses from the site itself.
+The full plan is `docs/PHASE3_PLAN.md`.
 
 ## Decisions (proposed)
 
@@ -69,8 +71,9 @@ Date: 2026-10-09. Status: proposed. The full plan is `docs/PHASE3_PLAN.md`.
 - The map now has 44 operators fetched from a feed. One KV write per operator per
   hourly refresh would be 1,056 a day, over the free plan's 1,000, so "fits easily"
   above no longer holds as written.
-- Where the map gets statuses from is with the repository owner again (see the update in
-  docs/PHASE3_PLAN.md). This ADR stays proposed until that is answered.
+- Where the map gets statuses from was put to the repository owner again (see the update
+  in docs/PHASE3_PLAN.md). On 12 November 2026 the owner chose the site itself (ADR
+  0032), so the Worker in `proxy/` is not deployed.
 - The snapshots themselves are built: `pipeline/refresh.py` reads statuses within every
   recorded rate limit and writes one `LiveSnapshot` per operator. Nothing schedules it.
 
