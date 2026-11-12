@@ -4,6 +4,8 @@ No test calls GitHub: the API is a dictionary of answers. No test sleeps.
 """
 
 import re
+import urllib.error
+import urllib.request
 from datetime import UTC, datetime, timedelta
 
 import pytest
@@ -338,6 +340,28 @@ def test_the_daily_fetch_waits_before_it_fetches():
     fetch = next(i for i, s in enumerate(steps) if s.get("id") == "fetch")
     assert wait == fetch - 1
     assert set(steps[wait]["env"]) == {"GH_TOKEN"}
+    # If the wait fails, the fetch is not stopped: it waits longer than any gap instead.
+    assert runs[wait].startswith("if ! uv run python -m pipeline.refresh_runs wait; then")
+    fallback = int(re.search(r"^\s+sleep (\d+)$", runs[wait], flags=re.MULTILINE).group(1))
+    assert fallback > refresh_runs.longest_gap()
+    assert "exit" not in runs[wait]
+
+
+def test_the_wait_with_the_real_registry_and_no_answer_from_github(monkeypatch, capsys):
+    # The command as the workflow runs it, apart from the sleep, with GitHub out of reach.
+    def unreachable(request, timeout):
+        assert request.full_url.startswith("https://api.github.com/repos/")
+        raise urllib.error.URLError("no route")
+
+    monkeypatch.setattr(urllib.request, "urlopen", unreachable)
+    monkeypatch.setenv("GH_TOKEN", "not-a-token")
+    monkeypatch.setenv("GITHUB_REPOSITORY", REPO)
+    monkeypatch.setenv("GITHUB_RUN_ID", str(CURRENT))
+    slept = []
+    assert refresh_runs.main(["wait"], sleep=slept.append) == 0
+    assert slept == [refresh_runs.longest_gap()]
+    out = capsys.readouterr().out
+    assert "::warning::" in out and "not-a-token" not in out
 
 
 def test_the_check_and_the_last_end_need_nothing_outside_the_standard_library():
