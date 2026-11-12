@@ -1,0 +1,116 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$defs": {
+    "LiveEvse": {
+      "additionalProperties": false,
+      "properties": {
+        "uid": {
+          "description": "OCPI EVSE uid, unique within its location.",
+          "minLength": 1,
+          "title": "Uid",
+          "type": "string"
+        },
+        "status": {
+          "enum": [
+            "available",
+            "blocked",
+            "charging",
+            "inoperative",
+            "out_of_order",
+            "planned",
+            "removed",
+            "reserved",
+            "unknown",
+            "working"
+          ],
+          "title": "Status",
+          "type": "string"
+        },
+        "status_at": {
+          "anyOf": [
+            {
+              "format": "date-time",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "description": "When the operator last reported the status. Null only when unknown.",
+          "title": "Status At"
+        }
+      },
+      "required": [
+        "uid",
+        "status",
+        "status_at"
+      ],
+      "title": "LiveEvse",
+      "type": "object"
+    },
+    "LiveLocation": {
+      "additionalProperties": false,
+      "description": "One location's statuses in a status file the site serves.",
+      "properties": {
+        "operator": {
+          "description": "Operator id in the registry.",
+          "pattern": "^[a-z0-9_]+$",
+          "title": "Operator",
+          "type": "string"
+        },
+        "fetched_at": {
+          "description": "When these statuses were read from the operator's feed.",
+          "format": "date-time",
+          "title": "Fetched At",
+          "type": "string"
+        },
+        "evses": {
+          "items": {
+            "$ref": "#/$defs/LiveEvse"
+          },
+          "title": "Evses",
+          "type": "array"
+        }
+      },
+      "required": [
+        "operator",
+        "fetched_at",
+        "evses"
+      ],
+      "title": "LiveLocation",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "description": "data/live/<shard>.json: statuses read since the daily fetch, for the locations whose\nkey starts with <shard>. A location with nothing newer than its detail file is absent.",
+  "properties": {
+    "schema_version": {
+      "const": 1,
+      "default": 1,
+      "title": "Schema Version",
+      "type": "integer"
+    },
+    "generated_at": {
+      "description": "When the status files were written.",
+      "format": "date-time",
+      "title": "Generated At",
+      "type": "string"
+    },
+    "locations": {
+      "patternProperties": {
+        "^[0-9a-f]{16}$": {
+          "$ref": "#/$defs/LiveLocation"
+        }
+      },
+      "title": "Locations",
+      "type": "object"
+    }
+  },
+  "required": [
+    "schema_version",
+    "generated_at",
+    "locations"
+  ],
+  "title": "LiveShard",
+  "type": "object"
+}

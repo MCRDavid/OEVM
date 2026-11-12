@@ -1,10 +1,14 @@
-"""The live status snapshot (Phase 3, docs/PHASE3_PLAN.md and ADR 0015).
+"""Statuses read between the daily fetches (Phase 3, docs/PHASE3_PLAN.md, ADR 0032).
 
-One file per operator: the status of every EVSE at every location the map shows, keyed
-by the same location key as the map's detail files (pipeline.publish.location_key). The
-pipeline builds it from operator feeds with the same polite client and normalisers as the
-daily run, and the live Worker (proxy/worker.js) stores and serves it without reading
-operator feeds itself. Nothing on the site uses it yet.
+LiveSnapshot is one file per operator: the status of every EVSE at every location the map
+shows, keyed by the same location key as the map's detail files
+(pipeline.publish.location_key). The pipeline builds it from operator feeds with the same
+polite client and normalisers as the daily run (pipeline.refresh), and RefreshLog records
+each run.
+
+LiveShard and LiveIndex are what the site serves (pipeline.live_site): the snapshots that
+are newer than the map files, split into small files by the first two characters of the
+location key, like the detail files, so the details screen reads one small file.
 """
 
 from typing import Literal
@@ -45,6 +49,55 @@ class LiveSnapshot(_Model):
     licence_url: str | None = None
     locations: dict[Key, list[LiveEvse]] = Field(
         description="EVSE statuses by location key, as in data/loc/<shard>/<key>.json."
+    )
+
+
+class LiveLocation(_Model):
+    """One location's statuses in a status file the site serves."""
+
+    operator: str = Field(pattern=r"^[a-z0-9_]+$", description="Operator id in the registry.")
+    fetched_at: AwareDatetime = Field(
+        description="When these statuses were read from the operator's feed."
+    )
+    evses: list[LiveEvse]
+
+
+class LiveShard(_Model):
+    """data/live/<shard>.json: statuses read since the daily fetch, for the locations whose
+    key starts with <shard>. A location with nothing newer than its detail file is absent."""
+
+    schema_version: Literal[1] = LIVE_SCHEMA_VERSION
+    generated_at: AwareDatetime = Field(description="When the status files were written.")
+    locations: dict[Key, LiveLocation]
+
+
+class LiveIndexEntry(_Model):
+    """One operator's statuses in the status files, with their source and licence."""
+
+    fetched_at: AwareDatetime = Field(
+        description="When the statuses were read from the operator's feed."
+    )
+    locations: int = Field(ge=0)
+    evses: int = Field(ge=0)
+    attribution: str = Field(min_length=1, description="The operator's attribution statement.")
+    licence: str = Field(min_length=1, description="The licence the operator's data is used under.")
+    licence_url: str | None = None
+
+
+class LiveIndex(_Model):
+    """data/live/index.json: which operators' statuses the status files hold."""
+
+    schema_version: Literal[1] = LIVE_SCHEMA_VERSION
+    generated_at: AwareDatetime = Field(description="When the status files were written.")
+    map_generated_at: AwareDatetime = Field(
+        description="generated_at of the map files the statuses belong to."
+    )
+    operators: dict[str, LiveIndexEntry] = Field(
+        description="Operators with statuses newer than their data on the map."
+    )
+    left_out: dict[str, str] = Field(
+        default_factory=dict,
+        description="Operators whose snapshot was not used, each with the reason in neutral words.",
     )
 
 
