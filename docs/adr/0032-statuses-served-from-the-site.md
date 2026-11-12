@@ -65,6 +65,12 @@ the same polite client, rate limits and normalisers as the daily run.
   request each, within its published limit of "1 request per 30 seconds".
 - **A failed or waiting operator keeps its last statuses**, with their own time, until
   a newer refresh or the next daily fetch replaces them.
+- **The details screen** (`site/assets/js/live.js`) reads the one status file for the
+  charger that was opened, from this site only. Where a refresh read the feed after the
+  detail file was made, it shows those statuses, the time the refresh read them under
+  the counts, and under "Where this comes from" that the statuses were read again. A
+  charge point the refresh did not list shows as unknown, never an older status under a
+  newer time. A status file that is missing or cannot be read changes nothing.
 - **The timer is the relay Worker's**, as for the daily fetch (ADR 0024). The Worker
   only asks GitHub to start the workflow; it reads no feed for this.
 
@@ -72,7 +78,6 @@ the same polite client, rate limits and normalisers as the daily run.
 
 Each is its own pull request:
 
-- The details screen reading the status files.
 - The hourly workflow, the deploy step that packs the newest statuses, and the relay
   Worker's hourly timer. The timer is a change under `relay/`, which Cloudflare deploys
   from main, so it waits for the owner's go-ahead.

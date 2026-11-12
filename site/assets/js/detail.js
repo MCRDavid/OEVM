@@ -58,7 +58,8 @@ function statusLine(evse) {
 }
 
 // How many charge points are free, in use, out of service or unknown, coloured, and when
-// the operator's feed was read. Statuses come from the daily fetch for now (ADR 0015).
+// the operator's feed was read: at the daily fetch, or at a status refresh since
+// (detail.status_read_at, set by withLiveStatuses in live.js; ADR 0032).
 // Given onHideOut, the out of service count is a button that switches the map's "Hide out of service"
 // filter (ADR 0012) on or off, as the owner chose on 10 October 2026.
 export function statusSection(detail, { hideOut = false, onHideOut = null } = {}) {
@@ -99,10 +100,10 @@ export function statusSection(detail, { hideOut = false, onHideOut = null } = {}
       ? h("p", {
           className: "hint",
           id: "status-filter-hint",
-          text: "Press the \"reported out of service\" count to hide or show chargers where every charge point was reported out of service, on the map and in the list. It is the same as the \"Hide out of service\" button.",
+          text: "Press the \"reported out of service\" count to hide or show chargers where every charge point was reported out of service at the last daily fetch, on the map and in the list. It is the same as the \"Hide out of service\" button.",
         })
       : null,
-    h("p", { className: "hint", text: `${asOfText(detail.fetched_at)}. It may have changed since.` }),
+    h("p", { className: "hint", text: `${asOfText(detail.status_read_at ?? detail.fetched_at)}. It may have changed since.` }),
   ].filter(Boolean);
 }
 
@@ -591,6 +592,12 @@ export function renderDetail(
             detail.licence_url ? safeLink(detail.licence_url, detail.licence) : detail.licence,
             ".",
           ),
+          detail.status_read_at
+            ? h("p", {
+                id: "status-read",
+                text: `Charge point statuses were read from the operator's feed again ${formatDateTime(detail.status_read_at)}; everything else is as fetched above.`,
+              })
+            : null,
         ]),
     ...sources.flatMap((source) => [
       h("p", { text: source.attribution }),

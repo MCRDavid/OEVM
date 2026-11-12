@@ -17,15 +17,17 @@ import re
 import shutil
 import subprocess
 import threading
+from datetime import UTC, datetime, timedelta
 from http.server import SimpleHTTPRequestHandler, ThreadingHTTPServer
 from urllib.parse import urlsplit
 
 import pytest
 from playwright.sync_api import expect
 
-from pipeline import build_site, run
+from pipeline import build_site, live_site, refresh, run
 from pipeline.project import REPOSITORY_URL
-from pipeline.registry import ROOT
+from pipeline.registry import ROOT, load_registry
+from schema.live import LiveEvse
 
 pytestmark = pytest.mark.e2e
 REQUIRED = os.environ.get("OEVM_REQUIRE_E2E") == "1"
@@ -49,6 +51,9 @@ TAXIS = "Swales Central Avenue"
 OUT_OF_SERVICE = 13  # fixture locations with every charger reported out of service
 LIST_LIMIT = 200  # the most locations the list shows at once (site/assets/js/main.js)
 SERVED: list[str] = []  # every path the test server was asked for
+# The one charger whose statuses a refresh read again after the map files were made (ADR
+# 0032): its first charge point reported out of order and the other five charging.
+REFRESHED = "WCCC Edgbaston - Location 1"
 # MapLibre writes the map position after the # a moment after the map settles, starting
 # from 0/0/0.
 MAP_SETTLED = re.compile(r"#[1-9][0-9.]*/")
@@ -66,6 +71,7 @@ def site(tmp_path_factory) -> str:
         _unavailable("node_modules is missing; run 'npm ci'")
     out = tmp_path_factory.mktemp("site")
     assert run.main(["--fixtures", "--publish", str(out)]) == 0
+    _refresh_one_charger(out, tmp_path_factory.mktemp("refresh"))
     build_site.build(out, offline_style=True)
 
     class Quiet(SimpleHTTPRequestHandler):
@@ -76,6 +82,31 @@ def site(tmp_path_factory) -> str:
     threading.Thread(target=server.serve_forever, daemon=True).start()
     yield f"http://127.0.0.1:{server.server_port}/"
     server.shutdown()
+
+
+def _refresh_one_charger(out, folder) -> None:
+    """Status files as an hourly refresh would leave them, for one operator only so the
+    other chargers keep the statuses of their detail files."""
+    read_at = datetime.now(UTC).replace(microsecond=0) + timedelta(hours=1)
+    assert refresh.main(["--fixtures", "--map", str(out), "--out", str(folder)], now=read_at) == 0
+    snapshots, unread = live_site.read_snapshots(folder)
+    assert unread == {}
+    snapshot = next(s for s in snapshots if s.operator == "wccc_edgbaston")
+    reported = read_at - timedelta(minutes=5)
+    locations = {
+        key: [
+            LiveEvse(uid=evse.uid, status="charging" if n else "out_of_order", status_at=reported)
+            for n, evse in enumerate(evses)
+        ]
+        for key, evses in snapshot.locations.items()
+    }
+    index = live_site.pack(
+        [snapshot.model_copy(update={"locations": locations})],
+        load_registry(),
+        out,
+        generated_at=read_at,
+    )
+    assert index.operators["wccc_edgbaston"].evses == 6
 
 
 @pytest.fixture(scope="module")
@@ -634,6 +665,74 @@ def test_on_a_phone_focus_stays_in_the_details_until_they_close(visit):
         assert page.evaluate(IN_DETAILS_OR_OUT_OF_PAGE), key
     page.keyboard.press("Escape")
     assert page.evaluate("document.activeElement.classList.contains('item')")
+
+
+def _open_details_of(page, name: str):
+    page.locator("#list-items button", has_text=name).first.click()
+    expect(page.locator("#detail-heading")).to_have_text(name)
+
+
+def test_details_show_statuses_a_refresh_read_since_the_daily_fetch(visit):
+    v = visit()
+    page = v.open("?view=list", map_ready=False)
+    expect(page.locator("#list-items li")).to_have_count(LOCATIONS)
+    _open_details_of(page, REFRESHED)
+    # The refresh's statuses, not the detail file's.
+    assert page.text_content("#detail-body .status-summary") == "0 of 6 charge points available"
+    chips = page.locator("#detail-body .status-chips > *").all_text_contents()
+    assert chips == ["◐ 5 in use", "✕ 1 reported out of service"]
+    statuses = page.locator("#detail-body .charge-points .status").all_text_contents()
+    assert len(statuses) == 6 and statuses[0].startswith("✕ ")
+    assert all(text.startswith("◐ ") for text in statuses[1:])
+    # The time under the counts is when the refresh read the feed, and the sources say so.
+    again = page.text_content("#status-read")
+    read = re.fullmatch(
+        r"Charge point statuses were read from the operator's feed again (.+); "
+        r"everything else is as fetched above\.",
+        again,
+    ).group(1)
+    body = page.text_content("#detail-body")
+    assert f"Status from the operator's feed, read {read}. It may have changed since." in body
+    fetched = re.search(r"Fetched (.+?) from the operator's feed", body).group(1)
+    assert fetched != read
+    assert not re.search(r"\blive\b|\bnow\b", again, re.IGNORECASE)
+    # One small file from this site, beside the detail file.
+    assert any(re.fullmatch(r"/data/live/[0-9a-f]{2}\.json", path) for path in SERVED)
+    assert v.outside == [] and v.errors == [] and v.stored() == {}
+
+
+def test_details_without_newer_statuses_keep_the_daily_fetch_and_say_nothing_more(visit):
+    v = visit()
+    page = v.open("?view=list", map_ready=False)
+    expect(page.locator("#list-items li")).to_have_count(LOCATIONS)
+    first = page.locator("#list-items button").first
+    assert REFRESHED not in first.text_content()
+    first.click()
+    expect(page.locator("#detail-heading")).to_be_focused()
+    assert page.locator("#status-read").count() == 0
+    body = page.text_content("#detail-body")
+    fetched = re.search(r"Fetched (.+?) from the operator's feed", body).group(1)
+    if "Charge point status" in body:
+        assert f"Status from the operator's feed, read {fetched}. It may have changed" in body
+    assert v.errors == []
+
+
+def test_details_still_open_when_the_status_file_cannot_be_read(visit):
+    v = visit()
+    v.page.route("**/data/live/*.json", lambda route: route.fulfill(status=200, body="<html>"))
+    page = v.open("?view=list", map_ready=False)
+    expect(page.locator("#list-items li")).to_have_count(LOCATIONS)
+    _open_details_of(page, REFRESHED)
+    # The statuses of the daily fetch, with its time.
+    assert page.locator("#status-read").count() == 0
+    assert "Status from the operator's feed, read " in page.text_content("#detail-body")
+    assert page.text_content("#detail-body .status-summary") != "0 of 6 charge points available"
+    page.keyboard.press("Escape")
+    v.page.unroute("**/data/live/*.json")
+    v.page.route("**/data/live/*.json", lambda route: route.abort())
+    _open_details_of(page, REFRESHED)
+    assert page.locator("#status-read").count() == 0
+    assert page.locator("#detail-body .charge-points .status").count() == 6
 
 
 def test_a_slow_answer_never_replaces_newer_details(visit):

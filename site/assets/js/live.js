@@ -1,10 +1,11 @@
-// Live status on the details screen (Phase 3, docs/PHASE3_PLAN.md and ADR 0015).
+// Charge point status on the details screen (Phase 3, docs/PHASE3_PLAN.md and ADR 0032).
 //
 // The details screen (detail.js) shows how many charge points are in each group below,
-// coloured, with the time the operator's feed was read. Today the statuses come from the
-// daily fetch, in the location's detail file. When the live Worker (proxy/worker.js) runs,
-// the same wording will show its fresher statuses. Colour is never the only cue: every
-// group has a text label and a symbol, and the counts are written out.
+// coloured, with the time the operator's feed was read. The statuses come from the daily
+// fetch, in the location's detail file, unless a status refresh read them again since:
+// then they come from a status file beside the map files on this site (liveUrl), and the
+// time shown is when the refresh read the feed. Colour is never the only cue: every group
+// has a text label and a symbol, and the counts are written out.
 //
 // Feed text is never put into the page as HTML; this file returns plain values only.
 
@@ -88,8 +89,52 @@ export function asOfText(fetchedAt) {
   return `Status from the operator's feed, read ${formatDateTime(fetchedAt)}`;
 }
 
-// The Worker address for one location. The key is the detail file's name (16 hex digits).
-export function liveUrl(base, operator, key) {
-  if (!/^[a-z0-9_]+$/.test(operator) || !/^[0-9a-f]{16}$/.test(key)) return null;
-  return `${String(base).replace(/\/+$/, "")}/live/${operator}/${key}`;
+// The status file for one location, on this site like the detail files and split the same
+// way: by the first two characters of the key (the detail file's name, 16 hex digits).
+export function liveUrl(key) {
+  if (!/^[0-9a-f]{16}$/.test(key)) return null;
+  return `data/live/${key.slice(0, 2)}.json`;
+}
+
+// One location's entry in a status file, or null when the file has nothing usable for it.
+export function liveEntry(file, key) {
+  if (file?.schema_version !== 1 || !file.locations || !Object.hasOwn(file.locations, key)) return null;
+  const entry = file.locations[key];
+  if (typeof entry?.fetched_at !== "string" || !Array.isArray(entry.evses)) return null;
+  return entry;
+}
+
+function uidCounts(evses) {
+  const counts = new Map();
+  for (const evse of evses) counts.set(evse?.uid, (counts.get(evse?.uid) ?? 0) + 1);
+  return counts;
+}
+
+// A detail file with the statuses of a later refresh laid over it, and status_read_at set
+// to when the refresh read the feed. Only statuses and their times change. The detail
+// file is returned as it is when the refresh is not newer than it, is for another
+// operator, or the operator's data is a copy it sent (ADR 0029). A charge point the
+// refresh did not list, or could not tell from another with the same uid, has no status
+// at that time, so it shows as unknown rather than keeping an older one under a newer time.
+export function withLiveStatuses(detail, entry) {
+  const location = detail?.location;
+  if (!location || !entry || detail.sent_copy) return detail;
+  if (!(Date.parse(entry.fetched_at) > Date.parse(detail.fetched_at))) return detail;
+  const operator = location.provenance?.source_id;
+  if (operator && entry.operator !== operator) return detail;
+  const listed = location.evses ?? [];
+  const fresh = entry.evses.filter((evse) => typeof evse?.uid === "string");
+  // The same charge points in the same order: match by position, which also tells apart
+  // two that a feed gives the same uid.
+  const sameOrder = fresh.length === listed.length && listed.every((evse, i) => evse.uid === fresh[i].uid);
+  const inDetail = uidCounts(listed);
+  const inRefresh = uidCounts(fresh);
+  const byUid = new Map(fresh.map((evse) => [evse.uid, evse]));
+  const evses = listed.map((evse, i) => {
+    const unique = inDetail.get(evse.uid) === 1 && inRefresh.get(evse.uid) === 1;
+    const read = sameOrder ? fresh[i] : unique ? byUid.get(evse.uid) : null;
+    if (!read || typeof read.status !== "string") return { ...evse, status: "unknown", status_at: null };
+    return { ...evse, status: read.status, status_at: read.status_at ?? null };
+  });
+  return { ...detail, location: { ...location, evses }, status_read_at: entry.fetched_at };
 }
