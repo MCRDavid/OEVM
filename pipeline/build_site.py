@@ -8,7 +8,8 @@ copies the committed site/ pages into the build folder, adds MapLibre GL JS from
 node_modules (served from the site itself, so visitors contact no script host), its
 licence and the notices of the packages it bundles, and writes assets/config.json. It
 also publishes the disclaimer, data licences, security policy, "Report a mistake" and
-findings pages (pipeline/documents.py), so the footer links stay on the site.
+findings pages (pipeline/documents.py), so the footer links stay on the site. Where the
+map files came with no status files (pipeline/live_site.py), it adds empty ones.
 
 --offline-style points the map at a plain local style instead of the OpenFreeMap
 basemap. Tests and CI use it, because the basemap's terms forbid automated collection
@@ -155,7 +156,7 @@ def build(out: Path, *, offline_style: bool = False) -> list[str]:
     pages = documents.write(out)
     folders = [f"{path.parent.relative_to(out)}/" for path in pages if path.parent.parent == out]
     posts = len(pages) - len(folders)
-    return [
+    lines = [
         f"copied site/ to {out}",
         f"added MapLibre GL JS {version} to {vendor.relative_to(out)}",
         f"map style: {config['style']}",
@@ -163,6 +164,17 @@ def build(out: Path, *, offline_style: bool = False) -> list[str]:
         + ", ".join(folders)
         + (f" and {posts} findings post{'s' if posts != 1 else ''}" if posts else ""),
     ]
+    # The details screen reads a status file for each charger it opens (ADR 0032). A build
+    # whose map files came without any gets empty ones, so no request is left unanswered.
+    from pipeline import live_site
+    from pipeline.live_snapshot import SnapshotError
+
+    try:
+        if live_site.ensure(out):
+            lines.append("added empty status files to data/live/ (no status refresh was packed)")
+    except SnapshotError as exc:
+        raise BuildError(str(exc)) from None
+    return lines
 
 
 def main(argv: list[str] | None = None) -> int:

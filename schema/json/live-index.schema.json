@@ -1,0 +1,108 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$defs": {
+    "LiveIndexEntry": {
+      "additionalProperties": false,
+      "description": "One operator's statuses in the status files, with their source and licence.",
+      "properties": {
+        "fetched_at": {
+          "description": "When the statuses were read from the operator's feed.",
+          "format": "date-time",
+          "title": "Fetched At",
+          "type": "string"
+        },
+        "locations": {
+          "minimum": 0,
+          "title": "Locations",
+          "type": "integer"
+        },
+        "evses": {
+          "minimum": 0,
+          "title": "Evses",
+          "type": "integer"
+        },
+        "attribution": {
+          "description": "The operator's attribution statement.",
+          "minLength": 1,
+          "title": "Attribution",
+          "type": "string"
+        },
+        "licence": {
+          "description": "The licence the operator's data is used under.",
+          "minLength": 1,
+          "title": "Licence",
+          "type": "string"
+        },
+        "licence_url": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Licence Url"
+        }
+      },
+      "required": [
+        "fetched_at",
+        "locations",
+        "evses",
+        "attribution",
+        "licence",
+        "licence_url"
+      ],
+      "title": "LiveIndexEntry",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "description": "data/live/index.json: which operators' statuses the status files hold.",
+  "properties": {
+    "schema_version": {
+      "const": 1,
+      "default": 1,
+      "title": "Schema Version",
+      "type": "integer"
+    },
+    "generated_at": {
+      "description": "When the status files were written.",
+      "format": "date-time",
+      "title": "Generated At",
+      "type": "string"
+    },
+    "map_generated_at": {
+      "description": "generated_at of the map files the statuses belong to.",
+      "format": "date-time",
+      "title": "Map Generated At",
+      "type": "string"
+    },
+    "operators": {
+      "additionalProperties": {
+        "$ref": "#/$defs/LiveIndexEntry"
+      },
+      "description": "Operators with statuses newer than their data on the map.",
+      "title": "Operators",
+      "type": "object"
+    },
+    "left_out": {
+      "additionalProperties": {
+        "type": "string"
+      },
+      "description": "Operators whose snapshot was not used, each with the reason in neutral words.",
+      "title": "Left Out",
+      "type": "object"
+    }
+  },
+  "required": [
+    "schema_version",
+    "generated_at",
+    "map_generated_at",
+    "operators",
+    "left_out"
+  ],
+  "title": "LiveIndex",
+  "type": "object"
+}

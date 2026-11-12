@@ -6,7 +6,10 @@ unchanged. The one change visible on the map is the owner's reading of char.gy's
 statuses (see "char.gy's statuses"). ADR 0015 records the main decision.
 
 Checked against the map on 9 and 10 November 2026: see the update below, which says
-where the rest of this plan no longer fits and what has been built since.
+where the rest of this plan no longer fits and what has been built since. On 12 November
+2026 the owner decided that statuses are served from the site itself, refreshed every
+hour and shown on the details screen only, and that the daily fetch stays one run (ADR
+0032). Where the sections from "Design: snapshots first" onwards differ, ADR 0032 stands.
 
 ## Update, 12 November 2026: the plan against today's map
 
@@ -41,16 +44,16 @@ schedule started the two backup runs more than 8 hours late. GitHub's limits pag
 says: "GitHub Pages sites have a soft limit of 10 builds per hour. This limit does not
 apply if you build and publish your site with a custom GitHub Actions workflow."
 
-### With the repository owner, not decided
+### Decided by the repository owner (12 November 2026, ADR 0032)
 
-Four questions were put to the owner on 9 November 2026. Until they are answered nothing
-is scheduled, deployed or shown, and no ADR is written:
+Four questions were put to the owner on 9 November 2026 and answered on 12 November:
 
 1. Where the map gets statuses from: files on the site itself, with each refresh
-   redeploying Pages, or the Worker of ADR 0015.
-2. How often statuses refresh.
-3. How availability shows on map points, whose colours now mean power (ADR 0031).
-4. Whether the daily fetch stays one run or is staggered as this plan says.
+   deploying the site again. Not the Worker of ADR 0015.
+2. How often statuses refresh: every hour.
+3. How availability shows: on the details screen only, as decided on 9 October. Map
+   points, whose colours mean power (ADR 0031), do not change.
+4. The daily fetch stays one run. The staggered daily fetches below are dropped.
 
 ### Eco-Movement's statuses endpoint (recorded 10 November 2026)
 
@@ -90,18 +93,21 @@ asked once each for three networks' tokens, through the polite client:
   started and not when the run ended. An operator that waits or fails keeps its last
   snapshot. `live/refresh.json` records each run.
 
-No workflow runs the command, and the site does not read what it writes.
+- `pipeline/live_site.py`: packs the snapshots that are newer than the map files into
+  the status files the site serves, `data/live/<shard>.json` and `data/live/index.json`
+  (ADR 0032). `pipeline/build_site.py` adds empty ones to a build that has none.
+
+No workflow runs the refresh, and the site does not read the status files yet.
 
 ### Still to do, each its own issue and pull request
 
-- Whatever the owner decides above, then an ADR.
+- The details screen reading the status files.
 - A scheduled refresh. It must share the daily fetch's concurrency group so the two
   never run together, and pass `--last-run-ended` from the workflows' run history: the
   end of the latest daily fetch or refresh, whether it succeeded or not. A run that
   fails or is stopped publishes nothing, so its files cannot say which hosts it asked.
   GitHub's schedule was hours late on 9 November 2026, so the timer would be the relay
   Worker's (a change under `relay/`, for the owner to approve).
-- Packing the snapshots for the map (one small file for colours, details on demand).
 - char.gy answers `date_from`; a refresh of changes only would be far fewer than its
   122 pages. How many pages needs testing.
 - Needs testing over a few refreshes: whether ChargePlace Scotland, Evolt, PoGo,
