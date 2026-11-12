@@ -97,11 +97,14 @@ asked once each for three networks' tokens, through the polite client:
   the status files the site serves, `data/live/<shard>.json` and `data/live/index.json`
   (ADR 0032). `pipeline/build_site.py` adds empty ones to a build that has none.
 
-No workflow runs the refresh, and the site does not read the status files yet.
+- `site/assets/js/live.js` and `main.js`: the details screen reads the status file for
+  the charger that was opened and shows statuses a refresh read since the daily fetch,
+  with the time they were read.
+
+No workflow runs the refresh yet, so every status file is empty.
 
 ### Still to do, each its own issue and pull request
 
-- The details screen reading the status files.
 - A scheduled refresh. It must share the daily fetch's concurrency group so the two
   never run together, and pass `--last-run-ended` from the workflows' run history: the
   end of the latest daily fetch or refresh, whether it succeeded or not. A run that
