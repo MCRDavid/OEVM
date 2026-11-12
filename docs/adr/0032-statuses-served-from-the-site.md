@@ -71,6 +71,21 @@ the same polite client, rate limits and normalisers as the daily run.
   the counts, and under "Where this comes from" that the statuses were read again. A
   charge point the refresh did not list shows as unknown, never an older status under a
   newer time. A status file that is missing or cannot be read changes nothing.
+- **The workflow** (`.github/workflows/refresh-statuses.yml`, Refresh statuses). Its
+  first job stops the run, without asking any feed, when a daily fetch or another
+  refresh is waiting or running, or when GitHub cannot say. So a refresh never waits
+  in the concurrency group, where GitHub would let it take the place of a daily fetch
+  waiting there. Its feed job is in the daily fetch's concurrency group. Once it holds
+  the group it reads from the run history when the last feed job of either workflow
+  ended, whatever its result (`pipeline/refresh_runs.py`), and the refresh keeps every
+  host's gap from then. What it read is kept as the `live-data` artifact, for the
+  deploy and for the next refresh.
+- **The daily fetch keeps the gap too.** Before it fetches, it waits until the longest
+  gap any operator keeps (Roam's, 721 seconds) has passed since the last feed job
+  ended. That is seldom any wait.
+- **Every deploy packs the newest statuses**: the deploy at the end of a refresh, of
+  the daily fetch, and after each change to main. If they cannot be downloaded or
+  packed the site is deployed without them, with a warning in the run.
 - **The timer is the relay Worker's**, as for the daily fetch (ADR 0024). The Worker
   only asks GitHub to start the workflow; it reads no feed for this.
 
@@ -78,9 +93,9 @@ the same polite client, rate limits and normalisers as the daily run.
 
 Each is its own pull request:
 
-- The hourly workflow, the deploy step that packs the newest statuses, and the relay
-  Worker's hourly timer. The timer is a change under `relay/`, which Cloudflare deploys
-  from main, so it waits for the owner's go-ahead.
+- The relay Worker's hourly timer. Until then the workflow is started by hand. The
+  timer is a change under `relay/`, which Cloudflare deploys from main, so it waits for
+  the owner's go-ahead.
 - Showing the last refresh on the feed health page.
 - `proxy/` (the Worker of ADR 0015) is no longer needed for this and was never
   deployed. Whether to remove it is the owner's decision.

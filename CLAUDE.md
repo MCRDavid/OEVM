@@ -19,6 +19,7 @@ decisions are in docs/adr/.
 - Status refresh from fixtures (after the map files): uv run python -m pipeline.refresh --fixtures --map build --out build,
   then its status files for the site: uv run python -m pipeline.live_site --map build --live build
 - Daily run (workflows only, not locally): uv run python -m pipeline.run --live all --log-dir logs --publish build
+- Status refresh (the Refresh statuses workflow only, not locally): uv run python -m pipeline.refresh --live all
 - After changing a model: uv run python -m schema.export (CI runs it with --check)
 - After changing operators/*.yaml: uv run python -m pipeline.transparency (CI runs it with --check)
 - After changing the notice in docs/PRIVACY_AND_COOKIES.md: uv run python -m pipeline.privacy (CI runs it with --check)
@@ -59,7 +60,7 @@ decisions are in docs/adr/.
   charger that was opened (data/live/, ADR 0032); the time shown is when the feed was read.
 - Statuses between daily fetches (ADR 0032: refreshed hourly, served from the site, shown on the
   details screen only). pipeline/live_snapshot.py, schema/live.py: snapshots per operator.
-  pipeline/refresh.py: the status refresh, not scheduled yet; it never reads a tariff
+  pipeline/refresh.py: the status refresh, started by hand so far; it never reads a tariff
   or changes the map files, and never asks a host before its gap has passed since the last run
   (--last-run-ended, or the daily fetch's whole job limit after the map files were made).
   adapters/statuses.py: statuses alone (Eco-Movement's statuses endpoint; other feeds statuses_only).
@@ -69,7 +70,10 @@ decisions are in docs/adr/.
   the connection's tokens; the daily run will read the operator's token from it. Cloudflare
   deploys ocpi/ from main (ocpi/wrangler.toml; owner's steps in docs/GITHUB_SETTINGS.md, section 11).
   Tests: tests/js/ocpi.test.js and tests/test_ocpi_worker.py.
-- .github/workflows/: ci, fetch-daily (calls deploy), deploy (Pages from main), keepalive.
+- .github/workflows/: ci, fetch-daily (calls deploy), refresh-statuses (calls deploy),
+  deploy (Pages from main, with the newest statuses), keepalive.
+  pipeline/refresh_runs.py: the refresh stops while a fetch or another refresh has not
+  finished, and both keep every host's gap since the last run that asked feeds ended.
   The relay Worker's timer starts fetch-daily; GitHub's schedule is a backup, and
   pipeline/daily_runs.py lets only the first each day fetch and records runs (ADR 0024).
 

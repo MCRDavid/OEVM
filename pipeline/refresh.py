@@ -3,7 +3,8 @@
     uv run python -m pipeline.refresh --fixtures --map build --out build
     uv run python -m pipeline.refresh --live all --map build --out out --previous last
 
-Not scheduled: no workflow runs this yet, and the site does not read what it writes.
+Run by the Refresh statuses workflow (.github/workflows/refresh-statuses.yml), which is
+started by hand so far. pipeline.live_site packs what this writes for the site.
 
 For each operator that is switched on and on the published map (--map DIR, the map files
 under DIR/data), it reads every EVSE's status and writes DIR/live/<operator>.json

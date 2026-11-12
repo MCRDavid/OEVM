@@ -101,16 +101,24 @@ asked once each for three networks' tokens, through the polite client:
   the charger that was opened and shows statuses a refresh read since the daily fetch,
   with the time they were read.
 
-No workflow runs the refresh yet, so every status file is empty.
+- `.github/workflows/refresh-statuses.yml` (Refresh statuses): runs the refresh, keeps
+  what it read as the `live-data` artifact and deploys the site with it. Its feed job
+  shares the daily fetch's concurrency group, so the two never ask feeds together, and
+  it passes `--last-run-ended` from the workflows' run history
+  (`pipeline/refresh_runs.py`): the end of the latest daily fetch or refresh, whether it
+  succeeded or not. A run stops at once, without asking any feed, when a fetch or
+  another refresh has not finished. Every deploy packs the newest statuses, and the
+  daily fetch waits out the longest gap after the last refresh before it fetches.
+
+The workflow is started by hand only, and has not been run, so every status file is
+still empty.
 
 ### Still to do, each its own issue and pull request
 
-- A scheduled refresh. It must share the daily fetch's concurrency group so the two
-  never run together, and pass `--last-run-ended` from the workflows' run history: the
-  end of the latest daily fetch or refresh, whether it succeeded or not. A run that
-  fails or is stopped publishes nothing, so its files cannot say which hosts it asked.
-  GitHub's schedule was hours late on 9 November 2026, so the timer would be the relay
-  Worker's (a change under `relay/`, for the owner to approve).
+- The hourly timer. GitHub's schedule was hours late on 9 November 2026, so it would be
+  the relay Worker's (a change under `relay/`, for the owner to approve).
+- Needs testing with the first run: how long a whole refresh takes, and whether any
+  operator refuses it.
 - char.gy answers `date_from`; a refresh of changes only would be far fewer than its
   122 pages. How many pages needs testing.
 - Needs testing over a few refreshes: whether ChargePlace Scotland, Evolt, PoGo,
