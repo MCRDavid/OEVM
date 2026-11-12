@@ -1,7 +1,9 @@
 name: Deploy site
 
 # Builds the site from main with the newest published map files and deploys it to
-# GitHub Pages. Runs after each change to main, by hand, and at the end of Fetch daily.
+# GitHub Pages. Runs after each change to main, by hand, and at the end of Fetch daily
+# and of Refresh statuses. Each deploy also packs the newest charge point statuses a
+# refresh read, for the details screen (ADR 0032).
 
 on:
   push:
@@ -11,6 +13,10 @@ on:
     inputs:
       from-this-run:
         description: Use the site-data artifact made earlier in the same workflow run
+        type: boolean
+        default: false
+      statuses-from-this-run:
+        description: Use the live-data artifact made earlier in the same workflow run
         type: boolean
         default: false
 
@@ -25,7 +31,7 @@ jobs:
     timeout-minutes: 20
     permissions:
       contents: read
-      actions: read # to download the map files
+      actions: read # to download the map files and the statuses
       pages: write
       id-token: write
     # One deploy at a time; a waiting deploy is not cancelled, so the newest data wins.
@@ -70,12 +76,43 @@ jobs:
           GH_REPO: ${{ github.repository }}
         run: .github/scripts/download-site-data.sh build --required
 
+      - name: Get the charge point statuses from this run
+        if: inputs.statuses-from-this-run
+        uses: actions/download-artifact@v8
+        with:
+          name: live-data
+          path: statuses
+
+      # The map is deployed whether or not the statuses can be had.
+      - name: Get the newest charge point statuses
+        if: ${{ !inputs.statuses-from-this-run }}
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+        run: |
+          if ! .github/scripts/download-live-data.sh statuses; then
+            echo "::warning::The newest charge point statuses could not be downloaded; the site is deployed without them."
+            rm -rf statuses
+          fi
+
+      # Only statuses read after the map files were made, and only for locations on the
+      # map, go into build/data/live (pipeline/live_site.py). Without any, or if this
+      # fails, the next step adds empty status files, so the details screen shows the
+      # daily fetch's statuses.
+      - name: Pack the statuses read since the map files were made
+        run: |
+          if ! uv run python -m pipeline.live_site --map build --live statuses; then
+            echo "::warning::The charge point statuses could not be packed; the site is deployed without them."
+            rm -rf build/data/live
+          fi
+
       - name: Assemble the site (OpenFreeMap basemap)
         run: uv run python -m pipeline.build_site --out build
 
       - name: Check the site has its map files and feed health page
         run: |
           for file in index.html data/locations.geojson data/manifest.json \
+            data/live/index.json data/live/00.json data/live/ff.json \
             data/status.json status/index.html privacy/index.html transparency/index.html \
             disclaimer/index.html data-licences/index.html security/index.html \
             report/index.html .well-known/security.txt; do

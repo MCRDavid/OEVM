@@ -1,0 +1,172 @@
+name: Refresh statuses
+run-name: ${{ inputs.started_by == 'timer' && 'Refresh statuses (Cloudflare timer)' || 'Refresh statuses (by hand)' }}
+
+# Reads the charge point statuses of every operator that is switched on again, between
+# the daily fetches, and deploys the site with them (ADR 0032). It reads statuses only:
+# never a tariff, and it never changes the map files. The details screen shows them, with
+# the time they were read; the map points still come from the daily fetch.
+#
+# Started by hand for now. GitHub's own schedule starts runs hours late (ADR 0024), so an
+# hourly start has to come from the relay Worker's timer, as it does for Fetch daily.
+
+on:
+  workflow_dispatch:
+    inputs:
+      started_by:
+        description: How this run was started. Leave as hand; the Cloudflare timer sends timer.
+        type: choice
+        options: [hand, timer]
+        default: hand
+
+permissions:
+  contents: read
+
+jobs:
+  check:
+    name: Check that no other run is asking feeds
+    # Only main publishes, so a run started on another branch cannot replace the site.
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    permissions:
+      contents: read
+      actions: read # to list the runs of this workflow and of Fetch daily
+    outputs:
+      refresh: ${{ steps.check.outputs.refresh }}
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+          sparse-checkout: pipeline
+
+      # Standard library only, so nothing needs installing. A refresh that waited in the
+      # concurrency group below would take the place of a daily fetch waiting there, so
+      # this run stops here instead when a fetch or another refresh has not finished.
+      - name: Refresh only if no fetch or refresh is waiting or running
+        id: check
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: python3 -m pipeline.refresh_runs check
+
+  refresh:
+    name: Read charge point statuses
+    needs: check
+    if: github.ref == 'refs/heads/main' && needs.check.outputs.refresh == 'true'
+    runs-on: ubuntu-latest
+    # How long a whole refresh takes needs testing. It asks fewer pages than the daily
+    # fetch, whose fetch step took 29 minutes on 12 November 2026, so it should take no
+    # longer. The limit leaves room for the waits after a refusal, and ends before the
+    # next hour's refresh would start.
+    timeout-minutes: 40
+    # The same group as Fetch daily: never two runs asking the same hosts at once.
+    concurrency:
+      group: fetch-daily
+      cancel-in-progress: false
+    permissions:
+      contents: read
+      actions: read # to download the map files and the last refresh, and list runs
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+
+      - uses: astral-sh/setup-uv@v7
+
+      - name: Install dependencies from the lock file
+        run: uv sync --locked
+
+      - name: Validate operator registry
+        run: uv run python -m pipeline.registry --validate
+
+      - name: Get the newest published map files
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+        run: .github/scripts/download-site-data.sh build --required
+
+      - name: Get the statuses from the last refresh
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+        run: .github/scripts/download-live-data.sh previous
+
+      # Asked here, once this job holds the concurrency group, so no other run can ask a
+      # feed between this answer and the refresh.
+      - name: Find when the last run stopped asking feeds
+        id: last
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: uv run python -m pipeline.refresh_runs last-ended
+
+      - name: Read every switched-on operator's statuses, never two on one host at once
+        id: refresh
+        # Keys are passed to this step only, by secret name, as the registry lists them.
+        env:
+          ALDI_TOKEN: ${{ secrets.ALDI_TOKEN }}
+          ALLEGO_TOKEN: ${{ secrets.ALLEGO_TOKEN }}
+          BLINK_CHARGING_UK_TOKEN: ${{ secrets.BLINK_CHARGING_UK_TOKEN }}
+          BP_PULSE_TOKEN: ${{ secrets.BP_PULSE_TOKEN }}
+          CHARGEPOINT_TOKEN: ${{ secrets.CHARGEPOINT_TOKEN }}
+          DRAX_GROUP_TOKEN: ${{ secrets.DRAX_GROUP_TOKEN }}
+          DRAX_ISTA_TOKEN: ${{ secrets.DRAX_ISTA_TOKEN }}
+          ESB_ECARS_TOKEN: ${{ secrets.ESB_ECARS_TOKEN }}
+          ESB_ENERGY_TOKEN: ${{ secrets.ESB_ENERGY_TOKEN }}
+          EVYVE_TOKEN: ${{ secrets.EVYVE_TOKEN }}
+          EV_POINT_TOKEN: ${{ secrets.EV_POINT_TOKEN }}
+          FASTNED_API_KEY: ${{ secrets.FASTNED_API_KEY }}
+          GFX_GB_DRAX_TOKEN: ${{ secrets.GFX_GB_DRAX_TOKEN }}
+          IONITY_TOKEN: ${{ secrets.IONITY_TOKEN }}
+          JOLT_API_KEY: ${{ secrets.JOLT_API_KEY }}
+          LIDL_TOKEN: ${{ secrets.LIDL_TOKEN }}
+          MONTA_CLIENT_ID: ${{ secrets.MONTA_CLIENT_ID }}
+          MONTA_CLIENT_SECRET: ${{ secrets.MONTA_CLIENT_SECRET }}
+          PLUG_CHARGING_TOKEN: ${{ secrets.PLUG_CHARGING_TOKEN }}
+          POD_TOKEN: ${{ secrets.POD_TOKEN }}
+          RAW_CHARGING_TOKEN: ${{ secrets.RAW_CHARGING_TOKEN }}
+          SHELL_RECHARGE_TOKEN: ${{ secrets.SHELL_RECHARGE_TOKEN }}
+          SOURCE_EV_TOKEN: ${{ secrets.SOURCE_EV_TOKEN }}
+          SOUTHAMPTON_APARTMENT_HOTELS_TOKEN: ${{ secrets.SOUTHAMPTON_APARTMENT_HOTELS_TOKEN }}
+          TRAVIS_PERKINS_TOKEN: ${{ secrets.TRAVIS_PERKINS_TOKEN }}
+          UBITRICITY_TOKEN: ${{ secrets.UBITRICITY_TOKEN }}
+          VOLVO_TOKEN: ${{ secrets.VOLVO_TOKEN }}
+          WCCC_EDGBASTON_TOKEN: ${{ secrets.WCCC_EDGBASTON_TOKEN }}
+          OEVM_RELAY_URL: ${{ secrets.OEVM_RELAY_URL }}
+          OEVM_RELAY_TOKEN: ${{ secrets.OEVM_RELAY_TOKEN }}
+          LAST_RUN_ENDED: ${{ steps.last.outputs.ended }}
+        run: |
+          since=()
+          if [ -n "$LAST_RUN_ENDED" ]; then
+            since=(--last-run-ended "$LAST_RUN_ENDED")
+          fi
+          set +e
+          uv run python -m pipeline.refresh --live all --map build --out statuses \
+            --previous previous "${since[@]}"
+          code=$?
+          set -e
+          # 2: an operator's statuses could not be read. It keeps the ones it had, with
+          # their own time, and the others were still written; the run stays green.
+          if [ "$code" -eq 2 ]; then
+            echo "::warning::At least one operator's statuses could not be read; it keeps its last ones. See the log above."
+          elif [ "$code" -ne 0 ]; then
+            exit "$code"
+          fi
+
+      - name: Keep the statuses for the deploy and the next refresh
+        uses: actions/upload-artifact@v7
+        with:
+          name: live-data
+          path: statuses
+          retention-days: 3
+          if-no-files-found: error
+
+  deploy:
+    name: Deploy
+    needs: refresh
+    uses: ./.github/workflows/deploy.yml
+    with:
+      statuses-from-this-run: true
+    permissions:
+      contents: read
+      actions: read
+      pages: write
+      id-token: write
