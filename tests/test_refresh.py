@@ -150,7 +150,7 @@ def test_a_status_that_cannot_be_read_is_unknown_and_never_guessed():
     assert read == {
         # Not an OCPI status, and no decision in the operator file: unknown.
         "L1": [
-            LiveEvse(uid="E1", status="unknown", status_at=at),
+            LiveEvse(uid="E1", status="unknown", status_at=at + timedelta(minutes=30)),
             # No time of its own: the location's time stands in, as in the daily fetch.
             LiveEvse(uid="E2", status="charging", status_at=at),
         ],
@@ -373,10 +373,11 @@ def test_a_hosts_cool_down_is_never_less_than_any_recorded_limit_needs():
 
 def test_a_host_asked_too_recently_is_not_asked_again():
     configs = [OPERATORS[i] for i in ("roam", "chargy", "aldi", "ubitricity", "three_ti")]
-    daily = NOW - timedelta(seconds=60)
+    daily = NOW - timedelta(seconds=20)
     waiting = refresh.too_soon(configs, now=NOW, last_contact={}, daily_finished=daily)
-    # A minute after the daily fetch: char.gy's 6 seconds have passed, the others' gaps not.
+    # 20 seconds after the daily fetch: char.gy's 6 seconds have passed, the others' gaps not.
     assert set(waiting) == {"roam", "aldi", "ubitricity", "three_ti"}
+    assert waiting["three_ti"] == daily + timedelta(seconds=31)
     assert waiting["roam"] == daily + timedelta(seconds=721)
     assert waiting["aldi"] == waiting["ubitricity"] == daily + timedelta(seconds=125)
 
@@ -388,6 +389,18 @@ def test_a_host_asked_too_recently_is_not_asked_again():
     waiting = refresh.too_soon(configs, now=later, last_contact=recent, daily_finished=daily)
     assert set(waiting) == {"aldi", "ubitricity"}
     assert refresh.too_soon(configs, now=later, last_contact={}, daily_finished=None) == {}
+
+    # It holds the host back even when it is not part of this run.
+    alone = [OPERATORS["aldi"]]
+    assert refresh.too_soon(alone, now=later, last_contact=recent, daily_finished=None) == {}
+    waiting = refresh.too_soon(
+        alone,
+        now=later,
+        last_contact=recent,
+        daily_finished=None,
+        sharing=list(OPERATORS.values()),
+    )
+    assert waiting == {"aldi": recent["ubitricity"] + timedelta(seconds=125)}
 
 
 # The command
@@ -486,6 +499,42 @@ def test_a_failed_or_waiting_operator_keeps_its_last_snapshot(map_dir, tmp_path,
             (last / "live" / f"{operator_id}.json").read_bytes()
         )
         assert kept == before
+
+
+def test_an_operator_left_out_of_a_run_keeps_its_snapshot_and_its_last_contact(
+    map_dir, tmp_path, monkeypatch
+):
+    last, out = tmp_path / "last", tmp_path / "out"
+    earlier = NOW - timedelta(hours=1)
+    assert refresh.main(["--fixtures", "--map", str(map_dir), "--out", str(last)], now=earlier) == 0
+    monkeypatch.setattr(
+        refresh, "refresh_live", lambda configs, max_pages=None: {"aldi": REFRESHED["aldi"]}
+    )
+    code = refresh.main(
+        ["--live", "aldi", "--map", str(map_dir), "--out", str(out), "--previous", str(last)],
+        now=NOW,
+    )
+    assert code == 0
+    new = RefreshLog.model_validate_json((out / "live" / "refresh.json").read_bytes())
+    assert set(new.operators) == set(REFRESHED)
+    assert new.operators["aldi"].refreshed and new.operators["aldi"].last_contact_at == NOW
+    for operator_id in ("wccc_edgbaston", "jolt"):
+        entry = new.operators[operator_id]
+        assert not entry.refreshed and entry.note == "not asked: not part of this run"
+        assert entry.last_contact_at == earlier and entry.fetched_at == earlier
+        assert (out / "live" / f"{operator_id}.json").read_bytes() == (
+            last / "live" / f"{operator_id}.json"
+        ).read_bytes()
+
+    # The next run still knows when that host was last asked.
+    waiting = refresh.too_soon(
+        [OPERATORS["wccc_edgbaston"]],
+        now=NOW + timedelta(seconds=60),
+        last_contact={i: e.last_contact_at for i, e in new.operators.items()},
+        daily_finished=None,
+        sharing=list(OPERATORS.values()),
+    )
+    assert waiting == {"wccc_edgbaston": NOW + timedelta(seconds=125)}
 
 
 def test_a_refresh_entry_says_when_there_is_no_snapshot_at_all():

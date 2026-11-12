@@ -87,6 +87,7 @@ def refresh_operator(
     key: str | None = None,
     page_size: int | None = None,
     max_pages: int | None = None,
+    now: datetime | None = None,
     notice: Callable[[str], None] = lambda _text: None,
 ) -> StatusResult:
     """Read one operator's statuses. A FeedError raised here carries `requests`."""
@@ -98,7 +99,7 @@ def refresh_operator(
         try:
             endpoint = STATUS_ENDPOINTS.get(config.adapter)
             if endpoint is not None:
-                result = endpoint(config, client, max_pages=max_pages)
+                result = endpoint(config, client, max_pages=max_pages, now=now)
             else:
                 fetch = (
                     CUSTOM_ADAPTERS.get(config.id)
@@ -113,6 +114,7 @@ def refresh_operator(
                         client,
                         page_size=page_size,
                         max_pages=max_pages,
+                        now=now,
                         statuses_only=True,
                     )
                 )
@@ -124,7 +126,9 @@ def refresh_operator(
         return result
 
 
-def refresh_fixtures(operators: dict[str, OperatorConfig]) -> dict[str, StatusResult]:
+def refresh_fixtures(
+    operators: dict[str, OperatorConfig], *, now: datetime | None = None
+) -> dict[str, StatusResult]:
     """Replay every fixture folder whose operator can be refreshed and has a recording of
     what a refresh asks for."""
     results = {}
@@ -143,6 +147,7 @@ def refresh_fixtures(operators: dict[str, OperatorConfig]) -> dict[str, StatusRe
             key=FIXTURE_KEY,
             page_size=manifest.get("page_size"),
             max_pages=manifest.get("max_pages"),
+            now=now,
         )
     return results
 
@@ -198,14 +203,19 @@ def too_soon(
     now: datetime,
     last_contact: dict[str, datetime],
     daily_finished: datetime | None,
+    sharing: list[OperatorConfig] | None = None,
 ) -> dict[str, datetime]:
     """Operators whose host was asked too recently, with the time each may be asked again.
 
     A host's last contact is the latest of its operators' last refreshes and the end of
     the daily fetch, and its gap is the longest any of its operators keeps (cool_down).
+    `sharing` names every operator that may share a host with these ones, so that an
+    operator left out of this run still holds its host back.
     """
+    asked = {config.id for config in configs}
+    everyone = {config.id: config for config in [*(sharing or []), *configs]}
     waiting: dict[str, datetime] = {}
-    for members in host_groups(configs):
+    for members in host_groups(list(everyone.values())):
         times = [last_contact[c.id] for c in members if c.id in last_contact]
         if daily_finished is not None:
             times.append(daily_finished)
@@ -213,7 +223,7 @@ def too_soon(
             continue
         ready = max(times) + timedelta(seconds=cool_down(members))
         if now < ready:
-            waiting |= {config.id: ready for config in members}
+            waiting |= {config.id: ready for config in members if config.id in asked}
     return waiting
 
 
@@ -255,7 +265,9 @@ def main(argv: list[str] | None = None, *, now: datetime | None = None) -> int:
         shown = live_snapshot.on_map(args.map)
         log = _previous_log(args.previous)
         if args.fixtures:
-            outcomes: dict[str, StatusResult | FeedError] = dict(refresh_fixtures(operators))
+            outcomes: dict[str, StatusResult | FeedError] = dict(
+                refresh_fixtures(operators, now=now)
+            )
             waiting: dict[str, datetime] = {}
         else:
             if args.live == ALL_ENABLED:
@@ -275,6 +287,11 @@ def main(argv: list[str] | None = None, *, now: datetime | None = None) -> int:
                 now=started,
                 last_contact=last_contact,
                 daily_finished=_daily_finished(args.map),
+                sharing=[
+                    config
+                    for config in operators.values()
+                    if refreshable(config) or config.id in last_contact
+                ],
             )
             outcomes = refresh_live(
                 [config for config in configs if config.id not in waiting],
@@ -285,16 +302,29 @@ def main(argv: list[str] | None = None, *, now: datetime | None = None) -> int:
         return 1
 
     finished = now or datetime.now(UTC).replace(microsecond=0)
+    # An operator left out of this run keeps its place in the record while it is still on
+    # the map, so its host's last contact is never forgotten.
+    left_out = {
+        operator_id
+        for operator_id in (log.operators if log else {})
+        if operator_id not in outcomes
+        and operator_id not in waiting
+        and operator_id in operators
+        and refreshable(operators[operator_id])
+        and shown.keys.get(operator_id)
+    }
     entries: dict[str, RefreshEntry] = {}
     failed = []
-    for operator_id in sorted({*outcomes, *waiting}):
+    for operator_id in sorted({*outcomes, *waiting, *left_out}):
         config = operators[operator_id]
         on_map = shown.keys.get(operator_id, {})
         outcome = outcomes.get(operator_id)
         before = log.operators.get(operator_id) if log else None
         note, requests, laid = None, None, None
         snapshot = None
-        if operator_id in waiting:
+        if operator_id in left_out:
+            note = "not asked: not part of this run"
+        elif operator_id in waiting:
             note = (
                 f"not asked: its host's gap had not passed (until {_stamp(waiting[operator_id])})"
             )
@@ -309,7 +339,7 @@ def main(argv: list[str] | None = None, *, now: datetime | None = None) -> int:
                 )
             except SnapshotError as exc:
                 note = f"failed: {exc}"
-        asked = operator_id not in waiting
+        asked = operator_id not in waiting and operator_id not in left_out
         if snapshot is None:
             failed += [operator_id] if asked else []
             snapshot = _carried(operator_id, args.previous, on_map)
