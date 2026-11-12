@@ -7,6 +7,7 @@ import { activeCount, connectorFilters as connectorFiltersOn, defaults, matches,
 import { h } from "./dom.js";
 import { allOut, formatKw, plugsSummary, powerBand } from "./format.js";
 import { bestPlans, priceLabel } from "./labels.js";
+import { liveEntry, liveUrl, withLiveStatuses } from "./live.js";
 import { createSettings } from "./settings.js";
 
 const LIST_LIMIT = 200;
@@ -433,6 +434,16 @@ function redrawDetailLabel() {
   $("detail-label")?.replaceChildren(...[mapLabelLine(app.detail, label, filtered)].filter(Boolean));
 }
 
+// Statuses a refresh read since the daily fetch, from a status file on this site (ADR
+// 0032). The details are shown without them if the file cannot be read.
+async function loadStatuses(key) {
+  try {
+    return liveEntry(await loadJson(liveUrl(key)), key);
+  } catch {
+    return null;
+  }
+}
+
 async function openDetail(key, trigger) {
   const request = ++app.detailRequest;
   app.lastTrigger = trigger ?? listButton(key) ?? document.activeElement;
@@ -447,7 +458,8 @@ async function openDetail(key, trigger) {
   let content;
   let loaded = null;
   try {
-    loaded = await loadJson(detailUrl(key));
+    const [detail, statuses] = await Promise.all([loadJson(detailUrl(key)), loadStatuses(key)]);
+    loaded = withLiveStatuses(detail, statuses);
     content = renderDetail(loaded, detailOptions());
   } catch {
     loaded = null;
