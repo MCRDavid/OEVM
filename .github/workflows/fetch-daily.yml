@@ -93,6 +93,13 @@ jobs:
           GH_REPO: ${{ github.repository }}
         run: .github/scripts/download-site-data.sh previous
 
+      # A status refresh (Refresh statuses) may have asked the same hosts. It never runs
+      # at the same time as this job, and this keeps each host's gap after it has ended.
+      - name: Leave every host its gap since the last run that asked feeds
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: uv run python -m pipeline.refresh_runs wait
+
       - name: Fetch every enabled operator, never two on one host at once
         id: fetch
         # Keys are passed to this step only, by secret name, as the registry lists them.
