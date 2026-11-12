@@ -397,8 +397,17 @@ def _crons() -> list[str]:
     return [entry["cron"] for entry in on["schedule"]]
 
 
-def _timer_crons() -> list[str]:
+# The relay Worker's hourly timer, which starts Refresh statuses instead (ADR 0032).
+REFRESH_CRON = "30 * * * *"
+
+
+def _all_timer_crons() -> list[str]:
     return tomllib.loads((ROOT / "relay" / "wrangler.toml").read_text())["triggers"]["crons"]
+
+
+def _timer_crons() -> list[str]:
+    """The timers that start Fetch daily: every one but the hourly timer."""
+    return [cron for cron in _all_timer_crons() if cron != REFRESH_CRON]
 
 
 def test_every_start_time_is_daily_and_away_from_the_top_of_the_hour():
@@ -408,7 +417,25 @@ def test_every_start_time_is_daily_and_away_from_the_top_of_the_hour():
     # GitHub's schedule is the backup, so it comes after the timer's first try each day.
     first = min(daily_runs.scheduled_time(c, NOW.replace(hour=23)) for c in _timer_crons())
     assert all(daily_runs.scheduled_time(c, NOW.replace(hour=23)) > first for c in _crons())
-    assert len(_timer_crons()) <= 5  # Cloudflare's free plan, per account
+    assert len(_all_timer_crons()) <= 5  # Cloudflare's free plan, per account
+
+
+def test_the_hourly_timer_starts_refresh_statuses_and_never_at_a_daily_start():
+    worker = (ROOT / "relay" / "worker.js").read_text(encoding="utf-8")
+    assert _all_timer_crons().count(REFRESH_CRON) == 1
+    assert f'export const REFRESH_CRON = "{REFRESH_CRON}";' in worker
+    owner_repo = REPOSITORY_URL.removeprefix("https://github.com/")
+    refresh = ROOT / ".github" / "workflows" / "refresh-statuses.yml"
+    assert (
+        f"api.github.com/repos/{owner_repo}/actions/workflows/{refresh.name}/dispatches" in worker
+    )
+    started_by = yaml.safe_load(refresh.read_text(encoding="utf-8"))[True]["workflow_dispatch"]
+    assert started_by["inputs"]["started_by"]["options"] == [HAND, TIMER]
+    # A refresh that starts with a daily fetch stops at once (pipeline/refresh_runs.py),
+    # so the hourly minute is kept away from every minute a daily fetch can start at.
+    minute = REFRESH_CRON.split()[0]
+    assert minute not in {cron.split()[0] for cron in [*_crons(), *_timer_crons()]}
+    assert len(_timer_crons()) == 2
 
 
 def test_the_timer_starts_this_workflow_on_main_as_the_timer():
