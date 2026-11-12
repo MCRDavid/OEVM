@@ -46,3 +46,43 @@ class LiveSnapshot(_Model):
     locations: dict[Key, list[LiveEvse]] = Field(
         description="EVSE statuses by location key, as in data/loc/<shard>/<key>.json."
     )
+
+
+class RefreshEntry(_Model):
+    """What one status refresh did for one operator (pipeline.refresh)."""
+
+    fetched_at: AwareDatetime | None = Field(
+        description="When the statuses in the operator's snapshot were fetched. Null when "
+        "it has no snapshot."
+    )
+    last_contact_at: AwareDatetime | None = Field(
+        description="When this project last finished asking the operator's host in a "
+        "refresh, so the next run can keep the host's gap across runs. Null if never."
+    )
+    refreshed: bool = Field(description="True when this run wrote a new snapshot.")
+    requests: int | None = Field(default=None, ge=0, description="Requests this run made.")
+    locations: int = Field(default=0, ge=0, description="Locations in the snapshot.")
+    evses: int = Field(default=0, ge=0, description="EVSEs in the snapshot.")
+    not_on_map: int = Field(
+        default=0, ge=0, description="Locations in the feed that the map does not show."
+    )
+    not_in_feed: int = Field(
+        default=0, ge=0, description="Locations on the map that the feed did not list."
+    )
+    ambiguous: int = Field(
+        default=0, ge=0, description="Locations whose id matched more than one on the map."
+    )
+    note: str | None = Field(
+        default=None, description="Why there is no new snapshot, in neutral words."
+    )
+
+
+class RefreshLog(_Model):
+    """A record of one status refresh, kept with its snapshots (live/refresh.json)."""
+
+    schema_version: Literal[1] = LIVE_SCHEMA_VERSION
+    generated_at: AwareDatetime = Field(description="When the refresh finished.")
+    map_generated_at: AwareDatetime = Field(
+        description="generated_at of the map files the snapshots were laid over."
+    )
+    operators: dict[str, RefreshEntry]

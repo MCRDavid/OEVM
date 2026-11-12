@@ -12,7 +12,7 @@ import json
 import sys
 from pathlib import Path
 
-from schema.live import LiveSnapshot
+from schema.live import LiveSnapshot, RefreshLog
 from schema.models import Location, Tariff
 from schema.operator import OperatorConfig
 from schema.provider import ProviderFile
@@ -48,6 +48,9 @@ def build_schemas() -> dict[Path, dict]:
             mode="serialization"
         ),
         ROOT / "schema" / "json" / "live-snapshot.schema.json": LiveSnapshot.model_json_schema(
+            mode="serialization"
+        ),
+        ROOT / "schema" / "json" / "live-refresh.schema.json": RefreshLog.model_json_schema(
             mode="serialization"
         ),
         ROOT / "schema" / "json" / "plans.schema.json": PlansFile.model_json_schema(

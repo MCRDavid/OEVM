@@ -188,8 +188,10 @@ def fetch(
     max_pages: int | None = None,
     now: datetime | None = None,
     progress: PageProgress = NO_PROGRESS,
+    statuses_only: bool = False,
 ) -> AdapterResult:
-    """Fetch every Jolt location, then each tariff they refer to (one request each)."""
+    """Fetch every Jolt location, then each tariff they refer to (one request each). With
+    statuses_only, for a status refresh, the locations alone: one request."""
     if date_from is not None or page_size is not None:
         raise FeedError(f"{config.id}: Jolt's API has no date_from or page size")
     fetched_at = now or datetime.now(UTC).replace(microsecond=0)
@@ -214,6 +216,11 @@ def fetch(
     for bad in [tariff_id for tariff_id in ids if not TARIFF_ID.fullmatch(tariff_id)]:
         issues.add(f"tariff id {bad!r} not fetched: unexpected characters")
     ids = [tariff_id for tariff_id in ids if TARIFF_ID.fullmatch(tariff_id)]
+    if statuses_only:
+        result = AdapterResult(config.id, fetched_at, {"locations": locations}, statuses_only=True)
+        convert_records(config, result, locations=raw_locations, tariffs=[], issues=issues)
+        result.issues = [client.redact(line) for line in issues.lines()]
+        return result
     tariffs = _fetch_tariffs(
         client, config.endpoints["tariffs"].url, ids, max_pages, issues, progress
     )

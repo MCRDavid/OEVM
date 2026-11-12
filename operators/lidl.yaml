@@ -17,8 +17,13 @@ endpoints:
     url: https://open-chargepoints.com/api/ocpi/cpo/2.2.1/tariffs/
     status: documented
   statuses:
-    url: https://open-chargepoints.com/api/statuses
+    url: https://open-chargepoints.com/api/statuses/
     status: documented
+    note: >-
+      "Returns realtime updates for all EVSES of a CPO" (Eco-Movement's PCPR API reference,
+      read 2026-11-09). Written with the trailing slash: without it the server answered
+      HTTP 307, a redirect to the address with the slash, for three networks' tokens on
+      2026-11-10.
 auth:
   method: header
   name: Authorization

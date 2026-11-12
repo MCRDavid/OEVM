@@ -16,6 +16,7 @@ decisions are in docs/adr/.
 - Feed health page: uv run python -m pipeline.run --fixtures --log-dir logs --publish build, then
   uv run python -m pipeline.status --runs logs --out build --map build/data/locations.geojson
 - One live page (sparingly, enabled operators only): uv run python -m pipeline.run --live chargy --max-pages 1
+- Status refresh from fixtures (after the map files): uv run python -m pipeline.refresh --fixtures --map build --out build
 - Daily run (workflows only, not locally): uv run python -m pipeline.run --live all --log-dir logs --publish build
 - After changing a model: uv run python -m schema.export (CI runs it with --check)
 - After changing operators/*.yaml: uv run python -m pipeline.transparency (CI runs it with --check)
@@ -54,6 +55,10 @@ decisions are in docs/adr/.
 - site/index.html, site/assets/: the map page. pipeline/build_site.py: build folder with MapLibre.
   site/assets/js/labels.js: the cheapest price drawn above each map point (ADR 0026).
 - proxy/: Phase 3 live status Worker, not deployed (docs/PHASE3_PLAN.md). pipeline/live_snapshot.py, schema/live.py: its snapshots.
+  pipeline/refresh.py: status refresh between daily fetches, not scheduled; it never reads a tariff
+  or changes the map files, and never asks a host before its gap has passed since the last run
+  (--last-run-ended, or the daily fetch's whole job limit after the map files were made).
+  adapters/statuses.py: statuses alone (Eco-Movement's statuses endpoint; other feeds statuses_only).
 - ocpi/: OCPI 2.2.1 credentials handshake Worker (oevm-ocpi, ADR 0025). One Durable Object holds
   the connection's tokens; the daily run will read the operator's token from it. Cloudflare
   deploys ocpi/ from main (ocpi/wrangler.toml; owner's steps in docs/GITHUB_SETTINGS.md, section 11).

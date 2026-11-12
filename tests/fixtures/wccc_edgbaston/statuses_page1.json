@@ -1,0 +1,92 @@
+{
+  "request": {
+    "method": "GET",
+    "url": "https://open-chargepoints.com/api/statuses/"
+  },
+  "response": {
+    "status_code": 200,
+    "headers": {
+      "content-type": "application/json",
+      "x-total-count": "2"
+    },
+    "body": {
+      "timestamp": "2026-11-10T03:26:24Z",
+      "status_code": 1000,
+      "status_message": "Success",
+      "data": [
+        {
+          "id": "4c2fd205-aed1-4d23-ab34-1b84a522ef35",
+          "last_updated": "2026-10-27T22:32:07Z",
+          "evses": [
+            {
+              "uid": "GB-GFX-EDRAX00613-1",
+              "status": "AVAILABLE",
+              "last_updated": "2026-09-29T12:45:46Z",
+              "evse_id": "GB*GFX*EDRAX00613*1"
+            },
+            {
+              "uid": "GB-GFX-EDRAX00613-2",
+              "status": "AVAILABLE",
+              "last_updated": "2026-10-11T14:45:18Z",
+              "evse_id": "GB*GFX*EDRAX00613*2"
+            },
+            {
+              "uid": "GB-GFX-EDRAX00614-1",
+              "status": "AVAILABLE",
+              "last_updated": "2026-10-14T09:51:47Z",
+              "evse_id": "GB*GFX*EDRAX00614*1"
+            },
+            {
+              "uid": "GB-GFX-EDRAX00614-2",
+              "status": "AVAILABLE",
+              "last_updated": "2026-10-14T09:51:18Z",
+              "evse_id": "GB*GFX*EDRAX00614*2"
+            },
+            {
+              "uid": "GB-GFX-EDRAX00615-1",
+              "status": "AVAILABLE",
+              "last_updated": "2026-09-29T12:12:08Z",
+              "evse_id": "GB*GFX*EDRAX00615*1"
+            },
+            {
+              "uid": "GB-GFX-EDRAX00615-2",
+              "status": "AVAILABLE",
+              "last_updated": "2026-09-15T13:02:32Z",
+              "evse_id": "GB*GFX*EDRAX00615*2"
+            }
+          ]
+        },
+        {
+          "id": "7e06978d-e0da-45f6-a09d-ca8826f641e1",
+          "last_updated": "2026-11-04T16:54:00Z",
+          "evses": [
+            {
+              "uid": "GB-GFX-EDRAX00616-1",
+              "status": "AVAILABLE",
+              "last_updated": "2026-11-03T17:04:44Z",
+              "evse_id": "GB*GFX*EDRAX00616*1"
+            },
+            {
+              "uid": "GB-GFX-EDRAX00616-2",
+              "status": "AVAILABLE",
+              "last_updated": "2026-11-03T17:07:04Z",
+              "evse_id": "GB*GFX*EDRAX00616*2"
+            },
+            {
+              "uid": "GB-GFX-EDRAX00617-1",
+              "status": "AVAILABLE",
+              "last_updated": "2026-11-04T13:19:42Z",
+              "evse_id": "GB*GFX*EDRAX00617*1"
+            },
+            {
+              "uid": "GB-GFX-EDRAX00617-2",
+              "status": "AVAILABLE",
+              "last_updated": "2026-11-04T16:54:00Z",
+              "evse_id": "GB*GFX*EDRAX00617*2"
+            }
+          ]
+        }
+      ]
+    }
+  }
+}

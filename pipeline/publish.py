@@ -651,6 +651,10 @@ def publish(
     validate every file and write them under out_dir/data."""
     if out_dir.resolve() == (ROOT / "site").resolve():
         raise PublishError("publish to a build folder, not the committed site/ folder")
+    for result in results:
+        if result.statuses_only:
+            # A status refresh read no tariffs, so it would publish every price as unknown.
+            raise PublishError(f"{result.operator_id}: a status refresh is never published")
     features: list[MapFeature] = []
     details: dict[str, bytes] = {}
     entries: dict[str, OperatorEntry] = {}

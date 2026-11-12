@@ -309,13 +309,15 @@ def _connector(
     )
 
 
-def _evse(
+def evse_status(
     raw: dict,
     fallback_time: datetime | None,
-    prefix: str,
     issues: IssueLog,
     config: OperatorConfig,
-) -> EVSE:
+) -> tuple[str, datetime | None]:
+    """An EVSE's status and when the operator last reported it, read by the project's
+    rules. Used for a whole EVSE (_evse) and for a status refresh, which reads only these
+    two fields (adapters.statuses), so both always read a status the same way."""
     status = EVSE_STATUSES.get(raw.get("status"))
     decision = config.nonstandard_statuses
     if status is None and decision is not None and raw.get("status") in decision.statuses:
@@ -335,6 +337,17 @@ def _evse(
     if status != "unknown" and status_at is None:
         issues.add("EVSE status has no timestamp; recorded as unknown")
         status = "unknown"
+    return status, status_at
+
+
+def _evse(
+    raw: dict,
+    fallback_time: datetime | None,
+    prefix: str,
+    issues: IssueLog,
+    config: OperatorConfig,
+) -> EVSE:
+    status, status_at = evse_status(raw, fallback_time, issues, config)
     return EVSE(
         uid=raw["uid"],
         evse_id=raw.get("evse_id"),

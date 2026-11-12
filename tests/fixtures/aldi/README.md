@@ -21,6 +21,14 @@ To keep the fixtures short:
 Only the content-type, link, x-total-count and x-limit headers were kept; the token is never in
 a response. `manifest.json` tells `python -m pipeline.run --fixtures` how to replay them.
 
+## Statuses
+
+`statuses_page1.json` was recorded on 10 November 2026 from
+https://open-chargepoints.com/api/statuses/ in the same way: one request, which gave all 266
+locations in one response with no paging. It keeps the 3 locations that `locations_page1.json`
+keeps, with `X-Total-Count` changed to match. Every record is exactly as Eco-Movement sent it.
+A status refresh reads this endpoint alone (`adapters/eco_movement.py`, `fetch_statuses`).
+
 ## Source and licence
 
 Contains data from Aldi Stores Limited published under the Public Charge Point Regulations 2023, used in line with the

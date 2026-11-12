@@ -20,6 +20,14 @@ To keep the fixtures short:
 Only the content-type, link, x-total-count and x-limit headers were kept; the token is never in
 a response. `manifest.json` tells `python -m pipeline.run --fixtures` how to replay them.
 
+## Statuses
+
+`statuses_page1.json` was recorded on 10 November 2026 from
+https://open-chargepoints.com/api/statuses/ in the same way: one request, which gave both of
+the network's locations. Both are kept, so one of them is in the statuses and not in
+`locations_page1.json`. Every record is exactly as Eco-Movement sent it. A status refresh
+reads this endpoint alone (`adapters/eco_movement.py`, `fetch_statuses`).
+
 ## Source and licence
 
 Contains data from WCCC Edgbaston published under the Public Charge Point Regulations 2023, used in line with the

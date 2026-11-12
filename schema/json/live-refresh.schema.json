@@ -1,0 +1,155 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$defs": {
+    "RefreshEntry": {
+      "additionalProperties": false,
+      "description": "What one status refresh did for one operator (pipeline.refresh).",
+      "properties": {
+        "fetched_at": {
+          "anyOf": [
+            {
+              "format": "date-time",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "description": "When the statuses in the operator's snapshot were fetched. Null when it has no snapshot.",
+          "title": "Fetched At"
+        },
+        "last_contact_at": {
+          "anyOf": [
+            {
+              "format": "date-time",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "description": "When this project last finished asking the operator's host in a refresh, so the next run can keep the host's gap across runs. Null if never.",
+          "title": "Last Contact At"
+        },
+        "refreshed": {
+          "description": "True when this run wrote a new snapshot.",
+          "title": "Refreshed",
+          "type": "boolean"
+        },
+        "requests": {
+          "anyOf": [
+            {
+              "minimum": 0,
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Requests this run made.",
+          "title": "Requests"
+        },
+        "locations": {
+          "default": 0,
+          "description": "Locations in the snapshot.",
+          "minimum": 0,
+          "title": "Locations",
+          "type": "integer"
+        },
+        "evses": {
+          "default": 0,
+          "description": "EVSEs in the snapshot.",
+          "minimum": 0,
+          "title": "Evses",
+          "type": "integer"
+        },
+        "not_on_map": {
+          "default": 0,
+          "description": "Locations in the feed that the map does not show.",
+          "minimum": 0,
+          "title": "Not On Map",
+          "type": "integer"
+        },
+        "not_in_feed": {
+          "default": 0,
+          "description": "Locations on the map that the feed did not list.",
+          "minimum": 0,
+          "title": "Not In Feed",
+          "type": "integer"
+        },
+        "ambiguous": {
+          "default": 0,
+          "description": "Locations whose id matched more than one on the map.",
+          "minimum": 0,
+          "title": "Ambiguous",
+          "type": "integer"
+        },
+        "note": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Why there is no new snapshot, in neutral words.",
+          "title": "Note"
+        }
+      },
+      "required": [
+        "fetched_at",
+        "last_contact_at",
+        "refreshed",
+        "requests",
+        "locations",
+        "evses",
+        "not_on_map",
+        "not_in_feed",
+        "ambiguous",
+        "note"
+      ],
+      "title": "RefreshEntry",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "description": "A record of one status refresh, kept with its snapshots (live/refresh.json).",
+  "properties": {
+    "schema_version": {
+      "const": 1,
+      "default": 1,
+      "title": "Schema Version",
+      "type": "integer"
+    },
+    "generated_at": {
+      "description": "When the refresh finished.",
+      "format": "date-time",
+      "title": "Generated At",
+      "type": "string"
+    },
+    "map_generated_at": {
+      "description": "generated_at of the map files the snapshots were laid over.",
+      "format": "date-time",
+      "title": "Map Generated At",
+      "type": "string"
+    },
+    "operators": {
+      "additionalProperties": {
+        "$ref": "#/$defs/RefreshEntry"
+      },
+      "title": "Operators",
+      "type": "object"
+    }
+  },
+  "required": [
+    "schema_version",
+    "generated_at",
+    "map_generated_at",
+    "operators"
+  ],
+  "title": "RefreshLog",
+  "type": "object"
+}
