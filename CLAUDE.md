@@ -56,7 +56,8 @@ decisions are in docs/adr/.
   site/assets/js/labels.js: the cheapest price drawn above each map point (ADR 0026).
 - proxy/: Phase 3 live status Worker, not deployed (docs/PHASE3_PLAN.md). pipeline/live_snapshot.py, schema/live.py: its snapshots.
   pipeline/refresh.py: status refresh between daily fetches, not scheduled; it never reads a tariff
-  or changes the map files, and never asks a host before its gap has passed since the last run.
+  or changes the map files, and never asks a host before its gap has passed since the last run
+  (--last-run-ended, or the daily fetch's whole job limit after the map files were made).
   adapters/statuses.py: statuses alone (Eco-Movement's statuses endpoint; other feeds statuses_only).
 - ocpi/: OCPI 2.2.1 credentials handshake Worker (oevm-ocpi, ADR 0025). One Durable Object holds
   the connection's tokens; the daily run will read the operator's token from it. Cloudflare

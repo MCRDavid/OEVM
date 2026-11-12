@@ -84,8 +84,11 @@ asked once each for three networks' tokens, through the polite client:
   on and fetched from a feed. It keeps the daily fetch's rules (one fetch per host at a
   time, operators with `limits_per_key` taking turns) and adds one for runs close
   together: a host is not asked until the longest gap any operator on it keeps has
-  passed since the last refresh of that host and since the daily fetch. An operator
-  that waits or fails keeps its last snapshot. `live/refresh.json` records each run.
+  passed since the last refresh of that host and since the last run of any kind ended
+  (`--last-run-ended`). Without that time the daily fetch is given the whole 150
+  minutes its job may run, because the map files say when its last operator's fetch
+  started and not when the run ended. An operator that waits or fails keeps its last
+  snapshot. `live/refresh.json` records each run.
 
 No workflow runs the command, and the site does not read what it writes.
 
@@ -93,11 +96,11 @@ No workflow runs the command, and the site does not read what it writes.
 
 - Whatever the owner decides above, then an ADR.
 - A scheduled refresh. It must share the daily fetch's concurrency group so the two
-  never run together, and it needs a floor between starts that does not depend on the
-  last run having finished: a run that stops before writing `live/refresh.json` leaves
-  no record of the hosts it asked. GitHub's schedule was hours late on 9 November 2026,
-  so the timer would be the relay Worker's (a change under `relay/`, for the owner to
-  approve).
+  never run together, and pass `--last-run-ended` from the workflows' run history: the
+  end of the latest daily fetch or refresh, whether it succeeded or not. A run that
+  fails or is stopped publishes nothing, so its files cannot say which hosts it asked.
+  GitHub's schedule was hours late on 9 November 2026, so the timer would be the relay
+  Worker's (a change under `relay/`, for the owner to approve).
 - Packing the snapshots for the map (one small file for colours, details on demand).
 - char.gy answers `date_from`; a refresh of changes only would be far fewer than its
   122 pages. How many pages needs testing.

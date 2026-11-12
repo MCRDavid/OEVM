@@ -10,6 +10,7 @@ from datetime import UTC, datetime, timedelta
 
 import httpx
 import pytest
+import yaml
 
 from adapters import eco_movement, statuses
 from adapters.http import FeedError, PoliteClient, required_gap
@@ -262,14 +263,19 @@ def test_a_refresh_reads_no_tariff(operator_id):
 
 @pytest.mark.parametrize("operator_id", OTHERS)
 def test_a_refresh_reads_each_status_exactly_as_the_daily_fetch_does(operator_id):
-    full = FULL[operator_id]
-    assert REFRESHED[operator_id].statuses == {
+    full, again = FULL[operator_id], REFRESHED[operator_id]
+
+    def at(when: datetime | None) -> datetime | None:
+        # A status with no time of its own carries the time of its fetch (Jolt's).
+        return again.fetched_at if when == full.fetched_at else when
+
+    assert again.statuses == {
         location.id: [
-            LiveEvse(uid=e.uid, status=e.status, status_at=e.status_at) for e in location.evses
+            LiveEvse(uid=e.uid, status=e.status, status_at=at(e.status_at)) for e in location.evses
         ]
         for location in full.locations
     }
-    assert REFRESHED[operator_id].dropped_location_ids == full.dropped_location_ids
+    assert again.dropped_location_ids == full.dropped_location_ids
 
 
 def test_a_status_refresh_is_never_published_as_map_files(tmp_path):
@@ -374,7 +380,7 @@ def test_a_hosts_cool_down_is_never_less_than_any_recorded_limit_needs():
 def test_a_host_asked_too_recently_is_not_asked_again():
     configs = [OPERATORS[i] for i in ("roam", "chargy", "aldi", "ubitricity", "three_ti")]
     daily = NOW - timedelta(seconds=20)
-    waiting = refresh.too_soon(configs, now=NOW, last_contact={}, daily_finished=daily)
+    waiting = refresh.too_soon(configs, now=NOW, last_contact={}, last_run=daily)
     # 20 seconds after the daily fetch: char.gy's 6 seconds have passed, the others' gaps not.
     assert set(waiting) == {"roam", "aldi", "ubitricity", "three_ti"}
     assert waiting["three_ti"] == daily + timedelta(seconds=31)
@@ -384,20 +390,20 @@ def test_a_host_asked_too_recently_is_not_asked_again():
     # An hour later nobody waits, unless a refresh of that host finished moments ago:
     # one operator's last contact holds back every operator on its host.
     later = NOW + timedelta(hours=1)
-    assert refresh.too_soon(configs, now=later, last_contact={}, daily_finished=daily) == {}
+    assert refresh.too_soon(configs, now=later, last_contact={}, last_run=daily) == {}
     recent = {"ubitricity": later - timedelta(seconds=100)}
-    waiting = refresh.too_soon(configs, now=later, last_contact=recent, daily_finished=daily)
+    waiting = refresh.too_soon(configs, now=later, last_contact=recent, last_run=daily)
     assert set(waiting) == {"aldi", "ubitricity"}
-    assert refresh.too_soon(configs, now=later, last_contact={}, daily_finished=None) == {}
+    assert refresh.too_soon(configs, now=later, last_contact={}, last_run=None) == {}
 
     # It holds the host back even when it is not part of this run.
     alone = [OPERATORS["aldi"]]
-    assert refresh.too_soon(alone, now=later, last_contact=recent, daily_finished=None) == {}
+    assert refresh.too_soon(alone, now=later, last_contact=recent, last_run=None) == {}
     waiting = refresh.too_soon(
         alone,
         now=later,
         last_contact=recent,
-        daily_finished=None,
+        last_run=None,
         sharing=list(OPERATORS.values()),
     )
     assert waiting == {"aldi": recent["ubitricity"] + timedelta(seconds=125)}
@@ -477,9 +483,9 @@ def test_a_failed_or_waiting_operator_keeps_its_last_snapshot(map_dir, tmp_path,
             result, config, shown, partial_ok=True
         ),
     )
+    folders = ["--map", str(map_dir), "--out", str(out), "--previous", str(last)]
     code = refresh.main(
-        ["--live", "all", "--map", str(map_dir), "--out", str(out), "--previous", str(last)],
-        now=NOW,
+        ["--live", "all", *folders, "--last-run-ended", earlier.isoformat()], now=NOW
     )
     assert code == refresh.EXIT_SOME_FAILED
     # Nobody on Aldi's host was asked, and no sent copy was.
@@ -488,7 +494,9 @@ def test_a_failed_or_waiting_operator_keeps_its_last_snapshot(map_dir, tmp_path,
 
     new = RefreshLog.model_validate_json((out / "live" / "refresh.json").read_bytes())
     aldi, jolt, genie = (new.operators[i] for i in ("aldi", "jolt", "geniepoint"))
-    assert not aldi.refreshed and "gap had not passed" in aldi.note
+    assert not aldi.refreshed and aldi.note == (
+        "not asked: too soon after the last run (until 2026-11-10 09:01:35 UTC)"
+    )
     assert aldi.last_contact_at == moments_ago and aldi.fetched_at == earlier
     assert not jolt.refreshed and jolt.note == "failed: jolt: the feed returned HTTP 503"
     assert jolt.requests == 4 and jolt.last_contact_at == NOW and jolt.fetched_at == earlier
@@ -501,6 +509,53 @@ def test_a_failed_or_waiting_operator_keeps_its_last_snapshot(map_dir, tmp_path,
         assert kept == before
 
 
+def test_the_daily_fetch_is_given_its_whole_time_limit_unless_told_when_it_ended(
+    map_dir, tmp_path, monkeypatch
+):
+    """The map files say when the daily fetch's last operator was started, not when the
+    run stopped asking feeds."""
+    workflow = yaml.safe_load((ROOT / ".github/workflows/fetch-daily.yml").read_text("utf-8"))
+    limit = timedelta(minutes=workflow["jobs"]["fetch"]["timeout-minutes"])
+    assert limit <= refresh.DAILY_FETCH_LIMIT
+
+    asked = []
+
+    def fake_live(configs, *, max_pages=None):
+        asked.append({config.id for config in configs})
+        return {c.id: REFRESHED[c.id] for c in configs if c.id in REFRESHED}
+
+    monkeypatch.setattr(refresh, "refresh_live", fake_live)
+    monkeypatch.setattr(
+        live_snapshot,
+        "from_statuses",
+        lambda result, config, shown, partial_ok=False: from_statuses(
+            result, config, shown, partial_ok=True
+        ),
+    )
+    arguments = ["--live", "all", "--map", str(map_dir), "--out", str(tmp_path)]
+    # The map was made at NOW. Just short of the limit later, nobody is asked.
+    assert refresh.main(arguments, now=NOW + limit - timedelta(seconds=1)) == 0
+    assert asked == [set()]
+    log = RefreshLog.model_validate_json((tmp_path / "live" / "refresh.json").read_bytes())
+    assert {"roam", "aldi", "jolt"} <= set(log.operators)
+    assert all(not e.refreshed and e.last_contact_at is None for e in log.operators.values())
+    assert log.operators["jolt"].note == (
+        "not asked: too soon after the last run (until 2026-11-10 11:30:02 UTC)"
+    )
+    # Once the limit and a host's own gap have passed, it is asked: Roam's is the longest.
+    assert refresh.main(arguments, now=NOW + limit + timedelta(seconds=720)) == 0
+    assert "jolt" in asked[1] and "aldi" in asked[1] and "roam" not in asked[1]
+    assert refresh.main(arguments, now=NOW + limit + timedelta(seconds=721)) == 0
+    assert "roam" in asked[2]
+    # Told when the last run ended, it waits for each host's gap from then.
+    ended = (NOW + timedelta(minutes=30)).isoformat()
+    later = NOW + timedelta(minutes=31)
+    assert refresh.main([*arguments, "--last-run-ended", ended], now=later) == 0
+    assert {"jolt", "three_ti", "chargy"} <= asked[3] and not {"roam", "aldi"} & asked[3]
+    assert refresh.main([*arguments, "--last-run-ended", "2026-11-10T09:30:00"], now=NOW) == 1
+    assert len(asked) == 4
+
+
 def test_an_operator_left_out_of_a_run_keeps_its_snapshot_and_its_last_contact(
     map_dir, tmp_path, monkeypatch
 ):
@@ -510,9 +565,9 @@ def test_an_operator_left_out_of_a_run_keeps_its_snapshot_and_its_last_contact(
     monkeypatch.setattr(
         refresh, "refresh_live", lambda configs, max_pages=None: {"aldi": REFRESHED["aldi"]}
     )
+    folders = ["--map", str(map_dir), "--out", str(out), "--previous", str(last)]
     code = refresh.main(
-        ["--live", "aldi", "--map", str(map_dir), "--out", str(out), "--previous", str(last)],
-        now=NOW,
+        ["--live", "aldi", *folders, "--last-run-ended", earlier.isoformat()], now=NOW
     )
     assert code == 0
     new = RefreshLog.model_validate_json((out / "live" / "refresh.json").read_bytes())
@@ -531,7 +586,7 @@ def test_an_operator_left_out_of_a_run_keeps_its_snapshot_and_its_last_contact(
         [OPERATORS["wccc_edgbaston"]],
         now=NOW + timedelta(seconds=60),
         last_contact={i: e.last_contact_at for i, e in new.operators.items()},
-        daily_finished=None,
+        last_run=None,
         sharing=list(OPERATORS.values()),
     )
     assert waiting == {"wccc_edgbaston": NOW + timedelta(seconds=125)}

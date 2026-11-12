@@ -19,9 +19,12 @@ It keeps the same rules as the daily fetch, with the same client (adapters.http)
 - Operators that share a host are fetched one after another, and hosts at the same time,
   as in pipeline.run; operators whose limits the owner reads per key take turns.
 - The client's timers last one run, so this keeps each host's gap across runs too: a host
-  is not asked again until its gap has passed since the last refresh finished (--previous)
-  and since the daily fetch finished (DIR/data/status.json). Such an operator, and one
-  whose refresh fails or does not finish, keeps its last snapshot.
+  is not asked again until its gap has passed since the last refresh of it finished
+  (--previous) and since the last run of any kind ended (--last-run-ended, from the
+  workflow's run history). Without that time, the daily fetch that made the map files is
+  taken to have been asking feeds for as long as its job may run, because its files say
+  when its last fetch started and not when it ended. Such an operator, and one whose
+  refresh fails or does not finish, keeps its last snapshot.
 
 --fixtures replays tests/fixtures and never uses the network; an Eco-Movement network is
 replayed only where a statuses response was recorded.
@@ -57,12 +60,14 @@ from pipeline.run import (
 )
 from schema.live import LiveSnapshot, RefreshEntry, RefreshLog
 from schema.operator import OperatorConfig
-from schema.published import StatusFile
 
 # Feeds with an endpoint for statuses alone, by registry adapter name.
 STATUS_ENDPOINTS = {"eco_movement_pcpr": adapters.eco_movement.fetch_statuses}
 # Exit code when at least one operator's refresh failed; the others were still written.
 EXIT_SOME_FAILED = 2
+# The longest the daily fetch's job may run (.github/workflows/fetch-daily.yml, the fetch
+# job's timeout-minutes; a test keeps the two in step).
+DAILY_FETCH_LIMIT = timedelta(minutes=150)
 
 
 def refreshable(config: OperatorConfig) -> bool:
@@ -189,12 +194,20 @@ def _previous_log(previous: Path | None) -> RefreshLog | None:
     return RefreshLog.model_validate_json(path.read_bytes()) if path.exists() else None
 
 
-def _daily_finished(map_dir: Path) -> datetime | None:
-    """When the daily fetch that made the map files finished, from its feed health file."""
-    path = map_dir / "data" / "status.json"
-    if not path.exists():
-        return None
-    return StatusFile.model_validate_json(path.read_bytes()).generated_at
+def _daily_fetch_until(shown: live_snapshot.OnMap) -> datetime:
+    """The latest the daily fetch that made the map files can have asked a feed.
+
+    The map files carry when its last operator's fetch started (generated_at), not when
+    the run ended, so the whole of the job's time limit is added.
+    """
+    return shown.generated_at + DAILY_FETCH_LIMIT
+
+
+def _when(text: str) -> datetime:
+    when = datetime.fromisoformat(text)
+    if when.tzinfo is None:
+        raise ValueError(f"{text!r} needs a time zone, such as 2026-11-12T05:00:00Z")
+    return when
 
 
 def too_soon(
@@ -202,23 +215,23 @@ def too_soon(
     *,
     now: datetime,
     last_contact: dict[str, datetime],
-    daily_finished: datetime | None,
+    last_run: datetime | None,
     sharing: list[OperatorConfig] | None = None,
 ) -> dict[str, datetime]:
     """Operators whose host was asked too recently, with the time each may be asked again.
 
-    A host's last contact is the latest of its operators' last refreshes and the end of
-    the daily fetch, and its gap is the longest any of its operators keeps (cool_down).
-    `sharing` names every operator that may share a host with these ones, so that an
-    operator left out of this run still holds its host back.
+    A host's last contact is the latest of its operators' last refreshes and last_run,
+    the latest another run can have asked any host. Its gap is the longest any of its
+    operators keeps (cool_down). `sharing` names every operator that may share a host
+    with these ones, so that an operator left out of this run still holds its host back.
     """
     asked = {config.id for config in configs}
     everyone = {config.id: config for config in [*(sharing or []), *configs]}
     waiting: dict[str, datetime] = {}
     for members in host_groups(list(everyone.values())):
         times = [last_contact[c.id] for c in members if c.id in last_contact]
-        if daily_finished is not None:
-            times.append(daily_finished)
+        if last_run is not None:
+            times.append(last_run)
         if not times:
             continue
         ready = max(times) + timedelta(seconds=cool_down(members))
@@ -256,6 +269,12 @@ def main(argv: list[str] | None = None, *, now: datetime | None = None) -> int:
     parser.add_argument("--map", type=Path, required=True, help="the map files (DIR/data)")
     parser.add_argument("--out", type=Path, required=True, help="where to write DIR/live")
     parser.add_argument("--previous", type=Path, help="the last refresh's files (DIR/live)")
+    parser.add_argument(
+        "--last-run-ended",
+        metavar="WHEN",
+        help="when the last run that asked feeds ended, the daily fetch or a refresh "
+        "(ISO 8601 with a time zone); without it the daily fetch is given its whole time limit",
+    )
     parser.add_argument("--max-pages", type=int, help="stop after this many pages per module")
     args = parser.parse_args(argv)
 
@@ -286,7 +305,9 @@ def main(argv: list[str] | None = None, *, now: datetime | None = None) -> int:
                 configs,
                 now=started,
                 last_contact=last_contact,
-                daily_finished=_daily_finished(args.map),
+                last_run=(
+                    _when(args.last_run_ended) if args.last_run_ended else _daily_fetch_until(shown)
+                ),
                 sharing=[
                     config
                     for config in operators.values()
@@ -325,9 +346,7 @@ def main(argv: list[str] | None = None, *, now: datetime | None = None) -> int:
         if operator_id in left_out:
             note = "not asked: not part of this run"
         elif operator_id in waiting:
-            note = (
-                f"not asked: its host's gap had not passed (until {_stamp(waiting[operator_id])})"
-            )
+            note = f"not asked: too soon after the last run (until {_stamp(waiting[operator_id])})"
         elif isinstance(outcome, FeedError):
             note, requests = f"failed: {outcome}", getattr(outcome, "requests", None)
         else:
