@@ -64,6 +64,16 @@ Date: 2026-10-09. Status: proposed. The full plan is `docs/PHASE3_PLAN.md`.
 - Whether Durable Objects are on the free plan (only matters for fetching on click later).
   16 October 2026: they are, with SQLite storage only (ADR 0025).
 
+## Update (12 November 2026)
+
+- The map now has 44 operators fetched from a feed. One KV write per operator per
+  hourly refresh would be 1,056 a day, over the free plan's 1,000, so "fits easily"
+  above no longer holds as written.
+- Where the map gets statuses from is with the repository owner again (see the update in
+  docs/PHASE3_PLAN.md). This ADR stays proposed until that is answered.
+- The snapshots themselves are built: `pipeline/refresh.py` reads statuses within every
+  recorded rate limit and writes one `LiveSnapshot` per operator. Nothing schedules it.
+
 ## Not done
 
 - Deploying the Worker, the refresh workflow, the notice changes and the map's status

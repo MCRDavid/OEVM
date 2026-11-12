@@ -5,6 +5,106 @@ answers below. Nothing in this plan is switched on, and the daily run and the re
 unchanged. The one change visible on the map is the owner's reading of char.gy's
 statuses (see "char.gy's statuses"). ADR 0015 records the main decision.
 
+Checked against the map on 9 and 10 November 2026: see the update below, which says
+where the rest of this plan no longer fits and what has been built since.
+
+## Update, 12 November 2026: the plan against today's map
+
+### What changed
+
+The plan was written with three operators switched on. On 9 November 2026 the map had
+46: 44 fetched from a feed and 2 shown from a copy the operator sent, whose statuses stay
+unknown (ADR 0029). The 04:17 UTC run that day published 34,050 locations and 75,339
+EVSEs from 17 hosts. One host, open-chargepoints.com (Eco-Movement), serves 23 of the
+operators.
+
+Where the sections below no longer fit:
+
+- **Workers KV writes.** One snapshot per operator per refresh, for 44 operators every
+  hour, is 1,056 writes a day. The free plan allows 1,000 (read again 9 November 2026).
+- **Colours on the map.** The owner's wish is availability colours on the map itself.
+  That needs every location's status when the page loads; one request per click serves
+  only the details screen.
+- **Snapshot size.** Every EVSE's uid, status and time for all operators is 6.9 MB as
+  JSON, 1.5 MB gzipped (measured from the 9 November map files).
+- **The Worker's operator list** is fixed at four ids (proxy/worker.js).
+- **Staggered daily fetches.** The daily fetch has since become one run with hosts in
+  parallel, a "first run each day" check (ADR 0024), a last good copy rule (ADR 0018)
+  and feed health history, all built around one run a day.
+- **Gaps across runs.** The polite client's timers last one run. Roam's limit is 5
+  requests an hour, a gap of 721 seconds, so a refresh started soon after another run
+  has to be told when the host was last asked.
+
+Also measured on 9 November 2026: the Pages deploy job took 27 seconds, and GitHub's own
+schedule started the two backup runs more than 8 hours late. GitHub's limits page (read
+9 November 2026, https://docs.github.com/en/pages/getting-started-with-github-pages/github-pages-limits)
+says: "GitHub Pages sites have a soft limit of 10 builds per hour. This limit does not
+apply if you build and publish your site with a custom GitHub Actions workflow."
+
+### With the repository owner, not decided
+
+Four questions were put to the owner on 9 November 2026. Until they are answered nothing
+is scheduled, deployed or shown, and no ADR is written:
+
+1. Where the map gets statuses from: files on the site itself, with each refresh
+   redeploying Pages, or the Worker of ADR 0015.
+2. How often statuses refresh.
+3. How availability shows on map points, whose colours now mean power (ADR 0031).
+4. Whether the daily fetch stays one run or is staggered as this plan says.
+
+### Eco-Movement's statuses endpoint (recorded 10 November 2026)
+
+Each Eco-Movement operator file already recorded a statuses endpoint and its published
+limit: "The `statuses` endpoint has a rate limit of 1 request per 30 seconds." It was
+asked once each for three networks' tokens, through the polite client:
+
+- The address needs its trailing slash. Without it the server answered HTTP 307, a
+  redirect to the address with the slash. The operator files now record the slash.
+- One request returned a whole network: 12,550 locations and 14,225 EVSEs for
+  ubitricity, with `X-Total-Count` and no `Link` header. No paging was seen.
+- Each record has the location's id, `last_updated` and its EVSEs' `uid`, `status`,
+  `last_updated` and `evse_id`. There is no country code, party id or publish flag, so a
+  status can only be laid over a location the daily fetch already published.
+- Location ids and EVSE uids matched the map files. Against the daily fetch 23 hours
+  earlier, 2,272 of ubitricity's 14,215 matched EVSEs had a different status.
+
+### Built, and not switched on
+
+- `adapters/statuses.py` and `adapters/eco_movement.py` (`fetch_statuses`): a network's
+  statuses from the statuses endpoint, one request. A status is read exactly as the
+  daily fetch reads it, including the owner's `nonstandard_statuses` and
+  `excluded_locations` decisions; a value that is not an OCPI status is unknown.
+- `statuses_only` on the other adapters: the locations module alone, no tariff request.
+  A result fetched this way is refused by `pipeline/publish.py`, so it can never
+  replace the map files.
+- `pipeline/live_snapshot.py` (`from_statuses`): one `LiveSnapshot` per operator, holding
+  only locations on the published map. A location the feed has withdrawn is left out at
+  once; a new one waits for the daily fetch. An unfinished refresh makes no snapshot.
+- `pipeline/refresh.py`: the command that does this for every operator that is switched
+  on and fetched from a feed. It keeps the daily fetch's rules (one fetch per host at a
+  time, operators with `limits_per_key` taking turns) and adds one for runs close
+  together: a host is not asked until the longest gap any operator on it keeps has
+  passed since the last refresh of that host and since the daily fetch. An operator
+  that waits or fails keeps its last snapshot. `live/refresh.json` records each run.
+
+No workflow runs the command, and the site does not read what it writes.
+
+### Still to do, each its own issue and pull request
+
+- Whatever the owner decides above, then an ADR.
+- A scheduled refresh. It must share the daily fetch's concurrency group so the two
+  never run together, and it needs a floor between starts that does not depend on the
+  last run having finished: a run that stops before writing `live/refresh.json` leaves
+  no record of the hosts it asked. GitHub's schedule was hours late on 9 November 2026,
+  so the timer would be the relay Worker's (a change under `relay/`, for the owner to
+  approve).
+- Packing the snapshots for the map (one small file for colours, details on demand).
+- char.gy answers `date_from`; a refresh of changes only would be far fewer than its
+  122 pages. How many pages needs testing.
+- Needs testing over a few refreshes: whether ChargePlace Scotland, Evolt, PoGo,
+  ChargePoint, RAW and BrightGreen statuses change during the day. None had changed in
+  the hour before the 9 November fetch.
+
 ## Decided by the repository owner (9 October 2026)
 
 - **Prices once a day.** Prices change rarely; one fetch a day is enough.
