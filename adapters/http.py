@@ -18,11 +18,15 @@
   finished. The host then gets at most at_once requests at the same time, started at
   least MIN_SECONDS_BETWEEN_REQUESTS apart. Any retry, wait the server asks for or
   refusal puts every key on the host back to its gap, one request at a time, for the
-  rest of the run (ADR 0003, amended).
-- Retries connection errors, timeouts, HTTP 429 and HTTP 5xx with exponential backoff.
-- Honours every Retry-After header, in seconds or as an HTTP date, on any attempt. One
-  that cannot be read is treated as a long wait. If the wait is longer than this project
-  waits, nothing more is sent to that host until it has passed.
+  rest of the run (ADR 0003, amended): the next request waits for those already on
+  their way, a request that was waiting for its turn waits again, and each key's
+  allowance still counts the requests it sent close together before.
+- Retries connection errors, timeouts, HTTP 429 and HTTP 5xx with exponential backoff,
+  and says so in the run's logged problems, with what the server answered.
+- Honours every Retry-After header, in seconds or as an HTTP date, on any attempt and
+  on any answer, retried or not. One that cannot be read is treated as a long wait. If
+  the wait is longer than this project waits, nothing more is sent to that host until
+  it has passed.
 - Reads rate limit headers (RateLimit, RateLimit-*, X-RateLimit-*). When a server says no
   requests are left, nothing more is sent to that host until its reset time; a refusal
   with a reset time but no Retry-After waits for the reset (ADR 0018).
@@ -62,7 +66,7 @@ import ssl
 import threading
 import time
 from collections.abc import Callable, Iterable
-from contextlib import ExitStack, nullcontext
+from contextlib import ExitStack
 from dataclasses import dataclass, field
 from datetime import UTC, datetime
 from email.utils import parsedate_to_datetime
@@ -306,7 +310,9 @@ class HostTimer:
     each request finished and the endpoint it was for; started_at is when the host's last
     request was sent; slots, made on first use, limits the requests at the same time; and
     spaced says something went wrong at the host, so every key is back to its gap and turn
-    is held for each whole request again.
+    is held for each whole request again. in_flight counts the requests on their way to
+    the host, and idle is notified as each one ends, so that the first request sent one
+    at a time again can wait for those sent before it.
     """
 
     last_finished_at: float | None = None
@@ -320,6 +326,10 @@ class HostTimer:
     started_at: float | None = None
     spaced: bool = False
     slots: threading.BoundedSemaphore | None = field(default=None, repr=False, compare=False)
+    in_flight: int = 0
+    idle: threading.Condition = field(
+        default_factory=threading.Condition, repr=False, compare=False
+    )
 
     def hold_until(self, moment: float) -> None:
         self.not_before = moment if self.not_before is None else max(self.not_before, moment)
@@ -616,23 +626,23 @@ class PoliteClient:
                 ready = max(ready, times[-allowed] + period)
         return ready
 
-    def _wait_turn(
+    def _ready_at(
         self,
         timer: HostTimer,
         host: HostTimer | None,
         *,
-        at_host: bool = True,
-        endpoint: str | None = None,
-    ) -> None:
-        """Wait for this client's gap or allowance, and with a per-key timer at_host also
-        for the host's turn."""
+        at_host: bool,
+        endpoint: str | None,
+    ) -> float:
+        """The earliest this client's next request may start, as things stand now."""
         spaced = self._spaced(host)
-        now = self._clock()
-        ready = now
+        ready = float("-inf")
         if timer.last_finished_at is not None:
             gap = self.min_interval * timer.slow_down if spaced else SHARED_HOST_SECONDS
             ready = max(ready, timer.last_finished_at + gap)
-        if not spaced:
+        if self._allowances:
+            # Kept once the key is back to its gap too: the requests it sent close
+            # together before still count towards each limit's period.
             ready = max(ready, self._allowance_ready(timer, endpoint))
         if timer.not_before is not None:
             ready = max(ready, timer.not_before)
@@ -643,8 +653,70 @@ class PoliteClient:
                 ready = max(ready, host.started_at + MIN_SECONDS_BETWEEN_REQUESTS)
             if host.not_before is not None:
                 ready = max(ready, host.not_before)
-        if ready > now:
-            self._sleep(ready - now)
+        return ready
+
+    def _wait_turn(
+        self,
+        timer: HostTimer,
+        host: HostTimer | None,
+        url: str,
+        *,
+        at_host: bool = True,
+        endpoint: str | None = None,
+    ) -> None:
+        """Wait for this client's gap or allowance, and with a per-key timer at_host also
+        for the host's turn.
+
+        It looks again after each wait: the answer to another key's request may have asked
+        for a longer one meanwhile, or put every key back to its gap. A wait longer than
+        this project waits stops the request instead.
+        """
+        waited_to = self._clock()
+        while True:
+            for each in (timer,) if host is None else (timer, host):
+                self._refuse_if_held(each, url)
+            ready = self._ready_at(timer, host, at_host=at_host, endpoint=endpoint)
+            if ready <= waited_to:
+                return
+            self._sleep(ready - waited_to)
+            waited_to = ready
+
+    @staticmethod
+    def _wait_for_others(host: HostTimer) -> bool:
+        """Wait until no request is on its way to the host. True if there was one.
+
+        Called with the host's turn held, so no other request can start meanwhile."""
+        with host.idle:
+            if not host.in_flight:
+                return False
+            while host.in_flight:
+                host.idle.wait()
+            return True
+
+    @staticmethod
+    def _landed(host: HostTimer) -> None:
+        with host.idle:
+            host.in_flight -= 1
+            host.idle.notify_all()
+
+    def _note(self, event: str) -> None:
+        """Keep what the client did for the run's logged problems, and say it now."""
+        self.events.append(event)
+        self._notice(event)
+
+    def _end_allowance(self, host: HostTimer | None, why: str) -> None:
+        """Something went wrong at a host whose keys read their limits as an allowance:
+        every key on it is back to its gap, one request at a time, for the rest of the
+        run. Said once, by the client that saw it."""
+        if host is None or self._allowance is None:
+            return
+        with host.idle:
+            first, host.spaced = not host.spaced, True
+        if first:
+            self._note(
+                f"{why}, so every key on that host is back to its gap ({self.min_interval:g} s "
+                "for this one), one request at a time, for the rest of this run"
+            )
 
     def _check_certificate(self, response: httpx.Response, url: str) -> None:
         """Stop unless the server presented the one expired certificate the operator file
@@ -734,8 +806,6 @@ class PoliteClient:
         def hold_until(moment: float) -> None:
             for each in timers:
                 each.hold_until(moment)
-            if host is not None and self._allowance is not None:
-                host.spaced = True
 
         request_url = with_params(url, self._auth_params) if self._auth_params else url
         relayed = self._relay is not None and urlsplit(url).netloc.lower() in self._relay.hosts
@@ -743,31 +813,37 @@ class PoliteClient:
         if relayed:
             request_url = self._relay.url(request_url)
             headers = {RELAY_TOKEN_HEADER: self._relay.token}
-        via = " (through the relay)" if relayed else ""
+        shown = redact_url(url) + (" (through the relay)" if relayed else "")
         attempt = refusals = 0
         while True:
-            for each in timers:
-                self._refuse_if_held(each, url)
             if host is not None:
                 # This key's own gap or allowance first, so a key that is waiting never
                 # holds the host.
-                self._wait_turn(timer, host, at_host=False, endpoint=endpoint)
+                self._wait_turn(timer, host, url, at_host=False, endpoint=endpoint)
             with ExitStack() as turn:
-                if host is not None:
+                if host is None:
+                    self._wait_turn(timer, None, url)
+                else:
                     if self._allowance is not None:
                         turn.enter_context(host_slots(host, self._allowance.at_once))
                     # The host's turn, for clients of keys on one host fetched at the same
                     # time: held until the answer, and any wait it asks for, has been
-                    # recorded. Read as an allowance, only while the request starts.
-                    whole = self._spaced(host)
-                    if whole:
-                        turn.enter_context(host.turn)
-                    self._refuse_if_held(host, url)
-                    with nullcontext() if whole else host.turn:
-                        self._wait_turn(timer, host, endpoint=endpoint)
+                    # recorded. Read as an allowance, only while the request starts,
+                    # unless something has gone wrong at the host: then it is held for the
+                    # whole request again, once those already on their way have ended.
+                    with ExitStack() as start:
+                        start.enter_context(host.turn)
+                        while True:
+                            self._wait_turn(timer, host, url, endpoint=endpoint)
+                            whole = self._spaced(host)
+                            if not (whole and self._wait_for_others(host)):
+                                break
                         host.started_at = self._clock()
-                else:
-                    self._wait_turn(timer, None)
+                        with host.idle:
+                            host.in_flight += 1
+                        if whole:
+                            turn.enter_context(start.pop_all())
+                        turn.callback(self._landed, host)
                 self.requests_made += 1
                 response = None
                 try:
@@ -781,7 +857,9 @@ class PoliteClient:
                     if host is not None:
                         host.last_finished_at = timer.last_finished_at
                 now = timer.last_finished_at
-                if response is not None:
+                if response is None:
+                    self._end_allowance(host, f"{shown} could not be reached ({problem})")
+                else:
                     wall = self._wall_clock()
                     remaining, reset = rate_limit_state(response, wall)
                     if remaining == 0 and reset is not None:
@@ -789,11 +867,24 @@ class PoliteClient:
                     retry_after = retry_after_seconds(response, wall)
                     if retry_after is None and response.status_code >= 400 and reset is not None:
                         retry_after = reset + LIMIT_MARGIN_SECONDS
+                    if retry_after is not None:
+                        # Kept whatever the answer was, whether or not it is tried again.
+                        hold_until(now + retry_after)
                     status = response.status_code
-                    if host is not None and (status == REFUSAL_STATUS or status in RETRY_STATUSES):
-                        # A refusal or a limit reached, even one not retried, ends the
-                        # allowance for every key on the host.
-                        host.spaced = True
+                    asked = (
+                        f" and asked this project to wait {retry_after:g} s"
+                        if retry_after is not None
+                        else ""
+                    )
+                    if status == REFUSAL_STATUS or status in RETRY_STATUSES or asked:
+                        # A refusal, a limit reached or a wait asked for, even on an
+                        # answer that is not retried, ends the allowance for every key
+                        # on the host.
+                        self._end_allowance(host, f"{shown} answered HTTP {status}{asked}")
+                    elif remaining == 0 and reset is not None:
+                        self._end_allowance(
+                            host, f"{shown} said no requests are left for {reset:g} s"
+                        )
                     if (
                         status == REFUSAL_STATUS
                         and timer.answered
@@ -804,12 +895,10 @@ class PoliteClient:
                         hold_until(now + wait)
                         timer.slow_down *= REFUSAL_SLOW_DOWN
                         gap = self.min_interval * timer.slow_down
-                        event = (
-                            f"refused {redact_url(url)}{via} with HTTP 403 part-way through; "
+                        self._note(
+                            f"refused {shown} with HTTP 403 part-way through; "
                             f"waited {wait:g} s and went on with {gap:g} s between requests"
                         )
-                        self.events.append(event)
-                        self._notice(event)
                         continue
                     if status not in RETRY_STATUSES or status in return_at_once:
                         if status < 400:
@@ -817,18 +906,16 @@ class PoliteClient:
                         return response
                     problem = f"HTTP {status}"
 
-                if retry_after is not None:
-                    hold_until(now + retry_after)
+                asked = (
+                    f"; the server asked to wait {retry_after:g} s"
+                    if retry_after is not None
+                    else ""
+                )
                 if attempt == self.max_retries:
-                    asked = (
-                        f"; the server asked to wait {retry_after:g} s"
-                        if retry_after is not None
-                        else ""
-                    )
                     raise FeedError(
-                        f"gave up on {redact_url(url)}{via} after {attempt + 1} attempts: "
-                        f"{problem}{asked}"
+                        f"gave up on {shown} after {attempt + 1} attempts: {problem}{asked}"
                     )
                 if retry_after is None:
                     hold_until(now + self.backoff_seconds * 2**attempt)
                 attempt += 1
+                self._note(f"{problem} from {shown}{asked}; tried again")
