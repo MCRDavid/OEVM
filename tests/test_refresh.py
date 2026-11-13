@@ -595,3 +595,77 @@ def test_an_operator_left_out_of_a_run_keeps_its_snapshot_and_its_last_contact(
 def test_a_refresh_entry_says_when_there_is_no_snapshot_at_all():
     entry = RefreshEntry(fetched_at=None, last_contact_at=None, refreshed=False, note="failed: x")
     assert entry.locations == 0 and entry.requests is None
+
+
+def _answer(config, requests: int = 1) -> statuses.StatusResult:
+    return statuses.StatusResult(
+        operator_id=config.id, fetched_at=NOW, modules={}, requests=requests
+    )
+
+
+def test_the_log_says_when_each_operator_finishes_and_who_is_still_to_finish(monkeypatch, capsys):
+    """After its last "asking for statuses" line a refresh printed nothing until every host
+    had finished, which read as a run that had stopped on 12 November 2026."""
+    clock = FakeClock()
+    members = [OPERATORS[i] for i in ("arnold_clark_charge", "scottishpower_recharge", "three_ti")]
+    # One host, asked one operator after another.
+    assert len(run.host_groups(members)) == 1 and not run.takes_turns(members)
+
+    def fake_operator(config, *, max_pages=None, notice=None):
+        if config.id == "three_ti":
+            clock.sleep(125)
+            error = FeedError("three_ti: the feed returned HTTP 503")
+            error.requests = 5
+            raise error
+        clock.sleep(31)
+        return _answer(config)
+
+    monkeypatch.setattr(refresh, "refresh_operator", fake_operator)
+    outcomes = refresh.refresh_live(members, clock=clock)
+    assert list(outcomes) == ["arnold_clark_charge", "scottishpower_recharge", "three_ti"]
+    assert isinstance(outcomes["three_ti"], FeedError)
+    assert outcomes["arnold_clark_charge"].requests == 1
+    assert capsys.readouterr().out.splitlines() == [
+        "arnold_clark_charge: asking for statuses",
+        "arnold_clark_charge: answered in 31 s, 1 request(s). "
+        "Still to finish: scottishpower_recharge, three_ti.",
+        "scottishpower_recharge: asking for statuses",
+        "scottishpower_recharge: answered in 31 s, 1 request(s). Still to finish: three_ti.",
+        "three_ti: asking for statuses",
+        "three_ti: failed after 2 min 5 s, 5 request(s). Every operator has finished.",
+    ]
+
+
+def test_every_operator_gets_one_finishing_line_when_hosts_are_asked_together(monkeypatch, capsys):
+    configs = [c for _, c in sorted(OPERATORS.items()) if refresh.refreshable(c)]
+    assert len(run.host_groups(configs)) > 1
+    monkeypatch.setattr(
+        refresh, "refresh_operator", lambda config, max_pages=None, notice=None: _answer(config)
+    )
+    outcomes = refresh.refresh_live(configs, clock=lambda: 0.0)
+    assert set(outcomes) == {config.id for config in configs}
+
+    lines = capsys.readouterr().out.splitlines()
+    asking = [line for line in lines if line.endswith(": asking for statuses")]
+    finished = [line for line in lines if ": answered in 0 s, 1 request(s). " in line]
+    assert len(asking) == len(finished) == len(configs) and len(lines) == 2 * len(configs)
+    assert sorted(line.split(":")[0] for line in finished) == sorted(c.id for c in configs)
+    # Each finishing line counts down who is left, in the order the lines were printed.
+    left = {config.id for config in configs}
+    for line in finished:
+        left.discard(line.split(":")[0])
+        if not left:
+            assert line.endswith(" Every operator has finished.")
+        elif len(left) <= refresh.NAMED_STILL_TO_FINISH:
+            assert line.endswith(f" Still to finish: {', '.join(sorted(left))}.")
+        else:
+            assert line.endswith(f" {len(left)} operators still to finish.")
+    assert len(configs) > refresh.NAMED_STILL_TO_FINISH
+
+
+def test_a_finishing_line_for_a_failure_that_counted_no_requests():
+    line = refresh.finished_line("jolt", FeedError("jolt: no answer"), 0.4, ["roam"])
+    assert line == "jolt: failed after 0 s. Still to finish: roam."
+    assert refresh.finished_line("jolt", _answer(OPERATORS["jolt"], 3), 3600.6, []) == (
+        "jolt: answered in 60 min 1 s, 3 request(s). Every operator has finished."
+    )

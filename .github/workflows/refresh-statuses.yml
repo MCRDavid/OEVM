@@ -56,10 +56,9 @@ jobs:
     needs: check
     if: github.ref == 'refs/heads/main' && needs.check.outputs.refresh == 'true'
     runs-on: ubuntu-latest
-    # How long a whole refresh takes needs testing. It asks fewer pages than the daily
-    # fetch, whose fetch step took 29 minutes on 12 November 2026, so it should take no
-    # longer. The limit leaves room for the waits after a refusal, and ends before the
-    # next hour's refresh would start.
+    # Reading the statuses took a little over 14 minutes in each of the first five runs
+    # (12 and 13 November 2026). The limit leaves room for the waits after a refusal,
+    # and ends before the next hour's refresh would start.
     timeout-minutes: 40
     # The same group as Fetch daily: never two runs asking the same hosts at once.
     concurrency:
