@@ -1,7 +1,17 @@
 import assert from "node:assert/strict";
 import { afterEach, test } from "node:test";
 
-import relay, { DISPATCH_BODY, DISPATCH_URL, ROUTES, sameToken, startDailyFetch } from "../../relay/worker.js";
+import relay, {
+  DISPATCH_BODY,
+  DISPATCH_URL,
+  REFRESH_CRON,
+  REFRESH_URL,
+  ROUTES,
+  sameToken,
+  startDailyFetch,
+  startsRefresh,
+  startStatusRefresh,
+} from "../../relay/worker.js";
 
 const TOKEN = "test-token-not-a-real-one";
 const env = { RELAY_TOKEN: TOKEN };
@@ -162,6 +172,50 @@ test("the scheduled event starts Fetch daily, and a failure fails the invocation
   await relay.scheduled({ cron: "17 4 * * *", scheduledTime: Date.now() }, { GITHUB_DISPATCH_TOKEN: GITHUB });
   assert.equal(calls.length, 1);
   await assert.rejects(relay.scheduled({ cron: "17 4 * * *" }, {}), /not set/);
+});
+
+test("the hourly timer starts Refresh statuses on main, marked as started by the timer", async () => {
+  github(204);
+  await relay.scheduled({ cron: REFRESH_CRON, scheduledTime: Date.now() }, { GITHUB_DISPATCH_TOKEN: GITHUB });
+  assert.equal(calls.length, 1);
+  const { url, init } = calls[0];
+  assert.equal(url, "https://api.github.com/repos/MCRDavid/OEVM/actions/workflows/refresh-statuses.yml/dispatches");
+  assert.equal(url, REFRESH_URL);
+  assert.equal(init.method, "POST");
+  assert.equal(init.headers.authorization, `Bearer ${GITHUB}`);
+  assert.match(init.headers["user-agent"], /^OEVM /);
+  assert.deepEqual(JSON.parse(init.body), { ref: "main", inputs: { started_by: "timer" } });
+});
+
+test("only the hourly timer starts a refresh; every other timer starts Fetch daily", async () => {
+  assert.equal(REFRESH_CRON, "30 * * * *");
+  assert.ok(startsRefresh("30 * * * *"));
+  assert.ok(startsRefresh(" 30  *  * * * "));
+  for (const cron of ["17 4 * * *", "17 6 * * *", "30 4 * * *", "*/30 * * * *", "", undefined, null, 30]) {
+    assert.ok(!startsRefresh(cron), String(cron));
+  }
+  for (const controller of [{ cron: "17 4 * * *" }, { cron: "17 6 * * *" }, { cron: "something new" }, {}, undefined]) {
+    github(204);
+    await relay.scheduled(controller, { GITHUB_DISPATCH_TOKEN: GITHUB });
+    assert.deepEqual(calls.map((call) => call.url), [DISPATCH_URL]);
+  }
+});
+
+test("a refresh that cannot be started fails the invocation and says which workflow", async () => {
+  github(204);
+  await assert.rejects(relay.scheduled({ cron: REFRESH_CRON }, {}), /so Refresh statuses was not started/);
+  assert.equal(calls.length, 0);
+
+  github(401);
+  const error = await startStatusRefresh({ GITHUB_DISPATCH_TOKEN: GITHUB }, noWait).catch((e) => e);
+  assert.match(error.message, /Refresh statuses was not started: GitHub answered HTTP 401/);
+  assert.ok(!error.message.includes(GITHUB));
+  assert.equal(calls.length, 1);
+
+  const waits = [];
+  github(503, 204);
+  assert.equal(await startStatusRefresh({ GITHUB_DISPATCH_TOKEN: GITHUB }, { sleep: async (ms) => waits.push(ms) }), 2);
+  assert.deepEqual(waits, [60_000]);
 });
 
 test("the timer's token does not open the relay", async () => {

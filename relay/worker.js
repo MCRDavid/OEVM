@@ -12,8 +12,9 @@
 //
 // It also has a timer (ADR 0024): at the times in wrangler.toml ([triggers] crons) it asks
 // GitHub to start the Fetch daily workflow, because GitHub's own schedule starts it late or
-// not at all when GitHub is busy. The timer only starts the workflow; it never contacts an
-// operator. It uses a second Worker secret, GITHUB_DISPATCH_TOKEN: a fine-grained GitHub
+// not at all when GitHub is busy. Once an hour it asks GitHub to start the Refresh statuses
+// workflow in the same way (ADR 0032). The timer only starts a workflow; it never contacts
+// an operator. It uses a second Worker secret, GITHUB_DISPATCH_TOKEN: a fine-grained GitHub
 // token for this repository only, with Actions read and write and nothing else.
 //
 // Cloudflare deploys this folder from main through its Git integration (wrangler.toml and
@@ -46,6 +47,12 @@ export function sameToken(given, expected) {
 export const DISPATCH_URL =
   "https://api.github.com/repos/MCRDavid/OEVM/actions/workflows/fetch-daily.yml/dispatches";
 export const DISPATCH_BODY = { ref: "main", inputs: { started_by: "timer" } };
+// The hourly timer in wrangler.toml, and the workflow it starts instead. That workflow
+// stops by itself while a daily fetch or another refresh is waiting or running
+// (pipeline/refresh_runs.py).
+export const REFRESH_CRON = "30 * * * *";
+export const REFRESH_URL =
+  "https://api.github.com/repos/MCRDavid/OEVM/actions/workflows/refresh-statuses.yml/dispatches";
 // GitHub may be briefly unavailable: try up to three times, a minute apart. A refusal such
 // as a wrong or expired token is not retried.
 const ATTEMPTS = 3;
@@ -54,19 +61,19 @@ const RETRIED = new Set([429, 500, 502, 503, 504]);
 
 const wait = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
-// Asks GitHub to start Fetch daily. Throws if it could not, so the failure shows in the
+// Asks GitHub to start a workflow. Throws if it could not, so the failure shows in the
 // Worker's Cron Events; the message never includes the token.
-export async function startDailyFetch(env, { sleep = wait } = {}) {
+async function startWorkflow(env, url, name, { sleep = wait } = {}) {
   const token = env.GITHUB_DISPATCH_TOKEN;
   if (typeof token !== "string" || token === "") {
-    throw new Error("GITHUB_DISPATCH_TOKEN is not set, so Fetch daily was not started.");
+    throw new Error(`GITHUB_DISPATCH_TOKEN is not set, so ${name} was not started.`);
   }
   let problem = "";
   for (let attempt = 1; attempt <= ATTEMPTS; attempt += 1) {
     if (attempt > 1) await sleep(RETRY_AFTER_MS);
     let response;
     try {
-      response = await fetch(DISPATCH_URL, {
+      response = await fetch(url, {
         method: "POST",
         headers: {
           accept: "application/vnd.github+json",
@@ -85,14 +92,29 @@ export async function startDailyFetch(env, { sleep = wait } = {}) {
     problem = `GitHub answered HTTP ${response.status}`;
     if (!RETRIED.has(response.status)) break;
   }
-  throw new Error(`Fetch daily was not started: ${problem}.`);
+  throw new Error(`${name} was not started: ${problem}.`);
+}
+
+export function startDailyFetch(env, options) {
+  return startWorkflow(env, DISPATCH_URL, "Fetch daily", options);
+}
+
+export function startStatusRefresh(env, options) {
+  return startWorkflow(env, REFRESH_URL, "Refresh statuses", options);
+}
+
+// Whether a timer is the hourly one. Every other timer starts Fetch daily, as before the
+// hourly one was added, so nothing about a timer's wording can stop the daily fetch.
+export function startsRefresh(cron) {
+  return typeof cron === "string" && cron.trim().split(/\s+/).join(" ") === REFRESH_CRON;
 }
 
 export default {
   // Awaited rather than left to waitUntil, so a failure marks the invocation as failed in
   // the Worker's Cron Events. Waiting between tries uses no CPU time.
   async scheduled(controller, env) {
-    await startDailyFetch(env);
+    if (startsRefresh(controller?.cron)) await startStatusRefresh(env);
+    else await startDailyFetch(env);
   },
 
   async fetch(request, env) {

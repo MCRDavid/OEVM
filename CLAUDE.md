@@ -60,7 +60,7 @@ decisions are in docs/adr/.
   charger that was opened (data/live/, ADR 0032); the time shown is when the feed was read.
 - Statuses between daily fetches (ADR 0032: refreshed hourly, served from the site, shown on the
   details screen only). pipeline/live_snapshot.py, schema/live.py: snapshots per operator.
-  pipeline/refresh.py: the status refresh, started by hand so far; it never reads a tariff
+  pipeline/refresh.py: the status refresh, run each hour by refresh-statuses; it never reads a tariff
   or changes the map files, and never asks a host before its gap has passed since the last run
   (--last-run-ended, or the daily fetch's whole job limit after the map files were made).
   adapters/statuses.py: statuses alone (Eco-Movement's statuses endpoint; other feeds statuses_only).
@@ -74,8 +74,9 @@ decisions are in docs/adr/.
   deploy (Pages from main, with the newest statuses), keepalive.
   pipeline/refresh_runs.py: the refresh stops while a fetch or another refresh has not
   finished, and both keep every host's gap since the last run that asked feeds ended.
-  The relay Worker's timer starts fetch-daily; GitHub's schedule is a backup, and
-  pipeline/daily_runs.py lets only the first each day fetch and records runs (ADR 0024).
+  The relay Worker's timer starts fetch-daily, and refresh-statuses at half past each hour;
+  GitHub's schedule is a backup for fetch-daily only, and pipeline/daily_runs.py lets only
+  the first each day fetch and records runs (ADR 0024).
 
 ## Hard rules
 - Never commit or print secrets. Reference keys by secret_name only, even keys an operator publishes.

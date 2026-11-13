@@ -265,6 +265,27 @@ stop within a minute. The timer needs a GitHub token of its own:
 To stop the timer, delete the `GITHUB_DISPATCH_TOKEN` secret in Cloudflare and the token on
 GitHub; GitHub's schedule carries on.
 
+### The timer that starts Refresh statuses each hour
+
+The same Worker and the same token also start **Refresh statuses** at half past each hour
+(ADR 0032). It reads every switched-on operator's charge point statuses again and deploys
+the site with them, for the details screen. Nothing new needs setting up: the token's
+**Actions: Read and write** permission covers it, and the timer is a third Cron Trigger,
+`30 * * * *`, of the five Cloudflare's free plan allows.
+
+- After the pull request that adds it is merged, the Worker's **Settings** list
+  `30 * * * *` beside the two daily timers, and the **Actions** tab shows a run named
+  **Refresh statuses (Cloudflare timer)** each hour.
+- A run that starts while Fetch daily or another refresh is waiting or running stops
+  within a minute without asking any feed. The 04:30 UTC run does so on most days.
+- To run one yourself, open **Actions > Refresh statuses > Run workflow** on `main`.
+- To stop the hourly refresh, open **Actions > Refresh statuses**, select the **...**
+  menu and **Disable workflow**. The daily fetch carries on, and the details screen goes
+  back to the daily fetch's statuses after the next one. How GitHub answers the timer's
+  hourly request for a disabled workflow needs testing; the Worker's Cron Events will
+  show it. To stop the requests as well, remove `30 * * * *` from `relay/wrangler.toml`
+  in a pull request.
+
 Cloudflare's app posts a build result on commits and pull requests that change `relay/`.
 Menu names in Cloudflare's dashboard change from time to time; if a label differs, look
 for the nearest match. To stop using the relay, delete **both** GitHub secrets,

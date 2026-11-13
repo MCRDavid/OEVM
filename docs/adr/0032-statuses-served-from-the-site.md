@@ -86,16 +86,18 @@ the same polite client, rate limits and normalisers as the daily run.
 - **Every deploy packs the newest statuses**: the deploy at the end of a refresh, of
   the daily fetch, and after each change to main. If they cannot be downloaded or
   packed the site is deployed without them, with a warning in the run.
-- **The timer is the relay Worker's**, as for the daily fetch (ADR 0024). The Worker
-  only asks GitHub to start the workflow; it reads no feed for this.
+- **The timer is the relay Worker's**, as for the daily fetch (ADR 0024). At half past
+  each hour (`30 * * * *` in `relay/wrangler.toml`) it asks GitHub to start Refresh
+  statuses, with the token it already has; it reads no feed for this. Half past is
+  away from every minute a daily fetch can start at. The run at 04:30 UTC finds the
+  daily fetch still going on most days and stops at once, so that hour has the daily
+  fetch's statuses. Any timer the Worker does not know as the hourly one starts Fetch
+  daily, as before, so the daily fetch cannot be lost to a change in a timer's wording.
 
 ## Not done yet
 
 Each is its own pull request:
 
-- The relay Worker's hourly timer. Until then the workflow is started by hand. The
-  timer is a change under `relay/`, which Cloudflare deploys from main, so it waits for
-  the owner's go-ahead.
 - Showing the last refresh on the feed health page.
 - `proxy/` (the Worker of ADR 0015) is no longer needed for this and was never
   deployed. Whether to remove it is the owner's decision.

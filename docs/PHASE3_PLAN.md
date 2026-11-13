@@ -110,14 +110,13 @@ asked once each for three networks' tokens, through the polite client:
   another refresh has not finished. Every deploy packs the newest statuses, and the
   daily fetch waits out the longest gap after the last refresh before it fetches.
 
-The workflow is started by hand only, and has not been run, so every status file is
-still empty.
+- `relay/worker.js` and `relay/wrangler.toml`: the relay Worker's timer starts Refresh
+  statuses at half past each hour, as it starts the daily fetch, because GitHub's own
+  schedule was hours late on 9 November 2026.
 
 ### Still to do, each its own issue and pull request
 
-- The hourly timer. GitHub's schedule was hours late on 9 November 2026, so it would be
-  the relay Worker's (a change under `relay/`, for the owner to approve).
-- Needs testing with the first run: how long a whole refresh takes, and whether any
+- Needs testing with the first runs: how long a whole refresh takes, and whether any
   operator refuses it.
 - char.gy answers `date_from`; a refresh of changes only would be far fewer than its
   122 pages. How many pages needs testing.

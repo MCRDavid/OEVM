@@ -6,8 +6,11 @@ run-name: ${{ inputs.started_by == 'timer' && 'Refresh statuses (Cloudflare time
 # never a tariff, and it never changes the map files. The details screen shows them, with
 # the time they were read; the map points still come from the daily fetch.
 #
-# Started by hand for now. GitHub's own schedule starts runs hours late (ADR 0024), so an
-# hourly start has to come from the relay Worker's timer, as it does for Fetch daily.
+# Started at half past each hour by the relay Worker's timer (relay/wrangler.toml), which
+# asks GitHub to start this workflow with started_by set to timer, or by hand. GitHub's
+# own schedule starts runs hours late (ADR 0024), so there is none here. A run that
+# starts while Fetch daily or another refresh is waiting or running stops at once, as
+# the 04:30 UTC run does on most days.
 
 on:
   workflow_dispatch:
