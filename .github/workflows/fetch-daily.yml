@@ -64,10 +64,11 @@ jobs:
     needs: check
     if: github.ref == 'refs/heads/main' && needs.check.outputs.fetch == 'true'
     runs-on: ubuntu-latest
-    # The slowest host sets the length (ADR 0014): the 22 networks on open-chargepoints.com
-    # make 57 requests within each token's hourly allowance, at most 5 at once, about a
-    # minute; Roam and char.gy then take about 12. Any trouble there puts each network back
-    # to a 125 second gap (about 30 minutes), so the limit leaves room for that and retries.
+    # The slowest host sets the length (ADR 0014): the 23 networks on open-chargepoints.com
+    # make about 60 requests within each token's hourly allowance, at most 5 at once, about
+    # a minute; Roam and char.gy then take about 12. Any trouble there puts each network
+    # back to a 125 second gap (about 30 minutes, as every run read from 30 October to
+    # 12 November 2026 did: ADR 0003), so the limit leaves room for that and retries.
     timeout-minutes: 150
     permissions:
       contents: read

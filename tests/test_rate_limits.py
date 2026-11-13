@@ -514,6 +514,152 @@ def test_a_refusal_not_retried_still_ends_the_allowance_for_every_key():
     assert own_b[1] - own_b[0] >= 125 - 1e-9
 
 
+def test_a_burst_still_counts_once_every_key_is_back_to_its_gap():
+    """A key that sent most of its hour's allowance close together and then met trouble
+    goes on at its gap, and the hour that holds the burst still holds no more than the
+    limit allows."""
+    config = OPERATORS["ubitricity"]
+    clock = FakeClock()
+    ok = httpx.Response(200, json={})
+    server = KeyServer(clock, [ok] * 28 + [httpx.Response(503)] + [ok] * 40)
+    with keyed_client_for(config, clock, server) as client:
+        while server.responses:
+            client.get(config.endpoints["locations"].url)
+    arrivals = server.arrivals
+    assert len(arrivals) == 69
+    # The burst, then the gap after the trouble, kept for the rest of the run.
+    assert arrivals[27] < 28 * 5
+    for earlier, later in pairwise(arrivals[28:]):
+        assert later - earlier >= 125 - 1e-9
+    # 29 of the 30 an hour were used by the burst and the retry; the next waits the hour out.
+    assert arrivals[29] - arrivals[0] > 3600
+    for start in arrivals:
+        assert len([t for t in arrivals if start <= t <= start + 3600]) <= 30
+
+
+def test_a_wait_asked_of_one_key_holds_a_request_already_waiting_for_its_turn():
+    """Two keys within their allowance, each on its own thread. While the second waits
+    the second it leaves after the first one's start, the first one's answer asks for a
+    wait: the second is not sent until that wait has passed."""
+    first, second = ECO[0], ECO[1]
+    clock = FakeClock()
+    in_flight, waiting, answered = threading.Event(), threading.Event(), threading.Event()
+    arrivals: list[tuple[float, str]] = []
+
+    def answer(request: httpx.Request) -> httpx.Response:
+        key = request.headers["authorization"]
+        arrivals.append((clock(), key))
+        if key == f"Token made-up-{first.id}":
+            in_flight.set()
+            assert waiting.wait(5)
+            return httpx.Response(429, headers={"Retry-After": "60"})
+        return httpx.Response(200, json={})
+
+    def wait_for_the_answer(seconds: float) -> None:
+        # The second key's first wait is for its turn to start: the first key's answer
+        # arrives, and is dealt with, while it waits.
+        if not waiting.is_set():
+            waiting.set()
+            assert answered.wait(5)
+        clock.sleep(seconds)
+
+    def client(config, sleep, **kwargs) -> PoliteClient:
+        return PoliteClient(
+            config,
+            transport=httpx.MockTransport(answer),
+            sleep=sleep,
+            clock=clock,
+            wall_clock=clock.wall,
+            key=f"made-up-{config.id}",
+            **kwargs,
+        )
+
+    def ask_first() -> None:
+        with client(first, clock.sleep, max_retries=0) as a, pytest.raises(FeedError):
+            a.get(first.endpoints["locations"].url)
+        answered.set()
+
+    thread = threading.Thread(target=ask_first)
+    thread.start()
+    assert in_flight.wait(5)
+    with client(second, wait_for_the_answer) as b:
+        b.get(second.endpoints["locations"].url)
+    thread.join(5)
+    assert [key for _, key in arrivals] == [
+        f"Token made-up-{first.id}",
+        f"Token made-up-{second.id}",
+    ]
+    assert arrivals[1][0] >= arrivals[0][0] + 60
+
+
+def test_after_trouble_no_request_starts_while_an_earlier_one_is_on_its_way(monkeypatch):
+    """Real threads. One key's request is slow; another key's fails meanwhile, which puts
+    every key back to one request at a time. The retry waits for the slow request to
+    finish, and for the host's gap after it."""
+    monkeypatch.setattr(http, "SHARED_HOST_SECONDS", 0.02)
+    monkeypatch.setattr(http, "MIN_SECONDS_BETWEEN_REQUESTS", 0.005)
+    slow, failing = ECO[0], ECO[1]
+    lock, seen = threading.Lock(), []
+    failed_once = threading.Event()
+
+    def answer(request: httpx.Request) -> httpx.Response:
+        key = request.headers["authorization"]
+        start = time.monotonic()
+        if key == f"Token made-up-{slow.id}":
+            time.sleep(0.4)
+            status = 200
+        elif not failed_once.is_set():
+            failed_once.set()
+            status = 503
+        else:
+            status = 200
+        with lock:
+            seen.append((start, time.monotonic(), key, status))
+        return httpx.Response(status, json={})
+
+    def fetch(config):
+        with PoliteClient(
+            config,
+            transport=httpx.MockTransport(answer),
+            key=f"made-up-{config.id}",
+            backoff_seconds=0.01,
+        ) as client:
+            client.min_interval = 0.05
+            client.get(config.endpoints["locations"].url)
+
+    threads = [threading.Thread(target=fetch, args=(config,)) for config in (slow, failing)]
+    threads[0].start()
+    time.sleep(0.05)  # the slow request is on its way
+    threads[1].start()
+    for thread in threads:
+        thread.join(10)
+    assert [status for _, _, _, status in sorted(seen)] == [200, 503, 200]
+    slow_done = next(done for _, done, key, _ in seen if key == f"Token made-up-{slow.id}")
+    retry_start = max(start for start, _, key, _ in seen if key != f"Token made-up-{slow.id}")
+    assert retry_start >= slow_done + 0.02 - 1e-3
+
+
+def test_the_end_of_the_allowance_is_said_once_by_the_client_that_saw_it():
+    first, second = ECO[0], ECO[1]
+    clock = FakeClock()
+    ok = httpx.Response(200, json={})
+    server = KeyServer(clock, [ok, httpx.Response(503), ok, httpx.Response(503), ok])
+    said: list[str] = []
+    with keyed_client_for(first, clock, server) as a, keyed_client_for(second, clock, server) as b:
+        a._notice = said.append
+        a.get(first.endpoints["locations"].url)
+        a.get(first.endpoints["locations"].url)  # HTTP 503, then a retry
+        b.get(second.endpoints["locations"].url)  # HTTP 503 again, then a retry
+        url = "https://open-chargepoints.com/api/ocpi/cpo/2.2.1/locations/"
+        assert a.events == [
+            f"{url} answered HTTP 503, so every key on that host is back to its gap "
+            "(125 s for this one), one request at a time, for the rest of this run",
+            f"HTTP 503 from {url}; tried again",
+        ]
+        assert said == a.events
+        assert b.events == [f"HTTP 503 from {url}; tried again"]
+
+
 def test_keys_fetched_together_within_their_allowance_send_at_most_five_at_once(monkeypatch):
     """Real threads, one per key, as pipeline.run fetches them. Floors are scaled down so
     the test is quick: requests overlap, never more than five at once, their starts at
@@ -679,6 +825,62 @@ def test_a_long_retry_after_holds_back_every_client_for_that_host():
         clock.sleep(1800)
         assert second.get(f"{EXAMPLE}/tariffs").status_code == 200
     assert server.arrivals[1] - server.arrivals[0] >= 3600
+
+
+@pytest.mark.parametrize("status", [200, 403, 404])
+def test_a_retry_after_on_an_answer_that_is_not_retried_is_still_honoured(status):
+    """A first request that is refused, or any other answer handed straight back, can
+    carry a Retry-After too: the next request to the host, from this operator or another
+    on it, waits for it."""
+    config = make_config(2)
+    clock = FakeClock()
+    server = Server(
+        clock,
+        [httpx.Response(status, headers={"Retry-After": "120"}), httpx.Response(200, json={})],
+    )
+    with client_for(config, clock, server) as first:
+        assert first.get(f"{EXAMPLE}/locations").status_code == status
+        assert first.events == []
+    with client_for(config, clock, server) as second:
+        second.get(f"{EXAMPLE}/tariffs")
+    assert server.arrivals[1] - server.arrivals[0] >= 120
+
+
+def test_every_retry_is_kept_for_the_run_log_with_what_the_server_answered():
+    config = make_config(2)
+    clock = FakeClock()
+    responses = [
+        httpx.Response(503),
+        httpx.Response(429, headers={"Retry-After": "30"}),
+        httpx.Response(200, json={}),
+    ]
+    said: list[str] = []
+    server = Server(clock, responses)
+    with client_for(config, clock, server, notice=said.append) as client:
+        client.get(f"{EXAMPLE}/locations?token=made-up")
+        assert client.events == [
+            f"HTTP 503 from {EXAMPLE}/locations?token=REDACTED; tried again",
+            f"HTTP 429 from {EXAMPLE}/locations?token=REDACTED; the server asked to wait "
+            "30 s; tried again",
+        ]
+    assert said == client.events
+
+
+def test_a_connection_error_that_is_retried_is_kept_for_the_run_log():
+    config = make_config(2)
+    clock = FakeClock()
+    calls = []
+
+    def answer(request: httpx.Request) -> httpx.Response:
+        calls.append(clock())
+        if len(calls) == 1:
+            raise httpx.ConnectError("made-up failure")
+        return httpx.Response(200, json={})
+
+    with client_for(config, clock, answer) as client:
+        client.get(f"{EXAMPLE}/locations")
+        assert client.events == [f"ConnectError from {EXAMPLE}/locations; tried again"]
+    assert calls[1] - calls[0] >= 5
 
 
 # The runner used by --live
