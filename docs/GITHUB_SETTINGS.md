@@ -278,6 +278,10 @@ the site with them, for the details screen. Nothing new needs setting up: the to
   **Refresh statuses (Cloudflare timer)** each hour.
 - A run that starts while Fetch daily or another refresh is waiting or running stops
   within a minute without asking any feed. The 04:30 UTC run does so on most days.
+- A refresh takes about 15 minutes. Its log prints a line as each operator is asked and
+  as each finishes, with who is still to finish. char.gy's feed is about 122 pages, 6
+  seconds apart, which takes most of that time, so several minutes with no new line
+  is expected.
 - To run one yourself, open **Actions > Refresh statuses > Run workflow** on `main`.
 - To stop the hourly refresh, open **Actions > Refresh statuses**, select the **...**
   menu and **Disable workflow**. The daily fetch carries on, and the details screen goes

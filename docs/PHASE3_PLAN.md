@@ -116,8 +116,9 @@ asked once each for three networks' tokens, through the polite client:
 
 ### Still to do, each its own issue and pull request
 
-- Needs testing with the first runs: how long a whole refresh takes, and whether any
-  operator refuses it.
+- The first five refreshes (12 and 13 November 2026) each read 44 of 44 operators in
+  a little over 14 minutes, and no operator's refresh failed (ADR 0032, "The first
+  runs"). Whether any operator refuses hourly requests over more days needs testing.
 - char.gy answers `date_from`; a refresh of changes only would be far fewer than its
   122 pages. How many pages needs testing.
 - Needs testing over a few refreshes: whether ChargePlace Scotland, Evolt, PoGo,

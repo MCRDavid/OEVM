@@ -34,6 +34,7 @@ replayed only where a statuses response was recorded.
 import argparse
 import json
 import sys
+import threading
 import time
 from collections.abc import Callable
 from concurrent.futures import ThreadPoolExecutor
@@ -158,22 +159,68 @@ def refresh_fixtures(
     return results
 
 
+def _took(seconds: float) -> str:
+    minutes, rest = divmod(round(max(0.0, seconds)), 60)
+    return f"{minutes} min {rest} s" if minutes else f"{rest} s"
+
+
+# How many operators the log names as still to finish; above this it gives the number.
+NAMED_STILL_TO_FINISH = 8
+
+
+def finished_line(
+    operator_id: str, outcome: StatusResult | FeedError, seconds: float, unfinished: list[str]
+) -> str:
+    """The log line for an operator whose refresh has just ended, with who is left."""
+    if isinstance(outcome, FeedError):
+        requests = getattr(outcome, "requests", None)
+        asked = "" if requests is None else f", {requests} request(s)"
+        ended = f"failed after {_took(seconds)}{asked}"
+    else:
+        ended = f"answered in {_took(seconds)}, {outcome.requests} request(s)"
+    if not unfinished:
+        left = "Every operator has finished."
+    elif len(unfinished) <= NAMED_STILL_TO_FINISH:
+        left = f"Still to finish: {', '.join(unfinished)}."
+    else:
+        left = f"{len(unfinished)} operators still to finish."
+    return f"{operator_id}: {ended}. {left}"
+
+
 def refresh_live(
-    configs: list[OperatorConfig], *, max_pages: int | None = None
+    configs: list[OperatorConfig],
+    *,
+    max_pages: int | None = None,
+    clock: Callable[[], float] = time.monotonic,
 ) -> dict[str, StatusResult | FeedError]:
     """Refresh each operator, never two on one host at once unless they take turns. A
-    failure comes back in place of the result, so the others still finish."""
+    failure comes back in place of the result, so the others still finish.
+
+    The log says when each operator is asked and when it has finished, with who is still
+    to finish, so that a long wait for one host's gap reads as that and not as a run that
+    has stopped."""
+    unfinished = {config.id for config in configs}
+    lock = threading.Lock()
 
     def one(config: OperatorConfig) -> StatusResult | FeedError:
         print(f"{config.id}: asking for statuses", flush=True)
+        began = clock()
+        outcome: StatusResult | FeedError
         try:
-            return refresh_operator(
+            outcome = refresh_operator(
                 config,
                 max_pages=max_pages,
                 notice=lambda text, i=config.id: print(f"{i}: {text}", flush=True),
             )
         except FeedError as exc:
-            return exc
+            outcome = exc
+        with lock:
+            unfinished.discard(config.id)
+            print(
+                finished_line(config.id, outcome, clock() - began, sorted(unfinished)),
+                flush=True,
+            )
+        return outcome
 
     def group(members: list[OperatorConfig]) -> list[StatusResult | FeedError]:
         if takes_turns(members):

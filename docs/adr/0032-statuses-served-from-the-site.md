@@ -102,13 +102,28 @@ Each is its own pull request:
 - `proxy/` (the Worker of ADR 0015) is no longer needed for this and was never
   deployed. Whether to remove it is the owner's decision.
 
+## The first runs (12 and 13 November 2026)
+
+- The first refresh was started by hand at 22:53 UTC on 12 November 2026. It read 44
+  of 44 operators in 14 minutes 18 seconds, with no failure and no retry in its log.
+- The relay Worker's hourly timer was merged at 03:04 UTC on 13 November 2026. Its
+  runs at 03:30, 05:30, 06:30 and 07:30 UTC each took between 14 minutes 4 seconds and
+  14 minutes 24 seconds to read the statuses. The first three logs say 44 of 44
+  operators were refreshed, and the site's status files after the fourth held all 44.
+- The 04:30 UTC run stopped within 12 seconds without asking any feed, because the
+  daily fetch was running. The daily fetch at 04:17 UTC needed no wait before it
+  fetched: the refresh before it had ended 32 minutes earlier.
+- GitHub Pages served a status file with `cache-control: max-age=600` on 13 November
+  2026, so a visitor's browser may keep one for 10 minutes before asking again.
+- The refresh log says when each operator finishes and who is still to finish, so a
+  wait for one host's gap never reads as a run that has stopped.
+
 ## Needs testing
 
-- How long a whole refresh takes from GitHub's servers, and whether any operator
-  refuses hourly requests, as char.gy and GeniePoint refused the first daily run on 8
-  October 2026.
+- Whether any operator refuses hourly requests over more days, as char.gy and
+  GeniePoint refused the first daily run on 8 October 2026. None did in the first five
+  refreshes.
 - How many pages a refresh of char.gy's changes only (`date_from`) takes; until then
   its whole feed is read, about 122 pages at 6 seconds.
 - Whether ChargePlace Scotland, Evolt, PoGo, ChargePoint, RAW and BrightGreen statuses
   change during the day. None had changed in the hour before the 9 November 2026 fetch.
-- How long a visitor's browser keeps a status file before asking again.
