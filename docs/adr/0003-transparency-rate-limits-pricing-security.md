@@ -124,6 +124,38 @@ keeps within either reading of the guide (`limits_as_allowance` in each operator
   one token) fits within each token's hourly allowance, so the group should take about a
   minute and the whole fetch about 12 minutes, set by Roam and char.gy (estimates).
 
+### Review, 13 November 2026: the fall back to spacing, corrected and made visible
+
+A review of the client found that the rules above were not fully kept at the moment a
+host's keys go back to spacing. None of these changes the owner's decisions; each makes
+`adapters/http.py` do what they already say, and tests now cover each one.
+
+- **The allowance still counts after the fall back.** A key that had sent requests close
+  together and then went back to its 125 second gap was no longer counted against its
+  hourly allowance, so in a test 28 requests close together followed by trouble became
+  57 requests to one endpoint in an hour. The allowance is now kept in both modes.
+- **A wait is seen by a request already waiting for its turn.** A request waiting the
+  second after another one's start was still sent if a different key's answer asked for
+  a wait in that second. Each wait is now followed by a second look.
+- **One request at a time starts once the earlier ones have ended.** The first request
+  after the trouble could start while up to four sent before it were still on their way.
+  It now waits for them, and the host's 2 seconds after the last.
+- **A Retry-After on any answer is kept**, including an answer that is not tried again,
+  such as a refusal of the first request to a host or an HTTP 200.
+- **Every retry is in the run's logged problems**, with the HTTP status or the kind of
+  connection error and any wait the server asked for, and so is the moment a host's
+  keys go back to spacing. Until now a retry left no trace.
+
+What the run logs show (GitHub Actions logs of the fetch job, read 12 November 2026): the
+runs of 29 October 23:01 UTC and 30 October 04:18 UTC fetched all 22 networks within
+their allowance in about 1 minute 16 seconds. In the run of 30 October 10:45 UTC, and in
+the runs of 4 and 12 November (the others were not read, but 31 October to 4 November all
+took about 31 minutes rather than 17), one request to open-chargepoints.com was tried again
+within the first 5 to 15 seconds, so every network went back to its 125 second gap and
+ubitricity's 13 pages took about 28 minutes. No published limit was passed: spacing is
+the stricter of the two. Why those requests were tried again is unknown, because the
+logs of those runs do not say; the next daily run after this change will.
+
 ## Prices
 
 - `pipeline/pricing.py` is the only way prices are shown: pounds and pence, GBP tariffs
