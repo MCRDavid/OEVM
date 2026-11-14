@@ -24,16 +24,18 @@ daily fetch its tariff had one energy price, 0.37 with VAT 20, every day of the 
 showed 37p. 0.37 with 20% added is 44.4p, which the app showed as 44p. That day 642 of Pod's 1,795
 sites on the map had a connector priced at 37p, more than any other price.
 
-One reading is that Pod publishes its prices without VAT, rounded to whole pence: 44p divided by
-1.2 is 36.7p, which rounds to 37p. That is inferred from one price and needs confirming by Pod.
-Either way, whole pence as published did not show that VAT was already in a price.
+The project owner reports that the app's price is the one a driver confirms for the session, so
+44p is what Pod charges there. Without VAT that is 36.67p, which the feed gives rounded to whole
+pence as 0.37. That is inferred from one price and needs confirming by Pod. Either way, whole
+pence as published did not show that VAT was already in a price.
 
 ## What changes
 
 On 14 November 2026 the owner withdrew the decision for Pod. Its stated VAT is now added, as for
 any feed that states its VAT rate, so every Pod price on the map is a fifth higher than before:
-37p becomes 44.4p, 42p becomes 50.4p and 52p becomes 62.4p. The feed does not say whether Pod
-charges 44p or 44.4p, so a price on the map can differ from the app's by part of a penny. The
+37p becomes 44.4p, 42p becomes 50.4p and 52p becomes 62.4p. The map does not round these back to
+whole pence, because the feed's rounding cannot always be undone: 0.58 without VAT could have
+been 69p or 70p with it. So a Pod price on the map can differ from the app's by up to 0.6p. The
 tariffs are published unchanged, and the [transparency page](transparency/) shows the dated
 record in Pod's row.
 
