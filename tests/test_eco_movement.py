@@ -323,7 +323,10 @@ def test_stated_vat_is_read_as_in_the_price_where_the_owner_decided(tmp_path):
 def test_pods_isle_of_man_site_is_left_off_and_its_zero_tariff_shows_free(tmp_path):
     shown = prices_shown("pod", tmp_path)
     assert "Free" in shown
-    assert any(text.startswith("38p per kWh including VAT, reading") for text in shown)
+    # Pod's stated VAT is added (the owner's vat_in_price of 29 October was withdrawn on
+    # 14 November 2026): 0.38 with VAT 20 shows as 45.6p, never as 38p.
+    assert "45.6p per kWh including VAT" in shown
+    assert not any(text.startswith("38p") or "already in the price" in text for text in shown)
     layer = json.loads((tmp_path / "data" / "locations.geojson").read_text())
     names = {f["properties"]["name"] for f in layer["features"]}
     assert len(names) == 3 and not any("IOM" in name for name in names)

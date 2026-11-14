@@ -228,6 +228,15 @@ published. Both readings are inferred from the figures and recorded as findings 
 operator file. The words a `vat_in_price` price carries were made general, as these feeds
 have no display price.
 
+### Amendment, 14 November 2026: Pod's VAT added
+
+On 14 November 2026 the owner withdrew Pod's `vat_in_price`. Pod's app showed 44p per kWh
+that day for a 7 kW connector whose tariff in the feed gives 0.37 with VAT 20, and 0.37 with
+20% added is 44.4p, so Pod's prices exclude VAT as OCPI 2.2.1 says. Its stated VAT is now
+added like any other feed's. Whole pence as published was not enough to show that VAT was
+already in a price: the decisions for ESB Energy and ESB ecars still rest on that reading and
+need confirming by each network.
+
 ## Security
 
 - `SECURITY.md` asks for private reports through GitHub's private vulnerability

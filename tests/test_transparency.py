@@ -416,12 +416,12 @@ def test_a_decision_to_read_stated_vat_as_in_the_price_is_shown(page):
         "bright_green": "2026-10-23",
         "esb_ecars": "2026-10-29",
         "esb_energy": "2026-10-29",
-        "pod": "2026-10-29",
     }
     text = " ".join(page.split())
     assert "The VAT each price states is read as already in the price, so it is not" in text
     assert "<li>BrightGreen: decided 2026-10-23" in text
-    assert "<li>Pod: decided 2026-10-29" in text
+    assert "<li>ESB ecars (Northern Ireland): decided 2026-10-29" in text
+    assert "<li>Pod: decided" not in text
 
 
 def test_a_decision_to_use_a_related_operators_tariffs_is_shown(page):
