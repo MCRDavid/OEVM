@@ -59,8 +59,8 @@ class ConnectorSummary(_Model):
     low: float | None = Field(
         default=None,
         ge=0,
-        description="Pence per kWh: the lowest energy price, to the tenth of a penny, that "
-        "the tariffs the connector lists give (the operator's app or account as well as "
+        description="Pence per kWh: the lowest energy price, to the tenth of a penny (to "
+        "the whole penny when it includes VAT, ADR 0003), that the tariffs the connector lists give (the operator's app or account as well as "
         "paying at the charger), for the label on the map (ADR 0026). Including VAT when "
         "lvat is true. Tariffs that charge nothing per kWh at all, tariffs named in "
         "zero_price_tariffs and tariffs outside their own dates are left out. Null when no "
@@ -81,7 +81,7 @@ class ConnectorSummary(_Model):
         default=None,
         description="The label drawn above the location's point on the map for this "
         "connector, worded by pipeline/pricing.py: 'Free' only when its price state is "
-        "free_confirmed, otherwise low as a price, such as '56p', 'from 32.5p' or "
+        "free_confirmed, otherwise low as a price, such as '56p', 'from 39p' or "
         "'49.2p excl. VAT'. Null when there is neither.",
     )
 

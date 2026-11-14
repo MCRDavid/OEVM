@@ -185,7 +185,7 @@ def test_a_parking_fee_shows_when_it_starts():
         },
     ]
     assert describe_tariff(tariff("P", elements)).text == (
-        "82.8p per kWh, plus £6.67 per hour parked after 90 minutes including VAT"
+        "83p per kWh, plus £6.67 per hour parked after 90 minutes including VAT"
     )
 
 
@@ -268,11 +268,11 @@ def test_recorded_jolt_connectors_are_priced_or_unknown_with_a_reason():
     prices = price_locations(result.locations, result.tariffs)
     priced = [p for p in prices if p.state == "priced"]
     assert {p.text for p in priced} == {
-        "49.2p per kWh including VAT",
-        "88.8p per kWh including VAT",
+        "49p per kWh including VAT",
+        "89p per kWh including VAT",
     }
     assert all(
-        p.reason == "Some listed tariffs could not be read." for p in priced if "49.2p" in p.text
+        p.reason == "Some listed tariffs could not be read." for p in priced if "49p" in p.text
     )
     unknown = [p for p in prices if p.state == "unknown"]
     assert unknown and all(p.reason == "No tariff is listed." for p in unknown)
@@ -527,10 +527,10 @@ def test_the_label_uses_the_cheapest_tariff_not_only_the_preferred_one():
     app = tariff("R", [energy(0.69)], type_="regular")
     shown = price(connector("A", "R"), contactless, app)
     # The price shown for the connector is still the pay-at-the-charger one...
-    assert shown.text == "92.4p per kWh including VAT"
+    assert shown.text == "92p per kWh including VAT"
     # ...but the label is the lowest price any listed tariff gives.
-    assert (shown.lowest, shown.lowest_vat, shown.lowest_varies) == (Decimal("0.828"), True, False)
-    assert shown.label == "82.8p"
+    assert (shown.lowest, shown.lowest_vat, shown.lowest_varies) == (Decimal("0.83"), True, False)
+    assert shown.label == "83p"
 
 
 def test_the_label_says_from_when_the_lowest_price_applies_only_at_some_times():
@@ -591,12 +591,12 @@ def test_a_tariff_free_per_kwh_at_some_times_or_free_altogether_means_no_label()
 
 
 def test_ties_are_judged_on_the_tenth_of_a_penny_the_label_shows():
-    stated = tariff("S", [energy(0.40975)])  # 49.17p including VAT
-    unstated = tariff("U", [energy(0.4916, vat=None)])
+    stated = tariff("S", [energy(0.40833)])  # 48.9996p including VAT, shown as 49p
+    unstated = tariff("U", [energy(0.4904, vat=None)])  # 49.04p, shown as 49p excl. VAT
     shown = price(connector("S", "U"), stated, unstated)
-    assert (shown.lowest, shown.lowest_vat, shown.label) == (Decimal("0.492"), True, "49.2p")
-    night = tariff("N", [energy(0.40972, start_time="00:00", end_time="07:00"), energy(0.5)])
-    assert price(connector("N", "S"), night, stated).label == "49.2p"
+    assert (shown.lowest, shown.lowest_vat, shown.label) == (Decimal("0.490"), True, "49p")
+    night = tariff("N", [energy(0.4075, start_time="00:00", end_time="07:00"), energy(0.5)])
+    assert price(connector("N", "S"), night, stated).label == "49p"
 
 
 def test_tariffs_outside_their_validity_dates_give_no_label():

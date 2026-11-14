@@ -111,7 +111,8 @@ def test_prices_add_the_vat_the_copy_states():
     # Tariff 561 is a flat 0.49 and 0.39 per kWh before VAT, with VAT stated as 20.
     tariffs = {t.id: t for t in read().tariffs}
     text = describe_tariff(tariffs["connekt:GB:CON:561"]).text
-    assert text == "46.8p per kWh, plus £0.59 per session including VAT"
+    # 0.39 plus 20% is 46.8p, shown to the whole penny as it includes VAT.
+    assert text == "47p per kWh, plus £0.59 per session including VAT"
 
 
 def received_hashes() -> dict[str, str]:

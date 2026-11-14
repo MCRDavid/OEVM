@@ -129,10 +129,10 @@ def test_recorded_tariffs_show_pounds_and_pence_including_vat():
     result, _ = replay()
     shown = {tariff.id: describe_tariff(tariff).text for tariff in result.tariffs}
     assert shown == {
-        "jolt:GB:JLT:4": "49.2p per kWh including VAT",
-        "jolt:GB:JLT:5": "49.2p per kWh including VAT",
-        "jolt:GB:JLT:14": "49.2p per kWh including VAT",
-        "jolt:GB:JLT:25": "88.8p per kWh including VAT",
+        "jolt:GB:JLT:4": "49p per kWh including VAT",
+        "jolt:GB:JLT:5": "49p per kWh including VAT",
+        "jolt:GB:JLT:14": "49p per kWh including VAT",
+        "jolt:GB:JLT:25": "89p per kWh including VAT",
     }
     alt_text = {tariff.id: tariff.alt_text for tariff in result.tariffs}
     assert alt_text["jolt:GB:JLT:4"] == "Contactless / Ad-hoc"

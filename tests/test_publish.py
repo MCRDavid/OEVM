@@ -535,16 +535,16 @@ def test_price_per_kwh_is_only_given_with_vat(results, tmp_path):
     by_operator = _ppk_by_operator(results, tmp_path)
     # char.gy's feed states no VAT; the owner decided to add 20% (vat_not_stated).
     assert by_operator["chargy"] == {59.0}
-    assert 49.2 in by_operator["jolt"]
+    assert 49.0 in by_operator["jolt"]  # 0.41 plus 20% is 49.2p, to the whole penny 49p
     # BrightGreen states VAT at 20%, read as already in its prices by the owner's decision.
-    assert 59.0 in by_operator["bright_green"] and 70.8 not in by_operator["bright_green"]
+    assert 59.0 in by_operator["bright_green"] and 71.0 not in by_operator["bright_green"]
 
 
 def test_without_the_in_price_decision_stated_vat_is_added(results, tmp_path):
     operators = load_registry()
     operators["bright_green"] = operators["bright_green"].model_copy(update={"vat_in_price": None})
     by_operator = _ppk_by_operator(results, tmp_path, operators)
-    assert 70.8 in by_operator["bright_green"] and 59.0 not in by_operator["bright_green"]
+    assert 71.0 in by_operator["bright_green"] and 59.0 not in by_operator["bright_green"]
 
 
 def test_without_the_vat_decision_a_price_with_no_vat_has_no_price_per_kwh(results, tmp_path):
@@ -685,9 +685,9 @@ def test_each_kind_of_connector_carries_its_map_label(results, tmp_path):
         ]
         if lows:
             assert min(lows) >= min(listed), "the label never undercuts the listed tariffs"
-    # GeniePoint's app price, not only its contactless price (pay at the charger: 92.4p).
-    assert labels[("Premier Inn Dumbarton/ Loch Lomond", 60.0)] == "82.8p"
-    assert labels[("Premier Inn Alnwick", 7.0)] == "57.6p"
+    # GeniePoint's app price, not only its contactless price (pay at the charger: 92p).
+    assert labels[("Premier Inn Dumbarton/ Loch Lomond", 60.0)] == "83p"
+    assert labels[("Premier Inn Alnwick", 7.0)] == "58p"
     # char.gy's weekday night price, with VAT at 20% added (vat_not_stated): 32.5p in the feed.
     assert labels[("141 - 143 Seaford Road", 5.06)] == "from 39p"
     assert labels[("Atlantic Quay", 22.0)] == "Free"

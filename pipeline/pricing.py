@@ -19,6 +19,12 @@ regulations describe the price in reference data as "the price in pence per kilo
   October 2026), `added_vat` is VAT_IN_PRICE: a component's stated VAT is read as already
   in its price, so nothing is added, and the price says it was read that way.
 - Sums are done in exact decimal arithmetic, so half pennies round up as expected.
+- A price that includes VAT is shown to the whole penny, half pennies rounding up, by the
+  owner's decision of 14 November 2026 (ADR 0003): drivers are charged whole pence, and a
+  feed that gives its prices excluding VAT, rounded to whole pence, gives a tenth of a
+  penny once VAT is added (Pod's 0.37 with VAT 20 is 44.4p, where its app shows 44p).
+  The figure can be a penny out where two whole-pence prices fit the feed's figure. A
+  price whose VAT is not stated is shown as published, to the tenth of a penny.
 - Reservation fees are not shown as charging prices.
 - Prices that apply only at some times or after some time are shown with their
   conditions, read as OCPI 2.2.1 section 11 describes them: for each kind of charge, the
@@ -62,6 +68,7 @@ UNSTATED_KIND = "How to pay is not stated"
 VAT_IN_PRICE: Literal["in_price"] = "in_price"
 VatReading = float | Literal["in_price"] | None
 IN_PRICE_NOTE = "including VAT, reading the VAT rate the feed states as already in the price"
+PENNY = Decimal("0.01")
 WEEK = ("monday", "tuesday", "wednesday", "thursday", "friday", "saturday", "sunday")
 
 
@@ -192,7 +199,10 @@ def _amount(component: PriceComponent, vat_stated: bool, added_vat: VatReading =
     price = _decimal(component.price)
     rate = _rate(component, added_vat)
     if vat_stated and rate is not None and added_vat != VAT_IN_PRICE:
-        return price * (1 + _decimal(rate) / 100)
+        price = price * (1 + _decimal(rate) / 100)
+    if vat_stated:
+        # Including VAT: to the whole penny, as drivers are charged (owner, 14 November 2026).
+        return price.quantize(PENNY, rounding=ROUND_HALF_UP)
     return price
 
 
