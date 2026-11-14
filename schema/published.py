@@ -60,8 +60,9 @@ class ConnectorSummary(_Model):
         default=None,
         ge=0,
         description="Pence per kWh: the lowest energy price, to the tenth of a penny (to "
-        "the whole penny when it includes VAT, ADR 0003), that the tariffs the connector lists give (the operator's app or account as well as "
-        "paying at the charger), for the label on the map (ADR 0026). Including VAT when "
+        "the whole penny when it includes VAT, ADR 0003), that the tariffs the connector "
+        "lists give (the operator's app or account as well as paying at the charger), for "
+        "the label on the map (ADR 0026). Including VAT when "
         "lvat is true. Tariffs that charge nothing per kWh at all, tariffs named in "
         "zero_price_tariffs and tariffs outside their own dates are left out. Null when no "
         "price above 0p is left, or when a tariff left in is free, or free per kWh only at "

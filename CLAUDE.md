@@ -92,6 +92,8 @@ decisions are in docs/adr/.
 ## Prices and rate limits
 - Show prices only through pipeline/pricing.py: pounds and pence, GBP tariffs only. Never convert
   currencies; other currencies show as "Price unknown".
+- Show a price including VAT to the whole penny, half pennies up (owner, 14 November 2026,
+  ADR 0003); a price whose VAT is not stated keeps its tenth of a penny.
 - Add VAT to a price whose feed gives no VAT rate only where the operator file records the
   owner's decision in vat_not_stated, at its rate, saying so in the price (ADR 0003); never add one yourself.
   Read a stated VAT rate as already in the price only where the owner recorded vat_in_price.

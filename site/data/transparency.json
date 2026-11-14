@@ -6084,7 +6084,7 @@
           "kind": "spec_conformance",
           "kind_label": "Differs from OCPI 2.2.1",
           "summary": "Pod's app showed 44p per kWh on 2026-11-14 for a 7 kW connector whose tariff in the feed gives an energy price of 0.37 with VAT 20; 0.37 with 20% added is 44.4p, so the feed's prices exclude VAT, as OCPI 2.2.1 says, rather than include it.",
-          "handling": "The stated VAT is added to each price, as for any feed that states its VAT rate, so 0.37 shows as 44.4p per kWh. The repository owner reports that the app's price is the one a driver confirms for the session, so the feed's 0.37 reads as 44p without VAT (36.67p) rounded to whole pence. The map adds VAT to the price as published and does not round it back, as for some prices two whole-pence figures fit (0.58 could be 69p or 70p), so a Pod price on the map can differ from the app's by up to 0.6p. The tariffs are published unchanged.",
+          "handling": "The stated VAT is added to each price, as for any feed that states its VAT rate. The repository owner reports that the app's price is the one a driver confirms for the session, so the feed's 0.37 reads as 44p without VAT (36.67p) rounded to whole pence. By the owner's decision of 2026-11-14, every price including VAT is shown to the whole penny, so 0.37 shows as 44p per kWh. Where two whole-pence prices fit the feed's figure (0.38 could be 45p or 46p, and 0.58 could be 69p or 70p), the map shows the nearer one, which can be a penny out. The tariffs are published unchanged.",
           "evidence_url": "https://open-chargepoints.com/api/ocpi/cpo/2.2.1/tariffs/",
           "status": "open",
           "resolved_date": null
