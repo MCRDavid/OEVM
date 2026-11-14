@@ -88,6 +88,11 @@ is inferred from the figures and needs confirming by the network.
   in pounds are whole pence as published and 106 once 20% is added. Its prices are shown as
   published and marked "VAT not stated".
 
+**Update, 14 November 2026:** Pod's app showed 44p per kWh for a connector whose feed price is
+0.37 with VAT 20, which is 44.4p with the VAT added, so the owner withdrew the decision for Pod
+and its stated VAT is now added. The decisions for ESB Energy and ESB ecars are unchanged. See
+[Pod's prices exclude VAT after all](findings/pod-prices-exclude-vat/).
+
 Source EV is a fourth case. One of its two tariffs gives VAT as 0.2 on a price of 0.45 pounds per
 kWh, while the other gives 20. OCPI 2.2.1 gives VAT as a percentage, so 0.2 reads as 0.2%, and the
 map shows that tariff as published, at 45.1p per kWh. It probably means 20%, which needs confirming
