@@ -15,6 +15,11 @@ findings in operators/monta.yaml on 2026-10-22 and 2026-10-23, are:
   the adapter looks for the smallest cursor past the last good one that answers,
   doubling the step and then halving the gap, so only the failing site (or run of
   failing sites) is skipped. Each skip is logged and the fetch is marked incomplete.
+- Since 13 November 2026 a page near the end of the list answers HTTP 504 with
+  Retry-After: 120. In the daily fetch a 504 is handled as a 500 is, by the repository
+  owner's decision of 2026-11-14: the client waits the 120 seconds after each one, and
+  the waits one run may be asked for are capped (MAX_WAIT_SECONDS). The status refresh
+  keeps the client's ordinary retries for a 504, as it runs each hour.
 - Each Location names its site owner in owner, often a private individual. The field is
   removed from every record as soon as it is read, so owner names are never kept, saved,
   logged or shown.
@@ -32,7 +37,7 @@ every model rule apply as for any other feed.
 
 from datetime import UTC, datetime
 
-from adapters.http import FeedError, PoliteClient, redact_url, with_params
+from adapters.http import FeedError, PoliteClient, redact_url, retry_after_seconds, with_params
 from adapters.ocpi_221 import AdapterResult, convert_records
 from adapters.ocpi_221.client import KEPT_HEADERS, ModuleFetch, Page
 from adapters.ocpi_221.normalise import IssueLog, location_record_id
@@ -43,11 +48,21 @@ PAGE_SIZES = (100, 10, 1)
 # Pages that work in a row before asking for bigger pages again.
 BACK_UP_AFTER = 5
 # Requests for one run, the token request included, and skips, at most. A full read took
-# 81 requests on 23 October 2026; at 7 seconds apart, 300 take 35 minutes, well inside the
-# daily fetch job's 60.
+# 81 requests on 23 October 2026; at 7 seconds apart, 300 take 35 minutes.
 MAX_REQUESTS = 300
 MAX_SKIPS = 30
 SERVER_ERROR = 500
+GATEWAY_TIMEOUT = 504
+# Answers that mean the server cannot send a page: HTTP 504 too in the daily fetch, only
+# HTTP 500 in the status refresh (the repository owner's decision of 2026-11-14).
+CANNOT_SEND = frozenset({SERVER_ERROR, GATEWAY_TIMEOUT})
+CANNOT_SEND_IN_REFRESH = frozenset({SERVER_ERROR})
+# The most waiting, in seconds, that those answers may ask for in one run. The client
+# waits every wait asked for, so with the requests above a run stays inside the daily
+# fetch job's 150 minutes. Skipping one failing site takes the three page sizes, then
+# about one and a half failing answers for each doubling of the gap to the site: about 30
+# for a gap of 100,000 ids, an hour at 120 seconds each (estimated, not measured).
+MAX_WAIT_SECONDS = 80 * 60
 # Charge point ids are 64-bit numbers.
 MAX_STEP = 2**62
 REMOVED_FIELDS = ("owner",)
@@ -99,47 +114,63 @@ def _without_owner(record: object) -> object:
 class _Reader:
     """Reads the locations list, page by page, skipping sites the server cannot send."""
 
-    def __init__(self, client: PoliteClient, url: str, issues: IssueLog):
+    def __init__(
+        self,
+        client: PoliteClient,
+        url: str,
+        issues: IssueLog,
+        cannot_send: frozenset[int] = CANNOT_SEND,
+    ):
         self.client = client
         self.url = url
         self.issues = issues
+        self.cannot_send = cannot_send
         self.module = ModuleFetch("locations", url)
         self.skipped = 0
+        self.skipped_for: set[int] = set()
+        self.waited = 0.0
 
     def _get(self, after: int | None, size: int):
         params = {"per_page": str(size), "group_by_location": "true"}
         if after is not None:
             params["after"] = str(after)
         url = with_params(self.url, params)
-        return url, self.client.get(url, return_at_once=frozenset({SERVER_ERROR}))
+        response = self.client.get(url, return_at_once=self.cannot_send)
+        if response.status_code in self.cannot_send:
+            # The client waits as long as the answer asks before its next request.
+            self.waited += retry_after_seconds(response, datetime.now(UTC)) or 0.0
+        return url, response
+
+    def _can_ask(self) -> bool:
+        return self.client.requests_made < MAX_REQUESTS and self.waited < MAX_WAIT_SECONDS
 
     def _skip_past(self, after: int):
         """The first cursor above `after` that answers, with its answer, or None.
 
-        Every cursor from `after` up to the failing site's own id answers HTTP 500, and
-        every cursor from that id up to the next site's id answers, so the smallest
-        cursor that answers is the failing site's id. Where failing sites come one after
-        another, it is the last one's id: one skip passes them all, and how many there
-        were cannot be known.
+        Every cursor from `after` up to the failing site's own id answers HTTP 500 (or
+        504 where that counts), and every cursor from that id up to the next site's id
+        answers, so the smallest cursor that answers is the failing site's id. Where
+        failing sites come one after another, it is the last one's id: one skip passes
+        them all, and how many there were cannot be known.
         """
         low, step, found = after, 1, None
-        while step <= MAX_STEP and self.client.requests_made < MAX_REQUESTS:
+        while step <= MAX_STEP and self._can_ask():
             url, response = self._get(after + step, 1)
             if response.status_code == 200:
                 found = (after + step, url, response)
                 break
-            if response.status_code != SERVER_ERROR:
+            if response.status_code not in self.cannot_send:
                 raise FeedError(f"{redact_url(url)} returned HTTP {response.status_code}")
             low, step = after + step, step * 2
         if found is None:
             return None
         high, url, response = found
-        while high - low > 1 and self.client.requests_made < MAX_REQUESTS:
+        while high - low > 1 and self._can_ask():
             middle = (low + high) // 2
             middle_url, middle_response = self._get(middle, 1)
             if middle_response.status_code == 200:
                 high, url, response = middle, middle_url, middle_response
-            elif middle_response.status_code == SERVER_ERROR:
+            elif middle_response.status_code in self.cannot_send:
                 low = middle
             else:
                 raise FeedError(
@@ -157,13 +188,20 @@ class _Reader:
                     "the rest of the list was not read"
                 )
                 return self.module
+            if self.waited >= MAX_WAIT_SECONDS:
+                self.issues.add(
+                    f"stopped after the server asked for {MAX_WAIT_SECONDS // 60} minutes of "
+                    "waits on pages it could not send; the rest of the list was not read"
+                )
+                return self.module
             url, response = self._get(after, PAGE_SIZES[level])
-            if response.status_code == SERVER_ERROR and level < len(PAGE_SIZES) - 1:
+            status = response.status_code
+            if status in self.cannot_send and level < len(PAGE_SIZES) - 1:
                 level, streak = level + 1, 0
                 continue
-            if response.status_code == SERVER_ERROR:
+            if status in self.cannot_send:
                 if after is None:
-                    raise FeedError(f"{redact_url(url)} returned HTTP 500 for the first site")
+                    raise FeedError(f"{redact_url(url)} returned HTTP {status} for the first site")
                 if self.skipped >= MAX_SKIPS:
                     self.issues.add(
                         f"stopped after skipping {MAX_SKIPS} times past sites the server could not "
@@ -171,6 +209,8 @@ class _Reader:
                     )
                     return self.module
                 skip = self._skip_past(after)
+                if skip is None and not self._can_ask():
+                    continue  # the checks at the top say why the run stops
                 if skip is None:
                     self.issues.add(
                         "stopped: no cursor past a site the server could not send answered"
@@ -178,6 +218,7 @@ class _Reader:
                     return self.module
                 after, url, response = skip
                 self.skipped += 1
+                self.skipped_for.add(status)
                 level = streak = 0
             elif response.status_code != 200:
                 raise FeedError(f"{redact_url(url)} returned HTTP {response.status_code}")
@@ -239,12 +280,13 @@ def fetch(
         token_field="accessToken",
     )
     url = config.endpoints["locations"].url
-    reader = _Reader(client, url, issues)
+    reader = _Reader(client, url, issues, CANNOT_SEND_IN_REFRESH if statuses_only else CANNOT_SEND)
     locations = reader.read(max_pages, progress)
     if reader.skipped:
+        answered = " or ".join(str(status) for status in sorted(reader.skipped_for))
         issues.add(
-            f"skipped {reader.skipped} time(s) past sites the server answered HTTP 500 for, "
-            "even asked for one at a time (at least one site each time)"
+            f"skipped {reader.skipped} time(s) past sites the server answered HTTP {answered} "
+            "for, even asked for one at a time (at least one site each time)"
         )
     progress.module_done(
         "locations",
