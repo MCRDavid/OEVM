@@ -88,12 +88,25 @@ def test_a_free_extra_without_vat_does_not_hide_vat_on_the_real_price():
     [
         ([{"type": "flat", "price": 0.4125, "vat": 20, "step_size": 1}], "£0.50 per session"),
         ([{"type": "flat", "price": 1.90, "vat": 5, "step_size": 1}], "£2.00 per session"),
-        ([energy(0.57, vat=5)], "59.9p per kWh"),
+        ([energy(0.4125, vat=20)], "50p per kWh"),
+        ([energy(0.57, vat=5)], "60p per kWh"),
     ],
-    ids=["half-penny-flat", "half-penny-low-vat", "half-tenth-penny-energy"],
+    ids=["half-penny-flat", "half-penny-low-vat", "half-penny-energy", "low-vat-energy"],
 )
 def test_vat_maths_is_exact_and_rounds_half_up(components, expected):
     assert describe_tariff(tariff(components=components)).text == f"{expected} including VAT"
+
+
+def test_a_price_including_vat_is_shown_to_the_whole_penny():
+    # The owner's decision of 14 November 2026 (ADR 0003): drivers are charged whole pence.
+    # Pod's 0.37 with VAT 20 is 44.4p, where its app shows 44p.
+    pod = tariff(components=[energy(0.37, vat=20)])
+    assert describe_tariff(pod).text == "44p per kWh including VAT"
+    assert energy_range(pod) == (Decimal("0.44"), Decimal("0.44"), True)
+    # A price whose VAT is not stated is shown as published, to the tenth of a penny.
+    unstated = tariff(components=[energy(0.4917)])
+    assert describe_tariff(unstated).text == "49.2p per kWh (excluding VAT, VAT not stated)"
+    assert energy_range(unstated) == (Decimal("0.4917"), Decimal("0.4917"), False)
 
 
 def test_other_charges_are_shown_in_pounds():
@@ -130,15 +143,15 @@ def test_vat_is_added_at_the_owners_rate_and_the_price_says_so():
     shown = describe_tariff(tariff(components=[energy(0.325)]), added_vat=20)
     assert shown.text == f"39p per kWh {ADDED}"
     assert energy_range(tariff(components=[energy(0.4167)]), 20) == (
-        Decimal("0.50004"),
-        Decimal("0.50004"),
+        Decimal("0.50"),
+        Decimal("0.50"),
         True,
     )
 
 
 def test_a_rate_the_feed_gives_is_kept_and_only_missing_ones_are_added():
     shown = describe_tariff(tariff(components=[energy(0.45, vat=5), energy(0.30)]), added_vat=20)
-    assert shown.text == f"36p to 47.3p per kWh {ADDED}"
+    assert shown.text == f"36p to 47p per kWh {ADDED}"
     # When every price gives its own rate, nothing is added, so nothing is said.
     stated = describe_tariff(tariff(components=[energy(0.45, vat=20)]), added_vat=20)
     assert stated.text == "54p per kWh including VAT"

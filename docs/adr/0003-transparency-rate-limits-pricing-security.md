@@ -228,6 +228,25 @@ published. Both readings are inferred from the figures and recorded as findings 
 operator file. The words a `vat_in_price` price carries were made general, as these feeds
 have no display price.
 
+### Amendment, 14 November 2026: Pod's VAT added
+
+On 14 November 2026 the owner withdrew Pod's `vat_in_price`. Pod's app showed 44p per kWh
+that day for a 7 kW connector whose tariff in the feed gives 0.37 with VAT 20, and 0.37 with
+20% added is 44.4p, so Pod's prices exclude VAT as OCPI 2.2.1 says. Its stated VAT is now
+added like any other feed's. Whole pence as published was not enough to show that VAT was
+already in a price: the decisions for ESB Energy and ESB ecars still rest on that reading and
+need confirming by each network.
+
+### Amendment, 14 November 2026: whole pence
+
+The same day the owner decided that every price including VAT is shown to the whole penny,
+half pennies rounding up, for every network, as drivers are charged whole pence: Pod's 0.37
+with VAT 20 shows as 44p, as its app does, not 44.4p. pipeline/pricing.py rounds the sum after
+VAT is added, or the price as published where `vat_in_price` reads the VAT as already in it.
+Where a feed rounds its prices without VAT to whole pence, two prices with VAT can fit (0.38
+could be 45p or 46p), and the nearer is shown, which can be a penny out. A price whose VAT is
+not stated is shown as published, to the tenth of a penny, as it is not what drivers pay.
+
 ## Security
 
 - `SECURITY.md` asks for private reports through GitHub's private vulnerability

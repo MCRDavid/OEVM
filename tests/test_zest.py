@@ -94,12 +94,12 @@ def test_prices_follow_the_data_including_the_idle_fee_zest_describes_per_minute
     # Tariff 530: 0.49 per kWh and an idle fee of 0.08 per hour before VAT, VAT stated as 20.
     # Its own text says "£0.10/min"; the price follows the data, as OCPI defines it.
     assert describe_tariff(tariffs["zest:GB:ZST:530"]).text == (
-        "58.8p per kWh from 08:00 to 23:00, 58.8p per kWh from 23:00 to 08:00; plus £0.10 per "
+        "59p per kWh from 08:00 to 23:00, 59p per kWh from 23:00 to 08:00; plus £0.10 per "
         "hour parked from 08:00 to 23:00 after 4 hours including VAT; minimum charge £0.33 "
         "excluding VAT"
     )
     # Tariff 428 sends min_price 0, so no minimum charge is shown.
-    assert describe_tariff(tariffs["zest:GB:ZST:428"]).text == "55.2p per kWh including VAT"
+    assert describe_tariff(tariffs["zest:GB:ZST:428"]).text == "55p per kWh including VAT"
 
 
 def received_hashes() -> dict[str, str]:

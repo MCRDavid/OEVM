@@ -812,7 +812,6 @@ def test_only_the_operators_the_owner_named_read_their_stated_vat_as_in_their_pr
         "bright_green": "2026-10-23",
         "esb_ecars": "2026-10-29",
         "esb_energy": "2026-10-29",
-        "pod": "2026-10-29",
     }
 
 

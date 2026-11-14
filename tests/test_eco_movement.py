@@ -323,7 +323,10 @@ def test_stated_vat_is_read_as_in_the_price_where_the_owner_decided(tmp_path):
 def test_pods_isle_of_man_site_is_left_off_and_its_zero_tariff_shows_free(tmp_path):
     shown = prices_shown("pod", tmp_path)
     assert "Free" in shown
-    assert any(text.startswith("38p per kWh including VAT, reading") for text in shown)
+    # Pod's stated VAT is added (the owner's vat_in_price of 29 October was withdrawn on
+    # 14 November 2026), to the whole penny: 0.37 with VAT 20 shows as 44p, never as 37p.
+    assert "44p per kWh including VAT" in shown
+    assert not any(text.startswith("38p") or "already in the price" in text for text in shown)
     layer = json.loads((tmp_path / "data" / "locations.geojson").read_text())
     names = {f["properties"]["name"] for f in layer["features"]}
     assert len(names) == 3 and not any("IOM" in name for name in names)
@@ -337,5 +340,6 @@ def test_chargepoints_dollar_tariffs_and_unstated_vat_are_never_guessed(tmp_path
 
 def test_source_evs_vat_of_0_2_is_shown_as_published(tmp_path):
     shown = prices_shown("source_ev", tmp_path)
-    assert any(text.startswith("45.1p per kWh") for text in shown)
+    # 0.45 with VAT 0.2 is 45.09p, shown to the whole penny as it includes VAT.
+    assert any(text.startswith("45p per kWh") for text in shown)
     assert any(text.startswith("90p per kWh") for text in shown)

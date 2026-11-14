@@ -90,7 +90,7 @@ class ConnectorPrice:
 
     @property
     def indicative(self) -> str | None:
-        """A short label such as "49.2p/kWh" or "32.5p to 49.2p/kWh (excl. VAT)"."""
+        """A short label such as "49p/kWh" or "32.5p to 49.2p/kWh (excl. VAT)"."""
         if self.energy_low is None or self.energy_high is None:
             return None
         low, high = pence(self.energy_low), pence(self.energy_high)
@@ -117,7 +117,8 @@ def _in_force(tariff: Tariff) -> bool:
 
 
 def _as_shown(amount: Decimal) -> Decimal:
-    # To the tenth of a penny a label shows, so ties are judged on what people see.
+    # To the tenth of a penny a label shows (a price including VAT is already whole pence),
+    # so ties are judged on what people see.
     return amount.quantize(Decimal("0.001"), rounding=ROUND_HALF_UP)
 
 
