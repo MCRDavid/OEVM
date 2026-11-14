@@ -2,7 +2,8 @@
 
 No test touches the network. tests/fixtures/monta/ holds made-up responses in the real
 feed's shape (no real record is kept: Monta's records name site owners). Made-up
-responses (httpx.MockTransport) cover the token request, HTTP 500 answers and paging.
+responses (httpx.MockTransport) cover the token request, HTTP 500 and 504 answers and
+paging.
 """
 
 import json
@@ -32,6 +33,21 @@ class Recorder:
 
     def __call__(self, seconds: float) -> None:
         self.sleeps.append(seconds)
+
+
+class FakeTime(Recorder):
+    """A clock that moves only when the client sleeps."""
+
+    def __init__(self) -> None:
+        super().__init__()
+        self.now = 0.0
+
+    def __call__(self, seconds: float) -> None:
+        super().__call__(seconds)
+        self.now += seconds
+
+    def clock(self) -> float:
+        return self.now
 
 
 def config(**update) -> OperatorConfig:
@@ -78,12 +94,14 @@ def site(cursor: int, status: str = "AVAILABLE", **extra) -> dict:
 
 
 class Server:
-    """Serves made-up sites by cursor, as Monta does, answering HTTP 500 for any page that
-    holds a site in `broken`."""
+    """Serves made-up sites by cursor, as Monta does, answering HTTP 500 (or broken_status,
+    with retry_after in a Retry-After header) for any page that holds a site in `broken`."""
 
     def __init__(self, cursors: list[int], broken: frozenset[int] = frozenset(), **kwargs):
         self.sites = {c: site(c) for c in cursors}
         self.broken = broken
+        self.broken_status = kwargs.get("broken_status", 500)
+        self.retry_after = kwargs.get("retry_after")
         self.token_status = kwargs.get("token_status", 200)
         self.token_body = kwargs.get("token_body", {"accessToken": TOKEN})
         self.requests: list[httpx.Request] = []
@@ -98,8 +116,11 @@ class Server:
         size = int(request.url.params["per_page"])
         rows = [c for c in sorted(self.sites) if c > after][:size]
         if any(c in self.broken for c in rows):
+            headers = {} if self.retry_after is None else {"Retry-After": str(self.retry_after)}
             return httpx.Response(
-                500, json={"message": "An unexpected error occurred", "errorCode": "UNKNOWN"}
+                self.broken_status,
+                headers=headers,
+                json={"message": "An unexpected error occurred", "errorCode": "UNKNOWN"},
             )
         more = bool(rows) and any(c > rows[-1] for c in self.sites)
         pagination = {"after": rows[-1] if rows else None, "has_more": more}
@@ -110,11 +131,11 @@ class Server:
         return [r for r in self.requests if r.method == "GET"]
 
 
-def run_with(handler, cfg: OperatorConfig | None = None, sleep=None, **kwargs):
+def run_with(handler, cfg: OperatorConfig | None = None, sleep=None, clock=None, **kwargs):
     cfg = cfg or config()
     transport = httpx.MockTransport(handler)
     with PoliteClient(
-        cfg, transport=transport, sleep=sleep or Recorder(), clock=lambda: 0, key=FAKE
+        cfg, transport=transport, sleep=sleep or Recorder(), clock=clock or (lambda: 0), key=FAKE
     ) as client:
         return monta.fetch(cfg, client, now=NOW, **kwargs)
 
@@ -292,6 +313,59 @@ def test_failing_sites_next_to_each_other_are_passed_in_one_skip():
     result = run_with(server)
     assert [loc.id for loc in result.locations] == ["monta:DK:MON:s1", "monta:DK:MON:s4"]
     assert "skipped 1 time(s)" in " ".join(result.issues)
+
+
+def test_in_the_daily_fetch_a_504_is_handled_like_a_500_waiting_as_the_server_asks():
+    time = FakeTime()
+    server = Server([1, 2, 3, 4], broken=frozenset({3}), broken_status=504, retry_after=120)
+    result = run_with(server, sleep=time, clock=time.clock)
+    assert [loc.id for loc in result.locations] == [f"monta:DK:MON:s{c}" for c in (1, 2, 4)]
+    assert not result.modules["locations"].complete
+    issues = " ".join(result.issues)
+    assert "skipped 1 time(s) past sites the server answered HTTP 504 for" in issues
+    # Pages of 100 and 10, then site 3 alone, answered 504, and each next request waited
+    # the 120 seconds asked for; every other request kept the 7 second gap.
+    gap = config().rate_limit.min_seconds_between_requests
+    assert sorted(set(time.sleeps)) == [gap, 120]
+    assert time.sleeps.count(120) == 3
+    # No 504 was asked for again as it was: each next request moved on.
+    asked = [(r.url.params["per_page"], r.url.params.get("after")) for r in server.gets()]
+    assert asked == [("100", None), ("10", None), ("1", None), ("1", "1"), ("1", "2"), ("1", "3")]
+
+
+def test_the_status_refresh_still_retries_a_504_then_gives_up():
+    time = FakeTime()
+    server = Server([1, 2, 3, 4], broken=frozenset({3}), broken_status=504, retry_after=120)
+    with pytest.raises(FeedError, match=r"gave up on .* after 4 attempts: HTTP 504"):
+        run_with(server, sleep=time, clock=time.clock, statuses_only=True)
+
+
+def test_the_status_refresh_still_skips_a_site_answering_500():
+    result = run_with(Server([1, 2, 3], broken=frozenset({2})), statuses_only=True)
+    assert [loc.id for loc in result.locations] == ["monta:DK:MON:s1", "monta:DK:MON:s3"]
+    assert "skipped 1 time(s) past sites the server answered HTTP 500 for" in " ".join(
+        result.issues
+    )
+
+
+def test_a_504_for_the_first_site_stops_the_fetch():
+    time = FakeTime()
+    server = Server([1, 2], broken=frozenset({1}), broken_status=504, retry_after=120)
+    with pytest.raises(FeedError, match="HTTP 504 for the first site"):
+        run_with(server, sleep=time, clock=time.clock)
+
+
+def test_the_waits_the_server_asks_for_in_one_run_are_capped(monkeypatch):
+    monkeypatch.setattr(monta, "MAX_WAIT_SECONDS", 300)
+    time = FakeTime()
+    server = Server([1, 2, 1000], broken=frozenset({1000}), broken_status=504, retry_after=120)
+    result = run_with(server, sleep=time, clock=time.clock)
+    # 504 for pages of 100 and 10, then for site 1000 alone: 360 seconds asked for, so the
+    # run stops there rather than looking for a cursor past site 1000.
+    assert [loc.id for loc in result.locations] == ["monta:DK:MON:s1", "monta:DK:MON:s2"]
+    assert len(server.gets()) == 5 and time.sleeps.count(120) == 2
+    assert any("stopped after the server asked for 5 minutes" in i for i in result.issues)
+    assert not result.complete
 
 
 def test_skipping_stops_after_the_most_sites_allowed(monkeypatch):

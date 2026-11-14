@@ -223,6 +223,24 @@ findings:
       (ADR 0030). The language code is not checked, as each note has only one text. Notes
       that look cut short are shown as sent, and no note is used to hide or label a site.
     evidence_url: https://github.com/MCRDavid/OEVM/pull/127
+  - date: 2026-11-13
+    kind: access
+    summary: >-
+      No status refresh of Monta succeeded from 08:30 UTC on 13 November 2026. In the runs
+      whose logs were read (09:30 and 13:30 UTC that day, and the daily fetch at 04:17 UTC
+      on 14 November 2026), a page near the end of the list answered HTTP 504 with
+      Retry-After: 120 on all four attempts, after 48 pages that answered. The daily fetch
+      stopped on it (53 requests, at the page after cursor 7145061), so the map kept
+      Monta's copy of 13 November. Why the server answers 504 is not known; Monta's API
+      changelog, read on 13 November 2026, named no recent change.
+    handling: >-
+      Since 2026-11-14, by the repository owner's decision of that day, the daily fetch
+      handles an HTTP 504 as it handles an HTTP 500: it asks for that page in tens and then
+      one at a time, waits the 120 seconds asked for after each 504, and skips only a site
+      that still fails, marking the run incomplete. The waits one run may be asked for are
+      capped at 80 minutes. The hourly status refresh keeps its ordinary retries for a 504
+      and gives up on Monta while it lasts, keeping the statuses last read.
+    evidence_url: https://mcrdavid.github.io/OEVM/status/
 notes: >-
   Monta runs charge point management software used by many UK charge point owners, and
   publishes their open data through one endpoint of its Public API. It is separate from
