@@ -1,5 +1,5 @@
 {
-  "last_reviewed": "2026-11-06",
+  "last_reviewed": "2026-11-14",
   "disclaimer": "OEVM is a personal, experimental project for learning about AI tools. Much of its code and text was written with an AI assistant, and it will contain mistakes. Charger data comes from the operators and other sources credited on every record, and remains their work. Everything is provided \"as is\", with no warranty or guarantee of any kind. Always check prices and availability at the charger.",
   "regulation": {
     "summary": "The Public Charge Point Regulations 2023 set no limit on how often data users may request the data. Regulation 10(5) requires the data to be available free of charge without terms on its use. DfT's guidance allows terms covering the means of access, which is where operators' rate limits come from.",
@@ -358,6 +358,16 @@
         }
       },
       "findings": [
+        {
+          "date": "2026-11-14",
+          "kind": "access",
+          "kind_label": "Access",
+          "summary": "In the daily run of 2026-11-14 the host answered this network's tariffs request with HTTP 429, naming no wait (no Retry-After). It was the key's second request of the run, 132 seconds after its first, sent while requests went to the host one at a time at least 2 seconds apart. The same request was answered when sent again 125 seconds later.",
+          "handling": "The request is tried again after this key's gap, and every key on the host goes back to one request at a time, each key 125 seconds apart, for the rest of the run (ADR 0003). This key was within the limits recorded in rate_limit.limits, so the reason for the answer is unknown and needs testing.",
+          "evidence_url": "https://github.com/MCRDavid/OEVM/actions/runs/43555897352",
+          "status": "open",
+          "resolved_date": null
+        },
         {
           "date": "2026-10-29",
           "kind": "data_quality",
@@ -2646,6 +2656,16 @@
       },
       "findings": [
         {
+          "date": "2026-11-14",
+          "kind": "access",
+          "kind_label": "Access",
+          "summary": "In the daily run of 2026-11-14 the host answered this network's tariffs request with HTTP 429, naming no wait (no Retry-After). It was the key's second request of the run, 125 seconds after its first, and no request had been sent to the host for 103 seconds. The same request was answered when sent again 126 seconds later.",
+          "handling": "The request is tried again after this key's gap, and every key on the host goes back to one request at a time, each key 125 seconds apart, for the rest of the run (ADR 0003). This key was within the limits recorded in rate_limit.limits, so the reason for the answer is unknown and needs testing.",
+          "evidence_url": "https://github.com/MCRDavid/OEVM/actions/runs/43555897352",
+          "status": "open",
+          "resolved_date": null
+        },
+        {
           "date": "2026-10-29",
           "kind": "data_quality",
           "kind_label": "Data quirk",
@@ -4555,7 +4575,18 @@
           "evidence_url": "https://developers.eco-movement.com/v2.2.1/docs/eco-movement-pcpr-api-user-guide"
         }
       },
-      "findings": []
+      "findings": [
+        {
+          "date": "2026-11-14",
+          "kind": "access",
+          "kind_label": "Access",
+          "summary": "In the daily run of 2026-11-14 the host answered this network's tariffs request with HTTP 429, naming no wait (no Retry-After). It was the key's second request of the run, 146 seconds after its first, sent while requests went to the host one at a time at least 2 seconds apart. The same request was answered when sent again 125 seconds later.",
+          "handling": "The request is tried again after this key's gap, and every key on the host goes back to one request at a time, each key 125 seconds apart, for the rest of the run (ADR 0003). This key was within the limits recorded in rate_limit.limits, so the reason for the answer is unknown and needs testing.",
+          "evidence_url": "https://github.com/MCRDavid/OEVM/actions/runs/43555897352",
+          "status": "open",
+          "resolved_date": null
+        }
+      ]
     },
     {
       "id": "jolt",
@@ -7214,6 +7245,16 @@
       },
       "findings": [
         {
+          "date": "2026-11-13",
+          "kind": "access",
+          "kind_label": "Access",
+          "summary": "In the status refresh of 2026-11-13 13:30 UTC the host answered this network's statuses request with HTTP 429, naming no wait (no Retry-After). It was the first request of that run to the host, and this key's last request before it was answered at 12:31 UTC. The same request was answered when sent again 125 seconds later.",
+          "handling": "The request is tried again after this key's gap, and every key on the host goes back to one request at a time, each key 125 seconds apart, for the rest of the run (ADR 0003). This key was within the limits recorded in rate_limit.limits, so the reason for the answer is unknown and needs testing.",
+          "evidence_url": "https://github.com/MCRDavid/OEVM/actions/runs/43434224733",
+          "status": "open",
+          "resolved_date": null
+        },
+        {
           "date": "2026-10-29",
           "kind": "spec_conformance",
           "kind_label": "Differs from OCPI 2.2.1",
@@ -8163,6 +8204,16 @@
         }
       },
       "findings": [
+        {
+          "date": "2026-11-14",
+          "kind": "access",
+          "kind_label": "Access",
+          "summary": "In the daily run of 2026-11-14 the host answered this network's tariffs request with HTTP 429, naming no wait (no Retry-After). It was the key's second request of the run, 23 seconds after its first, and the seventh tariffs request sent to the host in 8 seconds by seven keys. The same request was answered when sent again 152 seconds later.",
+          "handling": "The request is tried again after this key's gap, and every key on the host goes back to one request at a time, each key 125 seconds apart, for the rest of the run (ADR 0003). This key was within the limits recorded in rate_limit.limits, so the reason for the answer is unknown and needs testing.",
+          "evidence_url": "https://github.com/MCRDavid/OEVM/actions/runs/43555897352",
+          "status": "open",
+          "resolved_date": null
+        },
         {
           "date": "2026-10-29",
           "kind": "data_quality",

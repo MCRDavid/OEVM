@@ -156,6 +156,15 @@ ubitricity's 13 pages took about 28 minutes. No published limit was passed: spac
 the stricter of the two. Why those requests were tried again is unknown, because the
 logs of those runs do not say; the next daily run after this change will.
 
+What the first runs after the change show (read 14 November 2026): the answers are HTTP
+429 with no wait named. In the daily run of 14 November, 4 of 27 tariffs requests were
+answered that way and none of 37 locations requests: one within the allowance, the
+seventh tariffs request in 8 seconds, and three after the fall back, with requests one
+at a time and each key 125 seconds after its last. In five hourly status refreshes on
+13 November, 1 of 116 statuses requests was, the first request of its run. Each was
+answered when sent again. Every key was within its recorded limits, so the reason is
+unknown; each case is a dated finding in the network's operator file.
+
 ## Prices
 
 - `pipeline/pricing.py` is the only way prices are shown: pounds and pence, GBP tariffs

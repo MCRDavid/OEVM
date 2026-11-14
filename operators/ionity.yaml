@@ -169,7 +169,21 @@ sources:
       The "PCPR Data Request - Ionity" Google form embedded in IONITY's page (read
       2026-10-10, not submitted). Its disclaimer says the request will be shared with
       Eco-Movement.
-findings: []
+findings:
+  - date: 2026-11-14
+    kind: access
+    summary: >-
+      In the daily run of 2026-11-14 the host answered this network's tariffs request with
+      HTTP 429, naming no wait (no Retry-After). It was the key's second request of the
+      run, 146 seconds after its first, sent while requests went to the host one at a time
+      at least 2 seconds apart. The same request was answered when sent again 125 seconds
+      later.
+    handling: >-
+      The request is tried again after this key's gap, and every key on the host goes back
+      to one request at a time, each key 125 seconds apart, for the rest of the run
+      (ADR 0003). This key was within the limits recorded in rate_limit.limits, so the
+      reason for the answer is unknown and needs testing.
+    evidence_url: https://github.com/MCRDavid/OEVM/actions/runs/43555897352
 notes: >-
   Its regulation 10 data is served by Eco-Movement's PCPR API (eco_movement_pcpr adapter),
   with a token Eco-Movement sent on 2026-10-26, kept as the GitHub Actions secret

@@ -180,6 +180,19 @@ sources:
       planned use of the data, and its disclaimer says the request will be shared with
       Eco-Movement.
 findings:
+  - date: 2026-11-13
+    kind: access
+    summary: >-
+      In the status refresh of 2026-11-13 13:30 UTC the host answered this network's
+      statuses request with HTTP 429, naming no wait (no Retry-After). It was the first
+      request of that run to the host, and this key's last request before it was answered
+      at 12:31 UTC. The same request was answered when sent again 125 seconds later.
+    handling: >-
+      The request is tried again after this key's gap, and every key on the host goes back
+      to one request at a time, each key 125 seconds apart, for the rest of the run
+      (ADR 0003). This key was within the limits recorded in rate_limit.limits, so the
+      reason for the answer is unknown and needs testing.
+    evidence_url: https://github.com/MCRDavid/OEVM/actions/runs/43434224733
   - date: 2026-10-29
     kind: spec_conformance
     summary: >-
