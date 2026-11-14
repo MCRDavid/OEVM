@@ -788,13 +788,13 @@ def test_forget_in_another_tab_is_not_undone(visit):
 
 
 def test_power_and_price_filters_apply_to_the_same_connector(visit):
-    # In the fixtures this site's 50 kW connectors cost 82.8p and only a 7 kW one costs less.
+    # In the fixtures this site's 50 kW connectors cost 83p and only a 7 kW one costs less.
     page = visit().open("?minkw=50&maxp=60&unknown=0&view=list", map_ready=False)
     expect(page.locator("#list-summary")).not_to_contain_text("Loading")
     assert page.locator("#list-items", has_text="Premier Inn Alnwick").count() == 0
     page.goto(page.url.replace("maxp=60", "maxp=85"))
     expect(page.locator("#list-items")).to_contain_text("Premier Inn Alnwick")
-    assert "Energy 57.6p to 82.8p per kWh including VAT" in page.text_content("#list-items")
+    assert "Energy 58p to 83p per kWh including VAT" in page.text_content("#list-items")
 
 
 OUTSIDE_SOURCE = {
@@ -1275,9 +1275,9 @@ def test_the_list_shows_the_cheapest_price_for_the_connectors_the_filters_allow(
     expect(page.locator("#list-items li")).to_have_count(LOCATIONS)
     # GeniePoint's app price is lower than paying at the charger, which the summary shows.
     dumbarton = _item(page, "Premier Inn Dumbarton")
-    expect(dumbarton).to_contain_text("Cheapest here: 82.8p")
-    expect(dumbarton).to_contain_text("Energy 92.4p per kWh including VAT")
-    expect(_item(page, "Premier Inn Alnwick")).to_contain_text("Cheapest here: 57.6p")
+    expect(dumbarton).to_contain_text("Cheapest here: 83p")
+    expect(dumbarton).to_contain_text("Energy 92p per kWh including VAT")
+    expect(_item(page, "Premier Inn Alnwick")).to_contain_text("Cheapest here: 58p")
     # char.gy's feed gives 32.5p with no VAT; the owner decided to add 20% (vat_not_stated).
     seaford = _item(page, "141 - 143 Seaford Road")
     expect(seaford).to_contain_text("Cheapest here: from 39p")
@@ -1286,7 +1286,7 @@ def test_the_list_shows_the_cheapest_price_for_the_connectors_the_filters_allow(
     expect(_item(page, "Glengarry")).not_to_contain_text("Cheapest here")
     # With rapid chargers only, the 7 kW connector's price no longer counts.
     page.click("#quick-rapid")
-    expect(_item(page, "Premier Inn Alnwick")).to_contain_text("Cheapest here: 82.8p")
+    expect(_item(page, "Premier Inn Alnwick")).to_contain_text("Cheapest here: 83p")
     assert v.errors == []
 
 
@@ -1295,7 +1295,7 @@ def test_details_say_where_the_map_label_comes_from(visit):
     expect(page.locator("#list-items li")).to_have_count(LOCATIONS)
     _item(page, "Premier Inn Dumbarton").locator("button").click()
     line = page.locator("#detail-body .map-label")
-    expect(line).to_contain_text("Cheapest here: 82.8p, the lowest price per kWh listed here")
+    expect(line).to_contain_text("Cheapest here: 83p, the lowest price per kWh listed here")
     expect(line).to_contain_text("with an account, app or card from a charging provider")
     expect(line).to_contain_text("are not included")
     page.keyboard.press("Escape")
@@ -1312,16 +1312,16 @@ def test_the_details_line_follows_the_filters_while_the_details_are_open(visit):
     expect(page.locator("#list-items li")).to_have_count(LOCATIONS)
     _item(page, "Premier Inn Alnwick").locator("button").click()
     line = page.locator("#detail-body .map-label")
-    expect(line).to_contain_text("Cheapest here: 57.6p, the lowest price per kWh listed here")
+    expect(line).to_contain_text("Cheapest here: 58p, the lowest price per kWh listed here")
     expect(line).not_to_contain_text("match your filters")
     # On a wide screen the quick filters stay usable beside the panel.
     page.click("#quick-rapid")
     expect(line).to_contain_text(
-        "Cheapest here: 82.8p, the lowest price per kWh listed here for the connectors that "
+        "Cheapest here: 83p, the lowest price per kWh listed here for the connectors that "
         "match your filters"
     )
     page.click("#quick-rapid")
-    expect(line).to_contain_text("Cheapest here: 57.6p")
+    expect(line).to_contain_text("Cheapest here: 58p")
     assert v.errors == []
 
 
@@ -1378,7 +1378,7 @@ def test_a_ticked_plan_with_a_lower_price_labels_the_map_and_the_list(visit):
     page = v.open("#15/55.957027/-4.560159")
     page.click("#legend summary")  # the key, open on wide screens, shows the colour too
     item = _item(page, "Premier Inn Dumbarton")
-    expect(item).to_contain_text("Cheapest here: 82.8p")
+    expect(item).to_contain_text("Cheapest here: 83p")
     wait_for_amber(page, False)
     open_filters(page)
     page.check("#my-plans input[value='test.cheap']")
