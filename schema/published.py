@@ -294,7 +294,7 @@ class CheaperOut(_Model):
     headline: str = Field(description="For example 'Cheaper in the evyve app'.")
     text: str = Field(
         description="The rest of the sentence and any condition, for example 'than paying "
-        "by contactless, with no subscription needed.'"
+        "by contactless. No subscription needed.'"
     )
     only_where_dc: bool = Field(
         description="Said only at locations with a DC charger: the operator's AC chargers "

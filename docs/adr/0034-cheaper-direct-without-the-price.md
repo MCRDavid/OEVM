@@ -44,12 +44,13 @@ available. Many operators are in the same position (`providers/README.md`).
   without `own_networks`, and one for a provider whose terms allow reuse: there the plans
   themselves are listed with their prices instead (ADR 0016).
 - `data/plans.json` carries each entry, worded by `pipeline/publish.py`, under the
-  operator's `withheld` entry. Under "Cheapest here" a site's details then show, for evyve:
-  "**Cheaper in the evyve app** than paying by contactless, according to EVYVE's website
-  when last checked on 15 November 2026. No subscription needed. Lowest at weekends and on
-  bank holidays." and "EVYVE's website terms do not allow its prices to be shown here, so
-  check EVYVE's website or app before you charge.", linking to the terms and to the page
-  that was checked. This takes the place of the note of ADR 0016 at those locations.
+  operator's `withheld` entry. Under "Cheapest here" a site's details then show one line
+  for each entry and one closing line, for evyve: "**Cheaper in the evyve app** than paying
+  by contactless. No subscription needed. Lowest at weekends and on bank holidays." and
+  "According to EVYVE's website when last checked on 15 November 2026. Its website terms do
+  not allow its prices to be shown here, so check EVYVE's website or app before you
+  charge.", linking to the terms and to the page that was checked. This takes the place of
+  the note of ADR 0016 at those locations.
 - **Only where the map shows the price at the charger.** An entry is added only after the
   operator's feed has been compared with the page, because "cheaper" is only right where
   the map shows the higher price. evyve's 7 to 22 kW chargers can only be operated in its
@@ -57,6 +58,23 @@ available. Many operators are in the same position (`providers/README.md`).
   locations with a DC charger, and its other locations keep the note of ADR 0016.
 - Map labels and "Cheapest here" are unchanged: they still come from the feed and from
   plans the visitor ticked (ADR 0026).
+
+## The first entries (15 November 2026)
+
+Twelve operators whose terms keep their prices off the map were checked on their own
+pages and against their feeds that day:
+
+- **Added:** evyve (its app), IONITY (signing up in its app, and a subscription), bp pulse
+  (a subscription; paying as you go in its app costs the same as contactless), Jolt (its
+  app gives some free charging each day), Source EV (a free membership, and a paid one;
+  DC locations only), ESB Energy (a membership; its feed already gives the pay as you go
+  price, and contactless costs a little more, which the note says), ESB ecars (a
+  membership) and ubitricity (a Shell Recharge subscription).
+- **Not added:** Mer UK (a registered user saves very little, and only at locations on
+  its guest tariff, which the note cannot pick out), Arnold Clark Charge (its subscription
+  is already listed with its price as an Octopus Electroverse plan) and RAW Charging (no
+  comparison published). Allego's UK prices and Shell Recharge's pricing page could not be
+  read from the cloud, so they need checking in a browser.
 
 ## Amendments to earlier decisions
 

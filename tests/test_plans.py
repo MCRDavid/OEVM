@@ -226,16 +226,14 @@ def restricted(**changes) -> dict:
 
 def test_cheaper_direct_is_said_in_our_own_words_for_a_restricted_operator():
     entry = ProviderFile.model_validate(restricted(cheaper_direct=[CHEAPER])).cheaper_direct[0]
-    out = publish.cheaper_out("Example Charging", entry)
+    out = publish.cheaper_out(entry)
     assert out.headline == "Cheaper in the Example app"
-    assert out.text == (
-        "than paying by contactless, according to Example Charging's website when last "
-        "checked on 15 November 2026. No subscription needed."
-    )
+    assert out.text == "than paying by contactless. No subscription needed."
+    assert (out.source_url, out.checked) == ("https://example.com/pricing", dt.date(2026, 11, 15))
     paid = dict(CHEAPER, needs_subscription=True, conditions="Lowest at night.")
     entry = ProviderFile.model_validate(restricted(cheaper_direct=[paid])).cheaper_direct[0]
-    assert publish.cheaper_out("Example Charging", entry).text.endswith(
-        "A subscription fee applies. Lowest at night."
+    assert publish.cheaper_out(entry).text == (
+        "than paying by contactless. A subscription fee applies. Lowest at night."
     )
 
 
@@ -291,6 +289,12 @@ def test_the_plans_file_says_where_evyve_is_cheaper_in_its_app_without_a_price(t
     assert app.headline == "Cheaper in the evyve app"
     assert app.only_where_dc and app.source_url == "https://evyve.co.uk/pricing/"
     assert "No subscription needed." in app.text
-    assert not schema_provider.PRICE_IN_TEXT.search(app.headline + app.text)
-    # Operators with no cheaper_direct entry keep the note of ADR 0016 alone.
-    assert all(not entry.cheaper for entry in withheld if entry.operator_ids != ["evyve"])
+    # Each provider file's entries reach the plans file in order, and none gives a price.
+    files = load_providers()
+    for entry in withheld:
+        provider = next(p for p in files.values() if p.name == entry.provider)
+        assert [c.headline for c in entry.cheaper] == [
+            f"Cheaper {c.pay_by}" for c in provider.cheaper_direct
+        ]
+        for item in entry.cheaper:
+            assert not schema_provider.PRICE_IN_TEXT.search(item.headline + item.text)

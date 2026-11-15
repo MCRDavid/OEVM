@@ -39,14 +39,25 @@ export function cheaperFor(entry, location) {
   return (entry.cheaper ?? []).filter((item) => !item.only_where_dc || dc);
 }
 
-// The line after those notes: why the prices are not shown, and where to find them.
+const LONG_DATE = new Intl.DateTimeFormat("en-GB", { day: "numeric", month: "long", year: "numeric", timeZone: "UTC" });
+
+// "IONITY's", "ESB ecars'".
+function whose(name) {
+  return name.endsWith("s") ? `${name}'` : `${name}'s`;
+}
+
+// The line after those notes: whose website said so and when it was last checked (the
+// oldest check, when there are several), why the prices are not shown, and where to look.
 export function cheaperParts(entry, items) {
-  const name = entry.provider;
+  const name = whose(entry.provider);
+  const dates = items.map((item) => item.checked).filter(Boolean).sort();
+  const when = dates.length ? new Date(`${dates[0]}T00:00:00Z`) : null;
+  const checked = when && !Number.isNaN(when.getTime()) ? ` when last checked on ${LONG_DATE.format(when)}` : "";
   return [
-    `${name}'s `,
+    `According to ${name} website${checked}. Its `,
     entry.terms_url ? { url: entry.terms_url, text: "website terms" } : "website terms",
     " do not allow its prices to be shown here, so check ",
-    { url: items[0]?.source_url ?? entry.website, text: `${name}'s website` },
+    { url: items[0]?.source_url ?? entry.website, text: `${name} website` },
     " or app before you charge.",
   ];
 }

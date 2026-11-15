@@ -419,29 +419,18 @@ PLANS_NOTE = (
 )
 
 
-def cheaper_out(provider: str, entry: CheaperDirect) -> CheaperOut:
+def cheaper_out(entry: CheaperDirect) -> CheaperOut:
     """How a site's details say that paying an operator directly is cheaper, in this
     project's words, without the price and quoting nothing from the provider's page
-    (owner's decisions, 15 November 2026; ADR 0034)."""
-    when = entry.source.checked
+    (owner's decisions, 15 November 2026; ADR 0034). The details add whose website said so
+    and when it was last checked."""
     fee = "A subscription fee applies." if entry.needs_subscription else "No subscription needed."
-    text = " ".join(
-        filter(
-            None,
-            [
-                f"than {entry.cheaper_than}, according to {provider}'s website when last "
-                f"checked on {when.day} {when:%B %Y}.",
-                fee,
-                entry.conditions,
-            ],
-        )
-    )
     return CheaperOut(
         headline=f"Cheaper {entry.pay_by}",
-        text=text,
+        text=" ".join(filter(None, [f"than {entry.cheaper_than}.", fee, entry.conditions])),
         only_where_dc=entry.only_where_dc,
         source_url=entry.source.url,
-        checked=when,
+        checked=entry.source.checked,
     )
 
 
@@ -459,9 +448,7 @@ def plans_file(operators: dict[str, OperatorConfig], generated_at: datetime) -> 
                     operator_ids=provider.own_networks,
                     website=provider.website,
                     terms_url=provider.terms.url,
-                    cheaper=[
-                        cheaper_out(provider.name, entry) for entry in provider.cheaper_direct
-                    ],
+                    cheaper=[cheaper_out(entry) for entry in provider.cheaper_direct],
                 )
             )
         attribution = provider.terms.attribution if provider.terms.reuse == "attribution" else None

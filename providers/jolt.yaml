@@ -18,6 +18,22 @@ terms:
   checked: 2026-10-09
 own_networks: [jolt]
 plans: []
+# Said in this project's words, without the price, at its locations (ADR 0034).
+cheaper_direct:
+  - pay_by: in the JOLT app
+    cheaper_than: paying by contactless
+    needs_subscription: false
+    conditions: App users get some free charging each day.
+    feed_check: >-
+      On 2026-11-15 every JOLT connector in the feed named three ad hoc tariffs at one
+      price, one of them named for contactless, so the map shows the price for paying by
+      contactless.
+    source:
+      url: https://joltcharge.com/uk/
+      said: >-
+        People who charge with the JOLT app get some free charging every day, which paying
+        by contactless does not give.
+      checked: 2026-11-15
 notes: >-
   Plans are not listed because Jolt's terms do not allow material on its website or app
   to be reproduced without its written consent, and clause 4 of the terms also asks users

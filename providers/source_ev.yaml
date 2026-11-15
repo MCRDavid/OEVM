@@ -12,4 +12,33 @@ terms:
   checked: 2026-10-30
 own_networks: [source_ev]
 plans: []
+# Said in this project's words, without the price, at its locations (ADR 0034).
+cheaper_direct:
+  - pay_by: with a free Source EV membership
+    cheaper_than: paying by contactless
+    needs_subscription: false
+    only_where_dc: true
+    feed_check: >-
+      On 2026-11-15 the feed's price at every DC connector was the page's contactless
+      price. Its AC price did not match the page, so the note is given only at locations
+      with a DC charger.
+    source:
+      url: https://source-ev.com/ev-drivers/pricing-subscriptions
+      said: >-
+        Its free membership has lower prices than paying by contactless, and its paid
+        membership lower again.
+      checked: 2026-11-15
+  - pay_by: with a paid Source EV membership
+    cheaper_than: its free membership
+    needs_subscription: true
+    only_where_dc: true
+    feed_check: >-
+      On 2026-11-15 the feed's price at every DC connector was the page's contactless
+      price, above both memberships' prices.
+    source:
+      url: https://source-ev.com/ev-drivers/pricing-subscriptions
+      said: >-
+        Its paid monthly membership has lower prices than its free membership, with lower
+        prices again at night.
+      checked: 2026-11-15
 notes: "Plans are not listed because the website terms (clause 3, Intellectual Property) need Source's prior written permission to reproduce or distribute any content (checked 2026-10-30). Its plans are on https://source-ev.com/ev-drivers/pricing-subscriptions. Octopus Electroverse's discount at Source EV sites is listed under electroverse."

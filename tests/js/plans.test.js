@@ -130,7 +130,7 @@ const CHEAPER = {
   cheaper: [
     {
       headline: "Cheaper in the evyve app",
-      text: "than paying by contactless, according to EVYVE's website when last checked on 15 November 2026. No subscription needed.",
+      text: "than paying by contactless. No subscription needed.",
       only_where_dc: true,
       source_url: "https://evyve.co.uk/pricing/",
       checked: "2026-11-15",
@@ -151,7 +151,10 @@ test("a cheaper way to pay direct is said only where there is a charger to compa
 test("the cheaper note says why no price is shown and links to the operator's own page", () => {
   const parts = cheaperParts(CHEAPER, CHEAPER.cheaper);
   const text = parts.map((part) => (typeof part === "string" ? part : part.text)).join("");
-  assert.equal(text, "EVYVE's website terms do not allow its prices to be shown here, so check EVYVE's website or app before you charge.");
+  assert.equal(
+    text,
+    "According to EVYVE's website when last checked on 15 November 2026. Its website terms do not allow its prices to be shown here, so check EVYVE's website or app before you charge.",
+  );
   assert.deepEqual(
     parts.filter((part) => typeof part !== "string"),
     [
@@ -161,4 +164,17 @@ test("the cheaper note says why no price is shown and links to the operator's ow
   );
   // Nothing in the note is a price.
   assert.doesNotMatch(text + CHEAPER.cheaper[0].text, /£|\dp\b/);
+});
+
+test("the cheaper note gives the oldest check and a possessive that suits the name", () => {
+  const ecars = { provider: "ESB ecars", website: "https://esb.ie/", terms_url: null, cheaper: [] };
+  const items = [
+    { source_url: "https://esb.ie/a", checked: "2026-11-20" },
+    { source_url: "https://esb.ie/b", checked: "2026-11-15" },
+  ];
+  const text = cheaperParts(ecars, items).map((part) => (typeof part === "string" ? part : part.text)).join("");
+  assert.equal(
+    text,
+    "According to ESB ecars' website when last checked on 15 November 2026. Its website terms do not allow its prices to be shown here, so check ESB ecars' website or app before you charge.",
+  );
 });

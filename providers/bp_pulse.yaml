@@ -13,4 +13,19 @@ terms:
   checked: 2026-10-09
 own_networks: [bp_pulse]
 plans: []
+# Said in this project's words, without the price, at its locations (ADR 0034).
+cheaper_direct:
+  - pay_by: with a bp pulse subscription
+    cheaper_than: paying by contactless or as you go in the app
+    needs_subscription: true
+    feed_check: >-
+      On 2026-11-15 the feed's prices were the page's contactless and pay as you go
+      prices, which are the same, for fast chargers and for the most common rapid price.
+      Many rapid connectors have no price in the feed.
+    source:
+      url: https://www.bppulse.com/en-gb/public-ev-charging/pricing
+      said: >-
+        Subscribers, who pay a monthly fee, pay less per kWh than contactless and pay as you
+        go customers, who pay the same as each other.
+      checked: 2026-11-15
 notes: "Plans are not listed because the provider's legal notice allows copies only for viewing and personal use, and does not allow its content to be republished, compiled or used in a database (checked 2026-10-09)."

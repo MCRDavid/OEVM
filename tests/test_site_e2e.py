@@ -363,8 +363,8 @@ def test_details_say_where_paying_the_operator_directly_is_cheaper_without_a_pri
     expect(note).to_have_count(1)
     expect(note.locator("strong")).to_have_text("Cheaper in the evyve app")
     text = note.text_content()
-    assert "than paying by contactless, according to EVYVE's website when last checked" in text
-    assert "No subscription needed." in text
+    assert "than paying by contactless. No subscription needed." in text
+    assert "According to EVYVE's website when last checked on 15 November 2026." in text
     assert not re.search(r"£|\dp\b", text)
     links = note.locator("a")
     assert [links.nth(n).text_content() for n in range(links.count())] == [

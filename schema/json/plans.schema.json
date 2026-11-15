@@ -11,7 +11,7 @@
           "type": "string"
         },
         "text": {
-          "description": "The rest of the sentence and any condition, for example 'than paying by contactless, with no subscription needed.'",
+          "description": "The rest of the sentence and any condition, for example 'than paying by contactless. No subscription needed.'",
           "title": "Text",
           "type": "string"
         },

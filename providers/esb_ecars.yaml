@@ -13,4 +13,19 @@ terms:
   checked: 2026-10-30
 own_networks: [esb_ecars]
 plans: []
+# Said in this project's words, without the price, at its locations (ADR 0034).
+cheaper_direct:
+  - pay_by: with an ESB ecars membership
+    cheaper_than: paying as you go or by contactless
+    needs_subscription: true
+    feed_check: >-
+      On 2026-11-15 the feed's prices were the page's contactless prices for Northern
+      Ireland. The page lists pay as you go a little below contactless but also says the
+      two are the same, so only the membership is said to be cheaper.
+    source:
+      url: https://esb.ie/what-we-do/ecars/price-plans
+      said: >-
+        In Northern Ireland, members, who pay a monthly fee, pay less per kWh than pay as you
+        go and contactless customers.
+      checked: 2026-11-15
 notes: "Plans are not listed because ESB's copyright page (Published March 2022) does not allow materials on the website to be republished or used for public purposes without ESB's written authorisation (checked 2026-10-30). The Northern Ireland price plans are on the page named in website."
