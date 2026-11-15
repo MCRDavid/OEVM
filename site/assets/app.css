@@ -963,6 +963,14 @@ body[data-view="list"] .map-view {
 
 /* The visitor's own rates (ADR 0035): the list under "Your own rates", and the line in a
    charger's details */
+.my-rates label {
+  margin-top: 0.25rem;
+}
+
+.my-rates .actions {
+  margin: 0.5rem 0 0;
+}
+
 .rate-list {
   margin: 0.25rem 0 0;
   padding: 0;

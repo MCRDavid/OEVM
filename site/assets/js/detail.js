@@ -548,10 +548,10 @@ export function ownRateSection(rate, { cheaper = false, onEditRate = null } = {}
   if (!cheaper || !onEditRate) return [];
   return [
     h(
-      "p",
+      "div",
       { className: "own-rate" },
       h("button", { type: "button", className: "own-rate-edit", onClick: onEditRate, text: "Type in a rate you found" }),
-      h("span", { className: "hint", text: " It stays in this browser and is never sent anywhere." }),
+      h("p", { className: "hint", text: "It stays in this browser and is never sent anywhere." }),
     ),
   ];
 }
