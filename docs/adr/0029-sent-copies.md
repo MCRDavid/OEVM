@@ -81,3 +81,9 @@ with every charge point status unknown, as an exception to the 7 day rule.
   sends replaces the one shown without a new decision (`operators/zest.yaml`,
   `sent_copies/zest/README.md`). Zest's data is licensed under CC BY 4.0, as its open data
   page states, so its attribution names that licence and says the data is adapted.
+
+## Amended 15 November 2026: a shorter details screen
+
+ADR 0033 changes how the details screen words and lays out some of what this record
+decided. The data and the facts shown are unchanged; see ADR 0033, "Amendments to earlier
+decisions".

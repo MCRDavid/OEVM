@@ -254,10 +254,16 @@ def test_details_show_provenance_and_return_focus(visit):
     first.click()
     expect(page.locator("#detail-heading")).to_be_focused()
     body = page.text_content("#detail-body")
-    assert "Where this comes from" in body and "Fetched " in body and "Licence:" in body
-    report = page.get_attribute("text=Report a mistake about this charger", "href")
+    assert "Contains data from " in body
+    # Where the data comes from, in full, opens when asked for.
+    about = page.locator("#detail-body details.about")
+    expect(about.locator("text=Fetched ")).to_be_hidden()
+    about.locator("summary").click()
+    expect(about).to_contain_text("Fetched ")
+    expect(about).to_contain_text("Licence:")
+    report = page.get_attribute("text=Report a mistake", "href")
     assert report.startswith(f"{REPOSITORY_URL}/issues/new?template=correction.yml")
-    osm = page.get_attribute("text=View this place on OpenStreetMap", "href")
+    osm = page.get_attribute("text=View on OpenStreetMap", "href")
     assert osm.startswith("https://www.openstreetmap.org/?mlat=")
     page.keyboard.press("Escape")
     assert page.is_hidden("#detail")
@@ -276,7 +282,11 @@ def test_details_colour_charge_point_statuses_with_words_and_the_time_read(visit
     assert chip.locator("[aria-hidden=true]").text_content() == "● "
     body = page.text_content("#detail-body")
     assert "Status from the operator's feed, read " in body
-    # Each charge point's status has its group's colour too.
+    # Each charge point's status has its group's colour too, on its own line under the
+    # connectors and price it shares with others like it.
+    row = page.locator("#detail-body .charge-points > li").first
+    expect(row.locator(".charge-point-name")).to_have_count(1)
+    expect(row).to_contain_text("reported ")
     colours = {
         page.evaluate("(e) => getComputedStyle(e).color", e.element_handle())
         for e in page.locator("#detail-body .charge-points .status").all()
@@ -294,8 +304,9 @@ def test_details_list_every_tariff_with_the_lowest_energy_price(visit):
         expect(page.locator("#detail-heading")).to_be_focused()
         # Some feeds (Connekt's copy among them) do not say how each tariff is paid, and
         # some sites (Zest's among them) list several tariffs all paid at the charger.
-        body = page.text_content("#detail-body")
-        if "Lowest energy price listed here" in body and all(
+        tariffs = page.locator("#detail-body ul.tariffs:not(.plans)")
+        body = tariffs.text_content() if tariffs.count() else ""
+        if all(
             kind in body
             for kind in ("Pay at the charger", "With an account, app or card from a charging")
         ):
@@ -303,9 +314,14 @@ def test_details_list_every_tariff_with_the_lowest_energy_price(visit):
         page.keyboard.press("Escape")
     else:
         raise AssertionError("no location compares tariffs paid in different ways")
-    tariffs = page.locator("ul.tariffs > li")
+    # Every tariff listed here, cheapest first, opens when asked for.
+    summary = page.locator("#detail-body details.more summary", has_text="tariffs listed here")
+    expect(summary).to_have_text(re.compile(r"^All \d+ tariffs listed here$"))
+    summary.click()
+    tariffs = page.locator("ul.tariffs:not(.plans) > li")
     assert tariffs.count() >= 2
-    body = page.text_content("ul.tariffs")
+    expect(tariffs.first).to_be_visible()
+    body = page.text_content("ul.tariffs:not(.plans)")
     assert "Pay at the charger, for example by card" in body
     assert "With an account, app or card from a charging provider" in body
 
@@ -344,7 +360,7 @@ def test_details_show_plans_from_providers_pages_and_the_visitors_own(visit):
     _open_details_containing(page, "Other ways to pay here")
     plans = " ".join(page.locator("ul.plans").all_text_contents())
     assert "per kWh" in plans and "checked 9 Oct 2026" in plans
-    headings = page.locator("#detail-body h4").all_text_contents()
+    headings = page.locator("#detail-body details.more:has(ul.plans) h4").all_text_contents()
     assert headings and all(
         t.startswith(("No subscription needed", "With a paid subscription")) for t in headings
     )
@@ -417,6 +433,7 @@ def test_the_calculator_works_out_when_a_plan_pays_for_itself(visit):
     page = v.open("?view=list", map_ready=False)
     expect(page.locator("#list-items li")).to_have_count(LOCATIONS)
     _open_details_containing(page, "Is a subscription worth it here?")
+    page.locator("#detail-body details.more summary", has_text="Other ways to pay here").click()
     page.click(".calculator summary")
     assert page.input_value("#calc-fee") == "5"
     assert page.input_value("#calc-with") == "50"
@@ -433,9 +450,9 @@ def test_the_calculator_works_out_when_a_plan_pays_for_itself(visit):
     page.fill("#calc-with", "45")
     expect(answer).to_contain_text("pays for itself once you charge 11 kWh a month")
     assert page.input_value("#calc-with") == "45", "a price the visitor types is kept"
-    assert (
-        "Lowest published energy price here with any listed plan: 50p per kWh including "
-        "VAT, with Fixed plan from Test" in page.text_content("#detail-body")
+    # The plan is cheaper than every tariff published here, so one line says so in view.
+    expect(page.locator("#detail-body > p.cheapest")).to_have_text(
+        "With a listed plan: 50p per kWh including VAT, Fixed plan from Test (£5.00 a month)."
     )
 
 
@@ -481,11 +498,15 @@ def test_details_say_when_tariffs_come_from_a_related_networks_feed(visit):
     expect(page.locator("#list-items li")).to_have_count(LOCATIONS)
     page.locator("#list-items button", has_text="Lancing Manor Leisure Centre").click()
     body = page.locator("#detail-body")
+    expect(body.locator(".related-note")).to_have_text(
+        'Prices here use Evolt Network\'s tariff data: see "More about this data".'
+    )
     expect(body.locator(".related")).to_contain_text("only Evolt Network's tariff data holds")
-    expect(body.locator(".charge-points")).to_contain_text("56p per kWh including VAT")
+    expect(body.locator(".charge-point-groups")).to_contain_text("56p per kWh including VAT")
     options = body.locator(".tariffs li", has_text="Published in Evolt Network's tariff data.")
     expect(options).to_have_count(2)
     expect(body).to_contain_text("Contains data from Evolt Network")
+    body.locator("details.about summary").click()
     link = body.get_by_role("link", name="Evolt Network's tariff feed")
     href = "https://info.smartcharging.uk/public_feed/locations/3666/tariffs"
     expect(link).to_have_attribute("href", href)
@@ -496,13 +517,20 @@ def test_details_of_a_copy_an_operator_sent_give_its_date_and_no_status(visit):
     expect(page.locator("#list-items li")).to_have_count(LOCATIONS)
     page.locator("#list-items button", has_text="Colvend Golf Club").click()
     body = page.locator("#detail-body")
+    # A short note in view says it is a copy, when it was made and that no status is shown;
+    # the full note, with how and when it came and the owner's decision, is under "More
+    # about this data" (ADR 0029, amended 15 November 2026).
+    short = body.locator(".copy-note")
+    expect(short).to_contain_text("A copy Connekt Charging sent, made 26 Oct 2026")
+    expect(short).to_contain_text("not updated since. Charge point status is not shown.")
     note = body.locator(".sent-copy")
     expect(note).to_contain_text("Connekt sent this data by email on 26 October 2026")
     expect(note).to_contain_text("charge point status is not shown")
-    expect(body).to_contain_text("Not shown: this operator's data is a copy it sent")
     expect(body.locator(".status-chips")).to_have_count(0)
+    expect(body.locator(".charge-points .status")).to_have_count(0)
     expect(body).to_contain_text("Prices are as in the copy the operator sent")
     expect(body).not_to_contain_text("Fetched ")
+    body.locator("details.about summary").click()
     link = body.get_by_role("link", name="the files the operator sent")
     expect(link).to_have_attribute("href", f"{REPOSITORY_URL}/tree/main/sent_copies/connekt")
     expect(body).to_contain_text("Contains data from Connekt")
@@ -685,6 +713,7 @@ def test_details_show_statuses_a_refresh_read_since_the_daily_fetch(visit):
     assert len(statuses) == 6 and statuses[0].startswith("✕ ")
     assert all(text.startswith("◐ ") for text in statuses[1:])
     # The time under the counts is when the refresh read the feed, and the sources say so.
+    page.locator("#detail-body details.about summary").click()
     again = page.text_content("#status-read")
     read = re.fullmatch(
         r"Charge point statuses were read from the operator's feed again (.+); "
@@ -692,7 +721,7 @@ def test_details_show_statuses_a_refresh_read_since_the_daily_fetch(visit):
         again,
     ).group(1)
     body = page.text_content("#detail-body")
-    assert f"Status from the operator's feed, read {read}. It may have changed since." in body
+    assert f"Status from the operator's feed, read {read}." in body
     fetched = re.search(r"Fetched (.+?) from the operator's feed", body).group(1)
     assert fetched != read
     assert not re.search(r"\blive\b|\bnow\b", again, re.IGNORECASE)
@@ -713,7 +742,7 @@ def test_details_without_newer_statuses_keep_the_daily_fetch_and_say_nothing_mor
     body = page.text_content("#detail-body")
     fetched = re.search(r"Fetched (.+?) from the operator's feed", body).group(1)
     if "Charge point status" in body:
-        assert f"Status from the operator's feed, read {fetched}. It may have changed" in body
+        assert f"Status from the operator's feed, read {fetched}." in body
     assert v.errors == []
 
 
@@ -1167,17 +1196,20 @@ def test_details_list_each_charge_point_with_its_label_id_and_status(visit):
     expect(page.locator("#detail-heading")).to_be_focused()
     points = page.locator("#detail-body .charge-points > li")
     expect(points).to_have_count(6)
-    assert page.text_content("#detail-body h3 >> nth=1") == "Charge points (6)"
+    heading = page.locator("#detail-body h3", has_text="Charge points")
+    expect(heading).to_have_text("Charge points (6)")
+    # Charge points that offer the same are in one box, which names the connector once.
+    group = page.locator("#detail-body .charge-point-groups > li").first
+    expect(group.locator(".plug")).to_have_count(1)
+    expect(group.locator(".plug")).to_have_text("Type 2 · 7 kW")
     first = points.first
     assert first.locator(".charge-point-name").text_content() == "SEC31617"
-    expect(first).to_contain_text("ID GB*SSM*ESEC31617*1")
-    assert re.fullmatch(r"● Available, reported .+", first.locator(".status").text_content())
-    expect(first.locator(".connectors li")).to_have_count(1)
-    expect(first.locator(".connectors")).to_contain_text("Type 2 · 7 kW")
-    # The reference numbers come last, in small print.
+    assert first.locator(".status").text_content() == "● Available"
+    expect(first).to_contain_text("reported ")
+    # The reference numbers come last, in small print, under "More about this data".
     last = page.locator("#detail-body > *").last
-    assert last.get_attribute("class") == "references"
-    refs = [li.text_content() for li in last.locator("li").all()]
+    assert last.get_attribute("class") == "more about"
+    refs = [li.text_content() for li in last.locator(".references li").all()]
     assert refs[0] == (
         "Site: 12343565 in Evolt Network's feed (on this map: evolt:GB:SSM:12343565)."
     )
@@ -1189,9 +1221,11 @@ def test_parking_restrictions_are_shown_with_each_charge_point(visit):
     page = visit().open("?view=list", map_ready=False)
     page.locator("#list-items button", has_text="Premier Inn Alnwick").click()
     expect(page.locator("#detail-heading")).to_be_focused()
-    expect(page.locator("#detail-body .charge-points .parking").first).to_have_text(
+    # Every charge point here has the same rules, so they are said once, with the site.
+    expect(page.locator("#detail-body > .parking")).to_have_text(
         "Parking: only while plugged in and charging; customers only."
     )
+    expect(page.locator("#detail-body .charge-point-groups .parking")).to_have_count(0)
 
 
 def test_the_operators_notes_are_shown_once_as_published(visit):
@@ -1202,7 +1236,7 @@ def test_the_operators_notes_are_shown_once_as_published(visit):
     notes = page.locator("#detail-body .notes")
     expect(notes).to_have_count(1)
     expect(notes).to_have_text("Located in Hotel Car Park")
-    expect(page.locator("#detail-body .charge-points .notes")).to_have_count(0)
+    expect(page.locator("#detail-body .charge-point-groups .notes")).to_have_count(0)
     expect(page.locator("#detail-body h3", has_text="Operator's notes")).to_be_visible()
 
 
@@ -1217,27 +1251,27 @@ def test_card_payment_is_shown_as_the_operator_states_it(visit):
     page = visit().open("?view=list&priv=1", map_ready=False)
     page.locator("#list-items button", has_text="University of Surrey").click()
     expect(page.locator("#detail-heading")).to_be_focused()
-    expect(page.locator("#detail-body .charge-points .payment").first).to_have_text(
-        "Card payment here, the operator says: contactless, chip card, PIN pad."
+    expect(page.locator("#detail-body .says").first).to_contain_text(
+        "card payment (contactless, chip card, PIN pad)"
     )
+    expect(page.locator("#detail-body .says").first).to_contain_text("The operator says: ")
 
 
 def test_the_parking_type_is_shown_as_the_operator_states_it(visit):
     page = visit().open("?view=list", map_ready=False)
     page.locator("#list-items button", has_text="Premier Inn Alnwick").click()
     expect(page.locator("#detail-heading")).to_be_focused()
-    expect(page.locator("#detail-body .parking-type")).to_have_text(
-        "Parking type, the operator says: car park."
-    )
+    expect(page.locator("#detail-body > .says")).to_contain_text("The operator says: car park")
 
 
 def test_a_floor_level_is_shown_with_each_charge_point(visit):
     page = visit().open("?view=list", map_ready=False)
     page.locator("#list-items button", has_text="PARKWAY SC EVC 4").click()
     expect(page.locator("#detail-heading")).to_be_focused()
-    floors = page.locator("#detail-body .charge-points .floor-level")
-    expect(floors).to_have_count(2)
-    expect(floors.first).to_have_text("Floor level, the operator says: -2.")
+    # Both charge points are on the same level, so it is said once, with the site.
+    says = page.locator("#detail-body .says", has_text="floor level")
+    expect(says).to_have_count(1)
+    expect(says).to_contain_text("floor level -2")
 
 
 def test_brightgreen_plugs_and_statuses_come_from_its_connectors(visit):
@@ -1248,8 +1282,9 @@ def test_brightgreen_plugs_and_statuses_come_from_its_connectors(visit):
     points = page.locator("#detail-body .charge-points > li")
     expect(points).to_have_count(10)
     first = points.first
-    assert re.fullmatch(r"● Available, reported .+", first.locator(".status").text_content())
-    expect(first.locator(".connectors")).to_contain_text("Type 2 · 22 kW")
+    assert first.locator(".status").text_content() == "● Available"
+    group = page.locator("#detail-body .charge-point-groups > li").first
+    expect(group).to_contain_text("Type 2 · 22 kW")
 
 
 def test_taxi_only_charge_points_are_labelled(visit):
@@ -1257,9 +1292,8 @@ def test_taxi_only_charge_points_are_labelled(visit):
     page.locator("#list-items button", has_text=TAXIS).click()
     expect(page.locator("#detail-heading")).to_be_focused()
     expect(page.locator("#detail-body .private-note")).to_contain_text("Taxis only")
-    parking = page.locator("#detail-body .charge-points .parking")
-    expect(parking).to_have_count(3)
-    expect(parking.first).to_have_text("Parking: taxis only.")
+    # Every charge point here is for taxis only, so it is said once, with the site.
+    expect(page.locator("#detail-body > .parking")).to_have_text("Parking: taxis only.")
 
 
 # Price labels (ADR 0026)
@@ -1295,14 +1329,14 @@ def test_details_say_where_the_map_label_comes_from(visit):
     expect(page.locator("#list-items li")).to_have_count(LOCATIONS)
     _item(page, "Premier Inn Dumbarton").locator("button").click()
     line = page.locator("#detail-body .map-label")
-    expect(line).to_contain_text("Cheapest here: 83p, the lowest price per kWh listed here")
-    expect(line).to_contain_text("with an account, app or card from a charging provider")
-    expect(line).to_contain_text("are not included")
+    expect(line).to_contain_text(
+        "Cheapest here: 83p per kWh: with an account, app or card from a charging provider."
+    )
+    expect(line).to_contain_text("Any other charges are not included.")
     page.keyboard.press("Escape")
     _item(page, "Atlantic Quay").locator("button").click()
     expect(page.locator("#detail-body .map-label")).to_contain_text(
-        "Cheapest here: Free, as at least one connector here has a tariff the operator confirms "
-        "is free"
+        "Cheapest here: Free on at least one connector, confirmed by the operator's tariff."
     )
 
 
@@ -1312,14 +1346,10 @@ def test_the_details_line_follows_the_filters_while_the_details_are_open(visit):
     expect(page.locator("#list-items li")).to_have_count(LOCATIONS)
     _item(page, "Premier Inn Alnwick").locator("button").click()
     line = page.locator("#detail-body .map-label")
-    expect(line).to_contain_text("Cheapest here: 58p, the lowest price per kWh listed here")
-    expect(line).not_to_contain_text("match your filters")
+    expect(line).to_contain_text("Cheapest here: 58p per kWh")
     # On a wide screen the quick filters stay usable beside the panel.
     page.click("#quick-rapid")
-    expect(line).to_contain_text(
-        "Cheapest here: 83p, the lowest price per kWh listed here for the connectors that "
-        "match your filters"
-    )
+    expect(line).to_contain_text("Cheapest for your filters: 83p per kWh")
     page.click("#quick-rapid")
     expect(line).to_contain_text("Cheapest here: 58p")
     assert v.errors == []
@@ -1387,7 +1417,7 @@ def test_a_ticked_plan_with_a_lower_price_labels_the_map_and_the_list(visit):
     wait_for_amber(page, True)
     item.locator("button").click()
     expect(page.locator("#detail-body .map-label")).to_contain_text(
-        "Cheapest here: 39p with your plan Cheap plan from Test (£4.99 a month)"
+        "Cheapest here: 39p per kWh with your plan Cheap plan from Test (£4.99 a month)."
     )
     page.keyboard.press("Escape")
     # A point not grouped into a numbered circle keeps its label at any zoom.

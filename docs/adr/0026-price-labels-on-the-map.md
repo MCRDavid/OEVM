@@ -93,3 +93,9 @@ otherwise through a free app or paying at the charger by contactless card.
 - No tariff in the feeds sampled on 17 October 2026 (Glasgow and Leeds) gave a start or
   end date, or a price per kWh that is 0p at some times, so those rules have only been
   tested with made-up tariffs.
+
+## Amended 15 November 2026: a shorter details screen
+
+ADR 0033 changes how the details screen words and lays out some of what this record
+decided. The data and the facts shown are unchanged; see ADR 0033, "Amendments to earlier
+decisions".
