@@ -64,11 +64,14 @@ the site goes live.
    This gives consent under paragraph 2 and also meets paragraph 6. Today the filters
    are saved (with whether the map groups nearby chargers, added 12 October 2026), the
    charging plans the visitor ticked under "Your charging plans" (as plan
-   ids from `data/plans.json`, added 9 October 2026), and the choice of light or dark mode
-   if the visitor pressed the button, all under one `localStorage` key
-   (`oevm.settings.v1`). Ticked plans are used only in the page to order and compare
-   prices, and are never sent anywhere. Without that switch, light or dark
-   mode lasts only for the visit. Favourites and a home location are not built yet; they
+   ids from `data/plans.json`, added 9 October 2026), the visitor's own rates typed in
+   under "Your own rates" (a network id, an AC and a DC price in whole pence and an
+   optional note of up to 40 characters for each network, added 15 November 2026, ADR
+   0035), and the choice of light or dark mode if the visitor pressed the button, all
+   under one `localStorage` key (`oevm.settings.v1`). Ticked plans and own rates are used
+   only in the page to order and compare prices, and are never sent anywhere or put in
+   the page address. Without that switch, own rates, ticked plans and light or dark
+   mode last only for the visit. Favourites and a home location are not built yet; they
    must follow this rule when they are.
 5. **Saved settings stay on the device.** The site never sends them anywhere. The map
    still fetches map files for the area on screen (see the notice below), so a saved home
@@ -113,7 +116,7 @@ anything changes, and update the date.
 > personal data.
 >
 > **What is saved on your device.** Nothing, unless you turn on "Remember my settings on
-> this device". If you do, your filters, whether the map groups nearby chargers, the charging plans you ticked, and light or dark mode if you picked one, are
+> this device". If you do, your filters, whether the map groups nearby chargers, the charging plans you ticked, the rates you typed in under "Your own rates", and light or dark mode if you picked one, are
 > saved in your browser's local storage so the map opens the same way next time. They are not sent anywhere. Turn the switch off or
 > press "Forget my settings" at any time to delete them. Your browser may also keep copies
 > of the site's files and map files in its normal cache, as it does for any website. When
@@ -155,7 +158,7 @@ anything changes, and update the date.
 > vulnerability" button on the repository's Security and quality tab (called Security on
 > older pages). Both routes need a GitHub account.
 >
-> Last updated: 12 October 2026.
+> Last updated: 15 November 2026.
 
 The OpenFreeMap statements come from its privacy page and response headers as read on
 8 October 2026 (ADR 0008). Re-check them before publishing and from time to time, because

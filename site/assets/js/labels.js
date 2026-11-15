@@ -9,7 +9,10 @@
 // - the fixed price per kWh, including VAT, of a charging plan the visitor ticked under
 //   "Your charging plans" that covers this network. Discounts are never turned into
 //   prices (ADR 0016), and plans nobody ticked are left out, because many are limited (to
-//   taxis, off-peak hours or one council area, for example).
+//   taxis, off-peak hours or one council area, for example);
+// - the visitor's own rate for this network (rates.js, ADR 0035), typed in under "Your own
+//   rates": its AC rate for AC connectors and its DC rate for DC connectors, from the
+//   feed's power_type. A connector whose feed gives no power_type gets neither.
 // Only connectors that match the visitor's filters count, so a rapid charger's label is
 // never a slow connector's price, and no price above the visitor's maximum price per kWh
 // is shown (a price whose VAT is not stated could only be higher with VAT). Free comes
@@ -43,6 +46,13 @@ export function bestPlans(plans, mine) {
     }
   }
   return best;
+}
+
+// The visitor's own rate for one connector, by whether it is AC or DC.
+function fromRate(rate, connector) {
+  const value = connector.cur === "ac" || connector.cur === "dc" ? rate[connector.cur] : null;
+  if (!finite(value) || value <= 0) return null;
+  return { free: false, value, text: `${value}p`, lvat: true, lvar: false, rate: { ...rate, cur: connector.cur } };
 }
 
 function underLimit(found, state) {
@@ -80,24 +90,27 @@ function sortKey(best) {
   return 1 + Math.round(best.value * 10) * 4 + (best.lvat ? 0 : 2) + (best.lvar ? 1 : 0);
 }
 
-// The label for one location, as { text, key, low, lvat, plan }, or null when no price
-// can be shown. key orders labels cheapest first; plan is the ticked plan the price comes
-// from, if it does. A plan counts only where a connector matches the filters, and only
-// when it comes first in the order above: on a full tie the operator's own price is kept,
-// as it needs no plan.
-export function priceLabel(props, state, plan = null) {
+// The label for one location, as { text, key, low, lvat, plan, rate }, or null when no
+// price can be shown. key orders labels cheapest first; plan is the ticked plan the price
+// comes from, if it does, and rate the visitor's own rate (with cur, "ac" or "dc"), if it
+// does. A plan or rate counts only where a connector matches the filters, and only when
+// it comes first in the order above: on a full tie the operator's own price is kept, as
+// it needs nothing more, and then a ticked plan's.
+export function priceLabel(props, state, plan = null, rate = null) {
   let best = null;
   let matched = false;
+  const own = [];
+  const consider = (found) => {
+    if (found && underLimit(found, state) && (!best || lower(found, best) < 0)) best = found;
+  };
   for (const connector of props.cons ?? []) {
     if (!connectorMatches(connector, state)) continue;
     matched = true;
-    const found = candidate(connector);
-    if (found && underLimit(found, state) && (!best || lower(found, best) < 0)) best = found;
+    consider(candidate(connector));
+    if (rate) own.push(fromRate(rate, connector));
   }
-  if (matched && plan && finite(plan.ppk) && plan.label) {
-    const found = fromPlan(plan);
-    if (underLimit(found, state) && (!best || lower(found, best) < 0)) best = found;
-  }
+  if (matched && plan && finite(plan.ppk) && plan.label) consider(fromPlan(plan));
+  own.forEach(consider);
   if (!best) return null;
   return {
     text: best.text,
@@ -105,5 +118,6 @@ export function priceLabel(props, state, plan = null) {
     low: best.free ? null : best.value,
     lvat: best.free ? null : best.lvat,
     plan: best.plan ?? null,
+    rate: best.rate ?? null,
   };
 }

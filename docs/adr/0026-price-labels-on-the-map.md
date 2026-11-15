@@ -99,3 +99,9 @@ otherwise through a free app or paying at the charger by contactless card.
 ADR 0033 changes how the details screen words and lays out some of what this record
 decided. The data and the facts shown are unchanged; see ADR 0033, "Amendments to earlier
 decisions".
+
+## Amended 15 November 2026: the visitor's own rates
+
+ADR 0035 adds a third source for a label: the rate the visitor typed in under "Your own
+rates" for a network's AC or DC chargers. It is drawn like a ticked plan's price and said
+to be the visitor's own; on a full tie the operator's own price is kept, then a plan's.

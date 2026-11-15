@@ -21,6 +21,7 @@ import {
   withheldFor,
   withheldParts,
 } from "./plans.js";
+import { rateSummary } from "./rates.js";
 
 const WEEKDAYS = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"];
 // UNSTATED_KIND in pipeline/pricing.py: a tariff whose feed does not say how it is paid for.
@@ -529,6 +530,32 @@ export function cheaperSection(detail, withheld = []) {
   });
 }
 
+// The visitor's own rates for this network (rates.js, ADR 0035), said to be theirs, with
+// a button to change them. Where paying the operator directly is said to be cheaper
+// (ADR 0034) and the visitor has typed in no rate, a button offers to type one in.
+export function ownRateSection(rate, { cheaper = false, onEditRate = null } = {}) {
+  if (rate) {
+    return [
+      h(
+        "div",
+        { className: "own-rate" },
+        h("p", {}, h("strong", { text: "Your own rates for this network: " }), `${rateSummary(rate)}${rate.note ? ` (${rate.note})` : ""}.`),
+        h("p", { className: "hint", text: "Typed in by you and kept in this browser. This site has not checked them." }),
+        onEditRate ? h("button", { type: "button", className: "own-rate-edit", onClick: onEditRate, text: "Change your rates" }) : null,
+      ),
+    ];
+  }
+  if (!cheaper || !onEditRate) return [];
+  return [
+    h(
+      "div",
+      { className: "own-rate" },
+      h("button", { type: "button", className: "own-rate-edit", onClick: onEditRate, text: "Type in a rate you found" }),
+      h("p", { className: "hint", text: "It stays in this browser and is never sent anywhere." }),
+    ),
+  ];
+}
+
 // Plans from providers' own pages that cover this location's network, opened when asked
 // for, with the calculator. A plan that beats every tariff listed here is said in one
 // line above them. Where the operator's own plans cannot be shown because of its terms,
@@ -581,7 +608,10 @@ export function plansSection(detail, allPlans, mine = new Set(), withheld = []) 
 export function mapLabelLine(detail, label, filtered = false) {
   if (!label) return null;
   let source;
-  if (label.plan) {
+  if (label.rate) {
+    const note = label.rate.note ? ` (${label.rate.note})` : "";
+    source = ` per kWh with your own ${label.rate.cur.toUpperCase()} rate for this network${note}, typed in by you.`;
+  } else if (label.plan) {
     source = ` per kWh with your plan ${label.plan.name} from ${label.plan.provider} (${label.plan.fee_text.toLowerCase()}).`;
   } else if (label.low === null) {
     source = " on at least one connector, confirmed by the operator's tariff.";
@@ -601,7 +631,7 @@ export function mapLabelLine(detail, label, filtered = false) {
     "p",
     { className: "map-label" },
     filtered ? "Cheapest for your filters: " : "Cheapest here: ",
-    h("span", { className: `price-tag${label.plan ? " with-plan" : ""}`, text: label.text }),
+    h("span", { className: `price-tag${label.plan || label.rate ? " with-plan" : ""}`, text: label.text }),
     `${source} `,
     notes.length ? h("span", { className: "hint", text: notes.join(" ") }) : null,
   );
@@ -668,6 +698,8 @@ export function renderDetail(
     privateNote = null,
     label = null,
     filtered = false,
+    rate = null,
+    onEditRate = null,
   },
 ) {
   const location = detail.location;
@@ -686,6 +718,7 @@ export function renderDetail(
   report.searchParams.set("template", "correction.yml");
   report.searchParams.set("where", location.id);
   const sources = detail.tariff_sources ?? [];
+  const cheaper = cheaperSection(detail, withheld);
   return [
     h("h2", { id: "detail-heading", tabindex: "-1", text: location.name || "Charger location" }),
     h("p", { className: "operator", text: location.operator?.name ?? "Operator not given" }),
@@ -701,7 +734,8 @@ export function renderDetail(
     ...statusSection(detail, { hideOut, onHideOut }),
     // Kept even when empty, so the line can follow the filters while the panel is open.
     h("div", { id: "detail-label" }, mapLabelLine(detail, label, filtered)),
-    ...cheaperSection(detail, withheld),
+    ...cheaper,
+    ...ownRateSection(rate, { cheaper: cheaper.length > 0, onEditRate }),
     ...notesSection(notes),
     h("h3", { text: evses.length ? `Charge points (${evses.length})` : "Charge points" }),
     groups.length

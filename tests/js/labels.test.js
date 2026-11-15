@@ -153,3 +153,37 @@ test("of two ticked plans at the same price, the one that applies all the time i
   assert.equal(bestPlans([night, always], new Set(["a.night", "b.always"])).get("geniepoint").id, "b.always");
   assert.equal(bestPlans([always, night], new Set(["a.night", "b.always"])).get("geniepoint").id, "b.always");
 });
+
+const dc = { ...rapid, cur: "dc", low: 85, lt: "85p" };
+const ac = { ...slow, cur: "ac" };
+const rate = (values) => ({ op: "geniepoint", ac: null, dc: null, note: "", ...values });
+
+test("the visitor's own rate gives the label for AC or DC connectors, and says so", () => {
+  const label = priceLabel(site(dc, ac), defaults(), null, rate({ dc: 48 }));
+  assert.equal(label.text, "48p");
+  assert.equal(label.low, 48);
+  assert.equal(label.lvat, true);
+  assert.deepEqual(label.rate, { ...rate({ dc: 48 }), cur: "dc" });
+  assert.equal(label.plan, null);
+  // A DC rate never prices an AC connector, nor an AC rate a DC one.
+  assert.equal(priceLabel(site(ac), defaults(), null, rate({ dc: 30 })).rate, null);
+  assert.equal(priceLabel(site(dc), defaults(), null, rate({ ac: 30 })).rate, null);
+  assert.equal(priceLabel(site(dc, ac), defaults(), null, rate({ ac: 50, dc: 90 })).text, "50p");
+  // A connector whose feed gives no power_type gets neither.
+  assert.equal(priceLabel(site(rapid), defaults(), null, rate({ ac: 30, dc: 30 })).rate, null);
+});
+
+test("an own rate follows the filters, the maximum price, and loses to free and full ties", () => {
+  // Only connectors that match the filters count.
+  assert.equal(priceLabel(site(dc, ac), { ...defaults(), minkw: 50 }, null, rate({ ac: 30 })).text, "85p");
+  assert.equal(priceLabel(site(ac), { ...defaults(), minkw: 50 }, null, rate({ ac: 30 })), null);
+  // No label shows a price above the visitor's maximum.
+  assert.equal(priceLabel(site(ac), { ...defaults(), maxp: 40 }, null, rate({ ac: 45 })), null);
+  // Free comes first, and on a full tie the operator's own price is kept, then a plan's.
+  assert.equal(priceLabel(site({ ...free, cur: "ac" }), defaults(), null, rate({ ac: 1 })).text, "Free");
+  assert.equal(priceLabel(site(dc), defaults(), null, rate({ dc: 85 })).rate, null);
+  const tie = priceLabel(site(dc), defaults(), plan("p.cheap", 39), rate({ dc: 39 }));
+  assert.equal(tie.plan.id, "p.cheap");
+  assert.equal(tie.rate, null);
+  assert.equal(priceLabel(site(dc), defaults(), plan("p.cheap", 39), rate({ dc: 38 })).text, "38p");
+});

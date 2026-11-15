@@ -377,6 +377,68 @@ def test_details_say_where_paying_the_operator_directly_is_cheaper_without_a_pri
     expect(page.locator("#detail-body p.withheld")).to_have_count(0)
 
 
+def test_a_visitors_own_rates_price_ac_or_dc_and_stay_on_the_device_only_if_asked(visit):
+    # evyve's fixture sites: Greggs (Stockport) has DC chargers at 85p, Harbour City
+    # (Salford) an AC charger at 55p (ADR 0035).
+    v = visit()
+    page = v.open("?view=list", map_ready=False)
+    expect(page.locator("#list-items li")).to_have_count(LOCATIONS)
+    greggs, harbour = _item(page, "Greggs (Stockport)"), _item(page, "Harbour City (Salford)")
+    expect(greggs).to_contain_text("Cheapest here: 85p")
+    # The note that the app is cheaper offers to type in a rate, for this network.
+    greggs.locator("button").click()
+    page.click("#detail-body button:has-text('Type in a rate you found')")
+    expect(page.locator("#detail")).to_be_hidden()
+    expect(page.locator("#rate-op")).to_be_focused()
+    assert page.input_value("#rate-op") == "evyve"
+    message = page.locator("#rate-message")
+    page.fill("#rate-dc", "48.5")
+    page.click("#rate-use")
+    expect(message).to_contain_text("Type the DC rate in whole pence from 1 to 300")
+    expect(page.locator("#rate-dc")).to_be_focused()
+    page.fill("#rate-dc", "48")
+    page.fill("#rate-note", "app at weekends")
+    page.press("#rate-note", "Enter")
+    expect(message).to_have_text("Your rates for evyve are now used: DC 48p per kWh.")
+    expect(page.locator("#rate-list li")).to_contain_text("evyve: DC 48p per kWh (app at weekends)")
+    page.click("#done")
+    # A DC rate prices DC chargers only, and is said to be the visitor's own.
+    expect(greggs).to_contain_text("Cheapest here: 48p with your own rate")
+    expect(greggs.locator(".price-tag.with-plan")).to_have_count(1)
+    expect(harbour).to_contain_text("Cheapest here: 55p")
+    expect(harbour).not_to_contain_text("your own rate")
+    greggs.locator("button").click()
+    expect(page.locator("#detail-body .map-label")).to_contain_text(
+        "Cheapest here: 48p per kWh with your own DC rate for this network (app at weekends),"
+        " typed in by you."
+    )
+    own = page.locator("#detail-body .own-rate")
+    expect(own).to_contain_text(
+        "Your own rates for this network: DC 48p per kWh (app at weekends)."
+    )
+    expect(own).to_contain_text("This site has not checked them.")
+    page.keyboard.press("Escape")
+    # Nothing is saved, or put in the address, until the visitor asks.
+    assert v.stored() == {}
+    assert "48" not in page.url
+    open_filters(page)
+    page.check("#remember")
+    saved = json.loads(v.stored()["oevm.settings.v1"])
+    assert saved["rates"] == [{"op": "evyve", "dc": 48, "note": "app at weekends"}]
+    page.reload()
+    expect(page.locator("#list-items li")).to_have_count(LOCATIONS)
+    expect(greggs).to_contain_text("Cheapest here: 48p with your own rate")
+    # Removing it puts the operator's price back, and "Forget my settings" deletes it all.
+    open_filters(page)
+    page.click("#rate-list button[aria-label='Remove your rates for evyve']")
+    expect(message).to_have_text("Your rates for evyve have been removed.")
+    expect(greggs).to_contain_text("Cheapest here: 85p")
+    assert "rates" not in json.loads(v.stored()["oevm.settings.v1"])
+    page.click("#forget")
+    assert v.stored() == {}
+    assert v.errors == [] and v.outside == []
+
+
 def test_details_show_plans_from_providers_pages_and_the_visitors_own(visit):
     v = visit()
     page = v.open("?view=list", map_ready=False)

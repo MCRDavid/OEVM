@@ -86,7 +86,7 @@ pages and against their feeds that day:
 
 - The owner's idea for later: visitors type in the rates they found for a provider, kept
   on their own device only after they opt in, as ticked plans are, so the map can use
-  them without this project publishing them.
+  them without this project publishing them. Built as ADR 0035 ("Your own rates").
 - If an operator adds its app prices to its open data feed (OCPI 2.2.1 can carry an app
   tariff of type REGULAR beside a contactless one of type AD_HOC_PAYMENT, with
   `day_of_week` and `start_time` restrictions), they show from the feed with their days
