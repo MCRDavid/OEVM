@@ -113,3 +113,9 @@ of a site (it can name a private individual), and fields that only repeat a stan
   Both decisions are listed on the transparency page. BrightGreen's power types ("fast",
   "ultrarapid") stay unknown, and one Type 2 connector given as 150 kW is shown as
   published, with a finding in the operator file.
+
+## Amended 15 November 2026: a shorter details screen
+
+ADR 0033 changes how the details screen words and lays out some of what this record
+decided. The data and the facts shown are unchanged; see ADR 0033, "Amendments to earlier
+decisions".

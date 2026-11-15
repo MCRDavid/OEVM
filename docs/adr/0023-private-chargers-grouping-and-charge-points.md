@@ -80,3 +80,9 @@ hidden with private ones unless the visitor asks, and listed on the feed health 
 other feed on the map that day had "taxi only" in a location name ("Taxi Rank" and "Taxi
 Hub" are places, not rules, and are not caught). The phrase applies to every operator, as
 the others do; taxi-only parking restrictions still need the per-operator decision above.
+
+## Amended 15 November 2026: a shorter details screen
+
+ADR 0033 changes how the details screen words and lays out some of what this record
+decided. The data and the facts shown are unchanged; see ADR 0033, "Amendments to earlier
+decisions".

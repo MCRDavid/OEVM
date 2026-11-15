@@ -127,3 +127,9 @@ Each is its own pull request:
   its whole feed is read, about 122 pages at 6 seconds.
 - Whether ChargePlace Scotland, Evolt, PoGo, ChargePoint, RAW and BrightGreen statuses
   change during the day. None had changed in the hour before the 9 November 2026 fetch.
+
+## Amended 15 November 2026: a shorter details screen
+
+ADR 0033 changes how the details screen words and lays out some of what this record
+decided. The data and the facts shown are unchanged; see ADR 0033, "Amendments to earlier
+decisions".
