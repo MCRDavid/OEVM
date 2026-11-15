@@ -1,6 +1,96 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$defs": {
+    "CheaperDirect": {
+      "additionalProperties": false,
+      "description": "A way of paying an operator directly that its own pages show is cheaper than paying\nat the charger, said in this project's words without the price (ADR 0034). Only for an\noperator whose terms keep its prices off the map; where they allow reuse, its plans\nare listed instead.",
+      "properties": {
+        "pay_by": {
+          "description": "How, in words that follow 'Cheaper', for example 'in the evyve app' or 'with an IONITY subscription'.",
+          "minLength": 1,
+          "title": "Pay By",
+          "type": "string"
+        },
+        "cheaper_than": {
+          "description": "What it is cheaper than, in words that follow 'than', for example 'paying by contactless'.",
+          "minLength": 1,
+          "title": "Cheaper Than",
+          "type": "string"
+        },
+        "needs_subscription": {
+          "description": "True when it needs a paid subscription or membership; False when the provider says none is needed.",
+          "title": "Needs Subscription",
+          "type": "boolean"
+        },
+        "conditions": {
+          "anyOf": [
+            {
+              "minLength": 1,
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "When or where it is cheapest, in one short sentence with no price, for example 'Lowest at weekends and on bank holidays.'",
+          "title": "Conditions"
+        },
+        "only_where_dc": {
+          "default": false,
+          "description": "True to say it only at locations with a DC charger, for an operator whose AC chargers can only be paid for in its app, so they have no price at the charger to compare with.",
+          "title": "Only Where Dc",
+          "type": "boolean"
+        },
+        "feed_check": {
+          "description": "How the price in the operator's open data feed compares with the page's price at the charger, and on what date, without figures from the page: the note is only right where the map shows the price at the charger.",
+          "minLength": 1,
+          "title": "Feed Check",
+          "type": "string"
+        },
+        "source": {
+          "$ref": "#/$defs/CheckedPage"
+        }
+      },
+      "required": [
+        "pay_by",
+        "cheaper_than",
+        "needs_subscription",
+        "feed_check",
+        "source"
+      ],
+      "title": "CheaperDirect",
+      "type": "object"
+    },
+    "CheckedPage": {
+      "additionalProperties": false,
+      "description": "The provider's page a cheaper_direct entry rests on. Nothing is quoted from it\n(owner's decision, 15 November 2026): what it said is given in this project's words.",
+      "properties": {
+        "url": {
+          "pattern": "^https?://\\S+$",
+          "title": "Url",
+          "type": "string"
+        },
+        "said": {
+          "description": "What the page said, in this project's own words, never quoted and with no figures.",
+          "minLength": 1,
+          "title": "Said",
+          "type": "string"
+        },
+        "checked": {
+          "format": "date",
+          "title": "Checked",
+          "type": "string"
+        }
+      },
+      "required": [
+        "url",
+        "said",
+        "checked"
+      ],
+      "title": "CheckedPage",
+      "type": "object"
+    },
     "Plan": {
       "additionalProperties": false,
       "properties": {
@@ -325,6 +415,14 @@
         "$ref": "#/$defs/Plan"
       },
       "title": "Plans",
+      "type": "array"
+    },
+    "cheaper_direct": {
+      "description": "Ways of paying this operator directly that its own pages show are cheaper than paying at the charger, said without the price at its own networks' locations, because its terms keep the prices off the map (ADR 0034).",
+      "items": {
+        "$ref": "#/$defs/CheaperDirect"
+      },
+      "title": "Cheaper Direct",
       "type": "array"
     },
     "notes": {

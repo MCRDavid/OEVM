@@ -353,6 +353,30 @@ def test_details_say_where_an_operators_terms_keep_its_plans_off_the_map(visit):
     assert all(links.nth(n).get_attribute("href").startswith("https://") for n in range(2))
 
 
+def test_details_say_where_paying_the_operator_directly_is_cheaper_without_a_price(visit):
+    # evyve's fixture site with a DC charger (ADR 0034).
+    v = visit()
+    page = v.open("?view=list", map_ready=False)
+    expect(page.locator("#list-items li")).to_have_count(LOCATIONS)
+    _open_details_containing(page, "Cheaper in the evyve app")
+    note = page.locator("#detail-body .cheaper-direct")
+    expect(note).to_have_count(1)
+    expect(note.locator("strong")).to_have_text("Cheaper in the evyve app")
+    text = note.text_content()
+    assert "than paying by contactless. No subscription needed." in text
+    assert "According to EVYVE's website when last checked on 15 November 2026." in text
+    assert not re.search(r"£|\dp\b", text)
+    links = note.locator("a")
+    assert [links.nth(n).text_content() for n in range(links.count())] == [
+        "website terms",
+        "EVYVE's website",
+    ]
+    assert links.nth(1).get_attribute("href") == "https://evyve.co.uk/pricing/"
+    # It comes straight after the cheapest price, and takes the place of the plans note.
+    expect(page.locator("#detail-label + .cheaper-direct")).to_have_count(1)
+    expect(page.locator("#detail-body p.withheld")).to_have_count(0)
+
+
 def test_details_show_plans_from_providers_pages_and_the_visitors_own(visit):
     v = visit()
     page = v.open("?view=list", map_ready=False)

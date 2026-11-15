@@ -287,6 +287,23 @@ class PlanOut(_Model):
     checked: dt.date
 
 
+class CheaperOut(_Model):
+    """A way of paying an operator directly that its own pages show is cheaper than paying
+    at the charger, worded without the price (providers/*.yaml cheaper_direct; ADR 0034)."""
+
+    headline: str = Field(description="For example 'Cheaper in the evyve app'.")
+    text: str = Field(
+        description="The rest of the sentence and any condition, for example 'than paying "
+        "by contactless. No subscription needed.'"
+    )
+    only_where_dc: bool = Field(
+        description="Said only at locations with a DC charger: the operator's AC chargers "
+        "are paid for in its app only."
+    )
+    source_url: str
+    checked: dt.date
+
+
 class WithheldOut(_Model):
     """An operator whose terms keep its own plans off the map (providers/*.yaml with
     own_networks and terms that forbid reuse or allow personal use only; ADR 0016)."""
@@ -295,6 +312,11 @@ class WithheldOut(_Model):
     operator_ids: list[str] = Field(description="Operator registry ids of its own networks.")
     website: str
     terms_url: str | None = None
+    cheaper: list[CheaperOut] = Field(
+        default_factory=list,
+        description="Ways of paying it directly that its own pages show are cheaper than "
+        "paying at the charger, said without the price (ADR 0034).",
+    )
 
 
 class PlansFile(_Model):

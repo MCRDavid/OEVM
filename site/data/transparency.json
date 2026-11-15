@@ -3663,7 +3663,7 @@
             "channel": null,
             "channel_label": null,
             "summary": "evyve's pricing page was read. It lists lower prices for paying in the evyve app than for contactless, with a lower app rate at weekends and on bank holidays, and calls its prices indicative. evyve's terms, last updated in January 2026, say VAT is included in its charges unless stated otherwise, and still allow use of its website for personal, non-commercial use only.",
-            "quote": "Prices shown are indicative and may be updated periodically at the discretion of the site operator. Current pricing is always displayed at the charger and within the evyve app before you charge.",
+            "quote": null,
             "evidence_url": "https://evyve.co.uk/pricing/",
             "evidence_file": null
           }

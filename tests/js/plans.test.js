@@ -4,6 +4,8 @@ import { test } from "node:test";
 import {
   breakEven,
   breakEvenText,
+  cheaperFor,
+  cheaperParts,
   cheapest,
   discounted,
   needsSubscription,
@@ -117,5 +119,62 @@ test("the note says plans may exist, why they are not shown, and where to look",
   assert.deepEqual(
     mer.filter((part) => typeof part !== "string"),
     [{ url: "https://uk.mer.eco/", text: "Mer UK's website" }],
+  );
+});
+
+const CHEAPER = {
+  provider: "EVYVE",
+  operator_ids: ["evyve"],
+  website: "https://evyve.co.uk/",
+  terms_url: "https://evyve.co.uk/terms-and-conditions/",
+  cheaper: [
+    {
+      headline: "Cheaper in the evyve app",
+      text: "than paying by contactless. No subscription needed.",
+      only_where_dc: true,
+      source_url: "https://evyve.co.uk/pricing/",
+      checked: "2026-11-15",
+    },
+  ],
+};
+const site = (...types) => ({ evses: [{ connectors: types.map((power_type) => ({ power_type })) }] });
+
+test("a cheaper way to pay direct is said only where there is a charger to compare with", () => {
+  assert.equal(cheaperFor(CHEAPER, site("dc", "ac")).length, 1);
+  assert.deepEqual(cheaperFor(CHEAPER, site("ac")), []);
+  assert.deepEqual(cheaperFor(CHEAPER, undefined), []);
+  const anywhere = { ...CHEAPER, cheaper: [{ ...CHEAPER.cheaper[0], only_where_dc: false }] };
+  assert.equal(cheaperFor(anywhere, site("ac")).length, 1);
+  assert.deepEqual(cheaperFor(WITHHELD[0], site("dc")), []);
+});
+
+test("the cheaper note says why no price is shown and links to the operator's own page", () => {
+  const parts = cheaperParts(CHEAPER, CHEAPER.cheaper);
+  const text = parts.map((part) => (typeof part === "string" ? part : part.text)).join("");
+  assert.equal(
+    text,
+    "According to EVYVE's website when last checked on 15 November 2026. Its website terms do not allow its prices to be shown here, so check EVYVE's website or app before you charge.",
+  );
+  assert.deepEqual(
+    parts.filter((part) => typeof part !== "string"),
+    [
+      { url: "https://evyve.co.uk/terms-and-conditions/", text: "website terms" },
+      { url: "https://evyve.co.uk/pricing/", text: "EVYVE's website" },
+    ],
+  );
+  // Nothing in the note is a price.
+  assert.doesNotMatch(text + CHEAPER.cheaper[0].text, /£|\dp\b/);
+});
+
+test("the cheaper note gives the oldest check and a possessive that suits the name", () => {
+  const ecars = { provider: "ESB ecars", website: "https://esb.ie/", terms_url: null, cheaper: [] };
+  const items = [
+    { source_url: "https://esb.ie/a", checked: "2026-11-20" },
+    { source_url: "https://esb.ie/b", checked: "2026-11-15" },
+  ];
+  const text = cheaperParts(ecars, items).map((part) => (typeof part === "string" ? part : part.text)).join("");
+  assert.equal(
+    text,
+    "According to ESB ecars' website when last checked on 15 November 2026. Its website terms do not allow its prices to be shown here, so check ESB ecars' website or app before you charge.",
   );
 });

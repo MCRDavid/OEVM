@@ -15,6 +15,7 @@ from pipeline import publish, run
 from pipeline.plans import PROVIDERS_DIR, ProvidersError, load_providers
 from pipeline.pricing import plan_fee_text, plan_price_text
 from pipeline.registry import load_registry
+from schema import provider as schema_provider
 from schema.provider import ProviderFile
 from schema.published import PlansFile
 
@@ -200,3 +201,100 @@ def test_the_readme_tracks_every_provider_and_each_permission_request():
             assert row in listed, f"{item.id} is missing from Listed providers"
         else:
             assert row in requests, f"{item.id} is missing from Permission requests"
+
+
+CHEAPER = {
+    "pay_by": "in the Example app",
+    "cheaper_than": "paying by contactless",
+    "needs_subscription": False,
+    "conditions": None,
+    "feed_check": "On 2026-11-15 the feed gave the contactless price at every charger.",
+    "source": {
+        "url": "https://example.com/pricing",
+        "said": "Paying in the app costs less than paying by contactless.",
+        "checked": "2026-11-15",
+    },
+}
+
+
+def restricted(**changes) -> dict:
+    data = provider(kind="operator", plans=[], own_networks=["jolt"])
+    data["terms"].update(reuse="forbidden", quote="You may not copy any content.")
+    data.update(changes)
+    return data
+
+
+def test_cheaper_direct_is_said_in_our_own_words_for_a_restricted_operator():
+    entry = ProviderFile.model_validate(restricted(cheaper_direct=[CHEAPER])).cheaper_direct[0]
+    out = publish.cheaper_out(entry)
+    assert out.headline == "Cheaper in the Example app"
+    assert out.text == "than paying by contactless. No subscription needed."
+    assert (out.source_url, out.checked) == ("https://example.com/pricing", dt.date(2026, 11, 15))
+    paid = dict(CHEAPER, needs_subscription=True, conditions="Lowest at night.")
+    entry = ProviderFile.model_validate(restricted(cheaper_direct=[paid])).cheaper_direct[0]
+    assert publish.cheaper_out(entry).text == (
+        "than paying by contactless. A subscription fee applies. Lowest at night."
+    )
+
+
+@pytest.mark.parametrize(
+    ("field", "text"),
+    [
+        ("conditions", "48p at weekends."),
+        ("conditions", "From £0.48 a kWh."),
+        ("cheaper_than", "paying 85 pence by contactless"),
+        ("said", "The app costs 0.48/kWh."),
+        ("said", "The app costs 48.5p per kWh."),
+    ],
+)
+def test_cheaper_direct_never_gives_a_price(field, text):
+    entry = copy.deepcopy(CHEAPER)
+    if field == "said":
+        entry["source"]["said"] = text
+    else:
+        entry[field] = text
+    with pytest.raises(ValidationError, match="gives no price"):
+        ProviderFile.model_validate(restricted(cheaper_direct=[entry]))
+
+
+def test_cheaper_direct_never_quotes_the_page():
+    entry = copy.deepcopy(CHEAPER)
+    entry["source"]["quote"] = "Download our app for our best prices."
+    with pytest.raises(ValidationError, match="quote"):
+        ProviderFile.model_validate(restricted(cheaper_direct=[entry]))
+
+
+def test_cheaper_direct_is_only_for_restricted_operators_own_networks():
+    with pytest.raises(ValidationError, match="list its plans with their prices instead"):
+        data = restricted(cheaper_direct=[CHEAPER])
+        data["terms"].update(reuse="no_restriction_found", quote=None)
+        ProviderFile.model_validate(data)
+    with pytest.raises(ValidationError, match="needs own_networks"):
+        ProviderFile.model_validate(restricted(own_networks=[], cheaper_direct=[CHEAPER]))
+    elsewhere = copy.deepcopy(CHEAPER)
+    elsewhere["source"]["url"] = "https://comparison.example.org/prices"
+    with pytest.raises(ValidationError, match="provider's own site"):
+        ProviderFile.model_validate(restricted(cheaper_direct=[elsewhere]))
+
+
+def test_the_plans_file_says_where_evyve_is_cheaper_in_its_app_without_a_price(tmp_path):
+    operators = load_registry()
+    publish.publish(
+        run.run_fixtures(operators), operators, tmp_path, mode="fixtures", generated_at=WHEN
+    )
+    blob = (tmp_path / "data" / "plans.json").read_bytes()
+    withheld = PlansFile.model_validate_json(blob).withheld
+    evyve = next(entry for entry in withheld if entry.operator_ids == ["evyve"])
+    [app] = evyve.cheaper
+    assert app.headline == "Cheaper in the evyve app"
+    assert app.only_where_dc and app.source_url == "https://evyve.co.uk/pricing/"
+    assert "No subscription needed." in app.text
+    # Each provider file's entries reach the plans file in order, and none gives a price.
+    files = load_providers()
+    for entry in withheld:
+        provider = next(p for p in files.values() if p.name == entry.provider)
+        assert [c.headline for c in entry.cheaper] == [
+            f"Cheaper {c.pay_by}" for c in provider.cheaper_direct
+        ]
+        for item in entry.cheaper:
+            assert not schema_provider.PRICE_IN_TEXT.search(item.headline + item.text)

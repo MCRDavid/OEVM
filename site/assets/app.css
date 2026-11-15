@@ -959,3 +959,14 @@ body[data-view="list"] .map-view {
   font: inherit;
   padding: 0.3rem;
 }
+
+/* Where paying the operator directly is cheaper, said without the price (ADR 0034) */
+.cheaper-direct {
+  margin: 0.5rem 0;
+  border-left: 4px solid var(--priced);
+  padding: 0.25rem 0 0.25rem 0.75rem;
+}
+
+.cheaper-direct p {
+  margin: 0.25rem 0;
+}

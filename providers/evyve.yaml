@@ -13,4 +13,23 @@ terms:
   checked: 2026-11-15
 own_networks: [evyve]
 plans: []
-notes: "Plans are not listed because the provider's terms allow use of its website for personal, non-commercial use only and do not allow it to be copied or published (checked 2026-10-09, and again on 2026-11-15, when its pricing page listed lower prices for paying in its app than for contactless)."
+# Said in this project's words, without the price, at evyve's locations (ADR 0034).
+cheaper_direct:
+  - pay_by: in the evyve app
+    cheaper_than: paying by contactless
+    needs_subscription: false
+    conditions: Lowest at weekends and on bank holidays.
+    only_where_dc: true
+    feed_check: >-
+      On 2026-11-15, 300 of the 307 DC connectors in evyve's open data feed were priced at
+      the contactless price on this page, and no tariff in the feed had the app prices.
+      evyve's home page says its 7 to 22 kW chargers can only be operated through its app,
+      so they have no contactless price to compare with, and the note is only given at
+      locations with a DC charger.
+    source:
+      url: https://evyve.co.uk/pricing/
+      said: >-
+        Paying in evyve's free app costs less than paying by contactless, and less again at
+        weekends and on bank holidays, with no subscription or membership.
+      checked: 2026-11-15
+notes: "Plans are not listed because the provider's terms allow use of its website for personal, non-commercial use only and do not allow it to be copied or published (checked 2026-10-09, and again on 2026-11-15, when its pricing page listed lower prices for paying in its app than for contactless). That the app is cheaper is said without the price (cheaper_direct)."

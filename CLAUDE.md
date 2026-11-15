@@ -141,6 +141,9 @@ decisions are in docs/adr/.
   where the operator file records the owner's decision in nonstandard_parking_restrictions
   (ADR 0023); never add one yourself. Hidden locations stay in the data and are listed on the
   feed health page.
+- Where a provider's terms keep its prices off the map, say paying it directly is cheaper only
+  through cheaper_direct in providers/<id>.yaml (ADR 0034): own words, never a price or a quote
+  from its pages, dated, and only where the feed shows the price at the charger.
 - Show a tariff whose prices are all zero as "Price unknown" rather than "Free" only where the
   operator file records the owner's decision in zero_price_tariffs, by exact tariff id (ADR 0022); never add one yourself.
 - Leave off another operator's copies of a network's locations (records under the network's own

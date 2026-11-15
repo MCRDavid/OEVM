@@ -98,7 +98,9 @@ from pipeline.tariffs import (
 )
 from schema.models import Connector, Coordinates, Location, Tariff
 from schema.operator import UK_POSTCODE, OperatorConfig
+from schema.provider import CheaperDirect
 from schema.published import (
+    CheaperOut,
     ConnectorPriceOut,
     ConnectorSummary,
     CoordinatesCorrection,
@@ -417,6 +419,21 @@ PLANS_NOTE = (
 )
 
 
+def cheaper_out(entry: CheaperDirect) -> CheaperOut:
+    """How a site's details say that paying an operator directly is cheaper, in this
+    project's words, without the price and quoting nothing from the provider's page
+    (owner's decisions, 15 November 2026; ADR 0034). The details add whose website said so
+    and when it was last checked."""
+    fee = "A subscription fee applies." if entry.needs_subscription else "No subscription needed."
+    return CheaperOut(
+        headline=f"Cheaper {entry.pay_by}",
+        text=" ".join(filter(None, [f"than {entry.cheaper_than}.", fee, entry.conditions])),
+        only_where_dc=entry.only_where_dc,
+        source_url=entry.source.url,
+        checked=entry.source.checked,
+    )
+
+
 def plans_file(operators: dict[str, OperatorConfig], generated_at: datetime) -> PlansFile:
     """Every listed plan, for the map's plan list, details and calculator, and the
     operators whose terms keep their own plans off the map, so the details of their
@@ -431,6 +448,7 @@ def plans_file(operators: dict[str, OperatorConfig], generated_at: datetime) -> 
                     operator_ids=provider.own_networks,
                     website=provider.website,
                     terms_url=provider.terms.url,
+                    cheaper=[cheaper_out(entry) for entry in provider.cheaper_direct],
                 )
             )
         attribution = provider.terms.attribution if provider.terms.reuse == "attribution" else None

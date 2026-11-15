@@ -12,4 +12,31 @@ terms:
   checked: 2026-10-09
 own_networks: [ionity]
 plans: []
+# Said in this project's words, without the price, at its locations (ADR 0034).
+cheaper_direct:
+  - pay_by: when signed up in the IONITY app
+    cheaper_than: paying at the charger without signing up
+    needs_subscription: false
+    feed_check: >-
+      On 2026-11-15 every IONITY tariff in the feed had an id marked ADHOC, and at most
+      sites its price was the page's price for paying at the charger without signing up,
+      so the map shows that price.
+    source:
+      url: https://www.ionity.eu/subscriptions
+      said: >-
+        Paying through the free IONITY app costs a little less per kWh than paying at the
+        charger without signing up, with no subscription or monthly fee.
+      checked: 2026-11-15
+  - pay_by: with an IONITY subscription
+    cheaper_than: the IONITY app without one
+    needs_subscription: true
+    feed_check: >-
+      On 2026-11-15 every IONITY tariff in the feed had an id marked ADHOC, the price for
+      paying at the charger without signing up.
+    source:
+      url: https://www.ionity.eu/subscriptions
+      said: >-
+        IONITY's monthly and yearly subscriptions, taken out in its app, cost less per kWh
+        than paying in the app without one.
+      checked: 2026-11-15
 notes: "Plans are not listed because the provider's imprint does not allow use of its copyright protected content without explicit written consent; the site links only an imprint and a privacy policy, and no separate website terms of use were found (checked 2026-10-09)."

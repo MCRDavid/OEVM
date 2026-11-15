@@ -13,4 +13,18 @@ terms:
   checked: 2026-10-09
 own_networks: [ubitricity]
 plans: []
+# Said in this project's words, without the price, at its locations (ADR 0034).
+cheaper_direct:
+  - pay_by: with a Shell Recharge subscription
+    cheaper_than: paying as you go with the QR code on the charger
+    needs_subscription: true
+    feed_check: >-
+      On 2026-11-15 the feed's prices by time of day were the page's pay as you go prices
+      for paying with the QR code.
+    source:
+      url: https://ubitricity.com/en/driver/pricing/
+      said: >-
+        A Shell Recharge subscription, taken out in the Shell app, takes a percentage off
+        charging across the Shell Recharge network, which ubitricity's chargers are part of.
+      checked: 2026-11-15
 notes: "Plans are not listed because the provider's legal notice requires prior written consent for duplication, saving or repetition in databases, and allows copying only for private and non-commercial use (checked 2026-10-09). The pricing page is https://ubitricity.com/en/driver/pricing/."

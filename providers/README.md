@@ -24,6 +24,16 @@ uv run python -m pipeline.plans --validate
 - `includes_vat` says what the provider says. Where it says nothing, leave it `null` unless the owner decides from other evidence; then say so in the plan's `conditions` and record the decision, its date and its basis in `notes`.
 - British English, neutral wording, no em dashes. Never use a provider's logo or suggest it endorses the project.
 
+## Cheaper direct, without the price (ADR 0034)
+
+Where a provider's terms keep its prices off the map (`forbidden` or `personal_use_only`) but its own pages show that paying it directly, in its app or on its website, is cheaper than paying at the charger, add a `cheaper_direct` entry to its file. Its locations' details then say so, with whether a subscription is needed, and send the visitor to its website or app (owner's decisions, 15 November 2026).
+
+- Never give a price, a figure or by how much. The checker refuses pounds, pence and figures per kWh.
+- Never quote the page. Say what it said in your own words in `source.said`, with the page's address and the date checked. Keep a copy of the page outside the repository (in the project's files) as evidence; never commit it.
+- Compare the operator's open data feed with the page first and say how in `feed_check`. Add the entry only where the map shows the price at the charger, so "cheaper" is right. Set `only_where_dc` when the operator's AC chargers are paid for in its app only.
+- Use a separate entry for a paid subscription (`needs_subscription: true`).
+- Re-check the page when you re-check the provider, and update `checked`.
+
 ## Adding a provider or plan
 
 1. Copy `_template.yaml` to `<id>.yaml` (lower case, underscores).

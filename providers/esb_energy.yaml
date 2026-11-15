@@ -13,4 +13,20 @@ terms:
   checked: 2026-10-30
 own_networks: [esb_energy]
 plans: []
+# Said in this project's words, without the price, at its locations (ADR 0034).
+cheaper_direct:
+  - pay_by: with an ESB Energy membership
+    cheaper_than: paying as you go in the EV Plug In app
+    needs_subscription: true
+    conditions: Paying by contactless costs a little more than paying as you go.
+    feed_check: >-
+      On 2026-11-15 the feed's tariffs were named PAYG and their prices were the page's
+      pay as you go prices, so the map shows the price for paying as you go in the app, not
+      the contactless price, which the page gives a little higher.
+    source:
+      url: https://www.esbenergy.co.uk/ev/pricing
+      said: >-
+        Members, who pay a monthly fee, pay less per kWh than pay as you go customers in the
+        EV Plug In app, and contactless costs a little more than pay as you go.
+      checked: 2026-11-15
 notes: "Plans are not listed because the disclaimer page does not allow materials on the website or app to be reproduced, publicly displayed or used for public purposes (checked 2026-10-30). Price plans are on https://esbenergy.co.uk/ev/price-plans-terms-and-conditions."

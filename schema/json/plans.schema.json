@@ -1,6 +1,45 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$defs": {
+    "CheaperOut": {
+      "additionalProperties": false,
+      "description": "A way of paying an operator directly that its own pages show is cheaper than paying\nat the charger, worded without the price (providers/*.yaml cheaper_direct; ADR 0034).",
+      "properties": {
+        "headline": {
+          "description": "For example 'Cheaper in the evyve app'.",
+          "title": "Headline",
+          "type": "string"
+        },
+        "text": {
+          "description": "The rest of the sentence and any condition, for example 'than paying by contactless. No subscription needed.'",
+          "title": "Text",
+          "type": "string"
+        },
+        "only_where_dc": {
+          "description": "Said only at locations with a DC charger: the operator's AC chargers are paid for in its app only.",
+          "title": "Only Where Dc",
+          "type": "boolean"
+        },
+        "source_url": {
+          "title": "Source Url",
+          "type": "string"
+        },
+        "checked": {
+          "format": "date",
+          "title": "Checked",
+          "type": "string"
+        }
+      },
+      "required": [
+        "headline",
+        "text",
+        "only_where_dc",
+        "source_url",
+        "checked"
+      ],
+      "title": "CheaperOut",
+      "type": "object"
+    },
     "PlanOut": {
       "additionalProperties": false,
       "description": "One charging plan from a provider's own published page (providers/*.yaml).",
@@ -230,13 +269,22 @@
           ],
           "default": null,
           "title": "Terms Url"
+        },
+        "cheaper": {
+          "description": "Ways of paying it directly that its own pages show are cheaper than paying at the charger, said without the price (ADR 0034).",
+          "items": {
+            "$ref": "#/$defs/CheaperOut"
+          },
+          "title": "Cheaper",
+          "type": "array"
         }
       },
       "required": [
         "provider",
         "operator_ids",
         "website",
-        "terms_url"
+        "terms_url",
+        "cheaper"
       ],
       "title": "WithheldOut",
       "type": "object"
