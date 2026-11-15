@@ -329,7 +329,8 @@ button.status-chip {
 }
 
 .filters select,
-.filters input[type="number"] {
+.filters input[type="number"],
+.filters input[type="text"] {
   min-height: 44px;
   width: 100%;
   max-width: 20rem;
@@ -958,6 +959,30 @@ body[data-view="list"] .map-view {
 .calc select {
   font: inherit;
   padding: 0.3rem;
+}
+
+/* The visitor's own rates (ADR 0035): the list under "Your own rates", and the line in a
+   charger's details */
+.rate-list {
+  margin: 0.25rem 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.rate-list li {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem;
+  margin: 0.25rem 0;
+}
+
+.own-rate {
+  margin: 0.5rem 0;
+}
+
+.own-rate p {
+  margin: 0.25rem 0;
 }
 
 /* Where paying the operator directly is cheaper, said without the price (ADR 0034) */

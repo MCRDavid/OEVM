@@ -99,3 +99,29 @@ test("ticked charging plans are saved only with the settings, and forget removes
   assert.deepEqual(settings.plans(), []);
   assert.deepEqual(createSettings(blocked).plans(), []);
 });
+
+test("own rates are saved only with the settings, checked when read, and forget removes them", () => {
+  const storage = memoryStorage();
+  const settings = createSettings(storage);
+  assert.equal(settings.rates().size, 0);
+  const rates = new Map([["evyve", { op: "evyve", ac: null, dc: 48, note: "app, weekends" }]]);
+  settings.save(defaults(), null, [], rates);
+  // Only the parts given are saved.
+  assert.deepEqual(JSON.parse(storage.items.get(STORAGE_KEY)).rates, [{ op: "evyve", dc: 48, note: "app, weekends" }]);
+  assert.deepEqual(settings.rates().get("evyve"), { op: "evyve", ac: null, dc: 48, note: "app, weekends" });
+  settings.save(defaults(), null, [], new Map());
+  assert.equal(JSON.parse(storage.items.get(STORAGE_KEY)).rates, undefined);
+  // A damaged entry, a fraction of a penny, 0p or a price out of range is dropped.
+  storage.items.set(
+    STORAGE_KEY,
+    JSON.stringify({
+      version: 1,
+      filters: "",
+      rates: [{ op: "jolt", ac: 49.5 }, { op: "ionity", dc: 0 }, { op: "pod", ac: 301 }, { ac: 40 }, null, { op: "bp_pulse", ac: 52 }],
+    }),
+  );
+  assert.deepEqual([...settings.rates().keys()], ["bp_pulse"]);
+  settings.forget();
+  assert.equal(settings.rates().size, 0);
+  assert.equal(createSettings(blocked).rates().size, 0);
+});

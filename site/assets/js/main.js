@@ -8,6 +8,7 @@ import { h } from "./dom.js";
 import { allOut, formatKw, plugsSummary, powerBand } from "./format.js";
 import { bestPlans, priceLabel } from "./labels.js";
 import { liveEntry, liveUrl, withLiveStatuses } from "./live.js";
+import { CURRENTS, cleanRates, ratePence, rateSummary } from "./rates.js";
 import { createSettings } from "./settings.js";
 
 const LIST_LIMIT = 200;
@@ -45,7 +46,7 @@ const CHARGER_TARGETS = ["points", "dc-points", "price-labels", "point-labels"];
 const FONT = ["Noto Sans Regular"];
 // The rounded box behind each price label: white with a dark edge, or dark with a light
 // edge in dark mode, and amber with a thicker edge when the price comes from a plan the
-// visitor ticked, so it is not told apart by colour alone. Text on each meets 4.5:1
+// visitor ticked or their own rate, so it is not told apart by colour alone. Text on each meets 4.5:1
 // contrast, and stays at full strength on the faded boxes of points out of service.
 const PILLS = {
   light: { fill: "#ffffff", edge: "#24323f", plan: "#ffe08a", text: "#1b1b1b" },
@@ -85,6 +86,7 @@ const app = {
   plans: [], // data/plans.json; empty if it could not be loaded
   withheld: [], // data/plans.json: operators whose terms keep their own plans off the map
   mine: new Set(), // ids of the plans the visitor says they have
+  rates: new Map(), // the visitor's own rates by network id (rates.js, ADR 0035)
   detail: null, // the open location's detail file, so the panel can be redrawn
 };
 
@@ -117,7 +119,7 @@ function writeAddress() {
 }
 
 function saveIfRemembered() {
-  if ($("remember").checked && !settings.save(app.state, app.theme, [...app.mine])) {
+  if ($("remember").checked && !settings.save(app.state, app.theme, [...app.mine], app.rates)) {
     $("settings-message").textContent = "Your browser did not allow saving settings.";
   }
 }
@@ -196,21 +198,24 @@ function applyFilters() {
 }
 
 // Each matching location's price label (labels.js) for the map and the list: lab is the
-// text, labk orders labels cheapest first and labplan marks a price from a ticked plan.
-// They follow the filters and the plans the visitor ticked, so they are worked out again
-// whenever either changes.
+// text, labk orders labels cheapest first, labplan marks a price from a ticked plan or the
+// visitor's own rate, and labrate one from their own rate. They follow the filters, the
+// plans the visitor ticked and their own rates, so they are worked out again whenever any
+// of these change.
 function labelPrices() {
   const plans = bestPlans(app.plans, app.mine);
   for (const { properties } of app.filtered) {
-    const label = priceLabel(properties, app.state, plans.get(properties.op));
+    const label = priceLabel(properties, app.state, plans.get(properties.op), app.rates.get(properties.op));
     if (label) {
       properties.lab = label.text;
       properties.labk = label.key;
-      properties.labplan = Boolean(label.plan);
+      properties.labplan = Boolean(label.plan || label.rate);
+      properties.labrate = Boolean(label.rate);
     } else {
       delete properties.lab;
       delete properties.labk;
       delete properties.labplan;
+      delete properties.labrate;
     }
   }
 }
@@ -274,6 +279,128 @@ function buildPlanPicker() {
     }
     fieldset.append(group);
   }
+}
+
+// "Your own rates" (ADR 0035): the visitor types in the price per kWh they found they can
+// pay a network, for its AC chargers, its DC chargers or both. Kept in memory, and saved
+// only with "Remember my settings", like ticked plans.
+function networkName(op) {
+  return app.operators.get(op) ?? op;
+}
+
+function fillRateForm() {
+  const rate = app.rates.get($("rate-op").value);
+  for (const cur of CURRENTS) $(`rate-${cur}`).value = rate?.[cur] == null ? "" : String(rate[cur]);
+  $("rate-note").value = rate?.note ?? "";
+}
+
+function chooseRateNetwork(op, focus = "rate-ac") {
+  $("rate-op").value = op;
+  fillRateForm();
+  $("rate-message").textContent = "";
+  $(focus).focus();
+}
+
+function ratesChanged() {
+  renderRateList();
+  saveIfRemembered();
+  applyFilters(); // the price labels can change
+  redrawDetail();
+}
+
+function useRates() {
+  const op = $("rate-op").value;
+  const message = $("rate-message");
+  if (!op) {
+    message.textContent = "Choose a network first.";
+    $("rate-op").focus();
+    return;
+  }
+  const typed = {};
+  for (const cur of CURRENTS) {
+    const input = $(`rate-${cur}`);
+    typed[cur] = ratePence(input.value);
+    if (input.validity.badInput || (input.value.trim() !== "" && typed[cur] === null)) {
+      message.textContent = `Type the ${cur.toUpperCase()} rate in whole pence from 1 to 300, such as 48, or leave it empty.`;
+      input.focus();
+      return;
+    }
+  }
+  const name = networkName(op);
+  if (typed.ac === null && typed.dc === null) {
+    if (!app.rates.has(op)) {
+      message.textContent = "Type an AC rate, a DC rate or both.";
+      $("rate-ac").focus();
+      return;
+    }
+    app.rates.delete(op);
+    message.textContent = `Your rates for ${name} have been removed.`;
+  } else {
+    const rate = cleanRates([{ op, ...typed, note: $("rate-note").value }]).get(op);
+    app.rates.set(op, rate);
+    message.textContent = `Your rates for ${name} are now used: ${rateSummary(rate)}.`;
+  }
+  ratesChanged();
+}
+
+function renderRateList() {
+  const rates = [...app.rates.values()].sort((a, b) => networkName(a.op).localeCompare(networkName(b.op)));
+  const items = rates.map((rate) => {
+    const name = networkName(rate.op);
+    return h(
+      "li",
+      {},
+      h("span", { text: `${name}: ${rateSummary(rate)}${rate.note ? ` (${rate.note})` : ""}` }),
+      h("button", {
+        type: "button",
+        "aria-label": `Change your rates for ${name}`,
+        text: "Change",
+        onClick: () => chooseRateNetwork(rate.op),
+      }),
+      h("button", {
+        type: "button",
+        "aria-label": `Remove your rates for ${name}`,
+        text: "Remove",
+        onClick: () => {
+          app.rates.delete(rate.op);
+          if ($("rate-op").value === rate.op) fillRateForm();
+          $("rate-message").textContent = `Your rates for ${name} have been removed.`;
+          ratesChanged();
+          $("rate-op").focus();
+        },
+      }),
+    );
+  });
+  $("rate-list").replaceChildren(...items);
+}
+
+function buildRatePicker() {
+  const select = $("rate-op");
+  const ops = [...new Set(app.features.map((f) => f.properties.op))].sort((a, b) =>
+    networkName(a).localeCompare(networkName(b)),
+  );
+  for (const op of ops) select.append(h("option", { value: op, text: networkName(op) }));
+  select.addEventListener("change", () => {
+    fillRateForm();
+    $("rate-message").textContent = "";
+  });
+  $("rate-use").addEventListener("click", useRates);
+  // Enter in one of the boxes uses the rates, rather than sending the filters form.
+  $("my-rates").addEventListener("keydown", (event) => {
+    if (event.key === "Enter" && event.target.tagName === "INPUT") {
+      event.preventDefault();
+      useRates();
+    }
+  });
+  renderRateList();
+}
+
+// From a charger's details: open the filters at "Your own rates" for its network.
+function editRate(op) {
+  closeDetail();
+  showFilters(true);
+  $("my-rates").scrollIntoView?.({ block: "start", behavior: reducedMotion ? "auto" : "smooth" });
+  chooseRateNetwork(op, app.rates.has(op) ? "rate-ac" : "rate-op");
 }
 
 function buildAttribution(layer) {
@@ -347,7 +474,7 @@ function renderList() {
               { className: "meta cheapest-here" },
               "Cheapest here: ",
               h("span", { className: `price-tag${p.labplan ? " with-plan" : ""}`, text: p.lab }),
-              p.labplan ? " with your plan" : "",
+              p.labrate ? " with your own rate" : p.labplan ? " with your plan" : "",
             )
           : null,
         h("span", { className: `meta price-${p.price}`, text: p.pt || "Price unknown" }),
@@ -408,7 +535,11 @@ function detailOptions() {
     plans: app.plans,
     mine: app.mine,
     withheld: app.withheld,
-    label: props ? priceLabel(props, app.state, bestPlans(app.plans, app.mine).get(props.op)) : null,
+    label: props
+      ? priceLabel(props, app.state, bestPlans(app.plans, app.mine).get(props.op), app.rates.get(props.op))
+      : null,
+    rate: props ? (app.rates.get(props.op) ?? null) : null,
+    onEditRate: props ? () => editRate(props.op) : null,
     filtered: connectorFiltersOn(app.state),
     hideOut: app.state.working,
     onHideOut: toggleHideOut,
@@ -914,8 +1045,8 @@ function setUpSettings() {
   }
   remember.addEventListener("change", () => {
     if (remember.checked) {
-      if (settings.save(app.state, app.theme, [...app.mine])) {
-        message.textContent = "Your settings are saved on this device: filters, map grouping, ticked charging plans and light or dark mode if you picked one.";
+      if (settings.save(app.state, app.theme, [...app.mine], app.rates)) {
+        message.textContent = "Your settings are saved on this device: filters, map grouping, ticked charging plans, your own rates and light or dark mode if you picked one.";
       } else {
         remember.checked = false;
         message.textContent = "Your browser did not allow saving settings.";
@@ -948,10 +1079,16 @@ function trackHeaderHeight() {
 
 // Start
 
+function showFilters(open) {
+  $("toggle-filters").setAttribute("aria-expanded", String(open));
+  $("filters").hidden = !open;
+}
+
 function wireUp() {
   $("filters").addEventListener("change", (event) => {
     if (event.target.id === "remember") return; // handled in setUpSettings
     if (event.target.name === "plan") return; // handled in buildPlanPicker
+    if (event.target.closest("#my-rates")) return; // handled in buildRatePicker
     app.state = formToState();
     stateChanged();
   });
@@ -977,8 +1114,7 @@ function wireUp() {
     });
   }
   $("done").addEventListener("click", () => {
-    $("toggle-filters").setAttribute("aria-expanded", "false");
-    $("filters").hidden = true;
+    showFilters(false);
     $("toggle-filters").focus();
   });
   $("reset").addEventListener("click", () => {
@@ -988,8 +1124,7 @@ function wireUp() {
   });
   $("toggle-filters").addEventListener("click", (event) => {
     const open = event.currentTarget.getAttribute("aria-expanded") !== "true";
-    event.currentTarget.setAttribute("aria-expanded", String(open));
-    $("filters").hidden = !open;
+    showFilters(open);
     if (open) $("filters-heading").focus?.();
   });
   $("show-map").addEventListener("click", () => {
@@ -1031,6 +1166,7 @@ async function start() {
   if (settings.isRemembered()) {
     app.theme = settings.theme();
     app.mine = new Set(settings.plans());
+    app.rates = settings.rates();
   }
   applyTheme();
   $("legend").open = WIDE.matches;
@@ -1064,6 +1200,7 @@ async function start() {
     }
     buildNetworks();
     buildPlanPicker();
+    buildRatePicker();
     buildAttribution(layer);
   } catch {
     const failed = "The charger data could not be loaded. Please try again later.";
