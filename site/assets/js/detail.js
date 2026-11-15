@@ -8,7 +8,7 @@
 
 import { h, safeLink } from "./dom.js";
 import { STATUS_LABELS, formatDateTime, formatKw, formatShortDateTime, plugName } from "./format.js";
-import { STATUS_GROUPS, asOfText, chips, countByGroup, groupOf } from "./live.js";
+import { STATUS_GROUPS, asOfText, chips, countByGroup, groupOf, summaryText } from "./live.js";
 import { breakEven, breakEvenText, cheapest, discounted, needsSubscription, plansFor, withheldFor, withheldParts } from "./plans.js";
 
 const WEEKDAYS = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"];
@@ -87,6 +87,8 @@ export function statusSection(detail, { hideOut = false, onHideOut = null } = {}
   };
   return [
     h("h3", { className: "visually-hidden", text: "Charge point status" }),
+    // The counts in words, for screen readers; the chips below say the same.
+    h("p", { className: "visually-hidden status-summary", text: summaryText(counts) }),
     h("p", { className: "status-chips" }, all.map(chip)),
     h("p", { className: "hint", text: `${asOfText(detail.status_read_at ?? detail.fetched_at)}.` }),
     filterButton
@@ -660,7 +662,7 @@ export function renderDetail(
     ...(detail.coordinates_corrected?.note
       ? [h("p", { className: "hint corrected", text: detail.coordinates_corrected.note })]
       : []),
-    detail.sent_copy ? h("p", { className: "hint sent-copy", text: sentCopyText(detail) }) : null,
+    detail.sent_copy ? h("p", { className: "hint copy-note", text: sentCopyText(detail) }) : null,
     ...statusSection(detail, { hideOut, onHideOut }),
     // Kept even when empty, so the line can follow the filters while the panel is open.
     h("div", { id: "detail-label" }, mapLabelLine(detail, label, filtered)),
@@ -670,7 +672,7 @@ export function renderDetail(
       ? h("ul", { className: "charge-point-groups", "aria-label": "Charge points" }, groups.map((group) => groupItem(group, detail)))
       : h("p", { text: "No charge points listed." }),
     ...sources.map((source) =>
-      h("p", { className: "hint related", text: `Prices here use ${source.name}'s tariff data: see "More about this data".` }),
+      h("p", { className: "hint related-note", text: `Prices here use ${source.name}'s tariff data: see "More about this data".` }),
     ),
     h("p", {
       className: "hint",
