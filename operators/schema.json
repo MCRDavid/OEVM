@@ -721,7 +721,7 @@
     },
     "LimitsAsAllowance": {
       "additionalProperties": false,
-      "description": "The repository owner's recorded decision that this operator's published limits of so\nmany requests in a period are an allowance for its key to keep within, not a spacing\n(ADR 0003, amended 29 October 2026).\n\nWithout this decision a limit of 30 requests an hour means one request every 120\nseconds plus the margin. With it, the key may send its requests close together, each\nat least the floor plus the margin after its last one finished, as long as no period\nof the limit's length plus the margin holds more than one request fewer than the limit\nallows (a limit of one request stays a spacing). Requests to the host, from whichever\nkey, are sent at most at_once at a time, their starts at least the floor apart. Any\nretry, wait the server asks for or refusal puts every key on the host back to its\nspacing, one request at a time, for the rest of the run. Only with limits_per_key.",
+      "description": "The repository owner's recorded decision that this operator's published limits of so\nmany requests in a period are an allowance for its key to keep within, not a spacing\n(ADR 0003, amended 29 October 2026).\n\nWithout this decision a limit of 30 requests an hour means one request every 120\nseconds plus the margin. With it, the key may send its requests close together, each\nat least the floor plus the margin after its last one finished, as long as no period\nof the limit's length plus the margin holds more than one request fewer than the limit\nallows (a limit of one request stays a spacing). Requests to the host, from whichever\nkey, are sent at most at_once at a time, their starts at least the floor apart. Any\nretry, wait the server asks for or refusal puts every key on the host back to its\nspacing, one request at a time, for the rest of the run, except an HTTP 429 that names\nno wait where the owner has also recorded slow_only_refused_key. Only with\nlimits_per_key.",
       "properties": {
         "decided": {
           "description": "Date the owner made the decision (YYYY-MM-DD).",
@@ -753,6 +753,18 @@
           "pattern": "^https?://\\S+$",
           "title": "Evidence Url",
           "type": "string"
+        },
+        "slow_only_refused_key": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/SlowOnlyRefusedKey"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Only by the repository owner's decision: an HTTP 429 that names no wait puts only the key that got it back to its gap. Null means it puts every key on the host back. Every operator on the host records the same."
         }
       },
       "required": [
@@ -1249,6 +1261,37 @@
         "postal_code"
       ],
       "title": "SignMissingLocation",
+      "type": "object"
+    },
+    "SlowOnlyRefusedKey": {
+      "additionalProperties": false,
+      "description": "The repository owner's recorded decision that an HTTP 429 which names no wait slows\nonly the key that got it (ADR 0003, amended 15 November 2026).\n\nWithout this decision any retry puts every key on the host back to its gap, one\nrequest at a time, for the rest of the run. With it, an HTTP 429 with no Retry-After\nand no rate limit header saying requests have run out or when they come back puts\nonly the key that got it back to its gap for the rest of the run, and its request is\ntried again after that gap. The other keys keep their allowance, and the host still\ngets at most at_once requests at the same time. A 429 that names a wait, any other\nretry and any refusal still put every key back. Only within limits_as_allowance.",
+      "properties": {
+        "decided": {
+          "description": "Date the owner made the decision (YYYY-MM-DD).",
+          "format": "date",
+          "title": "Decided",
+          "type": "string"
+        },
+        "basis": {
+          "description": "What was observed, and why the owner decided.",
+          "minLength": 1,
+          "title": "Basis",
+          "type": "string"
+        },
+        "evidence_url": {
+          "description": "Where the answers it is based on can be seen.",
+          "pattern": "^https?://\\S+$",
+          "title": "Evidence Url",
+          "type": "string"
+        }
+      },
+      "required": [
+        "decided",
+        "basis",
+        "evidence_url"
+      ],
+      "title": "SlowOnlyRefusedKey",
       "type": "object"
     },
     "SocketTypes": {

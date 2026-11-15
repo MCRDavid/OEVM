@@ -12,16 +12,18 @@ have been checked.
 --live all fetches every enabled operator (the daily workflow). Operators that share a
 host are fetched one after another; groups that share no host are fetched at the same
 time, so a slow feed no longer holds up the others. Where every operator in a group has
-the owner's limits_per_key decision, they are fetched together instead: each keeps its own
-key's gap and they take turns at the host, one request at a time (adapters.http; the
+the owner's limits_per_key decision, they are fetched together instead: each keeps its
+own key's gap and they take turns at the host, one request at a time (adapters.http; the
 owner's decision of 29 October 2026, ADR 0003). Where they also have limits_as_allowance,
 each key keeps within its limits as an allowance and the host gets up to at_once requests
-at the same time, until anything goes wrong there. If one operator fails, its failure
-is logged, the others are still fetched and published, and the map keeps showing the
-failed operator's last good copy from --previous (the files last published) when there is
-one (ADR 0018). The exit code is 3 when every failed operator kept its last good copy,
-and 2 when one was left off the map, so a failure is visible without holding back the
-rest. Live runs print how far each operator has got as they go (pipeline.progress).
+at the same time, until anything goes wrong there (where the owner has recorded
+slow_only_refused_key, an HTTP 429 that names no wait slows only its own key). If one
+operator fails, its failure is logged, the others are still fetched and published, and
+the map keeps showing the failed operator's last good copy from --previous (the files
+last published) when there is one (ADR 0018). The exit code is 3 when every failed
+operator kept its last good copy, and 2 when one was left off the map, so a failure is
+visible without holding back the rest. Live runs print how far each operator has got as
+they go (pipeline.progress).
 """
 
 import argparse

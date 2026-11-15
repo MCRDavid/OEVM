@@ -71,9 +71,11 @@ rate_limit:
     open-chargepoints.com at the same time, whichever network they are for, started at
     least 1 second apart. Any retry, wait the server asks for or refusal puts every
     network back to a gap of 125 seconds (the 120 seconds the strictest limit needs, plus
-    a safety margin) and one request at a time for the rest of the run. Eco-Movement
-    "strongly recommends limiting simultaneous GET requests to a maximum of 5". It
-    recommends retrieving the entire dataset once a day.
+    a safety margin) and one request at a time for the rest of the run. By the owner's
+    decision of 2026-11-15 (slow_only_refused_key), an HTTP 429 that names no wait puts
+    only the network that got it back to that gap, and the others keep their allowance.
+    Eco-Movement "strongly recommends limiting simultaneous GET requests to a maximum of
+    5". It recommends retrieving the entire dataset once a day.
 limits_per_key:
   decided: 2026-10-29
   basis: >-
@@ -98,6 +100,17 @@ limits_as_allowance:
     requests to a maximum of 5". It does not say whether that counts per token or in
     total; the owner chose 5 in total, which keeps within either reading.
   evidence_url: https://developers.eco-movement.com/v2.2.1/docs/eco-movement-pcpr-api-user-guide
+  slow_only_refused_key:
+    decided: 2026-11-15
+    basis: >-
+      In the daily run of 2026-11-14 the host answered 4 of 27 tariffs requests with HTTP
+      429 and named no wait, as often while requests went one at a time as while they
+      came close together, with every network's token within its published limits; each
+      request was answered when sent again. The repository owner decided on 2026-11-15
+      that such an answer puts only the token that got it back to its gap of 125
+      seconds, and the other networks keep their allowance. A 429 that names a wait, any
+      other retry and any refusal still put every network back.
+    evidence_url: https://github.com/MCRDavid/OEVM/actions/runs/43555897352
 supports_single_location: supported
 cors: needs_testing
 attribution: >-

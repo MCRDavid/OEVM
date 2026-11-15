@@ -773,6 +773,24 @@ class LimitsPerKey(_Model):
     evidence_url: SafeUrl = Field(description="Where the limits are published.")
 
 
+class SlowOnlyRefusedKey(_Model):
+    """The repository owner's recorded decision that an HTTP 429 which names no wait slows
+    only the key that got it (ADR 0003, amended 15 November 2026).
+
+    Without this decision any retry puts every key on the host back to its gap, one
+    request at a time, for the rest of the run. With it, an HTTP 429 with no Retry-After
+    and no rate limit header saying requests have run out or when they come back puts
+    only the key that got it back to its gap for the rest of the run, and its request is
+    tried again after that gap. The other keys keep their allowance, and the host still
+    gets at most at_once requests at the same time. A 429 that names a wait, any other
+    retry and any refusal still put every key back. Only within limits_as_allowance.
+    """
+
+    decided: dt.date = Field(description="Date the owner made the decision (YYYY-MM-DD).")
+    basis: NeutralText = Field(description="What was observed, and why the owner decided.")
+    evidence_url: SafeUrl = Field(description="Where the answers it is based on can be seen.")
+
+
 class LimitsAsAllowance(_Model):
     """The repository owner's recorded decision that this operator's published limits of so
     many requests in a period are an allowance for its key to keep within, not a spacing
@@ -785,7 +803,9 @@ class LimitsAsAllowance(_Model):
     allows (a limit of one request stays a spacing). Requests to the host, from whichever
     key, are sent at most at_once at a time, their starts at least the floor apart. Any
     retry, wait the server asks for or refusal puts every key on the host back to its
-    spacing, one request at a time, for the rest of the run. Only with limits_per_key.
+    spacing, one request at a time, for the rest of the run, except an HTTP 429 that names
+    no wait where the owner has also recorded slow_only_refused_key. Only with
+    limits_per_key.
     """
 
     decided: dt.date = Field(description="Date the owner made the decision (YYYY-MM-DD).")
@@ -802,6 +822,12 @@ class LimitsAsAllowance(_Model):
         description="Where the number comes from, quoted from the publisher where it says."
     )
     evidence_url: SafeUrl = Field(description="Where the limits are published.")
+    slow_only_refused_key: SlowOnlyRefusedKey | None = Field(
+        default=None,
+        description="Only by the repository owner's decision: an HTTP 429 that names no "
+        "wait puts only the key that got it back to its gap. Null means it puts every key "
+        "on the host back. Every operator on the host records the same.",
+    )
 
 
 class Relay(_Model):
