@@ -73,6 +73,12 @@ they already have, and for a calculator showing when a paid plan pays for itself
   price, so the connector's current is no guide. `includes_vat` stays `null` where a
   provider says nothing, unless the owner decides otherwise, as here.
 
+- **Saying where paying directly is cheaper (amended 15 November 2026, ADR 0034).** Where
+  an operator's terms keep its prices off the map but its own pages show that paying it
+  directly is cheaper than paying at the charger, its locations' details say so in this
+  project's own words, without the price and quoting nothing, in place of the note that
+  its memberships or subscriptions may be available.
+
 ## Needs testing
 
 - The figures where a provider's own pages disagree (marked in the provider files).

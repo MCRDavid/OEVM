@@ -9,7 +9,18 @@
 import { h, safeLink } from "./dom.js";
 import { STATUS_LABELS, formatDateTime, formatKw, formatShortDateTime, plugName } from "./format.js";
 import { STATUS_GROUPS, asOfText, chips, countByGroup, groupOf, summaryText } from "./live.js";
-import { breakEven, breakEvenText, cheapest, discounted, needsSubscription, plansFor, withheldFor, withheldParts } from "./plans.js";
+import {
+  breakEven,
+  breakEvenText,
+  cheaperFor,
+  cheaperParts,
+  cheapest,
+  discounted,
+  needsSubscription,
+  plansFor,
+  withheldFor,
+  withheldParts,
+} from "./plans.js";
 
 const WEEKDAYS = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"];
 // UNSTATED_KIND in pipeline/pricing.py: a tariff whose feed does not say how it is paid for.
@@ -491,10 +502,31 @@ function calculator(detail, plans) {
   return h("details", { className: "calculator" }, h("summary", { text: "Is a subscription worth it here?" }), body);
 }
 
+function linked(parts) {
+  return parts.map((part) => (typeof part === "string" ? part : safeLink(part.url, part.text)));
+}
+
 // Where the operator's own terms keep its memberships or subscriptions off the map.
 function withheldNote(entry) {
-  const parts = withheldParts(entry).map((part) => (typeof part === "string" ? part : safeLink(part.url, part.text)));
-  return h("p", { className: "hint withheld" }, ...parts);
+  return h("p", { className: "hint withheld" }, ...linked(withheldParts(entry)));
+}
+
+// Where paying the operator directly is cheaper than paying at the charger, said under the
+// cheapest price without the price itself (ADR 0034). It takes the place of the note above.
+export function cheaperSection(detail, withheld = []) {
+  const operatorId = detail.location?.provenance?.source_id;
+  return withheldFor(operatorId, withheld).flatMap((entry) => {
+    const items = cheaperFor(entry, detail.location);
+    if (!items.length) return [];
+    return [
+      h(
+        "div",
+        { className: "cheaper-direct" },
+        ...items.map((item) => h("p", {}, h("strong", { text: item.headline }), ` ${item.text}`)),
+        h("p", { className: "hint" }, ...linked(cheaperParts(entry, items))),
+      ),
+    ];
+  });
 }
 
 // Plans from providers' own pages that cover this location's network, opened when asked
@@ -504,7 +536,10 @@ function withheldNote(entry) {
 export function plansSection(detail, allPlans, mine = new Set(), withheld = []) {
   const operatorId = detail.location?.provenance?.source_id;
   const plans = plansFor(operatorId, allPlans);
-  const held = withheldFor(operatorId, withheld).map(withheldNote);
+  // An operator said to be cheaper to pay directly has that note under the cheapest price.
+  const held = withheldFor(operatorId, withheld)
+    .filter((entry) => !cheaperFor(entry, detail.location).length)
+    .map(withheldNote);
   if (!plans.length) return held;
   const free = plans.filter((plan) => !needsSubscription(plan));
   const paid = plans.filter(needsSubscription);
@@ -666,6 +701,7 @@ export function renderDetail(
     ...statusSection(detail, { hideOut, onHideOut }),
     // Kept even when empty, so the line can follow the filters while the panel is open.
     h("div", { id: "detail-label" }, mapLabelLine(detail, label, filtered)),
+    ...cheaperSection(detail, withheld),
     ...notesSection(notes),
     h("h3", { text: evses.length ? `Charge points (${evses.length})` : "Charge points" }),
     groups.length

@@ -91,3 +91,6 @@ repetition rather than notices:
 Over the same 15 locations the screen shows 2,921 words, 61% fewer, and at most 1.8
 phone screens (bp pulse, High Street). Screenshots before and after, in light and dark,
 are in the project's files (`details-screen/2026-11-15/`).
+
+Amended 15 November 2026 by ADR 0034: where paying the operator directly is cheaper, a note
+saying so, without the price, is kept in view under "Cheapest here".

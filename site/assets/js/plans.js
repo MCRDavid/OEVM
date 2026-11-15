@@ -29,6 +29,28 @@ export function withheldFor(operatorId, withheld) {
   return (withheld ?? []).filter((entry) => (entry.operator_ids ?? []).includes(operatorId));
 }
 
+// Where paying one of those operators directly is cheaper than paying at the charger,
+// as its own pages showed when last checked: worded by the pipeline in this project's own
+// words, without the price (ADR 0034). An entry marked only_where_dc is for an operator
+// whose AC chargers are paid for in its app only, so it is said only where there is a DC
+// charger to compare with.
+export function cheaperFor(entry, location) {
+  const dc = (location?.evses ?? []).some((evse) => (evse.connectors ?? []).some((c) => c.power_type === "dc"));
+  return (entry.cheaper ?? []).filter((item) => !item.only_where_dc || dc);
+}
+
+// The line after those notes: why the prices are not shown, and where to find them.
+export function cheaperParts(entry, items) {
+  const name = entry.provider;
+  return [
+    `${name}'s `,
+    entry.terms_url ? { url: entry.terms_url, text: "website terms" } : "website terms",
+    " do not allow its prices to be shown here, so check ",
+    { url: items[0]?.source_url ?? entry.website, text: `${name}'s website` },
+    " or app before you charge.",
+  ];
+}
+
 // What the details say for one of those operators (owner's request, 30 October 2026), as
 // parts: text, or { url, text } for a link.
 export function withheldParts(entry) {
