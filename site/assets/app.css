@@ -642,15 +642,17 @@ body[data-view="list"] .map-view {
   font-weight: 600;
 }
 
+.charge-point-groups,
 .charge-points,
-.connectors,
 .tariffs {
   margin: 0;
   padding: 0;
   list-style: none;
 }
 
-.charge-points > li,
+/* One box for each kind of charge point: its connectors and price once, then one line
+   per charge point with its name and status. */
+.charge-point-groups > li,
 .tariffs > li {
   margin-bottom: 0.5rem;
   padding: 0.5rem 0.75rem;
@@ -658,15 +660,44 @@ body[data-view="list"] .map-view {
   border-radius: 6px;
 }
 
-/* Each charge point's connectors, inside its box. */
-.connectors > li {
+.charge-points {
   margin-top: 0.4rem;
-  padding-top: 0.4rem;
+}
+
+.charge-points > li {
+  display: flex;
+  flex-wrap: wrap;
+  column-gap: 0.6rem;
+  align-items: baseline;
+  padding: 0.3rem 0;
   border-top: 1px solid var(--line);
 }
 
 .charge-point-name {
-  font-size: 1.05rem;
+  font-weight: 600;
+  overflow-wrap: anywhere;
+}
+
+.charge-points .hint {
+  font-size: 0.85rem;
+}
+
+/* Fewer people need these, so they open when asked for. */
+.detail details.more {
+  margin: 0.75rem 0;
+  border-top: 1px solid var(--line);
+}
+
+.detail details.more > summary {
+  min-height: 44px;
+  padding: 0.6rem 0;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.detail .attribution {
+  margin-top: 0.75rem;
+  font-size: 0.9rem;
 }
 
 /* The operator's own notes (OCPI directions): kept on their own lines, as published. */
@@ -676,8 +707,8 @@ body[data-view="list"] .map-view {
 }
 
 /* The reference numbers at the foot of the details: small print. */
-.references h3 {
-  margin-top: 1.25rem;
+.references h4 {
+  margin-top: 1rem;
   font-size: 0.9rem;
 }
 

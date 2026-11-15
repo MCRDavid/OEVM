@@ -67,6 +67,24 @@ export function formatDateTime(iso) {
   return Number.isNaN(when.getTime()) ? "date not given" : DATE_TIME.format(when);
 }
 
+const SHORT = { day: "numeric", month: "short", hour: "2-digit", minute: "2-digit", timeZone: "Europe/London" };
+const SHORT_DATE_TIME = new Intl.DateTimeFormat("en-GB", SHORT);
+const SHORT_WITH_YEAR = new Intl.DateTimeFormat("en-GB", { ...SHORT, year: "numeric" });
+const YEAR = new Intl.DateTimeFormat("en-GB", { year: "numeric", timeZone: "Europe/London" });
+
+// A shorter date and time for a list of times shown under a full one, such as each charge
+// point's status under the time the feed was read: "14 Nov, 17:12", in UK time like the
+// full one, without the time zone's name. The year is given when it is not the year of
+// `beside`, the full date and time it is shown under. null when there is no usable time.
+export function formatShortDateTime(iso, beside) {
+  if (!iso) return null;
+  const when = new Date(iso);
+  if (Number.isNaN(when.getTime())) return null;
+  const other = new Date(beside ?? Number.NaN);
+  const sameYear = !Number.isNaN(other.getTime()) && YEAR.format(other) === YEAR.format(when);
+  return (sameYear ? SHORT_DATE_TIME : SHORT_WITH_YEAR).format(when);
+}
+
 export function plugsSummary(plugs) {
   const names = [...new Set((plugs ?? []).map((p) => PLUG_GROUPS[plugGroup(p)].label))];
   return names.length ? names.join(", ") : "Connector unknown";
