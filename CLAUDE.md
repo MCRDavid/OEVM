@@ -111,6 +111,10 @@ decisions are in docs/adr/.
   each request at least 2 seconds after the key's last one finished), and the host gets at most
   at_once requests at the same time, started at least 1 second apart. Any retry, wait the server
   asks for or refusal puts every key back to its gap, one request at a time. Never add one yourself.
+- Exception decided by the owner on 15 November 2026 (ADR 0003): where every operator on a host
+  records slow_only_refused_key in limits_as_allowance, an HTTP 429 that names no wait (no
+  Retry-After, no rate limit header saying none are left or when they come back) puts only the
+  key that got it back to its gap; the others keep their allowance. Never add one yourself.
 - Exception decided by the owner on 22 October 2026 (D1 in ADR 0025): in answer to an
   operator's own credentials call, the OCPI handshake Worker may overlap the daily pull, closer
   than the operator's gap, by up to three requests (two for a renewal). Nothing else may.

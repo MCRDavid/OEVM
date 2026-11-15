@@ -20,7 +20,10 @@
   refusal puts every key on the host back to its gap, one request at a time, for the
   rest of the run (ADR 0003, amended): the next request waits for those already on
   their way, a request that was waiting for its turn waits again, and each key's
-  allowance still counts the requests it sent close together before.
+  allowance still counts the requests it sent close together before. Where the owner
+  has also recorded slow_only_refused_key (15 November 2026), an HTTP 429 that names no
+  wait puts only the key that got it back to its gap, and the others keep their
+  allowance.
 - Retries connection errors, timeouts, HTTP 429 and HTTP 5xx with exponential backoff,
   and says so in the run's logged problems, with what the server answered.
 - Honours every Retry-After header, in seconds or as an HTTP date, on any attempt and
@@ -310,7 +313,8 @@ class HostTimer:
     each request finished and the endpoint it was for; started_at is when the host's last
     request was sent; slots, made on first use, limits the requests at the same time; and
     spaced says something went wrong at the host, so every key is back to its gap and turn
-    is held for each whole request again. in_flight counts the requests on their way to
+    is held for each whole request again; on a key's own timer, it says that key alone is
+    back to its gap (slow_only_refused_key). in_flight counts the requests on their way to
     the host, and idle is notified as each one ends, so that the first request sent one
     at a time again can wait for those sent before it.
     """
@@ -556,6 +560,8 @@ class PoliteClient:
         # limit, its endpoint, the requests allowed (one fewer than the limit, as the
         # margin) and the period they are counted over (the limit's, plus the margin).
         self._allowance = config.limits_as_allowance if self._key_name else None
+        # And the owner's decision that an HTTP 429 naming no wait slows only this key.
+        self._key_only = self._allowance.slow_only_refused_key if self._allowance else None
         self._allowances = [
             (limit.endpoint, max(1, limit.requests - 1), limit.per_seconds + LIMIT_MARGIN_SECONDS)
             for limit in (config.rate_limit.limits if self._allowance else ())
@@ -638,7 +644,9 @@ class PoliteClient:
         spaced = self._spaced(host)
         ready = float("-inf")
         if timer.last_finished_at is not None:
-            gap = self.min_interval * timer.slow_down if spaced else SHARED_HOST_SECONDS
+            # A key on its own back to its gap keeps it, though the host's are not.
+            key_spaced = spaced or (self._allowance is not None and timer.spaced)
+            gap = self.min_interval * timer.slow_down if key_spaced else SHARED_HOST_SECONDS
             ready = max(ready, timer.last_finished_at + gap)
         if self._allowances:
             # Kept once the key is back to its gap too: the requests it sent close
@@ -716,6 +724,39 @@ class PoliteClient:
             self._note(
                 f"{why}, so every key on that host is back to its gap ({self.min_interval:g} s "
                 "for this one), one request at a time, for the rest of this run"
+            )
+
+    def _only_this_key(
+        self,
+        host: HostTimer | None,
+        status: int,
+        retry_after: float | None,
+        remaining: float | None,
+        reset: float | None,
+    ) -> bool:
+        """Whether an answer is an HTTP 429 that names no wait, at a host whose keys still
+        read their limits as an allowance, where the owner decided it slows only its key."""
+        return (
+            self._key_only is not None
+            and host is not None
+            and not host.spaced
+            and status == 429
+            and retry_after is None
+            and reset is None
+            and remaining != 0
+        )
+
+    def _slow_key(self, timer: HostTimer, why: str) -> None:
+        """An HTTP 429 that names no wait, by the owner's slow_only_refused_key decision:
+        this key alone is back to its gap for the rest of the run. Said once."""
+        with timer.idle:
+            first, timer.spaced = not timer.spaced, True
+        if first:
+            decided = self._key_only.decided
+            self._note(
+                f"{why}, so this key alone is back to its gap ({self.min_interval:g} s) for "
+                "the rest of this run, and the other keys on that host keep their allowance "
+                f"(the owner's decision of {decided.day} {decided:%B %Y})"
             )
 
     def _check_certificate(self, response: httpx.Response, url: str) -> None:
@@ -816,6 +857,7 @@ class PoliteClient:
         shown = redact_url(url) + (" (through the relay)" if relayed else "")
         attempt = refusals = 0
         while True:
+            key_only = False
             if host is not None:
                 # This key's own gap or allowance first, so a key that is waiting never
                 # holds the host.
@@ -876,7 +918,10 @@ class PoliteClient:
                         if retry_after is not None
                         else ""
                     )
-                    if status == REFUSAL_STATUS or status in RETRY_STATUSES or asked:
+                    key_only = self._only_this_key(host, status, retry_after, remaining, reset)
+                    if key_only:
+                        self._slow_key(timer, f"{shown} answered HTTP 429 and named no wait")
+                    elif status == REFUSAL_STATUS or status in RETRY_STATUSES or asked:
                         # A refusal, a limit reached or a wait asked for, even on an
                         # answer that is not retried, ends the allowance for every key
                         # on the host.
@@ -916,6 +961,11 @@ class PoliteClient:
                         f"gave up on {shown} after {attempt + 1} attempts: {problem}{asked}"
                     )
                 if retry_after is None:
-                    hold_until(now + self.backoff_seconds * 2**attempt)
+                    # Only this key waits when the answer slowed only this key.
+                    backoff = now + self.backoff_seconds * 2**attempt
+                    if key_only:
+                        timer.hold_until(backoff)
+                    else:
+                        hold_until(backoff)
                 attempt += 1
                 self._note(f"{problem} from {shown}{asked}; tried again")

@@ -660,6 +660,161 @@ def test_the_end_of_the_allowance_is_said_once_by_the_client_that_saw_it():
         assert b.events == [f"HTTP 503 from {url}; tried again"]
 
 
+LOCATIONS = "https://open-chargepoints.com/api/ocpi/cpo/2.2.1/locations/"
+
+
+def without_slowing_only_the_refused_key(config: OperatorConfig) -> OperatorConfig:
+    allowance = config.limits_as_allowance.model_copy(update={"slow_only_refused_key": None})
+    return config.model_copy(update={"limits_as_allowance": allowance})
+
+
+def test_every_eco_movement_network_records_the_owners_decision_to_slow_only_the_refused_key():
+    decisions = [c.limits_as_allowance.slow_only_refused_key for c in ECO]
+    assert None not in decisions
+    assert {str(decision.decided) for decision in decisions} == {"2026-11-15"}
+
+
+def test_a_429_that_names_no_wait_slows_only_the_key_that_got_it():
+    first, second = ECO[0], ECO[1]
+    clock = FakeClock()
+    ok = httpx.Response(200, json={})
+    server = KeyServer(clock, [ok, httpx.Response(429), ok, ok, ok, ok])
+    with keyed_client_for(first, clock, server) as a, keyed_client_for(second, clock, server) as b:
+        a.get(first.endpoints["locations"].url)
+        a.get(first.endpoints["locations"].url)  # HTTP 429 naming no wait, then a retry
+        b.get(second.endpoints["locations"].url)
+        b.get(second.endpoints["locations"].url)
+        a.get(first.endpoints["locations"].url)
+    own_a = server.arrivals_for(f"made-up-{first.id}")
+    own_b = server.arrivals_for(f"made-up-{second.id}")
+    assert own_a[1] - own_a[0] == pytest.approx(SHARED_HOST_SECONDS)
+    # The retry waits for the key's own gap, and the key keeps it for the rest of the run.
+    assert own_a[2] - own_a[1] >= 125 - 1e-9
+    assert own_a[3] - own_a[2] >= 125 - 1e-9
+    # The other key keeps its allowance, and nothing holds the host.
+    assert own_b[1] - own_b[0] == pytest.approx(SHARED_HOST_SECONDS)
+    host = http.host_timer(LOCATIONS)
+    assert not host.spaced
+    assert host.not_before is None
+    assert a.events == [
+        f"{LOCATIONS} answered HTTP 429 and named no wait, so this key alone is back to its "
+        "gap (125 s) for the rest of this run, and the other keys on that host keep their "
+        "allowance (the owner's decision of 15 November 2026)",
+        f"HTTP 429 from {LOCATIONS}; tried again",
+    ]
+    assert b.events == []
+    for earlier, later in pairwise(server.arrivals):
+        assert later - earlier >= MIN_SECONDS_BETWEEN_REQUESTS - 1e-9
+
+
+@pytest.mark.parametrize(
+    "headers",
+    [
+        {"Retry-After": "10"},
+        {"RateLimit-Remaining": "0", "RateLimit-Reset": "30"},
+        {"X-RateLimit-Remaining": "0"},
+        {"X-RateLimit-Reset": "30"},
+    ],
+)
+def test_a_429_that_names_a_wait_or_says_none_are_left_still_puts_every_key_back(headers):
+    first, second = ECO[0], ECO[1]
+    clock = FakeClock()
+    ok = httpx.Response(200, json={})
+    server = KeyServer(clock, [ok, httpx.Response(429, headers=headers), ok, ok, ok])
+    with keyed_client_for(first, clock, server) as a, keyed_client_for(second, clock, server) as b:
+        a.get(first.endpoints["locations"].url)
+        a.get(first.endpoints["locations"].url)  # HTTP 429, then a retry
+        b.get(second.endpoints["locations"].url)
+        b.get(second.endpoints["locations"].url)
+    own_b = server.arrivals_for(f"made-up-{second.id}")
+    assert own_b[1] - own_b[0] >= 125 - 1e-9
+    assert http.host_timer(LOCATIONS).spaced
+    assert "every key on that host is back to its gap" in a.events[0]
+
+
+def test_without_the_owners_decision_a_429_that_names_no_wait_puts_every_key_back():
+    first, second = (without_slowing_only_the_refused_key(c) for c in ECO[:2])
+    clock = FakeClock()
+    ok = httpx.Response(200, json={})
+    server = KeyServer(clock, [ok, httpx.Response(429), ok, ok, ok])
+    with keyed_client_for(first, clock, server) as a, keyed_client_for(second, clock, server) as b:
+        a.get(first.endpoints["locations"].url)
+        a.get(first.endpoints["locations"].url)  # HTTP 429, then a retry
+        b.get(second.endpoints["locations"].url)
+        b.get(second.endpoints["locations"].url)
+    own_b = server.arrivals_for(f"made-up-{second.id}")
+    assert own_b[1] - own_b[0] >= 125 - 1e-9
+    assert http.host_timer(LOCATIONS).spaced
+
+
+def test_other_trouble_after_a_key_was_slowed_alone_still_puts_every_key_back():
+    first, second, third = ECO[0], ECO[1], ECO[2]
+    clock = FakeClock()
+    ok = httpx.Response(200, json={})
+    server = KeyServer(clock, [httpx.Response(429), ok, httpx.Response(503), ok, ok, ok])
+    with (
+        keyed_client_for(first, clock, server) as a,
+        keyed_client_for(second, clock, server) as b,
+        keyed_client_for(third, clock, server) as c,
+    ):
+        a.get(first.endpoints["locations"].url)  # HTTP 429 naming no wait, then a retry
+        b.get(second.endpoints["locations"].url)  # HTTP 503, then a retry
+        c.get(third.endpoints["locations"].url)
+        c.get(third.endpoints["locations"].url)
+    own_b = server.arrivals_for(f"made-up-{second.id}")
+    own_c = server.arrivals_for(f"made-up-{third.id}")
+    assert own_b[1] - own_b[0] >= 125 - 1e-9
+    assert own_c[1] - own_c[0] >= 125 - 1e-9
+    assert http.host_timer(LOCATIONS).spaced
+    assert b.events[0].startswith(f"{LOCATIONS} answered HTTP 503, so every key")
+
+
+def test_while_a_key_slowed_alone_waits_the_other_keys_go_on(monkeypatch):
+    """Real threads, floors scaled down. One key's first request is answered HTTP 429
+    naming no wait; another key's three requests are all sent while it waits for its gap."""
+    monkeypatch.setattr(http, "SHARED_HOST_SECONDS", 0.02)
+    monkeypatch.setattr(http, "MIN_SECONDS_BETWEEN_REQUESTS", 0.005)
+    slowed, other = ECO[0], ECO[1]
+    lock, seen = threading.Lock(), []
+    refused = threading.Event()
+
+    def answer(request: httpx.Request) -> httpx.Response:
+        key = request.headers["authorization"]
+        status = 200
+        if key == f"Token made-up-{slowed.id}" and not refused.is_set():
+            status = 429
+        with lock:
+            seen.append((time.monotonic(), key, status))
+        if status == 429:
+            refused.set()
+        return httpx.Response(status, json={})
+
+    def fetch(config, times: int) -> None:
+        with PoliteClient(
+            config,
+            transport=httpx.MockTransport(answer),
+            key=f"made-up-{config.id}",
+            backoff_seconds=0.01,
+        ) as client:
+            client.min_interval = 0.5
+            for _ in range(times):
+                client.get(config.endpoints["locations"].url)
+
+    first = threading.Thread(target=fetch, args=(slowed, 1))
+    first.start()
+    assert refused.wait(5)
+    second = threading.Thread(target=fetch, args=(other, 3))
+    second.start()
+    for thread in (first, second):
+        thread.join(10)
+    refused_at = next(at for at, _, status in seen if status == 429)
+    retried_at = max(at for at, key, _ in seen if key == f"Token made-up-{slowed.id}")
+    others = [at for at, key, _ in seen if key == f"Token made-up-{other.id}"]
+    assert retried_at >= refused_at + 0.5 - 1e-3
+    assert len(others) == 3
+    assert max(others) < retried_at
+
+
 def test_keys_fetched_together_within_their_allowance_send_at_most_five_at_once(monkeypatch):
     """Real threads, one per key, as pipeline.run fetches them. Floors are scaled down so
     the test is quick: requests overlap, never more than five at once, their starts at
@@ -720,12 +875,14 @@ def test_an_allowance_needs_limits_per_key_and_every_operator_on_the_host_to_agr
     assert registry._per_key_problems(operators) == []
     problem = (
         "operators on open-chargepoints.com must all record limits_as_allowance with the "
-        "same at_once, or none of them"
+        "same at_once and slow_only_refused_key, or none of them"
     )
     operators["pod"] = operators["pod"].model_copy(update={"limits_as_allowance": None})
     assert registry._per_key_problems(operators) == [problem]
     four = config.limits_as_allowance.model_copy(update={"at_once": 4})
     operators["pod"] = operators["pod"].model_copy(update={"limits_as_allowance": four})
+    assert registry._per_key_problems(operators) == [problem]
+    operators["pod"] = without_slowing_only_the_refused_key(OPERATORS["pod"])
     assert registry._per_key_problems(operators) == [problem]
 
 

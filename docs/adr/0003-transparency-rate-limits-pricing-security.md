@@ -165,6 +165,35 @@ at a time and each key 125 seconds after its last. In five hourly status refresh
 answered when sent again. Every key was within its recorded limits, so the reason is
 unknown; each case is a dated finding in the network's operator file.
 
+### Amendment, 15 November 2026: an HTTP 429 that names no wait slows only its key
+
+The first runs that logged retries showed what had put every Eco-Movement network back
+to spacing since 30 October: HTTP 429 answers from open-chargepoints.com with no
+Retry-After and no rate limit header. In the daily run of 14 November 2026, 4 of 27
+tariffs requests were answered that way and none of 37 locations requests; one came
+while requests went close together and three while they went one at a time, each key
+125 seconds after its last. Every token was within its published limits and each
+request was answered when sent again. Going back to spacing did not stop them, and made
+the fetch about 31 minutes rather than 17. The project asked the repository owner, with
+three choices (ask Eco-Movement and change nothing, leave it, or slow only the token
+that got the answer). The owner chose on 15 November 2026 to slow only that token
+(`slow_only_refused_key` within `limits_as_allowance` in each operator file).
+
+- **Only an HTTP 429 that names no wait**: no Retry-After, no rate limit header saying
+  no requests are left, and none saying when they come back. That key alone goes back
+  to its 125 second gap for the rest of the run, and its request is tried again after
+  it. The other keys keep their allowance, and the host still gets at most 5 requests at
+  once, started at least 1 second apart. The key's allowance still counts every request
+  it sent.
+- **Everything else is unchanged.** A 429 that names a wait, an HTTP 5xx, a connection
+  error, a refusal and a rate limit header saying none are left still put every key back
+  to its gap, one request at a time, for the rest of the run, and any wait asked for
+  still holds every key.
+- **Only where every operator on a host records it**, inside `limits_as_allowance`
+  (registry check). It changes nothing on any other host.
+- The retry and the slowed key are said in the run's logged problems, so each daily run
+  shows how many tokens were slowed.
+
 ## Prices
 
 - `pipeline/pricing.py` is the only way prices are shown: pounds and pence, GBP tariffs
