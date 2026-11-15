@@ -1,10 +1,12 @@
 # 0033: A shorter charger details screen
 
-Date: 2026-11-15. Status: proposed, waiting for the owner's answer.
+Date: 2026-11-15. Status: accepted by the repository owner on 15 November 2026.
 
 On 15 November 2026 the repository owner said the details screen for a charger was too
 wordy, with too much text and too many disclaimers, and asked whether it could be
-simplified. This records what was measured and what changes. It amends ADRs 0023, 0026,
+simplified. A proposal with screenshots before and after was put to the owner, who
+accepted it the same day and asked for the price wording to be shortened as well (a
+separate change, recorded in ADR 0003). This records what was measured and what changes. It amends ADRs 0023, 0026,
 0029, 0030 and 0032, which set some of the wording; each says so.
 
 ## What the check showed
