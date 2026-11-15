@@ -1,5 +1,5 @@
 {
-  "last_reviewed": "2026-11-14",
+  "last_reviewed": "2026-11-15",
   "disclaimer": "OEVM is a personal, experimental project for learning about AI tools. Much of its code and text was written with an AI assistant, and it will contain mistakes. Charger data comes from the operators and other sources credited on every record, and remains their work. Everything is provided \"as is\", with no warranty or guarantee of any kind. Always check prices and availability at the charger.",
   "regulation": {
     "summary": "The Public Charge Point Regulations 2023 set no limit on how often data users may request the data. Regulation 10(5) requires the data to be available free of charge without terms on its use. DfT's guidance allows terms covering the means of access, which is where operators' rate limits come from.",
@@ -3589,8 +3589,8 @@
       "engagement": {
         "status": "key_on_request",
         "label": "Key issued on request",
-        "headline": "Key issued on request (as of 2026-10-26)",
-        "as_of": "2026-10-26",
+        "headline": "Key issued on request (as of 2026-11-15)",
+        "as_of": "2026-11-15",
         "last_request": "2026-10-23",
         "last_response": {
           "date": "2026-10-26",
@@ -3655,6 +3655,17 @@
             "quote": null,
             "evidence_url": null,
             "evidence_file": "evidence/evyve/2026-10-26-token-email.md"
+          },
+          {
+            "date": "2026-11-15",
+            "action": "page_checked",
+            "action_label": "Operator's page checked",
+            "channel": null,
+            "channel_label": null,
+            "summary": "evyve's pricing page was read. It lists lower prices for paying in the evyve app than for contactless, with a lower app rate at weekends and on bank holidays, and calls its prices indicative. evyve's terms, last updated in January 2026, say VAT is included in its charges unless stated otherwise, and still allow use of its website for personal, non-commercial use only.",
+            "quote": "Prices shown are indicative and may be updated periodically at the discretion of the site operator. Current pricing is always displayed at the charger and within the evyve app before you charge.",
+            "evidence_url": "https://evyve.co.uk/pricing/",
+            "evidence_file": null
           }
         ]
       },
@@ -3768,6 +3779,16 @@
           "summary": "evyve's own feed uses the OCPI party GB DRI, while EV Roam's ID register lists evyve as GB*EVY and Monta's feed carries the same 224 locations under GB EVY, with no prices.",
           "handling": "evyve's own feed is shown, and Monta's GB EVY locations are left off while it is on the map, by the repository owner's decision of 2026-10-29 (own_feed_over_copies above). The feed health page lists how many were left off.",
           "evidence_url": "https://open-chargepoints.com/api/ocpi/cpo/2.2.1/locations/",
+          "status": "open",
+          "resolved_date": null
+        },
+        {
+          "date": "2026-11-15",
+          "kind": "data_quality",
+          "kind_label": "Data quirk",
+          "summary": "evyve's pricing page lists lower prices for paying in the evyve app than for contactless, with a lower app rate at weekends and on bank holidays. The feed gives one tariff per connector, with no tariff type and no day or time restrictions. At almost every rapid charger its price, 0.7083 plus the stated 20% VAT (85p), is the page's contactless price, and no tariff in the feed has the app prices.",
+          "handling": "The feed's tariffs are shown as published, as \"How to pay is not stated\". evyve's app prices are not shown, because its website terms do not allow its content to be republished (providers/evyve.yaml); each evyve location's details point to evyve's website and app.",
+          "evidence_url": "https://evyve.co.uk/pricing/",
           "status": "open",
           "resolved_date": null
         }
