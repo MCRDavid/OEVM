@@ -413,7 +413,9 @@ def test_a_visitors_own_rates_price_ac_or_dc_and_stay_on_the_device_only_if_aske
         " typed in by you."
     )
     own = page.locator("#detail-body .own-rate")
-    expect(own).to_contain_text("Your own rates for this network: DC 48p per kWh (app at weekends).")
+    expect(own).to_contain_text(
+        "Your own rates for this network: DC 48p per kWh (app at weekends)."
+    )
     expect(own).to_contain_text("This site has not checked them.")
     page.keyboard.press("Escape")
     # Nothing is saved, or put in the address, until the visitor asks.
