@@ -170,6 +170,8 @@ decisions are in docs/adr/.
 - Text from feeds goes into the page as text only (textContent), never as HTML.
 - Tests never contact the basemap (OpenFreeMap): use --offline-style.
 - Nothing is stored on a visitor's device until they opt in; "Forget my settings" deletes it all.
+- A visitor's own rates (site/assets/js/rates.js, ADR 0035) are used only in the page, marked as
+  theirs: never sent, published, put in the address or treated as operator data.
 - Every page shows the short disclaimer and links to the disclaimer, data sources, privacy notice
   and security policy pages. Footer links stay on the site; only "Source code" goes to GitHub.
 
