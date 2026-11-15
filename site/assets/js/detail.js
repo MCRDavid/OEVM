@@ -233,8 +233,12 @@ export function chargePointGroups(evses, prices, shownNotes = [], shared = {}) {
 
 // One line for a charge point: its name, its status in its group's colour with the group's
 // symbol, so colour is never the only cue, and when the operator reported it.
-function pointRow({ evse, index }, detail) {
-  const name = h("span", { className: "charge-point-name", text: chargePointName(evse, index) });
+// Where two charge points in one box share a name, each also shows its EVSE ID, so they
+// can be told apart.
+function pointRow({ evse, index }, detail, repeated) {
+  const label = chargePointName(evse, index);
+  const id = repeated.has(label) && evse.evse_id && evse.evse_id !== label ? ` (${evse.evse_id})` : "";
+  const name = h("span", { className: "charge-point-name", text: `${label}${id}` });
   if (detail.sent_copy) return h("li", {}, name);
   const known = Object.hasOwn(STATUS_LABELS, evse.status) ? evse.status : "unknown";
   const group = groupOf(known);
@@ -254,6 +258,8 @@ function pointRow({ evse, index }, detail) {
 }
 
 function groupItem({ offer, points }, detail) {
+  const names = points.map(({ evse, index }) => chargePointName(evse, index));
+  const repeated = new Set(names.filter((name, i) => names.indexOf(name) !== i));
   const [first] = offer.connectors;
   const onePrice = offer.connectors.every((c) => c.price === first.price && c.reason === first.reason);
   const priceLine = (c) =>
@@ -264,7 +270,7 @@ function groupItem({ offer, points }, detail) {
     "li",
     { className: "charge-point-group" },
     offer.connectors.length
-      ? offer.connectors.map((c) => [
+      ? offer.connectors.flatMap((c) => [
           h("p", { className: "plug" }, h("strong", { text: c.plug }), ` · ${c.kw}`),
           c.kwNote ? h("p", { className: "hint", text: c.kwNote }) : null,
           onePrice ? null : priceLine(c),
@@ -280,7 +286,7 @@ function groupItem({ offer, points }, detail) {
     h(
       "ul",
       { className: "charge-points", "aria-label": `Charge points with ${offer.connectors.map((c) => c.plug).join(" and ") || "no connectors listed"}` },
-      points.map((point) => pointRow(point, detail)),
+      points.map((point) => pointRow(point, detail, repeated)),
     ),
   );
 }
