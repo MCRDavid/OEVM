@@ -19,9 +19,16 @@ Rules the model enforces:
 - An operator's own provider file names its networks in own_networks. Where its terms keep
   its plans off the map, the details of those networks' locations say so and point to its
   website (owner's request, 30 October 2026; ADR 0016).
+- Where those terms keep its prices off the map but its own pages show that paying it
+  directly (in its app, on its website, with a subscription) is cheaper than paying at the
+  charger, cheaper_direct says so in this project's own words, with no figure and nothing
+  quoted from the page: how to pay, what it is cheaper than and whether a subscription is
+  needed, with the page and the date it was checked (owner's decisions, 15 November 2026;
+  ADR 0034).
 """
 
 import datetime as dt
+import re
 from decimal import Decimal
 from typing import Annotated, Literal
 from urllib.parse import urlsplit
@@ -64,6 +71,72 @@ class PlanSource(_Model):
     url: SafeUrl
     quote: str = Field(min_length=1, description="Copied word for word from the page.")
     checked: dt.date
+
+
+# A price: pounds (£1.20), pence (48p, 48.5p) or a figure per kWh (0.48/kWh).
+PRICE_IN_TEXT = re.compile(r"£|\d\s*p\b|\d\s*pence|\d\s*(?:/|per)\s*kwh", re.IGNORECASE)
+
+
+class CheckedPage(_Model):
+    """The provider's page a cheaper_direct entry rests on. Nothing is quoted from it
+    (owner's decision, 15 November 2026): what it said is given in this project's words."""
+
+    url: SafeUrl
+    said: NeutralText = Field(
+        description="What the page said, in this project's own words, never quoted and "
+        "with no figures."
+    )
+    checked: dt.date
+
+
+class CheaperDirect(_Model):
+    """A way of paying an operator directly that its own pages show is cheaper than paying
+    at the charger, said in this project's words without the price (ADR 0034). Only for an
+    operator whose terms keep its prices off the map; where they allow reuse, its plans
+    are listed instead."""
+
+    pay_by: NeutralText = Field(
+        min_length=1,
+        description="How, in words that follow 'Cheaper', for example 'in the evyve app' or "
+        "'with an IONITY subscription'.",
+    )
+    cheaper_than: NeutralText = Field(
+        min_length=1,
+        description="What it is cheaper than, in words that follow 'than', for example "
+        "'paying by contactless'.",
+    )
+    needs_subscription: bool = Field(
+        description="True when it needs a paid subscription or membership; False when the "
+        "provider says none is needed."
+    )
+    conditions: NeutralText | None = Field(
+        default=None,
+        description="When or where it is cheapest, in one short sentence with no price, for "
+        "example 'Lowest at weekends and on bank holidays.'",
+    )
+    only_where_dc: bool = Field(
+        default=False,
+        description="True to say it only at locations with a DC charger, for an operator "
+        "whose AC chargers can only be paid for in its app, so they have no price at the "
+        "charger to compare with.",
+    )
+    feed_check: NeutralText = Field(
+        min_length=1,
+        description="How the price in the operator's open data feed compares with the "
+        "page's price at the charger, and on what date, without figures from the page: "
+        "the note is only right where the map shows the price at the charger.",
+    )
+    source: CheckedPage
+
+    @model_validator(mode="after")
+    def _check(self) -> "CheaperDirect":
+        texts = (self.pay_by, self.cheaper_than, self.conditions or "", self.source.said)
+        for text in texts:
+            if PRICE_IN_TEXT.search(text):
+                raise ValueError(
+                    f"cheaper_direct gives no price: remove the figure from {text!r} (ADR 0034)"
+                )
+        return self
 
 
 class Plan(_Model):
@@ -156,6 +229,12 @@ class ProviderFile(_Model):
         "of these networks' locations say that its plans cannot be shown here (ADR 0016).",
     )
     plans: list[Plan] = Field(default_factory=list)
+    cheaper_direct: list[CheaperDirect] = Field(
+        default_factory=list,
+        description="Ways of paying this operator directly that its own pages show are "
+        "cheaper than paying at the charger, said without the price at its own networks' "
+        "locations, because its terms keep the prices off the map (ADR 0034).",
+    )
     notes: NeutralText | None = None
 
     @model_validator(mode="after")
@@ -169,16 +248,33 @@ class ProviderFile(_Model):
             raise ValueError("own_networks is only for an operator's own provider file")
         if len(self.own_networks) != len(set(self.own_networks)):
             raise ValueError("own_networks must not repeat an id")
+        if self.cheaper_direct and not self.own_networks:
+            raise ValueError("cheaper_direct needs own_networks: the networks it applies to")
+        if self.cheaper_direct and self.terms.reuse not in ("forbidden", "personal_use_only"):
+            raise ValueError(
+                "cheaper_direct is only for a provider whose terms keep its prices off the "
+                "map; where reuse is allowed, list its plans with their prices instead"
+            )
         ids = [p.id for p in self.plans]
         if len(ids) != len(set(ids)):
             raise ValueError("plan ids must be unique within a provider")
         site = _host(self.website)
         for plan in self.plans:
-            if _host(plan.source.url) != site and not _host(plan.source.url).endswith("." + site):
+            if not _on_site(plan.source.url, site):
                 raise ValueError(
                     f"plan {plan.id!r}: its source must be on the provider's own site ({site})"
                 )
+        for entry in self.cheaper_direct:
+            if not _on_site(entry.source.url, site):
+                raise ValueError(
+                    f"cheaper_direct {entry.pay_by!r}: its source must be on the provider's "
+                    f"own site ({site})"
+                )
         return self
+
+
+def _on_site(url: str, site: str) -> bool:
+    return _host(url) == site or _host(url).endswith("." + site)
 
 
 def _host(url: str) -> str:
