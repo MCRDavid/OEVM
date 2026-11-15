@@ -153,7 +153,7 @@ def test_prices_show_with_vat_added_only_under_the_owners_decision():
     assert describe_tariff(tariff).text == "45p per kWh (excluding VAT, VAT not stated)"
     shown = describe_tariff(tariff, added_vat=config().vat_not_stated.add_percent)
     assert shown.state == "priced"
-    assert shown.text.startswith("54p per kWh including VAT, with VAT at 20% added by this")
+    assert shown.text.startswith("54p per kWh including VAT (20% added by this project)")
 
 
 def test_the_test_charger_is_left_off_and_the_rest_of_its_site_stays():

@@ -1,6 +1,7 @@
 """Tests for pipeline/pricing.py: prices are only ever shown in pounds and pence."""
 
 import json
+from datetime import datetime
 from decimal import Decimal
 from pathlib import Path
 
@@ -12,12 +13,14 @@ from adapters.replay import ReplayTransport
 from pipeline.pricing import (
     VAT_IN_PRICE,
     describe_tariff,
+    energy_always,
     energy_range,
     location_summary,
     map_label,
     pence,
     plan_label,
     pounds,
+    varies_with,
 )
 from pipeline.registry import load_registry
 from pipeline.tariffs import ConnectorPrice
@@ -133,10 +136,7 @@ def test_minimum_charge_is_shown_after_the_vat_note():
 # VAT the owner decided to add where a feed gives none (vat_not_stated, ADR 0003 as
 # amended on 22 October 2026)
 
-ADDED = (
-    "including VAT, with VAT at 20% added by this project where the operator's feed does not "
-    "state it"
-)
+ADDED = "including VAT (20% added by this project)"
 
 
 def test_vat_is_added_at_the_owners_rate_and_the_price_says_so():
@@ -167,11 +167,11 @@ def test_added_vat_covers_other_charges_and_the_minimum_charge():
     )
     assert shown.text == (
         f"60p per kWh, plus £1.20 per session {ADDED}; "
-        "minimum charge £2.40 including VAT added by this project"
+        "minimum charge £2.40 including VAT (20% added by this project)"
     )
 
 
-IN_PRICE = "including VAT, reading the VAT rate the feed states as already in the price"
+IN_PRICE = "including VAT (read as already in the feed's price)"
 
 
 def test_stated_vat_read_as_in_the_price_is_not_added_and_the_price_says_so():
@@ -327,3 +327,58 @@ def test_a_plan_label_needs_a_fixed_price_including_vat():
 def test_a_plan_label_says_from_when_the_plan_applies_only_at_some_times():
     assert plan_label(Decimal("0.44"), True, only_at_some_times=True) == "from 44p"
     assert plan_label(Decimal("0.44"), True, only_at_some_times=False) == "44p"
+
+
+# Start dates that had passed when the tariff was read (owner, 15 November 2026). The
+# fixture's tariff was read on 6 October 2026 at 09:05 UTC.
+
+NOT_STATED = "(excluding VAT, VAT not stated)"
+
+
+def test_a_start_date_that_had_passed_when_read_is_left_out():
+    for start in ("2025-10-23", "2026-10-06"):
+        shown = tariff(restrictions={"start_date": start})
+        assert describe_tariff(shown).text == f"45p per kWh {NOT_STATED}"
+        # The price then applies whenever it is used, so a label does not say "from".
+        assert energy_always(shown)
+        assert varies_with(shown) == []
+
+
+def test_a_start_date_still_to_come_is_kept():
+    shown = tariff(restrictions={"start_date": "2026-12-01"})
+    assert describe_tariff(shown).text == f"45p per kWh from 1 December 2026 {NOT_STATED}"
+    assert not energy_always(shown)
+    assert varies_with(shown) == ["date"]
+
+
+def test_an_element_whose_start_date_had_passed_applies_before_any_after_it():
+    # OCPI uses the first element that applies, so the one after it never does.
+    def two(start):
+        return Tariff.model_validate(
+            {
+                **tariff().model_dump(mode="json"),
+                "elements": [
+                    {"price_components": [energy(0.50)], "restrictions": {"start_date": start}},
+                    {"price_components": [energy(0.45)]},
+                ],
+            }
+        )
+
+    assert describe_tariff(two("2026-01-01")).text == f"50p per kWh {NOT_STATED}"
+    assert (
+        describe_tariff(two("2026-12-01")).text
+        == f"50p per kWh from 1 December 2026, otherwise 45p per kWh {NOT_STATED}"
+    )
+
+
+def test_the_day_a_tariff_was_read_is_the_day_in_the_uk():
+    # 23:30 UTC on 5 October 2026 is 00:30 on 6 October in the UK (BST).
+    late = tariff(restrictions={"start_date": "2026-10-06"})
+    late = late.model_copy(
+        update={
+            "provenance": late.provenance.model_copy(
+                update={"fetched_at": datetime.fromisoformat("2026-10-05T23:30:00Z")}
+            )
+        }
+    )
+    assert describe_tariff(late).text == f"45p per kWh {NOT_STATED}"

@@ -247,6 +247,24 @@ Where a feed rounds its prices without VAT to whole pence, two prices with VAT c
 could be 45p or 46p), and the nearer is shown, which can be a penny out. A price whose VAT is
 not stated is shown as published, to the tenth of a penny, as it is not what drivers pay.
 
+### Amendment, 15 November 2026: shorter price wording
+
+With the shorter details screen (ADR 0033) the owner asked for the price wording to be
+shortened too. The meaning is unchanged:
+
+- A price with VAT added under `vat_not_stated` says "including VAT (20% added by this
+  project)", and its minimum charge the same. It still says so in the price; why the rate
+  was added stays on the transparency page and in the operator file.
+- A price read under `vat_in_price` says "including VAT (read as already in the feed's
+  price)".
+- A start date that had passed when the tariff was read is left out of when a price
+  applies: bp pulse's tariffs, for example, all start on 23 October 2025, and its prices
+  read in November 2026 said "65p per kWh from 23 October 2025". The element then counts
+  as applying at any time, so its label on the map no longer says "from 65p", and a later
+  element of the same tariff no longer applies, as OCPI 2.2.1 uses the first that matches.
+  The day read is the day in the UK. A start date still to come is shown as before. The
+  tariffs are published unchanged.
+
 ## Security
 
 - `SECURITY.md` asks for private reports through GitHub's private vulnerability
