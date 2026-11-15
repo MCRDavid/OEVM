@@ -280,16 +280,17 @@ def test_the_fixtures_hold_no_token(operator_id):
 
 def test_vat_is_added_where_the_owner_decided_the_prices_give_none(tmp_path):
     shown = prices_shown("allego", tmp_path)
-    added = "including VAT, with VAT at 20% added by this project"
+    added = "including VAT (20% added by this project)"
     assert any(text.startswith(f"63p per kWh {added}") for text in shown)
     assert all(added in text for text in shown)
 
 
 def test_bp_pulses_prices_have_vat_added_and_its_newer_sites_name_no_tariff(tmp_path):
     shown = prices_shown("bp_pulse", tmp_path)
-    added = "including VAT, with VAT at 20% added by this project"
-    assert sorted(text.split(" from ")[0] for text in shown) == ["65p per kWh", "89p per kWh"]
-    assert all(added in text for text in shown)
+    # Each tariff starts on 23 October 2025, which had passed when it was read, so the
+    # date is left out (owner, 15 November 2026).
+    added = "including VAT (20% added by this project)"
+    assert sorted(set(shown)) == [f"65p per kWh {added}", f"89p per kWh {added}"]
     layer = json.loads((tmp_path / "data" / "locations.geojson").read_text())
     states = {f["properties"]["name"]: f["properties"]["price"] for f in layer["features"]}
     assert states == {"Millfields Hotel": "priced", "Willingdon SF Connect": "unknown"}
@@ -315,9 +316,7 @@ def test_stated_vat_is_read_as_in_the_price_where_the_owner_decided(tmp_path):
     shown = prices_shown("esb_energy", tmp_path)
     assert any(text.startswith("80p per kWh") for text in shown)
     assert not any("96p" in text for text in shown)
-    assert all(
-        "reading the VAT rate the feed states as already in the price" in text for text in shown
-    )
+    assert all("including VAT (read as already in the feed's price)" in text for text in shown)
 
 
 def test_pods_isle_of_man_site_is_left_off_and_its_zero_tariff_shows_free(tmp_path):

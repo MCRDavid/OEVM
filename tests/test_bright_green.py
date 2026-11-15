@@ -106,7 +106,7 @@ def test_prices_are_read_as_including_vat_by_the_owners_decision():
     shown = [describe_tariff(t, added_vat=VAT_IN_PRICE).text for t in gbp]
     assert any(text.startswith("59p per kWh ") for text in shown)
     assert not any("71p" in text for text in shown)
-    in_price = "reading the VAT rate the feed states as already in the price"
+    in_price = "including VAT (read as already in the feed's price)"
     assert all(in_price in text for text in shown)
     # Without the decision, OCPI's reading adds the stated 20% (70.8p, to the whole penny).
     assert any("71p" in describe_tariff(t).text for t in gbp)

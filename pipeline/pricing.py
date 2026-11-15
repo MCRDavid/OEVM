@@ -14,10 +14,15 @@ regulations describe the price in reference data as "the price in pence per kilo
   published (OCPI prices exclude VAT) and marked "excluding VAT, VAT not stated".
 - Where the owner has recorded vat_not_stated in the operator file (ADR 0003, amended 22
   October 2026), its rate is added to each component that gives no VAT figure
-  (`added_vat`), and the price says this project added it.
+  (`added_vat`), and the price says this project added it: "including VAT (20% added by
+  this project)" (shorter wording, owner, 15 November 2026).
 - Where the owner has recorded vat_in_price in the operator file (ADR 0003, amended 23
   October 2026), `added_vat` is VAT_IN_PRICE: a component's stated VAT is read as already
   in its price, so nothing is added, and the price says it was read that way.
+- A start date that had passed when the tariff was read is left out of its conditions
+  (owner, 15 November 2026): from then on the element applies as if it had no start date,
+  so "from 23 October 2025" is not shown with a price fetched in November 2026, and the
+  price is not taken to apply only in some cases. Dates are read in UK time.
 - Sums are done in exact decimal arithmetic, so half pennies round up as expected.
 - A price that includes VAT is shown to the whole penny, half pennies rounding up, by the
   owner's decision of 14 November 2026 (ADR 0003): drivers are charged whole pence, and a
@@ -44,8 +49,10 @@ import html
 import re
 from collections.abc import Sequence
 from dataclasses import dataclass
+from datetime import date
 from decimal import ROUND_HALF_UP, Decimal
 from typing import Literal, Protocol
+from zoneinfo import ZoneInfo
 
 from schema.models import PriceComponent, Tariff, TariffElement, TariffRestrictions
 
@@ -67,8 +74,9 @@ UNSTATED_KIND = "How to pay is not stated"
 # `added_vat` when the operator file records vat_in_price: stated VAT is already in prices.
 VAT_IN_PRICE: Literal["in_price"] = "in_price"
 VatReading = float | Literal["in_price"] | None
-IN_PRICE_NOTE = "including VAT, reading the VAT rate the feed states as already in the price"
+IN_PRICE_NOTE = "including VAT (read as already in the feed's price)"
 PENNY = Decimal("0.01")
+UK = ZoneInfo("Europe/London")
 WEEK = ("monday", "tuesday", "wednesday", "thursday", "friday", "saturday", "sunday")
 
 
@@ -161,8 +169,27 @@ def conditions(restrictions: TariffRestrictions | None) -> str:
     return " ".join(part for part in parts if part)
 
 
+def _read_on(tariff: Tariff) -> date:
+    # The day, in UK time, the tariff was read from the operator's feed (or the copy made).
+    return tariff.provenance.fetched_at.astimezone(UK).date()
+
+
+def _as_read(element: TariffElement, read_on: date) -> TariffElement:
+    # A start date that had passed when the tariff was read no longer limits when the
+    # element applies, so it is left out (owner, 15 November 2026).
+    r = element.restrictions
+    if r is None or r.start_date is None or r.start_date > read_on:
+        return element
+    return element.model_copy(update={"restrictions": r.model_copy(update={"start_date": None})})
+
+
 def _charging_elements(tariff: Tariff) -> list[TariffElement]:
-    return [e for e in tariff.elements if not (e.restrictions and e.restrictions.reservation)]
+    read_on = _read_on(tariff)
+    return [
+        _as_read(e, read_on)
+        for e in tariff.elements
+        if not (e.restrictions and e.restrictions.reservation)
+    ]
 
 
 def _reachable(elements: list[TariffElement], kind: str) -> list[tuple[PriceComponent, str]]:
@@ -293,10 +320,7 @@ def describe_tariff(
 
     vat_note = "including VAT" if vat_stated else "(excluding VAT, VAT not stated)"
     if vat_added:
-        vat_note = (
-            f"including VAT, with VAT at {added_vat:g}% added by this project where the "
-            "operator's feed does not state it"
-        )
+        vat_note = added_note(added_vat)
     elif vat_stated and added_vat == VAT_IN_PRICE:
         vat_note = IN_PRICE_NOTE
     # Semicolons separate kinds of charge when a list of conditional prices uses commas.
@@ -306,10 +330,16 @@ def describe_tariff(
         text += f"; minimum charge {pounds(tariff.min_price)} {IN_PRICE_NOTE}"
     elif tariff.min_price and added_vat is not None:
         minimum = _decimal(tariff.min_price) * (1 + _decimal(added_vat) / 100)
-        text += f"; minimum charge {pounds(minimum)} including VAT added by this project"
+        text += f"; minimum charge {pounds(minimum)} {added_note(added_vat)}"
     elif tariff.min_price:
         text += f"; minimum charge {pounds(tariff.min_price)} excluding VAT"
     return PriceDisplay("priced", text)
+
+
+def added_note(rate: float) -> str:
+    """How a price with VAT this project added says so (ADR 0003): "including VAT (20%
+    added by this project)"."""
+    return f"including VAT ({rate:g}% added by this project)"
 
 
 class ConnectorPriceLike(Protocol):
