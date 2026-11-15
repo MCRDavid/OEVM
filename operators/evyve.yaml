@@ -186,6 +186,19 @@ engagement:
         expiring link, to be sent as an "Authorization: Token" header to its OCPI
         2.2.1 endpoints. The token is kept as a GitHub Actions secret.
       evidence_file: evidence/evyve/2026-10-26-token-email.md
+    - date: 2026-11-15
+      action: page_checked
+      summary: >-
+        evyve's pricing page was read. It lists lower prices for paying in the evyve app than
+        for contactless, with a lower app rate at weekends and on bank holidays, and calls its
+        prices indicative. evyve's terms, last updated in January 2026, say VAT is included in
+        its charges unless stated otherwise, and still allow use of its website for personal,
+        non-commercial use only.
+      quote: >-
+        Prices shown are indicative and may be updated periodically at the discretion of the
+        site operator. Current pricing is always displayed at the charger and within the evyve
+        app before you charge.
+      evidence_url: https://evyve.co.uk/pricing/
 access_requested: 2026-10-23
 access_granted: 2026-10-26
 sources:
@@ -220,6 +233,20 @@ findings:
       on the map, by the repository owner's decision of 2026-10-29
       (own_feed_over_copies above). The feed health page lists how many were left off.
     evidence_url: https://open-chargepoints.com/api/ocpi/cpo/2.2.1/locations/
+  - date: 2026-11-15
+    kind: data_quality
+    summary: >-
+      evyve's pricing page lists lower prices for paying in the evyve app than for
+      contactless, with a lower app rate at weekends and on bank holidays. The feed gives
+      one tariff per connector, with no tariff type and no day or time restrictions. At
+      almost every rapid charger its price, 0.7083 plus the stated 20% VAT (85p), is the
+      page's contactless price, and no tariff in the feed has the app prices.
+    handling: >-
+      The feed's tariffs are shown as published, as "How to pay is not stated". evyve's
+      app prices are not shown, because its website terms do not allow its content to be
+      republished (providers/evyve.yaml); each evyve location's details point to evyve's
+      website and app.
+    evidence_url: https://evyve.co.uk/pricing/
 notes: >-
   Its regulation 10 data is served by Eco-Movement's PCPR API (eco_movement_pcpr adapter),
   with a token Eco-Movement sent on 2026-10-26, kept as the GitHub Actions secret
