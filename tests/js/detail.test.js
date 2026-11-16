@@ -65,7 +65,7 @@ const connector = (id, standard, kw) => ({ id, standard, max_kw: kw });
 const point = (uid, connectors, more = {}) => ({ uid, physical_reference: uid, connectors, ...more });
 const price = (uid, id, text, reason = null) => ({ evse_uid: uid, connector_id: id, text, reason });
 
-test("charge points that offer the same are one group, in the operator's order", () => {
+test("charge points that offer the same are one group", () => {
   const evses = [
     point("A", [connector("1", "IEC_62196_T2", 7.4)]),
     point("B", [connector("1", "IEC_62196_T2_COMBO", 50)]),
@@ -100,6 +100,41 @@ test("a different price, connector, parking rule, payment, floor or note keeps c
   assert.equal(chargePointGroups(evses, pricesApart).length, 2);
   // A connector with no price found shows "Price unknown".
   assert.equal(chargePointGroups([same()], [])[0].offer.connectors[0].price, "Price unknown");
+});
+
+test("charge points are in order of their names, numbers in number order, and so are the groups", () => {
+  const ac = () => [connector("1", "IEC_62196_T2", 7.4)];
+  const dc = () => [connector("1", "IEC_62196_T2_COMBO", 50)];
+  const evses = [
+    point("VPP401599", dc()),
+    point("10", ac()),
+    point("VPP401083", dc()),
+    point("2", ac()),
+    point("24833", dc()),
+    point("b", ac()),
+    point("A", ac()),
+  ];
+  const groups = chargePointGroups(evses, []);
+  assert.deepEqual(
+    groups.map((g) => g.points.map((p) => p.evse.uid)),
+    [["2", "10", "A", "b"], ["24833", "VPP401083", "VPP401599"]],
+  );
+  // Shell's names: "01-2" before "02-1", and "01-10" after "01-9".
+  const shell = ["02-1", "01-10", "01-2", "01-9", "01-1"].map((name) => point(name, ac()));
+  assert.deepEqual(
+    chargePointGroups(shell, [])[0].points.map((p) => p.evse.uid),
+    ["01-1", "01-2", "01-9", "01-10", "02-1"],
+  );
+  // Charge points with no name are ordered by EVSE ID, then as the operator listed them.
+  const unnamed = [
+    { uid: "x", evse_id: "GB*EVC*E9", connectors: ac() },
+    { uid: "y", evse_id: "GB*EVC*E10", connectors: ac() },
+    { uid: "z", evse_id: "GB*EVC*E10", physical_reference: "GB*EVC*E10", connectors: ac() },
+  ];
+  assert.deepEqual(
+    chargePointGroups(unnamed, [])[0].points.map((p) => p.evse.uid),
+    ["x", "y", "z"],
+  );
 });
 
 test("what every charge point shares, or a note shown with the site, is not repeated in each group", () => {

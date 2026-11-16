@@ -94,3 +94,12 @@ are in the project's files (`details-screen/2026-11-15/`).
 
 Amended 15 November 2026 by ADR 0034: where paying the operator directly is cheaper, a note
 saying so, without the price, is kept in view under "Cheapest here".
+
+## Amended 16 November 2026: charge points in order of their names
+
+The owner noted on 16 November 2026 that charge points in a box seemed to be in a random
+order, rather than alphabetical or numerical. They were in the operator's order. Charge
+points are now listed in order of the names shown, letters A to Z whatever their case and
+numbers in number order ("2" before "10", "01-2" before "02-1"), then by EVSE ID, then in
+the operator's order. The boxes are in the order of the first charge point in each, and the
+reference numbers list charge points in the same order.

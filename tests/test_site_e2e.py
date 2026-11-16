@@ -1288,8 +1288,11 @@ def test_details_list_each_charge_point_with_its_label_id_and_status(visit):
     group = page.locator("#detail-body .charge-point-groups > li").first
     expect(group.locator(".plug")).to_have_count(1)
     expect(group.locator(".plug")).to_have_text("Type 2 · 7 kW")
+    # Charge points are in order of their names, though the feed lists SEC31617 first.
+    names = [n.text_content() for n in page.locator("#detail-body .charge-point-name").all()]
+    assert names[:5] == ["SEC31615", "SEC31616", "SEC31617", "SEC31618", "SEC31619"]
     first = points.first
-    assert first.locator(".charge-point-name").text_content() == "SEC31617"
+    assert first.locator(".charge-point-name").text_content() == "SEC31615"
     assert first.locator(".status").text_content() == "● Available"
     expect(first).to_contain_text("reported ")
     # The reference numbers come last, in small print, under "More about this data".
@@ -1299,7 +1302,7 @@ def test_details_list_each_charge_point_with_its_label_id_and_status(visit):
     assert refs[0] == (
         "Site: 12343565 in Evolt Network's feed (on this map: evolt:GB:SSM:12343565)."
     )
-    assert refs[1] == "SEC31617: EVSE ID GB*SSM*ESEC31617*1, uid SEC31617_1."
+    assert refs[1] == "SEC31615: EVSE ID GB*SSM*ESEC31615*1, uid SEC31615_1."
     assert len(refs) == 7
 
 

@@ -230,10 +230,24 @@ function offerOf(evse, prices, shownNotes, shared) {
   };
 }
 
-// Charge points (OCPI EVSEs) that offer the same thing, kept together in the operator's
-// order, so the connectors and the price are said once and each charge point then has one
-// line with its own name and status. A charge point charges one vehicle at a time,
-// whichever of its connectors is used.
+// Names in the order people expect: letters A to Z whatever their case, and numbers in
+// number order, so "2" comes before "10" and "01-2" before "02-1".
+const byName = new Intl.Collator("en-GB", { numeric: true, sensitivity: "base" });
+
+// Charge points by their names as shown, then by EVSE ID, then in the operator's order.
+function pointOrder(a, b) {
+  return (
+    byName.compare(chargePointName(a.evse, a.index), chargePointName(b.evse, b.index)) ||
+    byName.compare(a.evse.evse_id ?? "", b.evse.evse_id ?? "") ||
+    a.index - b.index
+  );
+}
+
+// Charge points (OCPI EVSEs) that offer the same thing, kept together, so the connectors
+// and the price are said once and each charge point then has one line with its own name
+// and status. A charge point charges one vehicle at a time, whichever of its connectors
+// is used. Charge points are in order of their names (owner, 16 November 2026), and so
+// are the groups, by the first charge point in each.
 export function chargePointGroups(evses, prices, shownNotes = [], shared = {}) {
   const groups = new Map();
   (evses ?? []).forEach((evse, index) => {
@@ -242,7 +256,9 @@ export function chargePointGroups(evses, prices, shownNotes = [], shared = {}) {
     if (!groups.has(key)) groups.set(key, { offer, points: [] });
     groups.get(key).points.push({ evse, index });
   });
-  return [...groups.values()];
+  const sorted = [...groups.values()];
+  for (const group of sorted) group.points.sort(pointOrder);
+  return sorted.sort((a, b) => pointOrder(a.points[0], b.points[0]));
 }
 
 // One line for a charge point: its name, its status in its group's colour with the group's
@@ -320,11 +336,14 @@ function referenceNote(detail) {
       "ul",
       { className: "hint", "aria-label": "Reference numbers" },
       h("li", { text: `Site: ${site} in ${network}'s feed (on this map: ${location.id}).` }),
-      (location.evses ?? []).map((evse, index) => {
-        const name = chargePointName(evse, index);
-        const parts = [evse.evse_id && evse.evse_id !== name ? `EVSE ID ${evse.evse_id}` : null, `uid ${evse.uid}`];
-        return h("li", { text: `${name}: ${parts.filter(Boolean).join(", ")}.` });
-      }),
+      (location.evses ?? [])
+        .map((evse, index) => ({ evse, index }))
+        .sort(pointOrder)
+        .map(({ evse, index }) => {
+          const name = chargePointName(evse, index);
+          const parts = [evse.evse_id && evse.evse_id !== name ? `EVSE ID ${evse.evse_id}` : null, `uid ${evse.uid}`];
+          return h("li", { text: `${name}: ${parts.filter(Boolean).join(", ")}.` });
+        }),
       renamed.map((option) => h("li", { text: `Tariff "${option.name}": the operator's name for it is ${option.original_name}.` })),
     ),
   );
