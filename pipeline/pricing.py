@@ -23,6 +23,9 @@ regulations describe the price in reference data as "the price in pence per kilo
   (owner, 15 November 2026): from then on the element applies as if it had no start date,
   so "from 23 October 2025" is not shown with a price fetched in November 2026, and the
   price is not taken to apply only in some cases. Dates are read in UK time.
+- A time of day from midnight to 23:59, like midnight to midnight, is read as all day
+  (owner, 16 November 2026, ADR 0003): it is not shown, and the price is not taken to
+  apply only at some times.
 - Sums are done in exact decimal arithmetic, so half pennies round up as expected.
 - A price that includes VAT is shown to the whole penny, half pennies rounding up, by the
   owner's decision of 14 November 2026 (ADR 0003): drivers are charged whole pence, and a
@@ -107,6 +110,11 @@ def _span(values: list[Decimal], fmt) -> str:
     return fmt(low) if low == high else f"{fmt(low)} to {fmt(high)}"
 
 
+# Times of day that cover the whole day: midnight to midnight, or midnight to 23:59,
+# which several feeds give for a price that applies all day (owner, 16 November 2026).
+ALL_DAY = (("00:00", "00:00"), ("00:00", "23:59"))
+
+
 def _clock(value: str) -> str:
     return "midnight" if value == "00:00" else value
 
@@ -138,7 +146,7 @@ def conditions(restrictions: TariffRestrictions | None) -> str:
     r = restrictions
     parts = []
     start, end = r.start_time, r.end_time
-    if start and end and not (start == end == "00:00"):
+    if start and end and (start, end) not in ALL_DAY:
         parts.append(f"from {_clock(start)} to {_clock(end)}")
     elif start and not end:
         parts.append(f"from {_clock(start)}")
@@ -176,11 +184,19 @@ def _read_on(tariff: Tariff) -> date:
 
 def _as_read(element: TariffElement, read_on: date) -> TariffElement:
     # A start date that had passed when the tariff was read no longer limits when the
-    # element applies, so it is left out (owner, 15 November 2026).
+    # element applies, so it is left out (owner, 15 November 2026). Nor do times that
+    # cover the whole day.
     r = element.restrictions
-    if r is None or r.start_date is None or r.start_date > read_on:
+    if r is None:
         return element
-    return element.model_copy(update={"restrictions": r.model_copy(update={"start_date": None})})
+    update = {}
+    if r.start_date is not None and r.start_date <= read_on:
+        update["start_date"] = None
+    if (r.start_time, r.end_time) in ALL_DAY:
+        update["start_time"] = update["end_time"] = None
+    if not update:
+        return element
+    return element.model_copy(update={"restrictions": r.model_copy(update=update)})
 
 
 def _charging_elements(tariff: Tariff) -> list[TariffElement]:
@@ -395,7 +411,7 @@ def varies_with(tariff: Tariff) -> list[str]:
         r = element.restrictions
         if r is None:
             continue
-        if (r.start_time or r.end_time) and not (r.start_time == r.end_time == "00:00"):
+        if r.start_time or r.end_time:
             found.add("time of day")
         if r.day_of_week and len(set(r.day_of_week)) < 7:
             found.add("day of the week")

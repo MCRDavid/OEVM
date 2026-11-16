@@ -294,6 +294,18 @@ shortened too. The meaning is unchanged:
   The day read is the day in the UK. A start date still to come is shown as before. The
   tariffs are published unchanged.
 
+### Amendment, 16 November 2026: midnight to 23:59 is all day
+
+After the change above, every Shell Recharge label on the map still said "from 89p",
+because its tariffs apply "from midnight to 23:59" every day. The owner decided on 16
+November 2026 that this is all day. A time of day from midnight to 23:59 is now read as no
+time limit, as midnight to midnight already was: it is left out of the price wording, the
+price counts as applying at any time, and its label no longer says "from". Other
+conditions on the same element (a day of the week, a duration) are kept. On the live data
+of 16 November 2026 this also applies to ChargePoint, ESB ecars, ESB Energy, evpoint, Mer
+UK and RAW, which give the same times. Other times, such as midnight to 23:58 or 07:00
+to 23:59, are said as before. The tariffs are published unchanged.
+
 ## Security
 
 - `SECURITY.md` asks for private reports through GitHub's private vulnerability
