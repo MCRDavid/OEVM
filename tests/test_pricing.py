@@ -12,6 +12,7 @@ from adapters.ocpi_221 import fetch
 from adapters.replay import ReplayTransport
 from pipeline.pricing import (
     VAT_IN_PRICE,
+    conditions,
     describe_tariff,
     energy_always,
     energy_range,
@@ -24,7 +25,7 @@ from pipeline.pricing import (
 )
 from pipeline.registry import load_registry
 from pipeline.tariffs import ConnectorPrice
-from schema.models import Tariff
+from schema.models import Tariff, TariffRestrictions
 
 FIXTURES = Path(__file__).parent / "fixtures"
 
@@ -382,3 +383,36 @@ def test_the_day_a_tariff_was_read_is_the_day_in_the_uk():
         }
     )
     assert describe_tariff(late).text == f"45p per kWh {NOT_STATED}"
+
+
+# Midnight to 23:59 is all day (owner, 16 November 2026), as midnight to midnight was.
+
+WEEK_DAYS = ["monday", "tuesday", "wednesday", "thursday", "friday", "saturday", "sunday"]
+
+
+@pytest.mark.parametrize("end", ["23:59", "00:00"])
+def test_midnight_to_2359_every_day_is_all_day(end):
+    # Shell Recharge's tariffs, as read on 16 November 2026: every day, midnight to 23:59.
+    shown = tariff(restrictions={"start_time": "00:00", "end_time": end, "day_of_week": WEEK_DAYS})
+    assert describe_tariff(shown).text == f"45p per kWh {NOT_STATED}"
+    assert energy_always(shown)
+    assert varies_with(shown) == []
+    assert conditions(TariffRestrictions(start_time="00:00", end_time=end)) == ""
+
+
+def test_midnight_to_2359_keeps_the_other_conditions():
+    shown = tariff(
+        restrictions={"start_time": "00:00", "end_time": "23:59", "day_of_week": ["monday"]}
+    )
+    assert describe_tariff(shown).text == f"45p per kWh on Monday {NOT_STATED}"
+    assert varies_with(shown) == ["day of the week"]
+
+
+@pytest.mark.parametrize(
+    ("start", "end"), [("00:00", "23:58"), ("00:01", "23:59"), ("07:00", "23:59")]
+)
+def test_other_times_are_still_said(start, end):
+    shown = tariff(restrictions={"start_time": start, "end_time": end})
+    assert describe_tariff(shown).text.startswith("45p per kWh from ")
+    assert not energy_always(shown)
+    assert varies_with(shown) == ["time of day"]
