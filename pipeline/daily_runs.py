@@ -19,6 +19,11 @@ already fetched and published today (UTC), and fetch=true otherwise. It also say
 when GitHub cannot be asked: a second fetch in a day is better than none, and every fetch
 keeps every operator's rate limit. A run started by hand always fetches.
 
+A scheduled run counts for the day its schedule was due (--schedule, the workflow's
+github.event.schedule), not the day GitHub started it: on 17 November 2026 the 16:47 UTC
+run of the day before started at 00:30 UTC, and, counted as that day's, it stopped the
+timer's 04:17 UTC fetch.
+
     python3 -m pipeline.daily_runs record --out daily-runs.json
 
 saves the last 30 days of runs, how each started and what it did, for the feed health
@@ -229,11 +234,28 @@ def daily_run(get: Getter, repo: str, run: dict, current_run_id: int | None) -> 
 # The check
 
 
+def counts_for(run: dict) -> date:
+    """The day a run of Fetch daily counts for: the day its schedule was due for a
+    scheduled run, which GitHub may start many hours late, otherwise the day it started
+    (UTC)."""
+    created = _time(run["created_at"])
+    how, cron = started_by(run)
+    due = scheduled_time(cron, created) if how == SCHEDULE and cron else None
+    return (due or created).date()
+
+
+def fetch_day(event: str, schedule: str, now: datetime) -> date:
+    """The day this run's fetch is for, as counts_for reads it."""
+    due = scheduled_time(schedule, now) if event == "schedule" and schedule else None
+    return (due or now).date()
+
+
 def published_today(get: Getter, repo: str, today: date, current_run_id: int) -> DailyRun | None:
-    """Another run of Fetch daily on main that fetched and published today, if any."""
+    """Another run of Fetch daily on main that fetched and published for today, if any."""
+    # A run started on this day or later: a scheduled run counts for the day it was due.
     runs, _older = list_runs(get, repo, today)
     for run in runs:
-        if run["id"] == current_run_id or _time(run["created_at"]).date() != today:
+        if run["id"] == current_run_id or counts_for(run) != today:
             continue
         found = daily_run(get, repo, run, current_run_id)
         if found.outcome in UPDATED:
@@ -242,20 +264,29 @@ def published_today(get: Getter, repo: str, today: date, current_run_id: int) ->
 
 
 def should_fetch(
-    get: Getter, repo: str, event: str, how: str, today: date, current_run_id: int
+    get: Getter,
+    repo: str,
+    event: str,
+    how: str,
+    today: date,
+    current_run_id: int,
+    day: date | None = None,
 ) -> tuple[bool, str]:
-    """Whether this run fetches, and why, in words for the run's log."""
+    """Whether this run fetches, and why, in words for the run's log. day is the day the
+    run is for (fetch_day), when it is not today."""
     if event != "schedule" and how != TIMER:
         return True, "Started by hand, so it fetches whatever ran earlier today."
+    day = day or today
+    when = f"today ({day})" if day == today else f"for {day}, the day this run was due"
     try:
-        earlier = published_today(get, repo, today, current_run_id)
+        earlier = published_today(get, repo, day, current_run_id)
     except (DailyRunsError, KeyError, TypeError) as exc:
         return True, f"Could not check earlier runs, so it fetches anyway: {exc}"
     if earlier is None:
-        return True, f"No run has fetched and published today ({today}), so this one fetches."
+        return True, f"No run has fetched and published {when}, so this one fetches."
     return False, (
         f"Run {earlier.number} ({STARTED_BY_LABELS[earlier.started_by]}) already fetched and "
-        f"published today ({today}), so this run stops without fetching."
+        f"published {when}, so this run stops without fetching."
     )
 
 
@@ -384,6 +415,7 @@ def main(argv: list[str] | None = None, get: Getter | None = None) -> int:
     check = commands.add_parser("check", help="say whether this run fetches")
     check.add_argument("--event", required=True, help="github.event_name")
     check.add_argument("--started-by", default="", help="the workflow's started_by input")
+    check.add_argument("--schedule", default="", help="github.event.schedule, if scheduled")
     record = commands.add_parser("record", help="save the last 30 days of runs")
     record.add_argument("--out", type=Path, required=True)
     for command in (check, record):
@@ -402,7 +434,13 @@ def main(argv: list[str] | None = None, get: Getter | None = None) -> int:
 
     if args.command == "check":
         fetch, why = should_fetch(
-            get, args.repo, args.event, args.started_by, now.date(), args.run_id
+            get,
+            args.repo,
+            args.event,
+            args.started_by,
+            now.date(),
+            args.run_id,
+            day=fetch_day(args.event, args.schedule, now),
         )
         print(why)
         _write_output("fetch", "true" if fetch else "false")

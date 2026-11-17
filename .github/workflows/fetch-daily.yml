@@ -8,7 +8,8 @@ run-name: ${{ github.event_name == 'schedule' && format('Fetch daily (GitHub sch
 # second try at 06:17 UTC), which asks GitHub to start this workflow with started_by set to
 # timer. GitHub's own schedule below is a backup only: GitHub starts scheduled runs late or
 # not at all when it is busy (ADR 0024). The first job lets only the first timer or
-# schedule run each day (UTC) fetch; a run started by hand always fetches.
+# schedule run each day (UTC) fetch, a scheduled run counting for the day it was due; a run
+# started by hand always fetches.
 
 on:
   schedule:
@@ -57,7 +58,11 @@ jobs:
           GH_TOKEN: ${{ github.token }}
           EVENT: ${{ github.event_name }}
           STARTED_BY: ${{ inputs.started_by }}
-        run: python3 -m pipeline.daily_runs check --event "$EVENT" --started-by "$STARTED_BY"
+          # A scheduled run counts for the day its schedule was due, however late it starts.
+          SCHEDULE: ${{ github.event.schedule }}
+        run: >-
+          python3 -m pipeline.daily_runs check --event "$EVENT" --started-by "$STARTED_BY"
+          --schedule "$SCHEDULE"
 
   fetch:
     name: Fetch operator feeds

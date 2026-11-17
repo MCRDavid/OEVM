@@ -214,6 +214,40 @@ def test_yesterdays_run_does_not_count_and_older_pages_are_not_read():
     assert len(github.asked) == 1  # the list only; no jobs for yesterday's run
 
 
+LATE_TITLE = "Fetch daily (GitHub schedule 47 16 * * *)"
+
+
+def test_a_scheduled_run_github_starts_after_midnight_counts_for_the_day_it_was_due():
+    # As on 17 November 2026: the 16:47 run of the day before started at 00:30 UTC.
+    now = datetime(2026, 10, 13, 0, 30, 9, tzinfo=UTC)
+    day = daily_runs.fetch_day("schedule", "47 16 * * *", now)
+    assert day == date(2026, 10, 12)
+    runs = [
+        make_run(CURRENT, "2026-10-13T00:30:09Z", title=LATE_TITLE, state="in_progress"),
+        make_run(7, "2026-10-12T04:17:03Z", event="timer"),
+    ]
+    github = FakeGitHub(runs, {7: make_jobs()})
+    fetch, why = daily_runs.should_fetch(github, REPO, "schedule", "", now.date(), CURRENT, day=day)
+    assert not fetch
+    assert "already fetched and published for 2026-10-12, the day this run was due" in why
+
+
+def test_a_late_scheduled_run_does_not_stop_the_next_days_timer():
+    # The late run fetched for the day before (the timer had missed it), so the timer's
+    # run on the day it started still fetches.
+    runs = [make_run(8, "2026-10-12T00:30:09Z", title=LATE_TITLE)]
+    github = FakeGitHub(runs, {8: make_jobs()})
+    fetch, why = check(github, event="workflow_dispatch", how="timer")
+    assert fetch and "No run has fetched and published today (2026-10-12)" in why
+    assert len(github.asked) == 1  # the list only; the late run's jobs are not needed
+
+
+def test_a_run_not_started_by_a_schedule_counts_for_today():
+    now = datetime(2026, 10, 13, 0, 30, tzinfo=UTC)
+    assert daily_runs.fetch_day("workflow_dispatch", "", now) == now.date()
+    assert daily_runs.fetch_day("schedule", "", now) == now.date()
+
+
 def test_if_github_cannot_be_asked_the_run_fetches_anyway():
     fetch, why = check(FakeGitHub([], fail=True))
     assert fetch and "Could not check" in why
@@ -465,6 +499,9 @@ def test_only_the_first_timer_or_schedule_run_each_day_fetches():
     step = next(s for s in check_job["steps"] if s.get("id") == "check")
     # Standard library only: the check runs before anything is installed.
     assert step["run"].startswith("python3 -m pipeline.daily_runs check")
+    # A scheduled run says which schedule it came from, so it counts for the day it was due.
+    assert step["env"]["SCHEDULE"] == "${{ github.event.schedule }}"
+    assert '--schedule "$SCHEDULE"' in step["run"]
     assert jobs["fetch"]["name"] == daily_runs.FETCH_JOB
     assert jobs["fetch"]["needs"] == "check"
     assert "needs.check.outputs.fetch == 'true'" in jobs["fetch"]["if"]

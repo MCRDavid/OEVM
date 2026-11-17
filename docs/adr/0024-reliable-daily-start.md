@@ -53,6 +53,9 @@ suggested trying more often and publishing how often the scheduled run works.
   always fetches. The workflow's concurrency group already stops two runs fetching at once,
   so a run that waits behind another checks only after the other has finished. The check
   uses only Python's standard library, so it runs before anything is installed.
+  A scheduled run counts for the day its schedule was due, not the day GitHub started it
+  (added 17 November 2026): that day the 16:47 UTC run of 16 November started at 00:30 UTC
+  and, counted as 17 November's fetch, stopped the timer's 04:17 UTC run.
 - **Each run says how it started.** The workflow's `run-name` reads "Fetch daily
   (Cloudflare timer)", "Fetch daily (GitHub schedule 47 4 * * *)" or "Fetch daily (by
   hand)". Runs before 12 October 2026 are titled "Fetch daily"; a scheduled one among them
