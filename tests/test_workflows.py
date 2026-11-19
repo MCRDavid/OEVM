@@ -1,5 +1,8 @@
 """Checks on the scheduled fetch, status refresh and deploy workflows (blueprint task 10)."""
 
+import os
+import subprocess
+
 import pytest
 import yaml
 
@@ -146,6 +149,68 @@ def test_the_map_is_deployed_even_if_the_statuses_cannot_be_had(name):
 def test_the_scripts_that_download_artifacts_can_be_run():
     for script in (ROOT / ".github" / "scripts").glob("*.sh"):
         assert script.stat().st_mode & 0o111, f"{script.name} is not executable"
+
+
+SCRIPTS = ROOT / ".github" / "scripts"
+
+# A stand-in for the gh command: "gh api" names run 123, and "gh run download" fails
+# (as GitHub's storage did with HTTP 503) until it has been asked FAILS times.
+FAKE_GH = """#!/usr/bin/env bash
+set -euo pipefail
+if [ "$1" = "api" ]; then echo 123; exit 0; fi
+count=$(cat "$FAKE_GH_COUNT" 2>/dev/null || echo 0)
+echo $((count + 1)) > "$FAKE_GH_COUNT"
+if [ "$count" -lt "$FAILS" ]; then
+  mkdir -p "$7/data" && echo half > "$7/data/half.json"
+  echo "error downloading $5: HTTP 503: 503 Egress is over the account limit." >&2
+  exit 1
+fi
+mkdir -p "$7/data" && echo '{}' > "$7/data/locations.json"
+"""
+
+
+def _download(tmp_path, fails: int, script: str, *args: str) -> subprocess.CompletedProcess:
+    bin_dir = tmp_path / "bin"
+    bin_dir.mkdir(exist_ok=True)
+    fake = bin_dir / "gh"
+    fake.write_text(FAKE_GH)
+    fake.chmod(0o755)
+    env = {
+        **os.environ,
+        "PATH": f"{bin_dir}{os.pathsep}{os.environ['PATH']}",
+        "FAILS": str(fails),
+        "FAKE_GH_COUNT": str(tmp_path / "count"),
+        "DOWNLOAD_RETRY_WAITS": "0 0",
+        "GH_REPO": "example/repo",
+    }
+    return subprocess.run(
+        ["bash", str(SCRIPTS / script), *args], env=env, capture_output=True, text=True
+    )
+
+
+def test_a_download_that_fails_for_a_moment_is_tried_again(tmp_path):
+    dest = tmp_path / "previous"
+    done = _download(tmp_path, 2, "download-run-artifact.sh", "123", "live-data", str(dest))
+    assert done.returncode == 0, done.stderr
+    assert done.stdout.count("::warning::Downloading live-data") == 2
+    # The half-made downloads of the failed tries are not kept.
+    assert sorted(p.name for p in (dest / "data").iterdir()) == ["locations.json"]
+
+
+def test_a_download_that_keeps_failing_stops_after_three_tries(tmp_path):
+    dest = tmp_path / "previous"
+    done = _download(tmp_path, 3, "download-run-artifact.sh", "123", "live-data", str(dest))
+    assert done.returncode == 1
+    assert "after 3 tries" in done.stdout
+    assert list(dest.iterdir()) == []
+
+
+@pytest.mark.parametrize("script", ["download-site-data.sh", "download-live-data.sh"])
+def test_both_download_scripts_try_again(tmp_path, script):
+    dest = tmp_path / "build"
+    done = _download(tmp_path, 1, script, str(dest))
+    assert done.returncode == 0, done.stderr
+    assert (dest / "data" / "locations.json").exists()
 
 
 def test_the_site_is_packaged_with_its_well_known_folder():

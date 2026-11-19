@@ -25,4 +25,4 @@ if [ -z "$run_id" ]; then
 fi
 
 echo "Using the site data from workflow run $run_id."
-gh run download "$run_id" --name site-data --dir "$dest"
+"$(dirname "$0")/download-run-artifact.sh" "$run_id" site-data "$dest"

@@ -20,4 +20,4 @@ if [ -z "$run_id" ]; then
 fi
 
 echo "Using the statuses from workflow run $run_id."
-gh run download "$run_id" --name live-data --dir "$dest"
+"$(dirname "$0")/download-run-artifact.sh" "$run_id" live-data "$dest"
