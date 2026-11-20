@@ -24,8 +24,9 @@ section filled in.
 | A9 | `sent_copy` | Connekt (OCPI files sent by email) | Nothing | Built: ADR 0029 |
 
 Operators that need no new adapter, so are not tasks here: Pod (`ocpi_221` once a token
-is granted; how tokens are sent is unknown), GeniePoint (already on `ocpi_221`). InstaVolt
-and Go Zero have no known feed, so their adapter is unknown until access is arranged.
+is granted; how tokens are sent is unknown), GeniePoint (already on `ocpi_221`), Go Zero
+(on `ocpi_221` since 20 November 2026, when its no-key feed was found behind its public
+dashboard). InstaVolt has no known feed, so its adapter is unknown until access is arranged.
 
 ## What every adapter task includes
 
@@ -158,8 +159,8 @@ documentation only visible after login), Giga Power, EV Smart (says OCPI, no ter
 Blink and Ionity (all by request). Each gets an A-numbered task in this file once a real
 response shows it is not standard OCPI.
 
-**No feed found:** Be.EV, Go Zero (the documented address now returns 404), Connected Kerb
-and Sainsbury's Smart Charge.
+**No feed found:** Be.EV, Connected Kerb and Sainsbury's Smart Charge. (Go Zero's documented
+address returns 404, but its feed was found on another host on 20 November 2026.)
 
 **OCPI connection by invitation (found 2026-10-13):** Tesla, through the Tesla Roaming Portal
 on its developer site. The connection form starts an OCPI 2.2.1 credentials handshake in which

@@ -1,0 +1,637 @@
+{
+  "request": {
+    "method": "GET",
+    "url": "https://ocpi.gozerocharge.com/api/v1/ocpi/2.2/tariffs"
+  },
+  "response": {
+    "status_code": 200,
+    "headers": {
+      "content-type": "application/json; charset=utf-8",
+      "x-total-count": "11",
+      "x-limit": "400"
+    },
+    "body": {
+      "status_code": 1000,
+      "status_message": "Success",
+      "timestamp": "2026-11-20T23:40:47.505Z",
+      "data": [
+        {
+          "country_code": "GB",
+          "party_id": "GOZ",
+          "id": "TARIFF-141052",
+          "currency": "GBP",
+          "tariff_alt_url": "https://gozerocharge.com/tariffs/141052",
+          "elements": [
+            {
+              "price_components": [
+                {
+                  "type": "ENERGY",
+                  "price": 0.4666666666666667,
+                  "step_size": 1,
+                  "vat": 20
+                }
+              ],
+              "restrictions": {
+                "start_time": "22:00",
+                "end_time": "06:00",
+                "day_of_week": [
+                  "MONDAY",
+                  "TUESDAY",
+                  "WEDNESDAY",
+                  "THURSDAY",
+                  "FRIDAY",
+                  "SATURDAY",
+                  "SUNDAY"
+                ]
+              }
+            },
+            {
+              "price_components": [
+                {
+                  "type": "ENERGY",
+                  "price": 0.4666666666666667,
+                  "step_size": 1,
+                  "vat": 20
+                }
+              ],
+              "restrictions": {
+                "start_time": "06:00",
+                "end_time": "22:00",
+                "day_of_week": [
+                  "MONDAY",
+                  "TUESDAY",
+                  "WEDNESDAY",
+                  "THURSDAY",
+                  "FRIDAY",
+                  "SATURDAY",
+                  "SUNDAY"
+                ]
+              }
+            }
+          ],
+          "last_updated": "2026-09-26T08:23:12.571Z"
+        },
+        {
+          "country_code": "GB",
+          "party_id": "GOZ",
+          "id": "TARIFF-153874",
+          "currency": "GBP",
+          "tariff_alt_url": "https://gozerocharge.com/tariffs/153874",
+          "elements": [
+            {
+              "price_components": [
+                {
+                  "type": "ENERGY",
+                  "price": 0.65,
+                  "step_size": 1,
+                  "vat": 20
+                }
+              ],
+              "restrictions": {
+                "start_time": "22:00",
+                "end_time": "06:00",
+                "day_of_week": [
+                  "MONDAY",
+                  "TUESDAY",
+                  "WEDNESDAY",
+                  "THURSDAY",
+                  "FRIDAY",
+                  "SATURDAY",
+                  "SUNDAY"
+                ]
+              }
+            },
+            {
+              "price_components": [
+                {
+                  "type": "ENERGY",
+                  "price": 0.65,
+                  "step_size": 1,
+                  "vat": 20
+                }
+              ],
+              "restrictions": {
+                "start_time": "06:00",
+                "end_time": "22:00",
+                "day_of_week": [
+                  "MONDAY",
+                  "TUESDAY",
+                  "WEDNESDAY",
+                  "THURSDAY",
+                  "FRIDAY",
+                  "SATURDAY",
+                  "SUNDAY"
+                ]
+              }
+            }
+          ],
+          "last_updated": "2026-09-26T08:23:13.532Z"
+        },
+        {
+          "country_code": "GB",
+          "party_id": "GOZ",
+          "id": "TARIFF-176133",
+          "currency": "GBP",
+          "tariff_alt_url": "https://gozerocharge.com/tariffs/176133",
+          "elements": [
+            {
+              "price_components": [
+                {
+                  "type": "ENERGY",
+                  "price": 0.4666666666666667,
+                  "step_size": 1,
+                  "vat": 20
+                }
+              ],
+              "restrictions": {
+                "start_time": "22:00",
+                "end_time": "06:00",
+                "day_of_week": [
+                  "MONDAY",
+                  "TUESDAY",
+                  "WEDNESDAY",
+                  "THURSDAY",
+                  "FRIDAY",
+                  "SATURDAY",
+                  "SUNDAY"
+                ]
+              }
+            },
+            {
+              "price_components": [
+                {
+                  "type": "ENERGY",
+                  "price": 0.4666666666666667,
+                  "step_size": 1,
+                  "vat": 20
+                }
+              ],
+              "restrictions": {
+                "start_time": "06:00",
+                "end_time": "22:00",
+                "day_of_week": [
+                  "MONDAY",
+                  "TUESDAY",
+                  "WEDNESDAY",
+                  "THURSDAY",
+                  "FRIDAY",
+                  "SATURDAY",
+                  "SUNDAY"
+                ]
+              }
+            }
+          ],
+          "last_updated": "2026-09-26T08:23:13.899Z"
+        },
+        {
+          "country_code": "GB",
+          "party_id": "GOZ",
+          "id": "TARIFF-141076",
+          "currency": "GBP",
+          "tariff_alt_url": "https://gozerocharge.com/tariffs/141076",
+          "elements": [
+            {
+              "price_components": [
+                {
+                  "type": "ENERGY",
+                  "price": 0.55,
+                  "step_size": 1,
+                  "vat": 20
+                }
+              ],
+              "restrictions": {
+                "start_time": "22:00",
+                "end_time": "06:00",
+                "day_of_week": [
+                  "MONDAY",
+                  "TUESDAY",
+                  "WEDNESDAY",
+                  "THURSDAY",
+                  "FRIDAY",
+                  "SATURDAY",
+                  "SUNDAY"
+                ]
+              }
+            },
+            {
+              "price_components": [
+                {
+                  "type": "ENERGY",
+                  "price": 0.55,
+                  "step_size": 1,
+                  "vat": 20
+                }
+              ],
+              "restrictions": {
+                "start_time": "06:00",
+                "end_time": "22:00",
+                "day_of_week": [
+                  "MONDAY",
+                  "TUESDAY",
+                  "WEDNESDAY",
+                  "THURSDAY",
+                  "FRIDAY",
+                  "SATURDAY",
+                  "SUNDAY"
+                ]
+              }
+            }
+          ],
+          "last_updated": "2026-09-26T08:23:14.018Z"
+        },
+        {
+          "country_code": "GB",
+          "party_id": "GOZ",
+          "id": "TARIFF-141066",
+          "currency": "GBP",
+          "tariff_alt_url": "https://gozerocharge.com/tariffs/141066",
+          "elements": [
+            {
+              "price_components": [
+                {
+                  "type": "ENERGY",
+                  "price": 0.55,
+                  "step_size": 1,
+                  "vat": 20
+                }
+              ],
+              "restrictions": {
+                "start_time": "22:00",
+                "end_time": "06:00",
+                "day_of_week": [
+                  "MONDAY",
+                  "TUESDAY",
+                  "WEDNESDAY",
+                  "THURSDAY",
+                  "FRIDAY",
+                  "SATURDAY",
+                  "SUNDAY"
+                ]
+              }
+            },
+            {
+              "price_components": [
+                {
+                  "type": "ENERGY",
+                  "price": 0.55,
+                  "step_size": 1,
+                  "vat": 20
+                }
+              ],
+              "restrictions": {
+                "start_time": "06:00",
+                "end_time": "22:00",
+                "day_of_week": [
+                  "MONDAY",
+                  "TUESDAY",
+                  "WEDNESDAY",
+                  "THURSDAY",
+                  "FRIDAY",
+                  "SATURDAY",
+                  "SUNDAY"
+                ]
+              }
+            }
+          ],
+          "last_updated": "2026-09-26T08:23:15.682Z"
+        },
+        {
+          "country_code": "GB",
+          "party_id": "GOZ",
+          "id": "TARIFF-141073",
+          "currency": "GBP",
+          "tariff_alt_url": "https://gozerocharge.com/tariffs/141073",
+          "elements": [
+            {
+              "price_components": [
+                {
+                  "type": "ENERGY",
+                  "price": 0.55,
+                  "step_size": 1,
+                  "vat": 20
+                }
+              ],
+              "restrictions": {
+                "start_time": "22:00",
+                "end_time": "06:00",
+                "day_of_week": [
+                  "MONDAY",
+                  "TUESDAY",
+                  "WEDNESDAY",
+                  "THURSDAY",
+                  "FRIDAY",
+                  "SATURDAY",
+                  "SUNDAY"
+                ]
+              }
+            },
+            {
+              "price_components": [
+                {
+                  "type": "ENERGY",
+                  "price": 0.55,
+                  "step_size": 1,
+                  "vat": 20
+                }
+              ],
+              "restrictions": {
+                "start_time": "06:00",
+                "end_time": "22:00",
+                "day_of_week": [
+                  "MONDAY",
+                  "TUESDAY",
+                  "WEDNESDAY",
+                  "THURSDAY",
+                  "FRIDAY",
+                  "SATURDAY",
+                  "SUNDAY"
+                ]
+              }
+            }
+          ],
+          "last_updated": "2026-09-26T08:23:16.837Z"
+        },
+        {
+          "country_code": "GB",
+          "party_id": "GOZ",
+          "id": "TARIFF-154126",
+          "currency": "GBP",
+          "tariff_alt_url": "https://gozerocharge.com/tariffs/154126",
+          "elements": [
+            {
+              "price_components": [
+                {
+                  "type": "ENERGY",
+                  "price": 0.55,
+                  "step_size": 1,
+                  "vat": 20
+                }
+              ],
+              "restrictions": {
+                "start_time": "22:00",
+                "end_time": "06:00",
+                "day_of_week": [
+                  "MONDAY",
+                  "TUESDAY",
+                  "WEDNESDAY",
+                  "THURSDAY",
+                  "FRIDAY",
+                  "SATURDAY",
+                  "SUNDAY"
+                ]
+              }
+            },
+            {
+              "price_components": [
+                {
+                  "type": "ENERGY",
+                  "price": 0.55,
+                  "step_size": 1,
+                  "vat": 20
+                }
+              ],
+              "restrictions": {
+                "start_time": "06:00",
+                "end_time": "22:00",
+                "day_of_week": [
+                  "MONDAY",
+                  "TUESDAY",
+                  "WEDNESDAY",
+                  "THURSDAY",
+                  "FRIDAY",
+                  "SATURDAY",
+                  "SUNDAY"
+                ]
+              }
+            }
+          ],
+          "last_updated": "2026-09-26T08:23:16.956Z"
+        },
+        {
+          "country_code": "GB",
+          "party_id": "GOZ",
+          "id": "TARIFF-238647",
+          "currency": "GBP",
+          "tariff_alt_url": "https://gozerocharge.com/tariffs/238647",
+          "elements": [
+            {
+              "price_components": [
+                {
+                  "type": "ENERGY",
+                  "price": 0.3333333333333333,
+                  "step_size": 1,
+                  "vat": 20
+                }
+              ],
+              "restrictions": {
+                "start_time": "22:00",
+                "end_time": "06:00",
+                "day_of_week": [
+                  "MONDAY",
+                  "TUESDAY",
+                  "WEDNESDAY",
+                  "THURSDAY",
+                  "FRIDAY",
+                  "SATURDAY",
+                  "SUNDAY"
+                ]
+              }
+            },
+            {
+              "price_components": [
+                {
+                  "type": "ENERGY",
+                  "price": 0.3333333333333333,
+                  "step_size": 1,
+                  "vat": 20
+                }
+              ],
+              "restrictions": {
+                "start_time": "06:00",
+                "end_time": "22:00",
+                "day_of_week": [
+                  "MONDAY",
+                  "TUESDAY",
+                  "WEDNESDAY",
+                  "THURSDAY",
+                  "FRIDAY",
+                  "SATURDAY",
+                  "SUNDAY"
+                ]
+              }
+            }
+          ],
+          "last_updated": "2026-09-26T08:23:17.064Z"
+        },
+        {
+          "country_code": "GB",
+          "party_id": "GOZ",
+          "id": "TARIFF-191698",
+          "currency": "GBP",
+          "tariff_alt_url": "https://gozerocharge.com/tariffs/191698",
+          "elements": [
+            {
+              "price_components": [
+                {
+                  "type": "ENERGY",
+                  "price": 0.55,
+                  "step_size": 1,
+                  "vat": 20
+                }
+              ],
+              "restrictions": {
+                "start_time": "22:00",
+                "end_time": "06:00",
+                "day_of_week": [
+                  "MONDAY",
+                  "TUESDAY",
+                  "WEDNESDAY",
+                  "THURSDAY",
+                  "FRIDAY",
+                  "SATURDAY",
+                  "SUNDAY"
+                ]
+              }
+            },
+            {
+              "price_components": [
+                {
+                  "type": "ENERGY",
+                  "price": 0.55,
+                  "step_size": 1,
+                  "vat": 20
+                }
+              ],
+              "restrictions": {
+                "start_time": "06:00",
+                "end_time": "22:00",
+                "day_of_week": [
+                  "MONDAY",
+                  "TUESDAY",
+                  "WEDNESDAY",
+                  "THURSDAY",
+                  "FRIDAY",
+                  "SATURDAY",
+                  "SUNDAY"
+                ]
+              }
+            }
+          ],
+          "last_updated": "2026-09-26T08:23:17.292Z"
+        },
+        {
+          "country_code": "GB",
+          "party_id": "GOZ",
+          "id": "TARIFF-215443",
+          "currency": "GBP",
+          "tariff_alt_url": "https://gozerocharge.com/tariffs/215443",
+          "elements": [
+            {
+              "price_components": [
+                {
+                  "type": "ENERGY",
+                  "price": 0.55,
+                  "step_size": 1,
+                  "vat": 20
+                }
+              ],
+              "restrictions": {
+                "start_time": "22:00",
+                "end_time": "06:00",
+                "day_of_week": [
+                  "MONDAY",
+                  "TUESDAY",
+                  "WEDNESDAY",
+                  "THURSDAY",
+                  "FRIDAY",
+                  "SATURDAY",
+                  "SUNDAY"
+                ]
+              }
+            },
+            {
+              "price_components": [
+                {
+                  "type": "ENERGY",
+                  "price": 0.55,
+                  "step_size": 1,
+                  "vat": 20
+                }
+              ],
+              "restrictions": {
+                "start_time": "06:00",
+                "end_time": "22:00",
+                "day_of_week": [
+                  "MONDAY",
+                  "TUESDAY",
+                  "WEDNESDAY",
+                  "THURSDAY",
+                  "FRIDAY",
+                  "SATURDAY",
+                  "SUNDAY"
+                ]
+              }
+            }
+          ],
+          "last_updated": "2026-09-26T08:23:17.518Z"
+        },
+        {
+          "country_code": "GB",
+          "party_id": "GOZ",
+          "id": "TARIFF-220384",
+          "currency": "GBP",
+          "tariff_alt_url": "https://gozerocharge.com/tariffs/220384",
+          "elements": [
+            {
+              "price_components": [
+                {
+                  "type": "ENERGY",
+                  "price": 0.18333333333333332,
+                  "step_size": 1,
+                  "vat": 20
+                }
+              ],
+              "restrictions": {
+                "start_time": "22:00",
+                "end_time": "06:00",
+                "day_of_week": [
+                  "MONDAY",
+                  "TUESDAY",
+                  "WEDNESDAY",
+                  "THURSDAY",
+                  "FRIDAY",
+                  "SATURDAY",
+                  "SUNDAY"
+                ]
+              }
+            },
+            {
+              "price_components": [
+                {
+                  "type": "ENERGY",
+                  "price": 0.18333333333333332,
+                  "step_size": 1,
+                  "vat": 20
+                }
+              ],
+              "restrictions": {
+                "start_time": "06:00",
+                "end_time": "22:00",
+                "day_of_week": [
+                  "MONDAY",
+                  "TUESDAY",
+                  "WEDNESDAY",
+                  "THURSDAY",
+                  "FRIDAY",
+                  "SATURDAY",
+                  "SUNDAY"
+                ]
+              }
+            }
+          ],
+          "last_updated": "2026-11-02T10:32:14.425Z"
+        }
+      ]
+    }
+  }
+}
