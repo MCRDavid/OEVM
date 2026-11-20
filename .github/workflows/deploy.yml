@@ -40,7 +40,7 @@ jobs:
       cancel-in-progress: false
     environment:
       name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
+      url: ${{ steps.deployment.outputs.page_url || steps.deploy-again.outputs.page_url }}
     steps:
       # The newest main, not the commit the run started on: Fetch daily takes about 15
       # minutes, and a change merged meanwhile (such as a new transparency page) would
@@ -126,6 +126,24 @@ jobs:
           # Keeps .well-known/security.txt, which is left out unless this is set.
           include-hidden-files: true
 
+      # GitHub sometimes does not yet list the package it has just stored, and the deploy
+      # then fails at once, before it starts (19 and 20 November 2026). So a failed
+      # deploy waits until GitHub lists the package, then tries once more; if that fails
+      # too, the job fails.
       - name: Deploy to GitHub Pages
         id: deployment
+        continue-on-error: true
+        uses: actions/deploy-pages@v5
+
+      - name: Wait until GitHub lists the site package
+        if: steps.deployment.outcome == 'failure'
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+          RUN_ID: ${{ github.run_id }}
+        run: .github/scripts/wait-for-run-artifact.sh "$RUN_ID" github-pages
+
+      - name: Deploy to GitHub Pages again
+        id: deploy-again
+        if: steps.deployment.outcome == 'failure'
         uses: actions/deploy-pages@v5
