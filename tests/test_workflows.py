@@ -213,6 +213,68 @@ def test_both_download_scripts_try_again(tmp_path, script):
     assert (dest / "data" / "locations.json").exists()
 
 
+# A stand-in for "gh api" listing a run's artifacts: the site package is listed only
+# once it has been asked LATE times.
+FAKE_GH_LIST = """#!/usr/bin/env bash
+set -euo pipefail
+count=$(cat "$FAKE_GH_COUNT" 2>/dev/null || echo 0)
+echo $((count + 1)) > "$FAKE_GH_COUNT"
+if [ "$count" -lt "$LATE" ]; then echo 0; else echo 1; fi
+"""
+
+
+def _wait_for_listing(tmp_path, late: int) -> subprocess.CompletedProcess:
+    bin_dir = tmp_path / "bin"
+    bin_dir.mkdir(exist_ok=True)
+    fake = bin_dir / "gh"
+    fake.write_text(FAKE_GH_LIST)
+    fake.chmod(0o755)
+    env = {
+        **os.environ,
+        "PATH": f"{bin_dir}{os.pathsep}{os.environ['PATH']}",
+        "LATE": str(late),
+        "FAKE_GH_COUNT": str(tmp_path / "count"),
+        "ARTIFACT_LIST_WAITS": "0 0",
+        "GH_REPO": "example/repo",
+    }
+    script = SCRIPTS / "wait-for-run-artifact.sh"
+    return subprocess.run(
+        ["bash", str(script), "123", "github-pages"], env=env, capture_output=True, text=True
+    )
+
+
+def test_waiting_for_a_package_stops_once_github_lists_it(tmp_path):
+    done = _wait_for_listing(tmp_path, 2)
+    assert done.returncode == 0, done.stderr
+    assert "lists github-pages for workflow run 123 (try 3)" in done.stdout
+
+
+def test_waiting_for_a_package_gives_up_after_its_last_wait(tmp_path):
+    done = _wait_for_listing(tmp_path, 3)
+    assert done.returncode == 1
+    assert "after 3 tries" in done.stdout
+
+
+def test_a_deploy_that_fails_at_once_waits_and_tries_once_more():
+    deploy = _load("deploy.yml")["jobs"]["deploy"]
+    steps = deploy["steps"]
+    first = next(s for s in steps if s.get("id") == "deployment")
+    wait = next(s for s in steps if s.get("name") == "Wait until GitHub lists the site package")
+    again = next(s for s in steps if s.get("id") == "deploy-again")
+    assert steps.index(first) < steps.index(wait) < steps.index(again) == len(steps) - 1
+    assert first["uses"] == again["uses"] and first["uses"].startswith("actions/deploy-pages")
+    assert first["continue-on-error"] is True and "continue-on-error" not in again
+    for step in (wait, again):
+        assert step["if"] == "steps.deployment.outcome == 'failure'"
+    assert '.github/scripts/wait-for-run-artifact.sh "$RUN_ID" github-pages' in wait["run"]
+    assert wait["env"]["RUN_ID"] == "${{ github.run_id }}"
+    assert deploy["permissions"]["actions"] == "read"
+    # The site's address comes from whichever try deployed it.
+    url = deploy["environment"]["url"]
+    assert "steps.deployment.outputs.page_url" in url
+    assert "steps.deploy-again.outputs.page_url" in url
+
+
 def test_the_site_is_packaged_with_its_well_known_folder():
     steps = _load("deploy.yml")["jobs"]["deploy"]["steps"]
     package = next(s for s in steps if s.get("uses", "").startswith("actions/upload-pages"))
