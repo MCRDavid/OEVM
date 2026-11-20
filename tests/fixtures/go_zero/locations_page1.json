@@ -1,0 +1,1133 @@
+{
+  "request": {
+    "method": "GET",
+    "url": "https://ocpi.gozerocharge.com/api/v1/ocpi/2.2.1/locations"
+  },
+  "response": {
+    "status_code": 200,
+    "headers": {
+      "content-type": "application/json; charset=utf-8",
+      "x-total-count": "11",
+      "x-limit": "400"
+    },
+    "body": {
+      "status_code": 1000,
+      "status_message": "Success",
+      "timestamp": "2026-11-20T23:40:45.2Z",
+      "data": [
+        {
+          "country_code": "GB",
+          "party_id": "GOZ",
+          "id": "141052",
+          "publish": true,
+          "type": "PARKING_LOT",
+          "name": "Thurston Council",
+          "address": "Thurston Recreation Ground Car Park",
+          "city": "Bury St. Edmunds",
+          "postal_code": "IP31 3RU",
+          "country": "GBR",
+          "coordinates": {
+            "latitude": "52.250224",
+            "longitude": "0.823788"
+          },
+          "evses": [
+            {
+              "uid": "TZG0D0814E",
+              "evse_id": "GB*GOZ*E7551258561",
+              "status": "OUTOFORDER",
+              "capabilities": [
+                "REMOTE_START_STOP_CAPABLE",
+                "START_SESSION_CONNECTOR_REQUIRED"
+              ],
+              "connectors": [
+                {
+                  "id": "1",
+                  "standard": "IEC_62196_T2",
+                  "format": "SOCKET",
+                  "power_type": "AC_3_PHASE",
+                  "max_voltage": 253,
+                  "max_amperage": 32,
+                  "max_electric_power": 22000,
+                  "tariff_ids": [
+                    "TARIFF-141052"
+                  ],
+                  "terms_and_conditions": "https://gozerocharge.com/terms-conditions/",
+                  "last_updated": "2026-11-13T18:22:41.123Z"
+                },
+                {
+                  "id": "2",
+                  "standard": "IEC_62196_T2",
+                  "format": "SOCKET",
+                  "power_type": "AC_3_PHASE",
+                  "max_voltage": 253,
+                  "max_amperage": 32,
+                  "max_electric_power": 22000,
+                  "tariff_ids": [
+                    "TARIFF-141052"
+                  ],
+                  "terms_and_conditions": "https://gozerocharge.com/terms-conditions/",
+                  "last_updated": "2026-11-13T18:22:41.123Z"
+                }
+              ],
+              "last_updated": "2026-11-13T18:22:41.123Z"
+            }
+          ],
+          "time_zone": "Europe/London",
+          "opening_times": {
+            "twentyfourseven": true
+          },
+          "charging_when_closed": true,
+          "last_updated": "2026-11-13T18:22:41.123Z"
+        },
+        {
+          "country_code": "GB",
+          "party_id": "GOZ",
+          "id": "176133",
+          "publish": true,
+          "type": "PARKING_LOT",
+          "name": "Blue Dial Caravan Park",
+          "address": "Blue Dial Farm",
+          "city": "Maryport",
+          "postal_code": "CA15 6PB",
+          "country": "GBR",
+          "coordinates": {
+            "latitude": "54.760546",
+            "longitude": "-3.431545"
+          },
+          "evses": [
+            {
+              "uid": "1000010044",
+              "evse_id": "GB*GOZ*E3774511",
+              "status": "AVAILABLE",
+              "capabilities": [
+                "REMOTE_START_STOP_CAPABLE",
+                "START_SESSION_CONNECTOR_REQUIRED"
+              ],
+              "connectors": [
+                {
+                  "id": "1",
+                  "standard": "IEC_62196_T2",
+                  "format": "SOCKET",
+                  "power_type": "AC_1_PHASE",
+                  "max_voltage": 253,
+                  "max_amperage": 32,
+                  "max_electric_power": 7400,
+                  "tariff_ids": [
+                    "TARIFF-176133"
+                  ],
+                  "terms_and_conditions": "https://gozerocharge.com/terms-conditions/",
+                  "last_updated": "2026-11-13T18:22:41.25Z"
+                }
+              ],
+              "last_updated": "2026-11-13T18:22:41.25Z"
+            },
+            {
+              "uid": "1000010045",
+              "evse_id": "GB*GOZ*E8589062",
+              "status": "AVAILABLE",
+              "capabilities": [
+                "REMOTE_START_STOP_CAPABLE",
+                "START_SESSION_CONNECTOR_REQUIRED"
+              ],
+              "connectors": [
+                {
+                  "id": "1",
+                  "standard": "IEC_62196_T2",
+                  "format": "SOCKET",
+                  "power_type": "AC_1_PHASE",
+                  "max_voltage": 253,
+                  "max_amperage": 32,
+                  "max_electric_power": 7400,
+                  "tariff_ids": [
+                    "TARIFF-176133"
+                  ],
+                  "terms_and_conditions": "https://gozerocharge.com/terms-conditions/",
+                  "last_updated": "2026-11-13T18:22:41.25Z"
+                }
+              ],
+              "last_updated": "2026-11-13T18:22:41.25Z"
+            }
+          ],
+          "time_zone": "Europe/London",
+          "opening_times": {
+            "twentyfourseven": true
+          },
+          "charging_when_closed": true,
+          "last_updated": "2026-11-13T18:22:41.25Z"
+        },
+        {
+          "country_code": "GB",
+          "party_id": "GOZ",
+          "id": "215443",
+          "publish": true,
+          "type": "PARKING_LOT",
+          "name": "Loch Leven Lodges",
+          "address": "Findatie",
+          "city": "Kinross KY13 9LY",
+          "postal_code": "KY13 9LY",
+          "country": "GBR",
+          "coordinates": {
+            "latitude": "56.178160",
+            "longitude": "-3.337550"
+          },
+          "evses": [
+            {
+              "uid": "DC40_2260407030800029",
+              "evse_id": "GB*GOZ*E7551262271",
+              "status": "AVAILABLE",
+              "capabilities": [
+                "REMOTE_START_STOP_CAPABLE",
+                "START_SESSION_CONNECTOR_REQUIRED"
+              ],
+              "connectors": [
+                {
+                  "id": "1",
+                  "standard": "IEC_62196_T2",
+                  "format": "SOCKET",
+                  "power_type": "AC_1_PHASE",
+                  "max_voltage": 253,
+                  "max_amperage": 32,
+                  "max_electric_power": 7400,
+                  "tariff_ids": [
+                    "TARIFF-215443"
+                  ],
+                  "terms_and_conditions": "https://gozerocharge.com/terms-conditions/",
+                  "last_updated": "2026-11-13T18:22:41.342Z"
+                },
+                {
+                  "id": "2",
+                  "standard": "IEC_62196_T2",
+                  "format": "SOCKET",
+                  "power_type": "AC_1_PHASE",
+                  "max_voltage": 253,
+                  "max_amperage": 32,
+                  "max_electric_power": 7400,
+                  "tariff_ids": [
+                    "TARIFF-215443"
+                  ],
+                  "terms_and_conditions": "https://gozerocharge.com/terms-conditions/",
+                  "last_updated": "2026-11-13T18:22:41.342Z"
+                }
+              ],
+              "last_updated": "2026-11-13T18:22:41.342Z"
+            },
+            {
+              "uid": "DC40_2260407030800027",
+              "evse_id": "GB*GOZ*E7551262252",
+              "status": "AVAILABLE",
+              "capabilities": [
+                "REMOTE_START_STOP_CAPABLE",
+                "START_SESSION_CONNECTOR_REQUIRED"
+              ],
+              "connectors": [
+                {
+                  "id": "1",
+                  "standard": "IEC_62196_T2",
+                  "format": "SOCKET",
+                  "power_type": "AC_1_PHASE",
+                  "max_voltage": 253,
+                  "max_amperage": 32,
+                  "max_electric_power": 7400,
+                  "tariff_ids": [
+                    "TARIFF-215443"
+                  ],
+                  "terms_and_conditions": "https://gozerocharge.com/terms-conditions/",
+                  "last_updated": "2026-11-13T18:22:41.342Z"
+                },
+                {
+                  "id": "2",
+                  "standard": "IEC_62196_T2",
+                  "format": "SOCKET",
+                  "power_type": "AC_1_PHASE",
+                  "max_voltage": 253,
+                  "max_amperage": 32,
+                  "max_electric_power": 7400,
+                  "tariff_ids": [
+                    "TARIFF-215443"
+                  ],
+                  "terms_and_conditions": "https://gozerocharge.com/terms-conditions/",
+                  "last_updated": "2026-11-13T18:22:41.342Z"
+                }
+              ],
+              "last_updated": "2026-11-13T18:22:41.342Z"
+            }
+          ],
+          "time_zone": "Europe/London",
+          "opening_times": {
+            "twentyfourseven": true
+          },
+          "charging_when_closed": true,
+          "last_updated": "2026-11-13T18:22:41.342Z"
+        },
+        {
+          "country_code": "GB",
+          "party_id": "GOZ",
+          "id": "141076",
+          "publish": true,
+          "type": "PARKING_LOT",
+          "name": "Steamship Walter Scott",
+          "address": "Steamship Walter Scott",
+          "city": "Callander",
+          "postal_code": "FK17 8HZ",
+          "country": "GBR",
+          "coordinates": {
+            "latitude": "56.226850",
+            "longitude": "-4.415878"
+          },
+          "evses": [
+            {
+              "uid": "Rolec_DMA52545",
+              "evse_id": "GB*GOZ*E7551259281",
+              "status": "AVAILABLE",
+              "capabilities": [
+                "REMOTE_START_STOP_CAPABLE",
+                "START_SESSION_CONNECTOR_REQUIRED"
+              ],
+              "connectors": [
+                {
+                  "id": "1",
+                  "standard": "IEC_62196_T2",
+                  "format": "SOCKET",
+                  "power_type": "AC_3_PHASE",
+                  "max_voltage": 253,
+                  "max_amperage": 32,
+                  "max_electric_power": 22000,
+                  "tariff_ids": [
+                    "TARIFF-141076"
+                  ],
+                  "terms_and_conditions": "https://gozerocharge.com/terms-conditions/",
+                  "last_updated": "2026-11-15T11:27:38.59Z"
+                },
+                {
+                  "id": "2",
+                  "standard": "IEC_62196_T2",
+                  "format": "SOCKET",
+                  "power_type": "AC_3_PHASE",
+                  "max_voltage": 253,
+                  "max_amperage": 32,
+                  "max_electric_power": 22000,
+                  "tariff_ids": [
+                    "TARIFF-141076"
+                  ],
+                  "terms_and_conditions": "https://gozerocharge.com/terms-conditions/",
+                  "last_updated": "2026-11-15T11:27:38.59Z"
+                }
+              ],
+              "last_updated": "2026-11-15T11:27:38.59Z"
+            },
+            {
+              "uid": "Rolec_DMA52654",
+              "evse_id": "GB*GOZ*E7551259292",
+              "status": "AVAILABLE",
+              "capabilities": [
+                "REMOTE_START_STOP_CAPABLE",
+                "START_SESSION_CONNECTOR_REQUIRED"
+              ],
+              "connectors": [
+                {
+                  "id": "1",
+                  "standard": "IEC_62196_T2",
+                  "format": "SOCKET",
+                  "power_type": "AC_3_PHASE",
+                  "max_voltage": 253,
+                  "max_amperage": 32,
+                  "max_electric_power": 22000,
+                  "tariff_ids": [
+                    "TARIFF-141076"
+                  ],
+                  "terms_and_conditions": "https://gozerocharge.com/terms-conditions/",
+                  "last_updated": "2026-11-15T11:27:38.59Z"
+                },
+                {
+                  "id": "2",
+                  "standard": "IEC_62196_T2",
+                  "format": "SOCKET",
+                  "power_type": "AC_3_PHASE",
+                  "max_voltage": 253,
+                  "max_amperage": 32,
+                  "max_electric_power": 22000,
+                  "tariff_ids": [
+                    "TARIFF-141076"
+                  ],
+                  "terms_and_conditions": "https://gozerocharge.com/terms-conditions/",
+                  "last_updated": "2026-11-15T11:27:38.59Z"
+                }
+              ],
+              "last_updated": "2026-11-15T11:27:38.59Z"
+            },
+            {
+              "uid": "Rolec_DMF55129",
+              "evse_id": "GB*GOZ*E7551259303",
+              "status": "OUTOFORDER",
+              "capabilities": [
+                "REMOTE_START_STOP_CAPABLE",
+                "START_SESSION_CONNECTOR_REQUIRED"
+              ],
+              "connectors": [
+                {
+                  "id": "1",
+                  "standard": "IEC_62196_T2",
+                  "format": "SOCKET",
+                  "power_type": "AC_1_PHASE",
+                  "max_voltage": 253,
+                  "max_amperage": 32,
+                  "max_electric_power": 7400,
+                  "tariff_ids": [
+                    "TARIFF-141076"
+                  ],
+                  "terms_and_conditions": "https://gozerocharge.com/terms-conditions/",
+                  "last_updated": "2026-11-15T11:27:38.59Z"
+                },
+                {
+                  "id": "2",
+                  "standard": "IEC_62196_T2",
+                  "format": "SOCKET",
+                  "power_type": "AC_1_PHASE",
+                  "max_voltage": 253,
+                  "max_amperage": 32,
+                  "max_electric_power": 7400,
+                  "tariff_ids": [
+                    "TARIFF-141076"
+                  ],
+                  "terms_and_conditions": "https://gozerocharge.com/terms-conditions/",
+                  "last_updated": "2026-11-15T11:27:38.59Z"
+                }
+              ],
+              "last_updated": "2026-11-15T11:27:38.59Z"
+            },
+            {
+              "uid": "DC30_Steam260018",
+              "evse_id": "GB*GOZ*E7551259314",
+              "status": "AVAILABLE",
+              "capabilities": [
+                "REMOTE_START_STOP_CAPABLE",
+                "START_SESSION_CONNECTOR_REQUIRED"
+              ],
+              "connectors": [
+                {
+                  "id": "1",
+                  "standard": "IEC_62196_T2_COMBO",
+                  "format": "CABLE",
+                  "power_type": "DC",
+                  "max_voltage": 500,
+                  "max_amperage": 60,
+                  "max_electric_power": 30000,
+                  "tariff_ids": [
+                    "TARIFF-141076"
+                  ],
+                  "terms_and_conditions": "https://gozerocharge.com/terms-conditions/",
+                  "last_updated": "2026-11-15T11:27:38.59Z"
+                }
+              ],
+              "last_updated": "2026-11-15T11:27:38.59Z"
+            }
+          ],
+          "time_zone": "Europe/London",
+          "opening_times": {
+            "twentyfourseven": true
+          },
+          "charging_when_closed": true,
+          "last_updated": "2026-11-15T11:27:38.59Z"
+        },
+        {
+          "country_code": "GB",
+          "party_id": "GOZ",
+          "id": "153874",
+          "publish": true,
+          "type": "PARKING_LOT",
+          "name": "Williams Garage",
+          "address": "Main Road",
+          "city": "Winchester",
+          "postal_code": "S021 2EE",
+          "country": "GBR",
+          "coordinates": {
+            "latitude": "51.008505",
+            "longitude": "-1.344001"
+          },
+          "evses": [
+            {
+              "uid": "DC80_2251220030800001",
+              "evse_id": "GB*GOZ*E7551260781",
+              "status": "AVAILABLE",
+              "capabilities": [
+                "REMOTE_START_STOP_CAPABLE",
+                "START_SESSION_CONNECTOR_REQUIRED"
+              ],
+              "connectors": [
+                {
+                  "id": "1",
+                  "standard": "IEC_62196_T2_COMBO",
+                  "format": "CABLE",
+                  "power_type": "DC",
+                  "max_voltage": 500,
+                  "max_amperage": 100,
+                  "max_electric_power": 50000,
+                  "tariff_ids": [
+                    "TARIFF-153874"
+                  ],
+                  "terms_and_conditions": "https://gozerocharge.com/terms-conditions/",
+                  "last_updated": "2026-11-19T22:50:05.952Z"
+                },
+                {
+                  "id": "2",
+                  "standard": "IEC_62196_T2_COMBO",
+                  "format": "CABLE",
+                  "power_type": "DC",
+                  "max_voltage": 500,
+                  "max_amperage": 100,
+                  "max_electric_power": 50000,
+                  "tariff_ids": [
+                    "TARIFF-153874"
+                  ],
+                  "terms_and_conditions": "https://gozerocharge.com/terms-conditions/",
+                  "last_updated": "2026-11-19T22:50:05.952Z"
+                }
+              ],
+              "last_updated": "2026-11-19T22:50:05.952Z"
+            }
+          ],
+          "time_zone": "Europe/London",
+          "opening_times": {
+            "twentyfourseven": true
+          },
+          "charging_when_closed": true,
+          "last_updated": "2026-11-19T22:50:05.952Z"
+        },
+        {
+          "country_code": "GB",
+          "party_id": "GOZ",
+          "id": "141073",
+          "publish": true,
+          "type": "PARKING_LOT",
+          "name": "Barrowfield Community Centre",
+          "address": "67 Yate Street",
+          "city": "Glasgow",
+          "postal_code": "G31 4AQ",
+          "country": "GBR",
+          "coordinates": {
+            "latitude": "55.851458",
+            "longitude": "-4.211407"
+          },
+          "evses": [
+            {
+              "uid": "Rolec_DNA52854",
+              "evse_id": "GB*GOZ*E7551261941",
+              "status": "INOPERATIVE",
+              "capabilities": [
+                "REMOTE_START_STOP_CAPABLE",
+                "START_SESSION_CONNECTOR_REQUIRED"
+              ],
+              "connectors": [
+                {
+                  "id": "1",
+                  "standard": "IEC_62196_T2",
+                  "format": "SOCKET",
+                  "power_type": "AC_1_PHASE",
+                  "max_voltage": 253,
+                  "max_amperage": 32,
+                  "max_electric_power": 7400,
+                  "tariff_ids": [
+                    "TARIFF-141073"
+                  ],
+                  "terms_and_conditions": "https://gozerocharge.com/terms-conditions/",
+                  "last_updated": "2026-11-20T00:55:06.01Z"
+                },
+                {
+                  "id": "2",
+                  "standard": "IEC_62196_T2",
+                  "format": "SOCKET",
+                  "power_type": "AC_1_PHASE",
+                  "max_voltage": 253,
+                  "max_amperage": 32,
+                  "max_electric_power": 7400,
+                  "tariff_ids": [
+                    "TARIFF-141073"
+                  ],
+                  "terms_and_conditions": "https://gozerocharge.com/terms-conditions/",
+                  "last_updated": "2026-11-20T00:55:06.01Z"
+                }
+              ],
+              "last_updated": "2026-11-20T00:55:06.01Z"
+            },
+            {
+              "uid": "Rolec_DNA52666",
+              "evse_id": "GB*GOZ*E7551261902",
+              "status": "AVAILABLE",
+              "capabilities": [
+                "REMOTE_START_STOP_CAPABLE",
+                "START_SESSION_CONNECTOR_REQUIRED"
+              ],
+              "connectors": [
+                {
+                  "id": "1",
+                  "standard": "IEC_62196_T2",
+                  "format": "SOCKET",
+                  "power_type": "AC_1_PHASE",
+                  "max_voltage": 253,
+                  "max_amperage": 32,
+                  "max_electric_power": 7400,
+                  "tariff_ids": [
+                    "TARIFF-141073"
+                  ],
+                  "terms_and_conditions": "https://gozerocharge.com/terms-conditions/",
+                  "last_updated": "2026-11-20T00:55:06.01Z"
+                },
+                {
+                  "id": "2",
+                  "standard": "IEC_62196_T2",
+                  "format": "SOCKET",
+                  "power_type": "AC_1_PHASE",
+                  "max_voltage": 253,
+                  "max_amperage": 32,
+                  "max_electric_power": 7400,
+                  "tariff_ids": [
+                    "TARIFF-141073"
+                  ],
+                  "terms_and_conditions": "https://gozerocharge.com/terms-conditions/",
+                  "last_updated": "2026-11-20T00:55:06.01Z"
+                }
+              ],
+              "last_updated": "2026-11-20T00:55:06.01Z"
+            },
+            {
+              "uid": "Rolec_DNA52844",
+              "evse_id": "GB*GOZ*E7551261923",
+              "status": "AVAILABLE",
+              "capabilities": [
+                "REMOTE_START_STOP_CAPABLE",
+                "START_SESSION_CONNECTOR_REQUIRED"
+              ],
+              "connectors": [
+                {
+                  "id": "1",
+                  "standard": "IEC_62196_T2",
+                  "format": "SOCKET",
+                  "power_type": "AC_1_PHASE",
+                  "max_voltage": 253,
+                  "max_amperage": 32,
+                  "max_electric_power": 7400,
+                  "tariff_ids": [
+                    "TARIFF-141073"
+                  ],
+                  "terms_and_conditions": "https://gozerocharge.com/terms-conditions/",
+                  "last_updated": "2026-11-20T00:55:06.01Z"
+                },
+                {
+                  "id": "2",
+                  "standard": "IEC_62196_T2",
+                  "format": "SOCKET",
+                  "power_type": "AC_1_PHASE",
+                  "max_voltage": 253,
+                  "max_amperage": 32,
+                  "max_electric_power": 7400,
+                  "tariff_ids": [
+                    "TARIFF-141073"
+                  ],
+                  "terms_and_conditions": "https://gozerocharge.com/terms-conditions/",
+                  "last_updated": "2026-11-20T00:55:06.01Z"
+                }
+              ],
+              "last_updated": "2026-11-20T00:55:06.01Z"
+            }
+          ],
+          "time_zone": "Europe/London",
+          "opening_times": {
+            "twentyfourseven": true
+          },
+          "charging_when_closed": true,
+          "last_updated": "2026-11-20T00:55:06.01Z"
+        },
+        {
+          "country_code": "GB",
+          "party_id": "GOZ",
+          "id": "238647",
+          "publish": true,
+          "type": "PARKING_LOT",
+          "name": "South Western House",
+          "address": "15 South Western House",
+          "city": "Southampton",
+          "postal_code": "SO14 3AS",
+          "country": "GBR",
+          "coordinates": {
+            "latitude": "50.897125",
+            "longitude": "-1.397021"
+          },
+          "evses": [
+            {
+              "uid": "AE0022G1GP3C01391P",
+              "evse_id": "GB*GOZ*E596428431",
+              "status": "CHARGING",
+              "capabilities": [
+                "REMOTE_START_STOP_CAPABLE",
+                "START_SESSION_CONNECTOR_REQUIRED"
+              ],
+              "connectors": [
+                {
+                  "id": "1",
+                  "standard": "IEC_62196_T2",
+                  "format": "SOCKET",
+                  "power_type": "AC_1_PHASE",
+                  "max_voltage": 253,
+                  "max_amperage": 32,
+                  "max_electric_power": 7400,
+                  "tariff_ids": [
+                    "TARIFF-238647"
+                  ],
+                  "terms_and_conditions": "https://gozerocharge.com/terms-conditions/",
+                  "last_updated": "2026-11-19T06:48:44.336Z"
+                }
+              ],
+              "last_updated": "2026-11-19T06:48:44.336Z"
+            },
+            {
+              "uid": "AE0007G1GRAC00112R",
+              "evse_id": "GB*GOZ*E404558342",
+              "status": "AVAILABLE",
+              "capabilities": [
+                "REMOTE_START_STOP_CAPABLE",
+                "START_SESSION_CONNECTOR_REQUIRED"
+              ],
+              "connectors": [
+                {
+                  "id": "1",
+                  "standard": "IEC_62196_T2",
+                  "format": "SOCKET",
+                  "power_type": "AC_1_PHASE",
+                  "max_voltage": 253,
+                  "max_amperage": 32,
+                  "max_electric_power": 7400,
+                  "tariff_ids": [
+                    "TARIFF-238647"
+                  ],
+                  "terms_and_conditions": "https://gozerocharge.com/terms-conditions/",
+                  "last_updated": "2026-11-19T06:48:44.336Z"
+                }
+              ],
+              "last_updated": "2026-11-19T06:48:44.336Z"
+            },
+            {
+              "uid": "AE0022G1GP3C01537S",
+              "evse_id": "GB*GOZ*E228617873",
+              "status": "AVAILABLE",
+              "capabilities": [
+                "REMOTE_START_STOP_CAPABLE",
+                "START_SESSION_CONNECTOR_REQUIRED"
+              ],
+              "connectors": [
+                {
+                  "id": "1",
+                  "standard": "IEC_62196_T2",
+                  "format": "SOCKET",
+                  "power_type": "AC_1_PHASE",
+                  "max_voltage": 253,
+                  "max_amperage": 32,
+                  "max_electric_power": 7400,
+                  "tariff_ids": [
+                    "TARIFF-238647"
+                  ],
+                  "terms_and_conditions": "https://gozerocharge.com/terms-conditions/",
+                  "last_updated": "2026-11-19T06:48:44.336Z"
+                }
+              ],
+              "last_updated": "2026-11-19T06:48:44.336Z"
+            }
+          ],
+          "time_zone": "Europe/London",
+          "opening_times": {
+            "twentyfourseven": true
+          },
+          "charging_when_closed": true,
+          "last_updated": "2026-11-19T06:48:44.336Z"
+        },
+        {
+          "country_code": "GB",
+          "party_id": "GOZ",
+          "id": "191698",
+          "publish": true,
+          "type": "PARKING_LOT",
+          "name": "Oakwood Garden Centre",
+          "address": "Oakwood Garden centre",
+          "city": "Glasgow",
+          "postal_code": "G639PT",
+          "country": "GBR",
+          "coordinates": {
+            "latitude": "56.033595",
+            "longitude": "-4.387170"
+          },
+          "evses": [
+            {
+              "uid": "DC40_2260407030800007",
+              "evse_id": "GB*GOZ*E7551262201",
+              "status": "OUTOFORDER",
+              "capabilities": [
+                "REMOTE_START_STOP_CAPABLE",
+                "START_SESSION_CONNECTOR_REQUIRED"
+              ],
+              "connectors": [
+                {
+                  "id": "1",
+                  "standard": "IEC_62196_T2",
+                  "format": "SOCKET",
+                  "power_type": "AC_1_PHASE",
+                  "max_voltage": 253,
+                  "max_amperage": 32,
+                  "max_electric_power": 7400,
+                  "tariff_ids": [
+                    "TARIFF-191698"
+                  ],
+                  "terms_and_conditions": "https://gozerocharge.com/terms-conditions/",
+                  "last_updated": "2026-11-13T18:22:42.126Z"
+                },
+                {
+                  "id": "2",
+                  "standard": "IEC_62196_T2",
+                  "format": "SOCKET",
+                  "power_type": "AC_1_PHASE",
+                  "max_voltage": 253,
+                  "max_amperage": 32,
+                  "max_electric_power": 7400,
+                  "tariff_ids": [
+                    "TARIFF-191698"
+                  ],
+                  "terms_and_conditions": "https://gozerocharge.com/terms-conditions/",
+                  "last_updated": "2026-11-13T18:22:42.126Z"
+                }
+              ],
+              "last_updated": "2026-11-13T18:22:42.126Z"
+            },
+            {
+              "uid": "DC40_2260407030800039",
+              "evse_id": "GB*GOZ*E7551262222",
+              "status": "AVAILABLE",
+              "capabilities": [
+                "REMOTE_START_STOP_CAPABLE",
+                "START_SESSION_CONNECTOR_REQUIRED"
+              ],
+              "connectors": [
+                {
+                  "id": "1",
+                  "standard": "IEC_62196_T2",
+                  "format": "SOCKET",
+                  "power_type": "AC_1_PHASE",
+                  "max_voltage": 253,
+                  "max_amperage": 32,
+                  "max_electric_power": 7400,
+                  "tariff_ids": [
+                    "TARIFF-191698"
+                  ],
+                  "terms_and_conditions": "https://gozerocharge.com/terms-conditions/",
+                  "last_updated": "2026-11-13T18:22:42.126Z"
+                },
+                {
+                  "id": "2",
+                  "standard": "IEC_62196_T2",
+                  "format": "SOCKET",
+                  "power_type": "AC_1_PHASE",
+                  "max_voltage": 253,
+                  "max_amperage": 32,
+                  "max_electric_power": 7400,
+                  "tariff_ids": [
+                    "TARIFF-191698"
+                  ],
+                  "terms_and_conditions": "https://gozerocharge.com/terms-conditions/",
+                  "last_updated": "2026-11-13T18:22:42.126Z"
+                }
+              ],
+              "last_updated": "2026-11-13T18:22:42.126Z"
+            }
+          ],
+          "time_zone": "Europe/London",
+          "opening_times": {
+            "twentyfourseven": true
+          },
+          "charging_when_closed": true,
+          "last_updated": "2026-11-13T18:22:42.126Z"
+        },
+        {
+          "country_code": "GB",
+          "party_id": "GOZ",
+          "id": "141066",
+          "publish": true,
+          "type": "PARKING_LOT",
+          "name": " EdenMill Farm Ltd",
+          "address": "Edenmill Farm & Nursery",
+          "city": "Glasgow",
+          "postal_code": "G63 9AX",
+          "country": "GBR",
+          "coordinates": {
+            "latitude": "55.989960",
+            "longitude": "-4.399245"
+          },
+          "evses": [
+            {
+              "uid": "Rolec_DMH42344",
+              "evse_id": "GB*GOZ*E7551258581",
+              "status": "AVAILABLE",
+              "capabilities": [
+                "REMOTE_START_STOP_CAPABLE",
+                "START_SESSION_CONNECTOR_REQUIRED"
+              ],
+              "connectors": [
+                {
+                  "id": "1",
+                  "standard": "IEC_62196_T2",
+                  "format": "SOCKET",
+                  "power_type": "AC_3_PHASE",
+                  "max_voltage": 253,
+                  "max_amperage": 32,
+                  "max_electric_power": 22000,
+                  "tariff_ids": [
+                    "TARIFF-141066"
+                  ],
+                  "terms_and_conditions": "https://gozerocharge.com/terms-conditions/",
+                  "last_updated": "2026-11-20T12:43:43.141Z"
+                },
+                {
+                  "id": "2",
+                  "standard": "IEC_62196_T2",
+                  "format": "SOCKET",
+                  "power_type": "AC_3_PHASE",
+                  "max_voltage": 253,
+                  "max_amperage": 32,
+                  "max_electric_power": 22000,
+                  "tariff_ids": [
+                    "TARIFF-141066"
+                  ],
+                  "terms_and_conditions": "https://gozerocharge.com/terms-conditions/",
+                  "last_updated": "2026-11-20T12:43:43.141Z"
+                }
+              ],
+              "last_updated": "2026-11-20T12:43:43.141Z"
+            },
+            {
+              "uid": "Rolec_DMH42412",
+              "evse_id": "GB*GOZ*E7551258602",
+              "status": "AVAILABLE",
+              "capabilities": [
+                "REMOTE_START_STOP_CAPABLE",
+                "START_SESSION_CONNECTOR_REQUIRED"
+              ],
+              "connectors": [
+                {
+                  "id": "1",
+                  "standard": "IEC_62196_T2",
+                  "format": "SOCKET",
+                  "power_type": "AC_3_PHASE",
+                  "max_voltage": 253,
+                  "max_amperage": 32,
+                  "max_electric_power": 22000,
+                  "tariff_ids": [
+                    "TARIFF-141066"
+                  ],
+                  "terms_and_conditions": "https://gozerocharge.com/terms-conditions/",
+                  "last_updated": "2026-11-20T12:43:43.141Z"
+                },
+                {
+                  "id": "2",
+                  "standard": "IEC_62196_T2",
+                  "format": "SOCKET",
+                  "power_type": "AC_3_PHASE",
+                  "max_voltage": 253,
+                  "max_amperage": 32,
+                  "max_electric_power": 22000,
+                  "tariff_ids": [
+                    "TARIFF-141066"
+                  ],
+                  "terms_and_conditions": "https://gozerocharge.com/terms-conditions/",
+                  "last_updated": "2026-11-20T12:43:43.141Z"
+                }
+              ],
+              "last_updated": "2026-11-20T12:43:43.141Z"
+            },
+            {
+              "uid": "Rolec_DMH42491",
+              "evse_id": "GB*GOZ*E7551258623",
+              "status": "AVAILABLE",
+              "capabilities": [
+                "REMOTE_START_STOP_CAPABLE",
+                "START_SESSION_CONNECTOR_REQUIRED"
+              ],
+              "connectors": [
+                {
+                  "id": "1",
+                  "standard": "IEC_62196_T2",
+                  "format": "SOCKET",
+                  "power_type": "AC_3_PHASE",
+                  "max_voltage": 253,
+                  "max_amperage": 32,
+                  "max_electric_power": 22000,
+                  "tariff_ids": [
+                    "TARIFF-141066"
+                  ],
+                  "terms_and_conditions": "https://gozerocharge.com/terms-conditions/",
+                  "last_updated": "2026-11-20T12:43:43.141Z"
+                },
+                {
+                  "id": "2",
+                  "standard": "IEC_62196_T2",
+                  "format": "SOCKET",
+                  "power_type": "AC_3_PHASE",
+                  "max_voltage": 253,
+                  "max_amperage": 32,
+                  "max_electric_power": 22000,
+                  "tariff_ids": [
+                    "TARIFF-141066"
+                  ],
+                  "terms_and_conditions": "https://gozerocharge.com/terms-conditions/",
+                  "last_updated": "2026-11-20T12:43:43.141Z"
+                }
+              ],
+              "last_updated": "2026-11-20T12:43:43.141Z"
+            }
+          ],
+          "time_zone": "Europe/London",
+          "opening_times": {
+            "twentyfourseven": true
+          },
+          "charging_when_closed": true,
+          "last_updated": "2026-11-20T12:43:43.141Z"
+        },
+        {
+          "country_code": "GB",
+          "party_id": "GOZ",
+          "id": "154126",
+          "publish": true,
+          "type": "PARKING_LOT",
+          "name": "Cuet Community Centre",
+          "address": "Carinish",
+          "city": "Isle of North Uist",
+          "postal_code": "HS6 5EJ",
+          "country": "GBR",
+          "coordinates": {
+            "latitude": "57.526372",
+            "longitude": "-7.316236"
+          },
+          "evses": [
+            {
+              "uid": "DC40_2260116030800014",
+              "evse_id": "GB*GOZ*E7551259981",
+              "status": "AVAILABLE",
+              "capabilities": [
+                "REMOTE_START_STOP_CAPABLE",
+                "START_SESSION_CONNECTOR_REQUIRED"
+              ],
+              "connectors": [
+                {
+                  "id": "1",
+                  "standard": "IEC_62196_T2_COMBO",
+                  "format": "CABLE",
+                  "power_type": "DC",
+                  "max_voltage": 500,
+                  "max_amperage": 80,
+                  "max_electric_power": 40000,
+                  "tariff_ids": [
+                    "TARIFF-154126"
+                  ],
+                  "terms_and_conditions": "https://gozerocharge.com/terms-conditions/",
+                  "last_updated": "2026-11-19T20:30:39.909Z"
+                }
+              ],
+              "last_updated": "2026-11-19T20:30:39.909Z"
+            },
+            {
+              "uid": "DC40_2260116030800015",
+              "evse_id": "GB*GOZ*E7551260002",
+              "status": "AVAILABLE",
+              "capabilities": [
+                "REMOTE_START_STOP_CAPABLE",
+                "START_SESSION_CONNECTOR_REQUIRED"
+              ],
+              "connectors": [
+                {
+                  "id": "1",
+                  "standard": "IEC_62196_T2_COMBO",
+                  "format": "CABLE",
+                  "power_type": "DC",
+                  "max_voltage": 500,
+                  "max_amperage": 80,
+                  "max_electric_power": 40000,
+                  "tariff_ids": [
+                    "TARIFF-154126"
+                  ],
+                  "terms_and_conditions": "https://gozerocharge.com/terms-conditions/",
+                  "last_updated": "2026-11-19T20:30:39.909Z"
+                }
+              ],
+              "last_updated": "2026-11-19T20:30:39.909Z"
+            }
+          ],
+          "time_zone": "Europe/London",
+          "opening_times": {
+            "twentyfourseven": true
+          },
+          "charging_when_closed": true,
+          "last_updated": "2026-11-19T20:30:39.909Z"
+        },
+        {
+          "country_code": "GB",
+          "party_id": "GOZ",
+          "id": "220384",
+          "publish": true,
+          "type": "PARKING_LOT",
+          "name": "Go Zero HQ",
+          "address": "Go Zero Charge",
+          "city": "Egham",
+          "postal_code": "TW20 8RB",
+          "country": "GBR",
+          "coordinates": {
+            "latitude": "51.414384",
+            "longitude": "-0.531651"
+          },
+          "evses": [
+            {
+              "uid": "Rolec_DMF55585",
+              "evse_id": "GB*GOZ*E2",
+              "status": "OUTOFORDER",
+              "capabilities": [
+                "REMOTE_START_STOP_CAPABLE",
+                "START_SESSION_CONNECTOR_REQUIRED"
+              ],
+              "connectors": [
+                {
+                  "id": "1",
+                  "standard": "IEC_62196_T2",
+                  "format": "SOCKET",
+                  "power_type": "AC_3_PHASE",
+                  "max_voltage": 253,
+                  "max_amperage": 32,
+                  "max_electric_power": 22000,
+                  "tariff_ids": [
+                    "TARIFF-220384"
+                  ],
+                  "terms_and_conditions": "https://gozerocharge.com/terms-conditions/",
+                  "last_updated": "2026-11-20T17:02:35.83Z"
+                },
+                {
+                  "id": "2",
+                  "standard": "IEC_62196_T2",
+                  "format": "SOCKET",
+                  "power_type": "AC_3_PHASE",
+                  "max_voltage": 253,
+                  "max_amperage": 32,
+                  "max_electric_power": 22000,
+                  "tariff_ids": [
+                    "TARIFF-220384"
+                  ],
+                  "terms_and_conditions": "https://gozerocharge.com/terms-conditions/",
+                  "last_updated": "2026-11-20T17:02:35.83Z"
+                }
+              ],
+              "last_updated": "2026-11-20T17:02:35.83Z"
+            }
+          ],
+          "time_zone": "Europe/London",
+          "opening_times": {
+            "twentyfourseven": true
+          },
+          "charging_when_closed": true,
+          "last_updated": "2026-11-20T17:02:35.83Z"
+        }
+      ]
+    }
+  }
+}
