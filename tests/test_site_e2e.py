@@ -45,11 +45,12 @@ BROWSER_ARGS = [
 # In the fixtures (recorded, and Monta's made-up ones), without the two hidden unless
 # asked for (ADR 0023): Evolt Network's "Arthur House - Private Use Only" and PoGo
 # Charge's taxi-only "Swales Central Avenue".
-LOCATIONS = 200
+LOCATIONS = 211
 PRIVATE = "Arthur House - Private Use Only"
 TAXIS = "Swales Central Avenue"
-OUT_OF_SERVICE = 13  # fixture locations with every charger reported out of service
+OUT_OF_SERVICE = 15  # fixture locations with every charger reported out of service
 LIST_LIMIT = 200  # the most locations the list shows at once (site/assets/js/main.js)
+SHOWN = min(LOCATIONS, LIST_LIMIT)  # how many of them the list shows
 SERVED: list[str] = []  # every path the test server was asked for
 # The one charger whose statuses a refresh read again after the map files were made (ADR
 # 0032): its first charge point reported out of order and the other five charging.
@@ -199,7 +200,7 @@ def test_wide_screens_show_the_map_and_list_together(visit):
     page = visit(WIDE).open()
     assert page.is_visible("#map") and page.is_visible("#list")
     assert page.is_hidden("#show-map")
-    assert page.locator("#list-items li").count() == LOCATIONS
+    assert page.locator("#list-items li").count() == SHOWN
 
 
 def test_filters_change_the_list_and_the_address(visit):
@@ -249,7 +250,7 @@ def test_settings_are_saved_only_after_opting_in_and_forget_deletes_them(visit):
 
 def test_details_show_provenance_and_return_focus(visit):
     page = visit().open("?view=list", map_ready=False)
-    expect(page.locator("#list-items li")).to_have_count(LOCATIONS)
+    expect(page.locator("#list-items li")).to_have_count(SHOWN)
     first = page.locator("#list-items button").first
     first.click()
     expect(page.locator("#detail-heading")).to_be_focused()
@@ -272,7 +273,7 @@ def test_details_show_provenance_and_return_focus(visit):
 
 def test_details_colour_charge_point_statuses_with_words_and_the_time_read(visit):
     page = visit().open("?view=list", map_ready=False)
-    expect(page.locator("#list-items li")).to_have_count(LOCATIONS)
+    expect(page.locator("#list-items li")).to_have_count(SHOWN)
     _open_details_containing(page, "● ")  # a location with a charge point available
     summary = page.text_content("#detail-body .status-summary")
     assert re.fullmatch(r"\d+ of \d+ charge points? available", summary)
@@ -297,7 +298,7 @@ def test_details_colour_charge_point_statuses_with_words_and_the_time_read(visit
 
 def test_details_list_every_tariff_with_the_lowest_energy_price(visit):
     page = visit().open("?view=list", map_ready=False)
-    expect(page.locator("#list-items li")).to_have_count(LOCATIONS)
+    expect(page.locator("#list-items li")).to_have_count(SHOWN)
     buttons = page.locator("#list-items button")
     for n in range(buttons.count()):
         buttons.nth(n).click()
@@ -340,7 +341,7 @@ def _open_details_containing(page, text):
 def test_details_say_where_an_operators_terms_keep_its_plans_off_the_map(visit):
     v = visit()
     page = v.open("?view=list", map_ready=False)
-    expect(page.locator("#list-items li")).to_have_count(LOCATIONS)
+    expect(page.locator("#list-items li")).to_have_count(SHOWN)
     _open_details_containing(page, "may be available here")
     note = page.locator("#detail-body p.withheld").first
     text = note.text_content()
@@ -357,7 +358,7 @@ def test_details_say_where_paying_the_operator_directly_is_cheaper_without_a_pri
     # evyve's fixture site with a DC charger (ADR 0034).
     v = visit()
     page = v.open("?view=list", map_ready=False)
-    expect(page.locator("#list-items li")).to_have_count(LOCATIONS)
+    expect(page.locator("#list-items li")).to_have_count(SHOWN)
     _open_details_containing(page, "Cheaper in the evyve app")
     note = page.locator("#detail-body .cheaper-direct")
     expect(note).to_have_count(1)
@@ -382,7 +383,7 @@ def test_a_visitors_own_rates_price_ac_or_dc_and_stay_on_the_device_only_if_aske
     # (Salford) an AC charger at 55p (ADR 0035).
     v = visit()
     page = v.open("?view=list", map_ready=False)
-    expect(page.locator("#list-items li")).to_have_count(LOCATIONS)
+    expect(page.locator("#list-items li")).to_have_count(SHOWN)
     greggs, harbour = _item(page, "Greggs (Stockport)"), _item(page, "Harbour City (Salford)")
     expect(greggs).to_contain_text("Cheapest here: 85p")
     # The note that the app is cheaper offers to type in a rate, for this network.
@@ -426,7 +427,7 @@ def test_a_visitors_own_rates_price_ac_or_dc_and_stay_on_the_device_only_if_aske
     saved = json.loads(v.stored()["oevm.settings.v1"])
     assert saved["rates"] == [{"op": "evyve", "dc": 48, "note": "app at weekends"}]
     page.reload()
-    expect(page.locator("#list-items li")).to_have_count(LOCATIONS)
+    expect(page.locator("#list-items li")).to_have_count(SHOWN)
     expect(greggs).to_contain_text("Cheapest here: 48p with your own rate")
     # Removing it puts the operator's price back, and "Forget my settings" deletes it all.
     open_filters(page)
@@ -442,7 +443,7 @@ def test_a_visitors_own_rates_price_ac_or_dc_and_stay_on_the_device_only_if_aske
 def test_details_show_plans_from_providers_pages_and_the_visitors_own(visit):
     v = visit()
     page = v.open("?view=list", map_ready=False)
-    expect(page.locator("#list-items li")).to_have_count(LOCATIONS)
+    expect(page.locator("#list-items li")).to_have_count(SHOWN)
     _open_details_containing(page, "Other ways to pay here")
     plans = " ".join(page.locator("ul.plans").all_text_contents())
     assert "per kWh" in plans and "checked 9 Oct 2026" in plans
@@ -517,7 +518,7 @@ def test_the_calculator_works_out_when_a_plan_pays_for_itself(visit):
         lambda route: route.fulfill(content_type="application/json", body=json.dumps(plans)),
     )
     page = v.open("?view=list", map_ready=False)
-    expect(page.locator("#list-items li")).to_have_count(LOCATIONS)
+    expect(page.locator("#list-items li")).to_have_count(SHOWN)
     _open_details_containing(page, "Is a subscription worth it here?")
     page.locator("#detail-body details.more summary", has_text="Other ways to pay here").click()
     page.click(".calculator summary")
@@ -545,7 +546,7 @@ def test_the_calculator_works_out_when_a_plan_pays_for_itself(visit):
 def test_ticking_a_plan_redraws_open_details_and_a_failed_list_keeps_saved_plans(visit):
     v = visit(viewport=WIDE)
     page = v.open("?view=list", map_ready=False)
-    expect(page.locator("#list-items li")).to_have_count(LOCATIONS)
+    expect(page.locator("#list-items li")).to_have_count(SHOWN)
     _open_details_containing(page, "Other ways to pay here")
     open_filters(page)
     first = page.locator("#my-plans input[name=plan]").first
@@ -572,7 +573,7 @@ def test_ticking_a_plan_redraws_open_details_and_a_failed_list_keeps_saved_plans
 
 def test_details_say_when_coordinates_were_swapped_back(visit):
     page = visit().open("?view=list", map_ready=False)
-    expect(page.locator("#list-items li")).to_have_count(LOCATIONS)
+    expect(page.locator("#list-items li")).to_have_count(SHOWN)
     page.locator("#list-items button", has_text="UBI 98 Southwell Road").click()
     note = page.locator("#detail-body .corrected")
     expect(note).to_contain_text("latitude and longitude the wrong way round")
@@ -581,7 +582,7 @@ def test_details_say_when_coordinates_were_swapped_back(visit):
 
 def test_details_say_when_tariffs_come_from_a_related_networks_feed(visit):
     page = visit().open("?view=list", map_ready=False)
-    expect(page.locator("#list-items li")).to_have_count(LOCATIONS)
+    expect(page.locator("#list-items li")).to_have_count(SHOWN)
     page.locator("#list-items button", has_text="Lancing Manor Leisure Centre").click()
     body = page.locator("#detail-body")
     expect(body.locator(".related-note")).to_have_text(
@@ -600,7 +601,7 @@ def test_details_say_when_tariffs_come_from_a_related_networks_feed(visit):
 
 def test_details_of_a_copy_an_operator_sent_give_its_date_and_no_status(visit):
     page = visit().open("?view=list", map_ready=False)
-    expect(page.locator("#list-items li")).to_have_count(LOCATIONS)
+    expect(page.locator("#list-items li")).to_have_count(SHOWN)
     page.locator("#list-items button", has_text="Colvend Golf Club").click()
     body = page.locator("#detail-body")
     # A short note in view says it is a copy, when it was made and that no status is shown;
@@ -624,7 +625,7 @@ def test_details_of_a_copy_an_operator_sent_give_its_date_and_no_status(visit):
 
 def test_a_phone_opening_in_the_list_starts_the_map_when_first_shown(visit):
     page = visit().open("?view=list", map_ready=False)
-    expect(page.locator("#list-items li")).to_have_count(LOCATIONS)
+    expect(page.locator("#list-items li")).to_have_count(SHOWN)
     assert page.locator("#map canvas").count() == 0
     assert "#" not in page.url
     page.click("#show-map")
@@ -658,7 +659,7 @@ def test_without_webgl_the_list_is_shown_instead(visit):
     page = v.open(map_ready=False)
     expect(page.locator("#notice")).to_contain_text("could not start in this browser")
     assert page.is_visible("#list") and page.is_disabled("#show-map")
-    assert page.locator("#list-items li").count() == LOCATIONS
+    assert page.locator("#list-items li").count() == SHOWN
     assert v.outside == []
 
 
@@ -668,13 +669,13 @@ def test_if_the_basemap_cannot_load_the_list_takes_over(visit):
     page = v.open(map_ready=False)
     expect(page.locator("#notice")).to_contain_text("background map could not be loaded")
     assert page.is_visible("#list") and page.is_disabled("#show-map")
-    assert page.locator("#list-items li").count() == LOCATIONS
+    assert page.locator("#list-items li").count() == SHOWN
     assert v.outside == []
 
 
 def test_widening_a_screen_that_opened_in_the_list_starts_the_map(visit):
     page = visit({"width": 768, "height": 1024}).open("?view=list", map_ready=False)
-    expect(page.locator("#list-items li")).to_have_count(LOCATIONS)
+    expect(page.locator("#list-items li")).to_have_count(SHOWN)
     assert page.locator("#map canvas").count() == 0
     page.set_viewport_size(WIDE)
     expect(page.locator("#map canvas")).to_have_count(1)
@@ -770,7 +771,7 @@ IN_DETAILS_OR_OUT_OF_PAGE = (
 
 def test_on_a_phone_focus_stays_in_the_details_until_they_close(visit):
     page = visit().open("?view=list", map_ready=False)
-    expect(page.locator("#list-items li")).to_have_count(LOCATIONS)
+    expect(page.locator("#list-items li")).to_have_count(SHOWN)
     page.locator("#list-items button").first.click()
     expect(page.locator("#detail-heading")).to_be_focused()
     for key in ["Tab"] * 12 + ["Shift+Tab"] * 12:
@@ -789,7 +790,7 @@ def _open_details_of(page, name: str):
 def test_details_show_statuses_a_refresh_read_since_the_daily_fetch(visit):
     v = visit()
     page = v.open("?view=list", map_ready=False)
-    expect(page.locator("#list-items li")).to_have_count(LOCATIONS)
+    expect(page.locator("#list-items li")).to_have_count(SHOWN)
     _open_details_of(page, REFRESHED)
     # The refresh's statuses, not the detail file's.
     assert page.text_content("#detail-body .status-summary") == "0 of 6 charge points available"
@@ -819,7 +820,7 @@ def test_details_show_statuses_a_refresh_read_since_the_daily_fetch(visit):
 def test_details_without_newer_statuses_keep_the_daily_fetch_and_say_nothing_more(visit):
     v = visit()
     page = v.open("?view=list", map_ready=False)
-    expect(page.locator("#list-items li")).to_have_count(LOCATIONS)
+    expect(page.locator("#list-items li")).to_have_count(SHOWN)
     first = page.locator("#list-items button").first
     assert REFRESHED not in first.text_content()
     first.click()
@@ -836,7 +837,7 @@ def test_details_still_open_when_the_status_file_cannot_be_read(visit):
     v = visit()
     v.page.route("**/data/live/*.json", lambda route: route.fulfill(status=200, body="<html>"))
     page = v.open("?view=list", map_ready=False)
-    expect(page.locator("#list-items li")).to_have_count(LOCATIONS)
+    expect(page.locator("#list-items li")).to_have_count(SHOWN)
     _open_details_of(page, REFRESHED)
     # The statuses of the daily fetch, with its time.
     assert page.locator("#status-read").count() == 0
@@ -852,7 +853,7 @@ def test_details_still_open_when_the_status_file_cannot_be_read(visit):
 
 def test_a_slow_answer_never_replaces_newer_details(visit):
     page = visit().open("?view=list", map_ready=False)
-    expect(page.locator("#list-items li")).to_have_count(LOCATIONS)
+    expect(page.locator("#list-items li")).to_have_count(SHOWN)
     first, second = (page.locator("#list-items button").nth(i) for i in (0, 1))
     held = []
     page.route(f"**/{first.get_attribute('data-key')}.json", lambda route: held.append(route))
@@ -882,7 +883,7 @@ def test_filters_used_while_data_loads_keep_the_ones_in_the_address(visit):
 
 def test_a_network_missing_from_the_data_is_dropped_from_the_filters(visit):
     page = visit().open("?op=not_in_the_data&view=list", map_ready=False)
-    expect(page.locator("#list-items li")).to_have_count(LOCATIONS)
+    expect(page.locator("#list-items li")).to_have_count(SHOWN)
     assert "removed from the filters" in page.text_content("#notice")
     assert "op=" not in page.url
 
@@ -978,7 +979,7 @@ def test_text_from_feeds_is_never_treated_as_markup(visit, site):
     page.route("**/data/locations.geojson", layer)
     page.route("**/data/loc/**", detail)
     v.open("?view=list", map_ready=False)
-    expect(page.locator("#list-items li")).to_have_count(LOCATIONS)
+    expect(page.locator("#list-items li")).to_have_count(SHOWN)
     item = page.locator("#list-items button", has_text=MARKUP)
     assert item.count() == 1
     item.click()
@@ -1057,17 +1058,19 @@ def test_chargers_reported_out_of_service_can_be_hidden(visit):
 
     v.page.route("**/data/locations.geojson", layer)
     page = v.open("?view=list", map_ready=False)
-    expect(page.locator("#list-items li")).to_have_count(LOCATIONS)
+    expect(page.locator("#list-items li")).to_have_count(SHOWN)
     expect(page.locator("#list-items")).to_contain_text("Reported out of service")
     page.goto(page.url.split("?")[0] + "?view=list&ok=1")
-    expect(page.locator("#list-items li")).to_have_count(LOCATIONS - 1 - OUT_OF_SERVICE)
+    expect(page.locator("#list-items li")).to_have_count(
+        min(LOCATIONS - 1 - OUT_OF_SERVICE, LIST_LIMIT)
+    )
     assert "Reported out of service" not in page.text_content("#list-items")
 
 
 def test_the_red_count_in_the_details_switches_hide_out_of_service(visit):
     v = visit()
     page = v.open("?view=list", map_ready=False)
-    expect(page.locator("#list-items li")).to_have_count(LOCATIONS)
+    expect(page.locator("#list-items li")).to_have_count(SHOWN)
     _open_details_containing(page, "reported out of service")
     button = page.locator('#detail-body button[data-filter="working"]')
     expect(button).to_have_attribute("aria-pressed", "false")
@@ -1080,7 +1083,9 @@ def test_the_red_count_in_the_details_switches_hide_out_of_service(visit):
     page.wait_for_url("**ok=1**")
     expect(button).to_have_attribute("aria-pressed", "true")
     expect(page.locator("#quick-working")).to_have_attribute("aria-pressed", "true")
-    expect(page.locator("#list-items li")).to_have_count(LOCATIONS - OUT_OF_SERVICE)
+    expect(page.locator("#list-items li")).to_have_count(
+        min(LOCATIONS - OUT_OF_SERVICE, LIST_LIMIT)
+    )
     # Details opened later show the filter's state, and the count switches it off again.
     page.keyboard.press("Escape")
     _open_details_containing(page, "reported out of service")
@@ -1088,7 +1093,7 @@ def test_the_red_count_in_the_details_switches_hide_out_of_service(visit):
     button.click()
     page.wait_for_url(re.compile(r"^(?!.*ok=1)"))
     expect(page.locator("#quick-working")).to_have_attribute("aria-pressed", "false")
-    expect(page.locator("#list-items li")).to_have_count(LOCATIONS)
+    expect(page.locator("#list-items li")).to_have_count(SHOWN)
     # Counts for other groups stay plain text.
     assert page.locator("#detail-body .status-chips button").count() == 1
 
@@ -1123,7 +1128,7 @@ def test_dark_mode_follows_the_device_and_the_button_switches_the_map(visit):
     page.wait_for_timeout(500)
     assert any(path.endswith("offline-style.json") for path in SERVED)
     # The chargers are drawn again on the new style, so a cluster still opens.
-    assert page.locator("#list-items li").count() == LOCATIONS
+    assert page.locator("#list-items li").count() == SHOWN
     assert v.stored() == {}, "picking light or dark saves nothing until the visitor opts in"
     open_filters(page)
     page.check("#remember")
@@ -1220,7 +1225,7 @@ def test_grouping_can_be_turned_off_and_on_from_the_map_or_the_filters(visit):
     open_filters(page)
     assert not page.is_checked("#group")
     assert page.text_content("#toggle-filters") == "Filters", "grouping is not a filter"
-    assert page.locator("#list-items li").count() == LOCATIONS, "no charger is hidden"
+    assert page.locator("#list-items li").count() == SHOWN, "no charger is hidden"
     page.check("#group")
     expect(button).to_have_attribute("aria-pressed", "true")
     assert "group=" not in page.url
@@ -1241,7 +1246,7 @@ def test_a_link_with_grouping_off_opens_without_numbered_circles(visit):
 def test_private_chargers_are_hidden_until_the_visitor_asks(visit):
     v = visit()
     page = v.open("?view=list", map_ready=False)
-    expect(page.locator("#list-items li")).to_have_count(LOCATIONS)
+    expect(page.locator("#list-items li")).to_have_count(SHOWN)
     assert PRIVATE not in page.text_content("#list-items")
     assert TAXIS not in page.text_content("#list-items")
     open_filters(page)
@@ -1267,7 +1272,7 @@ def test_private_chargers_are_hidden_until_the_visitor_asks(visit):
     page.keyboard.press("Escape")
     open_filters(page)
     page.click("#reset")
-    expect(page.locator("#list-items li")).to_have_count(LOCATIONS)
+    expect(page.locator("#list-items li")).to_have_count(SHOWN)
     links = page.locator("#private-hint a")
     assert [links.nth(i).get_attribute("href") for i in range(2)] == [
         "transparency/#private",
@@ -1395,7 +1400,7 @@ def _item(page, name):
 def test_the_list_shows_the_cheapest_price_for_the_connectors_the_filters_allow(visit):
     v = visit()
     page = v.open("?view=list", map_ready=False)
-    expect(page.locator("#list-items li")).to_have_count(LOCATIONS)
+    expect(page.locator("#list-items li")).to_have_count(SHOWN)
     # GeniePoint's app price is lower than paying at the charger, which the summary shows.
     dumbarton = _item(page, "Premier Inn Dumbarton")
     expect(dumbarton).to_contain_text("Cheapest here: 83p")
@@ -1415,7 +1420,7 @@ def test_the_list_shows_the_cheapest_price_for_the_connectors_the_filters_allow(
 
 def test_details_say_where_the_map_label_comes_from(visit):
     page = visit().open("?view=list", map_ready=False)
-    expect(page.locator("#list-items li")).to_have_count(LOCATIONS)
+    expect(page.locator("#list-items li")).to_have_count(SHOWN)
     _item(page, "Premier Inn Dumbarton").locator("button").click()
     line = page.locator("#detail-body .map-label")
     expect(line).to_contain_text(
@@ -1432,7 +1437,7 @@ def test_details_say_where_the_map_label_comes_from(visit):
 def test_the_details_line_follows_the_filters_while_the_details_are_open(visit):
     v = visit(WIDE)
     page = v.open("?view=list", map_ready=False)
-    expect(page.locator("#list-items li")).to_have_count(LOCATIONS)
+    expect(page.locator("#list-items li")).to_have_count(SHOWN)
     _item(page, "Premier Inn Alnwick").locator("button").click()
     line = page.locator("#detail-body .map-label")
     expect(line).to_contain_text("Cheapest here: 58p per kWh")
