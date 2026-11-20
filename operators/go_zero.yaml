@@ -1,21 +1,74 @@
 # yaml-language-server: $schema=schema.json
 id: go_zero
 display_name: Go Zero
-ocpi_country_code: unknown
-ocpi_party_id: unknown
-adapter: unknown
+ocpi_country_code: GB # From the feed's own records on 2026-11-20.
+ocpi_party_id: GOZ # From the feed's own records on 2026-11-20.
+adapter: ocpi_221
 base_url: unknown
-endpoints: {}
+endpoints:
+  locations:
+    url: https://ocpi.gozerocharge.com/api/v1/ocpi/2.2.1/locations
+    status: documented
+    note: >-
+      Read with no key by the script of Go Zero's own "CPO Live Data" dashboard
+      (cpo-data.gozerocharge.network, linked from the footer of gozerocharge.com), read
+      2026-11-20. Go Zero's earlier open data page gave the same path on another host.
+  tariffs:
+    url: https://ocpi.gozerocharge.com/api/v1/ocpi/2.2/tariffs
+    status: needs_testing
+    note: >-
+      The tariffs path from Go Zero's earlier open data page (now only in the web archive),
+      on the host its dashboard reads today. Go Zero does not list this exact address
+      anywhere found; it answered with 57 tariffs and no key on 2026-11-20.
 auth:
-  method: unknown
+  method: none
   name: null
   secret_name: null
+rate_limit:
+  min_seconds_between_requests: 2
+  limits: []
+  limits_checked: 2026-11-20
+  notes: >-
+    Go Zero's pages and the responses state no rate limit (read 2026-11-20). The 2 second gap
+    is this project's own choice; no other operator file uses this host. Each response holds
+    every record, so a daily run makes two requests and each hourly status refresh one.
 supports_single_location: unknown
 cors: needs_testing
-attribution: null
+attribution: >-
+  Contains data from Go Zero published under the Public Charge Point Regulations 2023, used in
+  line with the Open Government Licence v3.0.
+licence:
+  name: OGL-3.0
+  url: https://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/
+  basis: >-
+    Go Zero publishes its locations and tariffs with no key, no registration step and no terms
+    of their own: its "CPO Live Data" dashboard reads the locations feed openly, and its
+    earlier open data page ("GoZeroCharge CPO API", in the web archive to 5 October 2025)
+    described the same paths with no key. Every connector's terms_and_conditions field
+    links https://gozerocharge.com/terms-conditions/, which answered HTTP 404 on 2026-11-20.
+    The only terms on gozerocharge.com (read 2026-11-20) are "Go Zero Ltd Standard Terms and
+    Conditions of Commercial Sales FOR THE SUPPLY OF ELECTRIC VEHICLE CHARGING UNITS", a
+    contract with buyers of charging units whose clause 10, "Data Service License", is about
+    usage data from a buyer's own units; its privacy policy covers personal data only.
+    Neither sets terms for reusing the regulation 10 data. DfT's guidance (updated 21 October
+    2024) says "Data must be open in line with the Open Government Licence". On 2026-10-10
+    the repository owner decided, as a standing rule for operators whose data has no terms of
+    its own, to read general website or charging terms as not covering the open data, which
+    regulation 10(5) requires to be available without terms on its use.
+  checked: 2026-11-20
 engagement:
-  status: unknown
-  evidence: []
+  status: open_anonymous
+  evidence:
+    - date: 2026-11-20
+      url: https://cpo-data.gozerocharge.network/
+      note: >-
+        Go Zero's "OCPI Network Dashboard", linked as "CPO Live Data" from the footer of
+        gozerocharge.com. Its script reads the locations feed with no key every 30 seconds.
+    - date: 2026-11-20
+      url: https://ocpi.gozerocharge.com/api/v1/ocpi/2.2.1/locations
+      note: >-
+        Answered with no key on 2026-11-20: OCPI 2.2.1 response object, status_code 1000,
+        57 locations, all GB GOZ and all with publish true.
   log:
     - date: 2026-10-09
       action: feed_searched
@@ -29,15 +82,107 @@ engagement:
         429) to an earlier read that day, a single later read of its open data page address
         answered HTTP 404, and its home page and site map have not yet been searched.
       evidence_url: https://www.gozerocharge.com/public-charge-point-open-data
+    - date: 2026-11-20
+      action: page_checked
+      summary: >-
+        Go Zero's home page was read in a browser; its footer links "CPO Live Data", a public
+        dashboard of its OCPI network (57 locations, 158 EVSEs, 233 connectors).
+      evidence_url: https://www.gozerocharge.com/
+    - date: 2026-11-20
+      action: feed_searched
+      summary: >-
+        The dashboard's own script was read; it fetches the OCPI 2.2.1 locations module from
+        ocpi.gozerocharge.com with no key. Archived copies of Go Zero's earlier open data page
+        (December 2024 to 5 October 2025) give the locations and tariffs paths on an older
+        host, which now answers HTTP 404 to both.
+      evidence_url: https://web.archive.org/web/20251005212236/https://gozerocharge.com/public-charge-point-open-data/
+    - date: 2026-11-20
+      action: page_checked
+      summary: >-
+        Go Zero's terms of commercial sales and privacy policy were read; neither mentions
+        the open data or sets terms for it, and no rate limit was found. The terms page that
+        the feed's connectors link answered HTTP 404.
+      evidence_url: https://www.gozerocharge.com/copy-of-privacy-policy
 access_requested: null
 access_granted: null
 sources:
+  - url: https://www.gozerocharge.com/
+    note: >-
+      Go Zero's home page (read 2026-11-20). Its footer links "CPO Live Data" to the dashboard
+      below, and its terms and privacy pages.
+  - url: https://cpo-data.gozerocharge.network/
+    note: >-
+      Go Zero's public "OCPI Network Dashboard" (read 2026-11-20). Its script
+      (/_next/static/chunks/0ad0eaf4bded31ff.js on that host) reads
+      https://ocpi.gozerocharge.com/api/v1/ocpi/2.2.1/locations with no key. Its "Export CSV"
+      button builds a summary in the browser from the same feed, with no coordinates,
+      connectors or prices, and has no address of its own.
+  - url: https://web.archive.org/web/20251005212236/https://gozerocharge.com/public-charge-point-open-data/
+    note: >-
+      Archived copy of Go Zero's earlier open data page, "GoZeroCharge CPO API" (read in a
+      browser on 2026-11-20). It gave locations at /api/v1/ocpi/2.2.1/locations and tariffs at
+      /api/v1/ocpi/2.2/tariffs and /api/v1/ocpi/2.2/tariffs/{tariffId} on
+      cpo-api.gozerocharge.com, with no key and support by email.
   - url: https://www.gozerocharge.com/public-charge-point-open-data
     note: >-
-      Address on Go Zero's own website that this project's research recorded as its open
-      data page. A single read on 2026-10-10 answered HTTP 404 with the text "404 Error:
-      Page Not Found".
+      Address of Go Zero's earlier open data page. A single read on 2026-10-10 answered HTTP
+      404 with the text "404 Error: Page Not Found"; it still answered 404 on 2026-11-20.
+  - url: https://www.gozerocharge.com/copy-of-privacy-policy
+    note: >-
+      Despite its address, the page "Terms and Conditions": Go Zero Ltd's standard terms of
+      commercial sales for charging units (read 2026-11-20). They do not cover the open data.
+  - url: https://www.gozerocharge.com/privacy-policy
+    note: Go Zero's privacy policy (read 2026-11-20). It covers personal data only.
+findings:
+  - date: 2026-11-20
+    kind: documentation
+    summary: >-
+      Go Zero's open data page, which gave its feed addresses on cpo-api.gozerocharge.com,
+      answers HTTP 404, and that host answers 404 to both paths. Its public dashboard now reads
+      the locations feed on ocpi.gozerocharge.com. No page found gives the tariffs address on
+      that host; the path from the earlier page answered there on 2026-11-20.
+    handling: >-
+      Both modules are read from ocpi.gozerocharge.com, the tariffs address marked as needing
+      testing. If it stops answering, the prices show as unknown.
+    evidence_url: https://cpo-data.gozerocharge.network/
+    status: open
+  - date: 2026-11-20
+    kind: documentation
+    summary: >-
+      No terms for the data and no rate limit were found on Go Zero's pages. Every connector's
+      terms_and_conditions field links https://gozerocharge.com/terms-conditions/, which
+      answered HTTP 404 on 2026-11-20.
+    handling: >-
+      The data is used under the Open Government Licence, as DfT's guidance describes, and
+      fetched once a day with an hourly status refresh, 2 seconds apart. The terms link is not
+      shown on the map.
+    evidence_url: https://ocpi.gozerocharge.com/api/v1/ocpi/2.2.1/locations
+    status: open
+  - date: 2026-11-20
+    kind: spec_conformance
+    summary: >-
+      Every location gives its parking type as "type": "PARKING_LOT", the OCPI 2.1.1 field
+      name, rather than OCPI 2.2.1's parking_type (on 2026-11-20).
+    handling: >-
+      The field is not read under another name, so the parking type shows as unknown.
+    evidence_url: https://ocpi.gozerocharge.com/api/v1/ocpi/2.2.1/locations
+    status: open
+  - date: 2026-11-20
+    kind: data_quality
+    summary: >-
+      A few address fields look mistyped: one postcode starts with a zero instead of the
+      letter O ("S021 2EE", in Winchester), one has no space ("G639PT"), one city also holds
+      the postcode ("Kinross KY13 9LY"), and one location name starts with a space (on
+      2026-11-20).
+    handling: >-
+      Each is shown as published; the coordinates, not the postcode, place the locations on
+      the map.
+    evidence_url: https://ocpi.gozerocharge.com/api/v1/ocpi/2.2.1/locations
+    status: open
 notes: >-
-  The blueprint lists CORS and single-location fetching for Go Zero as untested and unknown,
-  but records no feed URL, adapter or access route.
-enabled: false
+  Prices are sent excluding VAT with a vat rate of 20 on every price component, as OCPI 2.2.1
+  describes, so the map adds the stated 20%; with it every price came to whole pence on
+  2026-11-20. Each tariff has two energy prices, 06:00 to 22:00 and 22:00 to 06:00 every day.
+  On 2026-11-20 no location record carried Go Zero's codes in another operator's feed; 6 of
+  its 57 locations were within 200 metres of another network's charger on the map.
+enabled: true
