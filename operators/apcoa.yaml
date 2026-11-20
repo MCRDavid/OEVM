@@ -41,6 +41,13 @@ engagement:
       summary: >-
         In a browser on 2026-10-23, APCOA's legal page, help centre (EV Charging category and searches for open data, OCPI, charge point regulations, API and data request), APCOA Connect site and charging station map were read; none gives an open data feed or a data request route.
       evidence_url: https://helpcentre.apcoa.com/hc/en-gb
+    - date: 2026-11-20
+      action: page_checked
+      summary: >-
+        In a browser on 2026-11-20, apcoa.co.uk's sitemap (1,000 addresses) and EV charging
+        pages were unchanged since 2026-10-23, with no open data route. Requests can go through
+        the help centre's "Submit a request" form.
+      evidence_url: https://helpcentre.apcoa.com/hc/en-gb
 access_requested: null
 access_granted: null
 sources:

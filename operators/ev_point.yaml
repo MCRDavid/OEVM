@@ -234,5 +234,9 @@ notes: >-
   which the adapter does not follow. Eco-Movement's user guide says it creates the
   location ids and may change them when it merges locations. On 2026-10-29 the feed
   reported 38 locations and 4 tariffs. It uses the OCPI party GB CPI of ChargePoint's
-  platform, as do ChargePoint and RAW Charging.
+  platform, as do ChargePoint and RAW Charging. On 2026-11-20 EG On The Move's site
+  (https://eg-otm.com/retail-channels/ev) described its own rapid charging brand, EV On The
+  Move, at 70 sites; evpoint's feed then held 38 locations, all named "EG GROUP ...", and
+  evpoint's about page says EG Group's older chargers moved to evpoint. So the two very
+  likely share sites (inferred); the gap between 70 and 38 is unexplained.
 enabled: true

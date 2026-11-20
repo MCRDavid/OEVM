@@ -20,7 +20,7 @@ cors: unknown
 attribution: null
 licence: null
 engagement:
-  status: unknown
+  status: no_public_feed_found
   evidence:
     - date: 2026-10-23
       url: https://evroam.org.uk/_functions/getRegister
@@ -33,6 +33,15 @@ engagement:
       summary: >-
         Its website returned HTTP 403 to an automated request on 2026-10-23, so it needs a check in a browser.
       evidence_url: https://www.leap24.co.uk/
+    - date: 2026-11-20
+      action: page_checked
+      summary: >-
+        In a browser on 2026-11-20, LEAP24's UK site and its sitemaps (29 pages and 16 posts)
+        were read. They list about a dozen charging sites, mostly in and around London, plus
+        support, overstay fee, partner card, location partner and policy pages, and no open
+        data, regulations, OCPI or API page. The footer gives a support email address; no
+        contact form was found.
+      evidence_url: https://leap24.co.uk/page-sitemap.xml
 access_requested: null
 access_granted: null
 sources:
@@ -42,9 +51,18 @@ sources:
       pointer only: "LEAP24 UK Limited", operator ID GB*24L.
   - url: https://www.leap24.co.uk/
     note: >-
-      LEAP24's own website. Its website returned HTTP 403 to an automated request on 2026-10-23, so it needs a check in a browser.
+      LEAP24's own website. It returned HTTP 403 to an automated request on 2026-10-23; in a
+      browser on 2026-11-20 it was readable, once after a redirect to leap24.eu.
+  - url: https://leap24.co.uk/page-sitemap.xml
+    note: >-
+      LEAP24's UK page sitemap (read 2026-11-20): 29 pages, including about a dozen site pages
+      and no open data or regulations page.
 findings: []
 notes: >-
   Found through the EV Roam ID register on 2026-10-23 (operator ID GB*24L; the OCPI country and
-  party codes stay unknown until read from a feed). Its website returned HTTP 403 to an automated request on 2026-10-23, so it needs a check in a browser. The next step is a browser check of its own site, then a written request if no data link is found.
+  party codes stay unknown until read from a feed). Its UK site, read in a browser on
+  2026-11-20, describes a public network of about a dozen sites and has no open data route.
+  www.leap24.co.uk sometimes redirected to the Dutch site leap24.eu (seemingly depending on
+  the page asked for; inferred). The next step is a written request to its support email
+  address, asking where its regulation 10 data is published.
 enabled: false

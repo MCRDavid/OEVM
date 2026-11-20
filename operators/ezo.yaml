@@ -40,6 +40,14 @@ engagement:
         To request data, simply complete the PCPR Data Request form and our team will review
         your submission before providing the information.
       evidence_url: https://ezo.co.uk/regulations-compliance/
+    - date: 2026-11-20
+      action: page_checked
+      summary: >-
+        In a browser on 2026-11-20, EasyGo's former websites easygo.co.uk and easygo.ie
+        (expired certificates, read past on the owner's instruction) answered HTTP 301 to
+        https://ezo.co.uk/ and https://ezo.ie/. EZO's own certificate was in date. The PCPR
+        Data Request form has not been sent.
+      evidence_url: https://ezo.co.uk/
 access_requested: null
 access_granted: null
 sources:
@@ -79,7 +87,8 @@ sources:
       Highland councils as moving to EZO.
 findings: []
 notes: >-
-  Formerly EasyGo. Runs public chargers in Northern Ireland and, from 2026, takes over and
+  Formerly EasyGo (EV Roam operator ID GB*EGO, "EasyGo Charging Limited"; see easygo.yaml,
+  kept as its former name since 2026-11-20). Runs public chargers in Northern Ireland and, from 2026, takes over and
   expands the public networks of four councils in the north of Scotland that are leaving
   ChargePlace Scotland. Access could be requested through the "PCPR Data Request" form on
   EZO's "Regulations & Compliance" page. Requests are passed to Eco-Movement, so the
