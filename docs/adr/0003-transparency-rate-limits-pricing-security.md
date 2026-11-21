@@ -306,6 +306,23 @@ of 16 November 2026 this also applies to ChargePoint, ESB ecars, ESB Energy, evp
 UK and RAW, which give the same times. Other times, such as midnight to 23:58 or 07:00
 to 23:59, are said as before. The tariffs are published unchanged.
 
+### Amendment, 21 November 2026: one price when every hour costs the same
+
+Go Zero's tariffs, first fetched on 20 November 2026, each give two energy prices, 22:00 to
+06:00 and 06:00 to 22:00 every day, at the same price. The details said "66p per kWh from
+22:00 to 06:00, 66p per kWh from 06:00 to 22:00 including VAT" and the map label said
+"from 66p", which suggests the price can be higher. The owner decided on 21 November 2026
+to show one price when a tariff costs the same at every hour. Tariff elements are now read
+as one price with no time when all of these hold: every element gives exactly the same
+price components (kind, price, VAT figure and step size); no element has a condition other
+than a time of day; each applies on every day of the week; and their times together cover
+every minute of the day, a time that ends before it starts running past midnight. Go Zero's
+prices then read "66p per kWh including VAT", the price counts as applying at any time, and
+the label no longer says "from". Anything else, such as a different price at night, a gap
+of an hour, weekdays only or a limit on energy, is said as before. In the fixtures only Go
+Zero's prices change; a sample of 42 published locations from the 13 networks with "from"
+labels on 20 November 2026 showed no change. The tariffs are published unchanged.
+
 ## Security
 
 - `SECURITY.md` asks for private reports through GitHub's private vulnerability

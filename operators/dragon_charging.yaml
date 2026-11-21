@@ -20,7 +20,7 @@ cors: unknown
 attribution: null
 licence: null
 engagement:
-  status: unknown
+  status: no_public_feed_found
   evidence:
     - date: 2026-10-23
       url: https://evroam.org.uk/_functions/getRegister
@@ -33,6 +33,23 @@ engagement:
       summary: >-
         Its website returned HTTP 403 to an automated request on 2026-10-23, so it needs a check in a browser.
       evidence_url: https://www.silverstonegreenenergy.co.uk/
+    - date: 2026-11-20
+      action: page_checked
+      summary: >-
+        In a browser on 2026-11-20, the register's address redirected to
+        https://silverstonege.com/ (Silverstone Green Energy, an installer), whose EV charging
+        page links Dragon Charging's own site. Dragon Charging's home, about, FAQ and contact
+        pages and its sitemap (139 location pages) were read and have no open data,
+        regulations, OCPI or API page. The site has a contact form (not used).
+      evidence_url: https://dragoncharging.co.uk/
+    - date: 2026-11-20
+      action: feed_searched
+      summary: >-
+        Checked this project's published map for Dragon Charging's places on 2026-11-20.
+        Clenergy EV's feed has 8 points in the Pembrokeshire area and none at the Dragon
+        location names checked (Tenby, Narberth, Crymych, St Davids, County Hall Haverfordwest),
+        so Dragon's sites are very likely not in Clenergy EV's feed (inferred).
+      evidence_url: https://dragoncharging.co.uk/wp-sitemap-posts-locations-1.xml
 access_requested: null
 access_granted: null
 sources:
@@ -42,9 +59,22 @@ sources:
       pointer only: "Dragon Charging", operator ID GB*DGN.
   - url: https://www.silverstonegreenenergy.co.uk/
     note: >-
-      Dragon Charging's own website. Its website returned HTTP 403 to an automated request on 2026-10-23, so it needs a check in a browser.
+      The website the register gives. It returned HTTP 403 to an automated request on
+      2026-10-23; in a browser on 2026-11-20 it redirected to https://silverstonege.com/
+      (Silverstone Green Energy), whose EV charging page links Dragon Charging's own site.
+  - url: https://dragoncharging.co.uk/
+    note: >-
+      Dragon Charging's own website (read 2026-11-20), with Welsh pages under /cymru/. No open
+      data, regulations, OCPI or API page on its home, about, FAQ or contact pages.
+  - url: https://dragoncharging.co.uk/wp-sitemap-posts-locations-1.xml
+    note: Dragon Charging's sitemap of location pages (read 2026-11-20), 139 entries.
 findings: []
 notes: >-
   Found through the EV Roam ID register on 2026-10-23 (operator ID GB*DGN; the OCPI country and
-  party codes stay unknown until read from a feed). Its website returned HTTP 403 to an automated request on 2026-10-23, so it needs a check in a browser. The next step is a browser check of its own site, then a written request if no data link is found.
+  party codes stay unknown until read from a feed). Its own site, dragoncharging.co.uk ("EV
+  charging in Wales"), lists 139 locations, mostly in Pembrokeshire and South West Wales, and
+  says its customers can also use Clenergy chargers; its driver portal appears to run on
+  Clenergy's platform (inferred from its link to Clenergy's app). Its sites are very likely
+  not in Clenergy EV's feed (inferred, 2026-11-20). The next step is a written request
+  through its contact page, asking where its regulation 10 data is published.
 enabled: false

@@ -48,6 +48,14 @@ engagement:
         Osprey's site map page was searched and lists no open data page, feed or request
         route.
       evidence_url: https://www.ospreycharging.co.uk/sitemap
+    - date: 2026-11-20
+      action: page_checked
+      summary: >-
+        In a browser on 2026-11-20, Osprey's home page, its sitemap (751 addresses), roaming,
+        contact, terms and pricing pages were read. The only regulations page is still the post
+        of 6 December 2023, unchanged, with no feed address or request route. The site gives a
+        freephone number, an email link and a contact page.
+      evidence_url: https://www.ospreycharging.co.uk/post/consumer-charge-point-regulations
 access_requested: null
 access_granted: null
 sources:
@@ -70,5 +78,6 @@ findings:
     evidence_url: https://www.ospreycharging.co.uk/post/consumer-charge-point-regulations
 notes: >-
   A written request to Osprey's support team could ask where its regulation 10 data is
-  published and whether this project may use it.
+  published and whether this project may use it. No page on Osprey's own site offers its feed
+  on request (checked 2026-11-20).
 enabled: false

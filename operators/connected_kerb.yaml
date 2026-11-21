@@ -20,7 +20,7 @@ cors: unknown
 attribution: null
 licence: null
 engagement:
-  status: unknown
+  status: no_public_feed_found
   evidence: []
   log:
     - date: 2026-10-10
@@ -31,6 +31,13 @@ engagement:
         no page whose address mentions open data or the regulations, so its open data route
         is not yet known; it needs checking in a browser.
       evidence_url: https://connectedkerb.com/our-technology/data/
+    - date: 2026-11-20
+      action: page_checked
+      summary: >-
+        In a browser on 2026-11-20, Connected Kerb's "Regulatory Data" footer link was still a
+        reliability report (a PDF last modified 16 February 2026), and no open data feed or
+        request route was found. Requests can go through its contact page.
+      evidence_url: https://connectedkerb.com/contact-us/
 access_requested: null
 access_granted: null
 sources:
@@ -48,6 +55,6 @@ sources:
       "Connected Kerb | Data", was readable, so whether it covers open data is unknown.
 findings: []
 notes: >-
-  Connected Kerb's pages need JavaScript to show their text. The next step is to read its
-  home page and its "Data" page in a browser and look for an open data or regulations link.
+  Connected Kerb's "Regulatory Data" link gives a reliability report, not its regulation 10 data
+  (checked 2026-11-20). The next step is a written request through its contact page.
 enabled: false

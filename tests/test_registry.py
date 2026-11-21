@@ -22,6 +22,7 @@ from tests.test_security_files import (
 OPERATORS_DIR = Path(__file__).resolve().parent.parent / "operators"
 SEED_IDS = {
     "aldi",
+    "alfa_power",
     "allego",
     "amey_ev_charging",
     "apcoa",
@@ -106,6 +107,7 @@ SEED_IDS = {
     "qwello",
     "raw_charging",
     "roam",
+    "rontec_charge",
     "saba_parking",
     "scottishpower_recharge",
     "shell_recharge",
@@ -217,7 +219,7 @@ def test_operator_files_contain_no_key_like_values():
 
 def test_cli_validate_succeeds_on_seed_registry(capsys):
     assert registry.main(["--validate"]) == 0
-    assert "Operator registry is valid: 110 operators" in capsys.readouterr().out
+    assert "Operator registry is valid: 112 operators" in capsys.readouterr().out
 
 
 def test_cli_without_validate_prints_help(capsys):

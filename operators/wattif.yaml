@@ -20,7 +20,7 @@ cors: unknown
 attribution: null
 licence: null
 engagement:
-  status: unknown
+  status: no_public_feed_found
   evidence: []
   log:
     - date: 2026-10-10
@@ -31,6 +31,12 @@ engagement:
         Wattif's current website and open data route were not found; they need checking in a
         browser.
       evidence_url: https://www.wattif.co.uk/
+    - date: 2026-11-20
+      action: page_checked
+      summary: >-
+        In a browser on 2026-11-20, wattif.co.uk was still a parked page. Wattif's own site,
+        wattifev.com, links only a UK app and a contact page, and has no open data page.
+      evidence_url: https://wattifev.com/contact/
 access_requested: null
 access_granted: null
 sources:
@@ -47,7 +53,7 @@ sources:
     note: Read 2026-10-10. Lists one page, /lander.
 findings: []
 notes: >-
-  The address www.wattif.co.uk appears on 2026-10-10 to show a domain parking page rather
-  than Wattif's own website (inferred from the page's code). Wattif's current website needs
-  finding in a browser before its open data route can be checked.
+  www.wattif.co.uk shows a domain parking page (2026-10-10 and 2026-11-20). Wattif's own site is
+  wattifev.com, which had no open data route on 2026-11-20. The next step is a written request
+  through its contact page.
 enabled: false

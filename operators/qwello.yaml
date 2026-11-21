@@ -20,7 +20,7 @@ cors: unknown
 attribution: null
 licence: null
 engagement:
-  status: unknown
+  status: no_public_feed_found
   evidence: []
   log:
     - date: 2026-10-10
@@ -30,6 +30,12 @@ engagement:
         project's automated checks on 2026-10-10, and it has no readable sitemap, so its open
         data route is not yet known; it needs checking in a browser.
       evidence_url: https://qwello.uk/en
+    - date: 2026-11-20
+      action: page_checked
+      summary: >-
+        In a browser on 2026-11-20, qwello.uk had no open data page; its parent site qwello.eu
+        mentions only AFIR, the EU rules. Requests can go through its UK contact page.
+      evidence_url: https://qwello.uk/en/contact
 access_requested: null
 access_granted: null
 sources:
@@ -43,6 +49,6 @@ sources:
       "We're sorry but qwello doesn't work properly without JavaScript enabled."
 findings: []
 notes: >-
-  Qwello's UK website needs JavaScript to show its text. The next step is to read it in a
-  browser and look for an open data or regulations link.
+  No open data route was found on Qwello's UK site on 2026-11-20. The next step is a written
+  request through its UK contact page.
 enabled: false

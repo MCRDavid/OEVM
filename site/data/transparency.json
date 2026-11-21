@@ -1,5 +1,5 @@
 {
-  "last_reviewed": "2026-11-15",
+  "last_reviewed": "2026-11-20",
   "disclaimer": "OEVM is a personal, experimental project for learning about AI tools. Much of its code and text was written with an AI assistant, and it will contain mistakes. Charger data comes from the operators and other sources credited on every record, and remains their work. Everything is provided \"as is\", with no warranty or guarantee of any kind. Always check prices and availability at the charger.",
   "regulation": {
     "summary": "The Public Charge Point Regulations 2023 set no limit on how often data users may request the data. Regulation 10(5) requires the data to be available free of charge without terms on its use. DfT's guidance allows terms covering the means of access, which is where operators' rate limits come from.",
@@ -4438,6 +4438,183 @@
       ]
     },
     {
+      "id": "go_zero",
+      "name": "Go Zero",
+      "enabled": true,
+      "adapter": "ocpi_221",
+      "engagement": {
+        "status": "open_anonymous",
+        "label": "Open, no registration",
+        "headline": "Open, no registration (as of 2026-11-20)",
+        "as_of": "2026-11-20",
+        "last_request": null,
+        "last_response": null,
+        "last_response_text": "No request sent",
+        "evidence": [
+          {
+            "date": "2026-11-20",
+            "url": "https://cpo-data.gozerocharge.network/",
+            "file": null,
+            "note": "Go Zero's \"OCPI Network Dashboard\", linked as \"CPO Live Data\" from the footer of gozerocharge.com. Its script reads the locations feed with no key every 30 seconds."
+          },
+          {
+            "date": "2026-11-20",
+            "url": "https://ocpi.gozerocharge.com/api/v1/ocpi/2.2.1/locations",
+            "file": null,
+            "note": "Answered with no key on 2026-11-20: OCPI 2.2.1 response object, status_code 1000, 57 locations, all GB GOZ and all with publish true."
+          }
+        ],
+        "log": [
+          {
+            "date": "2026-10-09",
+            "action": "feed_searched",
+            "action_label": "Searched for a feed",
+            "channel": null,
+            "channel_label": null,
+            "summary": "A web search for a Go Zero open data or Public Charge Point Regulations page found none. Go Zero's own website was not searched directly; this needs checking.",
+            "quote": null,
+            "evidence_url": null,
+            "evidence_file": null
+          },
+          {
+            "date": "2026-10-10",
+            "action": "feed_searched",
+            "action_label": "Searched for a feed",
+            "channel": null,
+            "channel_label": null,
+            "summary": "Go Zero's own website was checked directly; it answered \"too many requests\" (HTTP 429) to an earlier read that day, a single later read of its open data page address answered HTTP 404, and its home page and site map have not yet been searched.",
+            "quote": null,
+            "evidence_url": "https://www.gozerocharge.com/public-charge-point-open-data",
+            "evidence_file": null
+          },
+          {
+            "date": "2026-11-20",
+            "action": "page_checked",
+            "action_label": "Operator's page checked",
+            "channel": null,
+            "channel_label": null,
+            "summary": "Go Zero's home page was read in a browser; its footer links \"CPO Live Data\", a public dashboard of its OCPI network (57 locations, 158 EVSEs, 233 connectors).",
+            "quote": null,
+            "evidence_url": "https://www.gozerocharge.com/",
+            "evidence_file": null
+          },
+          {
+            "date": "2026-11-20",
+            "action": "feed_searched",
+            "action_label": "Searched for a feed",
+            "channel": null,
+            "channel_label": null,
+            "summary": "The dashboard's own script was read; it fetches the OCPI 2.2.1 locations module from ocpi.gozerocharge.com with no key. Archived copies of Go Zero's earlier open data page (December 2024 to 5 October 2025) give the locations and tariffs paths on an older host, which now answers HTTP 404 to both.",
+            "quote": null,
+            "evidence_url": "https://web.archive.org/web/20251005212236/https://gozerocharge.com/public-charge-point-open-data/",
+            "evidence_file": null
+          },
+          {
+            "date": "2026-11-20",
+            "action": "page_checked",
+            "action_label": "Operator's page checked",
+            "channel": null,
+            "channel_label": null,
+            "summary": "Go Zero's terms of commercial sales and privacy policy were read; neither mentions the open data or sets terms for it, and no rate limit was found. The terms page that the feed's connectors link answered HTTP 404.",
+            "quote": null,
+            "evidence_url": "https://www.gozerocharge.com/copy-of-privacy-policy",
+            "evidence_file": null
+          }
+        ]
+      },
+      "access_requested": null,
+      "access_granted": null,
+      "feeds": [
+        {
+          "kind": "locations",
+          "url": "https://ocpi.gozerocharge.com/api/v1/ocpi/2.2.1/locations",
+          "status": "documented"
+        },
+        {
+          "kind": "tariffs",
+          "url": "https://ocpi.gozerocharge.com/api/v1/ocpi/2.2/tariffs",
+          "status": "needs_testing"
+        }
+      ],
+      "licence": {
+        "name": "OGL-3.0",
+        "url": "https://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/",
+        "checked": "2026-11-20"
+      },
+      "attribution": "Contains data from Go Zero published under the Public Charge Point Regulations 2023, used in line with the Open Government Licence v3.0.",
+      "missing_publish_flag": null,
+      "swapped_coordinates": null,
+      "line_to_line_voltage": null,
+      "nonstandard_statuses": null,
+      "tariffs_from": null,
+      "nonstandard_parking_restrictions": null,
+      "zero_price_tariffs": null,
+      "vat_not_stated": null,
+      "vat_in_price": null,
+      "socket_types": null,
+      "status_from_connectors": null,
+      "floor_level_not_read": null,
+      "own_feed_over_copies": null,
+      "relay": null,
+      "expired_certificate": null,
+      "excluded_locations": null,
+      "sent_copy": null,
+      "rate_limit": {
+        "our_gap_seconds": 2.0,
+        "our_max_per_hour": 1800,
+        "ours": "At least 2 s between requests to the operator's host, measured from the end of the previous request (at most 1800 in any hour), retries included.",
+        "published": [],
+        "limits_checked": "2026-11-20",
+        "comparison": "No limit published (checked 2026-11-20). The gap is our own choice.",
+        "difference_from_regulations": "Neither the operator nor the regulations set a limit.",
+        "notes": "Go Zero's pages and the responses state no rate limit (read 2026-11-20). The 2 second gap is this project's own choice; no other operator file uses this host. Each response holds every record, so a daily run makes two requests and each hourly status refresh one.",
+        "per_key": null,
+        "allowance": null
+      },
+      "findings": [
+        {
+          "date": "2026-11-20",
+          "kind": "documentation",
+          "kind_label": "Documentation",
+          "summary": "Go Zero's open data page, which gave its feed addresses on cpo-api.gozerocharge.com, answers HTTP 404, and that host answers 404 to both paths. Its public dashboard now reads the locations feed on ocpi.gozerocharge.com. No page found gives the tariffs address on that host; the path from the earlier page answered there on 2026-11-20.",
+          "handling": "Both modules are read from ocpi.gozerocharge.com, the tariffs address marked as needing testing. If it stops answering, the prices show as unknown.",
+          "evidence_url": "https://cpo-data.gozerocharge.network/",
+          "status": "open",
+          "resolved_date": null
+        },
+        {
+          "date": "2026-11-20",
+          "kind": "documentation",
+          "kind_label": "Documentation",
+          "summary": "No terms for the data and no rate limit were found on Go Zero's pages. Every connector's terms_and_conditions field links https://gozerocharge.com/terms-conditions/, which answered HTTP 404 on 2026-11-20.",
+          "handling": "The data is used under the Open Government Licence, as DfT's guidance describes, and fetched once a day with an hourly status refresh, 2 seconds apart. The terms link is not shown on the map.",
+          "evidence_url": "https://ocpi.gozerocharge.com/api/v1/ocpi/2.2.1/locations",
+          "status": "open",
+          "resolved_date": null
+        },
+        {
+          "date": "2026-11-20",
+          "kind": "spec_conformance",
+          "kind_label": "Differs from OCPI 2.2.1",
+          "summary": "Every location gives its parking type as \"type\": \"PARKING_LOT\", the OCPI 2.1.1 field name, rather than OCPI 2.2.1's parking_type (on 2026-11-20).",
+          "handling": "The field is not read under another name, so the parking type shows as unknown.",
+          "evidence_url": "https://ocpi.gozerocharge.com/api/v1/ocpi/2.2.1/locations",
+          "status": "open",
+          "resolved_date": null
+        },
+        {
+          "date": "2026-11-20",
+          "kind": "data_quality",
+          "kind_label": "Data quirk",
+          "summary": "A few address fields look mistyped: one postcode starts with a zero instead of the letter O (\"S021 2EE\", in Winchester), one has no space (\"G639PT\"), one city also holds the postcode (\"Kinross KY13 9LY\"), and one location name starts with a space (on 2026-11-20).",
+          "handling": "Each is shown as published; the coordinates, not the postcode, place the locations on the map.",
+          "evidence_url": "https://ocpi.gozerocharge.com/api/v1/ocpi/2.2.1/locations",
+          "status": "open",
+          "resolved_date": null
+        }
+      ]
+    },
+    {
       "id": "ionity",
       "name": "IONITY",
       "enabled": true,
@@ -8432,6 +8609,77 @@
       ]
     },
     {
+      "id": "alfa_power",
+      "name": "Alfa Power",
+      "enabled": false,
+      "adapter": "unknown",
+      "engagement": {
+        "status": "no_public_feed_found",
+        "label": "No public feed found",
+        "headline": "No public feed found (as of 2026-11-20)",
+        "as_of": "2026-11-20",
+        "last_request": null,
+        "last_response": null,
+        "last_response_text": "No request sent",
+        "evidence": [
+          {
+            "date": "2026-11-20",
+            "url": "https://www.alfapower.co.uk/",
+            "file": null,
+            "note": "The address a service area guide gives for Alfa Power served a web host's \"domain only\" holding page over http on 2026-11-20; over https it served a certificate for another name. No page of Alfa Power's own was found."
+          }
+        ],
+        "log": [
+          {
+            "date": "2026-11-20",
+            "action": "feed_searched",
+            "action_label": "Searched for a feed",
+            "channel": null,
+            "channel_label": null,
+            "summary": "In a browser on 2026-11-20, alfapower.co.uk showed a web host's holding page and alfapower.com a domain-for-sale page, so no website, data route or contact channel of Alfa Power's own was found.",
+            "quote": null,
+            "evidence_url": "https://www.alfapower.co.uk/",
+            "evidence_file": null
+          }
+        ]
+      },
+      "access_requested": null,
+      "access_granted": null,
+      "feeds": [],
+      "licence": null,
+      "attribution": null,
+      "missing_publish_flag": null,
+      "swapped_coordinates": null,
+      "line_to_line_voltage": null,
+      "nonstandard_statuses": null,
+      "tariffs_from": null,
+      "nonstandard_parking_restrictions": null,
+      "zero_price_tariffs": null,
+      "vat_not_stated": null,
+      "vat_in_price": null,
+      "socket_types": null,
+      "status_from_connectors": null,
+      "floor_level_not_read": null,
+      "own_feed_over_copies": null,
+      "relay": null,
+      "expired_certificate": null,
+      "excluded_locations": null,
+      "sent_copy": null,
+      "rate_limit": {
+        "our_gap_seconds": 2.0,
+        "our_max_per_hour": 1800,
+        "ours": "At least 2 s between requests to the operator's host, measured from the end of the previous request (at most 1800 in any hour), retries included.",
+        "published": [],
+        "limits_checked": "unknown",
+        "comparison": "The operator's pages have not been checked for limits yet.",
+        "difference_from_regulations": "Not known yet.",
+        "notes": null,
+        "per_key": null,
+        "allowance": null
+      },
+      "findings": []
+    },
+    {
       "id": "amey_ev_charging",
       "name": "Amey EV Charging",
       "enabled": false,
@@ -8510,8 +8758,8 @@
       "engagement": {
         "status": "no_public_feed_found",
         "label": "No public feed found",
-        "headline": "No public feed found (as of 2026-10-23)",
-        "as_of": "2026-10-23",
+        "headline": "No public feed found (as of 2026-11-20)",
+        "as_of": "2026-11-20",
         "last_request": null,
         "last_response": null,
         "last_response_text": "No request sent",
@@ -8542,6 +8790,17 @@
             "channel": null,
             "channel_label": null,
             "summary": "In a browser on 2026-10-23, APCOA's legal page, help centre (EV Charging category and searches for open data, OCPI, charge point regulations, API and data request), APCOA Connect site and charging station map were read; none gives an open data feed or a data request route.",
+            "quote": null,
+            "evidence_url": "https://helpcentre.apcoa.com/hc/en-gb",
+            "evidence_file": null
+          },
+          {
+            "date": "2026-11-20",
+            "action": "page_checked",
+            "action_label": "Operator's page checked",
+            "channel": null,
+            "channel_label": null,
+            "summary": "In a browser on 2026-11-20, apcoa.co.uk's sitemap (1,000 addresses) and EV charging pages were unchanged since 2026-10-23, with no open data route. Requests can go through the help centre's \"Submit a request\" form.",
             "quote": null,
             "evidence_url": "https://helpcentre.apcoa.com/hc/en-gb",
             "evidence_file": null
@@ -9275,10 +9534,10 @@
       "enabled": false,
       "adapter": "unknown",
       "engagement": {
-        "status": "unknown",
-        "label": "Not yet established",
-        "headline": "Not yet established (as of 2026-10-10)",
-        "as_of": "2026-10-10",
+        "status": "no_public_feed_found",
+        "label": "No public feed found",
+        "headline": "No public feed found (as of 2026-11-20)",
+        "as_of": "2026-11-20",
         "last_request": null,
         "last_response": null,
         "last_response_text": "No request sent",
@@ -9293,6 +9552,17 @@
             "summary": "Connected Kerb's home page and its \"Data\" page are built by JavaScript and showed only their titles to this project's automated checks on 2026-10-10, and its sitemap lists no page whose address mentions open data or the regulations, so its open data route is not yet known; it needs checking in a browser.",
             "quote": null,
             "evidence_url": "https://connectedkerb.com/our-technology/data/",
+            "evidence_file": null
+          },
+          {
+            "date": "2026-11-20",
+            "action": "page_checked",
+            "action_label": "Operator's page checked",
+            "channel": null,
+            "channel_label": null,
+            "summary": "In a browser on 2026-11-20, Connected Kerb's \"Regulatory Data\" footer link was still a reliability report (a PDF last modified 16 February 2026), and no open data feed or request route was found. Requests can go through its contact page.",
+            "quote": null,
+            "evidence_url": "https://connectedkerb.com/contact-us/",
             "evidence_file": null
           }
         ]
@@ -9339,10 +9609,10 @@
       "enabled": false,
       "adapter": "unknown",
       "engagement": {
-        "status": "unknown",
-        "label": "Not yet established",
-        "headline": "Not yet established (as of 2026-10-23)",
-        "as_of": "2026-10-23",
+        "status": "no_public_feed_found",
+        "label": "No public feed found",
+        "headline": "No public feed found (as of 2026-11-20)",
+        "as_of": "2026-11-20",
         "last_request": null,
         "last_response": null,
         "last_response_text": "No request sent",
@@ -9364,6 +9634,28 @@
             "summary": "Its website returned HTTP 403 to an automated request on 2026-10-23, so it needs a check in a browser.",
             "quote": null,
             "evidence_url": "https://www.silverstonegreenenergy.co.uk/",
+            "evidence_file": null
+          },
+          {
+            "date": "2026-11-20",
+            "action": "page_checked",
+            "action_label": "Operator's page checked",
+            "channel": null,
+            "channel_label": null,
+            "summary": "In a browser on 2026-11-20, the register's address redirected to https://silverstonege.com/ (Silverstone Green Energy, an installer), whose EV charging page links Dragon Charging's own site. Dragon Charging's home, about, FAQ and contact pages and its sitemap (139 location pages) were read and have no open data, regulations, OCPI or API page. The site has a contact form (not used).",
+            "quote": null,
+            "evidence_url": "https://dragoncharging.co.uk/",
+            "evidence_file": null
+          },
+          {
+            "date": "2026-11-20",
+            "action": "feed_searched",
+            "action_label": "Searched for a feed",
+            "channel": null,
+            "channel_label": null,
+            "summary": "Checked this project's published map for Dragon Charging's places on 2026-11-20. Clenergy EV's feed has 8 points in the Pembrokeshire area and none at the Dragon location names checked (Tenby, Narberth, Crymych, St Davids, County Hall Haverfordwest), so Dragon's sites are very likely not in Clenergy EV's feed (inferred).",
+            "quote": null,
+            "evidence_url": "https://dragoncharging.co.uk/wp-sitemap-posts-locations-1.xml",
             "evidence_file": null
           }
         ]
@@ -9725,10 +10017,10 @@
       "enabled": false,
       "adapter": "unknown",
       "engagement": {
-        "status": "unknown",
-        "label": "Not yet established",
-        "headline": "Not yet established (as of 2026-10-23)",
-        "as_of": "2026-10-23",
+        "status": "possibly_out_of_scope",
+        "label": "Possibly out of scope",
+        "headline": "Possibly out of scope (as of 2026-11-20)",
+        "as_of": "2026-11-20",
         "last_request": null,
         "last_response": null,
         "last_response_text": "No request sent",
@@ -9748,6 +10040,17 @@
             "channel": null,
             "channel_label": null,
             "summary": "Its website could not be read from the cloud on 2026-10-23 (the TLS certificate check failed), so it needs a check in a browser.",
+            "quote": null,
+            "evidence_url": "https://easygo.co.uk/",
+            "evidence_file": null
+          },
+          {
+            "date": "2026-11-20",
+            "action": "page_checked",
+            "action_label": "Operator's page checked",
+            "channel": null,
+            "channel_label": null,
+            "summary": "In a browser on 2026-11-20, easygo.co.uk and easygo.ie both had TLS certificates that expired on 10 May 2026, with chains and host names in order. On the repository owner's instruction that day they were read past the expired certificate in the ADR 0021 way (only the date check relaxed): easygo.co.uk answers HTTP 301 to https://ezo.co.uk/ and easygo.ie answers HTTP 301 to https://ezo.ie/.",
             "quote": null,
             "evidence_url": "https://easygo.co.uk/",
             "evidence_file": null
@@ -10445,8 +10748,8 @@
       "engagement": {
         "status": "key_on_request",
         "label": "Key issued on request",
-        "headline": "Key issued on request (as of 2026-10-22)",
-        "as_of": "2026-10-22",
+        "headline": "Key issued on request (as of 2026-11-20)",
+        "as_of": "2026-11-20",
         "last_request": null,
         "last_response": null,
         "last_response_text": "No request sent",
@@ -10468,6 +10771,17 @@
             "summary": "EZO's \"Regulations & Compliance\" page and the \"PCPR Data Request - EZO\" Google form it links were read, not submitted; the form says the request will be shared with Eco-Movement and an answer will come within 5 working days.",
             "quote": "To request data, simply complete the PCPR Data Request form and our team will review your submission before providing the information.",
             "evidence_url": "https://ezo.co.uk/regulations-compliance/",
+            "evidence_file": null
+          },
+          {
+            "date": "2026-11-20",
+            "action": "page_checked",
+            "action_label": "Operator's page checked",
+            "channel": null,
+            "channel_label": null,
+            "summary": "In a browser on 2026-11-20, EasyGo's former websites easygo.co.uk and easygo.ie (expired certificates, read past on the owner's instruction) answered HTTP 301 to https://ezo.co.uk/ and https://ezo.ie/. EZO's own certificate was in date. The PCPR Data Request form has not been sent.",
+            "quote": null,
+            "evidence_url": "https://ezo.co.uk/",
             "evidence_file": null
           }
         ]
@@ -10886,81 +11200,6 @@
       "findings": []
     },
     {
-      "id": "go_zero",
-      "name": "Go Zero",
-      "enabled": false,
-      "adapter": "unknown",
-      "engagement": {
-        "status": "unknown",
-        "label": "Not yet established",
-        "headline": "Not yet established (as of 2026-10-10)",
-        "as_of": "2026-10-10",
-        "last_request": null,
-        "last_response": null,
-        "last_response_text": "No request sent",
-        "evidence": [],
-        "log": [
-          {
-            "date": "2026-10-09",
-            "action": "feed_searched",
-            "action_label": "Searched for a feed",
-            "channel": null,
-            "channel_label": null,
-            "summary": "A web search for a Go Zero open data or Public Charge Point Regulations page found none. Go Zero's own website was not searched directly; this needs checking.",
-            "quote": null,
-            "evidence_url": null,
-            "evidence_file": null
-          },
-          {
-            "date": "2026-10-10",
-            "action": "feed_searched",
-            "action_label": "Searched for a feed",
-            "channel": null,
-            "channel_label": null,
-            "summary": "Go Zero's own website was checked directly; it answered \"too many requests\" (HTTP 429) to an earlier read that day, a single later read of its open data page address answered HTTP 404, and its home page and site map have not yet been searched.",
-            "quote": null,
-            "evidence_url": "https://www.gozerocharge.com/public-charge-point-open-data",
-            "evidence_file": null
-          }
-        ]
-      },
-      "access_requested": null,
-      "access_granted": null,
-      "feeds": [],
-      "licence": null,
-      "attribution": null,
-      "missing_publish_flag": null,
-      "swapped_coordinates": null,
-      "line_to_line_voltage": null,
-      "nonstandard_statuses": null,
-      "tariffs_from": null,
-      "nonstandard_parking_restrictions": null,
-      "zero_price_tariffs": null,
-      "vat_not_stated": null,
-      "vat_in_price": null,
-      "socket_types": null,
-      "status_from_connectors": null,
-      "floor_level_not_read": null,
-      "own_feed_over_copies": null,
-      "relay": null,
-      "expired_certificate": null,
-      "excluded_locations": null,
-      "sent_copy": null,
-      "rate_limit": {
-        "our_gap_seconds": 2,
-        "our_max_per_hour": 1800,
-        "ours": "At least 2 s between requests to the operator's host, measured from the end of the previous request (at most 1800 in any hour), retries included.",
-        "published": [],
-        "limits_checked": "unknown",
-        "comparison": "The operator's pages have not been checked for limits yet.",
-        "difference_from_regulations": "Not known yet.",
-        "notes": null,
-        "per_key": null,
-        "allowance": null
-      },
-      "findings": []
-    },
-    {
       "id": "greenpoint_ev",
       "name": "GreenPoint EV",
       "enabled": false,
@@ -11308,8 +11547,8 @@
       "engagement": {
         "status": "unknown",
         "label": "Not yet established",
-        "headline": "Not yet established (as of 2026-10-23)",
-        "as_of": "2026-10-23",
+        "headline": "Not yet established (as of 2026-11-20)",
+        "as_of": "2026-11-20",
         "last_request": null,
         "last_response": null,
         "last_response_text": "No request sent",
@@ -11346,6 +11585,17 @@
             "summary": "Checked Mer UK's open data feed (https://uk.mer.eco/wp-json/ozev/v1/data) for Joju sites. It held 175 locations, all with operator \"Mer\" and suboperator \"Mer Fleet Services Ltd\". No owner, operator, name or other field mentions Joju, and only 2 locations have London postcodes. It has no Portsmouth or Eastleigh (Hampshire) locations, where a browser check the same day found Joju runs public chargers. So Joju's own Hampshire network is not in Mer UK's feed; whether any other Joju-installed chargers are in it is unknown.",
             "quote": null,
             "evidence_url": "https://uk.mer.eco/live-charge-point-data/",
+            "evidence_file": null
+          },
+          {
+            "date": "2026-11-20",
+            "action": "page_checked",
+            "action_label": "Operator's page checked",
+            "channel": null,
+            "channel_label": null,
+            "summary": "In a browser on 2026-11-20, Joju Solar's Joju Charging pages (on-street, council car parks and destination charging) name council customers but have no open data page. Requests can go through its contact page or its support desk.",
+            "quote": null,
+            "evidence_url": "https://www.jojusolar.co.uk/contact-us/",
             "evidence_file": null
           }
         ]
@@ -11392,10 +11642,10 @@
       "enabled": false,
       "adapter": "unknown",
       "engagement": {
-        "status": "unknown",
-        "label": "Not yet established",
-        "headline": "Not yet established (as of 2026-10-23)",
-        "as_of": "2026-10-23",
+        "status": "no_public_feed_found",
+        "label": "No public feed found",
+        "headline": "No public feed found (as of 2026-11-20)",
+        "as_of": "2026-11-20",
         "last_request": null,
         "last_response": null,
         "last_response_text": "No request sent",
@@ -11417,6 +11667,17 @@
             "summary": "Its website returned HTTP 403 to an automated request on 2026-10-23, so it needs a check in a browser.",
             "quote": null,
             "evidence_url": "https://www.leap24.co.uk/",
+            "evidence_file": null
+          },
+          {
+            "date": "2026-11-20",
+            "action": "page_checked",
+            "action_label": "Operator's page checked",
+            "channel": null,
+            "channel_label": null,
+            "summary": "In a browser on 2026-11-20, LEAP24's UK site and its sitemaps (29 pages and 16 posts) were read. They list about a dozen charging sites, mostly in and around London, plus support, overstay fee, partner card, location partner and policy pages, and no open data, regulations, OCPI or API page. The footer gives a support email address; no contact form was found.",
+            "quote": null,
+            "evidence_url": "https://leap24.co.uk/page-sitemap.xml",
             "evidence_file": null
           }
         ]
@@ -11961,8 +12222,8 @@
       "engagement": {
         "status": "no_public_feed_found",
         "label": "No public feed found",
-        "headline": "No public feed found (as of 2026-10-10)",
-        "as_of": "2026-10-10",
+        "headline": "No public feed found (as of 2026-11-20)",
+        "as_of": "2026-11-20",
         "last_request": null,
         "last_response": null,
         "last_response_text": "No request sent",
@@ -12001,6 +12262,17 @@
             "summary": "Osprey's site map page was searched and lists no open data page, feed or request route.",
             "quote": null,
             "evidence_url": "https://www.ospreycharging.co.uk/sitemap",
+            "evidence_file": null
+          },
+          {
+            "date": "2026-11-20",
+            "action": "page_checked",
+            "action_label": "Operator's page checked",
+            "channel": null,
+            "channel_label": null,
+            "summary": "In a browser on 2026-11-20, Osprey's home page, its sitemap (751 addresses), roaming, contact, terms and pricing pages were read. The only regulations page is still the post of 6 December 2023, unchanged, with no feed address or request route. The site gives a freephone number, an email link and a contact page.",
+            "quote": null,
+            "evidence_url": "https://www.ospreycharging.co.uk/post/consumer-charge-point-regulations",
             "evidence_file": null
           }
         ]
@@ -12264,10 +12536,10 @@
       "enabled": false,
       "adapter": "unknown",
       "engagement": {
-        "status": "unknown",
-        "label": "Not yet established",
-        "headline": "Not yet established (as of 2026-10-10)",
-        "as_of": "2026-10-10",
+        "status": "no_public_feed_found",
+        "label": "No public feed found",
+        "headline": "No public feed found (as of 2026-11-20)",
+        "as_of": "2026-11-20",
         "last_request": null,
         "last_response": null,
         "last_response_text": "No request sent",
@@ -12282,6 +12554,99 @@
             "summary": "Qwello's UK website is built by JavaScript and showed only its title to this project's automated checks on 2026-10-10, and it has no readable sitemap, so its open data route is not yet known; it needs checking in a browser.",
             "quote": null,
             "evidence_url": "https://qwello.uk/en",
+            "evidence_file": null
+          },
+          {
+            "date": "2026-11-20",
+            "action": "page_checked",
+            "action_label": "Operator's page checked",
+            "channel": null,
+            "channel_label": null,
+            "summary": "In a browser on 2026-11-20, qwello.uk had no open data page; its parent site qwello.eu mentions only AFIR, the EU rules. Requests can go through its UK contact page.",
+            "quote": null,
+            "evidence_url": "https://qwello.uk/en/contact",
+            "evidence_file": null
+          }
+        ]
+      },
+      "access_requested": null,
+      "access_granted": null,
+      "feeds": [],
+      "licence": null,
+      "attribution": null,
+      "missing_publish_flag": null,
+      "swapped_coordinates": null,
+      "line_to_line_voltage": null,
+      "nonstandard_statuses": null,
+      "tariffs_from": null,
+      "nonstandard_parking_restrictions": null,
+      "zero_price_tariffs": null,
+      "vat_not_stated": null,
+      "vat_in_price": null,
+      "socket_types": null,
+      "status_from_connectors": null,
+      "floor_level_not_read": null,
+      "own_feed_over_copies": null,
+      "relay": null,
+      "expired_certificate": null,
+      "excluded_locations": null,
+      "sent_copy": null,
+      "rate_limit": {
+        "our_gap_seconds": 2.0,
+        "our_max_per_hour": 1800,
+        "ours": "At least 2 s between requests to the operator's host, measured from the end of the previous request (at most 1800 in any hour), retries included.",
+        "published": [],
+        "limits_checked": "unknown",
+        "comparison": "The operator's pages have not been checked for limits yet.",
+        "difference_from_regulations": "Not known yet.",
+        "notes": null,
+        "per_key": null,
+        "allowance": null
+      },
+      "findings": []
+    },
+    {
+      "id": "rontec_charge",
+      "name": "Rontec CHARGE",
+      "enabled": false,
+      "adapter": "unknown",
+      "engagement": {
+        "status": "no_public_feed_found",
+        "label": "No public feed found",
+        "headline": "No public feed found (as of 2026-11-20)",
+        "as_of": "2026-11-20",
+        "last_request": null,
+        "last_response": null,
+        "last_response_text": "No request sent",
+        "evidence": [
+          {
+            "date": "2026-11-20",
+            "url": "https://www.rontec.com/evcharge",
+            "file": null,
+            "note": "Rontec's EV charging page describes CHARGE, its own charging brand at its service stations: 150 kW chargers, open 24 hours, paid by card or app. It gives no open data feed or request route."
+          }
+        ],
+        "log": [
+          {
+            "date": "2026-11-20",
+            "action": "page_checked",
+            "action_label": "Operator's page checked",
+            "channel": null,
+            "channel_label": null,
+            "summary": "In a browser on 2026-11-20, Rontec's EV charging page and its pages sitemap (26 pages) were read; there is no open data, regulations or API page. rontec.co.uk no longer resolves; Rontec's site is now rontec.com, with a contact page.",
+            "quote": null,
+            "evidence_url": "https://www.rontec.com/evcharge",
+            "evidence_file": null
+          },
+          {
+            "date": "2026-11-20",
+            "action": "feed_searched",
+            "action_label": "Searched for a feed",
+            "channel": null,
+            "channel_label": null,
+            "summary": "Checked this project's published map on 2026-11-20: no location in any feed is named Rontec, so CHARGE's sites are not on the map.",
+            "quote": null,
+            "evidence_url": "https://www.rontec.com/evcharge",
             "evidence_file": null
           }
         ]
@@ -12670,10 +13035,10 @@
       "enabled": false,
       "adapter": "unknown",
       "engagement": {
-        "status": "unknown",
-        "label": "Not yet established",
-        "headline": "Not yet established (as of 2026-10-10)",
-        "as_of": "2026-10-10",
+        "status": "no_public_feed_found",
+        "label": "No public feed found",
+        "headline": "No public feed found (as of 2026-11-20)",
+        "as_of": "2026-11-20",
         "last_request": null,
         "last_response": null,
         "last_response_text": "No request sent",
@@ -12688,6 +13053,17 @@
             "summary": "TotalEnergies' UK charging services page (HTTP 403) and the Source London website (no answer, then HTTP 503) could not be read by this project's automated checks on 2026-10-10, so its open data route is not yet known; it needs checking in a browser.",
             "quote": null,
             "evidence_url": "https://chargingservices.totalenergies.com/en/home/united-kingdom",
+            "evidence_file": null
+          },
+          {
+            "date": "2026-11-20",
+            "action": "page_checked",
+            "action_label": "Operator's page checked",
+            "channel": null,
+            "channel_label": null,
+            "summary": "In a browser on 2026-11-20, TotalEnergies' UK pages and sitemap (361 addresses) were read. They mention the regulations only for its 2025 rapid charger reliability figure and say it bought Source London in 2021; no open data page was found. Source London's website still did not connect (about 21 seconds, then no answer). Requests can go through TotalEnergies' charging services assistance page.",
+            "quote": null,
+            "evidence_url": "https://chargingservices.totalenergies.com/en/assistance",
             "evidence_file": null
           }
         ]
@@ -12869,10 +13245,10 @@
       "enabled": false,
       "adapter": "unknown",
       "engagement": {
-        "status": "unknown",
-        "label": "Not yet established",
-        "headline": "Not yet established (as of 2026-10-10)",
-        "as_of": "2026-10-10",
+        "status": "no_public_feed_found",
+        "label": "No public feed found",
+        "headline": "No public feed found (as of 2026-11-20)",
+        "as_of": "2026-11-20",
         "last_request": null,
         "last_response": null,
         "last_response_text": "No request sent",
@@ -12887,6 +13263,17 @@
             "summary": "On 2026-10-10 www.wattif.co.uk sent visitors on to a page at /lander whose code loads from an address named \"parking-lander\", and its sitemap listed only that page, so Wattif's current website and open data route were not found; they need checking in a browser.",
             "quote": null,
             "evidence_url": "https://www.wattif.co.uk/",
+            "evidence_file": null
+          },
+          {
+            "date": "2026-11-20",
+            "action": "page_checked",
+            "action_label": "Operator's page checked",
+            "channel": null,
+            "channel_label": null,
+            "summary": "In a browser on 2026-11-20, wattif.co.uk was still a parked page. Wattif's own site, wattifev.com, links only a UK app and a contact page, and has no open data page.",
+            "quote": null,
+            "evidence_url": "https://wattifev.com/contact/",
             "evidence_file": null
           }
         ]
