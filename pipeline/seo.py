@@ -3,8 +3,8 @@
 Every page gets, in its head, a short description, its one full address (a canonical
 link, so search engines count addresses that differ only in case, or end in index.html,
 as one page) and Open Graph tags, so a shared link shows a title, a summary and the
-site's picture (site/assets/share.png: the site's icon and name, no map or operator
-data). The map page also describes its data as a schema.org Dataset, which lets Google's
+site's picture (site/assets/share.png: the site's icon and name, with no map and no
+operator's data). The map page also describes its data as a schema.org Dataset, which lets Google's
 Dataset Search list it.
 
 The site build writes sitemap.xml, the list of every page, for submitting to Google
@@ -24,13 +24,12 @@ from pathlib import Path
 
 from pipeline.project import NAME, SITE_URL
 
-# The picture a shared link shows. Its alt text describes it for screen readers.
+# The picture a shared link shows, the same for every page: the site's icon with its
+# colours swapped, the words "UK public EV charger map", a line on where the data comes
+# from and OEVM, set in Inter, 1200 by 630 pixels. Its alt text describes it.
 SHARE_IMAGE = "assets/share.png"
 SHARE_IMAGE_SIZE = (1200, 630)
-SHARE_IMAGE_ALT = (
-    "The OEVM icon, a white lightning bolt on a blue circle, beside the words "
-    "UK public EV charger map"
-)
+SHARE_IMAGE_ALT = "A lightning bolt in a white circle beside the words UK public EV charger map"
 # Search results show about this many characters of a description.
 DESCRIPTION_LENGTH = 160
 

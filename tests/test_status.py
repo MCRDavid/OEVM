@@ -67,7 +67,9 @@ def test_the_page_renders_from_fixtures_with_neutral_labels(logs, tmp_path):
     assert "Fetched, incomplete" in text  # the char.gy fixtures stop after two pages
     assert "4 of 4 (100%)" in text
     assert "they do not say whether anyone has met their legal duties" in text
-    assert not {"script", "img", "iframe", "link"} & set(tags)
+    assert not {"script", "img", "iframe"} & set(tags)
+    # The only link tag is the page's canonical address, which loads nothing.
+    assert page.count("<link") == page.count('<link rel="canonical" href="https://') == 1
     jsonschema.validate(data, SCHEMA)
 
 

@@ -2,14 +2,15 @@
 
 import json
 import re
+import struct
 from html.parser import HTMLParser
 from pathlib import Path
 from urllib.parse import urlsplit
 
 import pytest
 
-from pipeline import build_site, documents
-from pipeline.project import REPOSITORY_URL
+from pipeline import build_site, documents, seo
+from pipeline.project import REPOSITORY_URL, SITE_URL
 from pipeline.registry import ROOT
 from pipeline.transparency import short_disclaimer
 
@@ -18,15 +19,17 @@ SCRIPTS = sorted((ROOT / "site" / "assets" / "js").glob("*.js"))
 
 
 class Page(HTMLParser):
-    """Collects links, meta tags, scripts and the text of the footer note."""
+    """Collects links, meta tags, scripts, JSON-LD and the text of the footer note."""
 
     def __init__(self) -> None:
         super().__init__()
         self.hrefs: list[str] = []
         self.meta: dict[str, str] = {}
         self.scripts: list[dict] = []
+        self.json_ld: list[str] = []
         self.note: list[str] = []
         self._in_note = False
+        self._in_json_ld = False
 
     def handle_starttag(self, tag, attrs):
         attributes = dict(attrs)
@@ -38,16 +41,21 @@ class Page(HTMLParser):
                 self.meta[key.lower()] = attributes.get("content", "")
         if tag == "script":
             self.scripts.append(attributes)
+            self._in_json_ld = attributes.get("type") == "application/ld+json"
         if tag == "p" and attributes.get("class") == "note":
             self._in_note = True
 
     def handle_endtag(self, tag):
         if tag == "p":
             self._in_note = False
+        if tag == "script":
+            self._in_json_ld = False
 
     def handle_data(self, data):
         if self._in_note:
             self.note.append(data)
+        if self._in_json_ld:
+            self.json_ld.append(data)
 
 
 @pytest.fixture(scope="module")
@@ -101,7 +109,37 @@ def test_the_content_security_policy_allows_only_this_site_and_the_basemap(page)
 
 
 def test_scripts_are_local_modules(page):
-    assert page.scripts == [{"type": "module", "src": "assets/js/main.js"}]
+    # The other script element is the Dataset for search engines: JSON, which browsers
+    # never run, so the policy above still lets no inline script run.
+    assert page.scripts == [
+        {"type": "application/ld+json"},
+        {"type": "module", "src": "assets/js/main.js"},
+    ]
+
+
+def test_the_map_page_gives_search_engines_its_address_description_and_data(page):
+    text = INDEX.read_text(encoding="utf-8")
+    assert f"<title>{seo.MAP_TITLE}: OEVM</title>" in text
+    # If the site moves, SITE_URL in pipeline/project.py and this head change together.
+    assert seo.head("", seo.MAP_TITLE, seo.MAP_DESCRIPTION) in text
+    assert f'<link rel="canonical" href="{SITE_URL}">' in text
+    assert page.meta["description"] == seo.MAP_DESCRIPTION
+    assert seo.dataset_script() in text
+    assert json.loads("".join(page.json_ld)) == seo.dataset()
+
+
+def test_the_map_page_says_in_words_what_it_shows():
+    # Search engines read words, and the chargers are drawn by the script.
+    about = re.search(r'<p class="about">(.+?)</p>', INDEX.read_text(encoding="utf-8"))
+    assert about and "Public Charge Point Regulations 2023" in about.group(1)
+    assert chr(0x2014) not in about.group(1)
+
+
+def test_the_link_preview_picture_is_a_png_of_the_stated_size():
+    data = (ROOT / "site" / seo.SHARE_IMAGE).read_bytes()
+    assert data[:8] == b"\x89PNG\r\n\x1a\n"
+    assert struct.unpack(">II", data[16:24]) == seo.SHARE_IMAGE_SIZE
+    assert len(data) < 150_000
 
 
 @pytest.mark.parametrize("script", SCRIPTS, ids=lambda path: path.name)
@@ -206,9 +244,45 @@ def test_build_copies_the_site_maplibre_and_notices(node_modules, tmp_path):
     assert f"map style: {build_site.STYLE_URL}" in report
     for folder in ("disclaimer", "data-licences", "security", "report", "findings"):
         assert "<h1>" in (out / folder / "index.html").read_text(encoding="utf-8")
-    published = report[-1]
+    published = report[-2]
     assert published.startswith("published disclaimer/, data-licences/, security/, report/, ")
     assert published.endswith(f"findings/ and {len(documents.posts())} findings posts")
+    assert report[-1] == f"wrote sitemap.xml listing {len(seo.pages(out))} pages"
+
+
+def test_the_sitemap_lists_every_page_of_the_built_site(node_modules, tmp_path):
+    out = tmp_path / "build"
+    # The deploy workflow puts the daily run's feed health page in place before the build.
+    (out / "status").mkdir(parents=True)
+    (out / "status" / "index.html").write_text("<!doctype html>", encoding="utf-8")
+    build_site.build(out)
+    sitemap = (out / "sitemap.xml").read_text(encoding="utf-8")
+    listed = re.findall(r"<loc>([^<]+)</loc>", sitemap)
+    assert listed[0] == SITE_URL
+    assert len(listed) == len(set(listed)) == sitemap.count("<url>")
+    folders = [url.removeprefix(SITE_URL) for url in listed]
+    for folder in ("status/", "transparency/", "privacy/", "findings/", "data-licences/"):
+        assert folder in folders
+    for post in documents.posts():
+        assert f"findings/{post['name']}/" in folders
+    for folder in folders:
+        assert (out / folder / "index.html").is_file(), folder
+    assert len(folders) == len(list(out.rglob("index.html")))
+
+
+def test_every_built_page_names_its_own_address_and_has_a_description(node_modules, tmp_path):
+    out = tmp_path / "build"
+    build_site.build(out)
+    for path in out.rglob("index.html"):
+        folder = path.parent.relative_to(out).as_posix()
+        address = SITE_URL if folder == "." else f"{SITE_URL}{folder}/"
+        text = path.read_text(encoding="utf-8")
+        parsed = Page()
+        parsed.feed(text)
+        assert text.count('rel="canonical"') == 1, folder
+        assert f'<link rel="canonical" href="{address}">' in text, folder
+        assert f'<meta property="og:url" content="{address}">' in text, folder
+        assert 20 < len(parsed.meta.get("description", "")) <= seo.DESCRIPTION_LENGTH, folder
 
 
 def test_every_link_between_pages_of_the_built_site_finds_a_page(node_modules, tmp_path):
