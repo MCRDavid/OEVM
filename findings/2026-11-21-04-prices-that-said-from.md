@@ -9,8 +9,8 @@ applies at any time.
 
 OCPI 2.2.1 lets each part of a tariff carry conditions, such as a time of day, days of the week or
 a date range. Where a price has a condition, the map's details say when it applies, and the label
-marks it "from". In each case below, the feed's tariffs are published unchanged in each location's data file; only
-the wording and the labels changed.
+marks it "from". In each case below, the feed's tariffs are published unchanged in each location's
+data file; only the wording and the labels changed.
 
 ## A start date that had passed
 

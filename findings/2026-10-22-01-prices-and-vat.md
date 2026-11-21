@@ -66,6 +66,13 @@ operator's feed does not state it". The operator's own tariffs are published unc
 location's data file; only the prices shown are worked out with VAT added. Any other network whose
 prices give no VAT rate keeps the "excl. VAT" mark until a decision is recorded for it.
 
+**Update, 21 November 2026:** from 14 November 2026 every price including VAT is shown to the whole
+penny, half pennies rounding up, so that char.gy charger's "from 39p" is unchanged but a price of
+0.33 without VAT now shows as 40p rather than 39.6p. From 15 November 2026 the note is shorter:
+"including VAT (20% added by this project)". See [the post on Pod's
+prices](findings/pod-prices-exclude-vat/) and [the post on prices that said
+"from"](findings/prices-that-said-from/).
+
 ## Other ways prices differ
 
 Prices also differ between feeds in ways that VAT does not explain, set out in [the post on data

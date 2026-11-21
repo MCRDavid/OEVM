@@ -61,6 +61,11 @@ error occurred") every time, whether it is asked for in a page of 100, of 10 or 
 October 2026). The map skips past it, so the [feed health page](status/) shows Monta's runs as
 incomplete. Each location also names its site owner; the map does not keep that field.
 
+**Update, 21 November 2026:** from 13 to 14 November 2026 Monta's server answered HTTP 504, a
+gateway time-out, for a page near the end of its list, so the map kept Monta's copy of 13
+November for a day. It read the whole list again from 15 November 2026. See [the post on refusals
+and outages](findings/refusals-and-outages/).
+
 ## Prices
 
 In the 4,775 locations read on 23 October 2026, 17,391 of the 17,675 connectors name a tariff id,

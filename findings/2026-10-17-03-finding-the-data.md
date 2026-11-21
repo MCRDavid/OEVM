@@ -66,6 +66,11 @@ that exchange. It has not yet asked Tesla for an invitation.
   requests with a browser check (HTTP 403).
 - **Self-service.** Believ offers a free account at https://api.believ.com/.
 
+**Update, 21 November 2026:** Osprey's website, read in a browser on 20 November 2026, still has no
+feed address or request route, and its page on the regulations is unchanged. No request had been
+sent to Osprey or FOR EV by 21 November 2026. See [the post on Go Zero's feed and networks with no
+data route](findings/go-zero-and-no-data-route/).
+
 ## Terms on the data
 
 Regulation 10(5) asks for the data "without any requirement to agree to terms and conditions
@@ -108,6 +113,10 @@ through a full fetch three times on 8 and 9 October 2026, after 54 to 58 pages.
 - Go Zero's open data page answered "page not found" on 9, 10 and 11 October 2026.
 - ChargePlace Scotland says the owners of the charge points on its network will move them to new
   networks by the end of December 2026.
+
+**Update, 21 November 2026:** Go Zero's feed was found on 20 November 2026, on a newer host, read
+by a public dashboard that Go Zero's website links, and its 57 locations are now on the map. See
+[the post on Go Zero's feed](findings/go-zero-and-no-data-route/).
 
 A rename or move can break the links that data users rely on, and we found no complete public list
 of data addresses to update.

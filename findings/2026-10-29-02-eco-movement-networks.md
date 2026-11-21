@@ -65,6 +65,12 @@ asked to wait, every network goes back to even spacing for the rest of the run. 
 evening all 22 networks were read in 1 minute 18 seconds, 57 requests, with nothing refused, and the
 whole daily fetch took 14 minutes.
 
+**Update, 21 November 2026:** from 30 October 2026 most daily runs went back to even spacing within
+their first seconds. From 13 November 2026 the logs showed why: the platform answered some requests
+HTTP 429 with no wait named, while every token was within its published limits. Since 15 November
+2026, by the owner's decision, such an answer slows only the token that got it. See [the post on
+refusals and outages](findings/refusals-and-outages/).
+
 Every response recorded on 29 October 2026 linked to a next page that starts after the last record,
 for example at offset 77 when the total was 77. The project stops once the stated total has
 arrived, which saves one request per network for each of locations and tariffs.
