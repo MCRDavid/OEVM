@@ -14,6 +14,7 @@ import {
   cheaperFor,
   cheaperParts,
   cheapest,
+  lowestWithVat,
   needsSubscription,
   payNowHint,
   payNowStart,
@@ -21,6 +22,7 @@ import {
   withheldFor,
   withheldParts,
 } from "./plans.js";
+import { cardAsPlan, cardTextFor, ownOffers } from "./cards.js";
 import { rateSummary } from "./rates.js";
 
 const WEEKDAYS = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"];
@@ -441,7 +443,8 @@ function currentsHere(location) {
 
 // The subscription calculator for this location. "What you pay now" starts from the
 // lowest price the visitor has here: a published price including VAT, a ticked plan with
-// no monthly fee, or their own rate for this network; they can change any figure.
+// no monthly fee, or their own rate or card with no monthly fee for this network; they
+// can change any figure.
 function calculator(detail, plans, mine, rate) {
   const start = payNowStart({
     tariffOptions: detail.tariff_options,
@@ -484,18 +487,29 @@ export function cheaperSection(detail, withheld = []) {
   });
 }
 
-// The visitor's own rates for this network (rates.js, ADR 0035), said to be theirs, with
-// a button to change them. Where paying the operator directly is said to be cheaper
-// (ADR 0034) and the visitor has typed in no rate, a button offers to type one in.
-export function ownRateSection(rate, { cheaper = false, onEditRate = null } = {}) {
-  if (rate) {
+// The visitor's own rates for this network (rates.js, ADR 0035) and their own cards that
+// work on it (cards.js), said to be theirs, with buttons to change them. op is this
+// network's id, for each card's figures here. Where paying the operator directly is
+// said to be cheaper (ADR 0034) and the visitor has typed in nothing for this network, a
+// button offers to type in a rate.
+export function ownRateSection(rate, { cards = [], op = null, cheaper = false, onEditRate = null, onEditCards = null } = {}) {
+  if (rate || cards.length) {
     return [
       h(
         "div",
         { className: "own-rate" },
-        h("p", {}, h("strong", { text: "Your own rates for this network: " }), `${rateSummary(rate)}${rate.note ? ` (${rate.note})` : ""}.`),
+        rate
+          ? h("p", {}, h("strong", { text: "Your own rates for this network: " }), `${rateSummary(rate)}${rate.note ? ` (${rate.note})` : ""}.`)
+          : null,
+        ...cards.map((card) => {
+          const here = cardTextFor(card, op) || "no price typed in for this network";
+          return h("p", {}, h("strong", { text: `Your card “${card.name}”: ` }), `${here}${card.note ? ` (${card.note})` : ""}.`);
+        }),
         h("p", { className: "hint", text: "Typed in by you and kept in this browser. This site has not checked them." }),
-        onEditRate ? h("button", { type: "button", className: "own-rate-edit", onClick: onEditRate, text: "Change your rates" }) : null,
+        rate && onEditRate ? h("button", { type: "button", className: "own-rate-edit", onClick: onEditRate, text: "Change your rates" }) : null,
+        cards.length && onEditCards
+          ? h("button", { type: "button", className: "own-rate-edit", onClick: onEditCards, text: "Change your cards" })
+          : null,
       ),
     ];
   }
@@ -513,15 +527,18 @@ export function ownRateSection(rate, { cheaper = false, onEditRate = null } = {}
 // Plans from providers' own pages that cover this location's network, opened when asked
 // for, with the calculator. A plan that beats every tariff listed here is said in one
 // line above them. Where the operator's own plans cannot be shown because of its terms,
-// a note says so. rate is the visitor's own rate for this network, if any (ADR 0035).
-export function plansSection(detail, allPlans, mine = new Set(), withheld = [], rate = null) {
+// a note says so. rate is the visitor's own figures for this network with no monthly fee,
+// if any: their own rate (ADR 0035) or their offers from ownOffers in cards.js. ownPlans
+// are their own cards with a monthly fee that work here, as plans (cardAsPlan), which
+// the calculator offers too, after the listed plans.
+export function plansSection(detail, allPlans, mine = new Set(), withheld = [], rate = null, ownPlans = []) {
   const operatorId = detail.location?.provenance?.source_id;
   const plans = plansFor(operatorId, allPlans);
   // An operator said to be cheaper to pay directly has that note under the cheapest price.
   const held = withheldFor(operatorId, withheld)
     .filter((entry) => !cheaperFor(entry, detail.location).length)
     .map(withheldNote);
-  if (!plans.length) return held;
+  if (!plans.length) return [...held, ownPlans.length ? calculator(detail, ownPlans, mine, rate) : null].filter(Boolean);
   const free = plans.filter((plan) => !needsSubscription(plan));
   const paid = plans.filter(needsSubscription);
   const yours = bestPlan(
@@ -548,7 +565,7 @@ export function plansSection(detail, allPlans, mine = new Set(), withheld = [], 
       ...(paid.length
         ? [h("h4", { text: `With a paid subscription (${paid.length})` }), list("With a paid subscription", paid)]
         : []),
-      calculator(detail, plans, mine, rate),
+      calculator(detail, [...plans, ...ownPlans], mine, rate),
     ),
     ...held,
   ].filter(Boolean);
@@ -563,8 +580,12 @@ export function mapLabelLine(detail, label, filtered = false) {
   if (!label) return null;
   let source;
   if (label.rate) {
-    const note = label.rate.note ? ` (${label.rate.note})` : "";
-    source = ` per kWh with your own ${label.rate.cur.toUpperCase()} rate for this network${note}, typed in by you.`;
+    const own = label.rate;
+    const note = own.note ? ` (${own.note})` : "";
+    const cur = own.cur.toUpperCase();
+    if (!own.card) source = ` per kWh with your own ${cur} rate for this network${note}, typed in by you.`;
+    else if (own.pct != null) source = ` per kWh with your card “${own.card}”${note}: ${own.pct}% off the published price, as you typed in.`;
+    else source = ` per kWh with your card “${own.card}”${note}: its ${cur} price, typed in by you.`;
   } else if (label.plan) {
     source = ` per kWh with your plan ${label.plan.name} from ${label.plan.provider} (${label.plan.fee_text.toLowerCase()}).`;
   } else if (label.low === null) {
@@ -654,6 +675,8 @@ export function renderDetail(
     filtered = false,
     rate = null,
     onEditRate = null,
+    cards = [],
+    onEditCards = null,
   },
 ) {
   const location = detail.location;
@@ -673,6 +696,16 @@ export function renderDetail(
   report.searchParams.set("where", location.id);
   const sources = detail.tariff_sources ?? [];
   const cheaper = cheaperSection(detail, withheld);
+  // The visitor's own figures here: their own rate for this network and their own cards
+  // that work on it. Cards with a monthly fee go in the calculator rather than being
+  // where it starts.
+  const op = location.provenance?.source_id ?? null;
+  const own = ownOffers(op, rate ? new Map([[op, rate]]) : null, cards, { withFee: false });
+  const currents = currentsHere(location);
+  const published = lowestWithVat(detail.tariff_options);
+  const ownPlans = cards
+    .map((card) => cardAsPlan(card, { op, cur: currents.includes("dc") ? "dc" : "ac", published }))
+    .filter(Boolean);
   return [
     h("h2", { id: "detail-heading", tabindex: "-1", text: location.name || "Charger location" }),
     h("p", { className: "operator", text: location.operator?.name ?? "Operator not given" }),
@@ -689,7 +722,7 @@ export function renderDetail(
     // Kept even when empty, so the line can follow the filters while the panel is open.
     h("div", { id: "detail-label" }, mapLabelLine(detail, label, filtered)),
     ...cheaper,
-    ...ownRateSection(rate, { cheaper: cheaper.length > 0, onEditRate }),
+    ...ownRateSection(rate, { cards, op, cheaper: cheaper.length > 0, onEditRate, onEditCards }),
     ...notesSection(notes),
     h("h3", { text: evses.length ? `Charge points (${evses.length})` : "Charge points" }),
     groups.length
@@ -705,7 +738,7 @@ export function renderDetail(
         : "Prices and statuses are as the operator published them, and may have changed. Always check at the charger.",
     }),
     ...tariffSection(detail),
-    ...plansSection(detail, plans, mine, withheld, rate),
+    ...plansSection(detail, plans, mine, withheld, own, ownPlans),
     h(
       "ul",
       { className: "detail-links" },

@@ -1002,6 +1002,39 @@ body[data-view="list"] .map-view {
   margin: 0.25rem 0;
 }
 
+/* The visitor's own cards (ADR 0035): the networks a card works on scroll in their own
+   box, so a card for every network does not make the panel very long */
+.my-cards label {
+  margin-top: 0.25rem;
+}
+
+.my-cards .actions {
+  margin: 0.5rem 0 0;
+}
+
+.my-cards .card-networks {
+  margin: 0.5rem 0;
+}
+
+.my-cards .card-ops {
+  max-height: 15rem;
+  overflow-y: auto;
+  margin-top: 0.5rem;
+}
+
+.my-cards .card-nets {
+  margin: 0.5rem 0;
+  border-top: 1px solid var(--line);
+  border-bottom: 1px solid var(--line);
+}
+
+.my-cards .card-nets > summary {
+  min-height: 44px;
+  padding: 0.6rem 0;
+  font-weight: 600;
+  cursor: pointer;
+}
+
 .own-rate {
   margin: 0.5rem 0;
 }

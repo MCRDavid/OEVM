@@ -1,6 +1,7 @@
 import assert from "node:assert/strict";
 import { test } from "node:test";
 
+import { cleanCards, ownOffers } from "../../site/assets/js/cards.js";
 import { defaults } from "../../site/assets/js/filters.js";
 import { bestPlans, priceLabel } from "../../site/assets/js/labels.js";
 
@@ -163,7 +164,7 @@ test("the visitor's own rate gives the label for AC or DC connectors, and says s
   assert.equal(label.text, "48p");
   assert.equal(label.low, 48);
   assert.equal(label.lvat, true);
-  assert.deepEqual(label.rate, { ...rate({ dc: 48 }), cur: "dc" });
+  assert.deepEqual(label.rate, { op: "geniepoint", value: 48, cur: "dc", card: null, note: "", pct: null });
   assert.equal(label.plan, null);
   // A DC rate never prices an AC connector, nor an AC rate a DC one.
   assert.equal(priceLabel(site(ac), defaults(), null, rate({ dc: 30 })).rate, null);
@@ -186,4 +187,25 @@ test("an own rate follows the filters, the maximum price, and loses to free and 
   assert.equal(tie.plan.id, "p.cheap");
   assert.equal(tie.rate, null);
   assert.equal(priceLabel(site(dc), defaults(), plan("p.cheap", 39), rate({ dc: 38 })).text, "38p");
+});
+
+test("the visitor's own cards price a network's connectors, a percentage off its own price", () => {
+  const cards = cleanCards([
+    { id: "card1", name: "Card A", ops: ["geniepoint"], dc: 70 },
+    { id: "card2", name: "Card B", ops: ["geniepoint"], pct: 10, note: "work" },
+  ]);
+  const offers = ownOffers("geniepoint", new Map(), cards);
+  // 10% off the DC connector's 85p is 76.5p, so 77p; Card A's 70p is lower.
+  const label = priceLabel(site(dc), defaults(), null, offers);
+  assert.equal(label.text, "70p");
+  assert.deepEqual(label.rate, { op: "geniepoint", value: 70, cur: "dc", card: "Card A", note: "", pct: null });
+  // On AC only Card B gives a figure: 10% off 57.6p is 51.84p, so 52p, the lowest here.
+  const slowOnly = priceLabel(site(dc, ac), defaults(), null, offers);
+  assert.equal(slowOnly.text, "52p");
+  assert.deepEqual(slowOnly.rate, { op: "geniepoint", value: 52, cur: "ac", card: "Card B", note: "work", pct: 10 });
+  // A percentage off needs a published price including VAT on that connector.
+  const pctOnly = ownOffers("geniepoint", new Map(), cleanCards([{ id: "c", name: "C", ops: ["geniepoint"], pct: 10 }]));
+  assert.equal(priceLabel(site({ ...unknown, cur: "dc" }), defaults(), null, pctOnly), null);
+  assert.equal(priceLabel(site({ ...noVat, cur: "dc" }), defaults(), null, pctOnly).rate, null);
+  assert.equal(priceLabel(site({ ...free, cur: "ac" }), defaults(), null, pctOnly).text, "Free");
 });

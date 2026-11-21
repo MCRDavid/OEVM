@@ -4,6 +4,7 @@
 // can be blocked or unavailable.
 
 import { parse, serialise } from "./filters.js";
+import { cardList, cleanCards } from "./cards.js";
 import { cleanRates, rateList } from "./rates.js";
 
 export const STORAGE_KEY = "oevm.settings.v1";
@@ -59,15 +60,25 @@ export function createSettings(storage) {
         return new Map();
       }
     },
+    // The visitor's own cards (cards.js, ADR 0035), by id, if saved.
+    cards() {
+      try {
+        return cleanCards(JSON.parse(read())?.cards);
+      } catch {
+        return new Map();
+      }
+    },
     // Only called after the visitor has opted in. Returns false if saving failed. theme is
-    // saved only when the visitor picked one; otherwise the page follows the device. plans
-    // and rates are saved only when the visitor ticked or typed in at least one.
-    save(state, theme = null, plans = [], rates = new Map()) {
+    // saved only when the visitor picked one; otherwise the page follows the device. plans,
+    // rates and cards are saved only when the visitor ticked or typed in at least one.
+    save(state, theme = null, plans = [], rates = new Map(), cards = new Map()) {
       const saved = { version: 1, filters: serialise(state) };
       if (THEMES.includes(theme)) saved.theme = theme;
       if (plans.length) saved.plans = [...plans];
       const own = rateList(rates);
       if (own.length) saved.rates = own;
+      const mine = cardList(cards);
+      if (mine.length) saved.cards = mine;
       try {
         storage.setItem(STORAGE_KEY, JSON.stringify(saved));
         return true;

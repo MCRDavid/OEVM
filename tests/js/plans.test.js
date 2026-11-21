@@ -12,12 +12,14 @@ import {
   paidPlans,
   payNowHint,
   payNowStart,
+  lowestWithVat,
   penceText,
   plansFor,
   poundsText,
   withheldFor,
   withheldParts,
 } from "../../site/assets/js/plans.js";
+import { cleanCards, ownOffers } from "../../site/assets/js/cards.js";
 
 const PLANS = [
   { id: "a.discount", operator_ids: ["jolt"], ppk: null, discount_percent: 20, monthly_fee: 0 },
@@ -206,7 +208,40 @@ test("the charger calculator starts from the lowest price the visitor has there"
   assert.equal(payNowStart(), null);
 });
 
+test("the charger calculator can start from the visitor's own card, but not one with a fee", () => {
+  const tariffOptions = [
+    { state: "priced", includes_vat: true, ppk_low: 79 },
+    { state: "priced", includes_vat: true, ppk_low: 85 },
+    { state: "priced", includes_vat: false, ppk_low: 30 },
+  ];
+  assert.equal(lowestWithVat(tariffOptions), 79);
+  assert.equal(lowestWithVat([tariffOptions[2]]), null);
+  const cards = cleanCards([
+    { id: "a", name: "Card A", ops: ["ionity"], pct: 10 },
+    { id: "b", name: "Card B", ops: ["ionity"], dc: 60, fee: 4.99 },
+  ]);
+  // Card B has a fee, so the calculator weighs it up instead; Card A takes 10% off 79p.
+  const offers = ownOffers("ionity", null, cards, { withFee: false });
+  assert.deepEqual(payNowStart({ tariffOptions, rate: offers, currents: ["dc"] }), {
+    kind: "rate",
+    ppk: 71,
+    item: { cur: "dc", pence: 71, card: "Card A", pct: 10 },
+  });
+  // With no published price including VAT, a percentage off gives nothing.
+  assert.equal(payNowStart({ tariffOptions: [tariffOptions[2]], rate: offers, currents: ["dc"] }), null);
+  const priced = ownOffers("ionity", null, cleanCards([{ id: "c", name: "Card C", ops: ["ionity"], dc: 50 }]));
+  assert.deepEqual(payNowStart({ tariffOptions, rate: priced, currents: ["dc"] }).item, { cur: "dc", pence: 50, card: "Card C" });
+});
+
 test("the hint says where the calculator's starting price came from", () => {
+  assert.equal(
+    payNowHint({ kind: "rate", item: { cur: "dc", pence: 50, card: "Card C" } }),
+    "Starts from the DC price you typed in for your card “Card C”.",
+  );
+  assert.equal(
+    payNowHint({ kind: "rate", item: { cur: "dc", pence: 71, card: "Card A", pct: 10 } }),
+    "Starts from your card “Card A”: 10% off the lowest published price here, as you typed in.",
+  );
   assert.equal(payNowHint(null), "No price including VAT is published here. Enter what you pay.");
   assert.equal(payNowHint({ kind: "tariff" }), "Starts from the lowest published price here that includes VAT.");
   assert.equal(

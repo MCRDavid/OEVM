@@ -125,3 +125,52 @@ test("own rates are saved only with the settings, checked when read, and forget 
   assert.equal(settings.rates().size, 0);
   assert.equal(createSettings(blocked).rates().size, 0);
 });
+
+test("own cards are saved only with the settings, checked when read, and forget removes them", () => {
+  const storage = memoryStorage();
+  const settings = createSettings(storage);
+  assert.equal(settings.cards().size, 0);
+  const cards = new Map([
+    [
+      "card1",
+      {
+        id: "card1",
+        name: "My card",
+        ops: ["ionity", "fastned"],
+        ac: null,
+        dc: 59,
+        pct: null,
+        fee: 7.99,
+        note: "",
+        nets: { fastned: { ac: null, dc: null, pct: 10 } },
+      },
+    ],
+  ]);
+  settings.save(defaults(), null, [], new Map(), cards);
+  // Only the parts given are saved.
+  assert.deepEqual(JSON.parse(storage.items.get(STORAGE_KEY)).cards, [
+    { id: "card1", name: "My card", ops: ["ionity", "fastned"], dc: 59, fee: 7.99, nets: { fastned: { pct: 10 } } },
+  ]);
+  assert.deepEqual(settings.cards().get("card1"), cards.get("card1"));
+  settings.save(defaults(), null, [], new Map(), new Map());
+  assert.equal(JSON.parse(storage.items.get(STORAGE_KEY)).cards, undefined);
+  // A card with no networks, no price or no name is dropped.
+  storage.items.set(
+    STORAGE_KEY,
+    JSON.stringify({
+      version: 1,
+      filters: "",
+      cards: [
+        { id: "a", name: "A", ops: [], dc: 50 },
+        { id: "b", name: "B", ops: ["pod"], dc: 0 },
+        { id: "c", ops: ["pod"], dc: 50 },
+        null,
+        { id: "d", name: "D", ops: ["pod"], ac: 40 },
+      ],
+    }),
+  );
+  assert.deepEqual([...settings.cards().keys()], ["d"]);
+  settings.forget();
+  assert.equal(settings.cards().size, 0);
+  assert.equal(createSettings(blocked).cards().size, 0);
+});

@@ -11,7 +11,8 @@ function number(input) {
   return Number.isFinite(value) ? value : Number.NaN;
 }
 
-// plans: the plans to offer (those without a monthly fee are left out). prefix keeps the
+// plans: the plans to offer (those without a monthly fee are left out), which can include
+// the visitor's own cards with a fee (cardAsPlan in cards.js, marked own). prefix keeps the
 // ids apart when there are two calculators on the page. payNow is the starting figure for
 // "What you pay now" in pence per kWh, or null, and nowHint the line saying where it came
 // from. here says whether the calculator is about one charger. Returns null when no plan
@@ -69,7 +70,11 @@ export function subscriptionCalculator({ plans, prefix = "calc", summary, payNow
     fee.value = String(plan.monthly_fee);
     withPlan.value = Number.isFinite(plan.ppk) ? String(plan.ppk) : "";
     base.value = "";
-    note.textContent = Number.isFinite(plan.discount_percent)
+    note.textContent = plan.own
+      ? Number.isFinite(plan.ppk)
+        ? "Your own card, with the figures you typed in."
+        : "Your own card. Enter its price per kWh if you know it."
+      : Number.isFinite(plan.discount_percent)
       ? `${plan.price_text}. That price is not published openly, so enter it from the provider's app.`
       : Number.isFinite(plan.ppk)
         ? ""

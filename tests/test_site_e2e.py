@@ -595,6 +595,112 @@ def test_plans_fold_by_provider_and_calculators_use_the_visitors_own_prices(visi
     assert v.errors == [] and v.outside == []
 
 
+def test_a_visitors_own_cards_price_the_networks_ticked_and_stay_on_the_device_only_if_asked(visit):
+    # A card the visitor uses, with what it charges on every network it works on and,
+    # where one differs, on that network (ADR 0035). evyve's fixture sites: Greggs
+    # (Stockport) has DC chargers at 85p, Harbour City (Salford) an AC charger at 55p.
+    v = visit()
+    page = v.open("?view=list", map_ready=False)
+    expect(page.locator("#list-items li")).to_have_count(SHOWN)
+    greggs, harbour = _item(page, "Greggs (Stockport)"), _item(page, "Harbour City (Salford)")
+    open_filters(page)
+    message = page.locator("#card-message")
+    # Starting from a roaming card this site lists ticks its networks on the map.
+    page.select_option("#card-start", label="Octopus Electroverse (27 networks)")
+    assert page.input_value("#card-name") == "Octopus Electroverse"
+    expect(page.locator("#card-ops-count")).to_have_text("(27 ticked)")
+    page.click("#card-none")
+    expect(page.locator("#card-ops-count")).to_have_text("(0 ticked)")
+    page.fill("#card-name", "Work card")
+    page.click("#card-save")
+    expect(message).to_have_text("Tick at least one network the card works on.")
+    page.check("#card-ops input[value='evyve']")
+    page.click("#card-save")
+    expect(message).to_have_text(
+        "Type a price or a percentage off, for every ticked network or for one of them."
+    )
+    page.fill("#card-pct", "95")
+    page.click("#card-save")
+    expect(message).to_contain_text("Type the percentage off as a number above 0 and up to 90")
+    expect(page.locator("#card-pct")).to_be_focused()
+    page.fill("#card-pct", "10")
+    page.press("#card-pct", "Enter")
+    expect(message).to_have_text(
+        "Your card \u201cWork card\u201d is now used on evyve: 10% off the price shown."
+    )
+    page.click("#done")
+    # 10% off 85p is 76.5p and 10% off 55p is 49.5p: whole pence, half pennies up.
+    expect(greggs).to_contain_text("Cheapest here: 77p with your card \u201cWork card\u201d")
+    expect(harbour).to_contain_text("Cheapest here: 50p with your card \u201cWork card\u201d")
+    # A different figure for one network, and a monthly fee.
+    open_filters(page)
+    page.click("#card-nets summary")
+    page.select_option("#card-net-op", "evyve")
+    page.fill("#card-net-dc", "60")
+    page.click("#card-net-use")
+    page.fill("#card-fee", "4.99")
+    page.click("#card-save")
+    expect(message).to_have_text(
+        "Your card \u201cWork card\u201d is now used on evyve: AC 10% off the price shown,"
+        " DC 60p per kWh, \u00a34.99 a month."
+    )
+    page.click("#done")
+    expect(greggs).to_contain_text("Cheapest here: 60p with your card \u201cWork card\u201d")
+    expect(harbour).to_contain_text("Cheapest here: 50p")
+    greggs.locator("button").click()
+    expect(page.locator("#detail-body .map-label")).to_contain_text(
+        "Cheapest here: 60p per kWh with your card \u201cWork card\u201d: its DC price,"
+        " typed in by you."
+    )
+    own = page.locator("#detail-body .own-rate")
+    expect(own).to_contain_text(
+        "Your card \u201cWork card\u201d: AC 10% off the price shown, DC 60p per kWh,"
+        " \u00a34.99 a month."
+    )
+    expect(own).to_contain_text("This site has not checked them.")
+    # A card with a monthly fee is weighed up in the calculator, not where it starts.
+    page.locator("#detail-body details.more summary", has_text="Other ways to pay here").click()
+    page.click("#detail-body .calculator summary")
+    page.select_option("#calc-plan", "own.card1")
+    assert page.input_value("#calc-fee") == "4.99"
+    assert page.input_value("#calc-with") == "60"
+    assert page.input_value("#calc-now") == "85"
+    expect(page.locator("#calc-note")).to_have_text("Your own card, with the figures you typed in.")
+    # "Change your cards" opens the form with this card in it.
+    own.locator("button", has_text="Change your cards").click()
+    expect(page.locator("#detail")).to_be_hidden()
+    expect(page.locator("#card-name")).to_be_focused()
+    assert page.input_value("#card-name") == "Work card"
+    # Nothing is saved, or put in the address, until the visitor asks.
+    assert v.stored() == {}
+    address = urlsplit(page.url)
+    assert "Work" not in f"{address.path}?{address.query}#{address.fragment}"
+    page.check("#remember")
+    saved = json.loads(v.stored()["oevm.settings.v1"])
+    assert saved["cards"] == [
+        {
+            "id": "card1",
+            "name": "Work card",
+            "ops": ["evyve"],
+            "pct": 10,
+            "fee": 4.99,
+            "nets": {"evyve": {"dc": 60}},
+        }
+    ]
+    page.reload()
+    expect(page.locator("#list-items li")).to_have_count(SHOWN)
+    expect(greggs).to_contain_text("Cheapest here: 60p with your card \u201cWork card\u201d")
+    # Removing it puts the operator's price back, and "Forget my settings" deletes it all.
+    open_filters(page)
+    page.click("#card-list button[aria-label='Remove your card \u201cWork card\u201d']")
+    expect(message).to_have_text("Your card \u201cWork card\u201d has been removed.")
+    expect(greggs).to_contain_text("Cheapest here: 85p")
+    assert "cards" not in json.loads(v.stored()["oevm.settings.v1"])
+    page.click("#forget")
+    assert v.stored() == {}
+    assert v.errors == [] and v.outside == []
+
+
 def test_ticking_a_plan_redraws_open_details_and_a_failed_list_keeps_saved_plans(visit):
     v = visit(viewport=WIDE)
     page = v.open("?view=list", map_ready=False)
