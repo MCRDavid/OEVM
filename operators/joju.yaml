@@ -47,6 +47,13 @@ engagement:
         the same day found Joju runs public chargers. So Joju's own Hampshire network is not in
         Mer UK's feed; whether any other Joju-installed chargers are in it is unknown.
       evidence_url: https://uk.mer.eco/live-charge-point-data/
+    - date: 2026-11-20
+      action: page_checked
+      summary: >-
+        In a browser on 2026-11-20, Joju Solar's Joju Charging pages (on-street, council car
+        parks and destination charging) name council customers but have no open data page.
+        Requests can go through its contact page or its support desk.
+      evidence_url: https://www.jojusolar.co.uk/contact-us/
 access_requested: null
 access_granted: null
 sources:

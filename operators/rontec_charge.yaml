@@ -1,0 +1,62 @@
+# yaml-language-server: $schema=schema.json
+id: rontec_charge
+display_name: "Rontec CHARGE"
+ocpi_country_code: unknown
+ocpi_party_id: unknown
+adapter: unknown
+base_url: unknown
+endpoints: {}
+auth:
+  method: unknown
+  name: null
+  secret_name: null
+rate_limit:
+  min_seconds_between_requests: 2
+  limits: []
+  limits_checked: unknown
+  notes: null
+supports_single_location: unknown
+cors: unknown
+attribution: null
+licence: null
+engagement:
+  status: no_public_feed_found
+  evidence:
+    - date: 2026-11-20
+      url: https://www.rontec.com/evcharge
+      note: >-
+        Rontec's EV charging page describes CHARGE, its own charging brand at its service
+        stations: 150 kW chargers, open 24 hours, paid by card or app. It gives no open data
+        feed or request route.
+  log:
+    - date: 2026-11-20
+      action: page_checked
+      summary: >-
+        In a browser on 2026-11-20, Rontec's EV charging page and its pages sitemap (26 pages)
+        were read; there is no open data, regulations or API page. rontec.co.uk no longer
+        resolves; Rontec's site is now rontec.com, with a contact page.
+      evidence_url: https://www.rontec.com/evcharge
+    - date: 2026-11-20
+      action: feed_searched
+      summary: >-
+        Checked this project's published map on 2026-11-20: no location in any feed is named
+        Rontec, so CHARGE's sites are not on the map.
+      evidence_url: https://www.rontec.com/evcharge
+access_requested: null
+access_granted: null
+sources:
+  - url: https://motorwayservices.uk/Electric_Car
+    note: >-
+      A guide to charging at motorway service areas (read 2026-11-20), used as a lead list
+      only: it names Rontec among the service area operators.
+  - url: https://www.rontec.com/evcharge
+    note: >-
+      Rontec's EV charging page (read 2026-11-20), describing its CHARGE brand.
+  - url: https://www.rontec.com/contactus
+    note: Rontec's contact page (read 2026-11-20).
+findings: []
+notes: >-
+  Rontec runs service stations and has its own charging brand, CHARGE (2026-11-20). No data
+  route was found on its own site. The next step is a written request through Rontec's
+  contact page, asking where CHARGE's regulation 10 data is published.
+enabled: false

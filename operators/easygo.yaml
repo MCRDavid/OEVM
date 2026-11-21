@@ -20,7 +20,7 @@ cors: unknown
 attribution: null
 licence: null
 engagement:
-  status: unknown
+  status: possibly_out_of_scope
   evidence:
     - date: 2026-10-23
       url: https://evroam.org.uk/_functions/getRegister
@@ -33,6 +33,15 @@ engagement:
       summary: >-
         Its website could not be read from the cloud on 2026-10-23 (the TLS certificate check failed), so it needs a check in a browser.
       evidence_url: https://easygo.co.uk/
+    - date: 2026-11-20
+      action: page_checked
+      summary: >-
+        In a browser on 2026-11-20, easygo.co.uk and easygo.ie both had TLS certificates that
+        expired on 10 May 2026, with chains and host names in order. On the repository owner's
+        instruction that day they were read past the expired certificate in the ADR 0021 way
+        (only the date check relaxed): easygo.co.uk answers HTTP 301 to https://ezo.co.uk/ and
+        easygo.ie answers HTTP 301 to https://ezo.ie/.
+      evidence_url: https://easygo.co.uk/
 access_requested: null
 access_granted: null
 sources:
@@ -42,9 +51,15 @@ sources:
       pointer only: "EasyGo Charging Limited", operator ID GB*EGO.
   - url: https://easygo.co.uk/
     note: >-
-      EasyGo's own website. Its website could not be read from the cloud on 2026-10-23 (the TLS certificate check failed), so it needs a check in a browser.
+      EasyGo's former website. It could not be read from the cloud on 2026-10-23 (the TLS
+      certificate check failed). In a browser on 2026-11-20 its certificate had expired on
+      10 May 2026, and read past it on the owner's instruction it answered HTTP 301 to
+      https://ezo.co.uk/.
 findings: []
 notes: >-
-  Found through the EV Roam ID register on 2026-10-23 (operator ID GB*EGO; the OCPI country and
-  party codes stay unknown until read from a feed). Its website could not be read from the cloud on 2026-10-23 (the TLS certificate check failed), so it needs a check in a browser. Based in Northern Ireland, which the regulations also cover. The next step is a browser check of its own site, then a written request if no data link is found.
+  EasyGo is now EZO, which has its own operator file (ezo.yaml): on 2026-11-20 both of EasyGo's
+  websites redirected to EZO's, and EZO's home page calls itself "The new name for EasyGo"
+  (read 2026-10-22). EasyGo's sites are counted under EZO, so this record is kept only as
+  EZO's former name, with its EV Roam operator ID GB*EGO. Nothing more needs reading past an
+  expired certificate: EZO's own certificate was in date on 2026-11-20.
 enabled: false

@@ -1,0 +1,59 @@
+# yaml-language-server: $schema=schema.json
+id: alfa_power
+display_name: "Alfa Power"
+ocpi_country_code: unknown
+ocpi_party_id: unknown
+adapter: unknown
+base_url: unknown
+endpoints: {}
+auth:
+  method: unknown
+  name: null
+  secret_name: null
+rate_limit:
+  min_seconds_between_requests: 2
+  limits: []
+  limits_checked: unknown
+  notes: null
+supports_single_location: unknown
+cors: unknown
+attribution: null
+licence: null
+engagement:
+  status: no_public_feed_found
+  evidence:
+    - date: 2026-11-20
+      url: https://www.alfapower.co.uk/
+      note: >-
+        The address a service area guide gives for Alfa Power served a web host's "domain
+        only" holding page over http on 2026-11-20; over https it served a certificate for
+        another name. No page of Alfa Power's own was found.
+  log:
+    - date: 2026-11-20
+      action: feed_searched
+      summary: >-
+        In a browser on 2026-11-20, alfapower.co.uk showed a web host's holding page and
+        alfapower.com a domain-for-sale page, so no website, data route or contact channel of
+        Alfa Power's own was found.
+      evidence_url: https://www.alfapower.co.uk/
+access_requested: null
+access_granted: null
+sources:
+  - url: https://motorwayservices.uk/Electric_Car
+    note: >-
+      A guide to charging at motorway service areas (read 2026-11-20), used as a lead list
+      only: it names Alfa Power among the charging brands at official service areas and links
+      alfapower.co.uk.
+  - url: https://www.alfapower.co.uk/
+    note: >-
+      The address the guide links (read 2026-11-20): a web host's holding page, not Alfa
+      Power's own site.
+findings: []
+notes: >-
+  Found on 2026-11-20 through a service area guide's list of charging brands. Search results
+  (pointers only, not used as data) describe a Leeds-based network of about 55 rapid and fast
+  chargers, mostly at forecourts from Yorkshire to Somerset, and a company register aggregator
+  lists its company as a micro company. The open data duty does not cover micro-business
+  operators (docs/BLUEPRINT.md), so it may not apply here (inferred, not confirmed). No request
+  can be sent until a contact channel of its own is found.
+enabled: false

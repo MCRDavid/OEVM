@@ -231,5 +231,8 @@ notes: >-
   Scotland (2463); the terms pages of all three name SWARCO Smart Charging Ltd as operator,
   while Evolt's privacy notice names EVOLT Charging Limited. Evolt Network's site calls
   itself the new home of SWARCO E.Connect. Not yet fetched from a GitHub Actions runner; the
-  first daily run will show whether the host answers requests from there.
+  first daily run will show whether the host answers requests from there. Westmorland's
+  charging page (https://westmorlandfamily.com/charging/, read 2026-11-20) lists six service
+  areas (Gloucester both sides, Tebay both sides, Cairn Lodge and the Westmorland Hotel) and
+  sends drivers to a SWARCO account; all six were on the map from this feed that day.
 enabled: true
