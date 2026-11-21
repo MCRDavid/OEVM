@@ -1,0 +1,74 @@
+# yaml-language-server: $schema=schema.json
+# Polestar Charge: Polestar's charging app and card for Polestar drivers, run by Plugsurfing.
+# Rules are in schema/provider.py.
+id: polestar_charge
+name: Polestar Charge
+kind: roaming
+website: https://plugsurfing.com/partners/polestar-charge-subscription/
+terms:
+  url: https://plugsurfing.com/legal/terms-of-use/
+  reuse: no_restriction_found
+  quote: null
+  attribution: null
+  checked: 2026-11-21
+plans:
+  - id: polestar_charge_plus
+    name: Polestar Charge Plus
+    pay_by: Polestar Charge app or card (Polestar drivers)
+    monthly_fee: 6.99
+    fee_note: Billed monthly. Cancel anytime.
+    price_per_kwh: null
+    discount_percent: 15
+    discount_of: the Polestar Charge pay-per-charge price at those networks
+    includes_vat: null
+    networks: [InstaVolt, MFG EV Power, Osprey, Smart Charge, Gridserve]
+    operator_ids: [gridserve, instavolt, mfg_ev_power, osprey, smart_charge]
+    conditions: >-
+      For Polestar drivers only. DC and high power charging only, at the networks named, so
+      not at AC chargers. The page does not say whether the fee includes VAT.
+    only_at_some_chargers: true
+    needs_testing: null
+    source:
+      url: https://plugsurfing.com/partners/polestar-charge-subscription/
+      quote: >-
+        Plus Ideal if you charge in public every month £6.99 per month Billed monthly.
+        Cancel anytime. Everything in Polestar Charge, and 15% off DC and HPC charging in
+        the UK at
+      checked: 2026-11-21
+  - id: polestar_charge_pro
+    name: Polestar Charge Pro
+    pay_by: Polestar Charge app or card (Polestar drivers)
+    monthly_fee: 12.99
+    fee_note: Billed monthly. Cancel anytime.
+    price_per_kwh: null
+    discount_percent: 30
+    discount_of: the Polestar Charge pay-per-charge price at those networks
+    includes_vat: null
+    networks: [InstaVolt, MFG EV Power, Osprey, Smart Charge, Fastned, IONITY, Gridserve]
+    operator_ids: [fastned, gridserve, instavolt, ionity, mfg_ev_power, osprey, smart_charge]
+    conditions: >-
+      For Polestar drivers only. DC and high power charging only, at the networks named, so
+      not at AC chargers. The page also gives 30% off IONITY anywhere in Europe. The page
+      does not say whether the fee includes VAT.
+    only_at_some_chargers: true
+    needs_testing: null
+    source:
+      url: https://plugsurfing.com/partners/polestar-charge-subscription/
+      quote: >-
+        Pro Best value if you charge often or drive long distances £12.99 per month Billed
+        monthly. Cancel anytime. Everything in Polestar Charge, and 30% off DC and HPC
+        charging in the UK at Gridserve And 30% off IONITY anywhere in Europe
+      checked: 2026-11-21
+notes: >-
+  Read 2026-11-21 with UK chosen under "Prices and networks for" on
+  https://plugsurfing.com/partners/polestar-charge-subscription/ (https://plugsurfing.com/polestar-charge
+  leads there). The page says it is powered by Plugsurfing, carries Plugsurfing GmbH's
+  copyright and links Plugsurfing's own Terms of Use, which have no clause on copying or
+  reusing content (re-read 2026-11-21). Each plan's networks are shown as logos after the
+  quoted words: InstaVolt, MFG EV Power, Osprey and Smart Charge (and Fastned and IONITY for
+  Pro) are named by the logos' text alternatives, and Gridserve in text. Smart Charge is
+  Sainsbury's Smart Charge. The free Polestar Charge tier (no monthly fee, pay per charge,
+  Tesla Superchargers included) is not listed because the page names no UK networks for it.
+  Plugsurfing's blog post of 2 September 2026
+  (https://plugsurfing.com/blog/polestar-charge-subscriptions-plus-pro/) says the single
+  subscription was replaced by Plus and Pro, with existing subscribers moved to Pro.

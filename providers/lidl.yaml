@@ -35,7 +35,7 @@ plans:
     source:
       url: https://www.lidl.co.uk/c/electric-vehicle-charging/s10049808
       quote: "Fast Charger Tariff: £0.40/kWh with the Lidl Plus app. £0.55/kWh through the third-party website."
-      checked: 2026-10-30
+      checked: 2026-11-21
   - id: lidl_plus_rapid
     name: Lidl Plus app (rapid chargers)
     pay_by: Lidl Plus app
@@ -59,7 +59,7 @@ plans:
     source:
       url: https://www.lidl.co.uk/c/electric-vehicle-charging/s10049808
       quote: "Rapid Charger Tariff: £0.59/kWh with the Lidl Plus app. £0.74/kWh through the third-party website or via contactless payment on Rapid Charging machines."
-      checked: 2026-10-30
+      checked: 2026-11-21
 notes: >-
   Terms checked 2026-10-30: the Legal Information page and the Lidl Plus Terms of Use
   (https://www.lidl.co.uk/c/lidl-plus-terms-of-use/s10025414) have no clause on copying or

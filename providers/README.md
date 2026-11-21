@@ -45,12 +45,12 @@ Where a provider's terms keep its prices off the map (`forbidden` or `personal_u
 
 Re-check listed plans regularly: prices change often, and each plan shows the date it was checked.
 
-## Listed providers (11)
+## Listed providers (12)
 
 | Provider | Plans | Terms |
 |---|---|---|
 | Be.EV (`be_ev`) | 9 | No restriction found |
-| Bonnet (`bonnet`) | 3 | No restriction found |
+| OVO Charge Anywhere (formerly Bonnet) (`bonnet`) | 2 | No restriction found |
 | char.gy (`chargy`) | 3 | No restriction found |
 | Connected Kerb (`connected_kerb`) | 4 | No restriction found |
 | Octopus Electroverse (`electroverse`) | 9 | No restriction found |
@@ -60,8 +60,9 @@ Re-check listed plans regularly: prices change often, and each plan shows the da
 | MFG EV Power (`mfg_ev_power`) | 2 | No restriction found |
 | Plugsurfing (`plugsurfing`) | 1 | No restriction found |
 | Pod (`pod`) | 0 | No restriction found |
+| Polestar Charge (`polestar_charge`) | 2 | No restriction found |
 
-## Permission requests (24 providers)
+## Permission requests (28 providers)
 
 The owner decided on 9 October 2026 to list plans only where the provider's terms allow reuse, and to ask the others in writing. As of 9 October 2026 the request below is drafted but **not yet sent** to any provider.
 
@@ -71,6 +72,7 @@ The owner decided on 9 October 2026 to list plans only where the provider's term
 | Allstar Chargepass (`allstar`) | Terms could not be read | Not sent |
 | Arnold Clark Charge (`arnold_clark_charge`) | Terms restrict copying or reuse ([terms](https://www.arnoldclark.com/terms-of-use)) | Not sent |
 | Believ (`believ`) | Terms restrict copying or reuse ([terms](https://www.believ.com/legal-notices/)) | Not sent |
+| BMW Charging (`bmw_charging`) | Terms restrict copying or reuse ([terms](https://bmw-public-charging.com/web/en/bmw-gb/copyright)) | Not sent |
 | bp pulse (`bp_pulse`) | Terms restrict copying or reuse ([terms](https://www.bppulse.com/en-gb/legal-notice)) | Not sent |
 | Chargemap (`chargemap`) | Terms restrict copying or reuse ([terms](https://community-optins.chargemap.com/conditions/3/document?locale=en_GB)) | Not sent |
 | ESB ecars (`esb_ecars`) | Terms restrict copying or reuse ([terms](https://esb.ie/copyright)) | Not sent |
@@ -81,7 +83,10 @@ The owner decided on 9 October 2026 to list plans only where the provider's term
 | InstaVolt (`instavolt`) | Terms allow personal use only ([terms](https://instavolt.co.uk/app-terms-conditions/)) | Not sent |
 | IONITY (`ionity`) | Terms restrict copying or reuse ([terms](https://www.ionity.eu/policies/imprint)) | Not sent |
 | Jolt (`jolt`) | Terms restrict copying or reuse ([terms](https://joltcharge.com/uk/terms/)) | Not sent |
+| Kia Charge (`kia_charge`) | Terms restrict copying or reuse ([terms](https://kiacharge.com/web/en/kia-gb/copyright)) | Not sent |
+| MB.CHARGE Public (`mb_charge_public`) | Terms restrict copying or reuse ([terms](https://eu.charge.mercedes-benz.com/web/en/mb-gb/copyright)) | Not sent |
 | Mer UK (`mer`) | Terms restrict copying or reuse ([terms](https://uk.mer.eco/mer/legal/terms-and-conditions/)) | Not sent |
+| Mobilize Charge Pass (`mobilize_charge_pass`) | Terms restrict copying or reuse ([terms](https://www.renault.co.uk/terms-and-conditions.html)) | Not sent |
 | Osprey Charging (`osprey`) | Terms allow personal use only ([terms](https://www.ospreycharging.co.uk/terms-conditions)) | Not sent |
 | Paua (`paua`) | Terms restrict copying or reuse ([terms](https://www.paua.com/downloads/paua-driver-terms)) | Not sent |
 | Raw Charging (`raw_charging`) | Terms restrict copying or reuse ([terms](https://rawcharging.com/legal-information)) | Not sent |

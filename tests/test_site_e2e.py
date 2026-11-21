@@ -455,7 +455,10 @@ def test_details_show_plans_from_providers_pages_and_the_visitors_own(visit):
     expect(page.locator("#list-items li")).to_have_count(SHOWN)
     _open_details_containing(page, "Other ways to pay here")
     plans = " ".join(page.locator("ul.plans").all_text_contents())
-    assert "per kWh" in plans and "checked 9 Oct 2026" in plans
+    # Each plan gives its price or discount and the date its page was checked. Network-wide
+    # plans (Electroverse's discounts) now come first at many sites, so no date is fixed here.
+    assert "per kWh" in plans or "% off" in plans
+    assert re.search(r"Provider's page, checked \d{1,2} [A-Z][a-z]{2} \d{4}\.", plans)
     headings = page.locator("#detail-body details.more:has(ul.plans) h4").all_text_contents()
     assert headings and all(
         t.startswith(("No subscription needed", "With a paid subscription")) for t in headings
