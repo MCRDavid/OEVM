@@ -421,7 +421,10 @@ def test_a_visitors_own_rates_price_ac_or_dc_and_stay_on_the_device_only_if_aske
     page.keyboard.press("Escape")
     # Nothing is saved, or put in the address, until the visitor asks.
     assert v.stored() == {}
-    assert "48" not in page.url
+    # Only the address after the test server's: its port is chosen at random and can
+    # itself hold "48" (CI run 417 on main, 21 November 2026, port 44813).
+    address = urlsplit(page.url)
+    assert "48" not in f"{address.path}?{address.query}#{address.fragment}"
     open_filters(page)
     page.check("#remember")
     saved = json.loads(v.stored()["oevm.settings.v1"])
