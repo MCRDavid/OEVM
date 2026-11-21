@@ -29,7 +29,7 @@ plans:
     source:
       url: https://char.gy/pricing
       quote: "£0.39/kWh Weekday Night 00:00 - 06:59"
-      checked: 2026-10-09
+      checked: 2026-11-21
   - id: chargy_weekday_day
     name: Weekday Day
     pay_by: char.gy app or website, pay as you go
@@ -47,7 +47,7 @@ plans:
     source:
       url: https://char.gy/pricing
       quote: "£0.59/kWh Weekday Day 07:00 - 23:59"
-      checked: 2026-10-09
+      checked: 2026-11-21
   - id: chargy_weekend
     name: Weekend
     pay_by: char.gy app or website, pay as you go
@@ -65,5 +65,5 @@ plans:
     source:
       url: https://char.gy/pricing
       quote: "£0.54/kWh Weekend 00:00 - 23:59"
-      checked: 2026-10-09
+      checked: 2026-11-21
 notes: "No clause in the terms of use deals specifically with reusing content or prices; clause 11.1 says the format and content of the service is protected by copyright (checked 2026-10-09). The pricing page has no date; the provider's help article (modified 29 July 2026) gives the same three prices. VAT treatment is not stated, so the prices are shown with VAT not stated and left out of price comparisons."

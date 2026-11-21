@@ -1,66 +1,72 @@
 # yaml-language-server: $schema=schema.json
-# Bonnet: roaming app with pay as you go and Boost subscriptions.
-# Rules are in schema/provider.py.
+# OVO Charge Anywhere (formerly Bonnet): roaming app with pay as you go and a Boost plan.
+# The id stays bonnet so links and saved choices keep working. Rules are in schema/provider.py.
 id: bonnet
-name: Bonnet
+name: OVO Charge Anywhere (formerly Bonnet)
 kind: roaming
-website: https://www.joinbonnet.com
+website: https://www.ovoenergy.com/electric-cars/charge-anywhere
 terms:
-  url: https://www.joinbonnet.com/terms-conditions
+  url: https://www.ovoenergy.com/terms/charge-anywhere
   reuse: no_restriction_found
   quote: null
   attribution: null
-  checked: 2026-10-09
+  checked: 2026-11-21
 plans:
   - id: bonnet_payg
-    name: PAYG
-    pay_by: Bonnet app
+    name: Pay As You Go
+    pay_by: OVO Charge app
     monthly_fee: 0
     fee_note: null
     price_per_kwh: null
     discount_percent: null
     discount_of: null
     includes_vat: true
-    networks: [All chargers on Bonnet]
-    operator_ids: []
-    conditions: "Rates are set by the charging networks and shown for each charger in the app. No access to Boost benefits."
+    networks: [Osprey, MFG, InstaVolt, TotalEnergies, Allego, FastNed, Ionity]
+    operator_ids: [allego, fastned, instavolt, ionity, mfg_ev_power, osprey, totalenergies]
+    conditions: >-
+      Rates are set by the charging networks and shown for each charger in the app. No
+      Boost benefits. You do not need to be an OVO energy customer. The page names these
+      networks as examples, so Charge Anywhere may also work at others.
     needs_testing: null
     source:
-      url: https://www.joinbonnet.com/pricing
-      quote: "PAYG Free Our PAYG rates are set by the charging networks and are clearly displayed for each charger on Bonnet."
-      checked: 2026-10-09
+      url: https://www.ovoenergy.com/electric-cars/charge-anywhere
+      quote: >-
+        Free. Charging rates clearly shown for each charger on Charge Anywhere. PAYG rates
+        are set by the charging networks
+      checked: 2026-11-21
   - id: bonnet_light_boost
     name: Light Boost
-    pay_by: Bonnet app
+    pay_by: OVO Charge app
     monthly_fee: 2
-    fee_note: "For regional pricing please check the Bonnet app. Change or cancel your plan anytime."
+    fee_note: You can upgrade, or cancel the plan at any time.
     price_per_kwh: null
     discount_percent: 10
-    discount_of: the PAYG rate set by each charging network, as shown in the Bonnet app
+    discount_of: the PAYG rate set by each charging network, as shown in the OVO Charge app
     includes_vat: true
-    networks: [All chargers on Bonnet]
-    operator_ids: []
-    conditions: "10% off the PAYG rate set by the charging networks, on every charge."
+    networks: [Osprey, MFG, InstaVolt, TotalEnergies, Allego, FastNed, Ionity]
+    operator_ids: [allego, fastned, instavolt, ionity, mfg_ev_power, osprey, totalenergies]
+    conditions: >-
+      10% off the PAYG rate set by the charging networks. The page names these networks as
+      examples, so Charge Anywhere may also work at others.
     needs_testing: null
     source:
-      url: https://www.joinbonnet.com/pricing
-      quote: "Light Boost 10% off £2/mo Get 10% off the PAYG rate set by the charging networks for every charge"
-      checked: 2026-10-09
-  - id: bonnet_turbo_boost
-    name: Turbo Boost
-    pay_by: Bonnet app
-    monthly_fee: 8
-    fee_note: "For regional pricing please check the Bonnet app. Change or cancel your plan anytime."
-    price_per_kwh: null
-    discount_percent: 15
-    discount_of: the PAYG rate set by each charging network, as shown in the Bonnet app
-    includes_vat: true
-    networks: [All chargers on Bonnet]
-    operator_ids: []
-    conditions: "15% off the PAYG rate set by the charging networks, on every charge. Includes the route planner."
-    needs_testing: null
-    source:
-      url: https://www.joinbonnet.com/pricing
-      quote: "Turbo Boost 15% off £8/mo Get 15% off the PAYG rate set by the charging networks for every charge"
-      checked: 2026-10-09
-notes: "No clause on reusing or copying content or prices was found in the terms (Last Updated: 19 March 2026); the site footer carries a general copyright notice. VAT is taken from terms clause 5.5, which says all prices are inclusive of any applicable VAT; the pricing page itself does not mention VAT. Per-charger rates are shown only in the app. The page https://www.joinbonnet.com/boost returned HTTP 404 (checked 2026-10-09)."
+      url: https://www.ovoenergy.com/electric-cars/charge-anywhere
+      quote: "Light Boost £2 per month | 10% off charging 10% off PAYG rate set by charging networks"
+      checked: 2026-11-21
+notes: >-
+  Bonnet's site, joinbonnet.com, and every page on it answered HTTP 301 to
+  https://www.ovoenergy.com/electric-cars/charge-anywhere on 2026-11-21; the service is now
+  OVO's Charge Anywhere in the OVO Charge app. The page gives Osprey, MFG, InstaVolt,
+  TotalEnergies, Allego, FastNed and Ionity as examples of the UK networks it gives access
+  to, and publishes no full list, so operator_ids holds only those. Turbo Boost (£8 a month,
+  15% off when last read on Bonnet's page on 2026-10-09) is no longer on the page, so it is
+  no longer listed; the Charge Anywhere terms still name it (7.1). Terms read 2026-11-21 at
+  https://www.ovoenergy.com/terms/charge-anywhere, which holds the OVO Charge app terms and
+  the Charge Anywhere terms (Last Updated: 18 March 2026): no clause on copying or reusing
+  website content was found. The app terms (4.1.1 and 4.4) license the app for personal
+  purposes and say the app and its contents may not be copied; the plans here are copied
+  from the website, not the app. No separate OVO website terms of use were found
+  (ovoenergy.com/legal-information gives company details only). VAT is taken from Charge
+  Anywhere terms clause 5.5, which says all bills, invoices and prices include any
+  applicable VAT; the page itself does not mention VAT. Per-charger rates are shown only in
+  the app.

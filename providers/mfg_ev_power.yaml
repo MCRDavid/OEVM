@@ -28,7 +28,7 @@ plans:
     source:
       url: https://www.motorfuelgroup.com/ev-power/
       quote: "59p per kWh – App Exclusive. Start your session through the MFG EV app to unlock our lowest rate."
-      checked: 2026-10-09
+      checked: 2026-11-21
   - id: mfg_ev_power_contactless
     name: Contactless
     pay_by: Contactless or card payment at the charger
@@ -45,5 +45,5 @@ plans:
     source:
       url: https://www.motorfuelgroup.com/ev-power/
       quote: "79p per kWh – Standard rate. Applies to contactless and card payments at the charger."
-      checked: 2026-10-09
+      checked: 2026-11-21
 notes: "No terms of use page was found (checked 2026-10-09): https://www.motorfuelgroup.com/terms-and-conditions/ returned 404, the EV Power page links only to the privacy policy, and the footer says \"© Copyright Motor Fuel Limited 2026. All rights reserved.\" The domain mfgevpower.co.uk redirects to a page with no content. The page does not say whether prices include VAT. The open tariffs feed at https://opendata.motorfuelgroup.net/tariffs shows no licence or terms text."
