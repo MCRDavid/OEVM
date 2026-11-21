@@ -5,8 +5,48 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self'; worker-src 'self'; connect-src 'self' https://tiles.openfreemap.org; img-src 'self' data: blob: https://tiles.openfreemap.org; style-src 'self'; font-src 'self'; base-uri 'none'; form-action 'none'">
 <meta name="referrer" content="strict-origin">
-<meta name="description" content="A map of UK public electric vehicle chargers, built from the open data operators publish under the Public Charge Point Regulations 2023.">
-<title>UK public EV chargers: OEVM</title>
+<title>UK public EV charger map with prices: OEVM</title>
+<meta name="description" content="Map of UK public EV chargers with prices per kWh, plug types and power, from the open data operators publish under the Public Charge Point Regulations 2023.">
+<link rel="canonical" href="https://mcrdavid.github.io/OEVM/">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="OEVM">
+<meta property="og:locale" content="en_GB">
+<meta property="og:title" content="UK public EV charger map with prices">
+<meta property="og:description" content="Map of UK public EV chargers with prices per kWh, plug types and power, from the open data operators publish under the Public Charge Point Regulations 2023.">
+<meta property="og:url" content="https://mcrdavid.github.io/OEVM/">
+<meta property="og:image" content="https://mcrdavid.github.io/OEVM/assets/share.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="The OEVM icon, a white lightning bolt on a blue circle, beside the words UK public EV charger map">
+<meta name="twitter:card" content="summary_large_image">
+<script type="application/ld+json">
+{
+ "@context": "https://schema.org",
+ "@type": "Dataset",
+ "name": "UK public EV charge points from operators' open data",
+ "description": "Locations, plug types, power and prices of public electric vehicle charge points across the UK, read each day from the open data that charge point operators publish under the Public Charge Point Regulations 2023. Each source keeps its own licence and is credited on the data sources and licences page.",
+ "url": "https://mcrdavid.github.io/OEVM/",
+ "inLanguage": "en-GB",
+ "isAccessibleForFree": true,
+ "license": "https://mcrdavid.github.io/OEVM/data-licences/",
+ "spatialCoverage": "United Kingdom",
+ "keywords": [
+  "electric vehicle charging",
+  "EV charge points",
+  "charging prices",
+  "OCPI",
+  "Public Charge Point Regulations 2023",
+  "United Kingdom"
+ ],
+ "distribution": [
+  {
+   "@type": "DataDownload",
+   "encodingFormat": "application/geo+json",
+   "contentUrl": "https://mcrdavid.github.io/OEVM/data/locations.geojson"
+  }
+ ]
+}
+</script>
 <link rel="icon" href="assets/icon.svg" type="image/svg+xml">
 <link rel="stylesheet" href="vendor/maplibre-gl/maplibre-gl.css">
 <link rel="stylesheet" href="assets/app.css">
@@ -178,6 +218,7 @@
 <noscript><p class="notice">This map needs JavaScript. The data it shows is published as files, listed on the <a href="transparency/">transparency page</a>.</p></noscript>
 
 <footer class="bottom">
+  <p class="about">This map shows public electric vehicle charge points across the UK, from the open data that charge point operators publish under the Public Charge Point Regulations 2023, read every day. For each charger it gives the location, plug types and power, prices per kWh from the published tariffs, and the latest reported status, checked every hour. Filter by power, AC or DC, connector, price or network, or switch to the list.</p>
   <p class="note">OEVM is a personal, experimental project for learning about AI tools. Much of its code and text was written with an AI assistant, and it will contain mistakes. Charger data comes from the operators and other sources credited on every record, and remains their work. Everything is provided "as is", with no warranty or guarantee of any kind. Always check prices and availability at the charger.</p>
   <details>
     <summary>Data sources and credits</summary>
