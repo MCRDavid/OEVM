@@ -9,7 +9,7 @@ terms:
   reuse: no_restriction_found
   quote: null
   attribution: null
-  checked: 2026-10-30
+  checked: 2026-11-21
 plans:
   - id: payg
     name: Pay as you go (app)
@@ -23,7 +23,49 @@ plans:
     discount_of: null
     includes_vat: null
     networks: [All networks on Electroverse]
-    operator_ids: []
+    operator_ids:
+      - allego
+      - applegreen_electric
+      - arnold_clark_charge
+      - be_ev
+      - believ
+      - blink_charging_uk
+      - bp_pulse
+      - charge_my_street
+      - chargeplace_scotland
+      - chargepoint
+      - clenergy_ev
+      - connected_kerb
+      - connekt
+      - dragon_charging
+      - e_on_drive
+      - esb_energy
+      - ev_point
+      - evolt
+      - evyve
+      - ezo
+      - fastned
+      - for_ev
+      - geniepoint
+      - instavolt
+      - ionity
+      - leap24
+      - lidl
+      - mer_uk
+      - mfg_ev_power
+      - monta
+      - osprey
+      - pogo_charge
+      - raw_charging
+      - roam
+      - scottishpower_recharge
+      - shell_recharge
+      - smart_charge
+      - source_ev
+      - totalenergies
+      - ubitricity
+      - wenea
+      - zest
     conditions: >-
       Prices for each charger are shown only in the app. The rates come from the charge
       point operators and can change.
@@ -34,7 +76,7 @@ plans:
         We also never charge any subscription or transaction fees. This means a low-cost
         and convenient public charging service for you. The latest pricing for every
         operator and each specific charging point is displayed in the Electroverse app.
-      checked: 2026-10-09
+      checked: 2026-11-21
   - id: ionity_subscription
     name: IONITY subscription (via Electroverse)
     pay_by: Electroverse app or Electrocard
@@ -58,7 +100,7 @@ plans:
         The cost for the subscription will vary depending on where you are signing up from
         but you can expect to pay £10.50 / €11.99 per month. We recommend checking the
         Electroverse app for currency specific pricing!
-      checked: 2026-10-30
+      checked: 2026-11-21
   - id: shell_recharge_subscription
     name: Shell Recharge subscription (via Electroverse)
     pay_by: Electroverse app or Electrocard
@@ -80,7 +122,7 @@ plans:
       quote: >-
         The Shell Recharge subscription is back and better than ever! Sign up via
         Electroverse and get 25% off charging for just £9.99 per month.
-      checked: 2026-10-09
+      checked: 2026-11-21
   - id: be_ev_subscription
     name: Be.EV subscription (via Electroverse)
     pay_by: Electroverse app or Electrocard
@@ -93,7 +135,7 @@ plans:
     discount_of: the price of charging on Be.EV chargers through Electroverse
     includes_vat: true
     networks: [Be.EV]
-    operator_ids: []
+    operator_ids: [be_ev]
     conditions: >-
       One month minimum term. The Subscription Terms say the subscription fee includes VAT.
     needs_testing: >-
@@ -105,7 +147,7 @@ plans:
         Electroverse users get 51% off with Be.EV chargers for a monthly subscription cost
         of £9.99. By signing up you get access to cheaper charging immediately and you will
         be billed monthly!
-      checked: 2026-10-09
+      checked: 2026-11-21
   - id: arnold_clark_subscription
     name: Arnold Clark Charge subscription (via Electroverse)
     pay_by: Electroverse app or Electrocard
@@ -124,7 +166,7 @@ plans:
       quote: >-
         Electroverse users can now get 29% off Arnold Clark chargers by subscribing for
         £8.99 a month! Once you sign up, you'll have instant access to cheaper charging!
-      checked: 2026-10-30
+      checked: 2026-11-21
   - id: octopus_go_discount
     name: Octopus Go customer discount
     pay_by: Electroverse app with a linked Octopus Energy account
@@ -135,7 +177,49 @@ plans:
     discount_of: the price of charging on any network through Electroverse
     includes_vat: null
     networks: [All networks on Electroverse]
-    operator_ids: []
+    operator_ids:
+      - allego
+      - applegreen_electric
+      - arnold_clark_charge
+      - be_ev
+      - believ
+      - blink_charging_uk
+      - bp_pulse
+      - charge_my_street
+      - chargeplace_scotland
+      - chargepoint
+      - clenergy_ev
+      - connected_kerb
+      - connekt
+      - dragon_charging
+      - e_on_drive
+      - esb_energy
+      - ev_point
+      - evolt
+      - evyve
+      - ezo
+      - fastned
+      - for_ev
+      - geniepoint
+      - instavolt
+      - ionity
+      - leap24
+      - lidl
+      - mer_uk
+      - mfg_ev_power
+      - monta
+      - osprey
+      - pogo_charge
+      - raw_charging
+      - roam
+      - scottishpower_recharge
+      - shell_recharge
+      - smart_charge
+      - source_ev
+      - totalenergies
+      - ubitricity
+      - wenea
+      - zest
     conditions: >-
       Only for Octopus Go customers, who must link their Octopus Energy account in the app. The terms say multiple discounts are
       applied one after another on a compounding basis.
@@ -145,7 +229,7 @@ plans:
       quote: >-
         If you are an Octopus Go customer or an Intelligent Octopus Go customer, you can get
         a 5% or 8% discount across the whole of the Electroverse.
-      checked: 2026-10-09
+      checked: 2026-11-21
   - id: intelligent_octopus_go_discount
     name: Intelligent Octopus Go customer discount
     pay_by: Electroverse app with a linked Octopus Energy account
@@ -156,7 +240,49 @@ plans:
     discount_of: the price of charging on any network through Electroverse
     includes_vat: null
     networks: [All networks on Electroverse]
-    operator_ids: []
+    operator_ids:
+      - allego
+      - applegreen_electric
+      - arnold_clark_charge
+      - be_ev
+      - believ
+      - blink_charging_uk
+      - bp_pulse
+      - charge_my_street
+      - chargeplace_scotland
+      - chargepoint
+      - clenergy_ev
+      - connected_kerb
+      - connekt
+      - dragon_charging
+      - e_on_drive
+      - esb_energy
+      - ev_point
+      - evolt
+      - evyve
+      - ezo
+      - fastned
+      - for_ev
+      - geniepoint
+      - instavolt
+      - ionity
+      - leap24
+      - lidl
+      - mer_uk
+      - mfg_ev_power
+      - monta
+      - osprey
+      - pogo_charge
+      - raw_charging
+      - roam
+      - scottishpower_recharge
+      - shell_recharge
+      - smart_charge
+      - source_ev
+      - totalenergies
+      - ubitricity
+      - wenea
+      - zest
     conditions: >-
       Only for Intelligent Octopus Go customers, who must link their Octopus Energy account in the app. The terms say multiple discounts are
       applied one after another on a compounding basis.
@@ -166,7 +292,7 @@ plans:
       quote: >-
         If you are an Octopus Go customer or an Intelligent Octopus Go customer, you can get
         a 5% or 8% discount across the whole of the Electroverse.
-      checked: 2026-10-09
+      checked: 2026-11-21
   - id: evyve_discount
     name: Evyve discount (via Electroverse)
     pay_by: Electroverse app or Electrocard
@@ -188,7 +314,7 @@ plans:
       quote: >-
         Automatically get 15% off Evyve chargers when you start a charge via the
         Electroverse app or charging card (Electrocard)!
-      checked: 2026-10-30
+      checked: 2026-11-21
   - id: source_ev_discount
     name: Source EV discount (via Electroverse)
     pay_by: Electroverse app or Electrocard
@@ -211,9 +337,18 @@ plans:
       quote: >-
         Starting Monday the 27th of October and running you will be able to stop and charge
         at any Source EV site and get a cool 20% discount!
-      checked: 2026-10-30
+      checked: 2026-11-21
 notes: >-
-  Terms checked 2026-10-09 and 2026-10-30: electroverse.com/legal/terms holds the General Terms and the
+  Terms checked 2026-10-09, 2026-10-30 and 2026-11-21: electroverse.com/legal/terms holds the General Terms and the
   Subscription Terms, with no clause found on copying or reusing website content or prices.
   Per charger prices are shown only in the Electroverse app. https://octopusev.com/ev-hub/electroverse
   returned HTTP 404 on 2026-10-09.
+  Which networks the network-wide plans (pay as you go and the Octopus Go discounts) cover:
+  the FAQ on the home page, https://electroverse.com/, read 2026-11-21, lists the networks
+  "currently partnered with Octopus Electroverse in the UK" and says the list is not
+  exhaustive. operator_ids holds the ones with a file in operators/: "ESB" links to
+  esbenergy.co.uk (ESB Energy, not ESB ecars in Northern Ireland); "eVolt Charging" is Evolt
+  Charging Ltd, which runs the Evolt Network; "Source" links to source-ev.com; "Smart Charge"
+  links to smartcharge.co.uk. "Fuuse" is left out because it is a platform that hosts
+  several networks and the list does not say which. Networks not on the list are not linked,
+  although Electroverse may still work at some of them.
