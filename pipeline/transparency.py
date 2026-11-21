@@ -146,7 +146,7 @@ LINKS = (
 # What search results and shared links say about this page (pipeline/seo.py).
 DESCRIPTION = (
     "Every source of UK charge point data this map uses or plans to use: how each operator "
-    "publishes it, its licence, rate limits, access requests and what was found."
+    "publishes it, its licence, rate limits, access requests and findings."
 )
 
 

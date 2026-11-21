@@ -42,8 +42,8 @@ REPORT_FOLDER = "report"
 # posts use their first paragraph instead.
 DESCRIPTIONS = {
     "disclaimer": (
-        "OEVM is a personal, experimental project, much of it written with an AI assistant. "
-        "Charger data stays the operators' work, with no warranty: check at the charger."
+        "A personal, experimental project, much of it written with an AI assistant. Charger "
+        "data stays the operators' work, with no warranty: check at the charger."
     ),
     "data-licences": (
         "Where each source of charger data on this map comes from, its licence and the credit "

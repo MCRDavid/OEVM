@@ -28,7 +28,7 @@ LAST_UPDATED = re.compile(r"^Last updated: (\d{1,2} \w+ \d{4})\.$")
 # What search results and shared links say about the page (pipeline/seo.py).
 DESCRIPTION = (
     "No accounts, analytics or advertising, and nothing saved on your device unless you turn "
-    'on "Remember my settings". Who else sees your visit, and how to ask a question.'
+    'on "Remember my settings". Who else sees your visit, and how to ask.'
 )
 
 
