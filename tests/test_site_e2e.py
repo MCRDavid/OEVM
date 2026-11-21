@@ -556,7 +556,7 @@ def test_the_calculator_works_out_when_a_plan_pays_for_itself(visit):
 def test_plans_fold_by_provider_and_calculators_use_the_visitors_own_prices(visit):
     v = visit()
     page = v.open("?view=list", map_ready=False)
-    expect(page.locator("#list-items li")).to_have_count(LOCATIONS)
+    expect(page.locator("#list-items li")).to_have_count(SHOWN)
     open_filters(page)
     # One fold per provider, closed until a plan in it is ticked.
     fastned = page.locator("#my-plans details.plan-group", has_text="Fastned: 3 plans")
