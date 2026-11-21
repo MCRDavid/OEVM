@@ -10,6 +10,7 @@ import {
   cardFigure,
   cardList,
   cardSummary,
+  cardTextFor,
   cardsFor,
   cleanCards,
   feePounds,
@@ -117,6 +118,13 @@ test("a card's figure for a network comes from that network first, then every ne
   assert.deepEqual(cardFigure(card, "jolt", "dc"), { pct: 20 });
   const [plain] = cleanCards([{ id: "c", name: "C", ops: ["pod"], dc: 50 }]).values();
   assert.equal(cardFigure(plain, "pod", "ac"), null);
+  // And for people, network by network.
+  assert.equal(cardTextFor(card, "ionity"), "AC 10% off the price shown, DC 59p per kWh");
+  assert.equal(cardTextFor(card, "pod"), "AC 40p and DC 59p per kWh");
+  assert.equal(cardTextFor(card, "jolt"), "20% off the price shown");
+  assert.equal(cardTextFor({ ...plain, fee: 2 }, "pod"), "DC 50p per kWh, £2.00 a month");
+  const [onePlace] = cleanCards([{ id: "d", name: "D", ops: ["pod", "jolt"], nets: { pod: { dc: 50 } } }]).values();
+  assert.equal(cardTextFor(onePlace, "jolt"), "");
 });
 
 test("a percentage off a price including VAT is taken to the whole penny, half pennies up", () => {

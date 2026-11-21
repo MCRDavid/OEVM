@@ -189,6 +189,22 @@ export function cardSummary(card) {
   return [figuresText(card), feeText(card?.fee)].filter(Boolean).join(", ");
 }
 
+// What a card charges on one network, for people: "DC 59p per kWh", "AC 45p and DC 59p
+// per kWh", "10% off the price shown" or "AC 45p per kWh, DC 10% off the price shown",
+// then its monthly fee; "" when it gives no figure there.
+export function cardTextFor(card, op) {
+  const ac = cardFigure(card, op, "ac");
+  const dc = cardFigure(card, op, "dc");
+  let figures;
+  if (ac?.pct != null && dc?.pct != null && ac.pct === dc.pct) figures = `${ac.pct}% off the price shown`;
+  else if (ac?.pence != null && dc?.pence != null) figures = `AC ${ac.pence}p and DC ${dc.pence}p per kWh`;
+  else {
+    const one = (cur, f) => (!f ? "" : f.pence != null ? `${cur} ${f.pence}p per kWh` : `${cur} ${f.pct}% off the price shown`);
+    figures = [one("AC", ac), one("DC", dc)].filter(Boolean).join(", ");
+  }
+  return figures ? [figures, feeText(card.fee)].filter(Boolean).join(", ") : "";
+}
+
 // A card with a monthly fee as a plan the subscription calculator can offer (calculator.js).
 // op, cur and published say where: the network, "ac" or "dc", and the lowest published
 // price including VAT there, so a percentage off can be worked out. Without them it

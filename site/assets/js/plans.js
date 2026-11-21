@@ -1,8 +1,11 @@
 // Charging plans (data/plans.json) and the subscription calculator.
 //
 // Plan fees and prices are worded by the pipeline (pipeline/pricing.py) and shown as
-// given. The calculator is the one place this site works out money: it uses the numbers
-// the visitor enters or confirms, shows its working, and says it is a guide only.
+// given. The calculator is the one place this site works out money, apart from a
+// percentage off that a visitor typed in for their own card (cards.js): it uses the
+// numbers the visitor enters or confirms, shows its working, and says it is a guide only.
+
+import { bestOffer } from "./cards.js";
 
 // Plans that apply to an operator's locations, cheapest first: fixed prices per kWh from
 // lowest to highest (the lower monthly fee first on a tie), then discounts from largest to
@@ -160,13 +163,23 @@ export function breakEvenText(result, { here = true } = {}) {
   return `${text} This is a guide only: prices change, and some plans add other charges.`;
 }
 
+// The lowest published price here that includes VAT, or null.
+export function lowestWithVat(tariffOptions) {
+  const prices = (tariffOptions ?? [])
+    .filter((option) => option.state === "priced" && option.includes_vat && finite(option.ppk_low))
+    .map((option) => option.ppk_low);
+  return prices.length ? Math.min(...prices) : null;
+}
+
 // Where a charger's calculator starts "What you pay now": the lowest of the prices here
 // that include VAT, a ticked plan with no monthly fee that gives a fixed price here, and
-// the visitor's own rate for this network (rates.js, ADR 0035) for the currents the site
-// has ("ac", "dc"). A plan with a fee is left out, as that is what the calculator weighs
-// up. On a tie the operator's own price is kept, then a ticked plan's, as on the map.
-// Returns { kind: "tariff" | "plan" | "rate", ppk, item } or null; for a rate, item is
-// { cur, pence }.
+// the visitor's own figures for this network for the currents the site has ("ac",
+// "dc"): their own rate (rates.js, ADR 0035) as { ac, dc } in pence, or their offers
+// from ownOffers in cards.js, where a card's percentage off is taken off the lowest
+// published price here that includes VAT. A plan or card with a fee is left out, as
+// that is what the calculator weighs up. On a tie the operator's own price is kept, then
+// a ticked plan's, as on the map. Returns { kind: "tariff" | "plan" | "rate", ppk, item }
+// or null; for a rate, item is { cur, pence } with card and pct where a card gave it.
 export function payNowStart({ tariffOptions = [], ticked = [], rate = null, currents = [] } = {}) {
   const candidates = [];
   for (const option of tariffOptions ?? []) {
@@ -178,8 +191,16 @@ export function payNowStart({ tariffOptions = [], ticked = [], rate = null, curr
     if (finite(plan.ppk) && plan.monthly_fee === 0) candidates.push({ kind: "plan", ppk: plan.ppk, item: plan });
   }
   for (const cur of ["ac", "dc"]) {
-    const pence = rate?.[cur];
-    if ((currents ?? []).includes(cur) && finite(pence)) candidates.push({ kind: "rate", ppk: pence, item: { cur, pence } });
+    if (!(currents ?? []).includes(cur)) continue;
+    if (Array.isArray(rate?.[cur])) {
+      const best = bestOffer(rate[cur], cur, lowestWithVat(tariffOptions));
+      if (best) {
+        const item = { cur, pence: best.value, ...(best.card ? { card: best.card } : {}), ...(best.pct !== null ? { pct: best.pct } : {}) };
+        candidates.push({ kind: "rate", ppk: best.value, item });
+      }
+    } else if (finite(rate?.[cur])) {
+      candidates.push({ kind: "rate", ppk: rate[cur], item: { cur, pence: rate[cur] } });
+    }
   }
   if (!candidates.length) return null;
   const low = Math.min(...candidates.map((c) => c.ppk));
@@ -193,7 +214,12 @@ export function payNowHint(start) {
     return `Starts from your plan ${start.item.name} from ${start.item.provider}, the lowest price you have here.`;
   }
   if (start.kind === "rate") {
-    return `Starts from your own ${start.item.cur.toUpperCase()} rate for this network, typed in by you.`;
+    const cur = start.item.cur.toUpperCase();
+    if (start.item.card && start.item.pct != null) {
+      return `Starts from your card ${start.item.card}: ${start.item.pct}% off the lowest published price here, as you typed in.`;
+    }
+    if (start.item.card) return `Starts from the ${cur} price you typed in for your card ${start.item.card}.`;
+    return `Starts from your own ${cur} rate for this network, typed in by you.`;
   }
   return "Starts from the lowest published price here that includes VAT.";
 }
