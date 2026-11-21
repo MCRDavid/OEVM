@@ -9,7 +9,7 @@ import httpx
 from adapters.replay import ReplayTransport
 from pipeline import refresh, run
 from pipeline.geography import place_in_uk
-from pipeline.pricing import describe_tariff
+from pipeline.pricing import describe_tariff, energy_always, varies_with
 from pipeline.registry import load_registry
 
 FIXTURES = Path(__file__).parent / "fixtures" / "go_zero"
@@ -91,9 +91,11 @@ def test_prices_add_the_stated_vat_to_whole_pence_and_are_never_free():
     # 0.55 with VAT 20 is 66p; 0.4666... is 56p; 0.65 is 78p; 0.18333... is 22p.
     expected = {"TARIFF-141076": 66, "TARIFF-141052": 56, "TARIFF-153874": 78}
     expected |= {"TARIFF-220384": 22, "TARIFF-238647": 40}
+    # Each tariff's two times of day give the same price and cover the whole day, so it is
+    # one price at all times (owner, 21 November 2026, ADR 0003).
     for tariff_id, pence in expected.items():
-        text = shown[tariff_id].text
-        assert text.count(f"{pence}p per kWh") == 2 and text.endswith("including VAT"), text
+        assert shown[tariff_id].text == f"{pence}p per kWh including VAT"
+    assert all(energy_always(t) and varies_with(t) == [] for t in result.tariffs)
     assert not any("Free" in d.text for d in shown.values())
     assert all(len(c.tariff_ids) == 1 for c in connectors(result))
 

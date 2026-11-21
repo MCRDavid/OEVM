@@ -26,6 +26,10 @@ regulations describe the price in reference data as "the price in pence per kilo
 - A time of day from midnight to 23:59, like midnight to midnight, is read as all day
   (owner, 16 November 2026, ADR 0003): it is not shown, and the price is not taken to
   apply only at some times.
+- Elements that give exactly the same prices, split only by time of day, every day, and
+  that together cover every minute of the day, are read as one price with no time (owner,
+  21 November 2026, ADR 0003): Go Zero's "66p per kWh from 22:00 to 06:00, 66p per kWh
+  from 06:00 to 22:00" is "66p per kWh", and its label is not marked "from".
 - Sums are done in exact decimal arithmetic, so half pennies round up as expected.
 - A price that includes VAT is shown to the whole penny, half pennies rounding up, by the
   owner's decision of 14 November 2026 (ADR 0003): drivers are charged whole pence, and a
@@ -201,11 +205,69 @@ def _as_read(element: TariffElement, read_on: date) -> TariffElement:
 
 def _charging_elements(tariff: Tariff) -> list[TariffElement]:
     read_on = _read_on(tariff)
-    return [
-        _as_read(e, read_on)
-        for e in tariff.elements
-        if not (e.restrictions and e.restrictions.reservation)
-    ]
+    return _one_price(
+        [
+            _as_read(e, read_on)
+            for e in tariff.elements
+            if not (e.restrictions and e.restrictions.reservation)
+        ]
+    )
+
+
+MINUTES_IN_DAY = 24 * 60
+
+
+def _minutes(value: str) -> int:
+    hours, minutes = value.split(":")
+    return int(hours) * 60 + int(minutes)
+
+
+def _same_prices(element: TariffElement) -> list[tuple[str, ...]]:
+    return sorted(
+        (c.type, str(_decimal(c.price)), str(c.vat), str(c.step_size))
+        for c in element.price_components
+    )
+
+
+def _time_of_day_only(restrictions: TariffRestrictions | None) -> bool:
+    # No condition but a time of day, on every day of the week.
+    if restrictions is None:
+        return True
+    days = set(restrictions.day_of_week)
+    rest = restrictions.model_copy(update={"start_time": None, "end_time": None, "day_of_week": []})
+    return rest == TariffRestrictions() and (not days or days == set(WEEK))
+
+
+def _whole_day(elements: list[TariffElement]) -> bool:
+    # Whether the elements' times of day together cover every minute of the day. A time that
+    # ends before it starts runs past midnight; one that starts when it ends covers nothing.
+    covered = [False] * MINUTES_IN_DAY
+    for element in elements:
+        r = element.restrictions
+        start = _minutes(r.start_time) if r and r.start_time else 0
+        end = _minutes(r.end_time) if r and r.end_time else MINUTES_IN_DAY
+        spans = [(start, end)] if start < end else [(start, MINUTES_IN_DAY), (0, end)]
+        if start == end:
+            spans = []
+        for low, high in spans:
+            covered[low:high] = [True] * (high - low)
+    return all(covered)
+
+
+def _one_price(elements: list[TariffElement]) -> list[TariffElement]:
+    # Elements with exactly the same prices, split only by time of day, that together cover
+    # every minute of every day give one price at all times (owner, 21 November 2026, ADR
+    # 0003), so they are read as one element with no conditions.
+    if len(elements) < 2:
+        return elements
+    prices = _same_prices(elements[0])
+    if (
+        all(_same_prices(e) == prices for e in elements[1:])
+        and all(_time_of_day_only(e.restrictions) for e in elements)
+        and _whole_day(elements)
+    ):
+        return [elements[0].model_copy(update={"restrictions": None})]
+    return elements
 
 
 def _reachable(elements: list[TariffElement], kind: str) -> list[tuple[PriceComponent, str]]:

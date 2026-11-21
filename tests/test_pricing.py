@@ -416,3 +416,97 @@ def test_other_times_are_still_said(start, end):
     assert describe_tariff(shown).text.startswith("45p per kWh from ")
     assert not energy_always(shown)
     assert varies_with(shown) == ["time of day"]
+
+
+# The same prices at every hour, split only by time of day, are one price (owner, 21
+# November 2026, ADR 0003).
+
+
+def split_tariff(elements) -> Tariff:
+    base = tariff()
+    return base.model_copy(
+        update={"elements": [base.elements[0].model_validate(e) for e in elements]}
+    )
+
+
+def kwh(price, vat=20.0):
+    return [energy(price, vat=vat)]
+
+
+def at(start, end, days=None, **more):
+    return {"start_time": start, "end_time": end, "day_of_week": days or [], **more}
+
+
+def test_the_same_price_at_every_hour_is_one_price():
+    # Go Zero's tariffs, as read on 20 November 2026: 22:00 to 06:00 and 06:00 to 22:00,
+    # every day, both 0.55 with VAT 20.
+    shown = split_tariff(
+        [
+            {"price_components": kwh(0.55), "restrictions": at("22:00", "06:00", WEEK_DAYS)},
+            {"price_components": kwh(0.55), "restrictions": at("06:00", "22:00", WEEK_DAYS)},
+        ]
+    )
+    assert describe_tariff(shown).text == "66p per kWh including VAT"
+    assert energy_always(shown)
+    assert varies_with(shown) == []
+    assert energy_range(shown) == (Decimal("0.66"), Decimal("0.66"), True)
+
+
+def test_one_price_also_covers_times_that_meet_at_midnight_and_a_closing_element():
+    shown = split_tariff(
+        [
+            {"price_components": kwh(0.5), "restrictions": at("00:00", "12:00")},
+            {"price_components": kwh(0.5), "restrictions": at("12:00", None)},
+        ]
+    )
+    assert describe_tariff(shown).text == "60p per kWh including VAT"
+    with_rest = split_tariff(
+        [
+            {"price_components": kwh(0.5), "restrictions": at("08:00", "20:00")},
+            {"price_components": kwh(0.5), "restrictions": None},
+        ]
+    )
+    assert describe_tariff(with_rest).text == "60p per kWh including VAT"
+
+
+@pytest.mark.parametrize(
+    "second",
+    [
+        # A different price at night.
+        {"price_components": kwh(0.45), "restrictions": at("22:00", "06:00")},
+        # A different VAT figure.
+        {"price_components": kwh(0.55, vat=None), "restrictions": at("22:00", "06:00")},
+        # A gap between 22:00 and 23:00.
+        {"price_components": kwh(0.55), "restrictions": at("23:00", "06:00")},
+        # Weekdays only, so not every day.
+        {"price_components": kwh(0.55), "restrictions": at("22:00", "06:00", WEEK_DAYS[:5])},
+        # Another condition besides the time.
+        {"price_components": kwh(0.55), "restrictions": at("22:00", "06:00", max_kwh=20)},
+        # Another kind of charge as well.
+        {
+            "price_components": [*kwh(0.55), {"type": "flat", "price": 1, "vat": 20}],
+            "restrictions": at("22:00", "06:00"),
+        },
+    ],
+)
+def test_prices_that_differ_by_time_or_leave_a_gap_are_still_said(second):
+    first = {"price_components": kwh(0.55), "restrictions": at("06:00", "22:00")}
+    shown = split_tariff([first, second])
+    text = describe_tariff(shown).text
+    assert "from 06:00 to 22:00" in text
+    assert not energy_always(shown)
+    assert "time of day" in varies_with(shown)
+
+
+def test_one_price_never_reads_a_reservation_or_leaves_out_the_stated_times():
+    # A single element keeps its time: only elements that together cover the day merge.
+    alone = split_tariff([{"price_components": kwh(0.55), "restrictions": at("06:00", "22:00")}])
+    assert describe_tariff(alone).text == "66p per kWh from 06:00 to 22:00 including VAT"
+    # A start that equals its end covers nothing here, so the gap is still said.
+    odd = split_tariff(
+        [
+            {"price_components": kwh(0.55), "restrictions": at("06:00", "06:00")},
+            {"price_components": kwh(0.55), "restrictions": at("06:00", "22:00")},
+        ]
+    )
+    assert not energy_always(odd)
