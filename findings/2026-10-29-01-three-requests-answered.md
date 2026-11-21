@@ -44,6 +44,10 @@ No limit is stated in the reply or on the website, but the locations address ans
 header "ratelimit-policy: 5;w=3600": 5 requests in each 3,600 seconds. The map keeps 721 seconds
 between requests to the host, so its daily read of the two addresses takes about 12 minutes.
 
+**Update, 21 November 2026:** since the morning of 16 November 2026 Roam's locations address has
+answered HTTP 502 in every daily fetch, so the map shows Roam's chargers as they were that morning.
+See [the post on refusals and outages](findings/refusals-and-outages/).
+
 ### An older version of OCPI
 
 The records come in OCPI response objects but use OCPI 2.1.1 field names. Locations give type

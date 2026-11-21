@@ -83,6 +83,11 @@ fees](https://www.evroam.org.uk/_files/ugd/ba22eb_43b30095ded54d7584b30b0f6ee690
 EVROAM.TC.050922.v1) ask "a one-off registration fee of £100" and "an annual fee of £250 for every
 unique ID", and say "All fees are shown exclusive of VAT".
 
+**Update, 21 November 2026:** the three websites that could not be read, EasyGo's, LEAP24's and
+Dragon Charging's, were read in a browser on 20 November 2026. EasyGo is now EZO, and LEAP24 and
+Dragon Charging show no data route. See [the post on Go Zero's feed and networks with no data
+route](findings/go-zero-and-no-data-route/).
+
 Some networks turn out to sit inside others. Joju says its chargers run "on the Mer network", but
 Mer UK's feed, checked on 23 October 2026, names no Joju site and has none in Portsmouth or
 Eastleigh, where Joju runs public chargers. Elmtronics' website did not load, and Mer's own [news
