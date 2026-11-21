@@ -61,7 +61,8 @@ decisions are in docs/adr/.
 - site/index.html, site/assets/: the map page. pipeline/build_site.py: build folder with MapLibre.
   site/assets/js/labels.js: the cheapest price drawn above each map point (ADR 0026).
   site/assets/js/plans.js and calculator.js: plans, the cheapest way to pay and the subscription
-  calculator (ADR 0016); rates.js: a visitor's own rates (ADR 0035).
+  calculator (ADR 0016); rates.js: a visitor's own rates; cards.js and cardform.js: a
+  visitor's own cards, with prices or a percentage off per network (both ADR 0035).
   site/assets/js/live.js: status counts on the details screen, and the status file read for the
   charger that was opened (data/live/, ADR 0032); the time shown is when the feed was read.
 - Statuses between daily fetches (ADR 0032: refreshed hourly, served from the site, shown on the
@@ -180,8 +181,9 @@ decisions are in docs/adr/.
 - Text from feeds goes into the page as text only (textContent), never as HTML.
 - Tests never contact the basemap (OpenFreeMap): use --offline-style.
 - Nothing is stored on a visitor's device until they opt in; "Forget my settings" deletes it all.
-- A visitor's own rates (site/assets/js/rates.js, ADR 0035) are used only in the page, marked as
-  theirs: never sent, published, put in the address or treated as operator data.
+- A visitor's own rates and cards (site/assets/js/rates.js and cards.js, ADR 0035) are used only
+  in the page, marked as theirs: never sent, published, put in the address or treated as
+  operator data. Starting a card from a listed roaming provider ticks its networks, never its prices.
 - Every page shows the short disclaimer and links to the disclaimer, data sources, privacy notice
   and security policy pages. Footer links stay on the site; only "Source code" goes to GitHub.
 
