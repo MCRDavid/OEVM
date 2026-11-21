@@ -62,8 +62,7 @@ asks for that page in smaller pieces, waits as long as asked, and skips only a s
 fails, marking the run incomplete. The waits in one run are capped at 80 minutes.
 
 It has not been needed so far. The daily fetch of 15 November 2026 read Monta's whole list, 50
-requests with no 504, and every daily fetch since has too, up to 21 November 2026, when 747 Monta
-locations were on the map.
+requests with no 504, and every daily fetch since has too, up to 21 November 2026.
 
 ## Roam: a long wait, then HTTP 502
 

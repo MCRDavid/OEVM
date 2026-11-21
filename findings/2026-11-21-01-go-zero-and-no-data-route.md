@@ -30,8 +30,9 @@ What the feed sent on 20 and 21 November 2026:
 - **57 locations, all new to the map.** Every one gives the OCPI party GB GOZ and a publish flag of
   true, with 158 charge points and 233 connectors. Going by their names as published, 29 are
   hotels, and the others include holiday lodges, campsites, community centres, garden centres,
-  offices and a shopping centre. 10 have a DC charger. None appeared in another operator's feed, and 6 were within 200 metres of
-  another network's charger on the map.
+  offices and a shopping centre. 10 have a DC charger. No other operator's feed carried a record
+  under Go Zero's codes, and 6 of the 57 were within 200 metres of another network's charger on the
+  map.
 - **Prices without VAT, VAT stated.** Every price gives a VAT rate of 20 beside a price excluding
   VAT, as OCPI 2.2.1 describes, so the map adds it, and every price then comes to whole pence. On
   21 November 2026, 37 of the 57 locations showed 66p per kWh including VAT, and the others between
@@ -77,8 +78,8 @@ data feed, a feed address, or a page saying how to ask for one.
 - **Alfa Power.** A guide to charging at motorway service areas names it, but the web address the
   guide gives showed a web host's holding page, and another likely address was for sale. No
   website, data route or contact route of its own was found.
-- **Connected Kerb.** Its "Regulatory Data" link leads to a reliability report rather than open
-  data.
+- **Connected Kerb.** The link in its footer for regulatory data leads to a reliability report
+  rather than open data.
 - **Qwello.** Its UK website has no open data page; its parent company's site mentions only the
   EU's rules.
 - **TotalEnergies and Source London.** TotalEnergies' UK pages say it bought Source London in 2021,
@@ -89,9 +90,9 @@ data feed, a feed address, or a page saying how to ask for one.
 - **Joju.** Its charging pages name the councils it works for, but have no open data page.
 - **APCOA.** Its pages were unchanged since 23 October 2026, with no open data route.
 
-Each record on the [transparency page](transparency/) now gives the contact route found. The next
-step for each is a written request asking where its open data is published. None had been sent by
-21 November 2026.
+Each network's record on the [transparency page](transparency/) gives the date of its check. The
+next step for each, once a contact route is found, is a written request asking where its open data
+is published. None had been sent by 21 November 2026.
 
 ## Two networks already on the map
 
