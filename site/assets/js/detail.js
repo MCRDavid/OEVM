@@ -9,14 +9,14 @@
 import { h, safeLink } from "./dom.js";
 import { STATUS_LABELS, formatDateTime, formatKw, formatShortDateTime, plugName } from "./format.js";
 import { STATUS_GROUPS, asOfText, chips, countByGroup, groupOf, summaryText } from "./live.js";
+import { subscriptionCalculator } from "./calculator.js";
 import {
-  breakEven,
-  breakEvenText,
   cheaperFor,
   cheaperParts,
   cheapest,
-  discounted,
   needsSubscription,
+  payNowHint,
+  payNowStart,
   plansFor,
   withheldFor,
   withheldParts,
@@ -426,100 +426,35 @@ function planLine(plan, label) {
   });
 }
 
-function number(input) {
-  const value = input.value.trim() === "" ? Number.NaN : Number(input.value);
-  return Number.isFinite(value) ? value : Number.NaN;
+// The currents ("ac", "dc") of this location's connectors, from the feed's power_type.
+function currentsHere(location) {
+  const currents = new Set();
+  for (const evse of location?.evses ?? []) {
+    for (const connector of evse.connectors ?? []) {
+      const type = connector.power_type ?? "";
+      if (type === "dc") currents.add("dc");
+      else if (type.startsWith("ac_")) currents.add("ac");
+    }
+  }
+  return [...currents];
 }
 
-// The subscription calculator. It starts from published figures where there are some
-// (the plan's fee and fixed price, and the lowest pay-at-the-charger price here that
-// includes VAT); the visitor can change any of them.
-function calculator(detail, plans) {
-  const paid = plans.filter((plan) => Number.isFinite(plan.monthly_fee) && plan.monthly_fee > 0);
-  if (!paid.length) return null;
-  const now = (detail.tariff_options ?? [])
-    .filter((o) => o.state === "priced" && o.includes_vat && Number.isFinite(o.ppk_low))
-    .map((o) => o.ppk_low);
-  const field = (id, label, attrs = {}) => {
-    const input = h("input", { id, type: "number", inputmode: "decimal", min: "0", step: "0.01", ...attrs });
-    return [h("label", { for: id, text: label }), input];
-  };
-  const select = h(
-    "select",
-    { id: "calc-plan", "aria-describedby": "calc-note" },
-    paid.map((plan) => h("option", { value: plan.id, text: `${plan.name} (${plan.provider})` })),
-  );
-  const [feeLabel, fee] = field("calc-fee", "Monthly fee (pounds)");
-  const [nowLabel, payNow] = field("calc-now", "What you pay now (pence per kWh)", {
-    step: "0.1",
-    "aria-describedby": "calc-now-hint",
+// The subscription calculator for this location. "What you pay now" starts from the
+// lowest price the visitor has here: a published price including VAT, a ticked plan with
+// no monthly fee, or their own rate for this network; they can change any figure.
+function calculator(detail, plans, mine, rate) {
+  const start = payNowStart({
+    tariffOptions: detail.tariff_options,
+    ticked: plans.filter((plan) => mine.has(plan.id)),
+    rate,
+    currents: currentsHere(detail.location),
   });
-  const [baseLabel, base] = field("calc-base", "Price the discount is taken off (pence per kWh)", {
-    step: "0.1",
-    "aria-describedby": "calc-note",
+  return subscriptionCalculator({
+    plans,
+    summary: "Is a subscription worth it here?",
+    payNow: start?.ppk ?? null,
+    nowHint: payNowHint(start),
   });
-  const [withLabel, withPlan] = field("calc-with", "Price with the plan (pence per kWh)", { step: "0.1" });
-  const [kwhLabel, kwh] = field("calc-kwh", "kWh you charge a month (optional)", { step: "1" });
-  const note = h("p", { className: "hint", id: "calc-note" });
-  const answer = h("p", { id: "calc-answer", role: "status" });
-  const baseRow = h("div", { className: "calc-base" }, baseLabel, base);
-  if (now.length) payNow.value = String(Math.min(...now));
-  // For a discount plan the price with the plan is worked out from the base price, but
-  // only when the base price changes, so a price the visitor types in is kept.
-  const update = (event) => {
-    const plan = paid.find((p) => p.id === select.value);
-    const isDiscount = Number.isFinite(plan.discount_percent);
-    baseRow.hidden = !isDiscount;
-    if (isDiscount && (!event || event.target === base)) {
-      const price = discounted(number(base), plan.discount_percent);
-      withPlan.value = price === null ? "" : String(Math.round(price * 10) / 10);
-    }
-    answer.textContent = breakEvenText(
-      breakEven({
-        fee: number(fee),
-        payNow: number(payNow),
-        withPlan: number(withPlan),
-        kwh: kwh.value.trim() === "" ? null : number(kwh),
-      }),
-    );
-  };
-  const choose = () => {
-    const plan = paid.find((p) => p.id === select.value);
-    fee.value = String(plan.monthly_fee);
-    withPlan.value = Number.isFinite(plan.ppk) ? String(plan.ppk) : "";
-    base.value = "";
-    note.textContent = Number.isFinite(plan.discount_percent)
-      ? `${plan.price_text}. That price is not published openly, so enter it from the provider's app.`
-      : Number.isFinite(plan.ppk)
-        ? ""
-        : "This plan's price per kWh is not published. Enter it if you know it.";
-    update();
-  };
-  select.addEventListener("change", choose);
-  for (const input of [fee, payNow, base, withPlan, kwh]) input.addEventListener("input", update);
-  const body = h(
-    "div",
-    { className: "calc" },
-    h("label", { for: "calc-plan", text: "Plan" }),
-    select,
-    note,
-    feeLabel,
-    fee,
-    nowLabel,
-    payNow,
-    h(
-      "p",
-      { className: "hint", id: "calc-now-hint", text: now.length ? "Starts from the lowest published price here that includes VAT." : "No price including VAT is published here. Enter what you pay." },
-    ),
-    baseRow,
-    withLabel,
-    withPlan,
-    kwhLabel,
-    kwh,
-    answer,
-  );
-  choose();
-  return h("details", { className: "calculator" }, h("summary", { text: "Is a subscription worth it here?" }), body);
 }
 
 function linked(parts) {
@@ -578,8 +513,8 @@ export function ownRateSection(rate, { cheaper = false, onEditRate = null } = {}
 // Plans from providers' own pages that cover this location's network, opened when asked
 // for, with the calculator. A plan that beats every tariff listed here is said in one
 // line above them. Where the operator's own plans cannot be shown because of its terms,
-// a note says so.
-export function plansSection(detail, allPlans, mine = new Set(), withheld = []) {
+// a note says so. rate is the visitor's own rate for this network, if any (ADR 0035).
+export function plansSection(detail, allPlans, mine = new Set(), withheld = [], rate = null) {
   const operatorId = detail.location?.provenance?.source_id;
   const plans = plansFor(operatorId, allPlans);
   // An operator said to be cheaper to pay directly has that note under the cheapest price.
@@ -613,7 +548,7 @@ export function plansSection(detail, allPlans, mine = new Set(), withheld = []) 
       ...(paid.length
         ? [h("h4", { text: `With a paid subscription (${paid.length})` }), list("With a paid subscription", paid)]
         : []),
-      calculator(detail, plans),
+      calculator(detail, plans, mine, rate),
     ),
     ...held,
   ].filter(Boolean);
@@ -770,7 +705,7 @@ export function renderDetail(
         : "Prices and statuses are as the operator published them, and may have changed. Always check at the charger.",
     }),
     ...tariffSection(detail),
-    ...plansSection(detail, plans, mine, withheld),
+    ...plansSection(detail, plans, mine, withheld, rate),
     h(
       "ul",
       { className: "detail-links" },

@@ -9,6 +9,9 @@ import {
   cheapest,
   discounted,
   needsSubscription,
+  paidPlans,
+  payNowHint,
+  payNowStart,
   penceText,
   plansFor,
   poundsText,
@@ -177,4 +180,53 @@ test("the cheaper note gives the oldest check and a possessive that suits the na
     text,
     "According to ESB ecars' website when last checked on 15 November 2026. Its website terms do not allow its prices to be shown here, so check ESB ecars' website or app before you charge.",
   );
+});
+
+test("the charger calculator starts from the lowest price the visitor has there", () => {
+  const tariffOptions = [
+    { state: "priced", includes_vat: true, ppk_low: 79 },
+    { state: "priced", includes_vat: false, ppk_low: 30 },
+  ];
+  const free = { id: "x.app", name: "App", provider: "X", monthly_fee: 0, ppk: 60 };
+  const paid = { id: "x.gold", name: "Gold", provider: "X", monthly_fee: 4.99, ppk: 40 };
+  assert.deepEqual(payNowStart({ tariffOptions }), { kind: "tariff", ppk: 79, item: tariffOptions[0] });
+  // A ticked plan with a fee is what the calculator weighs up, so it is never the start.
+  assert.equal(payNowStart({ tariffOptions, ticked: [paid] }).kind, "tariff");
+  assert.deepEqual(payNowStart({ tariffOptions, ticked: [free, paid] }), { kind: "plan", ppk: 60, item: free });
+  // Own rates count only for the currents the site has.
+  const rate = { ac: 30, dc: 55 };
+  assert.deepEqual(payNowStart({ tariffOptions, ticked: [free], rate, currents: ["dc"] }), {
+    kind: "rate",
+    ppk: 55,
+    item: { cur: "dc", pence: 55 },
+  });
+  assert.equal(payNowStart({ tariffOptions, rate: { ac: 79 }, currents: ["ac"] }).kind, "tariff", "a tie keeps the operator's price");
+  assert.equal(payNowStart({ ticked: [free], rate: { dc: 60 }, currents: ["dc"] }).kind, "plan", "then a ticked plan's");
+  assert.equal(payNowStart({ tariffOptions: [tariffOptions[1]] }), null);
+  assert.equal(payNowStart(), null);
+});
+
+test("the hint says where the calculator's starting price came from", () => {
+  assert.equal(payNowHint(null), "No price including VAT is published here. Enter what you pay.");
+  assert.equal(payNowHint({ kind: "tariff" }), "Starts from the lowest published price here that includes VAT.");
+  assert.equal(
+    payNowHint({ kind: "plan", item: { name: "App", provider: "X" } }),
+    "Starts from your plan App from X, the lowest price you have here.",
+  );
+  assert.equal(
+    payNowHint({ kind: "rate", item: { cur: "dc", pence: 55 } }),
+    "Starts from your own DC rate for this network, typed in by you.",
+  );
+});
+
+test("only plans with a monthly fee go in the calculator", () => {
+  const plans = [{ monthly_fee: 0 }, { monthly_fee: 4.99 }, { monthly_fee: null }, {}];
+  assert.deepEqual(paidPlans(plans), [{ monthly_fee: 4.99 }]);
+  assert.deepEqual(paidPlans(undefined), []);
+});
+
+test("the general calculator's answer is not about one charger", () => {
+  const result = breakEven({ fee: 5, payNow: 79, withPlan: 55 });
+  assert.match(breakEvenText(result), /21 kWh a month here or on the networks it covers\./);
+  assert.match(breakEvenText(result, { here: false }), /21 kWh a month on the networks it covers\./);
 });
