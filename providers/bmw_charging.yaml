@@ -1,0 +1,21 @@
+# yaml-language-server: $schema=schema.json
+# BMW Charging: public charging card and app for BMW drivers. Run by Digital Charging Solutions GmbH.
+# Rules are in schema/provider.py.
+id: bmw_charging
+name: BMW Charging
+kind: roaming
+website: https://bmw-public-charging.com/web/en/bmw-gb
+terms:
+  url: https://bmw-public-charging.com/web/en/bmw-gb/copyright
+  reuse: forbidden
+  quote: "The content and data available on this website, including but not limited to point of interest (POI) data, are protected by copyright and database rights. Any automated extraction, scraping, crawling, or systematic retrieval of data from this website - whether in whole or in part - is strictly prohibited without prior written consent of Digital Charging Solutions GmbH. Violations may result in civil and/or criminal liability."
+  attribution: null
+  checked: 2026-11-21
+plans: []
+notes: >-
+  Plans are not listed because the copyright notice on the service's own website says its
+  content and data are protected by copyright and database rights and forbids automated
+  extraction or systematic retrieval without written consent (checked 2026-11-21). The site
+  says it is a service by Digital Charging Solutions GmbH, which runs the same notice on its
+  other car makers' charging sites. Its tariffs page publishes monthly fees and discounts for
+  the UK; prices per kWh are shown only on its map and in the app.

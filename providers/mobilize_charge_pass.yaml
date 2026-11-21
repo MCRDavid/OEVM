@@ -1,0 +1,18 @@
+# yaml-language-server: $schema=schema.json
+# Mobilize Charge Pass: Renault's public charging card and app (My Renault app).
+# Rules are in schema/provider.py.
+id: mobilize_charge_pass
+name: Mobilize Charge Pass
+kind: roaming
+website: https://www.renault.co.uk/mobilize/charge-pass.html
+terms:
+  url: https://www.renault.co.uk/terms-and-conditions.html
+  reuse: forbidden
+  quote: "All rights of ownership in the site, illustrations pictures, sound, script, animation and other material appearing belong to Renault. All rights are strictly reserved. You shall not copy, amend, reproduce in any form whatsoever the information and material on the site or otherwise interfere with the site or do any act that is inconsistent with our rights. Copyright Renault UK Limited."
+  attribution: null
+  checked: 2026-11-21
+plans: []
+notes: >-
+  Plans are not listed because Renault UK's website terms do not allow the information on
+  the site to be copied or reproduced (checked 2026-11-21). The Charge Pass page links its
+  UK rates as PDF price lists.
