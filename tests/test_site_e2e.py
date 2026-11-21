@@ -184,7 +184,8 @@ def open_filters(page):
 
 def open_plan_groups(page):
     """Open every provider's fold under "Your charging plans", so its boxes can be ticked."""
-    page.locator("#my-plans details.plan-group").evaluate_all("folds => folds.forEach(f => f.open = true)")
+    folds = page.locator("#my-plans details.plan-group")
+    folds.evaluate_all("folds => folds.forEach(f => f.open = true)")
 
 
 def test_map_loads_on_a_phone_with_nothing_from_outside(visit):
@@ -581,7 +582,9 @@ def test_plans_fold_by_provider_and_calculators_use_the_visitors_own_prices(visi
     expect(page.locator("#calc-now-hint")).to_have_text(
         "Starts from your own DC rate for this network, typed in by you."
     )
-    expect(page.locator("#calc-answer")).to_contain_text("pays for itself once you charge 34 kWh a month here")
+    expect(page.locator("#calc-answer")).to_contain_text(
+        "pays for itself once you charge 34 kWh a month here"
+    )
     assert v.errors == [] and v.outside == []
 
 

@@ -56,6 +56,8 @@ decisions are in docs/adr/.
   .github/ISSUE_TEMPLATE, relay/worker.js and ocpi/worker.js).
 - site/index.html, site/assets/: the map page. pipeline/build_site.py: build folder with MapLibre.
   site/assets/js/labels.js: the cheapest price drawn above each map point (ADR 0026).
+  site/assets/js/plans.js and calculator.js: plans, the cheapest way to pay and the subscription
+  calculator (ADR 0016); rates.js: a visitor's own rates (ADR 0035).
   site/assets/js/live.js: status counts on the details screen, and the status file read for the
   charger that was opened (data/live/, ADR 0032); the time shown is when the feed was read.
 - Statuses between daily fetches (ADR 0032: refreshed hourly, served from the site, shown on the
