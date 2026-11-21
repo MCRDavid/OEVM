@@ -236,11 +236,11 @@ test("the charger calculator can start from the visitor's own card, but not one 
 test("the hint says where the calculator's starting price came from", () => {
   assert.equal(
     payNowHint({ kind: "rate", item: { cur: "dc", pence: 50, card: "Card C" } }),
-    "Starts from the DC price you typed in for your card Card C.",
+    "Starts from the DC price you typed in for your card “Card C”.",
   );
   assert.equal(
     payNowHint({ kind: "rate", item: { cur: "dc", pence: 71, card: "Card A", pct: 10 } }),
-    "Starts from your card Card A: 10% off the lowest published price here, as you typed in.",
+    "Starts from your card “Card A”: 10% off the lowest published price here, as you typed in.",
   );
   assert.equal(payNowHint(null), "No price including VAT is published here. Enter what you pay.");
   assert.equal(payNowHint({ kind: "tariff" }), "Starts from the lowest published price here that includes VAT.");

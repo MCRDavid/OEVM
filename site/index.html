@@ -154,10 +154,61 @@
     <p class="hint" id="rate-message" role="status"></p>
     <ul id="rate-list" class="rate-list" aria-label="Your own rates"></ul>
   </fieldset>
+  <fieldset id="my-cards" class="my-cards">
+    <legend>Your own cards</legend>
+    <p class="hint" id="cards-hint">Use a charge card, roaming app or membership whose prices are not listed here? Add it with the networks it works on and what it charges there: a price in whole pence per kWh including VAT, or a percentage off the price shown on this map. Where it charges differently on one network, add that network&rsquo;s figures too. The price labels on the map and each charger&rsquo;s details then use it where it is cheapest, marked as yours. This site does not check your cards, and never sends or publishes them. They stay in this browser, and are saved only if you turn on &ldquo;Remember my settings&rdquo;.</p>
+    <label for="card-start">Start from</label>
+    <select id="card-start" aria-describedby="cards-hint">
+      <option value="">A blank card</option>
+    </select>
+    <label for="card-name">Name of the card or app</label>
+    <input type="text" id="card-name" maxlength="40" autocomplete="off">
+    <fieldset class="card-networks">
+      <legend>Networks it works on <span id="card-ops-count" class="plan-count"></span></legend>
+      <div class="actions">
+        <button type="button" id="card-all">Tick all</button>
+        <button type="button" id="card-none">Untick all</button>
+      </div>
+      <div id="card-ops" class="card-ops"></div>
+    </fieldset>
+    <p class="hint">What it charges on every ticked network. Leave empty what you do not know; a price comes before a percentage off.</p>
+    <label for="card-ac">AC chargers: pence per kWh, including VAT</label>
+    <input type="number" id="card-ac" inputmode="numeric" min="1" max="300" step="1" autocomplete="off">
+    <label for="card-dc">DC chargers: pence per kWh, including VAT</label>
+    <input type="number" id="card-dc" inputmode="numeric" min="1" max="300" step="1" autocomplete="off">
+    <label for="card-pct">Or a percentage off the price shown</label>
+    <input type="number" id="card-pct" inputmode="decimal" min="0.1" max="90" step="0.1" autocomplete="off">
+    <details id="card-nets" class="card-nets">
+      <summary>Different on some networks</summary>
+      <p class="hint">Figures here are used on that network instead of those above.</p>
+      <label for="card-net-op">Network</label>
+      <select id="card-net-op"></select>
+      <label for="card-net-ac">AC chargers: pence per kWh, including VAT</label>
+      <input type="number" id="card-net-ac" inputmode="numeric" min="1" max="300" step="1" autocomplete="off">
+      <label for="card-net-dc">DC chargers: pence per kWh, including VAT</label>
+      <input type="number" id="card-net-dc" inputmode="numeric" min="1" max="300" step="1" autocomplete="off">
+      <label for="card-net-pct">Or a percentage off the price shown</label>
+      <input type="number" id="card-net-pct" inputmode="decimal" min="0.1" max="90" step="0.1" autocomplete="off">
+      <div class="actions">
+        <button type="button" id="card-net-use">Use for this network</button>
+      </div>
+      <ul id="card-net-list" class="rate-list" aria-label="Figures for one network"></ul>
+    </details>
+    <label for="card-fee">Monthly fee in pounds (optional)</label>
+    <input type="number" id="card-fee" inputmode="decimal" min="0" max="100" step="0.01" autocomplete="off">
+    <label for="card-note">Note for yourself (optional)</label>
+    <input type="text" id="card-note" maxlength="40" autocomplete="off">
+    <div class="actions">
+      <button type="button" id="card-save">Save this card</button>
+      <button type="button" id="card-new">Start a new card</button>
+    </div>
+    <p class="hint" id="card-message" role="status"></p>
+    <ul id="card-list" class="rate-list" aria-label="Your own cards"></ul>
+  </fieldset>
   <fieldset class="remember">
     <legend>Your settings</legend>
     <label><input type="checkbox" id="remember"> Remember my settings on this device</label>
-    <p class="hint">Off unless you turn it on. When on, your filters, whether the map groups nearby chargers, the charging plans you ticked, your own rates, and light or dark mode if you picked one, are saved in this browser&rsquo;s local storage so the map opens the same way next time. They are not sent anywhere. Turn this off, or press &ldquo;Forget my settings&rdquo;, to delete them.</p>
+    <p class="hint">Off unless you turn it on. When on, your filters, whether the map groups nearby chargers, the charging plans you ticked, your own rates and cards, and light or dark mode if you picked one, are saved in this browser&rsquo;s local storage so the map opens the same way next time. They are not sent anywhere. Turn this off, or press &ldquo;Forget my settings&rdquo;, to delete them.</p>
     <button type="button" id="forget">Forget my settings</button>
     <p class="hint" id="settings-message" role="status"></p>
   </fieldset>

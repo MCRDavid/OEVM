@@ -231,19 +231,19 @@ export function cardAsPlan(card, { op = null, cur = null, published = null } = {
   };
 }
 
-// The networks a known provider's plans or own networks cover, by provider name, from
-// data/plans.json, so a visitor can start a card from one: [{ name, ops }] sorted by
-// name, keeping only networks in onMap (a Set of ids) when given.
+// The roaming cards and apps this site lists (data/plans.json, providers of kind
+// "roaming") with the networks their plans cover, so a visitor can start a card from one
+// with its networks ticked: [{ name, ops }] sorted by name, keeping only networks in
+// onMap (a Set of ids) when given. Operators' own apps are left out: "Your own rates"
+// is for those.
 export function knownCards(plansFile, onMap = null) {
   const byName = new Map();
-  const add = (name, ops) => {
-    if (typeof name !== "string" || !name) return;
-    const set = byName.get(name) ?? new Set();
-    for (const op of ops ?? []) if (!onMap || onMap.has(op)) set.add(op);
-    byName.set(name, set);
-  };
-  for (const plan of plansFile?.plans ?? []) add(plan.provider, plan.operator_ids);
-  for (const entry of plansFile?.withheld ?? []) add(entry.provider, entry.operator_ids);
+  for (const plan of plansFile?.plans ?? []) {
+    if (plan.provider_kind !== "roaming" || typeof plan.provider !== "string" || !plan.provider) continue;
+    const set = byName.get(plan.provider) ?? new Set();
+    for (const op of plan.operator_ids ?? []) if (!onMap || onMap.has(op)) set.add(op);
+    byName.set(plan.provider, set);
+  }
   return [...byName]
     .filter(([, ops]) => ops.size)
     .map(([name, ops]) => ({ name, ops: [...ops].sort() }))

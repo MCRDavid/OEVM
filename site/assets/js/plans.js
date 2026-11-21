@@ -216,9 +216,9 @@ export function payNowHint(start) {
   if (start.kind === "rate") {
     const cur = start.item.cur.toUpperCase();
     if (start.item.card && start.item.pct != null) {
-      return `Starts from your card ${start.item.card}: ${start.item.pct}% off the lowest published price here, as you typed in.`;
+      return `Starts from your card “${start.item.card}”: ${start.item.pct}% off the lowest published price here, as you typed in.`;
     }
-    if (start.item.card) return `Starts from the ${cur} price you typed in for your card ${start.item.card}.`;
+    if (start.item.card) return `Starts from the ${cur} price you typed in for your card “${start.item.card}”.`;
     return `Starts from your own ${cur} rate for this network, typed in by you.`;
   }
   return "Starts from the lowest published price here that includes VAT.";

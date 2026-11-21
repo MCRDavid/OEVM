@@ -503,7 +503,7 @@ export function ownRateSection(rate, { cards = [], op = null, cheaper = false, o
           : null,
         ...cards.map((card) => {
           const here = cardTextFor(card, op) || "no price typed in for this network";
-          return h("p", {}, h("strong", { text: `Your card ${card.name}: ` }), `${here}${card.note ? ` (${card.note})` : ""}.`);
+          return h("p", {}, h("strong", { text: `Your card “${card.name}”: ` }), `${here}${card.note ? ` (${card.note})` : ""}.`);
         }),
         h("p", { className: "hint", text: "Typed in by you and kept in this browser. This site has not checked them." }),
         rate && onEditRate ? h("button", { type: "button", className: "own-rate-edit", onClick: onEditRate, text: "Change your rates" }) : null,
@@ -584,8 +584,8 @@ export function mapLabelLine(detail, label, filtered = false) {
     const note = own.note ? ` (${own.note})` : "";
     const cur = own.cur.toUpperCase();
     if (!own.card) source = ` per kWh with your own ${cur} rate for this network${note}, typed in by you.`;
-    else if (own.pct != null) source = ` per kWh with your card ${own.card}${note}: ${own.pct}% off the published price, as you typed in.`;
-    else source = ` per kWh with your card ${own.card}${note}: its ${cur} price, typed in by you.`;
+    else if (own.pct != null) source = ` per kWh with your card “${own.card}”${note}: ${own.pct}% off the published price, as you typed in.`;
+    else source = ` per kWh with your card “${own.card}”${note}: its ${cur} price, typed in by you.`;
   } else if (label.plan) {
     source = ` per kWh with your plan ${label.plan.name} from ${label.plan.provider} (${label.plan.fee_text.toLowerCase()}).`;
   } else if (label.low === null) {

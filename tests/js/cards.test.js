@@ -195,21 +195,18 @@ test("a card with a monthly fee can be weighed up in the calculator like a plan"
   assert.equal(cardAsPlan(null), null);
 });
 
-test("known cards list each provider's networks on the map, to start a card from", () => {
+test("known cards are the roaming cards listed, with their networks on the map", () => {
   const plansFile = {
     plans: [
-      { provider: "Electroverse", operator_ids: ["ionity", "fastned", "gone"] },
-      { provider: "Electroverse", operator_ids: ["pod"] },
-      { provider: "Lidl Plus", operator_ids: ["lidl"] },
-      { provider: "Nowhere", operator_ids: ["gone"] },
+      { provider: "Electroverse", provider_kind: "roaming", operator_ids: ["ionity", "fastned", "gone"] },
+      { provider: "Electroverse", provider_kind: "roaming", operator_ids: ["pod"] },
+      { provider: "Lidl Plus", provider_kind: "operator", operator_ids: ["lidl"] },
+      { provider: "Nowhere", provider_kind: "roaming", operator_ids: ["gone"] },
     ],
     withheld: [{ provider: "Pod Point", operator_ids: ["pod"] }],
   };
-  const onMap = new Set(["ionity", "fastned", "pod"]);
-  assert.deepEqual(knownCards(plansFile, onMap), [
-    { name: "Electroverse", ops: ["fastned", "ionity", "pod"] },
-    { name: "Pod Point", ops: ["pod"] },
-  ]);
-  assert.equal(knownCards(plansFile).length, 4);
+  const onMap = new Set(["ionity", "fastned", "pod", "lidl"]);
+  assert.deepEqual(knownCards(plansFile, onMap), [{ name: "Electroverse", ops: ["fastned", "ionity", "pod"] }]);
+  assert.equal(knownCards(plansFile).length, 2);
   assert.deepEqual(knownCards(null), []);
 });

@@ -3,6 +3,8 @@
 // visitor turns on "Remember my settings" (see settings.js).
 
 import { subscriptionCalculator } from "./calculator.js";
+import { buildCardForm } from "./cardform.js";
+import { cardAsPlan, cardsFor, knownCards, ownOffers } from "./cards.js";
 import { mapLabelLine, renderDetail, detailUrl } from "./detail.js";
 import { activeCount, connectorFilters as connectorFiltersOn, defaults, matches, parse, serialise } from "./filters.js";
 import { h } from "./dom.js";
@@ -88,6 +90,9 @@ const app = {
   withheld: [], // data/plans.json: operators whose terms keep their own plans off the map
   mine: new Set(), // ids of the plans the visitor says they have
   rates: new Map(), // the visitor's own rates by network id (rates.js, ADR 0035)
+  cards: new Map(), // the visitor's own cards by id (cards.js, ADR 0035)
+  cardForm: null, // "Your own cards" (cardform.js), once built
+  plansCalc: null, // the calculator under "Your charging plans"
   detail: null, // the open location's detail file, so the panel can be redrawn
 };
 
@@ -120,7 +125,7 @@ function writeAddress() {
 }
 
 function saveIfRemembered() {
-  if ($("remember").checked && !settings.save(app.state, app.theme, [...app.mine], app.rates)) {
+  if ($("remember").checked && !settings.save(app.state, app.theme, [...app.mine], app.rates, app.cards)) {
     $("settings-message").textContent = "Your browser did not allow saving settings.";
   }
 }
@@ -198,25 +203,36 @@ function applyFilters() {
   renderList();
 }
 
+// The visitor's own figures for a network: their own rate for it and their own cards
+// that work on it (cards.js), or null.
+function ownFor(op) {
+  return ownOffers(op, app.rates, app.cards);
+}
+
 // Each matching location's price label (labels.js) for the map and the list: lab is the
 // text, labk orders labels cheapest first, labplan marks a price from a ticked plan or the
-// visitor's own rate, and labrate one from their own rate. They follow the filters, the
-// plans the visitor ticked and their own rates, so they are worked out again whenever any
-// of these change.
+// visitor's own rate or card, labrate one from their own rate or card, and labcard the
+// name of the card it came from. They follow the filters, the plans the visitor ticked
+// and their own rates and cards, so they are worked out again whenever any of these change.
 function labelPrices() {
   const plans = bestPlans(app.plans, app.mine);
+  const own = new Map();
   for (const { properties } of app.filtered) {
-    const label = priceLabel(properties, app.state, plans.get(properties.op), app.rates.get(properties.op));
+    if (!own.has(properties.op)) own.set(properties.op, ownFor(properties.op));
+    const label = priceLabel(properties, app.state, plans.get(properties.op), own.get(properties.op));
     if (label) {
       properties.lab = label.text;
       properties.labk = label.key;
       properties.labplan = Boolean(label.plan || label.rate);
       properties.labrate = Boolean(label.rate);
+      if (label.rate?.card) properties.labcard = label.rate.card;
+      else delete properties.labcard;
     } else {
       delete properties.lab;
       delete properties.labk;
       delete properties.labplan;
       delete properties.labrate;
+      delete properties.labcard;
     }
   }
 }
@@ -291,16 +307,27 @@ function buildPlanPicker() {
     showCount();
     fieldset.append(group);
   }
-  // The calculator for every plan with a monthly fee, not only those that cover a charger
-  // on the map. The visitor types in what they pay now.
+}
+
+// The calculator for every plan with a monthly fee, not only those that cover a charger on
+// the map, and the visitor's own cards with a fee. The visitor types in what they pay
+// now. It is built again when their cards change, staying open if it was.
+function renderPlansCalc() {
+  const own = [...app.cards.values()].map((card) => cardAsPlan(card)).filter(Boolean);
   const calc = subscriptionCalculator({
-    plans: app.plans,
+    plans: [...app.plans, ...own],
     prefix: "plans-calc",
     summary: "Is a subscription worth it for you?",
     nowHint: "Type in what you pay per kWh now, including VAT: a network's price, your own rate or another plan's.",
     here: false,
   });
-  if (calc) fieldset.append(calc);
+  const open = Boolean(app.plansCalc?.open);
+  app.plansCalc?.remove();
+  app.plansCalc = calc;
+  if (calc) {
+    calc.open = open;
+    $("my-plans").append(calc);
+  }
 }
 
 // "Your own rates" (ADR 0035): the visitor types in the price per kWh they found they can
@@ -417,6 +444,36 @@ function buildRatePicker() {
   renderRateList();
 }
 
+// "Your own cards" (cardform.js, ADR 0035): a roaming card, app or membership with the
+// networks it works on and what it charges there.
+function cardsChanged() {
+  renderPlansCalc();
+  saveIfRemembered();
+  applyFilters(); // the price labels can change
+  redrawDetail();
+}
+
+function buildCardPicker() {
+  const onMap = new Set(app.features.map((f) => f.properties.op));
+  const networks = [...onMap].map((op) => ({ op, name: networkName(op) })).sort((a, b) => a.name.localeCompare(b.name));
+  // Cards saved for a network no longer on the map keep it, so nothing is lost when a
+  // feed is missing for a day.
+  app.cardForm = buildCardForm({
+    networks,
+    known: knownCards({ plans: app.plans, withheld: app.withheld }, onMap),
+    cards: app.cards,
+    onChange: cardsChanged,
+  });
+}
+
+// From a charger's details: open the filters at "Your own cards" for its network.
+function editCards(op) {
+  closeDetail();
+  showFilters(true);
+  $("my-cards").scrollIntoView?.({ block: "start", behavior: reducedMotion ? "auto" : "smooth" });
+  app.cardForm?.edit(op);
+}
+
 // From a charger's details: open the filters at "Your own rates" for its network.
 function editRate(op) {
   closeDetail();
@@ -496,7 +553,7 @@ function renderList() {
               { className: "meta cheapest-here" },
               "Cheapest here: ",
               h("span", { className: `price-tag${p.labplan ? " with-plan" : ""}`, text: p.lab }),
-              p.labrate ? " with your own rate" : p.labplan ? " with your plan" : "",
+              p.labcard ? ` with your card “${p.labcard}”` : p.labrate ? " with your own rate" : p.labplan ? " with your plan" : "",
             )
           : null,
         h("span", { className: `meta price-${p.price}`, text: p.pt || "Price unknown" }),
@@ -557,11 +614,11 @@ function detailOptions() {
     plans: app.plans,
     mine: app.mine,
     withheld: app.withheld,
-    label: props
-      ? priceLabel(props, app.state, bestPlans(app.plans, app.mine).get(props.op), app.rates.get(props.op))
-      : null,
+    label: props ? priceLabel(props, app.state, bestPlans(app.plans, app.mine).get(props.op), ownFor(props.op)) : null,
     rate: props ? (app.rates.get(props.op) ?? null) : null,
     onEditRate: props ? () => editRate(props.op) : null,
+    cards: props ? cardsFor(props.op, app.cards) : [],
+    onEditCards: props ? () => editCards(props.op) : null,
     filtered: connectorFiltersOn(app.state),
     hideOut: app.state.working,
     onHideOut: toggleHideOut,
@@ -1067,8 +1124,8 @@ function setUpSettings() {
   }
   remember.addEventListener("change", () => {
     if (remember.checked) {
-      if (settings.save(app.state, app.theme, [...app.mine], app.rates)) {
-        message.textContent = "Your settings are saved on this device: filters, map grouping, ticked charging plans, your own rates and light or dark mode if you picked one.";
+      if (settings.save(app.state, app.theme, [...app.mine], app.rates, app.cards)) {
+        message.textContent = "Your settings are saved on this device: filters, map grouping, ticked charging plans, your own rates and cards, and light or dark mode if you picked one.";
       } else {
         remember.checked = false;
         message.textContent = "Your browser did not allow saving settings.";
@@ -1111,6 +1168,7 @@ function wireUp() {
     if (event.target.id === "remember") return; // handled in setUpSettings
     if (event.target.name === "plan") return; // handled in buildPlanPicker
     if (event.target.closest("#my-rates")) return; // handled in buildRatePicker
+    if (event.target.closest("#my-cards")) return; // handled in cardform.js
     app.state = formToState();
     stateChanged();
   });
@@ -1189,6 +1247,7 @@ async function start() {
     app.theme = settings.theme();
     app.mine = new Set(settings.plans());
     app.rates = settings.rates();
+    app.cards = settings.cards();
   }
   applyTheme();
   $("legend").open = WIDE.matches;
@@ -1222,7 +1281,9 @@ async function start() {
     }
     buildNetworks();
     buildPlanPicker();
+    renderPlansCalc();
     buildRatePicker();
+    buildCardPicker();
     buildAttribution(layer);
   } catch {
     const failed = "The charger data could not be loaded. Please try again later.";
