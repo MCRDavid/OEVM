@@ -608,9 +608,9 @@ def test_a_visitors_own_cards_price_the_networks_ticked_and_stay_on_the_device_o
     # Starting from a roaming card this site lists ticks its networks on the map.
     page.select_option("#card-start", label="Octopus Electroverse (27 networks)")
     assert page.input_value("#card-name") == "Octopus Electroverse"
-    expect(page.locator("#card-ops-count")).to_have_text("27 networks ticked")
+    expect(page.locator("#card-ops-count")).to_have_text("(27 ticked)")
     page.click("#card-none")
-    expect(page.locator("#card-ops-count")).to_have_text("0 networks ticked")
+    expect(page.locator("#card-ops-count")).to_have_text("(0 ticked)")
     page.fill("#card-name", "Work card")
     page.click("#card-save")
     expect(message).to_have_text("Tick at least one network the card works on.")

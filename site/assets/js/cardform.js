@@ -37,7 +37,7 @@ export function buildCardForm({ networks, known, cards, onChange }) {
   const ticked = () => networks.map((n) => n.op).filter((op) => boxes.get(op).checked);
   const showCount = () => {
     const count = ticked().length;
-    $("card-ops-count").textContent = count === 1 ? "1 network ticked" : `${count} networks ticked`;
+    $("card-ops-count").textContent = `(${count} ticked)`;
   };
 
   // Reads a price, percentage or fee box: { value } when blank or valid, otherwise
@@ -195,15 +195,12 @@ export function buildCardForm({ networks, known, cards, onChange }) {
       const summary = card.ops.length === 1 ? cardTextFor(card, card.ops[0]) : cardSummary(card);
       // A card for one network has that network's figures in its summary already.
       const differs = card.ops.length === 1 ? 0 : Object.keys(card.nets).length;
-      const parts = [
-        summary,
-        differs ? `different on ${differs === 1 ? "1 network" : `${differs} networks`}` : "",
-        card.note ? `(${card.note})` : "",
-      ].filter(Boolean);
+      const parts = [summary, differs ? `different on ${differs === 1 ? "1 network" : `${differs} networks`}` : ""].filter(Boolean);
+      const note = card.note ? ` (${card.note})` : "";
       return h(
         "li",
         {},
-        h("span", { text: `${card.name}, on ${where}: ${parts.join("; ")}` }),
+        h("span", { text: `${card.name}, on ${where}: ${parts.join("; ")}${note}` }),
         h("button", {
           type: "button",
           text: "Change",
