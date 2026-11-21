@@ -236,4 +236,5 @@ def test_build_site_calls_for_the_status_files(monkeypatch, build):
     monkeypatch.setattr(build_site, "third_party_notices", lambda: "")
     lines = build_site.build(build)
     assert calls == [build]
-    assert lines[-1].startswith("added empty status files")
+    assert lines[-2].startswith("added empty status files")
+    assert lines[-1].startswith("wrote sitemap.xml")

@@ -995,7 +995,7 @@ def test_text_from_feeds_is_never_treated_as_markup(visit, site):
     assert page.evaluate("window.injected") is None
 
 
-def test_lighthouse_accessibility_score_on_a_phone(site, tmp_path):
+def test_lighthouse_accessibility_and_search_scores_on_a_phone(site, tmp_path):
     lighthouse = ROOT / "node_modules" / ".bin" / "lighthouse"
     chrome = os.environ.get("CHROME_PATH")
     if not lighthouse.exists() or not chrome or not shutil.which(chrome):
@@ -1005,7 +1005,7 @@ def test_lighthouse_accessibility_score_on_a_phone(site, tmp_path):
         [
             str(lighthouse),
             site,
-            "--only-categories=accessibility",
+            "--only-categories=accessibility,seo",
             "--form-factor=mobile",
             "--output=json",
             f"--output-path={report}",
@@ -1026,6 +1026,8 @@ def test_lighthouse_accessibility_score_on_a_phone(site, tmp_path):
         if audit.get("scoreDisplayMode") == "binary" and audit.get("score") == 0
     ]
     assert result["categories"]["accessibility"]["score"] >= 0.9, failed
+    # Search engines: title, description, canonical address, crawlable links and so on.
+    assert result["categories"]["seo"]["score"] == 1, failed
 
 
 def test_quick_filters_match_the_form_and_the_address(visit):

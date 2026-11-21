@@ -115,7 +115,7 @@ jobs:
             data/live/index.json data/live/00.json data/live/ff.json \
             data/status.json status/index.html privacy/index.html transparency/index.html \
             disclaimer/index.html data-licences/index.html security/index.html \
-            report/index.html .well-known/security.txt; do
+            report/index.html .well-known/security.txt sitemap.xml assets/share.png; do
             test -f "build/$file" || { echo "::error::build/$file is missing"; exit 1; }
           done
 

@@ -9,7 +9,10 @@ node_modules (served from the site itself, so visitors contact no script host), 
 licence and the notices of the packages it bundles, and writes assets/config.json. It
 also publishes the disclaimer, data licences, security policy, "Report a mistake" and
 findings pages (pipeline/documents.py), so the footer links stay on the site. Where the
-map files came with no status files (pipeline/live_site.py), it adds empty ones.
+map files came with no status files (pipeline/live_site.py), it adds empty ones. Last, it
+writes sitemap.xml, listing every page in the build folder for search engines
+(pipeline/seo.py). The deploy workflow builds after the feed health page is in the build
+folder, so the sitemap lists it too.
 
 --offline-style points the map at a plain local style instead of the OpenFreeMap
 basemap. Tests and CI use it, because the basemap's terms forbid automated collection
@@ -23,7 +26,7 @@ import sys
 from pathlib import Path
 from urllib.parse import urlsplit
 
-from pipeline import documents
+from pipeline import documents, seo
 from pipeline.project import REPOSITORY_URL
 from pipeline.registry import ROOT
 
@@ -174,6 +177,9 @@ def build(out: Path, *, offline_style: bool = False) -> list[str]:
             lines.append("added empty status files to data/live/ (no status refresh was packed)")
     except SnapshotError as exc:
         raise BuildError(str(exc)) from None
+    listed = seo.pages(out)
+    (out / "sitemap.xml").write_text(seo.sitemap(listed), encoding="utf-8")
+    lines.append(f"wrote sitemap.xml listing {len(listed)} pages")
     return lines
 
 

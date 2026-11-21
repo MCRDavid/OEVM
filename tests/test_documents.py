@@ -35,6 +35,11 @@ def parse(page: str) -> Text:
     return parsed
 
 
+def loads_nothing_else(page: str) -> bool:
+    """The page's only link tag is its canonical address, which loads nothing."""
+    return page.count("<link") == page.count('<link rel="canonical" href="https://') == 1
+
+
 @pytest.fixture(scope="module")
 def pages(tmp_path_factory) -> dict[str, str]:
     out = tmp_path_factory.mktemp("build")
@@ -75,7 +80,8 @@ def test_each_page_has_the_disclaimer_and_footer_links_and_no_scripts(pages, fol
     assert html.escape(short_disclaimer(), quote=True) in page
     for _, url in LINKS:
         assert url in parsed.hrefs
-    assert not {"script", "img", "iframe", "link"} & set(parsed.tags)
+    assert not {"script", "img", "iframe"} & set(parsed.tags)
+    assert loads_nothing_else(page)
     assert "../" in parsed.hrefs  # back to the map
 
 
@@ -167,7 +173,8 @@ def test_each_post_page_has_the_disclaimer_footer_links_and_its_date(pages, file
     # Posts are one folder deeper, so the site's own links climb two folders.
     for _, url in LINKS:
         assert (url.replace("../", "../../", 1) if url.startswith("../") else url) in parsed.hrefs
-    assert not {"script", "img", "iframe", "link"} & set(parsed.tags)
+    assert not {"script", "img", "iframe"} & set(parsed.tags)
+    assert loads_nothing_else(page)
     assert "../" in parsed.hrefs and "../../" in parsed.hrefs  # all findings, and the map
     published = file[:10]
     assert f'Published <time datetime="{published}">' in page
