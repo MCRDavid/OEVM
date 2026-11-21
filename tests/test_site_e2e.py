@@ -183,6 +183,12 @@ def open_filters(page):
         page.click("#toggle-filters")
 
 
+def open_plan_groups(page):
+    """Open every provider's fold under "Your charging plans", so its boxes can be ticked."""
+    folds = page.locator("#my-plans details.plan-group")
+    folds.evaluate_all("folds => folds.forEach(f => f.open = true)")
+
+
 def test_map_loads_on_a_phone_with_nothing_from_outside(visit):
     v = visit()
     page = v.open()
@@ -457,6 +463,7 @@ def test_details_show_plans_from_providers_pages_and_the_visitors_own(visit):
     assert "You have this plan" not in plans
     page.keyboard.press("Escape")
     open_filters(page)
+    open_plan_groups(page)
     page.locator("#my-plans input[name=plan]").first.check()
     page.click("#remember")
     stored = json.loads(v.stored()["oevm.settings.v1"])
@@ -524,7 +531,7 @@ def test_the_calculator_works_out_when_a_plan_pays_for_itself(visit):
     expect(page.locator("#list-items li")).to_have_count(SHOWN)
     _open_details_containing(page, "Is a subscription worth it here?")
     page.locator("#detail-body details.more summary", has_text="Other ways to pay here").click()
-    page.click(".calculator summary")
+    page.click("#detail-body .calculator summary")
     assert page.input_value("#calc-fee") == "5"
     assert page.input_value("#calc-with") == "50"
     page.fill("#calc-now", "82.8")
@@ -546,12 +553,52 @@ def test_the_calculator_works_out_when_a_plan_pays_for_itself(visit):
     )
 
 
+def test_plans_fold_by_provider_and_calculators_use_the_visitors_own_prices(visit):
+    v = visit()
+    page = v.open("?view=list", map_ready=False)
+    expect(page.locator("#list-items li")).to_have_count(SHOWN)
+    open_filters(page)
+    # One fold per provider, closed until a plan in it is ticked.
+    fastned = page.locator("#my-plans details.plan-group", has_text="Fastned: 3 plans")
+    expect(fastned).not_to_have_attribute("open", "")
+    fastned.locator("summary").click()
+    fastned.locator("input[value='fastned.fastned_gold_member']").check()
+    expect(fastned.locator("summary")).to_have_text("Fastned: 3 plans (1 ticked)")
+    # The calculator under the plans covers plans that link to no charger on the map.
+    general = page.locator("#my-plans .calculator")
+    general.locator("summary").click()
+    page.select_option("#plans-calc-plan", "be_ev.be_ev_flexi")
+    assert page.input_value("#plans-calc-fee") == "13.99"
+    assert page.input_value("#plans-calc-now") == ""
+    page.fill("#plans-calc-now", "79")
+    expect(page.locator("#plans-calc-answer")).to_contain_text(
+        "pays for itself once you charge 35 kWh a month on the networks it covers."
+    )
+    # An own DC rate for Fastned is where a Fastned charger's calculator starts.
+    page.select_option("#rate-op", "fastned")
+    page.fill("#rate-dc", "70")
+    page.click("#rate-use")
+    page.click("#done")
+    _item(page, "Angus Court").locator("button").click()
+    page.locator("#detail-body details.more summary", has_text="Other ways to pay here").click()
+    page.click("#detail-body .calculator summary")
+    assert page.input_value("#calc-now") == "70"
+    expect(page.locator("#calc-now-hint")).to_have_text(
+        "Starts from your own DC rate for this network, typed in by you."
+    )
+    expect(page.locator("#calc-answer")).to_contain_text(
+        "pays for itself once you charge 34 kWh a month here"
+    )
+    assert v.errors == [] and v.outside == []
+
+
 def test_ticking_a_plan_redraws_open_details_and_a_failed_list_keeps_saved_plans(visit):
     v = visit(viewport=WIDE)
     page = v.open("?view=list", map_ready=False)
     expect(page.locator("#list-items li")).to_have_count(SHOWN)
     _open_details_containing(page, "Other ways to pay here")
     open_filters(page)
+    open_plan_groups(page)
     first = page.locator("#my-plans input[name=plan]").first
     plan_name = first.evaluate("box => box.parentElement.textContent")
     shown = " ".join(page.locator("ul.plans").all_text_contents())
@@ -1510,6 +1557,7 @@ def test_a_ticked_plan_with_a_lower_price_labels_the_map_and_the_list(visit):
     expect(item).to_contain_text("Cheapest here: 83p")
     wait_for_amber(page, False)
     open_filters(page)
+    page.click("#my-plans details.plan-group summary:has-text('Test')")
     page.check("#my-plans input[value='test.cheap']")
     page.click("#done")
     expect(item).to_contain_text("Cheapest here: 39p with your plan")

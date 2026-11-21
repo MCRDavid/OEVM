@@ -935,14 +935,31 @@ body[data-view="list"] .map-view {
   font-weight: 600;
 }
 
+/* One fold per provider, so the list stays short on a phone. */
 .my-plans .plan-group {
-  margin: 0.5rem 0;
-  border: 0;
-  padding: 0;
+  margin: 0;
+  border-top: 1px solid var(--line);
 }
 
-.my-plans .plan-group legend {
+.my-plans .plan-group > summary,
+.my-plans .calculator > summary {
+  min-height: 44px;
+  padding: 0.6rem 0;
   font-weight: 600;
+  cursor: pointer;
+}
+
+.my-plans .plan-count {
+  font-weight: 400;
+}
+
+.my-plans .calculator {
+  margin: 0;
+  border-top: 1px solid var(--line);
+}
+
+.my-plans .calc {
+  padding-bottom: 0.5rem;
 }
 
 .calculator {

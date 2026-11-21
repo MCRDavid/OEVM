@@ -142,13 +142,15 @@ export function kwhText(kwh) {
   return `${Math.ceil(kwh - 1e-9)} kWh`;
 }
 
-// The calculator's answer in plain words.
-export function breakEvenText(result) {
+// The calculator's answer in plain words. here is false for the calculator under "Your
+// charging plans", which is not about one charger.
+export function breakEvenText(result, { here = true } = {}) {
   if (!result) return "Enter the monthly fee and both prices to see the answer.";
   if (result.breakEven === null) {
     return "With these prices the plan never pays for itself: its price per kWh is not lower than what you pay now.";
   }
-  let text = `The plan saves ${penceText(result.saving)} per kWh, so it pays for itself once you charge ${kwhText(result.breakEven)} a month here or on the networks it covers.`;
+  const where = here ? "here or on the networks it covers" : "on the networks it covers";
+  let text = `The plan saves ${penceText(result.saving)} per kWh, so it pays for itself once you charge ${kwhText(result.breakEven)} a month ${where}.`;
   if (result.net !== null) {
     text +=
       result.net >= 0
@@ -156,4 +158,47 @@ export function breakEvenText(result) {
         : ` At the use you entered you would pay about ${poundsText(-result.net)} a month more, including the fee.`;
   }
   return `${text} This is a guide only: prices change, and some plans add other charges.`;
+}
+
+// Where a charger's calculator starts "What you pay now": the lowest of the prices here
+// that include VAT, a ticked plan with no monthly fee that gives a fixed price here, and
+// the visitor's own rate for this network (rates.js, ADR 0035) for the currents the site
+// has ("ac", "dc"). A plan with a fee is left out, as that is what the calculator weighs
+// up. On a tie the operator's own price is kept, then a ticked plan's, as on the map.
+// Returns { kind: "tariff" | "plan" | "rate", ppk, item } or null; for a rate, item is
+// { cur, pence }.
+export function payNowStart({ tariffOptions = [], ticked = [], rate = null, currents = [] } = {}) {
+  const candidates = [];
+  for (const option of tariffOptions ?? []) {
+    if (option.state === "priced" && option.includes_vat && finite(option.ppk_low)) {
+      candidates.push({ kind: "tariff", ppk: option.ppk_low, item: option });
+    }
+  }
+  for (const plan of ticked ?? []) {
+    if (finite(plan.ppk) && plan.monthly_fee === 0) candidates.push({ kind: "plan", ppk: plan.ppk, item: plan });
+  }
+  for (const cur of ["ac", "dc"]) {
+    const pence = rate?.[cur];
+    if ((currents ?? []).includes(cur) && finite(pence)) candidates.push({ kind: "rate", ppk: pence, item: { cur, pence } });
+  }
+  if (!candidates.length) return null;
+  const low = Math.min(...candidates.map((c) => c.ppk));
+  return candidates.find((c) => c.ppk === low);
+}
+
+// The hint under "What you pay now", saying where its starting figure came from.
+export function payNowHint(start) {
+  if (!start) return "No price including VAT is published here. Enter what you pay.";
+  if (start.kind === "plan") {
+    return `Starts from your plan ${start.item.name} from ${start.item.provider}, the lowest price you have here.`;
+  }
+  if (start.kind === "rate") {
+    return `Starts from your own ${start.item.cur.toUpperCase()} rate for this network, typed in by you.`;
+  }
+  return "Starts from the lowest published price here that includes VAT.";
+}
+
+// Plans a visitor might weigh up in the calculator: those with a monthly fee.
+export function paidPlans(plans) {
+  return (plans ?? []).filter((plan) => finite(plan.monthly_fee) && plan.monthly_fee > 0);
 }
