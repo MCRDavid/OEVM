@@ -26,6 +26,7 @@ from pathlib import Path
 
 import yaml
 
+from pipeline import seo
 from pipeline.project import REPOSITORY_URL
 from pipeline.registry import ROOT
 from pipeline.transparency import LINKS, STYLE, _e, _link, short_disclaimer
@@ -37,6 +38,26 @@ DOCUMENTS = {
     "SECURITY.md": "security",
 }
 REPORT_FOLDER = "report"
+# What search results and shared links say about each page (pipeline/seo.py). Findings
+# posts use their first paragraph instead.
+DESCRIPTIONS = {
+    "disclaimer": (
+        "A personal, experimental project, much of it written with an AI assistant. Charger "
+        "data stays the operators' work, with no warranty: check at the charger."
+    ),
+    "data-licences": (
+        "Where each source of charger data on this map comes from, its licence and the credit "
+        "it needs. The project's code licence never covers the data."
+    ),
+    "security": (
+        "How to report a security problem, a leaked key or personal data to this project "
+        "privately, and what happens next."
+    ),
+    REPORT_FOLDER: (
+        "Report a wrong price, location or other mistake on the map with a form on GitHub, or "
+        "raise a security or privacy matter privately."
+    ),
+}
 ISSUE_FORMS = ROOT / ".github" / "ISSUE_TEMPLATE"
 FINDINGS = ROOT / "findings"
 FINDINGS_FOLDER = "findings"
@@ -204,11 +225,21 @@ def render_document(markdown: str, up: str = "../") -> tuple[str, str]:
 
 
 def page(
-    title: str, body: str, source: str | None = None, up: str = "../", back: str | None = None
+    title: str,
+    body: str,
+    source: str | None = None,
+    up: str = "../",
+    back: str | None = None,
+    *,
+    path: str,
+    summary: str,
+    published: date | None = None,
 ) -> str:
     """A page with the site's disclaimer and footer links, like the other pages.
 
-    up leads from the page to the top of the site; back replaces "Back to the map".
+    up leads from the page to the top of the site; back replaces "Back to the map". path
+    is the page's folder, such as "findings/", and summary its description, for search
+    engines and link previews (pipeline/seo.py), with the date a findings post was published.
     """
     links = "".join(
         f"<li>{_link(up + url.removeprefix('../') if url.startswith('../') else url, text)}</li>"
@@ -226,6 +257,7 @@ def page(
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>{_e(title)}: OEVM</title>
+{seo.head(path, title, summary, published)}
 <style>{STYLE}{EXTRA_STYLE}</style>
 </head>
 <body>
@@ -294,7 +326,12 @@ def report_page(folder: Path = ISSUE_FORMS) -> str:
             else ""
         )
     )
-    return page("Report a mistake", body)
+    return page(
+        "Report a mistake",
+        body,
+        path=f"{REPORT_FOLDER}/",
+        summary=DESCRIPTIONS[REPORT_FOLDER],
+    )
 
 
 def _long_date(day: date) -> str:
@@ -352,14 +389,21 @@ def posts(folder: Path = FINDINGS) -> list[dict]:
 
 def findings_page(folder: Path = FINDINGS) -> str:
     """The list of posts, newest first, under the introduction in findings/README.md."""
-    title, intro = render_document((folder / "README.md").read_text(encoding="utf-8"))
+    readme = (folder / "README.md").read_text(encoding="utf-8")
+    title, intro = render_document(readme)
     entries = "".join(
         f'<article><h2><a href="{post["name"]}/">{_e(post["title"])}</a></h2>'
         f'<p class="date"><time datetime="{post["date"].isoformat()}">'
         f"{_long_date(post['date'])}</time></p><p>{post['summary']}</p></article>"
         for post in posts(folder)
     )
-    return page(title, intro + (entries or "<p>No posts yet.</p>"), f"{FINDINGS_FOLDER}/README.md")
+    return page(
+        title,
+        intro + (entries or "<p>No posts yet.</p>"),
+        f"{FINDINGS_FOLDER}/README.md",
+        path=f"{FINDINGS_FOLDER}/",
+        summary=seo.description(_summary(readme)),
+    )
 
 
 def post_page(post: dict) -> str:
@@ -368,7 +412,16 @@ def post_page(post: dict) -> str:
         f"{_long_date(post['date'])}</time>.</p>"
     )
     back = 'Back to <a href="../">all findings</a> or the <a href="../../">map</a>.'
-    return page(post["title"], published + post["body"], post["source"], "../../", back)
+    return page(
+        post["title"],
+        published + post["body"],
+        post["source"],
+        "../../",
+        back,
+        path=f"{FINDINGS_FOLDER}/{post['name']}/",
+        summary=seo.description(post["summary"]),
+        published=post["date"],
+    )
 
 
 def outputs(out: Path, root: Path = ROOT) -> dict[Path, str]:
@@ -376,7 +429,9 @@ def outputs(out: Path, root: Path = ROOT) -> dict[Path, str]:
     files = {}
     for name, folder in DOCUMENTS.items():
         title, body = render_document((root / name).read_text(encoding="utf-8"))
-        files[out / folder / "index.html"] = page(title, body, name)
+        files[out / folder / "index.html"] = page(
+            title, body, name, path=f"{folder}/", summary=DESCRIPTIONS[folder]
+        )
     files[out / REPORT_FOLDER / "index.html"] = report_page(root / ".github" / "ISSUE_TEMPLATE")
     findings = root / FINDINGS_FOLDER
     files[out / FINDINGS_FOLDER / "index.html"] = findings_page(findings)

@@ -54,8 +54,14 @@ decisions are in docs/adr/.
   findings/: blog-style findings posts, one dated Markdown file each (naming rules in pipeline/documents.py).
 - pipeline/project.py: repository URL (also in site/index.html, site/.well-known/security.txt,
   .github/ISSUE_TEMPLATE, relay/worker.js and ocpi/worker.js).
+- pipeline/seo.py: what search engines and link previews read: each page's description, canonical
+  address (SITE_URL in pipeline/project.py, copied in the head of site/index.html), Open Graph tags,
+  the map's schema.org Dataset and sitemap.xml (written by build_site). No robots.txt: crawlers
+  read one only at the top of the host. site/assets/share.png is the link preview picture.
 - site/index.html, site/assets/: the map page. pipeline/build_site.py: build folder with MapLibre.
   site/assets/js/labels.js: the cheapest price drawn above each map point (ADR 0026).
+  site/assets/js/plans.js and calculator.js: plans, the cheapest way to pay and the subscription
+  calculator (ADR 0016); rates.js: a visitor's own rates (ADR 0035).
   site/assets/js/live.js: status counts on the details screen, and the status file read for the
   charger that was opened (data/live/, ADR 0032); the time shown is when the feed was read.
 - Statuses between daily fetches (ADR 0032: refreshed hourly, served from the site, shown on the

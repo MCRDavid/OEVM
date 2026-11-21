@@ -9,7 +9,7 @@ from pathlib import Path
 import pytest
 
 from pipeline import transparency
-from pipeline.project import REPOSITORY_URL
+from pipeline.project import REPOSITORY_URL, SITE_URL
 from pipeline.registry import load_registry
 from schema.operator import OperatorConfig, neutral_text
 
@@ -69,7 +69,11 @@ def test_page_shows_the_short_disclaimer_and_required_links(page):
 
 def test_page_loads_nothing_from_anywhere_else(page):
     tags = parse(page).tags
-    assert not [t for t, _ in tags if t in ("script", "link", "img", "iframe")]
+    assert not [t for t, _ in tags if t in ("script", "img", "iframe")]
+    # The only link tag is the page's canonical address, which loads nothing.
+    assert [a for t, a in tags if t == "link"] == [
+        {"rel": "canonical", "href": f"{SITE_URL}transparency/"}
+    ]
     assert not [a for _, a in tags if "src" in a]
     assert "@import" not in page and "url(" not in page
 

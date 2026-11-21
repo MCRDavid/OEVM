@@ -20,6 +20,7 @@ from pathlib import Path
 
 from adapters.http import SHARED_HOST_SECONDS
 from adapters.sent_copy import CHANNEL_WORDS
+from pipeline import seo
 from pipeline.access import PHRASES
 from pipeline.project import REPOSITORY_URL
 from pipeline.registry import ROOT, RegistryError, load_registry
@@ -136,8 +137,16 @@ LINKS = (
     ("Data sources and licences", "../data-licences/"),
     ("Privacy and cookies", "../privacy/"),
     ("Security policy", "../security/"),
+    ("Transparency", "../transparency/"),
+    ("Feed health", "../status/"),
+    ("Findings", "../findings/"),
     ("Report a mistake", "../report/"),
     ("Source code", REPOSITORY_URL),
+)
+# What search results and shared links say about this page (pipeline/seo.py).
+DESCRIPTION = (
+    "Every source of UK charge point data this map uses or plans to use: how each operator "
+    "publishes it, its licence, rate limits, access requests and findings."
 )
 
 
@@ -1039,6 +1048,7 @@ def render_html(data: dict) -> str:
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Data sources and transparency: OEVM</title>
+{seo.head("transparency/", "Data sources and transparency", DESCRIPTION)}
 <style>{STYLE}</style>
 </head>
 <body>

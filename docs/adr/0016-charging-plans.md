@@ -79,6 +79,19 @@ they already have, and for a calculator showing when a paid plan pays for itself
   project's own words, without the price and quoting nothing, in place of the note that
   its memberships or subscriptions may be available.
 
+- **The plan list folds by provider, and a calculator for every paid plan (amended 21
+  November 2026, at the owner's request).** "Your charging plans" shows one fold per
+  provider, with how many of its plans are ticked; a provider with a ticked plan starts
+  open. Under the folds, "Is a subscription worth it for you?" offers every plan with a
+  monthly fee, including those that link to no network on the map (such as be.EV's and
+  Bonnet's), and the visitor types in what they pay now. In a charger's details, "What you
+  pay now" starts from the lowest price the visitor has there: the lowest published price
+  including VAT, a ticked plan with no monthly fee and a fixed price, or the visitor's own
+  rate for that network (ADR 0035) for the currents the site has. On a tie the operator's
+  own price is kept, then a ticked plan's, as on the map, and a hint says which it is. A
+  plan with a fee is never the starting point, as that is what the calculator weighs up.
+  The form is built in `site/assets/js/calculator.js`; the sums stay in `plans.js`.
+
 ## Needs testing
 
 - The figures where a provider's own pages disagree (marked in the provider files).

@@ -38,7 +38,7 @@ from pathlib import Path
 
 from pydantic import ValidationError
 
-from pipeline import daily_runs
+from pipeline import daily_runs, seo
 from pipeline.publish import sent_copy_note
 from pipeline.registry import ROOT, RegistryError, load_registry
 from pipeline.transparency import LINKS, STYLE, _e, _link, short_disclaimer
@@ -47,6 +47,11 @@ from schema.published import HistoryPoint, Manifest, MapLayer, OperatorStatus, S
 from schema.runlog import Health, RunLog
 
 HISTORY_DAYS = 30
+# What search results and shared links say about the page (pipeline/seo.py).
+DESCRIPTION = (
+    "How each UK charge point operator's open data feed did in the latest daily runs: a "
+    f"green, yellow, red or grey circle each, counts, and the last {HISTORY_DAYS} days."
+)
 # A latest run older than this shows yellow, so a day the daily fetch missed is visible.
 STALE_AFTER = timedelta(days=2)
 
@@ -647,6 +652,7 @@ def render_html(
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Feed health: OEVM</title>
+{seo.head("status/", "Feed health", DESCRIPTION)}
 <style>{STYLE}{EXTRA_STYLE}</style>
 </head>
 <body>

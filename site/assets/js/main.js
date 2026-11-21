@@ -2,6 +2,7 @@
 // browser can run it (MapLibre needs WebGL2). Nothing is saved on the device unless the
 // visitor turns on "Remember my settings" (see settings.js).
 
+import { subscriptionCalculator } from "./calculator.js";
 import { mapLabelLine, renderDetail, detailUrl } from "./detail.js";
 import { activeCount, connectorFilters as connectorFiltersOn, defaults, matches, parse, serialise } from "./filters.js";
 import { h } from "./dom.js";
@@ -264,21 +265,42 @@ function buildPlanPicker() {
   const known = new Set(app.plans.map((plan) => plan.id));
   app.mine = new Set([...app.mine].filter((id) => known.has(id)));
   const providers = [...new Set(app.plans.map((plan) => plan.provider))].sort((a, b) => a.localeCompare(b));
+  // One fold per provider, so the list stays short on a phone. A provider with a ticked
+  // plan starts open, and its summary says how many are ticked.
   for (const provider of providers) {
-    const group = h("fieldset", { className: "plan-group" }, h("legend", { text: provider }));
-    for (const plan of app.plans.filter((p) => p.provider === provider)) {
+    const plans = app.plans.filter((p) => p.provider === provider);
+    const count = h("span", { className: "plan-count" });
+    const showCount = () => {
+      const ticked = plans.filter((plan) => app.mine.has(plan.id)).length;
+      count.textContent = ticked ? ` (${ticked} ticked)` : "";
+    };
+    const group = h("details", { className: "plan-group", open: plans.some((plan) => app.mine.has(plan.id)) });
+    group.append(h("summary", {}, `${provider}: ${plans.length === 1 ? "1 plan" : `${plans.length} plans`}`, count));
+    for (const plan of plans) {
       const box = h("input", { type: "checkbox", name: "plan", value: plan.id, checked: app.mine.has(plan.id) });
       box.addEventListener("change", () => {
         if (box.checked) app.mine.add(plan.id);
         else app.mine.delete(plan.id);
+        showCount();
         saveIfRemembered();
         applyFilters(); // the price labels can change
         redrawDetail();
       });
       group.append(h("label", {}, box, ` ${plan.name}: ${plan.fee_text}; ${plan.price_text}`));
     }
+    showCount();
     fieldset.append(group);
   }
+  // The calculator for every plan with a monthly fee, not only those that cover a charger
+  // on the map. The visitor types in what they pay now.
+  const calc = subscriptionCalculator({
+    plans: app.plans,
+    prefix: "plans-calc",
+    summary: "Is a subscription worth it for you?",
+    nowHint: "Type in what you pay per kWh now, including VAT: a network's price, your own rate or another plan's.",
+    here: false,
+  });
+  if (calc) fieldset.append(calc);
 }
 
 // "Your own rates" (ADR 0035): the visitor types in the price per kWh they found they can

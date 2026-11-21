@@ -14,6 +14,7 @@ import re
 import sys
 from pathlib import Path
 
+from pipeline import seo
 from pipeline.project import REPOSITORY_URL
 from pipeline.registry import ROOT
 from pipeline.transparency import LINKS, STYLE, _e, _link, short_disclaimer
@@ -24,6 +25,11 @@ HEADING = "## Notice for the site"
 URL = re.compile(r"https://[^\s)]+")
 BOLD = re.compile(r"\*\*(.+?)\*\*")
 LAST_UPDATED = re.compile(r"^Last updated: (\d{1,2} \w+ \d{4})\.$")
+# What search results and shared links say about the page (pipeline/seo.py).
+DESCRIPTION = (
+    "No accounts, analytics or advertising, and nothing saved on your device unless you turn "
+    'on "Remember my settings". Who else sees your visit, and how to ask.'
+)
 
 
 class NoticeError(ValueError):
@@ -82,6 +88,7 @@ def render_html(paragraphs: list[str]) -> str:
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>{_e(title.group(1))}: OEVM</title>
+{seo.head("privacy/", title.group(1), DESCRIPTION)}
 <style>{STYLE}</style>
 </head>
 <body>
