@@ -1,6 +1,6 @@
 # Other ways to pay: what the map can and cannot say
 
-The price in an operator's feed is often not the cheapest way to pay at its chargers. From 15
+The price in an operator's feed is not always the cheapest way to pay at its chargers. From 15
 November 2026 the details of eight networks' chargers say when paying in the operator's own app,
 or with a membership or subscription, is cheaper, but not by how much, because those operators'
 website terms do not allow their prices to be copied. A check of charge cards, roaming apps and car

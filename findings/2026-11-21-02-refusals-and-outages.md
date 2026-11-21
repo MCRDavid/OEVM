@@ -2,8 +2,8 @@
 
 Between 13 and 21 November 2026 three feeds refused requests or failed in ways their published
 documents do not explain. Eco-Movement's platform answered some requests with HTTP 429, "too many
-requests", while every network's token was within its published limits. Monta's server timed out on
-one page of its list for a day. Roam's locations address has answered HTTP 502 since 16 November
+requests", while every network's token was within its published limits. Monta's server timed out
+near the end of its list for a day. Roam's locations address has answered HTTP 502 since 16 November
 2026, so the map still shows Roam's chargers as they were that morning.
 
 Since 13 November 2026 every request that is tried again is listed, with its answer, in each run's
@@ -14,9 +14,9 @@ log and on the [feed health page](status/).
 The map reads 23 networks through Eco-Movement's platform, each with its own token. Eco-Movement
 publishes a rate limit for each part of its feed, and since 29 October 2026, by the project owner's
 decision, each token's limit is used as an hourly allowance, with no more than five requests at once
-(see [the post on Eco-Movement's networks](findings/eco-movement-networks/)). Under that rule, if
-anything goes wrong, every network goes back to one request at a time, each token 125 seconds after
-its last.
+(see [the post on Eco-Movement's networks](findings/eco-movement-networks/)). Under the rule as it
+then stood, if anything went wrong, every network went back to one request at a time, each token
+125 seconds after its last.
 
 From 30 October 2026 most daily runs went back that way within their first seconds, so the daily
 fetch took about 31 minutes rather than 17. No published limit was passed: spacing requests out is
