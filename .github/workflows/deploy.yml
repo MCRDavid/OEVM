@@ -40,7 +40,7 @@ jobs:
       cancel-in-progress: false
     environment:
       name: github-pages
-      url: ${{ steps.deployment.outputs.page_url || steps.deploy-again.outputs.page_url }}
+      url: ${{ steps.deployment.outputs.page_url || steps.deploy-again.outputs.page_url || steps.deploy-last.outputs.page_url }}
     steps:
       # The newest main, not the commit the run started on: Fetch daily takes about 15
       # minutes, and a change merged meanwhile (such as a new transparency page) would
@@ -127,23 +127,31 @@ jobs:
           include-hidden-files: true
 
       # GitHub sometimes does not yet list the package it has just stored, and the deploy
-      # then fails at once, before it starts (19 and 20 November 2026). So a failed
-      # deploy waits until GitHub lists the package, then tries once more; if that fails
-      # too, the job fails.
+      # then fails at once, before it starts (19, 20, 23 and 24 November 2026). The deploy
+      # step asks GitHub's artifact service, which can lag behind GitHub's API: on 24
+      # November the API listed the package while a second try a second later still
+      # found none. So a failed deploy waits 30 seconds and tries again, then 2 minutes
+      # and tries a last time; if that fails too, the job fails.
       - name: Deploy to GitHub Pages
         id: deployment
         continue-on-error: true
         uses: actions/deploy-pages@v5
 
-      - name: Wait until GitHub lists the site package
+      - name: Wait 30 seconds before trying again
         if: steps.deployment.outcome == 'failure'
-        env:
-          GH_TOKEN: ${{ github.token }}
-          GH_REPO: ${{ github.repository }}
-          RUN_ID: ${{ github.run_id }}
-        run: .github/scripts/wait-for-run-artifact.sh "$RUN_ID" github-pages
+        run: sleep 30
 
       - name: Deploy to GitHub Pages again
         id: deploy-again
         if: steps.deployment.outcome == 'failure'
+        continue-on-error: true
+        uses: actions/deploy-pages@v5
+
+      - name: Wait 2 minutes before the last try
+        if: steps.deploy-again.outcome == 'failure'
+        run: sleep 120
+
+      - name: Deploy to GitHub Pages a last time
+        id: deploy-last
+        if: steps.deploy-again.outcome == 'failure'
         uses: actions/deploy-pages@v5
